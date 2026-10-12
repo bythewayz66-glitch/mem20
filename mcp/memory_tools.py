@@ -1,4 +1,7 @@
+<<<<<<< Updated upstream
 import ast
+=======
+>>>>>>> Stashed changes
 import os
 import sys
 import json
@@ -324,6 +327,7 @@ class MemoryToolsMixin:
         self.tools["memory_store"] = mt.Tool(
             name="memory_store",
             title="Store Memory",
+<<<<<<< Updated upstream
             description=("Store a grounded fact in mem20's persistent memory system. "
                          "You MUST declare epistemic_status: how this claim came to be "
                          "known. Use 'observed' only for something you directly witnessed "
@@ -334,6 +338,9 @@ class MemoryToolsMixin:
                          "basis is genuinely unknown use 'unlabeled'. "
                          "For invented/simulated content use memory_simulate_store instead, "
                          "which keeps fiction in a separate partition."),
+=======
+            description="Store a fact in mem20's persistent memory system",
+>>>>>>> Stashed changes
             inputSchema={
                 "type": "object",
                 "properties": {
@@ -477,6 +484,7 @@ class MemoryToolsMixin:
         self.tools["memory_recall_graph"] = mt.Tool(
             name="memory_recall_graph",
             title="Graph Memory Recall",
+<<<<<<< Updated upstream
             description=(
                 "Multi-hop entity traversal over the persisted knowledge graph. "
                 "Entities are extracted at write time from topics, tags, and "
@@ -493,10 +501,21 @@ class MemoryToolsMixin:
                     "max_results": {"type": "integer", "default": 20},
                     "min_facts": {"type": "integer", "description": "Require the starting entity to have at least this many supporting facts", "default": 1},
                     "topic": {"type": "string", "description": "Only return entities seen under this topic", "default": ""},
+=======
+            description="Knowledge graph traversal with multi-hop entity resolution",
+            inputSchema={
+                "type": "object",
+                "properties": {
+                    "entity": {"type": "string", "description": "Starting entity"},
+                    "hops": {"type": "integer", "description": "Number of graph hops", "default": 2},
+                    "min_trust": {"type": "number", "description": "Minimum trust score", "default": 0.3},
+                    "max_results": {"type": "integer", "default": 20},
+>>>>>>> Stashed changes
                 },
                 "required": ["entity"],
             },
         )
+<<<<<<< Updated upstream
         self.tools["memory_index_health"] = mt.Tool(
             name="memory_index_health",
             title="Retrieval Index Health",
@@ -509,6 +528,8 @@ class MemoryToolsMixin:
             ),
             inputSchema={"type": "object", "properties": {}},
         )
+=======
+>>>>>>> Stashed changes
         self.tools["memory_entity_extract"] = mt.Tool(
             name="memory_entity_extract",
             title="Entity Extraction",
@@ -554,14 +575,22 @@ class MemoryToolsMixin:
         self.tools["memory_set_epistemic_status"] = mt.Tool(
             name="memory_set_epistemic_status",
             title="Set Epistemic Status",
+<<<<<<< Updated upstream
             description=("Set the epistemic status tag on a grounded fact. "
                          "'unlabeled' marks a fact whose basis is unknown. "
                          "Cannot be used on simulated facts - promote them instead."),
+=======
+            description="Set epistemic status tag (observed, inferred, imagined, user_stated, hypothesis, agent_generated)",
+>>>>>>> Stashed changes
             inputSchema={
                 "type": "object",
                 "properties": {
                     "fact_id": {"type": "string", "description": "Fact ID"},
+<<<<<<< Updated upstream
                     "status": {"type": "string", "enum": ["observed", "inferred", "imagined", "user_stated", "hypothesis", "agent_generated", "unlabeled"], "description": "Epistemic status"},
+=======
+                    "status": {"type": "string", "enum": ["observed", "inferred", "imagined", "user_stated", "hypothesis", "agent_generated"], "description": "Epistemic status"},
+>>>>>>> Stashed changes
                 },
                 "required": ["fact_id", "status"],
             },
@@ -655,14 +684,19 @@ class MemoryToolsMixin:
             name="memory_audit_contamination",
             title="Audit Memory Contamination",
             description=("Periodic provenance audit: detect any high-confidence memory whose ultimate "
+<<<<<<< Updated upstream
                          "provenance is simulation, any simulated content leaking into grounded indexes, "
                          "and any grounded fact with no established epistemic basis."),
+=======
+                         "provenance is simulation, and any simulated content leaking into grounded indexes."),
+>>>>>>> Stashed changes
             inputSchema={
                 "type": "object",
                 "properties": {},
                 "required": [],
             },
         )
+<<<<<<< Updated upstream
         self.tools["memory_label_coverage"] = mt.Tool(
             name="memory_label_coverage",
             title="Epistemic Label Coverage",
@@ -686,6 +720,8 @@ class MemoryToolsMixin:
                 "required": [],
             },
         )
+=======
+>>>>>>> Stashed changes
         self.tools["memory_epistemic_veto"] = mt.Tool(
             name="memory_epistemic_veto",
             title="Epistemic Veto",
@@ -809,7 +845,10 @@ class MemoryToolsMixin:
                     "namespace": {"type": "string", "description": "Namespace identifier (e.g., 'agent_1', 'project_alpha')"},
                     "owner": {"type": "string", "description": "Owner agent/user", "default": "agent"},
                     "acl": {"type": "object", "description": "Access control list {agent: permission}", "default": {}},
+<<<<<<< Updated upstream
                     "actor": {"type": "string", "description": "Authenticated actor requesting the change; required to modify an existing namespace and defaults to owner for a new one"},
+=======
+>>>>>>> Stashed changes
                 },
                 "required": ["namespace"],
             },
@@ -823,8 +862,12 @@ class MemoryToolsMixin:
         self.tools["memory_shared_store"] = mt.Tool(
             name="memory_shared_store",
             title="Store in Shared Memory",
+<<<<<<< Updated upstream
             description=("Store a fact in a shared namespace with ACL checking. "
                          "epistemic_status is required: declare how this claim was learned."),
+=======
+            description="Store a fact in a shared namespace with ACL checking",
+>>>>>>> Stashed changes
             inputSchema={
                 "type": "object",
                 "properties": {
@@ -832,6 +875,7 @@ class MemoryToolsMixin:
                     "content": {"type": "string", "description": "Content to store"},
                     "tags": {"type": "string", "description": "Comma-separated tags", "default": ""},
                     "actor": {"type": "string", "description": "Acting agent", "default": "agent"},
+<<<<<<< Updated upstream
                     "epistemic_status": {
                         "type": "string",
                         "enum": ["observed", "inferred", "imagined", "user_stated",
@@ -840,6 +884,10 @@ class MemoryToolsMixin:
                     },
                 },
                 "required": ["namespace", "content", "epistemic_status"],
+=======
+                },
+                "required": ["namespace", "content"],
+>>>>>>> Stashed changes
             },
         )
         self.tools["memory_shared_recall"] = mt.Tool(
@@ -880,14 +928,20 @@ class MemoryToolsMixin:
                     "capabilities": {"type": "array", "items": {"type": "string"}, "description": "Agent capabilities", "default": []},
                     "values": {"type": "array", "items": {"type": "string"}, "description": "Core values", "default": []},
                     "identity": {"type": "string", "description": "Identity description", "default": ""},
+<<<<<<< Updated upstream
                     "actor": {"type": "string", "description": "Authenticated identity performing the write; must be the owner of that identity or an authorised delegate", "default": ""},
                 },
                 "required": ["identity"],
+=======
+                },
+                "required": [],
+>>>>>>> Stashed changes
             },
         )
         self.tools["self_model_get"] = mt.Tool(
             name="self_model_get",
             title="Get Self-Model",
+<<<<<<< Updated upstream
             description="Retrieve a self-model by identity, or list the self-model registry when no identity is given",
             inputSchema={
                 "type": "object",
@@ -896,6 +950,10 @@ class MemoryToolsMixin:
                     "k": {"type": "integer", "description": "Maximum records to summarise", "default": 10},
                 },
             },
+=======
+            description="Retrieve the agent's self-model",
+            inputSchema={"type": "object", "properties": {}},
+>>>>>>> Stashed changes
         )
         self.tools["self_model_reflect"] = mt.Tool(
             name="self_model_reflect",
@@ -905,7 +963,10 @@ class MemoryToolsMixin:
                 "type": "object",
                 "properties": {
                     "focus": {"type": "string", "enum": ["capabilities", "gaps", "beliefs", "values", "all"], "description": "Reflection focus", "default": "all"},
+<<<<<<< Updated upstream
                     "identity": {"type": "string", "description": "Identity to reflect on; omit to use the most recently updated identity", "default": ""},
+=======
+>>>>>>> Stashed changes
                 },
                 "required": [],
             },
@@ -916,6 +977,7 @@ class MemoryToolsMixin:
         category = args.get("category", "general")
         tags_str = args.get("tags", "")
         tags = [t.strip() for t in tags_str.split(",") if t.strip()] if tags_str else []
+<<<<<<< Updated upstream
         epistemic_status = args.get("epistemic_status", "")
 
         if not epistemic_status:
@@ -940,6 +1002,12 @@ class MemoryToolsMixin:
             return (f"Stored in mem20 memory: [{category}] {content} (tags: {tags_str})\n"
                     f"Record ID: {rec['id']}\n"
                     f"Epistemic status: {rec['epistemic_status']}")
+=======
+        
+        try:
+            rec = remember(topic=category, content=content, tags=tags, priority="normal")
+            return f"Stored in mem20 memory: [{category}] {content} (tags: {tags_str})\nRecord ID: {rec['id']}"
+>>>>>>> Stashed changes
         except Exception as e:
             return f"Error storing memory: {str(e)}"
     async def _memory_recall(self, args: Dict) -> str:
@@ -956,7 +1024,15 @@ class MemoryToolsMixin:
             
             output = f"Memory recall results for '{query}' (category: {category}, limit: {limit}):\n\n"
             for r in results:
+<<<<<<< Updated upstream
                 output += _fact_line(r)
+=======
+                ts = r.get('ts', '')[:19]
+                topic = r.get('topic', '-')
+                pri = r.get('priority', '-')
+                content = r.get('content', '')[:500]
+                output += f"[{ts}] {topic} (pri={pri})\n   {content}\n\n"
+>>>>>>> Stashed changes
             return output
         except Exception as e:
             return f"Error recalling memory: {str(e)}"
@@ -974,7 +1050,15 @@ class MemoryToolsMixin:
             
             output = f"Facts about entity '{entity}':\n\n"
             for r in filtered[:10]:
+<<<<<<< Updated upstream
                 output += _fact_line(r)
+=======
+                ts = r.get('ts', '')[:19]
+                topic = r.get('topic', '-')
+                pri = r.get('priority', '-')
+                content = r.get('content', '')[:500]
+                output += f"[{ts}] {topic} (pri={pri})\n   {content}\n\n"
+>>>>>>> Stashed changes
             return output
         except Exception as e:
             return f"Error probing entity: {str(e)}"
@@ -1000,7 +1084,14 @@ class MemoryToolsMixin:
                 content = r.get('content', '')
                 if content not in seen:
                     seen.add(content)
+<<<<<<< Updated upstream
                     output += _fact_line(r)
+=======
+                    ts = r.get('ts', '')[:19]
+                    topic = r.get('topic', '-')
+                    pri = r.get('priority', '-')
+                    output += f"[{ts}] {topic} (pri={pri})\n   {content[:500]}\n\n"
+>>>>>>> Stashed changes
             return output
         except Exception as e:
             return f"Error reasoning across entities: {str(e)}"
@@ -1035,7 +1126,16 @@ class MemoryToolsMixin:
                 if "error" in r:
                     output += f"Error: {r['error']}\n"
                 else:
+<<<<<<< Updated upstream
                     output += _fact_line(r, prefix=f"[{r.get('score', 0):.3f}] ")
+=======
+                    ts = r.get('ts', '')[:19]
+                    topic_name = r.get('topic', '-')
+                    pri = r.get('priority', '-')
+                    score = r.get('score', 0)
+                    content = r.get('content', '')[:500]
+                    output += f"[{score:.3f}] [{ts}] {topic_name} (pri={pri})\n   {content}\n\n"
+>>>>>>> Stashed changes
             return output
         except Exception as e:
             return f"Error in semantic recall: {str(e)}"
@@ -1066,6 +1166,7 @@ class MemoryToolsMixin:
                 if "error" in r:
                     output += f"Error: {r['error']}\n"
                 else:
+<<<<<<< Updated upstream
                     vr = r.get('_vector_rank', 'N/A')
                     br = r.get('_bm25_rank', 'N/A')
                     ce = r.get('_ce_score', 'N/A')
@@ -1084,11 +1185,32 @@ class MemoryToolsMixin:
         max_results = int(args.get("max_results", 20))
         min_facts = int(args.get("min_facts", 1))
         topic = args.get("topic", "") or None
+=======
+                    ts = r.get('ts', '')[:19]
+                    topic_name = r.get('topic', '-')
+                    pri = r.get('priority', '-')
+                    score = r.get('score', 0)
+                    content = r.get('content', '')[:500]
+                    vr = r.get('_vector_rank', 'N/A')
+                    br = r.get('_bm25_rank', 'N/A')
+                    ce = r.get('_ce_score', 'N/A')
+                    output += f"[{score:.3f}] [{ts}] {topic_name} (pri={pri})\n   V-rank: {vr}, BM25-rank: {br}, CE: {ce}\n   {content}\n\n"
+            return output
+        except Exception as e:
+            return f"Error in hybrid recall: {str(e)}"
+    async def _memory_recall_graph(self, args: Dict) -> str:
+        """Knowledge graph traversal with multi-hop entity resolution."""
+        entity = args.get("entity", "")
+        hops = args.get("hops", 2)
+        min_trust = args.get("min_trust", 0.3)
+        max_results = args.get("max_results", 20)
+>>>>>>> Stashed changes
 
         if not entity:
             return "Error: entity is required"
 
         try:
+<<<<<<< Updated upstream
             m = _engine()
             r = m.recall_graph(entity, hops=hops, max_results=max_results,
                                min_facts=min_facts, topic=topic)
@@ -1150,6 +1272,83 @@ class MemoryToolsMixin:
             return "\n".join(lines)
         except Exception as e:
             return f"Error reading index health: {type(e).__name__}: {str(e)}"
+=======
+            sys.path.insert(0, os.environ.get("MEM20_STORE_PATH", os.path.expanduser("~/.mem20/store")))
+            from memory import _load_ledger, SUPERSEDED
+            from collections import defaultdict, deque
+            
+            recs = _load_ledger()
+            facts = [r for r in recs 
+                    if r.get("action") == "remember" 
+                    and SUPERSEDED not in r.get("content", "")]
+            
+            # Build entity graph from co-occurrence
+            entity_graph = defaultdict(set)
+            entity_facts = defaultdict(list)
+            
+            for f in facts:
+                content = f.get("content", "").lower()
+                topic = f.get("topic", "").lower()
+                # Extract potential entities (simple heuristic: capitalized words, topics)
+                words = content.split()
+                entities_in_fact = set()
+                for w in words:
+                    clean = w.strip('.,!?;:"()[]{}')
+                    if clean and (clean[0].isupper() or clean in topic):
+                        entities_in_fact.add(clean)
+                entities_in_fact.add(topic)
+                
+                for e1 in entities_in_fact:
+                    entity_facts[e1].append(f)
+                    for e2 in entities_in_fact:
+                        if e1 != e2:
+                            entity_graph[e1].add(e2)
+            
+            if entity.lower() not in [e.lower() for e in entity_graph]:
+                return f"Entity '{entity}' not found in knowledge graph"
+            
+            # Find actual case-matched entity name
+            actual_entity = next(e for e in entity_graph if e.lower() == entity.lower())
+            
+            # Multi-hop traversal
+            visited = set([actual_entity])
+            current_level = {actual_entity}
+            all_related = {}
+            
+            for hop in range(1, hops + 1):
+                next_level = set()
+                for e in current_level:
+                    for neighbor in entity_graph.get(e, []):
+                        if neighbor not in visited:
+                            visited.add(neighbor)
+                            next_level.add(neighbor)
+                            if neighbor not in all_related:
+                                all_related[neighbor] = hop
+                current_level = next_level
+                if not current_level:
+                    break
+            
+            if not all_related:
+                return f"No related entities found for: {entity} (hops={hops})"
+            
+            # Sort by hop distance and fact count
+            sorted_related = sorted(all_related.items(), key=lambda x: (x[1], -len(entity_facts.get(x[0], []))))
+            
+            output = f"**Graph Recall: '{entity}'** (hops={hops}, max={max_results})\n\n"
+            output += f"Starting entity: {actual_entity} ({len(entity_facts.get(actual_entity, []))} facts)\n\n"
+            output += f"Related entities:\n"
+            for rel_entity, hop_dist in sorted_related[:max_results]:
+                fact_count = len(entity_facts.get(rel_entity, []))
+                output += f"  Hop {hop_dist}: {rel_entity} ({fact_count} facts)\n"
+                # Show sample fact
+                sample_facts = entity_facts.get(rel_entity, [])
+                if sample_facts:
+                    sample = sample_facts[0].get('content', '')[:200]
+                    output += f"    Sample: {sample}...\n"
+            return output
+        except Exception as e:
+            return f"Error in graph recall: {str(e)}"
+>>>>>>> Stashed changes
     async def _memory_entity_extract(self, args: Dict) -> str:
         """Extract entities and relationships from text using spaCy/LLM."""
         text = args.get("text", "")
@@ -1215,6 +1414,7 @@ class MemoryToolsMixin:
                 from memory import remember
                 
                 for e in entities:
+<<<<<<< Updated upstream
                     # spaCy extraction is a model INFERENCE over supplied text, not a
                     # witnessed observation, so it is labelled as one.
                     remember(topic=topic, content=f"Entity: {e['text']} (type: {e['label']})",
@@ -1225,6 +1425,12 @@ class MemoryToolsMixin:
                              content=f"Relation: {r['subject']} --[{r['predicate']}]--> {r['object']}",
                              tags=["relationship", r['predicate'].lower()],
                              epistemic_status="inferred")
+=======
+                    remember(topic=topic, content=f"Entity: {e['text']} (type: {e['label']})", tags=["entity", e['label'].lower()])
+                
+                for r in relationships:
+                    remember(topic=topic, content=f"Relation: {r['subject']} --[{r['predicate']}]--> {r['object']}", tags=["relationship", r['predicate'].lower()])
+>>>>>>> Stashed changes
                 
                 output += "\n✅ Stored extracted entities and relationships in memory"
             
@@ -1307,6 +1513,7 @@ class MemoryToolsMixin:
                             
                             output += f"  Summary: {summary[:500]}\n"
                             
+<<<<<<< Updated upstream
                             # Store summary as higher-level memory. The summary is produced by a
                             # cognitive model over existing facts, so it is an
                             # inference - never an observation of the world.
@@ -1315,6 +1522,13 @@ class MemoryToolsMixin:
                                    tags=["summary", "consolidated", f"cluster_{idx+1}"],
                                    priority="high",
                                    epistemic_status="inferred")
+=======
+                            # Store summary as higher-level memory
+                            remember(topic=f"{topic}_summary" if topic else "summary", 
+                                   content=f"Consolidated summary (cluster {idx+1}): {summary}", 
+                                   tags=["summary", "consolidated", f"cluster_{idx+1}"],
+                                   priority="high")
+>>>>>>> Stashed changes
                         except Exception:
                             output += f"  Summary: [generation failed]\n"
                     
@@ -1445,6 +1659,7 @@ class MemoryToolsMixin:
             return f"VETO / BLOCKED: {e}"
         except Exception as e:
             return f"Error promoting simulated fact: {e}"
+<<<<<<< Updated upstream
     async def _memory_label_coverage(self, args: Dict) -> str:
         try:
             sys.path.insert(0, os.environ.get("MEM20_STORE_PATH", os.path.expanduser("~/.mem20/store")))
@@ -1477,6 +1692,8 @@ class MemoryToolsMixin:
                     f"'{rep['labeled_as']}'.\n{rep['note']}")
         except Exception as e:
             return f"Error backfilling labels: {e}"
+=======
+>>>>>>> Stashed changes
     async def _memory_list_simulated(self, args: Dict) -> str:
         try:
             sys.path.insert(0, os.environ.get("MEM20_STORE_PATH", os.path.expanduser("~/.mem20/store")))
@@ -1639,10 +1856,14 @@ class MemoryToolsMixin:
                         topic=topic,
                         content=f"[PDF Chunk {i+1}/{len(chunks)}] {chunk}",
                         tags=["pdf", "ingested", f"chunk_{i+1}"],
+<<<<<<< Updated upstream
                         source=file_path,
                         # Extracted text of a document on disk: what the file
                         # says, transcribed. Not a claim about the world.
                         epistemic_status="observed"
+=======
+                        source=file_path
+>>>>>>> Stashed changes
                     )
                     stored_count += 1
             
@@ -1677,10 +1898,14 @@ class MemoryToolsMixin:
                 topic=topic,
                 content=f"[OCR from {file_path}] {text}",
                 tags=["ocr", "image", "ingested"],
+<<<<<<< Updated upstream
                 source=file_path,
                 # Text recognised in an image. What the pixels say, as read by a
                 # recogniser - an observation of the image, never of the world.
                 epistemic_status="observed"
+=======
+                source=file_path
+>>>>>>> Stashed changes
             )
             
             return f"✅ Image OCR complete: {file_path}\nText length: {len(text)} chars\nTopic: {topic}\n\nExtracted text:\n{text[:500]}..."
@@ -1713,11 +1938,15 @@ class MemoryToolsMixin:
                 topic=topic,
                 content=f"[Transcription from {file_path}] {text}",
                 tags=["transcription", "audio", "ingested", f"model_{model}"],
+<<<<<<< Updated upstream
                 source=file_path,
                 # A speech recogniser's rendering of an audio file. Observed, but
                 # observed-through-a-model: never grounds a claim about the world
                 # on its own.
                 epistemic_status="observed"
+=======
+                source=file_path
+>>>>>>> Stashed changes
             )
             
             return f"✅ Audio transcribed: {file_path}\nModel: {model}\nLanguage: {result.get('language', 'unknown')}\nText length: {len(text)} chars\n\nTranscription:\n{text[:500]}..."
@@ -1767,10 +1996,14 @@ class MemoryToolsMixin:
                     topic=topic,
                     content=f"[Code Analysis: {file_path}]\n{summary}",
                     tags=["code", "ast", "ingested", language],
+<<<<<<< Updated upstream
                     source=file_path,
                     # A parse of a file on disk. Observed structure, not a claim
                     # about what the code does or whether it is correct.
                     epistemic_status="observed"
+=======
+                    source=file_path
+>>>>>>> Stashed changes
                 )
                 
                 return f"✅ Code ingested: {file_path}\nClasses: {len(classes)}\nFunctions: {len(functions)}\nImports: {len(imports)}\n\n{summary[:1000]}..."
@@ -1786,6 +2019,7 @@ class MemoryToolsMixin:
 
         try:
             sys.path.insert(0, os.environ.get("MEM20_STORE_PATH", os.path.expanduser("~/.mem20/store")))
+<<<<<<< Updated upstream
             from memory import recall, remember
 
             existing = _namespace_meta(namespace, recall)
@@ -1810,6 +2044,19 @@ class MemoryToolsMixin:
             )
 
             return f"✅ Namespace created: {namespace}\nOwner: {owner}\nACL: {payload['acl']}"
+=======
+            from memory import remember
+            
+            # Store namespace metadata
+            remember(
+                topic="namespace_meta",
+                content=f"Namespace: {namespace}, Owner: {owner}, ACL: {acl}",
+                tags=["namespace", "metadata", namespace],
+                priority="high"
+            )
+            
+            return f"✅ Namespace created: {namespace}\nOwner: {owner}\nACL: {acl}"
+>>>>>>> Stashed changes
         except Exception as e:
             return f"Error creating namespace: {str(e)}"
     async def _memory_namespace_list(self, args: Dict) -> str:
@@ -1834,11 +2081,15 @@ class MemoryToolsMixin:
         content = args.get("content", "")
         tags_str = args.get("tags", "")
         actor = args.get("actor", "agent")
+<<<<<<< Updated upstream
         epistemic_status = args.get("epistemic_status", "")
+=======
+>>>>>>> Stashed changes
         tags = [t.strip() for t in tags_str.split(",") if t.strip()] if tags_str else []
 
         if not namespace or not content:
             return "Error: namespace and content are required"
+<<<<<<< Updated upstream
         if not epistemic_status:
             return ("Error: epistemic_status is required. Declare how this claim was "
                     "learned: observed / inferred / user_stated / agent_generated / "
@@ -1862,6 +2113,35 @@ class MemoryToolsMixin:
 
             return (f"✅ Stored in shared namespace: {namespace}\nActor: {actor}\n"
                     f"Tags: {tags}\nEpistemic status: {epistemic_status}")
+=======
+
+        try:
+            sys.path.insert(0, os.environ.get("MEM20_STORE_PATH", os.path.expanduser("~/.mem20/store")))
+            from memory import remember, recall
+            
+            # Check ACL by looking at namespace metadata
+            meta_results = recall(topic="namespace_meta", k=10)
+            namespace_meta = next((r for r in meta_results if namespace in r.get('content', '')), None)
+            
+            # Simple ACL check - in production would be more sophisticated
+            if namespace_meta:
+                import json
+                try:
+                    acl_str = namespace_meta.get('content', '').split('ACL: ')[-1]
+                    acl = json.loads(acl_str.replace("'", '"'))
+                    if actor not in acl and '*' not in acl:
+                        return f"Access denied: {actor} not in ACL for namespace {namespace}"
+                except:
+                    pass  # No ACL or parse error - allow
+            
+            remember(
+                topic=f"namespace_{namespace}",
+                content=content,
+                tags=tags + ["shared", namespace, f"actor_{actor}"]
+            )
+            
+            return f"✅ Stored in shared namespace: {namespace}\nActor: {actor}\nTags: {tags}"
+>>>>>>> Stashed changes
         except Exception as e:
             return f"Error storing in shared memory: {str(e)}"
     async def _memory_shared_recall(self, args: Dict) -> str:
@@ -1876,6 +2156,7 @@ class MemoryToolsMixin:
         try:
             sys.path.insert(0, os.environ.get("MEM20_STORE_PATH", os.path.expanduser("~/.mem20/store")))
             from memory import recall
+<<<<<<< Updated upstream
 
             allowed, reason, _ = _namespace_access(namespace, actor, "read", recall)
             if not allowed:
@@ -1886,12 +2167,28 @@ class MemoryToolsMixin:
             if not results:
                 return f"No memories found in namespace: {namespace}"
 
+=======
+            
+            results = recall(topic=f"namespace_{namespace}", k=k)
+            
+            if not results:
+                return f"No memories found in namespace: {namespace}"
+            
+>>>>>>> Stashed changes
             # Filter by query
             filtered = [r for r in results if query.lower() in r.get('content', '').lower()]
             
             output = f"**Shared Recall: '{query}' from {namespace}** (actor: {actor})\n\n"
             for r in filtered[:k]:
+<<<<<<< Updated upstream
                 output += _fact_line(r)
+=======
+                ts = r.get('ts', '')[:19]
+                topic = r.get('topic', '-')
+                pri = r.get('priority', '-')
+                content = r.get('content', '')[:500]
+                output += f"[{ts}] {topic} (pri={pri})\n   {content}\n\n"
+>>>>>>> Stashed changes
             return output
         except Exception as e:
             return f"Error recalling from shared memory: {str(e)}"
@@ -1931,11 +2228,15 @@ class MemoryToolsMixin:
                     topic="quarantine",
                     content=f"Quarantined content (PII detected): {content}",
                     tags=["quarantine", "pii", "auto"],
+<<<<<<< Updated upstream
                     priority="high",
                     # A detector's verdict about submitted text. Observed as a
                     # detection, and deliberately not trusted as a fact: it is
                     # parked in quarantine precisely because it is unverified.
                     epistemic_status="unlabeled"
+=======
+                    priority="high"
+>>>>>>> Stashed changes
                 )
                 output += "\n⚠️ Content quarantined in memory."
             
@@ -1946,6 +2247,7 @@ class MemoryToolsMixin:
         capabilities = args.get("capabilities", [])
         values = args.get("values", [])
         identity = args.get("identity", "")
+<<<<<<< Updated upstream
         actor = args.get("actor", "") or _slugify_identity(identity or "agent")
 
         if not identity:
@@ -2048,6 +2350,45 @@ class MemoryToolsMixin:
                            f"  last written: {latest.get('created')}\n"
                            f"  written by: {latest.get('actor') or 'unknown (legacy record)'}\n"
                            f"  legacy records: {sum(1 for e in entries if e.get('legacy'))}\n\n")
+=======
+
+        try:
+            sys.path.insert(0, os.environ.get("MEM20_STORE_PATH", os.path.expanduser("~/.mem20/store")))
+            from memory import remember
+            
+            model_data = {
+                "capabilities": capabilities,
+                "values": values,
+                "identity": identity,
+                "created": __import__('datetime').datetime.now().isoformat()
+            }
+            
+            remember(
+                topic="self_model",
+                content=f"Self-Model: {model_data}",
+                tags=["self_model", "identity", "core"],
+                priority="high"
+            )
+            
+            return f"✅ Self-model created/updated\nCapabilities: {len(capabilities)}\nValues: {len(values)}\nIdentity: {identity[:100] if identity else 'Not set'}"
+        except Exception as e:
+            return f"Error creating self-model: {str(e)}"
+    async def _self_model_get(self, args: Dict) -> str:
+        try:
+            sys.path.insert(0, os.environ.get("MEM20_STORE_PATH", os.path.expanduser("~/.mem20/store")))
+            from memory import recall
+            
+            results = recall(topic="self_model", k=5)
+            
+            if not results:
+                return "No self-model found. Create one first."
+            
+            output = "**Self-Model**\n\n"
+            for r in results:
+                ts = r.get('ts', '')[:19]
+                content = r.get('content', '')
+                output += f"[{ts}] {content}\n\n"
+>>>>>>> Stashed changes
             return output
         except Exception as e:
             return f"Error getting self-model: {str(e)}"
@@ -2057,6 +2398,7 @@ class MemoryToolsMixin:
         try:
             sys.path.insert(0, os.environ.get("MEM20_STORE_PATH", os.path.expanduser("~/.mem20/store")))
             from memory import recall, self_audit
+<<<<<<< Updated upstream
 
             target = args.get("identity", "")
             if not target:
@@ -2088,6 +2430,21 @@ class MemoryToolsMixin:
 
             output = f"**Self-Model Reflection** (focus: {focus})\n\n"
             output += f"Identity under reflection: {target or 'none registered'}\n\n"
+=======
+            
+            # Get self-model
+            model_results = recall(topic="self_model", k=1)
+            model_content = model_results[0].get('content', '') if model_results else "No self-model"
+            
+            # Run self-audit
+            audit = self_audit(topic="self_model")
+            
+            # Get capabilities from memory
+            cap_results = recall(topic=None, k=20)
+            cap_facts = [r for r in cap_results if 'capab' in r.get('content', '').lower()]
+            
+            output = f"**Self-Model Reflection** (focus: {focus})\n\n"
+>>>>>>> Stashed changes
             output += f"Current Model:\n{model_content}\n\n"
             output += f"Self-Audit:\n"
             for k, v in audit.items():
@@ -2255,11 +2612,17 @@ class MemoryToolsMixin:
             sys.path.insert(0, os.environ.get("MEM20_STORE_PATH", os.path.expanduser("~/.mem20/store")))
             from memory import remember, _append_ledger
             
+<<<<<<< Updated upstream
             # Store feedback as a remember event. A trust rating is an observation of
             # what a user reported, not a claim about the rated fact itself.
             feedback_content = f"Feedback for fact {fact_id}: {action}"
             remember(topic="feedback", content=feedback_content, tags=[str(fact_id), action],
                      priority="high", epistemic_status="observed")
+=======
+            # Store feedback as a remember event
+            feedback_content = f"Feedback for fact {fact_id}: {action}"
+            remember(topic="feedback", content=feedback_content, tags=[str(fact_id), action], priority="high")
+>>>>>>> Stashed changes
             
             return f"Feedback recorded: {action} for fact {fact_id}"
         except Exception as e:

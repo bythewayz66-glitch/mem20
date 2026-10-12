@@ -31,7 +31,7 @@ def store_path(tmp_path):
     d.mkdir()
     with open_store(d) as s:
         for topic, content, tags in FACTS:
-            s.remember(topic, content, tags=tags)
+            s.remember(topic, content, tags=tags, epistemic_status="observed")
     return d
 
 
@@ -55,9 +55,9 @@ def test_two_stores_do_not_leak_into_each_other(tmp_path):
     a.mkdir()
     b.mkdir()
     with open_store(a) as sa:
-        sa.remember("t", "alpha fact", tags=["x"])
+        sa.remember("t", "alpha fact", tags=["x"], epistemic_status="observed")
     with open_store(b) as sb:
-        sb.remember("t", "beta fact", tags=["x"])
+        sb.remember("t", "beta fact", tags=["x"], epistemic_status="observed")
 
     with open_store(a) as sa:
         contents = {r["content"] for r in sa.recall(k=50)}
@@ -193,7 +193,8 @@ def test_entities_are_ranked_by_connectivity(store_path):
 def test_recall_at_is_point_in_time(store_path):
     with open_store(store_path) as s:
         first = s.recall(k=1)[0]["ts"]
-        s.remember("deploys", "Prod moved to build 4200", tags=["prod"])
+        s.remember("deploys", "Prod moved to build 4200", tags=["prod"],
+                   epistemic_status="observed")
         past = s.recall_at(first, k=50)
         assert all(r["ts"] <= first for r in past)
 

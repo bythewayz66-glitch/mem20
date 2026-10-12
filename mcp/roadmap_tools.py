@@ -13,7 +13,13 @@ import time
 from pathlib import Path
 from typing import Any, Dict, List, Optional
 
-import mcp_types as mt
+try:
+    from mcp.server import Server
+    from mcp.server.lowlevel.server import ServerRequestContext
+    import mcp_types as mt
+except ImportError:
+    print("Error: mcp package not installed. Please install with: pip install mcp")
+    sys.exit(1)
 
 sys.path.insert(0, os.environ.get("MEM20_STORE_PATH", os.path.expanduser("~/.mem20/store")))
 try:
@@ -29,7 +35,7 @@ class RoadmapToolsMixin:
             name="roadmap_create",
             title="Create Roadmap",
             description="Create a new roadmap in mem20",
-            input_schema={
+            inputSchema={
                 "type": "object",
                 "properties": {
                     "name": {"type": "string", "description": "Roadmap name"},
@@ -43,13 +49,13 @@ class RoadmapToolsMixin:
             name="roadmap_list",
             title="List Roadmaps",
             description="List all roadmaps in mem20",
-            input_schema={"type": "object", "properties": {}},
+            inputSchema={"type": "object", "properties": {}},
         )
         self.tools["roadmap_get"] = mt.Tool(
             name="roadmap_get",
             title="Get Roadmap",
             description="Get details of a specific roadmap",
-            input_schema={
+            inputSchema={
                 "type": "object",
                 "properties": {
                     "name": {"type": "string", "description": "Roadmap name"},
@@ -61,7 +67,7 @@ class RoadmapToolsMixin:
             name="roadmap_update_phase",
             title="Update Roadmap Phase",
             description="Update a roadmap phase status",
-            input_schema={
+            inputSchema={
                 "type": "object",
                 "properties": {
                     "roadmap": {"type": "string", "description": "Roadmap name"},

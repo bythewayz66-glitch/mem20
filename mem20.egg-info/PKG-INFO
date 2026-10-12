@@ -183,6 +183,7 @@ python3 -m venv .venv
 MEM20_STORE_PATH=~/.mem20/store .venv/bin/python mcp/mcp_server.py
 ```
 
+<<<<<<< Updated upstream
 ### Install on Penguin Linux (ChromeOS Crostini)
 
 Penguin Linux is Debian-based — the standard systemd install works perfectly:
@@ -211,6 +212,8 @@ MEM20_STORE_PATH=/opt/mem20/store /opt/mem20/.venv/bin/python /opt/mem20/mcp/mcp
 
 **Note:** Penguin Linux has systemd, so the default install (without `--no-systemd`) is recommended. The service runs on port 8080.
 
+=======
+>>>>>>> Stashed changes
 ### Install with systemd (recommended for always-on)
 
 ```bash

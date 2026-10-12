@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-07T05:13:30-0600",
+  "generated_at": "2026-10-11T18:25:06-0600",
   "root": "/opt/mem20",
   "root_files": [
     ".gitignore",
@@ -29,6 +29,8 @@
     "mem20_pathfix.py",
     "mem20path.py",
     "memory.db",
+    "memory.db-shm",
+    "memory.db-wal",
     "memory.py",
     "memory.py.broken",
     "metrics_collector.py",
@@ -60,7 +62,7 @@
     "/opt/mem20",
     "/sb"
   ],
-  "scan_seconds": 2.28,
+  "scan_seconds": 4.88,
   "schema": "mem20-sitemap-v1",
   "subsystems": [
     {
@@ -93,6 +95,39 @@
       "subdirs": [
         "adr",
         "human_package"
+      ],
+      "test_files": 0,
+      "version": null
+    },
+    {
+      "bytes": 17135,
+      "category": "other",
+      "code_lines": 0,
+      "dependencies": [],
+      "description": "",
+      "dir": "benchmarks",
+      "docs": [],
+      "entry_points": {},
+      "file_count": 2,
+      "keywords": [],
+      "languages": {
+        "json": 1,
+        "markdown": 1
+      },
+      "license": null,
+      "line_count": 714,
+      "lines_by_language": {
+        "json": 660,
+        "markdown": 54
+      },
+      "modules": [],
+      "name": "benchmarks",
+      "packaged": false,
+      "readme_summary": "",
+      "readme_text": "",
+      "requires_python": null,
+      "subdirs": [
+        "results"
       ],
       "test_files": 0,
       "version": null
@@ -1773,35 +1808,54 @@
       "version": null
     },
     {
-      "bytes": 11889,
+      "bytes": 27754,
       "category": "organ",
-      "code_lines": 237,
+      "code_lines": 469,
       "dependencies": [],
-      "description": "",
+      "description": "Stable Python API over the mem20 memory engine: bind a store, read and write through one object, and get index-health and contamination diagnostics with every retrieval result.",
       "dir": "mem20api",
-      "docs": [],
-      "entry_points": {},
-      "file_count": 1,
-      "keywords": [],
-      "languages": {
-        "python": 1
+      "docs": [
+        "mem20api/README.md"
+      ],
+      "entry_points": {
+        "mem20-api-health": "mem20api.cli:main"
       },
-      "license": null,
-      "line_count": 237,
+      "file_count": 5,
+      "keywords": [
+        "mem20",
+        "memory",
+        "retrieval",
+        "api",
+        "grounded",
+        "simulated"
+      ],
+      "languages": {
+        "markdown": 1,
+        "python": 3,
+        "toml": 1
+      },
+      "license": "MIT",
+      "line_count": 593,
       "lines_by_language": {
-        "python": 237
+        "markdown": 96,
+        "python": 469,
+        "toml": 28
       },
       "modules": [
-        "mem20api"
+        "__init__",
+        "api",
+        "cli"
       ],
       "name": "mem20api",
-      "packaged": false,
-      "readme_summary": "",
-      "readme_text": "",
-      "requires_python": null,
-      "subdirs": [],
+      "packaged": true,
+      "readme_summary": "mem20api",
+      "readme_text": "# mem20api\n\na stable python api over the mem20 memory engine.\n\n## why this exists\n\nthe engine (`memory_engine/memory.py`) resolves every store path at import time:\n\n```python\nstore_dir = os.environ.get(\"mem20_store_path\") or os.path.expanduser(\"~/.mem20/store\")\nledger = os.path.join(store_dir, \"ledger.jsonl\")\n```\n\ncallers therefore had to reassign a dozen module globals before every operation, and the mcp handlers were running `sys.path.insert(...)` plus a fresh `from memory import ...` inside each query. that is a lot of machinery to answer \"what is in my memory\".\n\nthis package is the supported way in.\n\n## install\n\n```bash\npip install -e /opt/mem20/mem20api\n```\n\nretrieval extras are optional. without them `health()` reports that vector and bm25 are unavailable rather than pretending they ran:\n\n```bash\npip install -e '/opt/mem20/mem20api[retrieval]'\n```\n\n## use\n\n```python\nfrom mem20api import open_store\n\nwith open_store() as store:                 # $mem20_store_path, else ~/.mem20/store\n    store.remember(\"deploys\", \"prod runs build 4127\", tags=[\"prod\"])\n\n    r = store.semantic(\"what build is prod on\", k=5)\n    r[\"hits\"]          # results\n    r[\"healthy\"]       # false if the index drifted from the ledger\n    r[\"diagnostic\"]    # exactly how many stale pointers exist\n\n    store.graph(\"prod\", hops=2)\n    store.health()\n```\n\n## what it guarantees\n\n**reads never write.** `recall`, `semantic`, `hybrid`, `graph`, `health`, `contamination`, `stats`, and `entities` do not touch stored data. `rebuild()` rewrites derived indexes but never the ledger.\n\n**retrieval reports its own reliability.** every result carries a diagnostic:\n\n```python\nr[\"diagnostic\"]\n# {'index': 'vector', 'indexed': 2705, 'resolvable': 379,\n#  'missing_from_ledger': 2326, 'healthy': false, ...}\n```\n\nthat field exists because of a real defect. semantic retrieval on this\nrepository's live store returned **zero results and reported success**: the\nfaiss index held 2,681 vectors against 371 ledger records, and every stale\nentry was found by the search and then silently dropped when its content could\nnot be resolved. nothing distinguished \"nothing matches\" from \"your index is\nstale\".\n\n**hybrid search says which halves ran:**\n\n```python\nstore.hybrid(\"query\")[\"degraded_to\"]   # 'both' | 'bm25_only' | 'vector_only' | 'neither'\n```\n\na missing vector index previously degraded hybrid to keyword-only with no\nsignal at all.\n\n**graph traversal says when it has nothing.** it returns `found: false` with a\nreason, not an empty list.\n\n**simulated content stays separate.** `remember_simulated` writes to a\ndifferent ledger that is never indexed. `promote` requires evidence.\n\n## api\n\n| method | kind | notes |\n|---|---|---|\n| `health()` | read | index/ledger agreement. `healthy` is false if anything drifted |\n| `contamination()` | read | grounded/simulated audit. clean store reports `0.0` |\n| `recall(topic, tags, k)` | read | reverse-chronological |\n| `recall_at(as_of)` | read | point-in-time |\n| `semantic(query, k, strict)` | read | vector. `strict=true` raises `indexdrifterror` |\n| `hybrid(query, k, alpha)` | read | rrf fusion + optional rerank |\n| `graph(entity, hops)` | read | multi-hop entity traversal |\n| `entities(limit)` | read | known entities, most connected first |\n| `remember(topic, content, tags)` | **write** | grounded only |\n| `remember_simulated(topic, content)` | **write** | simulated partition |\n| `supersede(old_id, new)` | **write** | marks the old fact superseded |\n| `promote(sim_id, confirmation)` | **write** | refuses without evidence |\n| `rebuild(which)` | derived | reindexes; never touches the ledger |\n| `stats()` / `export(dest)` | read | counts; ledger export |\n\n## cli\n\n```bash\nmem20-api-health health          # exits 1 if drifted\nmem20-api-health rebuild         # reindex from the ledger\nmem20-api-health contamination   # exits 1 if contamination_rate != 0\nmem20-api-health stats\nmem20-api-health query \"what build is prod on\" --mode hybrid\nmem20-api-health query unity --mode graph -k 2\n```\n\n## a note on module resolution\n\n`/opt/mem20` contains **two** `memory.py`: the repo root one and the engine at\n`memory_engine/memory.py`. under the repo's pytest configuration the root is\nremoved from `sys.path` while every project directory is added, so a bare\n`import memory` can resolve to the wrong file \u2014 one that has none of the\nretrieval api.\n\n`open_store()` therefore verifies the module it loaded actually has the api it\nis about to call, and raises `enginenotfound` naming the file if not. that turns\na confusing `attributeerror` deep in a traceback into an immediate, accurate\nerror.\n\n## tests\n\n```bash\ncd /opt/mem20 && pytest tests/test_memory_api.py\n```\n\ncovers binding, cross-store isolation, read-only guarantees, drift detection,\nsimulated/grounded separation, and export.",
+      "requires_python": ">=3.10",
+      "subdirs": [
+        "mem20api"
+      ],
       "test_files": 0,
-      "version": null
+      "version": "0.1.0"
     },
     {
       "bytes": 29504,
@@ -2779,6 +2833,61 @@
       ],
       "test_files": 0,
       "version": "1.0.0"
+    },
+    {
+      "bytes": 51665,
+      "category": "organ",
+      "code_lines": 984,
+      "dependencies": [
+        "mem20api>=0.1.0"
+      ],
+      "description": "mem20 retrieval benchmarks \u2014 quality, latency, and trustworthiness metrics, with an explicit statement of what the numbers are and are not comparable to.",
+      "dir": "mem20benchmarkz",
+      "docs": [
+        "mem20benchmarkz/README.md"
+      ],
+      "entry_points": {
+        "mem20benchmarkz": "mem20benchmarkz.cli:main"
+      },
+      "file_count": 8,
+      "keywords": [
+        "mem20",
+        "benchmark",
+        "retrieval",
+        "memory",
+        "trustworthiness"
+      ],
+      "languages": {
+        "markdown": 1,
+        "python": 6,
+        "toml": 1
+      },
+      "license": "MIT",
+      "line_count": 1096,
+      "lines_by_language": {
+        "markdown": 86,
+        "python": 984,
+        "toml": 26
+      },
+      "modules": [
+        "__init__",
+        "__main__",
+        "bench",
+        "cli",
+        "corpus",
+        "test_benchmark"
+      ],
+      "name": "mem20benchmarkz",
+      "packaged": true,
+      "readme_summary": "mem20benchmarkz",
+      "readme_text": "# mem20benchmarkz\n\nretrieval benchmarks for the mem20 memory engine, on the axis mem20 actually\nclaims to be differentiated on.\n\n## why this exists\n\nmem0 reports locomo 92.5 and longmemeval 94.4. zep reports dmr 94.8%. mem20\npublished nothing. an unmeasured differentiator is indistinguishable from\nmarketing, and one competitor publishes a comparison table.\n\n## what it measures, in priority order\n\n**1. trustworthiness.** the axis nobody else publishes.\n\n| check | meaning |\n|---|---|\n| `contamination_rate` | simulated records found in the grounded store or its indexes. must be `0.0` |\n| `stale_pointer_rate` | fraction of index entries pointing at records that no longer exist |\n| `degraded_to` | which halves of a hybrid search actually ran |\n| `all_reported_healthy` | whether retrieval reported its own drift |\n\n**2. retrieval quality.** hit rate and mrr, broken out per query kind \u2014\n`direct`, `multi_hop`, `adversarial`. a single average hides the fact that\nkeyword search handles direct queries and nothing else.\n\n**3. latency.** p50/p95/p99 per mode, after warm-up. a cold-start number is not\na latency number.\n\n## scope of the claim\n\n**these numbers are not comparable to anyone else's.** the corpus is\n`mem20-agent-kb-v1`: 14 grounded facts, 3 simulated, 13 queries. locomo and\nlongmemeval are fixed public datasets with published ground truth; zep's dmr is\nrun on zep's own data. two of the three are private or vendor-defined, so their\nnumbers cannot be reproduced or refuted from outside.\n\na small corpus is a deliberate trade. it is large enough to catch the regression\nthis suite was written to catch, and small enough that anyone can read all 14\nfacts and check the scoring by hand. it is a regression gate, not a leaderboard.\nclaiming parity with a published locomo score off this corpus would be the exact\nkind of unearned claim the trust metrics exist to prevent.\n\n## the corpus\n\nfacts are grouped into sessions that mimic how an agent accumulates knowledge:\na decision, the reason behind it, a constraint, a follow-up. queries come in\nthree kinds:\n\n- **`direct`** \u2014 one fact, paraphrased. keyword search should handle these.\n- **`multi_hop`** \u2014 requires joining two facts from *different* sessions.\n  keyword search cannot answer these; this is where vector retrieval earns its\n  place.\n- **`adversarial`** \u2014 the answer was deliberately recorded as *simulated*. a\n  correct grounded system must not return it.\n\nadversarial queries are near-duplicates of real ones on purpose. \"did prod\nmigrate to build 4200\" *should* be answered from the grounded \"prod runs build\n4127\". returning that is correct. returning the simulated \"zephyra is a real\ncity\" is the failure. the leak metric tests for the simulated text specifically\n\u2014 an earlier version flagged any non-empty result as a leak and reported\n`leak_rate: 1.000` on a store whose contamination was measurably `0.0`.\n\n## running it\n\n```bash\nmem20benchmarkz run --out benchmarks/results   # full suite, isolated store\nmem20benchmarkz drift                         # prove drift diagnostics fire\nmem20benchmarkz render benchmarks/results      # re-render from latest.json\n```\n\nevery command seeds a temporary store, so a benchmark run cannot touch live\ndata. the corpus is written through the real `remember` path, not appended to\nthe ledger directly, because the indexes, the graph, and the contamination tags\nare all built by `remember` \u2014 bypassing them would benchmark a store state the\nsystem cannot produce.\n\n`run` refuses to publish if the freshly-seeded store is unhealthy. a number\nproduced from a stale index measures the index, not the retriever.\n\n`drift` truncates a ledger mid-run and asserts the diagnostics fire. a\ntrustworthiness claim never demonstrated under failure is just a number.\n\n## what came out of it\n\nreranking was invisible and expensive. hybrid retrieval ran at **182 ms p50**\nagainst **17.6 ms** for the vector half, because the cross-encoder loads a second\ntransformer and scores every candidate pair. measuring it produced two results:\n\n1. a `mem20_rerank=0` opt-out, so the trade can be made deliberately.\n2. evidence that reranking buys **direct-query ranking** (mrr 1.000 vs 0.900)\n   but not multi-hop recall (0.640 vs 0.800 \u2014 it was *worse*). with reranking\n   off, hybrid runs at **18 ms**.\n\n| setting | p50 | direct mrr | multi-hop mrr |\n|---|---:|---:|---:|\n| `mem20_rerank=1` (default) | 173.3 ms | 1.000 | 0.640 |\n| `mem20_rerank=0` | 18.0 ms | 0.900 | 0.800 |\n\n## tests\n\n```bash\ncd /opt/mem20 && pytest mem20benchmarkz/tests\n```\n\nthe harness is tested as carefully as the system, because a benchmark that\ncannot detect a real leak is worse than no benchmark:\n\n- a leak fires when simulated content is returned\n- an honest grounded hit is **not** flagged as a leak\n- leakage markers never collide with grounded fact text\n- percentiles are correct\n- the runner reports an unhealthy store rather than scoring it\n- the rerank comparison terminates and restores the engine flag",
+      "requires_python": ">=3.10",
+      "subdirs": [
+        "mem20benchmarkz",
+        "tests"
+      ],
+      "test_files": 1,
+      "version": "0.1.0"
     },
     {
       "bytes": 4466,
@@ -14411,32 +14520,33 @@
       "version": "0.2.0"
     },
     {
-      "bytes": 189046,
+      "bytes": 206364,
       "category": "service",
-      "code_lines": 3878,
+      "code_lines": 4176,
       "dependencies": [],
       "description": "",
       "dir": "memory_engine",
       "docs": [],
       "entry_points": {},
-      "file_count": 8,
+      "file_count": 9,
       "keywords": [],
       "languages": {
         "jsonl": 1,
         "markdown": 1,
-        "python": 6
+        "python": 7
       },
       "license": null,
-      "line_count": 3889,
+      "line_count": 4187,
       "lines_by_language": {
         "jsonl": 2,
         "markdown": 9,
-        "python": 3878
+        "python": 4176
       },
       "modules": [
         "__init__",
         "memory",
         "test_event_time_provenance",
+        "test_fact_fiction_labeling",
         "test_grounded_firewall",
         "test_pii_non_destructive",
         "test_recall_at_bitemporal"
@@ -14449,7 +14559,7 @@
       "subdirs": [
         "tests"
       ],
-      "test_files": 4,
+      "test_files": 5,
       "version": null
     },
     {
@@ -14517,6 +14627,54 @@
       "version": null
     },
     {
+      "bytes": 628815,
+      "category": "other",
+      "code_lines": 3570,
+      "dependencies": [],
+      "description": "",
+      "dir": "plans",
+      "docs": [],
+      "entry_points": {},
+      "file_count": 14,
+      "keywords": [],
+      "languages": {
+        "json": 1,
+        "markdown": 1,
+        "python": 12
+      },
+      "license": null,
+      "line_count": 9663,
+      "lines_by_language": {
+        "json": 3212,
+        "markdown": 2881,
+        "python": 3570
+      },
+      "modules": [
+        "build_master",
+        "plans_data_a",
+        "plans_data_b",
+        "plans_data_c",
+        "plans_data_d",
+        "plans_extra",
+        "plans_extra2",
+        "plans_extra3",
+        "plans_extra4",
+        "plans_extra5",
+        "plans_extra6",
+        "plans_extra7"
+      ],
+      "name": "plans",
+      "packaged": false,
+      "readme_summary": "",
+      "readme_text": "",
+      "requires_python": null,
+      "subdirs": [
+        "master"
+      ],
+      "test_files": 0,
+      "version": null
+    },
+    {
       "bytes": 43965,
       "category": "service",
       "code_lines": 861,
@@ -14558,7 +14716,7 @@
       "version": null
     },
     {
-      "bytes": 466160,
+      "bytes": 468956,
       "category": "service",
       "code_lines": 0,
       "dependencies": [],
@@ -14568,16 +14726,16 @@
         "roadmaps/README.md"
       ],
       "entry_points": {},
-      "file_count": 53,
+      "file_count": 54,
       "keywords": [],
       "languages": {
-        "json": 45,
+        "json": 46,
         "markdown": 8
       },
       "license": null,
-      "line_count": 6533,
+      "line_count": 6588,
       "lines_by_language": {
-        "json": 2696,
+        "json": 2751,
         "markdown": 3837
       },
       "modules": [],
@@ -14593,7 +14751,7 @@
       "version": null
     },
     {
-      "bytes": 15475547,
+      "bytes": 16935983,
       "category": "service",
       "code_lines": 0,
       "dependencies": [],
@@ -14601,16 +14759,16 @@
       "dir": "store",
       "docs": [],
       "entry_points": {},
-      "file_count": 420,
+      "file_count": 529,
       "keywords": [],
       "languages": {
-        "json": 407,
+        "json": 516,
         "markdown": 13
       },
       "license": null,
-      "line_count": 159935,
+      "line_count": 173132,
       "lines_by_language": {
-        "json": 159035,
+        "json": 172232,
         "markdown": 900
       },
       "modules": [],
@@ -14667,9 +14825,9 @@
       "version": null
     },
     {
-      "bytes": 68187,
+      "bytes": 68407,
       "category": "other",
-      "code_lines": 1507,
+      "code_lines": 1510,
       "dependencies": [],
       "description": "",
       "dir": "tests",
@@ -14681,9 +14839,9 @@
         "python": 12
       },
       "license": null,
-      "line_count": 1507,
+      "line_count": 1510,
       "lines_by_language": {
-        "python": 1507
+        "python": 1510
       },
       "modules": [
         "conftest",
@@ -14889,12 +15047,12 @@
   ],
   "totals": {
     "categories": {
-      "organ": 301,
-      "other": 9,
+      "organ": 302,
+      "other": 11,
       "service": 17
     },
-    "code_lines": 470778,
-    "files": 9059,
+    "code_lines": 475865,
+    "files": 9198,
     "languages": {
       "c": 1,
       "cpp": 39,
@@ -14902,21 +15060,21 @@
       "css": 11,
       "html": 20,
       "javascript": 62,
-      "json": 4851,
+      "json": 4963,
       "jsonl": 13,
       "make": 3,
-      "markdown": 1319,
+      "markdown": 1323,
       "other": 19,
-      "python": 1799,
+      "python": 1820,
       "rust": 74,
       "shell": 14,
       "svg": 3,
-      "toml": 175,
+      "toml": 177,
       "typescript": 512,
       "xml": 2,
       "yaml": 92
     },
-    "lines": 1391090,
-    "subsystems": 327
+    "lines": 1416472,
+    "subsystems": 330
   }
 }

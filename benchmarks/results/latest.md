@@ -9,25 +9,25 @@ Corpus `mem20-agent-kb-v1` — 14 grounded facts, 3 simulated facts, 13 queries.
 
 | Mode | Query kind | n | Hit rate | MRR | Leak rate | p50 ms |
 |---|---|---:|---:|---:|---:|---:|
-| `graph` | multi_hop | 2 | 1.000 | 1.000 | 0.000 | 0.8 |
-| `hybrid` | adversarial | 3 | 0.000 | 0.000 | 0.000 | 196.7 |
-| `hybrid` | direct | 5 | 1.000 | 1.000 | 0.000 | 167.5 |
-| `hybrid` | multi_hop | 5 | 0.800 | 0.640 | 0.000 | 205.1 |
-| `keyword` | adversarial | 3 | 0.000 | 0.000 | 0.000 | 160.2 |
-| `keyword` | direct | 5 | 1.000 | 1.000 | 0.000 | 175.2 |
-| `keyword` | multi_hop | 5 | 0.800 | 0.640 | 0.000 | 193.7 |
-| `semantic` | adversarial | 3 | 0.000 | 0.000 | 0.000 | 20.7 |
-| `semantic` | direct | 5 | 1.000 | 0.900 | 0.000 | 17.2 |
-| `semantic` | multi_hop | 5 | 0.800 | 0.800 | 0.000 | 20.4 |
+| `graph` | multi_hop | 2 | 1.000 | 1.000 | 0.000 | 0.6 |
+| `hybrid` | adversarial | 3 | 0.000 | 0.000 | 0.000 | 102.0 |
+| `hybrid` | direct | 5 | 1.000 | 1.000 | 0.000 | 108.0 |
+| `hybrid` | multi_hop | 5 | 0.800 | 0.640 | 0.000 | 105.1 |
+| `keyword` | adversarial | 3 | 0.000 | 0.000 | 0.000 | 110.7 |
+| `keyword` | direct | 5 | 1.000 | 1.000 | 0.000 | 103.3 |
+| `keyword` | multi_hop | 5 | 0.800 | 0.640 | 0.000 | 104.4 |
+| `semantic` | adversarial | 3 | 0.000 | 0.000 | 0.000 | 12.3 |
+| `semantic` | direct | 5 | 1.000 | 0.900 | 0.000 | 12.2 |
+| `semantic` | multi_hop | 5 | 0.800 | 0.800 | 0.000 | 11.6 |
 
 ## Latency
 
 | Mode | n | p50 ms | p95 ms | p99 ms | max ms |
 |---|---:|---:|---:|---:|---:|
-| `graph` | 2 | 0.8 | 0.8 | 0.8 | 0.8 |
-| `hybrid` | 13 | 182.4 | 219.3 | 258.6 | 258.6 |
-| `keyword` | 13 | 175.2 | 228.4 | 241.6 | 241.6 |
-| `semantic` | 13 | 17.6 | 26.8 | 32.1 | 32.1 |
+| `graph` | 2 | 0.5 | 0.6 | 0.6 | 0.6 |
+| `hybrid` | 13 | 103.5 | 115.6 | 123.1 | 123.1 |
+| `keyword` | 13 | 105.0 | 126.3 | 138.9 | 138.9 |
+| `semantic` | 13 | 12.2 | 15.1 | 15.4 | 15.4 |
 
 ## Trustworthiness
 
@@ -39,8 +39,8 @@ Cross-encoder reranking is why hybrid is ~10x slower than the vector half alone.
 
 | Setting | p50 ms | direct MRR | multi-hop MRR |
 |---|---:|---:|---:|
-| `MEM20_RERANK=1` (default) | 173.3 | 1.000 | 0.640 |
-| `MEM20_RERANK=0` | 18.0 | 0.900 | 0.800 |
+| `MEM20_RERANK=1` (default) | 101.4 | 1.000 | 0.640 |
+| `MEM20_RERANK=0` | 15.7 | 0.900 | 0.800 |
 
 Reranking improves direct-query ranking and costs an order of magnitude in latency. An agent doing many lookups is usually better off with it off.
 
@@ -57,7 +57,7 @@ Reranking improves direct-query ranking and costs an order of magnitude in laten
 
 ## Environment
 
-- Python 3.14.6 on Linux-7.0.12+kali-amd64-x86_64-with-glibc2.42 (x86_64)
+- Python 3.14.6 on Linux-7.0.12+kali-amd64-x86_64-with-glibc2.43 (x86_64)
 - Embedding model: `sentence-transformers/all-MiniLM-L6-v2` (384-dim)
 - Vector deps available: True; BM25: True; cross-encoder: True
 

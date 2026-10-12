@@ -76,6 +76,21 @@ for _name, _module in list(sys.modules.items()):
         if _file is None and getattr(_module, "__path__", None) is not None:
             del sys.modules[_name]
 
+# 3b. Re-import the INSTALLED mcp SDK and pre-bind it.
+#     /opt/mem20/mcp is a project directory in this estate, so it lands on
+#     sys.path during pytest's collection walk and matches `import mcp` as a
+#     namespace package. That name collision then shadows the real SDK, and
+#     mcp/memory_tools.py responds to the resulting ImportError by calling
+#     sys.exit(1) - which aborts the entire session rather than skipping one
+#     test. Binding the installed SDK here, while sys.path is still clean, makes
+#     the later `import mcp` a cache hit so the shadow can never win.
+try:
+    import mcp as _real_mcp
+    if getattr(_real_mcp, "__file__", None) is None:
+        raise ImportError("mcp resolved to a namespace package, not the SDK")
+except ImportError:
+    pass  # SDK genuinely absent: the mcp suite cannot run here, say so per-test.
+
 # 4. Proactively import each real package so collection cannot shadow it.
 #    Binding the real module into sys.modules first turns the later
 #    `import mem20x` into a cache hit, so a bare namespace portion (no

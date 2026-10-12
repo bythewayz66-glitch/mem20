@@ -58,7 +58,10 @@ FACTS = [
 
 def _seed():
     for topic, content, tags in FACTS:
-        M.remember(topic, content, tags=tags)
+        # These fixtures are directly-asserted facts about the graph's own
+        # behaviour, so 'observed' is the honest label. The engine refuses an
+        # undeclared epistemic_status.
+        M.remember(topic, content, tags=tags, epistemic_status="observed")
 
 
 # --- index health -------------------------------------------------------

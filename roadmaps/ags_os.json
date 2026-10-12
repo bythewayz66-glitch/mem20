@@ -1,94 +1,70 @@
 {
   "name": "ags_os",
-  "description": "Autonomous Game Studio OS (AGS-OS): 300 Hermes workers, Box A creation / Box B adversarial validation, SQLite ToT substrate, Quest 3/Unity target. Design review completed \u2014 NOT YET APPROVED TO BUILD. FUTURE: Phase 8: Worker orchestration layer (task distribution, load balancing). Phase 9: Content pipeline (asset generation, validation loops). Phase 10: Multi-agent collaboration protocols. Phase 11: Quest 3 deployment and optimization.",
+  "description": "Autonomous Game Studio OS (AGS-OS): 300 mem20agentz workers, Box A creation / Box B adversarial validation, SQLite ToT substrate, Quest 3/Unity target. Design review completed \u2014 NOT YET APPROVED TO BUILD. FUTURE: Phase 8: Worker orchestration layer (task distribution, load balancing). Phase 9: Content pipeline (asset generation, validation loops). Phase 10: Multi-agent collaboration protocols. Phase 11: Quest 3 deployment and optimization.",
   "phases": [
     {
-      "name": {
-        "name": "Phase 1: Design review and architecture validation",
-        "status": "completed"
-      },
-      "status": "planned",
+      "name": "Phase 1: Design review and architecture validation",
+      "status": "completed",
       "notes": ""
     },
     {
-      "name": {
-        "name": "Phase 2: Schema fix \u2014 05_hermes_router.py queries design_nodes table which 04 kernel never creates",
-        "status": "blocked"
-      },
-      "status": "planned",
+      "name": "Phase 2: Schema fix \u2014 05_hermes_router.py queries design_nodes table which 04 kernel never creates",
+      "status": "blocked",
       "notes": ""
     },
     {
-      "name": {
-        "name": "Phase 3: Box A \u2014 Creation workers (300 Hermes agents)",
-        "status": "planned"
-      },
+      "name": "Phase 3: Box A \u2014 Creation workers (300 mem20agentz workers)",
       "status": "planned",
-      "notes": ""
+      "notes": "",
+      "jobid": "21e685ce-276a-4cb0-97cf-b6be36cc5851"
     },
     {
-      "name": {
-        "name": "Phase 4: Box B \u2014 Adversarial validation workers",
-        "status": "planned"
-      },
+      "name": "Phase 4: Box B \u2014 Adversarial validation workers",
       "status": "planned",
-      "notes": ""
+      "notes": "",
+      "jobid": "2e44642d-93f2-45fa-947a-977ecfbf06f9"
     },
     {
-      "name": {
-        "name": "Phase 5: SQLite ToT substrate implementation",
-        "status": "planned"
-      },
+      "name": "Phase 5: SQLite ToT substrate implementation",
       "status": "planned",
-      "notes": ""
+      "notes": "",
+      "jobid": "5f632009-6c96-4b8b-bce2-d46015fb0c84"
     },
     {
-      "name": {
-        "name": "Phase 6: Quest 3 / Unity target integration",
-        "status": "planned"
-      },
+      "name": "Phase 6: Quest 3 / Unity target integration",
       "status": "planned",
-      "notes": ""
+      "notes": "",
+      "jobid": "3f6b6223-f23f-4916-9073-f36750f38204"
     },
     {
-      "name": {
-        "name": "Phase 7: Full system integration and testing",
-        "status": "planned"
-      },
+      "name": "Phase 7: Full system integration and testing",
       "status": "planned",
-      "notes": ""
+      "notes": "",
+      "jobid": "a46d8670-eb51-4111-834a-9077fcc8b6ec"
     },
     {
-      "name": {
-        "name": "Phase 8: Worker orchestration layer (task distribution, load balancing)",
-        "status": "planned"
-      },
+      "name": "Phase 8: Worker orchestration layer (task distribution, load balancing)",
       "status": "planned",
-      "notes": ""
+      "notes": "",
+      "jobid": "49db6d87-99bc-4c11-97e7-2507a2ad8fc6"
     },
     {
-      "name": {
-        "name": "Phase 9: Content pipeline (asset generation, validation loops)",
-        "status": "planned"
-      },
+      "name": "Phase 9: Content pipeline (asset generation, validation loops)",
       "status": "planned",
-      "notes": ""
+      "notes": "",
+      "jobid": "b747d108-d8a4-439b-970b-459397e40e7e"
     },
     {
-      "name": {
-        "name": "Phase 10: Multi-agent collaboration protocols",
-        "status": "planned"
-      },
+      "name": "Phase 10: Multi-agent collaboration protocols",
       "status": "planned",
-      "notes": ""
+      "notes": "",
+      "jobid": "5e7e59ff-7e61-4b63-b4e2-d6351a14117c"
     },
     {
-      "name": {
-        "name": "Phase 11: Quest 3 deployment and optimization",
-        "status": "planned"
-      },
+      "name": "Phase 11: Quest 3 deployment and optimization",
       "status": "planned",
-      "notes": ""
+      "notes": "",
+      "jobid": "18cc17cf-e992-494e-9595-0eae486d910b"
     }
   ],
   "created": "1788371144.7886407",

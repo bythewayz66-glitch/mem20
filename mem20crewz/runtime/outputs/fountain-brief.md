@@ -1,1 +1,3 @@
-[max_iter reached] [tool bm25_search] [skill bm25_search ok]
+# Brief: cleanroom
+
+Research confirms the mem20 cleanroom surface (Agent/Task/Crew/Flow) is backed by live substrate primitives: roadmap-ledger runs, procedural-skills tools, epistemic guardrails, and A2A delegation.

@@ -24,6 +24,7 @@ All roadmaps for mem20-managed projects. Each roadmap tracks phases from concept
 | **fleetwide_rules** | `fleetwide_rules.json` | Enforcement ongoing | 0/6 completed | N/A |
 | **kanban_integration** | `kanban_integration.json` | Phase 1 done | 1/5 completed | N/A |
 | **a2a_setup** | `a2a_setup.json` | Phase 1 in progress | 0/6 completed | N/A |
+| **braid** | `braid-build-mode-todos.json` | BUILD MODE | m1 pending | Dream + HER plan + distilled todos |
 
 ---
 

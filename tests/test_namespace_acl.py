@@ -22,7 +22,7 @@ def test_unlisted_actor_cannot_read_namespace():
         "namespace": "acl-read", "owner": "owner-a", "acl": {"reader": "read"},
     })
     assert "✅" in call("_memory_shared_store", {
-        "namespace": "acl-read", "content": "quarterly numbers", "actor": "owner-a",
+        "namespace": "acl-read", "content": "quarterly numbers", "actor": "owner-a", "epistemic_status": "observed",
     })
 
     denied = call("_memory_shared_recall", {
@@ -36,7 +36,7 @@ def test_unlisted_actor_cannot_write_namespace():
     call("_memory_namespace_create", {"namespace": "acl-write", "owner": "owner-b", "acl": {}})
 
     denied = call("_memory_shared_store", {
-        "namespace": "acl-write", "content": "injected", "actor": "attacker",
+        "namespace": "acl-write", "content": "injected", "actor": "attacker", "epistemic_status": "observed",
     })
     assert denied.startswith("Access denied"), denied
 
@@ -51,7 +51,7 @@ def test_acl_reader_can_read_but_not_write():
         "namespace": "acl-roles", "owner": "owner-c", "acl": {"reader": "read", "writer": "write"},
     })
     call("_memory_shared_store", {
-        "namespace": "acl-roles", "content": "launch plan", "actor": "writer",
+        "namespace": "acl-roles", "content": "launch plan", "actor": "writer", "epistemic_status": "observed",
     })
 
     read_ok = call("_memory_shared_recall", {
@@ -60,7 +60,7 @@ def test_acl_reader_can_read_but_not_write():
     assert "launch plan" in read_ok, read_ok
 
     write_denied = call("_memory_shared_store", {
-        "namespace": "acl-roles", "content": "reader should not write", "actor": "reader",
+        "namespace": "acl-roles", "content": "reader should not write", "actor": "reader", "epistemic_status": "observed",
     })
     assert write_denied.startswith("Access denied"), write_denied
 
@@ -73,7 +73,7 @@ def test_unknown_namespace_is_denied_fail_closed():
     assert "does not exist" in missing, missing
 
     store_missing = call("_memory_shared_store", {
-        "namespace": "never-created", "content": "sneaky", "actor": "owner-a",
+        "namespace": "never-created", "content": "sneaky", "actor": "owner-a", "epistemic_status": "observed",
     })
     assert store_missing.startswith("Access denied"), store_missing
 
@@ -83,7 +83,7 @@ def test_prefix_namespace_does_not_leak():
         "namespace": "team-1", "owner": "owner-d", "acl": {},
     })
     call("_memory_shared_store", {
-        "namespace": "team-1", "content": "team one secret", "actor": "owner-d",
+        "namespace": "team-1", "content": "team one secret", "actor": "owner-d", "epistemic_status": "observed",
     })
 
     leaked = call("_memory_shared_recall", {
@@ -113,7 +113,7 @@ def test_namespace_recreation_requires_admin():
     assert "✅" in by_owner, by_owner
 
     helper_write = call("_memory_shared_store", {
-        "namespace": "acl-admin", "content": "helper wrote", "actor": "helper",
+        "namespace": "acl-admin", "content": "helper wrote", "actor": "helper", "epistemic_status": "observed",
     })
     assert "✅" in helper_write, helper_write
 
@@ -130,7 +130,7 @@ def test_wildcard_acl_grants_everyone_read():
         "namespace": "acl-open", "owner": "owner-h", "acl": {"*": "read"},
     })
     call("_memory_shared_store", {
-        "namespace": "acl-open", "content": "public note", "actor": "owner-h",
+        "namespace": "acl-open", "content": "public note", "actor": "owner-h", "epistemic_status": "observed",
     })
     anyone = call("_memory_shared_recall", {
         "namespace": "acl-open", "query": "public", "actor": "literally-anyone",
@@ -146,9 +146,10 @@ def test_legacy_metadata_still_enforced():
         content="Namespace: legacy-ns, Owner: legacy-owner, ACL: {'legacy-reader': 'read'}",
         tags=["namespace", "metadata", "legacy-ns"],
         priority="high",
+        epistemic_status="observed",
     )
     call("_memory_shared_store", {
-        "namespace": "legacy-ns", "content": "legacy content", "actor": "legacy-owner",
+        "namespace": "legacy-ns", "content": "legacy content", "actor": "legacy-owner", "epistemic_status": "observed",
     })
 
     allowed = call("_memory_shared_recall", {

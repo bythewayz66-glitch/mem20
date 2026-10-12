@@ -265,9 +265,308 @@ async def apot_reason(problem: str, language: str = "python", complexity: str = 
 
 
 # --------------------------------------------------------------------------
+# Least-to-Most (L2M) — decompose, solve simplest-to-hardest, combine
+# --------------------------------------------------------------------------
+def _clamp_int(value: Any, lo: int, hi: int) -> int:
+    try:
+        return max(lo, min(hi, int(value)))
+    except (TypeError, ValueError):
+        return lo
+
+
+def _extract_json_array(text: str) -> Optional[List[Any]]:
+    """Extract the first balanced top-level JSON array from an LLM reply."""
+    if not text:
+        return None
+    start = text.find("[")
+    if start == -1:
+        return None
+    depth = 0
+    in_str = False
+    esc = False
+    for i in range(start, len(text)):
+        ch = text[i]
+        if in_str:
+            if esc:
+                esc = False
+            elif ch == "\\":
+                esc = True
+            elif ch == '"':
+                in_str = False
+            continue
+        if ch == '"':
+            in_str = True
+        elif ch == "[":
+            depth += 1
+        elif ch == "]":
+            depth -= 1
+            if depth == 0:
+                try:
+                    return json.loads(text[start:i + 1])
+                except json.JSONDecodeError:
+                    return None
+    return None
+
+
+def _split_numbered(text: str) -> list:
+    """Best-effort list split when the LLM replies with numbers instead of JSON."""
+    out = []
+    for ln in (ln.strip() for ln in text.splitlines() if ln.strip()):
+        head = ln[:1]
+        if head.isdigit() or head in ("-", "*", "•"):
+            cleaned = re.sub(r"^\d+[\).:]?\s*[\-•*]?\s*", "", ln).strip()
+            if cleaned and cleaned not in out:
+                out.append(cleaned)
+    return out
+
+
+def _build_least_plan_messages(problem: str, count: int) -> List[Dict]:
+    system = (
+        f"You are mem20's least-to-most decomposition engine. Break the problem into exactly "
+        f"{count} ordered sub-problems, ordered simplest prerequisite to hardest. "
+        'Reply with ONLY a JSON array of strings, e.g. ["sub-problem 1", "sub-problem 2"]. '
+        "Nothing else."
+    )
+    return [{"role": "system", "content": system}, {"role": "user", "content": f"PROBLEM:\n{problem}"}]
+
+
+def _build_least_solve_messages(problem: str, subs: List[str], solved: List[str], idx: int) -> List[Dict]:
+    section = "".join(f"{i + 1}. {s}\n" for i, s in enumerate(subs))
+    solved_block = "\n".join(f"{i + 1}. {r}" for i, r in enumerate(solved)) if solved else "none yet"
+    system = (
+        "You are mem20's least-to-most engine. You are solving a decomposed problem strictly in "
+        "order. Use the already-solved simpler sub-problems as building blocks. Solve ONLY the "
+        f"current sub-problem (#{idx + 1}) now; be concrete and complete."
+    )
+    user = (
+        f"ORIGINAL PROBLEM:\n{problem}\n\n"
+        f"DECOMPOSITION:\n{section}\n"
+        f"ALREADY SOLVED:\n{solved_block}\n\n"
+        f"CURRENT SUB-PROBLEM (#{idx + 1}):\n{subs[idx]}\n\nSolve it."
+    )
+    return [{"role": "system", "content": system}, {"role": "user", "content": user}]
+
+
+def _build_least_combine_messages(problem: str, subs: List[str], solved: List[str]) -> List[Dict]:
+    section = "".join(f"{i + 1}. {s}\n" for i, s in enumerate(subs))
+    solved_block = "\n".join(f"{i + 1}. {r}" for i, r in enumerate(solved))
+    system = (
+        "You are mem20's least-to-most engine. All sub-problems have been solved. Combine them "
+        "into a single coherent, complete answer to the original problem."
+    )
+    user = f"ORIGINAL PROBLEM:\n{problem}\n\nSUB-PROBLEMS AND RESULTS:\n{section}\n{solved_block}\n\nCombine now."
+    return [{"role": "system", "content": system}, {"role": "user", "content": user}]
+
+
+def least_to_most(problem: str, sub_problems: int = 3) -> str:
+    count = _clamp_int(sub_problems, 1, 6)
+    plan = chat(_build_least_plan_messages(problem, count), max_tokens=600)
+    subs = _extract_json_array(plan)
+    if subs and all(isinstance(s, str) and s.strip() for s in subs):
+        subs = [s.strip() for s in subs[:count]]
+    else:
+        subs = _split_numbered(plan)
+    if not subs:
+        subs = [problem]
+    count_final = min(count, len(subs))
+
+    solved = []
+    for idx in range(count_final):
+        solved.append(chat(_build_least_solve_messages(problem, subs, solved, idx), max_tokens=900))
+
+    final = chat(_build_least_combine_messages(problem, subs, solved), max_tokens=1200)
+
+    summary = f"**Least-to-Most Reasoning**\n\n**Problem:** {problem}\n\n**Decomposition:**\n" + \
+        "".join(f"{i + 1}. {s}\n" for i, s in enumerate(subs)) + "\n**Results:**\n" + \
+        "".join(f"{i + 1}. {r}\n" for i, r in enumerate(solved)) + "\n**Final Answer:**\n" + final
+    _store_cognitive("least_to_most", problem, summary)
+    return summary
+
+
+async def aleast_to_most(problem: str, sub_problems: int = 3) -> str:
+    count = _clamp_int(sub_problems, 1, 6)
+    plan = await achat(_build_least_plan_messages(problem, count), max_tokens=600)
+    subs = _extract_json_array(plan)
+    if subs and all(isinstance(s, str) and s.strip() for s in subs):
+        subs = [s.strip() for s in subs[:count]]
+    else:
+        subs = _split_numbered(plan)
+    if not subs:
+        subs = [problem]
+    count_final = min(count, len(subs))
+
+    solved = []
+    for idx in range(count_final):
+        solved.append(await achat(_build_least_solve_messages(problem, subs, solved, idx), max_tokens=900))
+
+    final = await achat(_build_least_combine_messages(problem, subs, solved), max_tokens=1200)
+
+    summary = f"**Least-to-Most Reasoning**\n\n**Problem:** {problem}\n\n**Decomposition:**\n" + \
+        "".join(f"{i + 1}. {s}\n" for i, s in enumerate(subs)) + "\n**Results:**\n" + \
+        "".join(f"{i + 1}. {r}\n" for i, r in enumerate(solved)) + "\n**Final Answer:**\n" + final
+    _store_cognitive("least_to_most", problem, summary)
+    return summary
+
+
+# --------------------------------------------------------------------------
+# Beam Search — maintain the top-K most promising solution paths across depth
+# --------------------------------------------------------------------------
+def _build_beam_expand_messages(problem: str, beam: List[Tuple[str, str]], beam_width: int) -> List[Dict]:
+    state = json.dumps([{"path": p, "score": s} for p, s in beam], ensure_ascii=False)
+    system = (
+        f"You are mem20's beam-search engine. You maintain the top-{beam_width} most promising "
+        "partial solution paths. Expand each current path one step deeper, score every candidate "
+        f"on feasibility and promise (0-10), keep only the top {beam_width}, and reply with ONLY "
+        'a JSON array like [{"path": "....", "score": 8.5}, ...]. Nothing else.'
+    )
+    user = f"PROBLEM:\n{problem}\n\nCURRENT BEAM:\n{state}\n\nExpand and score."
+    return [{"role": "system", "content": system}, {"role": "user", "content": user}]
+
+
+def _build_beam_final_messages(problem: str, beam: List[Tuple[str, str]]) -> List[Dict]:
+    state = json.dumps([{"path": p, "score": s} for p, s in beam], ensure_ascii=False)
+    system = (
+        "You are mem20's beam-search engine. From the final top-K beam, select the single best "
+        "solution and justify it against the paths you discarded."
+    )
+    user = f"PROBLEM:\n{problem}\n\nFINAL BEAM:\n{state}\n\nSelect and justify."
+    return [{"role": "system", "content": system}, {"role": "user", "content": user}]
+
+
+async def abeam_search(problem: str, beam_width: int = 3, depth: int = 4) -> str:
+    width = _clamp_int(beam_width, 1, 8)
+    levels = _clamp_int(depth, 1, 6)
+    beam = [(f"initial approach to: {problem}", "0.0")]
+    trace = []
+    for level in range(levels):
+        raw = await achat(_build_beam_expand_messages(problem, beam, width), max_tokens=700)
+        parsed = _extract_json_array(raw)
+        candidates = []
+        if parsed and isinstance(parsed, list):
+            for item in parsed[:width * 3]:
+                if isinstance(item, dict) and item.get("path"):
+                    candidates.append((str(item["path"]), str(item.get("score", "?"))))
+        if not candidates:
+            candidates = [(raw.strip(), "?")]
+        # keep the top-K by numeric score desc (unknown scores sort last, stable)
+        beam = sorted(candidates, key=lambda c: _parse_score(c[1]), reverse=True)[:width]
+        trace.append(f"**Depth {level + 1}:** kept top-{len(beam)} paths")
+    final = await achat(_build_beam_final_messages(problem, beam), max_tokens=900)
+
+    output = f"**Beam Search Reasoning**\n\n**Problem:** {problem}\n\n" + "\n".join(trace) + "\n\n**Final beam:**\n"
+    for p, s in beam:
+        output += f"- (score {s}) {p}\n"
+    output += f"\n**Selected solution:**\n{final}"
+    _store_cognitive("beam_search", problem, output)
+    return output
+
+
+def beam_search(problem: str, beam_width: int = 3, depth: int = 4) -> str:
+    width = _clamp_int(beam_width, 1, 8)
+    levels = _clamp_int(depth, 1, 6)
+    beam = [(f"initial approach to: {problem}", "0.0")]
+    trace = []
+    for level in range(levels):
+        raw = chat(_build_beam_expand_messages(problem, beam, width), max_tokens=700)
+        parsed = _extract_json_array(raw)
+        candidates = []
+        if parsed and isinstance(parsed, list):
+            for item in parsed[:width * 3]:
+                if isinstance(item, dict) and item.get("path"):
+                    candidates.append((str(item["path"]), str(item.get("score", "?"))))
+        if not candidates:
+            candidates = [(raw.strip(), "?")]
+        beam = sorted(candidates, key=lambda c: _parse_score(c[1]), reverse=True)[:width]
+        trace.append(f"**Depth {level + 1}:** kept top-{len(beam)} paths")
+    final = chat(_build_beam_final_messages(problem, beam), max_tokens=900)
+
+    output = f"**Beam Search Reasoning**\n\n**Problem:** {problem}\n\n" + "\n".join(trace) + "\n\n**Final beam:**\n"
+    for p, s in beam:
+        output += f"- (score {s}) {p}\n"
+    output += f"\n**Selected solution:**\n{final}"
+    _store_cognitive("beam_search", problem, output)
+    return output
+
+
+def _parse_score(text: str) -> float:
+    try:
+        return float(str(text).strip().split("/")[0])
+    except (TypeError, ValueError):
+        return -1.0
+
+
+# --------------------------------------------------------------------------
+# ReAct — interleave Think / Act / Observe toward a goal
+# --------------------------------------------------------------------------
+def _build_react_step_messages(goal: str, available_tools: str, trace: str) -> List[Dict]:
+    system = (
+        "You are mem20's ReAct reasoning engine. Interleave THINK (analysis) and ACT (chosen "
+        "action). There is no external tool executor inside this engine: when your chosen action "
+        "would call a tool, explicitly state what the tool would check and why — never claim a "
+        "tool result you did not receive. Conclude the trace with a FINAL ANSWER once the goal "
+        "is reached. Do not fabricate observations."
+    )
+    user = f"GOAL:\n{goal}\n"
+    if available_tools:
+        user += f"\nAVAILABLE TOOLS:\n{available_tools}\n"
+    if trace:
+        user += f"\nTRACE SO FAR:\n{trace}\n"
+    user += "\nContinue (THINK: ... / ACT: ...), or emit FINAL ANSWER if the goal is met."
+    return [{"role": "system", "content": system}, {"role": "user", "content": user}]
+
+
+def _build_react_final_messages(goal: str, available_tools: str, trace: str) -> List[Dict]:
+    system = (
+        "You are mem20's ReAct reasoning engine. Produce the final answer for the goal based "
+        "solely on the trace produced so far."
+    )
+    user = f"GOAL:\n{goal}\n"
+    if available_tools:
+        user += f"\nAVAILABLE TOOLS:\n{available_tools}\n"
+    user += f"\nTRACE:\n{trace}\n\nFINAL ANSWER:"
+    return [{"role": "system", "content": system}, {"role": "user", "content": user}]
+
+
+async def areact_reason(goal: str, available_tools: str = "", max_iterations: int = 5) -> str:
+    iterations = _clamp_int(max_iterations, 1, 6)
+    trace = ""
+    trace_len = 0
+    for _ in range(iterations):
+        step = await achat(_build_react_step_messages(goal, available_tools, trace), max_tokens=600)
+        trace = (trace + "\n" + step).strip()
+        trace_len += len(step)
+        if "final answer" in step.lower() or trace_len > 6000:
+            break
+    final = await achat(_build_react_final_messages(goal, available_tools, trace), max_tokens=900)
+    output = f"**ReAct Reasoning**\n\n**Goal:** {goal}\n" + \
+        (f"\n**Available tools:** {available_tools}\n" if available_tools else "") + \
+        f"\n**Trace:**\n{trace}\n\n**Final Answer:**\n{final}"
+    _store_cognitive("react_reason", goal, output)
+    return output
+
+
+def react_reason(goal: str, available_tools: str = "", max_iterations: int = 5) -> str:
+    iterations = _clamp_int(max_iterations, 1, 6)
+    trace = ""
+    trace_len = 0
+    for _ in range(iterations):
+        step = chat(_build_react_step_messages(goal, available_tools, trace), max_tokens=600)
+        trace = (trace + "\n" + step).strip()
+        trace_len += len(step)
+        if "final answer" in step.lower() or trace_len > 6000:
+            break
+    final = chat(_build_react_final_messages(goal, available_tools, trace), max_tokens=900)
+    output = f"**ReAct Reasoning**\n\n**Goal:** {goal}\n" + \
+        (f"\n**Available tools:** {available_tools}\n" if available_tools else "") + \
+        f"\n**Trace:**\n{trace}\n\n**Final Answer:**\n{final}"
+    _store_cognitive("react_reason", goal, output)
+    return output
+
+
+# --------------------------------------------------------------------------
 # Tree-of-Thoughts (ToT) — persistent substrate-enabled version
 # --------------------------------------------------------------------------
-_TOT_DB_PATH = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "..", "tot_state.db")
+_TOT_DB_PATH = os.environ.get("MEM20_TOT_DB", os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "tot_state.db"))
 
 def get_tot_historical_lessons(problem_context: str, max_lessons: int = 3) -> list:
     """
@@ -839,7 +1138,7 @@ def imagination_concept(seed, mode="expand", depth=3, constraints=None) -> str:
         user += f"\nRELEVANT MEMORY:\n{memory}\n"
     user += "\nExplore the concept."
     return chat([{"role": "system", "content": _img_system("concept expansion")},
-                 {"role": "user", "content": user}], max_tokens=1200)
+                 {"role": "user", "content": user}], max_tokens=120000)
 
 
 async def aimagination_concept(seed, mode="expand", depth=3, constraints=None) -> str:
@@ -852,7 +1151,7 @@ async def aimagination_concept(seed, mode="expand", depth=3, constraints=None) -
         user += f"\nRELEVANT MEMORY:\n{memory}\n"
     user += "\nExplore the concept."
     return await achat([{"role": "system", "content": _img_system("concept expansion")},
-                        {"role": "user", "content": user}], max_tokens=1200)
+                        {"role": "user", "content": user}], max_tokens=120000)
 
 
 def imagination_simulate(scenario, variables=None, steps=5, branching_factor=3,
@@ -870,7 +1169,7 @@ def imagination_simulate(scenario, variables=None, steps=5, branching_factor=3,
              "(not random) probability and explain the mechanism. Clearly mark what is "
              "speculative. If a world-model is implied, state its assumptions.")
     return chat([{"role": "system", "content": _img_system("generative simulation")},
-                 {"role": "user", "content": user}], max_tokens=1800)
+                 {"role": "user", "content": user}], max_tokens=120000)
 
 
 async def aimagination_simulate(scenario, variables=None, steps=5, branching_factor=3,
@@ -888,7 +1187,7 @@ async def aimagination_simulate(scenario, variables=None, steps=5, branching_fac
              "(not random) probability and explain the mechanism. Clearly mark what is "
              "speculative. If a world-model is implied, state its assumptions.")
     return await achat([{"role": "system", "content": _img_system("generative simulation")},
-                        {"role": "user", "content": user}], max_tokens=1800)
+                        {"role": "user", "content": user}], max_tokens=120000)
 
 
 def imagination_counterfactual(factual_premise, counterfactual_change, depth=3,
@@ -899,7 +1198,7 @@ def imagination_counterfactual(factual_premise, counterfactual_change, depth=3,
             "Explore the counterfactual consequences across the domains. Be explicit about "
             "causal mechanism and uncertainty.")
     return chat([{"role": "system", "content": _img_system("counterfactual reasoning")},
-                 {"role": "user", "content": user}], max_tokens=1500)
+                 {"role": "user", "content": user}], max_tokens=120000)
 
 
 async def aimagination_counterfactual(factual_premise, counterfactual_change, depth=3,
@@ -910,7 +1209,7 @@ async def aimagination_counterfactual(factual_premise, counterfactual_change, de
             "Explore the counterfactual consequences across the domains. Be explicit about "
             "causal mechanism and uncertainty.")
     return await achat([{"role": "system", "content": _img_system("counterfactual reasoning")},
-                        {"role": "user", "content": user}], max_tokens=1500)
+                        {"role": "user", "content": user}], max_tokens=120000)
 
 
 def imagination_recombine(concepts, recombination_mode="blend", num_outputs=5,
@@ -921,7 +1220,7 @@ def imagination_recombine(concepts, recombination_mode="blend", num_outputs=5,
         user += f"CONSTRAINT DOMAIN: {constraint_domain}\n"
     user += "Generate novel combinations by transferring structure/patterns across the concepts."
     return chat([{"role": "system", "content": _img_system("creative recombination")},
-                 {"role": "user", "content": user}], max_tokens=1500)
+                 {"role": "user", "content": user}], max_tokens=120000)
 
 
 async def aimagination_recombine(concepts, recombination_mode="blend", num_outputs=5,
@@ -932,7 +1231,7 @@ async def aimagination_recombine(concepts, recombination_mode="blend", num_outpu
         user += f"CONSTRAINT DOMAIN: {constraint_domain}\n"
     user += "Generate novel combinations by transferring structure/patterns across the concepts."
     return await achat([{"role": "system", "content": _img_system("creative recombination")},
-                        {"role": "user", "content": user}], max_tokens=1500)
+                        {"role": "user", "content": user}], max_tokens=120000)
 
 
 def imagination_model(system, model_type="causal", query="", variables=None) -> str:
@@ -945,7 +1244,7 @@ def imagination_model(system, model_type="causal", query="", variables=None) -> 
     user += ("Build an explicit mental model of this system and answer the query. State the "
              "model's assumptions, dynamic relationships, and limits of validity.")
     return chat([{"role": "system", "content": _img_system("mental modeling")},
-                 {"role": "user", "content": user}], max_tokens=1500)
+                 {"role": "user", "content": user}], max_tokens=120000)
 
 
 async def aimagination_model(system, model_type="causal", query="", variables=None) -> str:
@@ -958,7 +1257,7 @@ async def aimagination_model(system, model_type="causal", query="", variables=No
     user += ("Build an explicit mental model of this system and answer the query. State the "
              "model's assumptions, dynamic relationships, and limits of validity.")
     return await achat([{"role": "system", "content": _img_system("mental modeling")},
-                        {"role": "user", "content": user}], max_tokens=1500)
+                        {"role": "user", "content": user}], max_tokens=120000)
 
 
 def imagination_critique(concept, perspectives=None, refine=True) -> str:
@@ -967,7 +1266,7 @@ def imagination_critique(concept, perspectives=None, refine=True) -> str:
     user += ("Critique the concept adversarially from each perspective. "
              + ("Then produce a refined version." if refine else ""))
     return chat([{"role": "system", "content": _img_system("adversarial critique")},
-                 {"role": "user", "content": user}], max_tokens=1500)
+                 {"role": "user", "content": user}], max_tokens=120000)
 
 
 async def aimagination_critique(concept, perspectives=None, refine=True) -> str:
@@ -976,14 +1275,57 @@ async def aimagination_critique(concept, perspectives=None, refine=True) -> str:
     user += ("Critique the concept adversarially from each perspective. "
              + ("Then produce a refined version." if refine else ""))
     return await achat([{"role": "system", "content": _img_system("adversarial critique")},
-                        {"role": "user", "content": user}], max_tokens=1500)
+                        {"role": "user", "content": user}], max_tokens=120000)
 
 
+<<<<<<< Updated upstream
 # --------------------------------------------------------------------------
 # Free-form iterative dreaming was removed here. The loop above re-seeded each
 # pass with out[:300], so early structure could not survive and every iteration
 # resampled rather than revised. It was also the dream engine's job, and keeping
 # a second, weaker one here meant two engines that disagreed.
+=======
+def imagination_dream(prompt, iterations=3, output_mode="concepts", memory_topics=None) -> str:
+    memory_topics = memory_topics or []
+    seed = prompt
+    log = [f"DREAM starting from: {prompt}\n"]
+    for i in range(1, iterations + 1):
+        mem = _retrieve_memories_text(seed) if memory_topics else ""
+        user = f"ITERATION {i}. Seed: {seed}\n"
+        if mem:
+            user += f"Memory inspiration:\n{mem}\n"
+        user += "Produce the next creative concept elaboration (concepts mode)."
+        try:
+            out = chat([{"role": "system", "content": _img_system("dream loop")},
+                        {"role": "user", "content": user}], max_tokens=120000)
+        except LLMError as e:
+            log.append(f"[iteration {i}] LLM unavailable: {e}")
+            break
+        log.append(f"--- iteration {i} ---\n{out}\n")
+        seed = out[:300]
+    return "\n".join(log)
+
+
+async def aimagination_dream(prompt, iterations=3, output_mode="concepts", memory_topics=None) -> str:
+    memory_topics = memory_topics or []
+    seed = prompt
+    log = [f"DREAM starting from: {prompt}\n"]
+    for i in range(1, iterations + 1):
+        mem = _retrieve_memories_text(seed) if memory_topics else ""
+        user = f"ITERATION {i}. Seed: {seed}\n"
+        if mem:
+            user += f"Memory inspiration:\n{mem}\n"
+        user += "Produce the next creative concept elaboration (concepts mode)."
+        try:
+            out = await achat([{"role": "system", "content": _img_system("dream loop")},
+                               {"role": "user", "content": user}], max_tokens=120000)
+        except LLMError as e:
+            log.append(f"[iteration {i}] LLM unavailable: {e}")
+            break
+        log.append(f"--- iteration {i} ---\n{out}\n")
+        seed = out[:300]
+    return "\n".join(log)
+>>>>>>> Stashed changes
 
 
 # --------------------------------------------------------------------------
@@ -1002,7 +1344,7 @@ def theory_of_mind_simulate(agent_model, scenario, depth=2) -> str:
                   "You are mem20's theory-of-mind engine. Simulate another agent's internal "
                   "reasoning from a supplied model of that agent. Be specific and avoid "
                   "stereotyping; show your chain."},
-                 {"role": "user", "content": user}], max_tokens=1200)
+                 {"role": "user", "content": user}], max_tokens=120000)
 
 
 async def atheory_of_mind_simulate(agent_model, scenario, depth=2) -> str:
@@ -1018,7 +1360,7 @@ async def atheory_of_mind_simulate(agent_model, scenario, depth=2) -> str:
                          "You are mem20's theory-of-mind engine. Simulate another agent's internal "
                          "reasoning from a supplied model of that agent. Be specific and avoid "
                          "stereotyping; show your chain."},
-                        {"role": "user", "content": user}], max_tokens=1200)
+                        {"role": "user", "content": user}], max_tokens=120000)
 
 
 def theory_of_mind_perspective(entity, topic, context="") -> str:
@@ -1033,7 +1375,7 @@ def theory_of_mind_perspective(entity, topic, context="") -> str:
     return chat([{"role": "system", "content":
                   "You are mem20's theory-of-mind / perspective-taking engine. Reason from the "
                   "supplied facts about the entity; do not invent a persona beyond the evidence."},
-                 {"role": "user", "content": user}], max_tokens=1200)
+                 {"role": "user", "content": user}], max_tokens=120000)
 
 
 async def atheory_of_mind_perspective(entity, topic, context="") -> str:
@@ -1048,7 +1390,7 @@ async def atheory_of_mind_perspective(entity, topic, context="") -> str:
     return await achat([{"role": "system", "content":
                          "You are mem20's theory-of-mind / perspective-taking engine. Reason from the "
                          "supplied facts about the entity; do not invent a persona beyond the evidence."},
-                        {"role": "user", "content": user}], max_tokens=1200)
+                        {"role": "user", "content": user}], max_tokens=120000)
 
 
 # --------------------------------------------------------------------------

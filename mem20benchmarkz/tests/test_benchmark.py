@@ -42,7 +42,8 @@ def seeded(tmp_path):
     c = load()
     with open_store(tmp_path / "store") as s:
         for f in c.facts:
-            s.remember(f.topic, f.content, tags=list(f.tags))
+            s.remember(f.topic, f.content, tags=list(f.tags),
+                       epistemic_status=f.epistemic_status)
         for f in c.simulated:
             s.remember_simulated(f.topic, f.content, scenario="test")
         yield s

@@ -41,18 +41,19 @@ def _run_in_subprocess(body: str) -> dict:
     return json.loads(proc.stdout.strip().splitlines()[-1])
 
 
-def test_importing_llm_adds_nothing_to_the_process_environment():
+def test_importing_llm_does_not_publish_secrets_into_the_environment():
+    """The leak this file exists for."""
     report = _run_in_subprocess(
         """
         import json, os
         before = set(os.environ)
         import llm
-        added = sorted(set(os.environ) - before)
+        after = set(os.environ)
+        added = sorted(after - before)
         print(json.dumps({
             "added": added,
-            # Spot-check the credentials that must never be published.
-            "control_password_present": "MEM20_CONTROL_PASSWORD" in os.environ,
-            "control_secret_present": "MEM20_CONTROL_SECRET" in os.environ,
+            "control_password_present": "CONTROL_PASSWORD" in os.environ,
+            "control_secret_present": "CONTROL_SECRET" in os.environ,
             "sudo_present": "SUDO_PASSWORD" in os.environ,
             "github_present": "GITHUB_TOKEN" in os.environ,
         }))
@@ -71,17 +72,19 @@ def test_llm_still_finds_its_provider_key_in_the_file():
     report = _run_in_subprocess(
         """
         import json, llm
-        base, key, model = llm._config()
+        base, key, model, vision_model = llm._config()
         print(json.dumps({
             "has_key": bool(key),
             "base_is_configured": bool(base),
             "model": model,
+            "vision_model": vision_model,
         }))
         """
     )
     assert report["has_key"] is True, "llm must still resolve its provider key from the secrets file"
     assert report["base_is_configured"] is True
     assert report["model"], "a model must still resolve"
+    assert report["vision_model"], "a vision model must still resolve"
 
 
 def test_a_real_environment_value_wins_over_the_file():

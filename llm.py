@@ -582,3 +582,64 @@ async def achat(
             " || ".join(f"{a['provider']}[{a['model']}]: {a['error']}"
                         for a in attempts))
     )
+
+
+# ---------------------------------------------------------------------------
+# Translation
+# ---------------------------------------------------------------------------
+# 2026-11-11: nvidia/riva-translate-4b-instruct-v2 is a purpose-built
+# translation model, NOT a general chat model, so it is deliberately kept OUT of
+# FALLBACKS and given its own slot. Verified live 2026-11-11: "Translate to
+# French: The retrieval roadmap is finished." -> "La feuille de route de
+# récupération est terminée."
+#
+# Verified UNAVAILABLE to this account (do not add without re-probing):
+#   nvidia/riva-translate-4b-instruct  (v1, superseded) -> HTTP 404
+#   nvidia/parakeet-tdt-0.6b           -> absent from catalog
+#   nvidia/parakeet-ctc-0.6b / -1.1b   -> absent from catalog
+#   nvidia/canary-1b-asr               -> absent from catalog
+#   nvidia/magpie-tts-zeroshot         -> absent from catalog
+# The ASR/TTS models 404 at the ROUTE level ("404 page not found" on
+# /v1/audio/transcriptions and /v1/audio/speech), which is distinct from the
+# model-level "Function not found for account" 404. This account has no audio
+# surface at all: 0 of 80 catalogued models match asr|tts|speech|audio|whisper.
+TRANSLATE_MODEL = "nvidia/riva-translate-4b-instruct-v2"
+TRANSLATE_BASE_URL = "https://integrate.api.nvidia.com/v1"
+
+_LANG_NAMES = {
+    "fr": "French", "de": "German", "es": "Spanish", "it": "Italian",
+    "pt": "Portuguese", "nl": "Dutch", "ru": "Russian", "zh": "Chinese",
+    "ja": "Japanese", "ko": "Korean", "ar": "Arabic", "hi": "Hindi",
+    "tr": "Turkish", "pl": "Polish", "sv": "Swedish", "uk": "Ukrainian",
+}
+
+
+def translate(text: str, target_lang: str, source_lang: str = "") -> str:
+    """Translate ``text`` into ``target_lang`` using the Riva translation model.
+
+    Raises LLMError if the model is unreachable; returns the translated text
+    on success. Not a chat fallback: riva is a dedicated translation model, so
+    it gets its own slot rather than competing in the general chain.
+    """
+    target = _LANG_NAMES.get(target_lang.lower(), target_lang)
+    prompt = "Translate to {}: {}".format(target, text)
+    if source_lang:
+        prompt = "Translate from {} into {}: {}".format(
+            _LANG_NAMES.get(source_lang.lower(), source_lang), target, text)
+    # Resolves its own key on purpose: walking _fallback_chain() here would
+    # both miss riva (it is not a chat fallback) and risk handing a Groq/OpenRouter
+    # key to the NVIDIA host.
+    api_key = _get("NVAPI_KEY") or _get("NVIDIA_API_KEY")
+    if not api_key:
+        raise LLMError("No NVIDIA key for translation (set NVIDIA_API_KEY)")
+    base_url = _get("MEM20_TRANSLATE_BASE_URL", TRANSLATE_BASE_URL).rstrip("/")
+    model = _get("MEM20_TRANSLATE_MODEL", TRANSLATE_MODEL)
+    resp = httpx.post(
+        base_url + "/chat/completions",
+        headers=_headers(api_key),
+        json={"model": model,
+              "messages": [{"role": "user", "content": prompt}],
+              "max_tokens": 1024, "temperature": 0.2},
+        timeout=_default_timeout())
+    resp.raise_for_status()
+    return _extract(resp.json()).strip()

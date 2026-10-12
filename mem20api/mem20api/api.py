@@ -212,17 +212,29 @@ class MemoryStore:
     # -- writes (explicit) ----------------------------------------------
 
     def remember(self, topic: str, content: str, tags: Iterable[str] | None = None,
-                 priority: str = "normal", **kw) -> dict:
+                 priority: str = "normal", epistemic_status: str = "observed",
+                 **kw) -> dict:
+        """Store a grounded fact.
+
+        `epistemic_status` says what KIND of claim this is and is forwarded to
+        the engine, which refuses an undeclared one. The default is 'observed'
+        because this API is the explicit programmatic write path: callers
+        writing invented or speculative content should pass the honest status
+        or use remember_simulated().
+        """
         return self._engine.remember(topic, content, tags=list(tags or []),
-                                     priority=priority, **kw)
+                                     priority=priority,
+                                     epistemic_status=epistemic_status, **kw)
 
     def remember_simulated(self, topic: str, content: str, **kw) -> dict:
         """Write to the SIMULATED partition. Never indexed, never retrievable
         by default. Use for counterfactuals and hypotheses."""
         return self._engine.remember_simulated(topic, content, **kw)
 
-    def supersede(self, old_id: str, new_content: str, **kw) -> dict:
-        return self._engine.supersede(old_id, new_content, **kw)
+    def supersede(self, old_id: str, new_content: str,
+                  epistemic_status: str = "observed", **kw) -> dict:
+        return self._engine.supersede(old_id, new_content,
+                                      epistemic_status=epistemic_status, **kw)
 
     def promote(self, sim_id: str, confirmation: str = "", **kw) -> dict:
         """Promote a simulated fact to grounded. Requires evidence: an explicit

@@ -51,6 +51,11 @@ class Fact:
     content: str
     tags: tuple[str, ...] = ()
     priority: str = "normal"
+    # How this fact came to be known. Carried through the seed so a benchmark
+    # corpus is labelled with the same honesty the live store requires; a corpus
+    # that seeds itself 'observed' by default would be asserting provenance for
+    # synthetic content, which is exactly what the benchmark measures leakage of.
+    epistemic_status: str = "observed"
 
 
 @dataclass(frozen=True)

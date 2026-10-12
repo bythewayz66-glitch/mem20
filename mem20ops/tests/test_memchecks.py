@@ -23,7 +23,7 @@ def test_identity_check_parses_legacy_namespace_metadata(tmp_path, monkeypatch):
         topic="namespace_meta",
         content="Namespace: legacy-ns, Owner: legacy-owner, ACL: {'reader': 'read'}",
         tags=["namespace", "metadata", "legacy-ns"],
-    )
+     epistemic_status="observed")
     result = memchecks.identity_check()
     names = {ns["namespace"]: ns for ns in result["namespaces"]}
     assert "legacy-ns" in names
@@ -45,7 +45,7 @@ def test_identity_check_parses_structured_namespace_metadata(tmp_path, monkeypat
         topic="namespace_meta",
         content="NSMETA2 " + payload,
         tags=["namespace", "metadata", "new-ns"],
-    )
+     epistemic_status="observed")
     result = memchecks.identity_check()
     names = {ns["namespace"]: ns for ns in result["namespaces"]}
     assert names["new-ns"]["owner"] == "owner-a"
@@ -59,7 +59,7 @@ def test_acl_probe_reports_per_actor(tmp_path, monkeypatch):
     memchecks._load_engine(str(store))
     from memory import remember
 
-    remember(topic="namespace_probe", content="life model secret", tags=["shared"])
+    remember(topic="namespace_probe", content="life model secret", tags=["shared"], epistemic_status="observed")
     result = memchecks.acl_probe("probe", actors=["alice", "bob"], probe_query="life model")
     assert result["namespace"] == "probe"
     assert [row["actor"] for row in result["actors"]] == ["alice", "bob"]
@@ -72,7 +72,7 @@ def test_acl_probe_does_not_cross_namespace_prefixes(tmp_path, monkeypatch):
     memchecks._load_engine(str(store))
     from memory import remember
 
-    remember(topic="namespace_ceo-10", content="life model ceo ten", tags=["shared"])
+    remember(topic="namespace_ceo-10", content="life model ceo ten", tags=["shared"], epistemic_status="observed")
     result = memchecks.acl_probe("ceo-1", actors=["alice"])
     assert result["actors"][0]["matching_rows"] == 0
 

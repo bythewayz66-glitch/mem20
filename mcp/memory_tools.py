@@ -293,20 +293,67 @@ def _namespace_content_rows(namespace, recall_fn, k):
     return rows[:k]
 
 
+# A recalled fact that does not say what KIND of claim it is is unusable: the
+# reader cannot tell a verified observation from a prior assumption, which is the
+# one distinction the whole epistemic layer exists to preserve. Every recall
+# renderer prints this tag.
+_EPISTEMIC_MARK = {
+    "observed": "[observed]",
+    "inferred": "[inferred]",
+    "user_stated": "[user-stated]",
+    "hypothesis": "[HYPOTHESIS]",
+    "imagined": "[IMAGINED]",
+    "agent_generated": "[AGENT-GENERATED]",
+    "unlabeled": "[UNLABELED]",
+}
+
+
+def _fact_line(r, prefix=""):
+    """Render one recalled fact with its epistemic label visible."""
+    ts = r.get("ts", "")[:19]
+    topic = r.get("topic", "-")
+    pri = r.get("priority", "-")
+    status = r.get("epistemic_status") or "unlabeled"
+    mark = _EPISTEMIC_MARK.get(status, f"[{status}]")
+    content = r.get("content", "")[:500]
+    return f"{prefix}[{ts}] {topic} (pri={pri}) {mark}\n   {content}\n\n"
+
+
 class MemoryToolsMixin:
     def register_memory_tools(self):
         self.tools["memory_store"] = mt.Tool(
             name="memory_store",
             title="Store Memory",
-            description="Store a fact in mem20's persistent memory system",
+            description=("Store a grounded fact in mem20's persistent memory system. "
+                         "You MUST declare epistemic_status: how this claim came to be "
+                         "known. Use 'observed' only for something you directly witnessed "
+                         "or verified (a command's real output, a file that exists). Use "
+                         "'inferred' for a conclusion drawn from observations, "
+                         "'agent_generated' for your own prior claim, 'hypothesis' for a "
+                         "guess, 'user_stated' for something the user told you. If the "
+                         "basis is genuinely unknown use 'unlabeled'. "
+                         "For invented/simulated content use memory_simulate_store instead, "
+                         "which keeps fiction in a separate partition."),
             inputSchema={
                 "type": "object",
                 "properties": {
                     "content": {"type": "string", "description": "The fact/content to store"},
                     "category": {"type": "string", "enum": ["user_pref", "project", "tool", "general"], "default": "general"},
                     "tags": {"type": "string", "description": "Comma-separated tags", "default": ""},
+                    "epistemic_status": {
+                        "type": "string",
+                        "enum": ["observed", "inferred", "imagined", "user_stated",
+                                 "hypothesis", "agent_generated", "unlabeled"],
+                        "description": ("REQUIRED: what kind of claim this is. "
+                                        "'observed' = directly verified; 'inferred' = "
+                                        "concluded from evidence; 'agent_generated' = your "
+                                        "own prior belief; 'hypothesis' = a guess; "
+                                        "'user_stated' = told by the user; 'unlabeled' = "
+                                        "basis genuinely unknown (will be refused by the "
+                                        "epistemic veto)."),
+                    },
                 },
-                "required": ["content"],
+                "required": ["content", "epistemic_status"],
             },
         )
         self.tools["memory_recall"] = mt.Tool(
@@ -507,12 +554,14 @@ class MemoryToolsMixin:
         self.tools["memory_set_epistemic_status"] = mt.Tool(
             name="memory_set_epistemic_status",
             title="Set Epistemic Status",
-            description="Set epistemic status tag (observed, inferred, imagined, user_stated, hypothesis, agent_generated)",
+            description=("Set the epistemic status tag on a grounded fact. "
+                         "'unlabeled' marks a fact whose basis is unknown. "
+                         "Cannot be used on simulated facts - promote them instead."),
             inputSchema={
                 "type": "object",
                 "properties": {
                     "fact_id": {"type": "string", "description": "Fact ID"},
-                    "status": {"type": "string", "enum": ["observed", "inferred", "imagined", "user_stated", "hypothesis", "agent_generated"], "description": "Epistemic status"},
+                    "status": {"type": "string", "enum": ["observed", "inferred", "imagined", "user_stated", "hypothesis", "agent_generated", "unlabeled"], "description": "Epistemic status"},
                 },
                 "required": ["fact_id", "status"],
             },
@@ -606,10 +655,34 @@ class MemoryToolsMixin:
             name="memory_audit_contamination",
             title="Audit Memory Contamination",
             description=("Periodic provenance audit: detect any high-confidence memory whose ultimate "
-                         "provenance is simulation, and any simulated content leaking into grounded indexes."),
+                         "provenance is simulation, any simulated content leaking into grounded indexes, "
+                         "and any grounded fact with no established epistemic basis."),
             inputSchema={
                 "type": "object",
                 "properties": {},
+                "required": [],
+            },
+        )
+        self.tools["memory_label_coverage"] = mt.Tool(
+            name="memory_label_coverage",
+            title="Epistemic Label Coverage",
+            description=("Report how many grounded facts carry an epistemic label and what they say. "
+                         "Answers 'is every stored fact labelled as a fact?' with a number."),
+            inputSchema={"type": "object", "properties": {}, "required": []},
+        )
+        self.tools["memory_backfill_labels"] = mt.Tool(
+            name="memory_backfill_labels",
+            title="Backfill Epistemic Labels",
+            description=("Mark pre-existing unlabeled grounded facts as 'unlabeled'. Honest, not "
+                         "convenient: their basis cannot be reconstructed, so they are refused by the "
+                         "epistemic veto until a human labels them individually. Never writes 'observed'. "
+                         "Does not modify content, topics, or the simulated partition."),
+            inputSchema={
+                "type": "object",
+                "properties": {
+                    "dry_run": {"type": "boolean", "default": False,
+                                "description": "Report what would be backfilled without writing."},
+                },
                 "required": [],
             },
         )
@@ -750,7 +823,8 @@ class MemoryToolsMixin:
         self.tools["memory_shared_store"] = mt.Tool(
             name="memory_shared_store",
             title="Store in Shared Memory",
-            description="Store a fact in a shared namespace with ACL checking",
+            description=("Store a fact in a shared namespace with ACL checking. "
+                         "epistemic_status is required: declare how this claim was learned."),
             inputSchema={
                 "type": "object",
                 "properties": {
@@ -758,8 +832,14 @@ class MemoryToolsMixin:
                     "content": {"type": "string", "description": "Content to store"},
                     "tags": {"type": "string", "description": "Comma-separated tags", "default": ""},
                     "actor": {"type": "string", "description": "Acting agent", "default": "agent"},
+                    "epistemic_status": {
+                        "type": "string",
+                        "enum": ["observed", "inferred", "imagined", "user_stated",
+                                 "hypothesis", "agent_generated", "unlabeled"],
+                        "description": "REQUIRED: how this claim came to be known.",
+                    },
                 },
-                "required": ["namespace", "content"],
+                "required": ["namespace", "content", "epistemic_status"],
             },
         )
         self.tools["memory_shared_recall"] = mt.Tool(
@@ -836,10 +916,30 @@ class MemoryToolsMixin:
         category = args.get("category", "general")
         tags_str = args.get("tags", "")
         tags = [t.strip() for t in tags_str.split(",") if t.strip()] if tags_str else []
-        
+        epistemic_status = args.get("epistemic_status", "")
+
+        if not epistemic_status:
+            # The tool schema marks this required, but a model that omits it would
+            # otherwise reach remember() and have the engine raise a raw ValueError.
+            # Say plainly what is missing and what the choices mean.
+            return ("Error: epistemic_status is required. Declare how this claim was "
+                    "learned:\n"
+                    "  observed       - directly verified (command output, file exists)\n"
+                    "  inferred       - concluded from evidence\n"
+                    "  user_stated    - the user told you\n"
+                    "  agent_generated- your own prior belief\n"
+                    "  hypothesis     - a guess\n"
+                    "  unlabeled      - basis genuinely unknown\n"
+                    "'imagined' is not offered here on purpose: invented content "
+                    "belongs in the separate simulated partition. Use "
+                    "memory_simulate_store instead.")
+
         try:
-            rec = remember(topic=category, content=content, tags=tags, priority="normal")
-            return f"Stored in mem20 memory: [{category}] {content} (tags: {tags_str})\nRecord ID: {rec['id']}"
+            rec = remember(topic=category, content=content, tags=tags, priority="normal",
+                           epistemic_status=epistemic_status)
+            return (f"Stored in mem20 memory: [{category}] {content} (tags: {tags_str})\n"
+                    f"Record ID: {rec['id']}\n"
+                    f"Epistemic status: {rec['epistemic_status']}")
         except Exception as e:
             return f"Error storing memory: {str(e)}"
     async def _memory_recall(self, args: Dict) -> str:
@@ -856,11 +956,7 @@ class MemoryToolsMixin:
             
             output = f"Memory recall results for '{query}' (category: {category}, limit: {limit}):\n\n"
             for r in results:
-                ts = r.get('ts', '')[:19]
-                topic = r.get('topic', '-')
-                pri = r.get('priority', '-')
-                content = r.get('content', '')[:500]
-                output += f"[{ts}] {topic} (pri={pri})\n   {content}\n\n"
+                output += _fact_line(r)
             return output
         except Exception as e:
             return f"Error recalling memory: {str(e)}"
@@ -878,11 +974,7 @@ class MemoryToolsMixin:
             
             output = f"Facts about entity '{entity}':\n\n"
             for r in filtered[:10]:
-                ts = r.get('ts', '')[:19]
-                topic = r.get('topic', '-')
-                pri = r.get('priority', '-')
-                content = r.get('content', '')[:500]
-                output += f"[{ts}] {topic} (pri={pri})\n   {content}\n\n"
+                output += _fact_line(r)
             return output
         except Exception as e:
             return f"Error probing entity: {str(e)}"
@@ -908,10 +1000,7 @@ class MemoryToolsMixin:
                 content = r.get('content', '')
                 if content not in seen:
                     seen.add(content)
-                    ts = r.get('ts', '')[:19]
-                    topic = r.get('topic', '-')
-                    pri = r.get('priority', '-')
-                    output += f"[{ts}] {topic} (pri={pri})\n   {content[:500]}\n\n"
+                    output += _fact_line(r)
             return output
         except Exception as e:
             return f"Error reasoning across entities: {str(e)}"
@@ -946,12 +1035,7 @@ class MemoryToolsMixin:
                 if "error" in r:
                     output += f"Error: {r['error']}\n"
                 else:
-                    ts = r.get('ts', '')[:19]
-                    topic_name = r.get('topic', '-')
-                    pri = r.get('priority', '-')
-                    score = r.get('score', 0)
-                    content = r.get('content', '')[:500]
-                    output += f"[{score:.3f}] [{ts}] {topic_name} (pri={pri})\n   {content}\n\n"
+                    output += _fact_line(r, prefix=f"[{r.get('score', 0):.3f}] ")
             return output
         except Exception as e:
             return f"Error in semantic recall: {str(e)}"
@@ -982,15 +1066,13 @@ class MemoryToolsMixin:
                 if "error" in r:
                     output += f"Error: {r['error']}\n"
                 else:
-                    ts = r.get('ts', '')[:19]
-                    topic_name = r.get('topic', '-')
-                    pri = r.get('priority', '-')
-                    score = r.get('score', 0)
-                    content = r.get('content', '')[:500]
                     vr = r.get('_vector_rank', 'N/A')
                     br = r.get('_bm25_rank', 'N/A')
                     ce = r.get('_ce_score', 'N/A')
-                    output += f"[{score:.3f}] [{ts}] {topic_name} (pri={pri})\n   V-rank: {vr}, BM25-rank: {br}, CE: {ce}\n   {content}\n\n"
+                    line = _fact_line(r, prefix=f"[{r.get('score', 0):.3f}] ")
+                    # Keep the retrieval diagnostics, insert them under the label.
+                    parts = line.split("\n", 1)
+                    output += parts[0] + f"\n   V-rank: {vr}, BM25-rank: {br}, CE: {ce}\n" + parts[1]
             return output
         except Exception as e:
             return f"Error in hybrid recall: {str(e)}"
@@ -1133,10 +1215,16 @@ class MemoryToolsMixin:
                 from memory import remember
                 
                 for e in entities:
-                    remember(topic=topic, content=f"Entity: {e['text']} (type: {e['label']})", tags=["entity", e['label'].lower()])
-                
+                    # spaCy extraction is a model INFERENCE over supplied text, not a
+                    # witnessed observation, so it is labelled as one.
+                    remember(topic=topic, content=f"Entity: {e['text']} (type: {e['label']})",
+                             tags=["entity", e['label'].lower()], epistemic_status="inferred")
+
                 for r in relationships:
-                    remember(topic=topic, content=f"Relation: {r['subject']} --[{r['predicate']}]--> {r['object']}", tags=["relationship", r['predicate'].lower()])
+                    remember(topic=topic,
+                             content=f"Relation: {r['subject']} --[{r['predicate']}]--> {r['object']}",
+                             tags=["relationship", r['predicate'].lower()],
+                             epistemic_status="inferred")
                 
                 output += "\n✅ Stored extracted entities and relationships in memory"
             
@@ -1219,11 +1307,14 @@ class MemoryToolsMixin:
                             
                             output += f"  Summary: {summary[:500]}\n"
                             
-                            # Store summary as higher-level memory
-                            remember(topic=f"{topic}_summary" if topic else "summary", 
-                                   content=f"Consolidated summary (cluster {idx+1}): {summary}", 
+                            # Store summary as higher-level memory. The summary is produced by a
+                            # cognitive model over existing facts, so it is an
+                            # inference - never an observation of the world.
+                            remember(topic=f"{topic}_summary" if topic else "summary",
+                                   content=f"Consolidated summary (cluster {idx+1}): {summary}",
                                    tags=["summary", "consolidated", f"cluster_{idx+1}"],
-                                   priority="high")
+                                   priority="high",
+                                   epistemic_status="inferred")
                         except Exception:
                             output += f"  Summary: [generation failed]\n"
                     
@@ -1354,6 +1445,38 @@ class MemoryToolsMixin:
             return f"VETO / BLOCKED: {e}"
         except Exception as e:
             return f"Error promoting simulated fact: {e}"
+    async def _memory_label_coverage(self, args: Dict) -> str:
+        try:
+            sys.path.insert(0, os.environ.get("MEM20_STORE_PATH", os.path.expanduser("~/.mem20/store")))
+            from memory import label_coverage
+            cov = label_coverage()
+            # An empty store has no coverage to report; saying 100% would be a
+            # perfect score for having stored nothing.
+            pct = "n/a (store is empty)" if cov["empty"] else f"{cov['coverage']:.1%}"
+            lines = [f"Epistemic label coverage: {cov['labeled']}/{cov['total']} ({pct})", ""]
+            for status, n in sorted(cov["by_status"].items(), key=lambda kv: -kv[1]):
+                lines.append(f"  {status:16s} {n}")
+            if cov["unlabeled"]:
+                lines += ["",
+                          f"{cov['unlabeled']} fact(s) have no established basis. "
+                          "They are refused by the epistemic veto.",
+                          "Fix: backfill_labels (marks them 'unlabeled', never "
+                          "'observed'), then set_epistemic_status per fact."]
+            return "\n".join(lines)
+        except Exception as e:
+            return f"Error computing label coverage: {e}"
+    async def _memory_backfill_labels(self, args: Dict) -> str:
+        dry_run = bool(args.get("dry_run", False))
+        try:
+            sys.path.insert(0, os.environ.get("MEM20_STORE_PATH", os.path.expanduser("~/.mem20/store")))
+            from memory import backfill_epistemic_labels
+            rep = backfill_epistemic_labels(dry_run=dry_run)
+            if rep.get("dry_run"):
+                return f"Would backfill {rep['would_backfill']} fact(s) -> 'unlabeled'."
+            return (f"Backfilled {rep['backfilled']} fact(s) -> "
+                    f"'{rep['labeled_as']}'.\n{rep['note']}")
+        except Exception as e:
+            return f"Error backfilling labels: {e}"
     async def _memory_list_simulated(self, args: Dict) -> str:
         try:
             sys.path.insert(0, os.environ.get("MEM20_STORE_PATH", os.path.expanduser("~/.mem20/store")))
@@ -1516,7 +1639,10 @@ class MemoryToolsMixin:
                         topic=topic,
                         content=f"[PDF Chunk {i+1}/{len(chunks)}] {chunk}",
                         tags=["pdf", "ingested", f"chunk_{i+1}"],
-                        source=file_path
+                        source=file_path,
+                        # Extracted text of a document on disk: what the file
+                        # says, transcribed. Not a claim about the world.
+                        epistemic_status="observed"
                     )
                     stored_count += 1
             
@@ -1551,7 +1677,10 @@ class MemoryToolsMixin:
                 topic=topic,
                 content=f"[OCR from {file_path}] {text}",
                 tags=["ocr", "image", "ingested"],
-                source=file_path
+                source=file_path,
+                # Text recognised in an image. What the pixels say, as read by a
+                # recogniser - an observation of the image, never of the world.
+                epistemic_status="observed"
             )
             
             return f"✅ Image OCR complete: {file_path}\nText length: {len(text)} chars\nTopic: {topic}\n\nExtracted text:\n{text[:500]}..."
@@ -1584,7 +1713,11 @@ class MemoryToolsMixin:
                 topic=topic,
                 content=f"[Transcription from {file_path}] {text}",
                 tags=["transcription", "audio", "ingested", f"model_{model}"],
-                source=file_path
+                source=file_path,
+                # A speech recogniser's rendering of an audio file. Observed, but
+                # observed-through-a-model: never grounds a claim about the world
+                # on its own.
+                epistemic_status="observed"
             )
             
             return f"✅ Audio transcribed: {file_path}\nModel: {model}\nLanguage: {result.get('language', 'unknown')}\nText length: {len(text)} chars\n\nTranscription:\n{text[:500]}..."
@@ -1634,7 +1767,10 @@ class MemoryToolsMixin:
                     topic=topic,
                     content=f"[Code Analysis: {file_path}]\n{summary}",
                     tags=["code", "ast", "ingested", language],
-                    source=file_path
+                    source=file_path,
+                    # A parse of a file on disk. Observed structure, not a claim
+                    # about what the code does or whether it is correct.
+                    epistemic_status="observed"
                 )
                 
                 return f"✅ Code ingested: {file_path}\nClasses: {len(classes)}\nFunctions: {len(functions)}\nImports: {len(imports)}\n\n{summary[:1000]}..."
@@ -1667,7 +1803,10 @@ class MemoryToolsMixin:
                 content=_NAMESPACE_META_PREFIX + json.dumps(payload, sort_keys=True),
                 tags=["namespace", "metadata", namespace],
                 priority="high",
-                actor=args.get("actor") or owner
+                actor=args.get("actor") or owner,
+                # An access-control record. Observed: it is a statement about who
+                # was granted what, not a claim about the world.
+                epistemic_status="observed"
             )
 
             return f"✅ Namespace created: {namespace}\nOwner: {owner}\nACL: {payload['acl']}"
@@ -1695,10 +1834,15 @@ class MemoryToolsMixin:
         content = args.get("content", "")
         tags_str = args.get("tags", "")
         actor = args.get("actor", "agent")
+        epistemic_status = args.get("epistemic_status", "")
         tags = [t.strip() for t in tags_str.split(",") if t.strip()] if tags_str else []
 
         if not namespace or not content:
             return "Error: namespace and content are required"
+        if not epistemic_status:
+            return ("Error: epistemic_status is required. Declare how this claim was "
+                    "learned: observed / inferred / user_stated / agent_generated / "
+                    "hypothesis / unlabeled.")
 
         try:
             sys.path.insert(0, os.environ.get("MEM20_STORE_PATH", os.path.expanduser("~/.mem20/store")))
@@ -1712,10 +1856,12 @@ class MemoryToolsMixin:
                 topic=f"{_NAMESPACE_CONTENT_TOPIC}{namespace}",
                 content=content,
                 tags=tags + ["shared", namespace, f"actor_{actor}"],
-                actor=actor
+                actor=actor,
+                epistemic_status=epistemic_status
             )
 
-            return f"✅ Stored in shared namespace: {namespace}\nActor: {actor}\nTags: {tags}"
+            return (f"✅ Stored in shared namespace: {namespace}\nActor: {actor}\n"
+                    f"Tags: {tags}\nEpistemic status: {epistemic_status}")
         except Exception as e:
             return f"Error storing in shared memory: {str(e)}"
     async def _memory_shared_recall(self, args: Dict) -> str:
@@ -1745,11 +1891,7 @@ class MemoryToolsMixin:
             
             output = f"**Shared Recall: '{query}' from {namespace}** (actor: {actor})\n\n"
             for r in filtered[:k]:
-                ts = r.get('ts', '')[:19]
-                topic = r.get('topic', '-')
-                pri = r.get('priority', '-')
-                content = r.get('content', '')[:500]
-                output += f"[{ts}] {topic} (pri={pri})\n   {content}\n\n"
+                output += _fact_line(r)
             return output
         except Exception as e:
             return f"Error recalling from shared memory: {str(e)}"
@@ -1789,7 +1931,11 @@ class MemoryToolsMixin:
                     topic="quarantine",
                     content=f"Quarantined content (PII detected): {content}",
                     tags=["quarantine", "pii", "auto"],
-                    priority="high"
+                    priority="high",
+                    # A detector's verdict about submitted text. Observed as a
+                    # detection, and deliberately not trusted as a fact: it is
+                    # parked in quarantine precisely because it is unverified.
+                    epistemic_status="unlabeled"
                 )
                 output += "\n⚠️ Content quarantined in memory."
             
@@ -1831,6 +1977,10 @@ class MemoryToolsMixin:
                 tags=["self_model", "identity", "core", slug],
                 priority="high",
                 actor=actor,
+                # A self-model is an agent's account of ITSELF - a declaration by
+                # the agent, not something an outside observer witnessed. Labelled
+                # so the epistemic veto will not treat it as external evidence.
+                epistemic_status="agent_generated",
             )
 
             if _self_model_owner(identity, recall) is None:
@@ -1842,6 +1992,8 @@ class MemoryToolsMixin:
                     tags=["self_model_identity", slug],
                     priority="high",
                     actor=actor,
+                    # Ownership/ACL record: observed fact about who may write.
+                    epistemic_status="observed",
                 )
 
             return (f"Self-model recorded\nIdentity: {identity} (key: {slug})\n"
@@ -2103,9 +2255,11 @@ class MemoryToolsMixin:
             sys.path.insert(0, os.environ.get("MEM20_STORE_PATH", os.path.expanduser("~/.mem20/store")))
             from memory import remember, _append_ledger
             
-            # Store feedback as a remember event
+            # Store feedback as a remember event. A trust rating is an observation of
+            # what a user reported, not a claim about the rated fact itself.
             feedback_content = f"Feedback for fact {fact_id}: {action}"
-            remember(topic="feedback", content=feedback_content, tags=[str(fact_id), action], priority="high")
+            remember(topic="feedback", content=feedback_content, tags=[str(fact_id), action],
+                     priority="high", epistemic_status="observed")
             
             return f"Feedback recorded: {action} for fact {fact_id}"
         except Exception as e:

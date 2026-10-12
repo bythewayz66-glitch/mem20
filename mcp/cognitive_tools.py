@@ -412,7 +412,9 @@ class CognitiveToolsMixin:
                 topic="corrigibility_tier",
                 content=f"Capability tier set to: {tier} by {actor}",
                 tags=["corrigibility", "tier", tier, f"actor_{actor}"],
-                priority="high"
+                priority="high",
+                # An access-control fact set by a named actor: observed.
+                epistemic_status="observed"
             )
             
             tier_descriptions = {

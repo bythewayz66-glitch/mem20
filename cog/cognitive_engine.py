@@ -81,6 +81,9 @@ def _store_cognitive(kind: str, prompt: str, output: str, mode: str = ""):
             content=f"[{kind}/{mode}] {prompt}\n---\n{output[:600]}",
             tags=["cognitive", kind, mode] if mode else ["cognitive", kind],
             priority="normal",
+            # A model's own reasoning trace. It is the agent's generation, not an
+            # observation of anything, and must never be read back as evidence.
+            epistemic_status="agent_generated",
         )
     except Exception:
         pass

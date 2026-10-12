@@ -396,6 +396,10 @@ class Mem20MCPServer(MemoryToolsMixin, CognitiveToolsMixin, RoadmapToolsMixin,
             return await self._memory_quarantine_simulated(arguments)
         elif tool_name == "memory_audit_contamination":
             return await self._memory_audit_contamination(arguments)
+        elif tool_name == "memory_label_coverage":
+            return await self._memory_label_coverage(arguments)
+        elif tool_name == "memory_backfill_labels":
+            return await self._memory_backfill_labels(arguments)
         elif tool_name == "memory_epistemic_veto":
             return await self._memory_epistemic_veto(arguments)
         # Pinned Blocks tools

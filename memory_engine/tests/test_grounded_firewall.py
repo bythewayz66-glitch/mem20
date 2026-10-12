@@ -147,7 +147,7 @@ class TestPinnedBlockAudit:
         assert "violations_simulated_in_graph" in audit
 
     def test_clean_store_reports_clean(self, mem):
-        mem.remember(topic="ops", content="the runbook lives in the ops directory")
+        mem.remember(topic="ops", content="the runbook lives in the ops directory", epistemic_status="observed")
         audit = mem.audit_contamination()
         assert audit["status"] == "CLEAN"
         assert audit["recommendation"] == "No action needed."

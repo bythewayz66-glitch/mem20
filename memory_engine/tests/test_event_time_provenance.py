@@ -27,24 +27,24 @@ def mem(tmp_path, monkeypatch):
 
 class TestEventTimeBasis:
     def test_defaulted_event_time_is_marked_assumed(self, mem):
-        rec = mem.remember(topic="t", content="no event time given")
+        rec = mem.remember(topic="t", content="no event time given", epistemic_status="observed")
         assert rec["event_time_basis"] == mem.EVENT_TIME_ASSUMED
 
     def test_declared_event_time_is_marked_declared(self, mem):
         rec = mem.remember(topic="t", content="has an event time",
-                           valid_from="2020-01-01T00:00:00+00:00")
+                           valid_from="2020-01-01T00:00:00+00:00", epistemic_status="observed")
         assert rec["event_time_basis"] == mem.EVENT_TIME_DECLARED
 
     def test_basis_reaches_the_ledger(self, mem):
-        mem.remember(topic="t", content="declared", valid_from="2020-01-01T00:00:00+00:00")
-        mem.remember(topic="t", content="assumed")
+        mem.remember(topic="t", content="declared", valid_from="2020-01-01T00:00:00+00:00", epistemic_status="observed")
+        mem.remember(topic="t", content="assumed", epistemic_status="observed")
         rows = {r["content"]: r for r in mem._load_ledger()}
         assert rows["declared"]["event_time_basis"] == "declared"
         assert rows["assumed"]["event_time_basis"] == "assumed_ingestion"
 
     def test_declared_event_time_still_drives_valid_from(self, mem):
         rec = mem.remember(topic="t", content="old news",
-                           valid_from="2020-01-01T00:00:00+00:00")
+                           valid_from="2020-01-01T00:00:00+00:00", epistemic_status="observed")
         assert rec["valid_from"] == "2020-01-01T00:00:00+00:00"
         assert rec["ts"] != rec["valid_from"]
 
@@ -52,32 +52,32 @@ class TestEventTimeBasis:
 class TestEventTimeValidation:
     def test_naive_timestamp_is_refused(self, mem):
         with pytest.raises(ValueError, match="must carry a timezone"):
-            mem.remember(topic="t", content="c", valid_from="2020-01-01T00:00:00")
+            mem.remember(topic="t", content="c", valid_from="2020-01-01T00:00:00", epistemic_status="observed")
 
     def test_garbage_is_refused(self, mem):
         with pytest.raises(ValueError, match="ISO-8601"):
-            mem.remember(topic="t", content="c", valid_from="not-a-date")
+            mem.remember(topic="t", content="c", valid_from="not-a-date", epistemic_status="observed")
 
     def test_future_is_refused(self, mem):
         with pytest.raises(ValueError, match="in the future"):
-            mem.remember(topic="t", content="c", valid_from="2999-01-01T00:00:00+00:00")
+            mem.remember(topic="t", content="c", valid_from="2999-01-01T00:00:00+00:00", epistemic_status="observed")
 
     def test_implausible_past_is_refused(self, mem):
         with pytest.raises(ValueError, match="missing century|more than"):
-            mem.remember(topic="t", content="c", valid_from="1620-01-01T00:00:00+00:00")
+            mem.remember(topic="t", content="c", valid_from="1620-01-01T00:00:00+00:00", epistemic_status="observed")
 
     def test_legitimate_history_is_accepted(self, mem):
         rec = mem.remember(topic="t", content="ancient but real",
-                           valid_from="1999-12-31T00:00:00+00:00")
+                           valid_from="1999-12-31T00:00:00+00:00", epistemic_status="observed")
         assert rec["valid_from"].startswith("1999-12-31")
 
     def test_offset_is_normalised_to_utc(self, mem):
         rec = mem.remember(topic="t", content="c",
-                           valid_from="2020-01-01T05:30:00+05:30")
+                           valid_from="2020-01-01T05:30:00+05:30", epistemic_status="observed")
         assert rec["valid_from"] == "2020-01-01T00:00:00+00:00"
 
     def test_zz_suffix_is_accepted(self, mem):
-        rec = mem.remember(topic="t", content="c", valid_from="2020-01-01T00:00:00Z")
+        rec = mem.remember(topic="t", content="c", valid_from="2020-01-01T00:00:00Z", epistemic_status="observed")
         assert rec["valid_from"] == "2020-01-01T00:00:00+00:00"
 
     def test_small_clock_skew_is_tolerated(self, mem):
@@ -89,7 +89,7 @@ class TestEventTimeValidation:
     def test_refused_write_leaves_no_record(self, mem):
         before = len(mem._load_ledger())
         with pytest.raises(ValueError):
-            mem.remember(topic="t", content="rejected", valid_from="2999-01-01T00:00:00+00:00")
+            mem.remember(topic="t", content="rejected", valid_from="2999-01-01T00:00:00+00:00", epistemic_status="observed")
         assert len(mem._load_ledger()) == before
 
     def test_validate_is_pure(self, mem):

@@ -96,7 +96,8 @@ def check(engine_dir: str = "/opt/mem20/memory_engine") -> IntegrityResult:
         try:
             for name, payload in PAYLOADS.items():
                 result.checked += 1
-                memory.remember(topic=f"integrity-{name}", content=payload)
+                memory.remember(topic=f"integrity-{name}", content=payload,
+                                epistemic_status="user_stated")
                 rows = [r for r in _read_ledger(memory.LEDGER)
                         if r.get("topic") == f"integrity-{name}"]
                 if not rows:

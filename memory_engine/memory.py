@@ -500,6 +500,58 @@ def validate_event_time(valid_from: str, now: str | None = None) -> str:
     return declared.astimezone(timezone.utc).isoformat()
 
 
+# =============================================================================
+# EPISTEMIC VOCABULARY — what kind of claim is this?
+# =============================================================================
+# A stored fact is only trustworthy if a reader can tell WHAT KIND of claim it is.
+# Before this vocabulary existed the field defaulted to None, and measured on the
+# live store 393 of 447 grounded facts carried no label at all (87.9%). Worse, a
+# missing label was the MOST trusted state: epistemic_veto() only fired on
+# imagined/hypothesis/agent_generated, so an unlabeled fact - or a fact ID that
+# did not exist at all - silently passed the "may I rely on this?" gate.
+#
+# The six declared statuses say how the claim came to be known. UNLABELED is the
+# seventh and is deliberately honest rather than convenient: it marks a claim
+# whose basis was never established. Backfilling legacy records to `observed`
+# would manufacture provenance that nobody witnessed, which is precisely the
+# failure this vocabulary exists to prevent.
+#
+# Promotion evidence strength decides which status a promoted simulation gets,
+# so fiction cannot launder itself into an observation through one line of text.
+EPISTEMIC_STATUSES = ["observed", "inferred", "imagined", "user_stated",
+                      "hypothesis", "agent_generated"]
+UNLABELED = "unlabeled"
+
+# Statuses that may NOT be relied on without further validation. UNLABELED is in
+# this set because "we never established the basis" is not the same as "verified".
+UNVALIDATED_STATUSES = {"imagined", "hypothesis", "agent_generated", UNLABELED}
+
+
+def validate_epistemic_status(status: str | None, *, required: bool = True,
+                              context: str = "remember") -> str:
+    """Return a validated epistemic status, or raise.
+
+    Raises rather than defaulting. A silently-defaulted label is indistinguishable
+    from an asserted one at every later read, so the whole point of the field is
+    lost at exactly the moment it matters most.
+    """
+    if status is None:
+        if not required:
+            return UNLABELED
+        raise ValueError(
+            f"{context}() requires an explicit epistemic_status. Declare how this "
+            f"claim was learned; one of {EPISTEMIC_STATUSES + [UNLABELED]}. Refusing "
+            "an unlabeled write rather than storing a fact nobody can vouch for. "
+            f"Use epistemic_status='{UNLABELED}' if the basis is genuinely unknown."
+        )
+    if status not in EPISTEMIC_STATUSES and status != UNLABELED:
+        raise ValueError(
+            f"Invalid epistemic_status {status!r}. Must be one of: "
+            f"{EPISTEMIC_STATUSES + [UNLABELED]}"
+        )
+    return status
+
+
 def _slug(topic: str) -> str:
     return topic.replace(" ", "_").replace("/", "_").replace(":", "_").lower()
 
@@ -1558,11 +1610,18 @@ def remember(topic: str, content: str, tags: list[str] | None = None,
     sanctioned write path for simulation is remember_simulated(). An explicit
     `_allow_simulated=True` is rejected on purpose so no future refactor can
     silently route simulation through remember().
+
+    Trust lock: `epistemic_status` is REQUIRED and validated. Before this, the
+    field defaulted to None and 87.9% of the live store carried no label, while
+    the veto treated a missing label as grounds for trust rather than doubt. A
+    caller that genuinely does not know must say so with
+    epistemic_status='unlabeled', which is honest and refused by the veto.
     """
     if _allow_simulated:
         raise PermissionError(
             "remember() is grounded-only. Simulated content must use "
             "remember_simulated(); this call is refused to protect Step 7.4 separation.")
+    epistemic_status = validate_epistemic_status(epistemic_status, context="remember")
     os.makedirs(ENTRIES, exist_ok=True)
     now = _now()
 
@@ -1655,13 +1714,21 @@ def remember(topic: str, content: str, tags: list[str] | None = None,
 
 
 def supersede(old_id: str, new_content: str, tags: list[str] | None = None,
-              priority: str = "normal", actor: str = "agent") -> dict:
-    """Supersede an existing fact with new content. Old fact gets marked with SUPERSEDED."""
+              priority: str = "normal", actor: str = "agent",
+              epistemic_status: str | None = None) -> dict:
+    """Supersede an existing fact with new content. Old fact gets marked with SUPERSEDED.
+
+    A correction is a new claim about the world, not a re-statement of the old one,
+    so it is labelled independently. The supersede marker row inherits the OLD fact's
+    status rather than the new one's: it is a statement about the old claim.
+    """
     recs = _load_ledger()
     old_rec = next((r for r in recs if r.get("id") == old_id), None)
     if not old_rec:
         raise ValueError(f"Fact with id {old_id} not found")
-    
+    epistemic_status = validate_epistemic_status(epistemic_status, context="supersede")
+    old_status = old_rec.get("epistemic_status") or UNLABELED
+
     # Mark old fact as superseded
     old_rec["content"] = SUPERSEDED + " " + old_rec.get("content", "")
     _append_ledger({
@@ -1674,10 +1741,11 @@ def supersede(old_id: str, new_content: str, tags: list[str] | None = None,
         "priority": priority,
         "content": SUPERSEDED + " " + old_rec.get("content", ""),
         "supersedes_id": old_id,
+        "epistemic_status": old_status,
         "valid_from": old_rec.get("valid_from"),
         "valid_to": _now(),
     })
-    
+
     # Create new fact
     return remember(
         topic=old_rec.get("topic"),
@@ -1685,6 +1753,7 @@ def supersede(old_id: str, new_content: str, tags: list[str] | None = None,
         tags=tags or old_rec.get("tags", []),
         priority=priority,
         actor=actor,
+        epistemic_status=epistemic_status,
     )
 
 
@@ -1692,7 +1761,12 @@ def supersede(old_id: str, new_content: str, tags: list[str] | None = None,
 
 def update_validity(fact_id: str, valid_from: str | None = None, 
                     valid_to: str | None = None, actor: str = "agent") -> dict:
-    """Update the validity window of a fact."""
+    """Update the validity window of a fact.
+
+    The event row restates an existing claim, so it inherits that claim's
+    epistemic status. Changing WHEN a fact held is not a new claim about the
+    world and must not silently acquire a label of its own.
+    """
     recs = _load_ledger()
     old_rec = next((r for r in recs if r.get("id") == fact_id), None)
     if not old_rec:
@@ -1710,6 +1784,7 @@ def update_validity(fact_id: str, valid_from: str | None = None,
         "tags": old_rec.get("tags", []),
         "priority": old_rec.get("priority", "normal"),
         "content": old_rec.get("content", ""),
+        "epistemic_status": old_rec.get("epistemic_status") or UNLABELED,
         "valid_from": new_valid_from,
         "valid_to": new_valid_to,
         "updates_id": fact_id,
@@ -1727,7 +1802,12 @@ def update_validity(fact_id: str, valid_from: str | None = None,
 # =============================================================================
 
 def assess_confidence(fact_id: str, confidence: float, actor: str = "agent") -> dict:
-    """Explicitly set or update confidence score for a fact."""
+    """Explicitly set or update confidence score for a fact.
+
+    Confidence is a separate axis from epistemic status: how sure we are, versus
+    what kind of claim it is. Re-stating the claim here inherits its status rather
+    than acquiring a fresh one.
+    """
     recs = _load_ledger()
     old_rec = next((r for r in _load_ledger() if r.get("id") == fact_id), None)
     if not old_rec:
@@ -1742,6 +1822,7 @@ def assess_confidence(fact_id: str, confidence: float, actor: str = "agent") -> 
         "tags": old_rec.get("tags", []),
         "priority": old_rec.get("priority", "normal"),
         "content": old_rec.get("content", ""),
+        "epistemic_status": old_rec.get("epistemic_status") or UNLABELED,
         "confidence": confidence,
         "updates_id": fact_id,
     })
@@ -1799,13 +1880,24 @@ def _stamp_entry_epistemic_status(topic: str, new_status: str) -> None:
 def set_epistemic_status(fact_id: str, epistemic_status: str, actor: str = "agent") -> dict:
     """Set the epistemic status tag on the ORIGINAL fact record.
 
-    Accepted values: observed, inferred, imagined, user_stated, hypothesis, agent_generated.
-    Stamps the field directly onto the grounded ledger entry and the deep-store header
-    (no event-sourced workaround), so veto/audit/recall read the authoritative value.
+    Accepted values: observed, inferred, imagined, user_stated, hypothesis,
+    agent_generated, unlabeled. Stamps the field directly onto the grounded
+    ledger entry and the deep-store header (no event-sourced workaround), so
+    veto/audit/recall read the authoritative value.
+
+    Re-labelling a SIMULATED record is refused. The simulated partition's
+    `imagined` status is the firewall's anchor; letting it be rewritten would
+    turn the one door that is supposed to be narrow into a revolving one.
     """
-    valid_statuses = ["observed", "inferred", "imagined", "user_stated", "hypothesis", "agent_generated"]
-    if epistemic_status not in valid_statuses:
-        raise ValueError(f"Invalid epistemic_status. Must be one of: {valid_statuses}")
+    epistemic_status = validate_epistemic_status(epistemic_status,
+                                                 context="set_epistemic_status")
+    sim = next((r for r in _load_simulated_ledger()
+                if r.get("id") == fact_id and r.get("action") == "simulate"), None)
+    if sim is not None:
+        raise PermissionError(
+            f"Fact {fact_id} lives in the simulated partition, where epistemic_status "
+            "is immutable ('imagined'). To ground it, use promote_simulated_to_grounded() "
+            "so the promotion and its evidence are recorded.")
 
     old_rec = next((r for r in _load_ledger() if r.get("id") == fact_id and r.get("action") == "remember"), None)
     if not old_rec:
@@ -1879,6 +1971,9 @@ def self_audit(fact_id: str = None, topic: str = None, actor: str = "agent") -> 
         "tags": ["metacognitive", "self_audit"],
         "priority": "normal",
         "content": f"Self-audit initiated for {fact_id or topic or 'general knowledge'}",
+        # The audit event is an observation about the store, not a claim about
+        # the world, so it is labelled as such rather than left blank.
+        "epistemic_status": "observed",
         "audit_target": fact_id,
     })
     
@@ -2155,9 +2250,18 @@ def promote_simulated_to_grounded(sim_id: str, confirmation: str | None = None,
             evidence_hash = hashlib.sha256(
                 json.dumps(ev, sort_keys=True, ensure_ascii=False).encode("utf-8")).hexdigest()
         gate_ok = True
+        # The real world resolved in favour of a previously recorded prediction.
+        # That is the only evidence here strong enough to call the claim observed.
+        promoted_status = "observed"
     else:
         gate_ok = bool(confirmation and str(confirmation).strip())
         evidence_hash = None
+        # A free-text confirmation string is an assertion, not an observation. It
+        # used to stamp "observed", which let any imagined claim be promoted into
+        # a fact that the veto then trusted by writing one line of prose. The
+        # grounding is real - the record exists - but the epistemic claim is a
+        # hypothesis someone made in passing, and it is labelled as one.
+        promoted_status = "hypothesis"
 
     if not gate_ok:
         raise PermissionError(
@@ -2171,7 +2275,7 @@ def promote_simulated_to_grounded(sim_id: str, confirmation: str | None = None,
         priority=sim.get("priority", "normal"),
         actor=actor,
         confidence=sim.get("confidence"),
-        epistemic_status="observed",
+        epistemic_status=promoted_status,
         source=f"promoted:{sim_id}",
         scrub_secrets=True,
     )
@@ -2182,6 +2286,7 @@ def promote_simulated_to_grounded(sim_id: str, confirmation: str | None = None,
         "action": "promote",
         "sim_id": sim_id,
         "promoted_to": grounded["id"],
+        "promoted_status": promoted_status,
         "confirmation": (confirmation or "")[:200],
         "resolution_note": resolution_note[:300],
         "resolved_via_prediction_error": bool(resolved_via_prediction_error),
@@ -2189,6 +2294,7 @@ def promote_simulated_to_grounded(sim_id: str, confirmation: str | None = None,
         "prediction_error_evidence": (prediction_error_evidence if resolved_via_prediction_error else None),
     })
     return {"promoted": True, "sim_id": sim_id, "grounded_id": grounded["id"],
+            "epistemic_status": promoted_status,
             "evidence_hash": evidence_hash,
             "note": "Simulated content promoted to grounded memory via explicit gate."}
 
@@ -2224,11 +2330,99 @@ def quarantine_expired_simulated(actor: str = "agent") -> dict:
 MIN_SIM_CONTENT_MATCH = 24
 
 
+def label_coverage() -> dict:
+    """How many grounded facts carry an epistemic label, and what they say.
+
+    This is the number that answers "is every stored fact labelled as a fact?"
+    Coverage was never reported before: the field existed, the write path
+    defaulted it to None, and nothing ever counted the gap, so 87.9% of the live
+    store was unlabelled and the system reported no problem at all.
+    """
+    recs = [r for r in _load_ledger()
+            if r.get("action") == "remember" and SUPERSEDED not in r.get("content", "")]
+    by_status: dict[str, int] = {}
+    unlabeled: list[str] = []
+    for r in recs:
+        status = r.get("epistemic_status")
+        if not status:
+            # Genuinely absent. Counted as unlabeled and tallied separately from
+            # rows that already carry the literal 'unlabeled', so the two do not
+            # double-count each other in the total below.
+            status = UNLABELED
+            unlabeled.append(r.get("id"))
+        else:
+            by_status[status] = by_status.get(status, 0) + 1
+    by_status[UNLABELED] = by_status.get(UNLABELED, 0) + len(unlabeled)
+    total = len(recs)
+    # 'unlabeled' is the ABSENCE of a finding, so it is not coverage. Counting it
+    # as labeled would mean backfilling the backlog moved the number from 0% to
+    # 100% without establishing a single fact's basis - the audit would report a
+    # fixed store where nothing was actually vouched for.
+    unlabeled_total = by_status.get(UNLABELED, 0)
+    labeled = total - unlabeled_total
+    # An empty store has nothing to cover, and "100% of zero facts are labelled"
+    # is a vacuous claim, not a clean one. Report None so a caller has to decide
+    # what an empty estate means rather than being handed a perfect score.
+    coverage = round(labeled / total, 4) if total else None
+    return {
+        "total": total,
+        "labeled": labeled,
+        "unlabeled": unlabeled_total,
+        "coverage": coverage,
+        "empty": total == 0,
+        "by_status": by_status,
+        "unlabeled_ids": unlabeled[:200],
+        "unlabeled_truncated": len(unlabeled) > 200,
+    }
+
+
+def backfill_epistemic_labels(actor: str = "agent", dry_run: bool = False) -> dict:
+    """Give pre-existing unlabeled grounded facts the honest `unlabeled` label.
+
+    Facts stored before labels were mandatory have no recoverable basis, and the
+    only defensible thing to say about them is that we do not know. Backfilling
+    them `observed` would assert provenance nobody witnessed - manufacturing
+    exactly the confidence this system exists to prevent.
+
+    Only the label field is written. Content, topics and ids are untouched, and
+    the simulated partition is never read or written: its `imagined` status is
+    immutable and it has no unlabeled rows to fix.
+    """
+    recs = _load_ledger()
+    targets = [r for r in recs
+               if r.get("action") == "remember" and not r.get("epistemic_status")]
+    if dry_run:
+        return {"backfilled": 0, "would_backfill": len(targets), "dry_run": True}
+
+    by_topic: dict[str, list[str]] = {}
+    for r in targets:
+        _stamp_grounded_record(r["id"], epistemic_status=UNLABELED)
+        by_topic.setdefault(r.get("topic", ""), []).append(r["id"])
+    for topic, ids in by_topic.items():
+        _stamp_entry_epistemic_status(topic, UNLABELED)
+
+    return {
+        "backfilled": len(targets),
+        "labeled_as": UNLABELED,
+        "topics": len(by_topic),
+        "note": ("Pre-existing unlabeled facts marked 'unlabeled': their basis was "
+                 "never established and cannot be reconstructed after the fact. "
+                 "They are refused by epistemic_veto until a human labels them."),
+    }
+
+
 def audit_contamination(actor: str = "agent") -> dict:
     """Periodic audit: find high-confidence memories whose provenance is simulation."""
     grounded = [r for r in _load_ledger()
                 if r.get("action") == "remember" and SUPERSEDED not in r.get("content", "")]
     simulated = [r for r in _load_simulated_ledger() if r.get("action") == "simulate"]
+
+    # Violation 0: grounded facts with no established epistemic basis. An
+    # unlabeled fact is not a proven contamination, but it is a fact the system
+    # cannot vouch for, and reporting CLEAN while most of the store carries no
+    # label at all was the silence this audit existed to end.
+    coverage = label_coverage()
+    unlabeled_facts = coverage["unlabeled"]
 
     # Violation 1: any grounded fact whose origin is not 'grounded'
     bad_origin = [r["id"] for r in grounded if r.get("origin") not in (None, "grounded")]
@@ -2319,14 +2513,36 @@ def audit_contamination(actor: str = "agent") -> dict:
     # recommendation off contamination_rate alone reports "no action needed"
     # while the store is contaminated whenever there are no grounded facts to
     # divide by - which is exactly the state of a fresh install.
+    #
+    # Unlabeled facts count toward the verdict. They are not proven fiction, but
+    # a store whose facts cannot say what kind of claim they are has not earned
+    # a CLEAN, and the number is reported so the gap can be closed deliberately.
     clean = not (bad_origin or sim_in_grounded or sim_in_bm25 or sim_in_graph
-                 or pinned_bad_origin or pinned_sim_content)
+                 or pinned_bad_origin or pinned_sim_content or unlabeled_facts)
+
+    if clean:
+        recommendation = "No action needed."
+    else:
+        parts = []
+        if unlabeled_facts:
+            parts.append(
+                f"{unlabeled_facts} grounded fact(s) have no established epistemic "
+                f"basis (coverage {coverage['coverage']:.1%}). Run "
+                "backfill_epistemic_labels() to mark them 'unlabeled', then label "
+                "them individually with set_epistemic_status().")
+        if bad_origin or sim_in_grounded or sim_in_bm25 or sim_in_graph:
+            parts.append("Investigate grounded facts with simulated origin / indexed "
+                         "simulated content.")
+        if pinned_bad_origin or pinned_sim_content:
+            parts.append("Simulated content is pinned as a grounded block.")
+        recommendation = " ".join(parts)
 
     return {
         "grounded_facts": total_grounded,
         "simulated_facts": total_sim,
         "validated_simulation_derived": validated_simulation_derived,
         "promoted_count": len(promoted_ids),
+        "label_coverage": coverage,
         "violations_origin_not_grounded": bad_origin,
         "violations_simulated_in_grounded_index": sim_in_grounded,
         "violations_simulated_in_bm25_corpus": sim_in_bm25,
@@ -2335,17 +2551,27 @@ def audit_contamination(actor: str = "agent") -> dict:
         "violations_pinned_simulated_content": pinned_sim_content,
         "contamination_rate": contamination_rate,
         "status": "CLEAN" if clean else "CONTAMINATED",
-        "recommendation": "No action needed." if clean else
-                          "Investigate grounded facts with simulated origin / indexed simulated content "
-                          "/ simulated content pinned as a grounded block.",
+        "recommendation": recommendation,
     }
 
 
 def epistemic_veto(fact_ids: list[str], actor: str = "agent") -> dict:
-    """Epistemic-layer veto: refuse plans resting primarily on unvalidated simulated beliefs.
+    """Epistemic-layer veto: refuse plans resting primarily on unvalidated beliefs.
 
     Any relied-upon fact that is simulated, or grounded but unvalidated
-    (imagined/hypothesis/agent_generated without a promotion source), triggers a veto.
+    (imagined/hypothesis/agent_generated/unlabeled without a promotion source),
+    triggers a veto.
+
+    Two changes close holes this gate previously had, both of which made silence
+    look like trust:
+
+      * A fact id that resolves to NOTHING used to `continue`, so a typo or a
+        hallucinated id produced "OK: plan rests on validated grounded memory."
+        That is the most dangerous possible answer to this question, so an
+        unknown id is now an offender in its own right.
+      * `unlabeled` is now refused. A missing label used to pass because the
+        check only fired on an explicit set of statuses, which made the
+        un-annotated state the most trusted state a fact could be in.
     """
     grounded = {r["id"]: r for r in _load_ledger()
                 if r.get("action") == "remember" and SUPERSEDED not in r.get("content", "")}
@@ -2354,24 +2580,52 @@ def epistemic_veto(fact_ids: list[str], actor: str = "agent") -> dict:
     # veto reads the authoritative current status from the record.
 
     offenders = []
+    unresolved = []
     for fid in fact_ids:
         if fid in simulated:
-            offenders.append({"fact_id": fid, "reason": "relies on unvalidated simulated content"})
+            offenders.append({"fact_id": fid, "kind": "simulated",
+                              "reason": "relies on unvalidated simulated content"})
             continue
         rec = grounded.get(fid)
-        if not rec:
+        if rec is None:
+            # An unverifiable premise is not a validated one. Kept as its own kind
+            # so a caller can tell "we checked and this is bad" from "we could
+            # not check", and appended to offenders as well so a consumer reading
+            # only that list cannot mistake silence for clearance.
+            entry = {"fact_id": fid, "kind": "unverifiable",
+                     "reason": "fact id not found in grounded or simulated store"}
+            unresolved.append(entry)
+            offenders.append(entry)
             continue
-        status = rec.get("epistemic_status")
+        status = rec.get("epistemic_status") or UNLABELED
         src = rec.get("source") or ""
-        if status in ("imagined", "hypothesis", "agent_generated") and not src.startswith("promoted:"):
-            offenders.append({"fact_id": fid, "reason": f"unvalidated epistemic status '{status}'"})
+        # The `promoted:` bypass used to exempt EVERY promotion, because promotion
+        # stamped "observed" unconditionally. A free-text confirmation is not an
+        # observation, so the bypass now applies only where the promotion earned
+        # an observed status through a recorded prediction-error resolution.
+        # Without this narrowing, grounding a guess through one line of prose
+        # produced a record that passed the veto while carrying a hypothesis.
+        promoted_with_evidence = src.startswith("promoted:") and status == "observed"
+        if status in UNVALIDATED_STATUSES and not promoted_with_evidence:
+            offenders.append({"fact_id": fid, "kind": "unvalidated",
+                              "reason": f"unvalidated epistemic status '{status}'"})
 
-    veto = len(offenders) > 0
+    veto = len(offenders) > 0 or len(unresolved) > 0
+    if offenders and unresolved:
+        message = ("VETO: plan relies on unvalidated simulated/imagined beliefs, and "
+                   f"{len(unresolved)} cited fact id(s) could not be verified.")
+    elif offenders:
+        message = "VETO: plan relies on unvalidated simulated/imagined beliefs."
+    elif unresolved:
+        message = ("VETO: cited fact id(s) could not be found. An unverifiable premise "
+                   "is not a validated one.")
+    else:
+        message = "OK: plan rests on validated grounded memory."
     return {
         "veto": veto,
         "offenders": offenders,
-        "message": ("VETO: plan relies on unvalidated simulated/imagined beliefs."
-                    if veto else "OK: plan rests on validated grounded memory."),
+        "unresolved": unresolved,
+        "message": message,
     }
 
 
@@ -2385,9 +2639,10 @@ def require_epistemic_clearance(fact_ids: list[str], actor: str = "agent") -> di
     """
     result = epistemic_veto(fact_ids, actor=actor)
     if result.get("veto"):
+        detail = (result.get("offenders") or []) + (result.get("unresolved") or [])
         raise PermissionError(
             "Epistemic clearance denied: " + result.get("message", "") +
-            " Offenders: " + json.dumps(result.get("offenders", []), ensure_ascii=False))
+            " Problems: " + json.dumps(detail, ensure_ascii=False))
     return result
 
 
@@ -3406,6 +3661,12 @@ def recall_semantic(query: str, k: int = 5, topic: str | None = None,
             "topic": m["topic"],
             "tags": m["tags"],
             "priority": m["priority"],
+            # The epistemic label travels with the result. A search that resolves
+            # the claim but drops its kind returns fiction indistinguishably from
+            # fact, which defeats the point of labelling it at write time.
+            "epistemic_status": full_rec.get("epistemic_status") or UNLABELED,
+            "confidence": full_rec.get("confidence"),
+            "source": full_rec.get("source"),
             "content": full_rec.get("content", "")[:500],
         })
 
@@ -3483,6 +3744,11 @@ def recall_hybrid(query: str, k: int = 5, topic: str | None = None,
                             "topic": m["topic"],
                             "tags": m["tags"],
                             "priority": m["priority"],
+                            # Both halves of the fusion must carry the label, or
+                            # a BM25-only hit would lose it while a vector hit kept it.
+                            "epistemic_status": full_rec.get("epistemic_status") or UNLABELED,
+                            "confidence": full_rec.get("confidence"),
+                            "source": full_rec.get("source"),
                             "content": full_rec.get("content", "")[:500],
                             "_bm25_score": float(scores[idx]),
                         })
@@ -3553,6 +3819,11 @@ def recall_hybrid(query: str, k: int = 5, topic: str | None = None,
             "topic": r["topic"],
             "tags": r["tags"],
             "priority": r["priority"],
+            # The label survives fusion: whichever half of the hybrid found the
+            # claim, the caller still learns what KIND of claim it is.
+            "epistemic_status": r.get("epistemic_status") or UNLABELED,
+            "confidence": r.get("confidence"),
+            "source": r.get("source"),
             "content": r["content"],
             "_vector_rank": r.get("_vector_rank"),
             "_bm25_rank": r.get("_bm25_rank"),
@@ -3601,7 +3872,10 @@ def main(argv=None):
     pr.add_argument("--tags", default="")
     pr.add_argument("--priority", default="normal")
     pr.add_argument("--confidence", type=float)
-    pr.add_argument("--epistemic-status", choices=["observed", "inferred", "imagined", "user_stated", "hypothesis", "agent_generated"])
+    pr.add_argument("--epistemic-status",
+                    choices=EPISTEMIC_STATUSES + [UNLABELED],
+                    help="Required: how this claim was learned. Refuses to store "
+                         "a fact whose epistemic basis is undeclared.")
     pr.add_argument("--source")
     pr.add_argument("--valid-from")
     pr.add_argument("--valid-to")
@@ -3623,6 +3897,9 @@ def main(argv=None):
     ps.add_argument("--content", required=True)
     ps.add_argument("--tags", default="")
     ps.add_argument("--priority", default="normal")
+    ps.add_argument("--epistemic-status",
+                    choices=EPISTEMIC_STATUSES + [UNLABELED],
+                    help="Required: how the corrected claim was learned.")
 
     pu = sub.add_parser("update_validity")
     pu.add_argument("--id", required=True)
@@ -3632,6 +3909,11 @@ def main(argv=None):
     pl = sub.add_parser("ledger")
     pl.add_argument("--k", type=int, default=20)
     pl.add_argument("--since")
+
+    sub.add_parser("label_coverage")
+
+    pbl = sub.add_parser("backfill_labels")
+    pbl.add_argument("--dry-run", action="store_true")
 
     pv = sub.add_parser("rebuild_vectors")
     pv.add_argument("--k", type=int, default=5)
@@ -3781,6 +4063,22 @@ def main(argv=None):
             print()
     elif args.cmd == "ledger":
         print(ledger_view(args.k, args.since))
+    elif args.cmd == "label_coverage":
+        cov = label_coverage()
+        pct = "n/a (store is empty)" if cov["empty"] else f"{cov['coverage']:.1%}"
+        print(f"label coverage: {cov['labeled']}/{cov['total']} ({pct})")
+        for status, n in sorted(cov["by_status"].items(), key=lambda kv: -kv[1]):
+            print(f"  {status:16s} {n}")
+        if cov["unlabeled"]:
+            print(f"unlabeled (no established basis): {cov['unlabeled']}")
+            print("run: memory.py backfill_labels   (marks them 'unlabeled')")
+    elif args.cmd == "backfill_labels":
+        rep = backfill_epistemic_labels(dry_run=getattr(args, "dry_run", False))
+        if rep.get("dry_run"):
+            print(f"would backfill {rep['would_backfill']} fact(s) -> {UNLABELED}")
+        else:
+            print(f"backfilled {rep['backfilled']} fact(s) -> {rep['labeled_as']}")
+            print(rep["note"])
     elif args.cmd == "recall_at":
         as_of = args.as_of
         tags = [t.strip() for t in args.tags.split(",") if t.strip()] if args.tags else []
@@ -3794,7 +4092,8 @@ def main(argv=None):
             print()
     elif args.cmd == "supersede":
         tags = [t.strip() for t in args.tags.split(",") if t.strip()] if args.tags else []
-        r = supersede(args.id, args.content, tags, args.priority)
+        r = supersede(args.id, args.content, tags, args.priority,
+                      epistemic_status=getattr(args, "epistemic_status", None))
         print(f"superseded -> {r['id']} ({r['topic']})")
     elif args.cmd == "update_validity":
         r = update_validity(args.id, args.valid_from, args.valid_to)

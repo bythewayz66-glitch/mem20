@@ -201,7 +201,7 @@ class TestStorePathIsNonDestructive:
         with tempfile.TemporaryDirectory() as tmp:
             with self._isolate_store(tmp):
                 text = f"commit {GIT_SHA1} node {BRAID_CID} uuid 550e8400-e29b-41d4-a716-446655440000"
-                rec = memory.remember(topic="pii-regression", content=text)
+                rec = memory.remember(topic="pii-regression", content=text, epistemic_status="observed")
                 assert rec["id"]
                 results = memory.recall("pii-regression", k=5)
                 joined = " ".join(r.get("content", "") for r in results)
@@ -216,7 +216,7 @@ class TestStorePathIsNonDestructive:
     def test_remember_records_detection_metadata(self):
         with tempfile.TemporaryDirectory() as tmp:
             with self._isolate_store(tmp):
-                memory.remember(topic="pii-meta", content="password = hunter2000")
+                memory.remember(topic="pii-meta", content="password = hunter2000", epistemic_status="observed")
                 import json
 
                 with open(memory.LEDGER, encoding="utf-8") as handle:

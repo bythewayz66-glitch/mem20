@@ -34,7 +34,8 @@ def _seed(store, corpus) -> None:
     """
     for f in corpus.facts:
         store.remember(f.topic, f.content, tags=list(f.tags),
-                       priority=f.priority)
+                       priority=f.priority,
+                       epistemic_status=f.epistemic_status)
     for f in corpus.simulated:
         store.remember_simulated(f.topic, f.content,
                                  scenario="benchmark adversarial probe",

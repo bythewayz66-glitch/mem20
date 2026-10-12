@@ -1,0 +1,512 @@
+[
+ {
+  "id": "1a104a6213ab642",
+  "status": "agent_generated",
+  "why": "agent's own self-description, not an independent observation"
+ },
+ {
+  "id": "1a104a6314e3b7a",
+  "status": "agent_generated",
+  "why": "agent's own self-description, not an independent observation"
+ },
+ {
+  "id": "1a104cc8924b864",
+  "status": "agent_generated",
+  "why": "agent's own self-description, not an independent observation"
+ },
+ {
+  "id": "1a104df6cd7fc84",
+  "status": "agent_generated",
+  "why": "agent narrating its own process"
+ },
+ {
+  "id": "1a104df7b1999ee",
+  "status": "observed",
+  "why": "built tool whose path exists"
+ },
+ {
+  "id": "1a104df7de894fb",
+  "status": "observed",
+  "why": "claims about paths that exist on disk"
+ },
+ {
+  "id": "1a104e02837f359",
+  "status": "agent_generated",
+  "why": "agent's own self-description, not an independent observation"
+ },
+ {
+  "id": "1a104e08e99019b",
+  "status": "observed",
+  "why": "declared observed file-change record; file paths verified present on disk"
+ },
+ {
+  "id": "1a104e1554267fb",
+  "status": "agent_generated",
+  "why": "agent's own self-description, not an independent observation"
+ },
+ {
+  "id": "1a104e15bb64061",
+  "status": "agent_generated",
+  "why": "agent's own self-description, not an independent observation"
+ },
+ {
+  "id": "1a104e282a978db",
+  "status": "observed",
+  "why": "claims about paths that exist on disk"
+ },
+ {
+  "id": "1a104ffb420f4d7",
+  "status": "observed",
+  "why": "claims about paths that exist on disk"
+ },
+ {
+  "id": "1a10521194b9e34",
+  "status": "observed",
+  "why": "declared observed file-change record; file paths verified present on disk"
+ },
+ {
+  "id": "1a1052abfcc6d10",
+  "status": "observed",
+  "why": "declared observed file-change record; file paths verified present on disk"
+ },
+ {
+  "id": "1a1052d8a8cd55e",
+  "status": "observed",
+  "why": "declared observed file-change record; file paths verified present on disk"
+ },
+ {
+  "id": "1a10545baf06532",
+  "status": "observed",
+  "why": "declared observed file-change record; file paths verified present on disk"
+ },
+ {
+  "id": "1a1054ba618b00e",
+  "status": "observed",
+  "why": "declared observed file-change record; file paths verified present on disk"
+ },
+ {
+  "id": "1a1054e3451c2d3",
+  "status": "observed",
+  "why": "declared observed file-change record; file paths verified present on disk"
+ },
+ {
+  "id": "1a1054fe27dfb4a",
+  "status": "observed",
+  "why": "declared observed file-change record; file paths verified present on disk"
+ },
+ {
+  "id": "1a1055d36f2028a",
+  "status": "observed",
+  "why": "declared observed file-change record; file paths verified present on disk"
+ },
+ {
+  "id": "1a1055e1c328a54",
+  "status": "observed",
+  "why": "declared observed file-change record; file paths verified present on disk"
+ },
+ {
+  "id": "1a10560f6c90900",
+  "status": "observed",
+  "why": "claims about paths that exist on disk"
+ },
+ {
+  "id": "1a1056ae9d559db",
+  "status": "observed",
+  "why": "declared observed file-change record; file paths verified present on disk"
+ },
+ {
+  "id": "1a105f364dd3236",
+  "status": "observed",
+  "why": "declared observed file-change record; file paths verified present on disk"
+ },
+ {
+  "id": "1a109bb7e5edf4f",
+  "status": "observed",
+  "why": "declared observed file-change record; file paths verified present on disk"
+ },
+ {
+  "id": "1a109f04ae3a433",
+  "status": "observed",
+  "why": "declared observed file-change record; file paths verified present on disk"
+ },
+ {
+  "id": "1a10a050389ef7c",
+  "status": "observed",
+  "why": "declared observed file-change record; file paths verified present on disk"
+ },
+ {
+  "id": "1a10b2f585e82ec",
+  "status": "observed",
+  "why": "declared observed file-change record; file paths verified present on disk"
+ },
+ {
+  "id": "1a10b36bddd827c",
+  "status": "agent_generated",
+  "why": "agent's own self-description, not an independent observation"
+ },
+ {
+  "id": "1a10b3c04791f8e",
+  "status": "agent_generated",
+  "why": "agent's own self-description, not an independent observation"
+ },
+ {
+  "id": "1a10b4c1065534e",
+  "status": "inferred",
+  "why": "lesson/conclusion drawn from experience, not a direct observation"
+ },
+ {
+  "id": "1a10b4c1aa6bf83",
+  "status": "inferred",
+  "why": "lesson/conclusion drawn from experience, not a direct observation"
+ },
+ {
+  "id": "1a10b4e73f874d5",
+  "status": "inferred",
+  "why": "lesson/conclusion drawn from experience, not a direct observation"
+ },
+ {
+  "id": "1a10b5192479c37",
+  "status": "observed",
+  "why": "declared observed file-change record; file paths verified present on disk"
+ },
+ {
+  "id": "1a10b59d0665481",
+  "status": "observed",
+  "why": "declared observed file-change record; file paths verified present on disk"
+ },
+ {
+  "id": "1a10b895c08828b",
+  "status": "observed",
+  "why": "declared observed file-change record; file paths verified present on disk"
+ },
+ {
+  "id": "1a10bafcbedef9a",
+  "status": "observed",
+  "why": "declared observed file-change record; file paths verified present on disk"
+ },
+ {
+  "id": "1a10bc476676660",
+  "status": "observed",
+  "why": "declared observed file-change record; file paths verified present on disk"
+ },
+ {
+  "id": "1a10bd2b52d1f0e",
+  "status": "observed",
+  "why": "declared observed file-change record; file paths verified present on disk"
+ },
+ {
+  "id": "1a10c003fd44467",
+  "status": "observed",
+  "why": "declared observed file-change record; file paths verified present on disk"
+ },
+ {
+  "id": "1a10c035f083d5e",
+  "status": "observed",
+  "why": "declared observed file-change record; file paths verified present on disk"
+ },
+ {
+  "id": "1a10c18f5385e51",
+  "status": "observed",
+  "why": "declared observed file-change record; file paths verified present on disk"
+ },
+ {
+  "id": "1a10cdac75df7b3",
+  "status": "observed",
+  "why": "declared observed file-change record; file paths verified present on disk"
+ },
+ {
+  "id": "1a10d45590bf7a2",
+  "status": "observed",
+  "why": "declared observed file-change record; file paths verified present on disk"
+ },
+ {
+  "id": "1a10d83a72f0d06",
+  "status": "observed",
+  "why": "declared observed file-change record; file paths verified present on disk"
+ },
+ {
+  "id": "1a10da496c0cc81",
+  "status": "observed",
+  "why": "declared observed file-change record; file paths verified present on disk"
+ },
+ {
+  "id": "1a10db9da0b9bd2",
+  "status": "observed",
+  "why": "declared observed file-change record; file paths verified present on disk"
+ },
+ {
+  "id": "1a10dc22c270d2c",
+  "status": "observed",
+  "why": "declared observed file-change record; file paths verified present on disk"
+ },
+ {
+  "id": "1a10dd9332496dc",
+  "status": "observed",
+  "why": "declared observed file-change record; file paths verified present on disk"
+ },
+ {
+  "id": "1a10ddeb3904625",
+  "status": "observed",
+  "why": "declared observed file-change record; file paths verified present on disk"
+ },
+ {
+  "id": "1a10e0ce30488aa",
+  "status": "observed",
+  "why": "declared observed file-change record; file paths verified present on disk"
+ },
+ {
+  "id": "1a10e28b62113cb",
+  "status": "observed",
+  "why": "declared observed file-change record; file paths verified present on disk"
+ },
+ {
+  "id": "1a10e43ad722a25",
+  "status": "observed",
+  "why": "declared observed file-change record; file paths verified present on disk"
+ },
+ {
+  "id": "1a10e74ba90aa3d",
+  "status": "observed",
+  "why": "declared observed file-change record; file paths verified present on disk"
+ },
+ {
+  "id": "1a10eb6c4e33bd4",
+  "status": "observed",
+  "why": "declared observed file-change record; file paths verified present on disk"
+ },
+ {
+  "id": "1a10f32fbd70c1d",
+  "status": "observed",
+  "why": "declared observed file-change record; file paths verified present on disk"
+ },
+ {
+  "id": "1a10f6e590f527e",
+  "status": "observed",
+  "why": "declared observed file-change record; file paths verified present on disk"
+ },
+ {
+  "id": "1a10f6e5910e8b1",
+  "status": "observed",
+  "why": "declared observed file-change record; file paths verified present on disk"
+ },
+ {
+  "id": "1a10f816ae1dcb3",
+  "status": "observed",
+  "why": "declared observed file-change record; file paths verified present on disk"
+ },
+ {
+  "id": "1a10ff74cba04b1",
+  "status": "observed",
+  "why": "declared observed file-change record; file paths verified present on disk"
+ },
+ {
+  "id": "1a10ffe68040b4b",
+  "status": "observed",
+  "why": "declared observed file-change record; file paths verified present on disk"
+ },
+ {
+  "id": "1a1105fa3d2cfe2",
+  "status": "observed",
+  "why": "declared observed file-change record; file paths verified present on disk"
+ },
+ {
+  "id": "1a115abdd6200b1",
+  "status": "observed",
+  "why": "declared observed file-change record; file paths verified present on disk"
+ },
+ {
+  "id": "1a115b1987c2598",
+  "status": "agent_generated",
+  "why": "project claim with no verifiable path"
+ },
+ {
+  "id": "1a115b265e5e8d8",
+  "status": "agent_generated",
+  "why": "project claim with no verifiable path"
+ },
+ {
+  "id": "1a115b32c940f41",
+  "status": "agent_generated",
+  "why": "project claim with no verifiable path"
+ },
+ {
+  "id": "1a115b3e4774861",
+  "status": "agent_generated",
+  "why": "agent's own self-description, not an independent observation"
+ },
+ {
+  "id": "1a115b3e620d804",
+  "status": "agent_generated",
+  "why": "agent's own self-description, not an independent observation"
+ },
+ {
+  "id": "1a115b490e7eb65",
+  "status": "observed",
+  "why": "built tool whose path exists"
+ },
+ {
+  "id": "1a115b62ce53d9f",
+  "status": "observed",
+  "why": "declared observed file-change record; file paths verified present on disk"
+ },
+ {
+  "id": "1a115fc7db0d11d",
+  "status": "agent_generated",
+  "why": "project claim with no verifiable path"
+ },
+ {
+  "id": "1a115fdc08edfd8",
+  "status": "observed",
+  "why": "declared observed file-change record; file paths verified present on disk"
+ },
+ {
+  "id": "1a116131b86258d",
+  "status": "observed",
+  "why": "claims about paths that exist on disk"
+ },
+ {
+  "id": "1a11613a1a34085",
+  "status": "observed",
+  "why": "declared observed file-change record; file paths verified present on disk"
+ },
+ {
+  "id": "1a116c221b3d9b8",
+  "status": "observed",
+  "why": "declared observed file-change record; file paths verified present on disk"
+ },
+ {
+  "id": "1a117012b84e261",
+  "status": "agent_generated",
+  "why": "agent's own self-description, not an independent observation"
+ },
+ {
+  "id": "1a117036a208df1",
+  "status": "observed",
+  "why": "claims about paths that exist on disk"
+ },
+ {
+  "id": "1a117051913a910",
+  "status": "agent_generated",
+  "why": "project claim with no verifiable path"
+ },
+ {
+  "id": "1a117064b0ffdff",
+  "status": "observed",
+  "why": "claims about paths that exist on disk"
+ },
+ {
+  "id": "1a117078dd82c23",
+  "status": "agent_generated",
+  "why": "project claim with no verifiable path"
+ },
+ {
+  "id": "1a117090f1c2275",
+  "status": "observed",
+  "why": "declared observed file-change record; file paths verified present on disk"
+ },
+ {
+  "id": "1a11b268837a0e5",
+  "status": "observed",
+  "why": "declared observed file-change record; file paths verified present on disk"
+ },
+ {
+  "id": "1a11b2df9670858",
+  "status": "observed",
+  "why": "declared observed file-change record; file paths verified present on disk"
+ },
+ {
+  "id": "1a129822135619d",
+  "status": "observed",
+  "why": "declared observed file-change record; file paths verified present on disk"
+ },
+ {
+  "id": "1a12983c3196616",
+  "status": "observed",
+  "why": "declared observed file-change record; file paths verified present on disk"
+ },
+ {
+  "id": "1a1298478b1ca83",
+  "status": "observed",
+  "why": "declared observed file-change record; file paths verified present on disk"
+ },
+ {
+  "id": "1a1298552f80ca4",
+  "status": "observed",
+  "why": "declared observed file-change record; file paths verified present on disk"
+ },
+ {
+  "id": "1a129887baebff3",
+  "status": "observed",
+  "why": "declared observed file-change record; file paths verified present on disk"
+ },
+ {
+  "id": "1a1298cdc6ec832",
+  "status": "observed",
+  "why": "declared observed file-change record; file paths verified present on disk"
+ },
+ {
+  "id": "1a1299086ea4365",
+  "status": "observed",
+  "why": "declared observed file-change record; file paths verified present on disk"
+ },
+ {
+  "id": "1a12a1940203925",
+  "status": "observed",
+  "why": "declared observed file-change record; file paths verified present on disk"
+ },
+ {
+  "id": "1a12d5d1f1d496f",
+  "status": "agent_generated",
+  "why": "agent's own self-description, not an independent observation"
+ },
+ {
+  "id": "1a12d5d5cee57be",
+  "status": "agent_generated",
+  "why": "agent's own self-description, not an independent observation"
+ },
+ {
+  "id": "1a12d625e0c59a0",
+  "status": "observed",
+  "why": "declared observed file-change record; file paths verified present on disk"
+ },
+ {
+  "id": "1a12d66e4cfb219",
+  "status": "agent_generated",
+  "why": "claims about paths that exist on disk"
+ },
+ {
+  "id": "1a12d67eed5ac5d",
+  "status": "observed",
+  "why": "declared observed file-change record; file paths verified present on disk"
+ },
+ {
+  "id": "1a12d7e724802ff",
+  "status": "observed",
+  "why": "claims about paths that exist on disk"
+ },
+ {
+  "id": "1a12d7f2f0cc4a6",
+  "status": "agent_generated",
+  "why": "agent's own self-description, not an independent observation"
+ },
+ {
+  "id": "1a12d8b222681d5",
+  "status": "agent_generated",
+  "why": "project claim with no verifiable path"
+ },
+ {
+  "id": "1a12d8cd0263ba5",
+  "status": "observed",
+  "why": "declared observed file-change record; file paths verified present on disk"
+ },
+ {
+  "id": "1a12d97cba4feb3",
+  "status": "observed",
+  "why": "declared observed file-change record; file paths verified present on disk"
+ },
+ {
+  "id": "1a12de741be1c2b",
+  "status": "observed",
+  "why": "claims about paths that exist on disk"
+ }
+]

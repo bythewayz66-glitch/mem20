@@ -61,6 +61,31 @@ DEFAULT_MODEL = "moonshotai/kimi-k3"
 KIMI_K3_TOP_P = 0.95
 MODEL_FIXED_TOP_P = {"moonshotai/kimi-k3": KIMI_K3_TOP_P}
 
+# Reasoning models spend their token budget on hidden reasoning tokens before
+# emitting any content. If the caller's budget is smaller than that reasoning
+# trace, the API does not error - it returns HTTP 200 with message.content set
+# to null, so the caller silently receives an empty reply.
+#
+# Verified 2026-11-11: nvidia/nemotron-3.5-lightning-30b-a3b asked to "Reply
+# exactly: LIGHTNING-OK" returned content=null at max_tokens=100 and only
+# produced "LIGHTNING-OK" at max_tokens=2000. It is registered as a cog
+# fallback, so any small-max_tokens call that fell through to it returned
+# nothing at all. _budget() raises the request to the floor below for these
+# models; callers still get a real answer.
+#
+# Floors are evidence-based, not guessed - only models verified to return null
+# on a small budget are listed here.
+MODEL_MIN_TOKENS = {
+    "nvidia/nemotron-3.5-lightning-30b-a3b": 2048,
+    "nvidia/nemotron-3-nano-omni-30b-a3b-reasoning": 2048,
+}
+
+
+def _budget(model: str, requested: int) -> int:
+    """Return a max_tokens large enough for reasoning models to emit content."""
+    floor = MODEL_MIN_TOKENS.get(model, 0)
+    return max(requested or 0, floor)
+
 # Verified free vision-capable model (multimodal requests route here).
 DEFAULT_VISION_MODEL = "meta/llama-3.2-11b-vision-instruct"
 
@@ -495,7 +520,8 @@ def chat(
             resp = client.post(
                 f"{base_url_}/chat/completions",
                 headers=_headers(bearer),
-                json=_payload(_with_images(messages, images), m, temperature, max_tokens),
+                json=_payload(_with_images(messages, images), m, temperature,
+                              _budget(m, max_tokens)),
             )
             resp.raise_for_status()
             return _extract(resp.json())
@@ -570,7 +596,7 @@ async def achat(
                         f"{base_url_}/chat/completions",
                         headers=_headers(bearer),
                         json=_payload(_with_images(messages, images), m,
-                                      temperature, max_tokens),
+                                      temperature, _budget(m, max_tokens)),
                     )
                     resp.raise_for_status()
                     return _extract(resp.json())

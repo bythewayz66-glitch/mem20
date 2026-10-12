@@ -84,10 +84,7 @@ from tools.search_tools import SearchToolsMixin
 from tools.versioncontrol_tools import VersionControlToolsMixin
 from tools.webscraping_tools import WebScrapingToolsMixin
 from tools.braid_tools import BraidToolsMixin
-<<<<<<< Updated upstream
 from tools.irc_tools import IRCToolsMixin
-=======
->>>>>>> Stashed changes
 from health import start_health_server
 
 class Mem20MCPServer(MemoryToolsMixin, CognitiveToolsMixin, RoadmapToolsMixin,
@@ -100,11 +97,7 @@ class Mem20MCPServer(MemoryToolsMixin, CognitiveToolsMixin, RoadmapToolsMixin,
                      FinanceToolsMixin, MarketingToolsMixin,
                      ProductivityToolsMixin, SearchToolsMixin,
                      VersionControlToolsMixin, WebScrapingToolsMixin,
-<<<<<<< Updated upstream
                      BraidToolsMixin, IRCToolsMixin):
-=======
-                     BraidToolsMixin):
->>>>>>> Stashed changes
     def __init__(self):
         self.tools = {}
         self._start_time = time.time()
@@ -151,10 +144,7 @@ class Mem20MCPServer(MemoryToolsMixin, CognitiveToolsMixin, RoadmapToolsMixin,
         self.register_versioncontrol_tools()
         self.register_webscraping_tools()
         self.register_braid_tools()
-<<<<<<< Updated upstream
         self.register_irc_tools()
-=======
->>>>>>> Stashed changes
         self.register_job_tools()
     async def _handle_list_tools(self, context: ServerRequestContext, params: Optional[mt.PaginatedRequestParams]) -> mt.ListToolsResult:
         """Handle tools/list request."""
@@ -170,11 +160,7 @@ class Mem20MCPServer(MemoryToolsMixin, CognitiveToolsMixin, RoadmapToolsMixin,
     # mem20_job_wait (job_* tools) until complete.
     # ------------------------------------------------------------------
     LONG_RUNNING_TOOLS = {
-<<<<<<< Updated upstream
-        "imagination_concept", "imagination_critique",
-=======
         "imagination_concept", "imagination_dream", "imagination_critique",
->>>>>>> Stashed changes
         "imagination_simulate", "imagination_counterfactual", "imagination_recombine",
         "imagination_model", "imagination_visualize",
         "cog_process", "cog_chain", "cog_reason", "cog_plan", "cog_reflect",
@@ -277,11 +263,7 @@ class Mem20MCPServer(MemoryToolsMixin, CognitiveToolsMixin, RoadmapToolsMixin,
         except Exception as e:
             self._jobs[job_id]["error"] = str(e)
             self._jobs[job_id]["status"] = "error"
-<<<<<<< Updated upstream
     async def _job_status(self, arguments: Dict[str, Any]) -> str:
-=======
-    async def _job_status_tool(self, arguments: Dict[str, Any]) -> str:
->>>>>>> Stashed changes
         job_id = arguments.get("job_id", "")
         entry = self._jobs.get(job_id)
         if not entry:
@@ -293,11 +275,7 @@ class Mem20MCPServer(MemoryToolsMixin, CognitiveToolsMixin, RoadmapToolsMixin,
             "result": entry.get("result"),
             "error": entry.get("error"),
         }, indent=2)
-<<<<<<< Updated upstream
     async def _job_wait(self, arguments: Dict[str, Any]) -> str:
-=======
-    async def _job_wait_tool(self, arguments: Dict[str, Any]) -> str:
->>>>>>> Stashed changes
         job_id = arguments.get("job_id", "")
         timeout_ms = int(arguments.get("timeout_ms", 30000))
         entry = self._jobs.get(job_id)
@@ -309,7 +287,6 @@ class Mem20MCPServer(MemoryToolsMixin, CognitiveToolsMixin, RoadmapToolsMixin,
                 await asyncio.wait_for(task, timeout=max(1, timeout_ms) / 1000.0)
             except asyncio.TimeoutError:
                 pass
-<<<<<<< Updated upstream
         return await self._job_status(arguments)
     async def _execute_tool(self, tool_name: str, arguments: Dict[str, Any]) -> str:
         """Execute a tool and return result as string."""
@@ -330,17 +307,6 @@ class Mem20MCPServer(MemoryToolsMixin, CognitiveToolsMixin, RoadmapToolsMixin,
             return await self._job_status(arguments)
         elif tool_name == "job_wait":
             return await self._job_wait(arguments)
-=======
-        return await self._job_status_tool(arguments)
-    async def _execute_tool(self, tool_name: str, arguments: Dict[str, Any]) -> str:
-        """Execute a tool and return result as string."""
-        
-        # Job registry tools
-        if tool_name == "job_status":
-            return await self._job_status_tool(arguments)
-        elif tool_name == "job_wait":
-            return await self._job_wait_tool(arguments)
->>>>>>> Stashed changes
         # Memory tools
         if tool_name == "memory_store":
             return await self._memory_store(arguments)

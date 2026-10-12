@@ -219,8 +219,6 @@ class CognitiveToolsMixin:
                 "required": ["concept", "project_path"],
             },
         )
-<<<<<<< Updated upstream
-=======
         self.tools["imagination_dream"] = mt.Tool(
             name="imagination_dream",
             title="Imagination Dream",
@@ -236,7 +234,6 @@ class CognitiveToolsMixin:
                 "required": ["prompt"],
             },
         )
->>>>>>> Stashed changes
         self.tools["imagination_critique"] = mt.Tool(
             name="imagination_critique",
             title="Imagination Critique",

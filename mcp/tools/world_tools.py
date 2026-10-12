@@ -230,8 +230,6 @@ class WorldToolsMixin:
         """Helper to get the memory store path."""
         return os.environ.get("MEM20_STORE_PATH", os.path.expanduser("~/.mem20/store"))
 
-<<<<<<< Updated upstream
-=======
         if not name or not description or not steps:
             return "Error: name, description, and steps are required"
 
@@ -349,7 +347,6 @@ class WorldToolsMixin:
             return output
         except Exception as e:
             return f"Error listing skills: {str(e)}"
->>>>>>> Stashed changes
     async def _world_model_add_variable(self, args: Dict) -> str:
         name = args.get("name", "")
         initial_value = args.get("initial_value", 0)
@@ -359,23 +356,14 @@ class WorldToolsMixin:
             return "Error: name is required"
 
         try:
-<<<<<<< Updated upstream
             sys.path.insert(0, self._store_path())
             from memory import world_model_add_variable
 
-=======
-            sys.path.insert(0, os.environ.get("MEM20_STORE_PATH", os.path.expanduser("~/.mem20/store")))
-            from memory import world_model_add_variable
-            
->>>>>>> Stashed changes
             result = world_model_add_variable(name, initial_value, dynamics)
             return f"✅ Variable added: {result['variable']} = {result['initial_value']} ({result['dynamics']})"
         except Exception as e:
             return f"Error adding world model variable: {str(e)}"
-<<<<<<< Updated upstream
 
-=======
->>>>>>> Stashed changes
     async def _world_model_add_rule(self, args: Dict) -> str:
         condition = args.get("condition", "")
         effect = args.get("effect", {})
@@ -385,36 +373,21 @@ class WorldToolsMixin:
             return "Error: condition and effect are required"
 
         try:
-<<<<<<< Updated upstream
             sys.path.insert(0, self._store_path())
             from memory import world_model_add_rule
 
-=======
-            sys.path.insert(0, os.environ.get("MEM20_STORE_PATH", os.path.expanduser("~/.mem20/store")))
-            from memory import world_model_add_rule
-            
->>>>>>> Stashed changes
             result = world_model_add_rule(condition, effect, probability)
             return f"✅ Rule added: IF {result['condition']} THEN {result['effect']} (p={result['probability']})"
         except Exception as e:
             return f"Error adding world model rule: {str(e)}"
-<<<<<<< Updated upstream
 
-=======
->>>>>>> Stashed changes
     async def _world_model_simulate(self, args: Dict) -> str:
         steps = args.get("steps", 10)
 
         try:
-<<<<<<< Updated upstream
             sys.path.insert(0, self._store_path())
             from memory import world_model_simulate
 
-=======
-            sys.path.insert(0, os.environ.get("MEM20_STORE_PATH", os.path.expanduser("~/.mem20/store")))
-            from memory import world_model_simulate
-            
->>>>>>> Stashed changes
             result = world_model_simulate(steps)
             output = f"**World Model Simulation** ({result['steps']} steps)\n\n"
             output += f"Final state: {result['final_state']}\n\n"
@@ -424,10 +397,7 @@ class WorldToolsMixin:
             return output
         except Exception as e:
             return f"Error simulating world model: {str(e)}"
-<<<<<<< Updated upstream
 
-=======
->>>>>>> Stashed changes
     async def _world_model_predict(self, args: Dict) -> str:
         query = args.get("query", "")
         horizon = args.get("horizon", 10)
@@ -436,39 +406,16 @@ class WorldToolsMixin:
             return "Error: query is required"
 
         try:
-<<<<<<< Updated upstream
             sys.path.insert(0, self._store_path())
             from memory import world_model_predict
 
-=======
-            sys.path.insert(0, os.environ.get("MEM20_STORE_PATH", os.path.expanduser("~/.mem20/store")))
-            from memory import world_model_predict
-            
->>>>>>> Stashed changes
             result = world_model_predict(query, horizon)
             output = f"**World Model Prediction**\n\n"
             output += f"Query: {result['query']}\n"
             if 'prediction' in result:
                 output += f"Prediction: {result['prediction']}\n"
-<<<<<<< Updated upstream
             if 'final_value' in result:
                 output += f"Final value: {result['final_value']} (threshold: {result.get('threshold')})\n"
-            output += f"Trajectory: {result['trajectory']}\n"
-            return output
-        except Exception as e:
-            return f"Error predicting with world model: {str(e)}"
-
-    async def _world_model_get_state(self, args: Dict) -> str:
-        try:
-            sys.path.insert(0, self._store_path())
-            from memory import world_model_get_state
-
-            state = world_model_get_state()
-            if not state:
-                return "World model is empty (no variables defined)"
-
-=======
-                output += f"Final value: {result['final_value']} (threshold: {result['threshold']})\n"
                 output += f"Trajectory: {result['trajectory']}\n"
             else:
                 output += f"Final state: {result['final_state']}\n"
@@ -476,23 +423,21 @@ class WorldToolsMixin:
             return output
         except Exception as e:
             return f"Error predicting with world model: {str(e)}"
+
     async def _world_model_get_state(self, args: Dict) -> str:
         try:
-            sys.path.insert(0, os.environ.get("MEM20_STORE_PATH", os.path.expanduser("~/.mem20/store")))
+            sys.path.insert(0, self._store_path())
             from memory import world_model_get_state
-            
+
             state = world_model_get_state()
             if not state:
                 return "World model is empty (no variables defined)"
-            
->>>>>>> Stashed changes
             output = "**World Model Current State**\n\n"
             for var, val in state.items():
                 output += f"  {var}: {val}\n"
             return output
         except Exception as e:
             return f"Error getting world model state: {str(e)}"
-<<<<<<< Updated upstream
 
     async def _world_model_reset(self, args: Dict) -> str:
         try:
@@ -504,17 +449,6 @@ class WorldToolsMixin:
         except Exception as e:
             return f"Error resetting world model: {str(e)}"
 
-=======
-    async def _world_model_reset(self, args: Dict) -> str:
-        try:
-            sys.path.insert(0, os.environ.get("MEM20_STORE_PATH", os.path.expanduser("~/.mem20/store")))
-            from memory import world_model_reset
-
-            result = world_model_reset()
-            return f"✅ {result['status']}"
-        except Exception as e:
-            return f"Error resetting world model: {str(e)}"
->>>>>>> Stashed changes
     async def _world_model_record_prediction(self, args: Dict) -> str:
         query = args.get("query", "")
         prediction = args.get("prediction", "")
@@ -524,7 +458,6 @@ class WorldToolsMixin:
             return "Error: query is required"
 
         try:
-<<<<<<< Updated upstream
             sys.path.insert(0, self._store_path())
             from memory import world_model_record_prediction
 
@@ -534,16 +467,6 @@ class WorldToolsMixin:
         except Exception as e:
             return f"Error recording prediction: {str(e)}"
 
-=======
-            sys.path.insert(0, os.environ.get("MEM20_STORE_PATH", os.path.expanduser("~/.mem20/store")))
-            from memory import world_model_record_prediction
-
-            result = world_model_record_prediction(query, prediction or None, horizon)
-            return (f"✅ Prediction recorded: prediction_id={result['prediction_id']} "
-                    f"(use as prediction_ref when promoting via resolved_via_prediction_error)")
-        except Exception as e:
-            return f"Error recording prediction: {str(e)}"
->>>>>>> Stashed changes
     async def _world_model_resolve_prediction(self, args: Dict) -> str:
         prediction_id = args.get("prediction_id", "")
         observed_outcome = args.get("observed_outcome", "")
@@ -553,7 +476,6 @@ class WorldToolsMixin:
             return "Error: prediction_id and observed_outcome are required"
 
         try:
-<<<<<<< Updated upstream
             sys.path.insert(0, self._store_path())
             from memory import world_model_resolve_prediction
 
@@ -564,17 +486,6 @@ class WorldToolsMixin:
         except Exception as e:
             return f"Error resolving prediction: {str(e)}"
 
-=======
-            sys.path.insert(0, os.environ.get("MEM20_STORE_PATH", os.path.expanduser("~/.mem20/store")))
-            from memory import world_model_resolve_prediction
-
-            result = world_model_resolve_prediction(prediction_id, observed_outcome, resolved_in_favor)
-            verdict = "in favor" if result["resolved_in_favor"] else "against"
-            return (f"✅ Prediction {prediction_id} resolved {verdict}. "
-                    f"observed_outcome={result['observed_outcome']!r}")
-        except Exception as e:
-            return f"Error resolving prediction: {str(e)}"
->>>>>>> Stashed changes
     async def _affective_set_value(self, args: Dict) -> str:
         name = args.get("name", "")
         weight = args.get("weight", 0)
@@ -584,23 +495,14 @@ class WorldToolsMixin:
             return "Error: name is required"
 
         try:
-<<<<<<< Updated upstream
             sys.path.insert(0, self._store_path())
             from memory import affective_set_value
 
-=======
-            sys.path.insert(0, os.environ.get("MEM20_STORE_PATH", os.path.expanduser("~/.mem20/store")))
-            from memory import affective_set_value
-            
->>>>>>> Stashed changes
             result = affective_set_value(name, weight, description)
             return f"✅ Value set: {result['value']} (weight: {result['weight']}) - {result['description']}"
         except Exception as e:
             return f"Error setting affective value: {str(e)}"
-<<<<<<< Updated upstream
 
-=======
->>>>>>> Stashed changes
     async def _affective_set_emotion(self, args: Dict) -> str:
         name = args.get("name", "")
         intensity = args.get("intensity", 0)
@@ -610,23 +512,14 @@ class WorldToolsMixin:
             return "Error: name is required"
 
         try:
-<<<<<<< Updated upstream
             sys.path.insert(0, self._store_path())
             from memory import affective_set_emotion
 
-=======
-            sys.path.insert(0, os.environ.get("MEM20_STORE_PATH", os.path.expanduser("~/.mem20/store")))
-            from memory import affective_set_emotion
-            
->>>>>>> Stashed changes
             result = affective_set_emotion(name, intensity, cause)
             return f"✅ Emotion set: {result['emotion']} (intensity: {result['intensity']}) - {result['cause']}"
         except Exception as e:
             return f"Error setting affective emotion: {str(e)}"
-<<<<<<< Updated upstream
 
-=======
->>>>>>> Stashed changes
     async def _affective_add_goal(self, args: Dict) -> str:
         name = args.get("name", "")
         priority = args.get("priority", 0)
@@ -636,23 +529,14 @@ class WorldToolsMixin:
             return "Error: name is required"
 
         try:
-<<<<<<< Updated upstream
             sys.path.insert(0, self._store_path())
             from memory import affective_add_goal
 
-=======
-            sys.path.insert(0, os.environ.get("MEM20_STORE_PATH", os.path.expanduser("~/.mem20/store")))
-            from memory import affective_add_goal
-            
->>>>>>> Stashed changes
             result = affective_add_goal(name, priority, target_state)
             return f"✅ Goal added: {result['goal']} (priority: {result['priority']}) - Target: {result['target_state']}"
         except Exception as e:
             return f"Error adding affective goal: {str(e)}"
-<<<<<<< Updated upstream
 
-=======
->>>>>>> Stashed changes
     async def _affective_update_preference(self, args: Dict) -> str:
         context = args.get("context", "")
         preference = args.get("preference", "")
@@ -662,23 +546,14 @@ class WorldToolsMixin:
             return "Error: context and preference are required"
 
         try:
-<<<<<<< Updated upstream
             sys.path.insert(0, self._store_path())
             from memory import affective_update_preference
 
-=======
-            sys.path.insert(0, os.environ.get("MEM20_STORE_PATH", os.path.expanduser("~/.mem20/store")))
-            from memory import affective_update_preference
-            
->>>>>>> Stashed changes
             result = affective_update_preference(context, preference, strength)
             return f"✅ Preference updated: {result['context']} -> {result['preference']} = {result['strength']}"
         except Exception as e:
             return f"Error updating affective preference: {str(e)}"
-<<<<<<< Updated upstream
 
-=======
->>>>>>> Stashed changes
     async def _affective_evaluate(self, args: Dict) -> str:
         situation = args.get("situation", {})
 
@@ -686,15 +561,9 @@ class WorldToolsMixin:
             return "Error: situation is required"
 
         try:
-<<<<<<< Updated upstream
             sys.path.insert(0, self._store_path())
             from memory import affective_evaluate
 
-=======
-            sys.path.insert(0, os.environ.get("MEM20_STORE_PATH", os.path.expanduser("~/.mem20/store")))
-            from memory import affective_evaluate
-            
->>>>>>> Stashed changes
             result = affective_evaluate(situation)
             output = f"**Affective Evaluation**\n\n"
             output += f"Situation: {situation}\n\n"
@@ -708,20 +577,12 @@ class WorldToolsMixin:
             return output
         except Exception as e:
             return f"Error evaluating affective state: {str(e)}"
-<<<<<<< Updated upstream
 
     async def _affective_get_state(self, args: Dict) -> str:
         try:
             sys.path.insert(0, self._store_path())
             from memory import affective_get_state
 
-=======
-    async def _affective_get_state(self, args: Dict) -> str:
-        try:
-            sys.path.insert(0, os.environ.get("MEM20_STORE_PATH", os.path.expanduser("~/.mem20/store")))
-            from memory import affective_get_state
-            
->>>>>>> Stashed changes
             state = affective_get_state()
             output = "**Affective State**\n\n"
             output += f"Values: {state.get('values', {})}\n"
@@ -738,10 +599,5 @@ class WorldToolsMixin:
             "enabled": getattr(self, "worldmodel_enabled", WORLDMODEL_ENABLED),
             "phase": "8.1",
             "note": "World model / self model / affective / procedural tools. "
-<<<<<<< Updated upstream
             "Disabled when MEM20_FLAG_WORLDMODEL_20 is 0/false/no/off.",
         }, ensure_ascii=False)
-=======
-                    "Disabled when MEM20_FLAG_WORLDMODEL_20 is 0/false/no/off.",
-        }, ensure_ascii=False)
->>>>>>> Stashed changes

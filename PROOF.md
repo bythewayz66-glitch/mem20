@@ -1,0 +1,202 @@
+# proof.md — mem20 retrieval work
+
+**Session:** 2026-10-12 · **HEAD at time of writing:** `efd5b23c` · **Agent:** spacebunny
+
+> **Read this first.** This file separates what was **verified done** from what was
+> **not done**. Nothing below is marked complete without a command output or a
+> named artifact as evidence. Items I could not genuinely finish are marked
+> **NOT DONE** and say why. A partial pass is not a clean pass.
+
+---
+
+## 1. DONE — verified by execution
+
+### 1.1 cog model repair (the blocker that started everything)
+| Proof | Detail |
+|---|---|
+| Commit | `2d107330` |
+| Verified | `llm.chat()` answers "which is larger, 9.11 or 9.8" → **9.8** (the known-tricky decimal comparison) |
+| Verified | Forcing a broken `MEM20_LLM_MODEL` falls through the chain → returns `FALLBACK-OK` exactly |
+
+Root cause found, not guessed: **every paid provider was unfunded** (groq
+organization-delinquent, openrouter/deepseek/together no balance, mistral 401,
+cerebras 402) *and* the Gemini fallback pointed at `gemini-2.0-flash`, which
+Google **retired** — so that fallback could never fire either.
+
+Constraint that is only discoverable from a failed request: Kimi K3 **fixes
+`top_p` at 0.95**; any other value is a hard HTTP 400. Recorded in code.
+
+### 1.2 Modality slots — all 10 filled
+| Slot | Model | Proof |
+|---|---|---|
+| chat primary | `moonshotai/kimi-k3` | `9.8` decimal test |
+| chat fallbacks ×6 | nemotron-3-super/ultra, glm-5.3/-flash, gpt-oss-20b, nemotron-3.5-lightning | chain exercised via forced failure |
+| translate | `nvidia/riva-translate-4b-instruct-v2` | EN→FR and EN→DE both correct French/German |
+| embed | `nvidia/nemotron-3-embed-1b` | 2048-dim, single + batch |
+| safety | `nvidia/nemotron-3.5-content-safety` | `unsafe` for lock-picking, `safe` for benign |
+| optimize | `nvidia/ising-calibration-1.5-31b` | see 1.4 |
+| generate_ui | `meta/muse-glimmer-30b` | 1886 B complete HTML w/ inline CSS |
+| code | OpenRouter `:free` ×3 | working linked-list reversal returned |
+| tts | `gemini-2.5-flash-preview-tts` | 2.25 s / 24 kHz mono **valid WAV** |
+| asr | `faster-whisper-base` (local) | TTS→ASR round trip exact |
+
+**Commits:** `2d107330`, `b8b4a187`, `f83e10ef`, `56865c26`, `dcbafe8e`, `ea18aed0`
+
+> I corrected a fabricated model name here. An earlier commit set the Gemini
+> fallback to `gemini-3.8-flash` — a name **I invented from the wording of a 404
+> error message**. It does not exist, and the model it replaced was also dead
+> ("no longer available to new users"). Fixed to `gemini-flash-latest`, verified.
+
+### 1.3 Benchmark harness built from local data — no downloads
+| Proof | Detail |
+|---|---|
+| Corpus | `opencode.db` read **READ-ONLY** via sqlite `mode=ro` URI |
+| Extracted | 21,449 chunks / 158 sessions, from 201 sessions · 41,353 messages · 157,780 parts |
+| Queries | 1,124 probes × 3 styles (identifier / first-sentence / mixed) |
+| Isolation | `MEM20_STORE_PATH=/opt/mem20/bench/store` + hard assert against escape. **Live store never a target.** |
+| Commit | `466dbfea` |
+
+**Pilot only (n=28, ~2 % indexed) — proves the harness runs, is NOT an accuracy claim:**
+semantic R@5 0.845 @ 55.6 ms · hybrid R@5 0.952 @ 949 ms (**17× slower**).
+
+### 1.4 Six methods implemented and verified this session
+| # | Method | Proof | Commit |
+|---|---|---|---|
+| 8 | `decompose_query` | 2-hop question split, 5 hits/hop, RRF-fused | `466dbfea` |
+| 9 | `entity_anchor_expand` | anchors found; graph starved until index completes | `466dbfea` |
+| 10 | `calibrated_search` | abstention **8/8** on labelled on/off-topic set | `466dbfea` |
+| 1 | `recency_decay` | exponential decay second pass, dated/undated split | `efd5b23c` |
+| 14 | `hyde_expand` | deterministic **offline** HyDE, 24 terms, no LLM | `efd5b23c` |
+| 16 | `mmr` | pairwise similarity **0.0465 → 0.0225 = 52 % redundancy cut** | `efd5b23c` |
+| 18 | `get_by_id` | bogus id → `found=False`; real id → `found=True` over 483 records | `efd5b23c` |
+| 21 | `failure_memory` | 15 examined → 2 post-mortems surfaced | `efd5b23c` |
+| 23 | `associative_reconstruct` | 4 seeds, 1 hop, 12 graph facts fused | `efd5b23c` |
+
+### 1.5 Frozen method list
+`memory_engine/METHOD_MANIFEST.json` — 14 methods, 10 slots, 4 open defects.
+
+> **FREEZE RULE:** no additions unless a method is *demonstrated* to beat every
+> existing method on the same benchmark under the same harness. Prose claims do
+> not count. Renaming or recomposing an existing method is not a new method.
+
+I also recorded which of the "25 methods" are **not methods**: #5 is #3+#4 fused,
+#22 restates #11, #20 is #9 + summarisation, #13 is orchestration, #2 and #12 are
+context management. Honest count is **~17 distinct, not 25**.
+
+---
+
+## 2. OPEN DEFECTS — recorded, not hidden
+
+### CE-1 (high) — cross-encoder rerank silently did nothing
+`recall_hybrid` contains a rerank block that calls `_get_cross_encoder()`,
+`predict()` returns **10 real scores**, **no failure warning fires**, and yet every
+returned record has `_ce_score = None`. A line-level trace showed the mutation
+executing; no code path reassigns the list between mutation and return.
+
+**I could not root-cause this and stopped rather than keep guessing.** Evidence:
+`/tmp/opencode/proof/ce_probe_final.json`. **Impact: every hybrid rerank on the
+live system has been a no-op.** Mitigated by `retrieval_v2.rerank()`, verified
+working. Engine fix: **NOT DONE.**
+
+### SCORE-1 (high) — hybrid score has no dynamic range
+`score = 0.007576` for a **real** query and `0.007576` for a **nonsense** query.
+This blocks weighted multi-factor scoring (#15) entirely — and "RRF + learned
+weights" (as in the OmniRecall design) are mutually exclusive, because RRF
+deliberately discards scores. **NOT DONE.**
+
+### EPI-1 (high) — 84 % of live facts unlabeled
+Of the last 200 live records: **22 have no `epistemic_status` key at all**,
+152 explicitly `unlabeled`. Offending writers are IRC/kanban **bot agents**
+(newest records are `[#mem20] …` messages). The enforcement correctly refuses
+them — that is the contract working — but it surfaces as background errors.
+
+My own 3 writes this session all carried explicit statuses and succeeded.
+**Not patched: those are other agents' write paths and I do not own them.**
+
+### REC-1 (low) — recency undemonstrable on this corpus
+The mechanism works, but every bench timestamp is ~now, so decay is not
+*differentiated* here. Needs an older corpus to prove.
+
+### Ising objective — verified unreliable
+Spin assignment correct **4/4** runs (all scored a true cut of 4, the optimum).
+Self-reported objective **wrong every run** (`cut_size: 2`). Documented in code:
+solutions can be trusted, arithmetic cannot.
+
+---
+
+## 3. NOT DONE
+
+Stated plainly. None of these were faked.
+
+| Item | Why |
+|---|---|
+| **Full R@k eval** | Blocked — index at **2,519 / 21,449 (~12 %)** at ~73 rec/min, ETA ~4.4 h. Any accuracy number now would be meaningless. |
+| **Measure all methods on full corpus** | Same blocker. |
+| **End-to-end LLM-judge QA eval vs 94.6 %** | Not started. Needs the above first. |
+| **#15 weighted multi-factor** | Blocked by SCORE-1. |
+| **#6 engine rerank fix** | Not root-caused. See CE-1. |
+| **Bot fix (unlabeled writes)** | Not patched — other agents' code. |
+| **Epistemic labeling 412/493** | Not started. **This is the highest-value unfinished item.** |
+| **12 missing READMEs / 111 unwired / 241 untested** | Not started. Large. |
+| **Systemwide .md currency pass** | Not started. |
+| **mem20benchmarkz full suite** | Not started. |
+| **Sales/information sites** | Not started. |
+| **First-class tiers, trust track, SITEMAP rebuild** | Not started. |
+
+---
+
+## 4. COMPETITOR BAR — read before trusting any future number
+
+The target set is **Zep, Mem0, LangGraph, Hindsight, Stashbird, MemPalace**.
+
+**There is no single "top provider number" to beat.** Measured spread:
+
+| System | LoCoMo | LongMemEval |
+|---|---|---|
+| Zep | 94.7 claimed / 75.1 third-party / **58.5 common harness** | 71.2 |
+| Mem0 | 92.5 claimed / 66.9 third-party / **71.4 common harness** | 94.4 claimed / 32–49 independent |
+| Hindsight | 83.2 | **94.6 reproduced** |
+| Stashbird | 80.4 / 87.5 | 75.6 / 81.0 |
+| MemPalace | — | 96.6 **(R@5, verbatim storage — not comparable)** |
+
+**Honest target: beat Hindsight's 94.6 %** (end-to-end judge, reproducible).
+MemPalace's 96.6 % is R@5 with raw verbatim storage — a retrieval-only ceiling
+requiring no reasoning. Do **not** compare against it.
+
+Reference on the same harness: plain hybrid-search **74.0 % @ 1600 ms / 23.2k
+tokens** — so ~20 points of real headroom.
+
+**Caveat on our own corpus:** ours is **real agent sessions**; LoCoMo/LongMemEval
+are **synthetic conversations**. Harder in messiness, cleaner in self-consistent
+ground truth. A high number here does not transfer automatically.
+
+---
+
+## 5. Evidence index
+
+| File | Contents |
+|---|---|
+| `/opt/mem20/memory_engine/METHOD_MANIFEST.json` | frozen list, harness, open defects |
+| `/opt/mem20/memory_engine/retrieval_v2.py` | methods 1, 14, 16, 18, 21, 23 + 8/9/10 + 6 |
+| `/tmp/opencode/proof/partials.json` | verification output for 1/14/18/21/23 |
+| `/tmp/opencode/proof/rerank_mmr.json` | rerank + MMR diversity numbers |
+| `/tmp/opencode/proof/ce_probe_final.json` | CE-1 evidence |
+| `/opt/mem20/bench/` | corpus extractor, query generator, R@k harness, indexer |
+| `/opt/mem20/roadmaps/mem20-retrieval-v2.json` | new roadmap (8 phases) |
+
+---
+
+## 6. Verification method — worth reading
+
+Three defects this session were **invisible** to green exit codes:
+
+1. `build_index.py` was missing its `__main__` guard → **exited 0 in 10 s doing
+   nothing** while systemd reported "Deactivated successfully".
+2. `PosixPath` iterated directly → `TypeError`.
+3. The cross-encoder returns HTTP 200 with `content: null` on a small token budget
+   — reasoning models starve silently, so `nemotron-3.5-lightning` **was already a
+   cog fallback that returned empty strings**. Fixed via `MODEL_MIN_TOKENS` /
+   `_budget()` in both sync and async paths (commit `08c87f21`).
+
+Lesson applied throughout: **a zero exit code is not evidence that work happened.**
+Count rows, check the artifact, verify the behaviour.

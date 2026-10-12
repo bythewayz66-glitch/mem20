@@ -88,15 +88,29 @@ context management. Honest count is **~17 distinct, not 25**.
 ## 2. OPEN DEFECTS — recorded, not hidden
 
 ### CE-1 (high) — cross-encoder rerank silently did nothing
-`recall_hybrid` contains a rerank block that calls `_get_cross_encoder()`,
-`predict()` returns **10 real scores**, **no failure warning fires**, and yet every
-returned record has `_ce_score = None`. A line-level trace showed the mutation
-executing; no code path reassigns the list between mutation and return.
+**Narrowed, not solved.** Object-identity tracing (`bench/ce_trace_evidence.json`)
+established the exact shape of the bug:
 
-**I could not root-cause this and stopped rather than keep guessing.** Evidence:
-`/tmp/opencode/proof/ce_probe_final.json`. **Impact: every hybrid rerank on the
-live system has been a no-op.** Mitigated by `retrieval_v2.rerank()`, verified
-working. Engine fix: **NOT DONE.**
+| line | `sorted_results` size | object ids (first 3) | has `_ce_score` |
+|---|---|---|---|
+| 3802 (mutation loop) | 44 | `…544, …096, …016` | flips `False → True` |
+| 3808 (re-sort) | 44 | `…544, …096, …016` | `True` |
+| 3814 (return loop) | 44 | **`…416, …272, …480`** | **`False`** |
+
+So the mutation genuinely happens on 44 dicts, and the dicts being read at the
+return are **different objects that never received it**. Same length, same
+function, same file (`M.__file__` verified), and the `except` at 3809 never
+fires — captured stderr contains only the two model-loading progress bars, no
+`"reranking failed"`.
+
+Explanations checked and **eliminated**: `recall_semantic` does not call the
+cross-encoder (lines 3583-3682 contain no reference to it); `USE_CROSS_ENCODER`
+is `True`; `predict()` returns a real `ndarray`; the module is loaded from the
+file being read.
+
+**Impact: every hybrid rerank on the live system has been a no-op.** Mitigated by
+`retrieval_v2.rerank()`, verified working. Engine fix: **NOT DONE** — this needs a
+clean reproduction, not more inference.
 
 ### SCORE-1 (high) — hybrid score has no dynamic range
 `score = 0.007576` for a **real** query and `0.007576` for a **nonsense** query.

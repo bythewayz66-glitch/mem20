@@ -1,0 +1,524 @@
+{
+ "3802": [
+  {
+   "n": 44,
+   "ids": [
+    140059997140544,
+    140059997140096,
+    140059997142016
+   ],
+   "has_ce": [
+    false,
+    false,
+    false
+   ],
+   "has_final": [
+    false,
+    false,
+    false
+   ]
+  },
+  {
+   "n": 44,
+   "ids": [
+    140059997140544,
+    140059997140096,
+    140059997142016
+   ],
+   "has_ce": [
+    true,
+    false,
+    false
+   ],
+   "has_final": [
+    true,
+    false,
+    false
+   ]
+  },
+  {
+   "n": 44,
+   "ids": [
+    140059997140544,
+    140059997140096,
+    140059997142016
+   ],
+   "has_ce": [
+    true,
+    true,
+    false
+   ],
+   "has_final": [
+    true,
+    true,
+    false
+   ]
+  },
+  {
+   "n": 44,
+   "ids": [
+    140059997140544,
+    140059997140096,
+    140059997142016
+   ],
+   "has_ce": [
+    true,
+    true,
+    true
+   ],
+   "has_final": [
+    true,
+    true,
+    true
+   ]
+  },
+  {
+   "n": 44,
+   "ids": [
+    140059997140544,
+    140059997140096,
+    140059997142016
+   ],
+   "has_ce": [
+    true,
+    true,
+    true
+   ],
+   "has_final": [
+    true,
+    true,
+    true
+   ]
+  },
+  {
+   "n": 44,
+   "ids": [
+    140059997140544,
+    140059997140096,
+    140059997142016
+   ],
+   "has_ce": [
+    true,
+    true,
+    true
+   ],
+   "has_final": [
+    true,
+    true,
+    true
+   ]
+  },
+  {
+   "n": 44,
+   "ids": [
+    140059997140544,
+    140059997140096,
+    140059997142016
+   ],
+   "has_ce": [
+    true,
+    true,
+    true
+   ],
+   "has_final": [
+    true,
+    true,
+    true
+   ]
+  },
+  {
+   "n": 44,
+   "ids": [
+    140059997140544,
+    140059997140096,
+    140059997142016
+   ],
+   "has_ce": [
+    true,
+    true,
+    true
+   ],
+   "has_final": [
+    true,
+    true,
+    true
+   ]
+  },
+  {
+   "n": 44,
+   "ids": [
+    140059997140544,
+    140059997140096,
+    140059997142016
+   ],
+   "has_ce": [
+    true,
+    true,
+    true
+   ],
+   "has_final": [
+    true,
+    true,
+    true
+   ]
+  },
+  {
+   "n": 44,
+   "ids": [
+    140059997140544,
+    140059997140096,
+    140059997142016
+   ],
+   "has_ce": [
+    true,
+    true,
+    true
+   ],
+   "has_final": [
+    true,
+    true,
+    true
+   ]
+  },
+  {
+   "n": 44,
+   "ids": [
+    140059997140544,
+    140059997140096,
+    140059997142016
+   ],
+   "has_ce": [
+    true,
+    true,
+    true
+   ],
+   "has_final": [
+    true,
+    true,
+    true
+   ]
+  }
+ ],
+ "3808": [
+  {
+   "n": 44,
+   "ids": [
+    140059997140544,
+    140059997140096,
+    140059997142016
+   ],
+   "has_ce": [
+    true,
+    true,
+    true
+   ],
+   "has_final": [
+    true,
+    true,
+    true
+   ]
+  }
+ ],
+ "3814": [
+  {
+   "n": 44,
+   "ids": [
+    140059997140416,
+    140059997142272,
+    140059997140480
+   ],
+   "has_ce": [
+    false,
+    false,
+    false
+   ],
+   "has_final": [
+    false,
+    false,
+    false
+   ]
+  },
+  {
+   "n": 44,
+   "ids": [
+    140059997140416,
+    140059997142272,
+    140059997140480
+   ],
+   "has_ce": [
+    false,
+    false,
+    false
+   ],
+   "has_final": [
+    false,
+    false,
+    false
+   ]
+  },
+  {
+   "n": 44,
+   "ids": [
+    140059997140416,
+    140059997142272,
+    140059997140480
+   ],
+   "has_ce": [
+    false,
+    false,
+    false
+   ],
+   "has_final": [
+    false,
+    false,
+    false
+   ]
+  },
+  {
+   "n": 44,
+   "ids": [
+    140059997140416,
+    140059997142272,
+    140059997140480
+   ],
+   "has_ce": [
+    false,
+    false,
+    false
+   ],
+   "has_final": [
+    false,
+    false,
+    false
+   ]
+  },
+  {
+   "n": 44,
+   "ids": [
+    140059997140416,
+    140059997142272,
+    140059997140480
+   ],
+   "has_ce": [
+    false,
+    false,
+    false
+   ],
+   "has_final": [
+    false,
+    false,
+    false
+   ]
+  },
+  {
+   "n": 44,
+   "ids": [
+    140059997140416,
+    140059997142272,
+    140059997140480
+   ],
+   "has_ce": [
+    false,
+    false,
+    false
+   ],
+   "has_final": [
+    false,
+    false,
+    false
+   ]
+  }
+ ],
+ "3815": [
+  {
+   "n": 44,
+   "ids": [
+    140059997140416,
+    140059997142272,
+    140059997140480
+   ],
+   "has_ce": [
+    false,
+    false,
+    false
+   ],
+   "has_final": [
+    false,
+    false,
+    false
+   ]
+  },
+  {
+   "n": 44,
+   "ids": [
+    140059997140416,
+    140059997142272,
+    140059997140480
+   ],
+   "has_ce": [
+    false,
+    false,
+    false
+   ],
+   "has_final": [
+    false,
+    false,
+    false
+   ]
+  },
+  {
+   "n": 44,
+   "ids": [
+    140059997140416,
+    140059997142272,
+    140059997140480
+   ],
+   "has_ce": [
+    false,
+    false,
+    false
+   ],
+   "has_final": [
+    false,
+    false,
+    false
+   ]
+  },
+  {
+   "n": 44,
+   "ids": [
+    140059997140416,
+    140059997142272,
+    140059997140480
+   ],
+   "has_ce": [
+    false,
+    false,
+    false
+   ],
+   "has_final": [
+    false,
+    false,
+    false
+   ]
+  },
+  {
+   "n": 44,
+   "ids": [
+    140059997140416,
+    140059997142272,
+    140059997140480
+   ],
+   "has_ce": [
+    false,
+    false,
+    false
+   ],
+   "has_final": [
+    false,
+    false,
+    false
+   ]
+  },
+  {
+   "n": 44,
+   "ids": [
+    140059997140416,
+    140059997142272,
+    140059997140480
+   ],
+   "has_ce": [
+    false,
+    false,
+    false
+   ],
+   "has_final": [
+    false,
+    false,
+    false
+   ]
+  },
+  {
+   "n": 44,
+   "ids": [
+    140059997140416,
+    140059997142272,
+    140059997140480
+   ],
+   "has_ce": [
+    false,
+    false,
+    false
+   ],
+   "has_final": [
+    false,
+    false,
+    false
+   ]
+  },
+  {
+   "n": 44,
+   "ids": [
+    140059997140416,
+    140059997142272,
+    140059997140480
+   ],
+   "has_ce": [
+    false,
+    false,
+    false
+   ],
+   "has_final": [
+    false,
+    false,
+    false
+   ]
+  },
+  {
+   "n": 44,
+   "ids": [
+    140059997140416,
+    140059997142272,
+    140059997140480
+   ],
+   "has_ce": [
+    false,
+    false,
+    false
+   ],
+   "has_final": [
+    false,
+    false,
+    false
+   ]
+  },
+  {
+   "n": 44,
+   "ids": [
+    140059997140416,
+    140059997142272,
+    140059997140480
+   ],
+   "has_ce": [
+    false,
+    false,
+    false
+   ],
+   "has_final": [
+    false,
+    false,
+    false
+   ]
+  }
+ ],
+ "returned_ids": [
+  140059997585984,
+  140059997586304,
+  140059997587008
+ ],
+ "returned_ce": [
+  null,
+  null,
+  null
+ ]
+}

@@ -1,0 +1,55 @@
+{
+  "name": "mem20-retrieval-v2",
+  "description": "Re-measured 2026-10-12, supersedes mem20-retrieval-master-100 whose premises had drifted. GOAL: 10 retrieval methods FULLY IMPLEMENTED, benchmarked on a harness built locally from opencode.db (no HuggingFace downloads), each justified by measured numbers against published competitor results. HARD RULE: never write to /root/.mem20/store from benchmark work - use MEM20_STORE_PATH=/opt/mem20/bench/store.\n\nWHAT THE RE-MEASUREMENT CHANGED. C01 index_health is DONE (was 'MISSING') - all three indexes healthy, vector 492/492, bm25 493/493, graph 860 entities/11937 edges, 0 drift. B01 corpus moved 14 -> 493 facts (35x, still short of 1500). R01 (huggingface network hang) is DOWNGRADED to LOW: both models are already cached locally and load fully offline with HF_HUB_OFFLINE=1 - all-MiniLM-L6-v2 (88M, 384-dim embedder) and cross-encoder/ms-marco-MiniLM-L-6-v2 (reranker, verified ranking 'the epistemic_status contract break was fixed' top at -5.12 vs -11.4). So R01 is a test-harness artifact, not a real dependency, and dropping HF loses nothing.\n\nMETHOD INVENTORY - 7 of 10 exist, not 5. Already verified working: recall (topical), recall_semantic (vector 384-dim local MiniLM), recall_hybrid (BM25+vector+RRF), recall_graph (multi-hop, 860 entities), recall_at (BI-TEMPORAL - resolves valid-time AND transaction-time independently, so a fact corrected later still returns for the instant it was true; this is Zep's core differentiator and is the strongest method already in the box), cross-encoder rerank (ms-marco-MiniLM, verified offline), and local ASR (Systran/faster-whisper-base cached - closes the last unfilled slot for free). Only 3 remain to build: query decomposition, entity-anchored expansion, abstention/calibration.\n\nCOMPETITOR BAR - the field is NOT a single number and that must be stated in every report. Zep ranges 58.5 to 94.7 depending on harness; Mem0 ranges 24.5 to 94.4. Stashbird (arXiv 2609.34242) is the only apples-to-apples reference because it runs all competitors through ONE harness: Full-Context 80.9, Hindsight 85.9, Stashbird 80.4, Mem0 71.4, Zep 58.5. MemPalace's 96.6 is R@5 with raw verbatim storage - a retrieval-only ceiling requiring no reasoning, NOT comparable to end-to-end judge accuracy. HONEST TARGET: exceed Hindsight's 94.6% local reproduction (500 queries, 473 correct, 675ms recall, 43625 context tokens) on agentmemorybenchmark's longmemeval setup. Reference on that same harness: plain hybrid-search 74.0% at 1600ms / 23.2k tokens - so ~20 points of headroom between naive hybrid and a tuned system. Mem0's efficiency bar to match or beat: ~6,956 tokens per retrieval call and p95 latency 1.44s (vs full-context 25,000+ tokens / 17.12s).\n\nMEASURED GROUND TRUTH. opencode.db is 5.7GB at /root/.local/share/opencode/opencode.db, opened read-only via sqlite URI mode=ro: 201 sessions, 41,353 messages, 157,780 parts, 561,325 events, 567 todos. Corpus extracted to bench/corpus/corpus.jsonl: 21,449 chunks over 158 sessions (19,481 assistant / 1,968 user), median 162 chars. Throughput measured at 0.24s per remember() call, so indexing the bench corpus is ~85 minutes - that is the real cost driver, not compute. Known honest gap: our corpus is REAL agent sessions while LoCoMo/LongMemEval are SYNTHETIC conversations - harder in messiness and cleaner in self-consistent ground truth; say so rather than let a high number mislead.\n\nP0 CARRIED FORWARD: 412 of 493 facts (84%) are epistemically unlabeled, up from a lesser share at last measure. This gates the epistemic veto and must be fixed with honest labels, never bulk-assigned 'observed'.",
+  "phases": [
+    {
+      "name": "P0 epistemic labeling: 412/493 facts unlabeled (84%) - label honestly, never bulk-assign observed; this gates the epistemic veto",
+      "status": "planned",
+      "notes": "",
+      "jobid": "d586d16c-62da-413e-9544-cadc92099861"
+    },
+    {
+      "name": "Benchmark harness: index 21,449 chunks into ISOLATED store (MEM20_STORE_PATH=bench/store, ~85min at 0.24s/write), generate probe queries, R@k pilot on 100 queries",
+      "status": "planned",
+      "notes": "",
+      "jobid": "0c77beff-cee7-4052-b712-f8e73ebdc821"
+    },
+    {
+      "name": "Measure the 7 existing methods on R@k: recall, recall_semantic, recall_hybrid, recall_graph, recall_at (bi-temporal), cross-encoder rerank, and ASR - establish the real baseline before adding anything",
+      "status": "planned",
+      "notes": "",
+      "jobid": "0db81fb8-5dea-452a-8a80-d645df98e6ca"
+    },
+    {
+      "name": "Build the 3 missing methods: query decomposition (multi-hop split), entity-anchored expansion (graph seed to vector expand), abstention/calibration using cross-model disagreement as the confidence signal",
+      "status": "planned",
+      "notes": "",
+      "jobid": "dce92609-a297-4fc2-a227-1b288ee78c2c"
+    },
+    {
+      "name": "Fill ASR slot from local faster-whisper-base and wire ingest_audio to it - closes the last unfilled capability slot",
+      "status": "planned",
+      "notes": "",
+      "jobid": "6fbe1a4d-aace-4da8-98b8-2b36e7134009"
+    },
+    {
+      "name": "End-to-end LLM-judge QA eval on locally-built benchmark; target >94.6% vs Hindsight reproduction, reporting accuracy AND context tokens AND p95 latency together so the comparison is honest not favourable",
+      "status": "planned",
+      "notes": "",
+      "jobid": "dfe48ae1-d26c-4de0-9c68-49e77943e43a"
+    },
+    {
+      "name": "Scale live corpus 493 -> 1500+ facts and keep bench corpus and live corpus reconciled via index_health",
+      "status": "planned",
+      "notes": "",
+      "jobid": "e02b89c0-cf1e-4931-a1c8-780c64c850d0"
+    },
+    {
+      "name": "Confirm R01 closed by HF_HUB_OFFLINE=1 env var rather than a network change; document that no HuggingFace download is required anywhere in the retrieval path",
+      "status": "planned",
+      "notes": "",
+      "jobid": "267b907c-5bdd-4825-954d-1a77faadf4de"
+    }
+  ],
+  "created": "1791781394.6411095"
+}

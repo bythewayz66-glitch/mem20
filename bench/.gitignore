@@ -1,0 +1,7 @@
+# Generated benchmark artifacts - reproducible, not source.
+# bench/store is an ISOLATED index built from opencode.db; never commit it.
+store/
+corpus/corpus.jsonl
+corpus/queries.jsonl
+corpus/store_map.json
+results/

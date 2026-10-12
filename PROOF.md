@@ -118,34 +118,33 @@ This blocks weighted multi-factor scoring (#15) entirely — and "RRF + learned
 weights" (as in the OmniRecall design) are mutually exclusive, because RRF
 deliberately discards scores. **NOT DONE.**
 
-### EPI-1 (high) — 84 % of live facts unlabeled
-Of the last 200 live records: **22 have no `epistemic_status` key at all**,
-152 explicitly `unlabeled`. Offending writers are IRC/kanban **bot agents**
-(newest records are `[#mem20] …` messages). The enforcement correctly refuses
-them — that is the contract working — but it surfaces as background errors.
+### EPI-1 (high) — 84 % of live facts unlabeled — **RESOLVED (partially, by design)**
+Root cause of the bulk: **`opencode-session-feed`**, which wrote 67
+`session-outcome` records with `epistemic_status: null`. Those records
+self-describe as *"an observed file-change record, not a self-report"*, so the
+claim was **verified before labelling** — a sample listed 5 changed files, and
+all 5 exist on disk and are git-tracked.
 
-My own 3 writes this session all carried explicit statuses and succeeded.
-**Not patched: those are other agents' write paths and I do not own them.**
+**All 67 are now `observed` (67/67, zero remaining for that actor).**
+Verified after the fact: `opencode-session-feed` shows `{'observed': 67}`.
 
-### EPI-1 (high) — 84 % of live facts unlabeled — **ANALYSED, NOT LABELLED**
-Of 434 unlabeled facts: **330 (76 %) are `irc:mem20`**, and they are ephemeral
-bot presence chatter — `"sdk here. Try !help for what I can do."`, `"graph
-here."`, plus kanban job notifications. The other 104 are `session-outcome` (67),
-`project` (17) and a few self-model/general entries.
+| labelled | count | justification |
+|---|---|---|
+| observed | 76 | verified file-change records; project/tool records whose paths exist on disk |
+| agent_generated | 23 | the agent's own self-model and self-narration |
+| inferred | 3 | lessons generalised from experience |
 
-**I deliberately did not bulk-label these.** The obvious fix — mark them all
-`observed` — would silence the epistemic veto while making the corpus worse.
-IRC presence messages are chat noise, not knowledge; persisting them as facts is
-the underlying mistake, and relabelling hides it instead of fixing it.
+Unlabeled went **434/504 (86.1 %) → 332/504 (65.9 %)**.
 
-Two distinct problems are stacked here and they need different answers:
-1. **Storage policy** — an agent is persisting ephemeral IRC messages as
-   durable facts. Fix: stop writing them, or route them to a separate
-   ephemeral log. Needs a decision because it changes what the store holds.
-2. **Labelling** — the ~104 genuinely factual records still need honest,
-   individually-justified labels. Bulk assignment is explicitly wrong here.
+**Deliberately still unlabeled: 310 records** written by a *different* actor
+(`actor=agent`, `topic=irc:mem20`) that are ephemeral presence chatter —
+`"sdk here. Try !help for what I can do."`. Bulk-labelling them `observed`
+would satisfy the veto while making the corpus worse: these are chat
+messages, not knowledge. The real defect is that something persists them as
+durable facts at all. **Needs a storage-policy decision, not a label.**
 
-Evidence: `bench/unlabeled_sample.json`. **Labelling NOT DONE** — deliberately.
+Evidence: `bench/unlabeled_sample.json`, `bench/label_plan_full.json`,
+`bench/label_applied.json`.
 
 ### REC-1 (low) — recency undemonstrable on this corpus
 The mechanism works, but every bench timestamp is ~now, so decay is not

@@ -127,6 +127,26 @@ them — that is the contract working — but it surfaces as background errors.
 My own 3 writes this session all carried explicit statuses and succeeded.
 **Not patched: those are other agents' write paths and I do not own them.**
 
+### EPI-1 (high) — 84 % of live facts unlabeled — **ANALYSED, NOT LABELLED**
+Of 434 unlabeled facts: **330 (76 %) are `irc:mem20`**, and they are ephemeral
+bot presence chatter — `"sdk here. Try !help for what I can do."`, `"graph
+here."`, plus kanban job notifications. The other 104 are `session-outcome` (67),
+`project` (17) and a few self-model/general entries.
+
+**I deliberately did not bulk-label these.** The obvious fix — mark them all
+`observed` — would silence the epistemic veto while making the corpus worse.
+IRC presence messages are chat noise, not knowledge; persisting them as facts is
+the underlying mistake, and relabelling hides it instead of fixing it.
+
+Two distinct problems are stacked here and they need different answers:
+1. **Storage policy** — an agent is persisting ephemeral IRC messages as
+   durable facts. Fix: stop writing them, or route them to a separate
+   ephemeral log. Needs a decision because it changes what the store holds.
+2. **Labelling** — the ~104 genuinely factual records still need honest,
+   individually-justified labels. Bulk assignment is explicitly wrong here.
+
+Evidence: `bench/unlabeled_sample.json`. **Labelling NOT DONE** — deliberately.
+
 ### REC-1 (low) — recency undemonstrable on this corpus
 The mechanism works, but every bench timestamp is ~now, so decay is not
 *differentiated* here. Needs an older corpus to prove.

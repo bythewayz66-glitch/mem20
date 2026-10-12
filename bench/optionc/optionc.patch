@@ -1,0 +1,225 @@
+diff --git a/README.md b/README.md
+index b6d7c3b..0dce6ca 100644
+--- a/README.md
++++ b/README.md
+@@ -20,6 +20,8 @@
+ 
+ The original idea — separate *grounded* facts from *simulated* ones and refuse to promote a hypothesis without evidence — is still enforced at the lowest append path and is still the thing that distinguishes mem20 from every other memory product. But that is one subsystem. Around it there are **301 organs**, **17 services**, **28 live systemd units**, an append-only cryptographic ledger in Rust, a dream engine with an eight-model critique panel, an IRC channel where agents coordinate with each other, a 3D modeler with procedural node graphs, a visual programming language, and a chat front-end with its own model gateway.
+ 
++> **Read the package count honestly.** An audit hashed all 293 `mem20*z` packages with each package's own name normalised out. Only **65 distinct implementations** exist; **228 packages are byte-identical clones** of just three templates (94 copies of a 273-line runtime, 93 of a 683-line runtime, 44 of a 348-line runtime). A package named *adaptive pricing brain* contained the same generic runtime as 93 unrelated names. The count above is a count of **directories, not of distinct systems** — do not read it as breadth. The audit that found this is in [`bench/clone_audit.json`](bench/clone_audit.json), the finding is written up in [`PROOF.md`](PROOF.md) §1b, and the per-package specification for what each clone should become is [`UPGRADE.md`](UPGRADE.md). Conversion is in progress under Option C; see the status table in that document.
++
+ If you came here for a memory library, read [What this is](#what-this-is) and stop. If you came to see what an agent platform looks like when one person builds the whole stack, keep going.
+ 
+ ---
+@@ -96,7 +98,9 @@ What is uncontested is the axis mem20 is built around: **a memory system that te
+ 
+ These are all measured in [Benchmarks](#benchmarks). A system that answers confidently from a stale index can post an excellent hit rate and score terribly here. That is the point of measuring it.
+ 
+-**Where mem20 is behind, stated plainly:** no bi-temporal (event-time + ingestion-time) model — Zep's is genuinely best-in-class and ours is deferred; no temporal graph at all; Python-only SDK, where Mem0 ships Python, TypeScript, and Go; and a small corpus, so the quality numbers above are from 14 facts and 13 queries, which is enough to catch a regression and not enough to claim parity with anything.
++**Where mem20 is behind, stated plainly:** no temporal graph at all; Python-only SDK, where Mem0 ships Python, TypeScript, and Go; and a small corpus, so the quality numbers above are from 14 facts and 13 queries, which is enough to catch a regression and not enough to claim parity with anything.
++
++**Bi-temporal recall is implemented, not deferred.** `recall_at()` in `memory_engine/memory.py` reconstructs the store as of a given event time, so a fact superseded later is still returned correctly for an earlier `as_of`. Zep's temporal model remains broader (it maintains a full temporal knowledge graph); ours is a point-in-time reconstruction over the append-only ledger.
+ 
+ ---
+ 
+@@ -145,6 +149,8 @@ Cross-encoder reranking costs an order of magnitude in latency and buys direct-q
+ 
+ **327 indexed subsystems** — 301 organs, 17 services, 9 other. 8,969 source files, ~468k code lines.
+ 
++**Of those 327, only 65 are distinct implementations.** 228 of the 293 `mem20*z` packages are byte-identical clones of three templates, so the directory count overstates real breadth by roughly 4.5×. The honest headline is **65 distinct implementations plus the audit that found the gap** — not 327 subsystems. See [`PROOF.md`](PROOF.md) §1b and [`UPGRADE.md`](UPGRADE.md).
++
+ Find code with the sitemap instead of grepping:
+ 
+ ```bash
+@@ -168,7 +174,7 @@ Find code with the sitemap instead of grepping:
+ | `mem20owebz/` | Chat front-end + LiteLLM model gateway |
+ | `mem20ircz/`, `mem20botz/` | The IRC channel where agents talk and take jobs |
+ | `mem20controlz/` | Unified control plane with per-subsystem panels |
+-| `toolchest/` | Registry of 879 capabilities (258 MCP tools, 318 CLIs, 303 subsystems) with runtime status |
++| `toolchest/` | Registry of 879 capabilities (260 MCP tools, 318 CLIs, 303 subsystems) with runtime status |
+ 
+ ### Braid: the ledger everything else could be built on
+ 
+@@ -244,7 +250,7 @@ mem20-api-health rebuild     # reindex from the ledger
+ | Resource | What's covered |
+ |---|---|
+ | [`benchmarks/results/latest.md`](benchmarks/results/latest.md) | Retrieval quality, latency, trustworthiness |
+-| [`SITEMAP.md`](SITEMAP.md) | Generated map of all 327 subsystems |
++| [`SITEMAP.md`](SITEMAP.md) | Generated map of all 327 subsystems (65 distinct implementations — see [`PROOF.md`](PROOF.md) §1b) |
+ | [`mem20api/README.md`](mem20api/README.md) | The Python API |
+ | [`mem20benchmarkz/README.md`](mem20benchmarkz/README.md) | Benchmark methodology and scope |
+ | [`braid/README.md`](braid/README.md) | The ledger architecture |
+diff --git a/UPGRADE.md b/UPGRADE.md
+index 33deb81..276b658 100644
+--- a/UPGRADE.md
++++ b/UPGRADE.md
+@@ -16,6 +16,29 @@ Note that the `Sherry`/`Judy`/`Jammee` names in the clone template's
+ `FAMILY_FUNCS` are not a family plan — that is the dispatch table of the generic
+ runtime, duplicated 231 times, and is part of the problem this document fixes.
+ 
++## Conversion status
++
++Conversion is being done in batches under **Option C**: each clone in a group
++gets a real, domain-specific implementation derived from its own
++`CAPABILITY.json`, rather than the shared generic runtime. Batches land as
++separate commits so each is independently reviewable.
++
++| Batch | Scope | Tests | Status |
++|---|---|---|---|
++| 1 | three real domain implementations | 12 green | landed |
++| 3 | 5 real domains | 29 green | landed |
++| 4 | energy scheduling, demand forecast, retry mesh | 21 green | landed |
++| 5 | planner, zero-downtime migration, risk predictor | 19 green | landed |
++| 6 | traffic control, webhook network | 17 green | landed |
++| — | remaining clones | — | **not started** |
++
++**Honest status: the large majority of the 228 clones are still clones.** The
++batches above converted a small number of packages; the rest still contain the
++generic runtime. Do not describe the estate as "228 real systems" until the
++remaining batches land. The per-package specification below is what each one
++should become, and it is a specification to build against — not a description
++of what is currently there.
++
+ **Three rules for every package below.**
+ 
+ 1. **Do one thing.** A package that can do three jobs does none of them well and cannot be tested for any of them.
+diff --git a/docs/01-architecture.md b/docs/01-architecture.md
+index da7fd2a..3cba0d3 100644
+--- a/docs/01-architecture.md
++++ b/docs/01-architecture.md
+@@ -21,7 +21,7 @@
+ ```
+                         ┌──────────────────────────────────────────┐
+    MCP client  --stdio──▶│  mcp/mcp_server.py  (Mem20MCPServer)     │
+-   (Hermes, Claude,      │  JSON-RPC 2.0 · 111 tools · 15 domains  │
++   (Hermes, Claude,      │  JSON-RPC 2.0 · 260 tools · 26 domains  │
+     any MCP host)        └──────────────┬───────────────────────────┘
+                                          │ calls
+                  ┌────────────────────────┼─────────────────────────┐
+@@ -104,7 +104,7 @@ store/
+ - **Audit** — `memory_audit_contamination()` returns `contamination_rate`, `violations`
+ - **Prediction ledger** — couples forecasts to observed outcomes
+ 
+-### Tool Domains (15 domains, 111 tools)
++### Tool Domains (26 domains, 260 tools)
+ 
+ | Prefix | Domain | Count |
+ |--------|--------|-------|
+diff --git a/docs/02-tools-reference.md b/docs/02-tools-reference.md
+index 8f5424a..1af9044 100644
+--- a/docs/02-tools-reference.md
++++ b/docs/02-tools-reference.md
+@@ -1,6 +1,6 @@
+ # mem20 MCP Tools Reference
+ 
+-> Complete reference for all 111 tools organized by domain.
++> Complete reference for all 260 tools organized by domain.
+ 
+ 
+ ## A2A (Agent-to-Agent) Tools (5 tools)
+diff --git a/docs/README.md b/docs/README.md
+index 6837754..3da454a 100644
+--- a/docs/README.md
++++ b/docs/README.md
+@@ -10,7 +10,7 @@
+ | Document | Description |
+ |----------|-------------|
+ | [Architecture Overview](01-architecture.md) | System design, memory model, tool domains, deployment |
+-| [Tools Reference](02-tools-reference.md) | Complete reference for all 111 MCP tools |
++| [Tools Reference](02-tools-reference.md) | Complete reference for all 260 MCP tools |
+ | [Installation Guide](03-installation.md) | Install, configure, and connect MCP hosts |
+ | [Usage Examples](04-usage-examples.md) | Practical examples for every tool domain |
+ 
+diff --git a/memory_engine/memory.py b/memory_engine/memory.py
+index ad365df..5173a05 100644
+--- a/memory_engine/memory.py
++++ b/memory_engine/memory.py
+@@ -44,6 +44,7 @@ import ast as _ast
+ import argparse
+ import copy
+ import json
++import math
+ import os
+ import random
+ import re
+@@ -3790,24 +3791,59 @@ def recall_hybrid(query: str, k: int = 5, topic: str | None = None,
+     # Sort by RRF score
+     sorted_results = sorted(all_results.values(), key=lambda x: x["_rrf_score"], reverse=True)
+     
+-    # Optional cross-encoder reranking
++    # Optional cross-encoder reranking.
++    #
++    # CE-1: this block used to blend the cross-encoder score into only the top
++    # `k * 2` candidates while every other candidate kept its raw RRF score, and
++    # then sorted both kinds together in one list. ms-marco cross-encoders emit
++    # raw logits that are routinely negative (measured range on this host:
++    # -11.4 .. +3.3), so a blended candidate scored ~0.5*rrf + 0.5*ce and could
++    # fall BELOW an unblended candidate still sitting at its raw rrf (~0.007).
++    # The reranker could therefore push the best candidates out of the returned
++    # window while `_retrieval.cross_encoder` still reported True.
++    #
++    # The fix has three parts:
++    #   1. score every candidate, so no two candidates compete on different
++    #      scales;
++    #   2. squash the logits to (0, 1) before blending, so the two terms are
++    #      commensurate and the blend cannot invert the ordering;
++    #   3. apply the rerank atomically - on any failure, revert to the RRF
++    #      ordering and say so, rather than returning a half-mutated list.
++    rerank_applied = False
++    rerank_error = None
+     if USE_CROSS_ENCODER and sorted_results:
+         try:
+             cross_encoder = _get_cross_encoder()
+             # Prepare query-document pairs for cross-encoder
+-            pairs = [(query, r["content"]) for r in sorted_results[:k * 2]]
++            pairs = [(query, r["content"]) for r in sorted_results]
+             ce_scores = cross_encoder.predict(pairs)
++            if len(ce_scores) != len(pairs):
++                raise ValueError(
++                    f"cross-encoder returned {len(ce_scores)} scores for "
++                    f"{len(pairs)} pairs")
+             
+             # Update scores with cross-encoder scores (weighted combination)
+-            for i, r in enumerate(sorted_results[:k * 2]):
+-                r["_ce_score"] = float(ce_scores[i])
+-                # Combine RRF score with cross-encoder score
+-                r["_final_score"] = 0.5 * r["_rrf_score"] + 0.5 * r["_ce_score"]
++            # Squash the logits to (0, 1) before blending. The RRF term is
++            # already in (0, 1) because 1/(k_rrf + rank + 1) <= 1/61, so a
++            # logistic keeps the cross-encoder's ordering while making the two
++            # terms commensurate.
++            squashed = [1.0 / (1.0 + math.exp(-float(s))) for s in ce_scores]
++            for r, s in zip(sorted_results, squashed):
++                r["_ce_score"] = s
++                r["_final_score"] = 0.5 * r["_rrf_score"] + 0.5 * s
+             
+             # Re-sort by final score
+             sorted_results = sorted(sorted_results, key=lambda x: x.get("_final_score", x["_rrf_score"]), reverse=True)
++            rerank_applied = True
+         except Exception as e:
+-            print(f"Warning: cross-encoder reranking failed: {e}", file=sys.stderr)
++            # Atomic: drop any partial mutation so the caller never sees a list
++            # where some candidates were reranked and others were not.
++            for r in sorted_results:
++                r.pop("_ce_score", None)
++                r.pop("_final_score", None)
++            rerank_error = f"{type(e).__name__}: {e}"
++            print(f"Warning: cross-encoder reranking failed: {rerank_error}",
++                  file=sys.stderr)
+     
+     # Return top k
+     results = []
+@@ -3853,8 +3889,11 @@ def recall_hybrid(query: str, k: int = 5, topic: str | None = None,
+         "vector_available": VECTOR_AVAILABLE,
+         "bm25_available": BM25_AVAILABLE,
+         "degraded_to": degraded,
+-        "cross_encoder": USE_CROSS_ENCODER and any(
+-            r.get("_ce_score") is not None for r in results),
++        # Report what actually happened, not what was configured. CE-1 was
++        # invisible precisely because this flag said True while the rerank had
++        # not reached the caller.
++        "cross_encoder": rerank_applied,
++        "cross_encoder_error": rerank_error,
+     }
+     for r in results:
+         r["_retrieval"] = retrieval

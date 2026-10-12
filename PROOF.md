@@ -146,6 +146,29 @@ durable facts at all. **Needs a storage-policy decision, not a label.**
 Evidence: `bench/unlabeled_sample.json`, `bench/label_plan_full.json`,
 `bench/label_applied.json`.
 
+### BOT FIX — **DONE and LIVE VERIFIED**
+One function caused both the unlabeled writes and the operator-visible errors:
+`mem20botz/mem20botz/relay.py` `RelayBot.record()` called
+`memory.remember(topic="irc:mem20", ...)` with **no `epistemic_status`**, so
+the enforcement contract refused every line.
+
+Fixed to append to a dedicated `irc_transcript.jsonl` beside the store instead
+of writing to the fact store. Dead `_store_fn()` resolver removed; the bot's
+`purpose`/`source_of_truth` text corrected (it still claimed to write to mem20
+memory).
+
+**Bounce verified end-to-end:**
+| check | result |
+|---|---|
+| PID before → after | 1207 → 1068788 |
+| service state | `active/running`, **PPID=1** (supervised, not floating) |
+| new `irc:mem20` facts after 60 s | **0** (was 330 before) |
+| transcript file | created, 536 B, populated |
+| epistemic/unlabel errors post-restart | **0** |
+
+The 330 pre-existing IRC facts were left in place — stopping the *writing* was
+the ask; deleting existing user data was not.
+
 ### REC-1 (low) — recency undemonstrable on this corpus
 The mechanism works, but every bench timestamp is ~now, so decay is not
 *differentiated* here. Needs an older corpus to prove.

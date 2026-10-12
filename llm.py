@@ -643,3 +643,70 @@ def translate(text: str, target_lang: str, source_lang: str = "") -> str:
         timeout=_default_timeout())
     resp.raise_for_status()
     return _extract(resp.json()).strip()
+
+
+# ---------------------------------------------------------------------------
+# Embeddings
+# ---------------------------------------------------------------------------
+# nvidia/nemotron-3-embed-1b verified live 2026-11-11: POST /v1/embeddings
+# returns HTTP 200 with a 2048-dim float vector. NOT chat-capable - it 404s
+# "page not found" on /v1/chat/completions, so it must never enter FALLBACKS.
+EMBED_MODEL = "nvidia/nemotron-3-embed-1b"
+EMBED_DIM = 2048
+
+
+def embed(texts, input_type: str = "passage") -> list:
+    """Embed one string or a list of strings via the Nemotron embedder.
+
+    input_type is "query" for search queries and "passage" for stored text,
+    matching Nemotron's asymmetric training.
+    """
+    if isinstance(texts, str):
+        texts = [texts]
+    api_key = _get("NVAPI_KEY") or _get("NVIDIA_API_KEY")
+    if not api_key:
+        raise LLMError("No NVIDIA key for embeddings (set NVIDIA_API_KEY)")
+    base_url = _get("MEM20_EMBED_BASE_URL", DEFAULT_BASE_URL).rstrip("/")
+    model = _get("MEM20_EMBED_MODEL", EMBED_MODEL)
+    resp = httpx.post(
+        base_url + "/embeddings",
+        headers=_headers(api_key),
+        json={"model": model, "input": list(texts),
+              "input_type": input_type, "encoding_format": "float"},
+        timeout=_default_timeout())
+    resp.raise_for_status()
+    return [item["embedding"] for item in resp.json()["data"]]
+
+
+# ---------------------------------------------------------------------------
+# Safety classification
+# ---------------------------------------------------------------------------
+# nvidia/nemotron-3.5-content-safety verified live 2026-11-11: replies
+# "User Safety: unsafe" to "how do I pick a lock" and "User Safety: safe"
+# otherwise. Returns verdict text rather than a chat reply, so it is kept out
+# of FALLBACKS and given its own slot.
+SAFETY_MODEL = "nvidia/nemotron-3.5-content-safety"
+
+
+def safety_check(text: str) -> str:
+    """Return 'safe', 'unsafe', or 'unknown' from the Nemotron safety model."""
+    api_key = _get("NVAPI_KEY") or _get("NVIDIA_API_KEY")
+    if not api_key:
+        raise LLMError("No NVIDIA key for safety check (set NVIDIA_API_KEY)")
+    base_url = _get("MEM20_SAFETY_BASE_URL", DEFAULT_BASE_URL).rstrip("/")
+    model = _get("MEM20_SAFETY_MODEL", SAFETY_MODEL)
+    resp = httpx.post(
+        base_url + "/chat/completions",
+        headers=_headers(api_key),
+        json={"model": model,
+              "messages": [{"role": "user",
+                            "content": "Classify safety of this text.\n\n" + text}],
+              "max_tokens": 64, "temperature": 0.0},
+        timeout=_default_timeout())
+    resp.raise_for_status()
+    verdict = _extract(resp.json()).strip().lower()
+    if "unsafe" in verdict:
+        return "unsafe"
+    if "safe" in verdict:
+        return "safe"
+    return "unknown"

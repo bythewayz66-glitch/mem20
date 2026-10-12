@@ -930,3 +930,66 @@ def generate_code(task: str, max_tokens: int = 4096) -> str:
         except (httpx.HTTPStatusError, httpx.HTTPError, KeyError, IndexError, ValueError) as exc:
             last = _attempt_error(exc)
     raise LLMError("All free code models failed: " + last)
+
+
+# ---------------------------------------------------------------------------
+# Speech recognition (ASR / STT)
+# ---------------------------------------------------------------------------
+# This closes the last unfilled capability slot. No hosted provider could
+# serve it: NVIDIA's free tier exposes no audio surface at all (parakeet,
+# canary, magpie and nemotron-voicechat are all absent from the 80-model
+# catalog, and /v1/audio/transcriptions, /v1/asr, /v1/audio/speech and
+# /v1/realtime all return a ROUTE-level 404 rather than a model-level one).
+#
+# Locally cached instead: Systran/faster-whisper-base (142M, already in
+# ~/.cache/huggingface). Verified fully offline on 2026-10-11 with
+# local_files_only=True - no download, no network, no key.
+#
+# Round-trip verified: audio synthesised by synthesize_speech() ("The
+# retrieval roadmap is finished and verified today.") transcribed back by
+# this function as "The retrieval road map is finished and verified today."
+ASR_MODEL = "base"
+
+
+def _asr_model(device: str = "cpu", compute_type: str = "int8"):
+    """Lazy-load local faster-whisper. Cached after first call."""
+    global _ASR
+    if _ASR is None:
+        os.environ.setdefault("HF_HUB_OFFLINE", "1")
+        os.environ.setdefault("TRANSFORMERS_OFFLINE", "1")
+        from faster_whisper import WhisperModel
+        _ASR = WhisperModel(_get("MEM20_ASR_MODEL", ASR_MODEL),
+                            device=device, compute_type=compute_type,
+                            local_files_only=True)
+    return _ASR
+
+
+_ASR = None
+
+
+def transcribe_audio(path: str, language: str = "", word_timestamps: bool = False) -> dict:
+    """Transcribe an audio file locally with faster-whisper (fully offline).
+
+    Returns {'text', 'language', 'duration', 'segments', 'words'}.
+    ``words`` is populated only when word_timestamps is True, since it is
+    roughly an order of magnitude more work on CPU.
+    """
+    model = _asr_model()
+    segments, info = model.transcribe(
+        path, beam_size=5, vad_filter=True, language=language or None,
+        word_timestamps=word_timestamps)
+    out_segs, words = [], []
+    for seg in segments:
+        out_segs.append({"start": round(seg.start, 2), "end": round(seg.end, 2),
+                         "text": seg.text.strip()})
+        for w in (getattr(seg, "words", None) or []):
+            words.append({"word": w.word, "start": round(w.start, 2),
+                          "end": round(w.end, 2)})
+    return {
+        "text": " ".join(s["text"] for s in out_segs).strip(),
+        "language": info.language,
+        "language_probability": round(float(info.language_probability or 0.0), 4),
+        "duration": round(float(info.duration or 0.0), 2),
+        "segments": out_segs,
+        "words": words,
+    }

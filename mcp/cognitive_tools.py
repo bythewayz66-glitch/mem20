@@ -740,6 +740,73 @@ class CognitiveToolsMixin:
             return out
         except Exception as e:
             return f"[imagination_critique] Error: {e}"
+    async def _imagination_dream(self, args: Dict) -> str:
+        """Free-form creative exploration: memory -> cognitive -> visualize -> prototype loop.
+
+        Routes to the mem20dreamz engine: creates an active lineage from the seed,
+        claims the idle run lock, and runs up to `iterations` real iteration cycles
+        (critique, verdict, invent, forecast, accept/reject). Output is a summary
+        of the lineage; the full artifact lives in the dream store and its braid.
+        """
+        prompt = args.get("prompt", "")
+        iterations = min(int(args.get("iterations", 3)), 5)
+        output_mode = args.get("output_mode", "all")
+        memory_topics = args.get("memory_topics", [])
+
+        if not prompt:
+            return "Error: prompt is required"
+        try:
+            sys.path.insert(0, "/opt/mem20")
+            from mem20dreamz import engine as dreamz_engine
+            from mem20dreamz import idle as dreamz_idle
+            from mem20dreamz import ledger as dreamz_ledger
+            from mem20dreamz.lineage import Lineage
+
+            foundation = ", ".join(memory_topics) or ""
+            lineage = dreamz_engine.new_dream(prompt, kind="active", foundation=foundation)
+            claim = dreamz_idle.claim_active(lineage.dream_id)
+            if not claim.get("claimed"):
+                return (
+                    f"Error: another dream run is active: "
+                    f"{claim.get('reason', 'the run lock is held')}"
+                )
+            run = 0
+            paused = None
+            try:
+                while run < iterations and not lineage.done:
+                    run += 1
+                    n = lineage.iteration_count + 1
+                    try:
+                        iteration = dreamz_engine.run_iteration(lineage, n)
+                    except Exception as exc:
+                        lineage.paused = True
+                        lineage.pause_reason = str(exc)[:400]
+                        lineage.save()
+                        paused = str(exc)
+                        break
+                    lineage.record(iteration)
+                    try:
+                        dreamz_ledger.commit_iteration(lineage, iteration)
+                    except Exception:
+                        pass
+            finally:
+                dreamz_idle.release_active()
+            lineage.save()
+            artifact = lineage.current_artifact()
+            summary = {
+                "dream_id": lineage.dream_id,
+                "iterations_run": run,
+                "iteration_count": lineage.iteration_count,
+                "done": lineage.done,
+                "output_mode": output_mode,
+                "artifact_chars": len(artifact),
+                "paused": paused,
+                "preview": artifact[:800],
+            }
+            self._persist_simulated(args, json.dumps(summary)[:2000], "dream")
+            return json.dumps(summary)
+        except Exception as e:
+            return f"[imagination_dream] Error: {e}"
     async def _imagination_simulate(self, args: Dict) -> str:
         """Generative simulation - run mental simulations of scenarios with branching futures."""
         scenario = args.get("scenario", "")

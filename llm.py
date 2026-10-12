@@ -8,11 +8,9 @@ OpenAI-compatible endpoint (https://api.groq.com/openai/v1); NVIDIA's free
 endpoint remains reachable via MEM20_LLM_BASE_URL / the fallback chain.
 
 Configuration (environment variables):
-<<<<<<< Updated upstream
   GROQ_API_KEY / MEM20_LLM_API_KEY / NVAPI_KEY / NVIDIA_API_KEY : bearer token
   MEM20_LLM_BASE_URL                              : default endpoint
   MEM20_LLM_MODEL                                 : default model name
-=======
   NVAPI_KEY / NVIDIA_API_KEY / MEM20_LLM_API_KEY  : primary bearer token (required)
   MEM20_LLM_BASE_URL                              : primary endpoint (default NVIDIA)
   MEM20_LLM_MODEL                                 : primary model name
@@ -24,7 +22,6 @@ Configuration (environment variables):
                                                     deepseek,together,mistral,
                                                     sambanova). Default: all whose
                                                     key is present in the env.
->>>>>>> Stashed changes
 
 Design rule: the primary provider is attempted first; on failure (missing key,
 transport error, HTTP error, malformed reply) the configured fallback chain is
@@ -45,27 +42,18 @@ try:
 except ImportError:  # some venvs install the fork as "httpx2"
     import httpx2 as httpx
 
-<<<<<<< Updated upstream
 # 2026-09-20: moved default off NVIDIA (too slow for interactive dreaming)
 # to Groq gpt-oss-120b. Groq gpt-oss returns reasoning in message.reasoning,
 # which _extract already handles.
 DEFAULT_BASE_URL = "https://api.groq.com/openai/v1"
 DEFAULT_MODEL = "openai/gpt-oss-120b"
 
+# Verified free vision-capable model (multimodal requests route here).
+DEFAULT_VISION_MODEL = "meta/llama-3.2-11b-vision-instruct"
+
 # Candidate .env files that may hold NVAPI_KEY / NVIDIA_API_KEY etc.
 # 2026-09-07 key rule: the single permanent secrets home is
 # /opt/mem20/secrets/.env — it must be read FIRST.
-=======
-DEFAULT_BASE_URL = "https://integrate.api.nvidia.com/v1"
-DEFAULT_MODEL = "nvidia/nemotron-3-ultra-550b-a55b"
-# Verified free vision-capable model on the NVIDIA endpoint (see llm_client notes).
-DEFAULT_VISION_MODEL = "meta/llama-3.2-11b-vision-instruct"
-
-# Permanent secrets home — single source of truth for ALL keys.
-_SECRETS_HOME = "/opt/mem20/secrets"
-
-# Candidate .env files that may hold NVAPI_KEY / NVIDIA_API_KEY etc. (secondary only)
->>>>>>> Stashed changes
 _ENV_CANDIDATES = [
     "/opt/mem20/secrets/.env",
     os.environ.get("MEM20_ENV_FILE"),
@@ -120,7 +108,6 @@ DEFAULT_FALLBACK_ORDER = [
 ]
 
 
-<<<<<<< Updated upstream
 # Values read from the secrets file, private to this module.
 #
 # This used to be poured into ``os.environ`` at import time, and that was wrong
@@ -165,60 +152,6 @@ def _load_dotenv() -> dict[str, str]:
         _FILE_VALUES.update(values)
         # Only need one successful load for the keys we care about.
         if _get("NVIDIA_API_KEY") or _get("NVAPI_KEY"):
-=======
-def _load_secrets_home():
-    """Load the permanent secrets home ('/opt/mem20/secrets/.env') into os.environ
-    unless already set. Keep the MAIN keyfile trim (1 of each key); the FALLBACK
-    keyfile ('.env.fallback', named *-N variants) is loaded only when a key is not
-    found in the main file — so bloat only ever loads if actually required."""
-    main = os.path.join(_SECRETS_HOME, ".env")
-    if not os.path.exists(main):
-        return
-    loaded = _read_env_file(main)
-    for key, val in loaded.items():
-        if key not in os.environ:
-            os.environ[key] = val
-
-
-def _load_dotenv_fallback():
-    """Load '.env.fallback' (numbered *-N variants) for any key still missing."""
-    fb = os.path.join(_SECRETS_HOME, ".env.fallback")
-    if not os.path.exists(fb):
-        return
-    for key, val in _read_env_file(fb).items():
-        if key not in os.environ:
-            os.environ[key] = val
-
-
-def _read_env_file(path):
-    """Parse a .env file into {key: value}. Values stripped of quotes."""
-    out = {}
-    try:
-        with open(path, "r") as fh:
-            for line in fh:
-                line = line.strip()
-                if not line or line.startswith("#") or "=" not in line:
-                    continue
-                key, _, val = line.partition("=")
-                key, val = key.strip(), val.strip().strip('"').strip("'")
-                if key and val:
-                    out[key] = val
-    except OSError:
-        pass
-    return out
-
-
-def _load_dotenv():
-    """Legacy best-effort load of API keys from scattered candidate .env files."""
-    for path in _ENV_CANDIDATES:
-        if not path or not os.path.exists(path):
-            continue
-        loaded = _read_env_file(path)
-        for k, v in loaded.items():
-            if k not in os.environ:
-                os.environ[k] = v
-        if os.environ.get("NVIDIA_API_KEY") or os.environ.get("NVAPI_KEY"):
->>>>>>> Stashed changes
             break
     return _FILE_VALUES
 
@@ -244,24 +177,9 @@ def env_value(name: str, default: str = "") -> str:
     return _get(name, default)
 
 
-# Load order: main secrets home (trim, 1 each) → fallback file (numbered variants,
-# only if key missing) → legacy scattered .env files (last resort).
-_load_secrets_home()
-_load_dotenv_fallback()
+# Load the private LLM settings map once at import.
 _load_dotenv()
 
-
-def _env(key: str, max_variants: int = 9) -> str:
-    """Return the first non-empty value found in os.environ among KEY, KEY_2, KEY_3 ...
-    up to max_variants. Returns "" if none found."""
-    v = os.environ.get(key, "").strip()
-    if v:
-        return v
-    for i in range(2, max_variants + 1):
-        v = os.environ.get(f"{key}_{i}", "").strip()
-        if v:
-            return v
-    return ""
 
 
 class LLMError(RuntimeError):
@@ -269,7 +187,6 @@ class LLMError(RuntimeError):
 
 
 def _config():
-<<<<<<< Updated upstream
     base = _get("MEM20_LLM_BASE_URL", DEFAULT_BASE_URL).rstrip("/")
     # Key must match the provider the base URL points at. Previously NVAPI_KEY
     # was always preferred, so a Groq base URL paired with NVAPI_KEY sent the
@@ -292,19 +209,8 @@ def _config():
         )
     key = key.strip()
     model = _get("MEM20_LLM_MODEL", DEFAULT_MODEL)
-    return base, key, model
-=======
-    base = os.environ.get("MEM20_LLM_BASE_URL", DEFAULT_BASE_URL).rstrip("/")
-    key = (
-        _env("NVAPI_KEY")
-        or _env("NVIDIA_API_KEY")
-        or _env("MEM20_LLM_API_KEY")
-        or ""
-    ).strip()
-    model = os.environ.get("MEM20_LLM_MODEL", DEFAULT_MODEL)
-    vision_model = os.environ.get("MEM20_LLM_VISION_MODEL", DEFAULT_VISION_MODEL)
+    vision_model = _get("MEM20_LLM_VISION_MODEL", DEFAULT_VISION_MODEL)
     return base, key, model, vision_model
->>>>>>> Stashed changes
 
 
 def _headers(key: str) -> dict:
@@ -372,65 +278,8 @@ def _env(name: str, default: str = "") -> str:
     return default
 
 
-def _provider_key(name: str) -> str:
-    """API key for a fallback provider name (openrouter -> OPENROUTER_API_KEY)."""
-    stem = name.upper().replace("-", "_")
-    return _env(f"{stem}_API_KEY") or _env(f"{stem}_API_KEYS") or ""
 
 
-def _fallback_chain() -> list[dict]:
-    """Ordered fallback provider candidates for chat()/achat().
-
-    Built from the explicit ``MEM20_LLM_FALLBACK_BASE_URL`` endpoint plus every
-    provider listed in ``MEM20_LLM_FALLBACK_PROVIDERS`` that actually has a key
-    configured. Providers without a key are skipped — we never retry a provider
-    anonymously or fabricate a completion.
-    """
-    chain: list[dict] = []
-    fb_base = _get("MEM20_LLM_FALLBACK_BASE_URL").strip().rstrip("/")
-    if fb_base:
-        fb_key = _get("MEM20_LLM_FALLBACK_API_KEY").strip()
-        if fb_key:
-            chain.append({
-                "name": "fallback",
-                "base": fb_base,
-                "key": fb_key,
-                "model": _get("MEM20_LLM_FALLBACK_MODEL"),
-            })
-    for name in _get("MEM20_LLM_FALLBACK_PROVIDERS").split(","):
-        name = name.strip()
-        if not name:
-            continue
-        key = _provider_key(name)
-        if not key:
-            continue
-        stem = name.upper().replace("-", "_")
-        chain.append({
-            "name": name,
-            "base": _env(f"{stem}_BASE_URL", DEFAULT_BASE_URL).rstrip("/"),
-            "key": key,
-            "model": _env(f"{stem}_MODEL", DEFAULT_MODEL),
-        })
-    return chain
-
-
-def _aggregate_error(primary: str, failures: list[dict]) -> LLMError:
-    lines = [f"LLM primary provider failed: {primary}"]
-    if failures:
-        lines.extend(f"  fallback {f['name']}: {f['error']}" for f in failures)
-    else:
-        lines.append("  no fallback providers configured")
-    return LLMError("\n".join(lines))
-
-
-def _post_sync(client, base, key, messages, model, temperature, max_tokens):
-    resp = client.post(
-        f"{base}/chat/completions",
-        headers=_headers(key),
-        json=_payload(messages, model, temperature, max_tokens),
-    )
-    resp.raise_for_status()
-    return _extract(resp.json())
 
 
 def _image_url(p: str) -> str:
@@ -523,15 +372,6 @@ def chat(
     timeout: float = None,
     images: list = None,
 ) -> str:
-<<<<<<< Updated upstream
-    """Synchronous chat completion with fallback chain.
-
-    Tries the primary provider first; on an HTTP/transport failure, tries each
-    configured fallback provider in order and returns the first success. If
-    every provider fails, raises an honest, aggregated LLMError.
-    """
-    base, key, def_model = _config()
-=======
     """Synchronous chat completion. Raises LLMError when EVERY provider fails.
 
     Primary (NVIDIA by default) is tried first; on failure the configured
@@ -543,7 +383,6 @@ def chat(
     unless an explicit `model` is given.
     """
     base, key, def_model, def_vision = _config()
->>>>>>> Stashed changes
     base = (base_url or base).rstrip("/")
     key = api_key if api_key is not None else key
     if model is None:
@@ -556,18 +395,6 @@ def chat(
             "MEM20_LLM_API_KEY. Refusing to fabricate reasoning output."
         )
 
-<<<<<<< Updated upstream
-    primary_err = None
-    try:
-        with httpx.Client(timeout=timeout) as client:
-            return _post_sync(client, base, key, messages, model, temperature, max_tokens)
-    except httpx.HTTPStatusError as exc:
-        primary_err = f"HTTP {exc.response.status_code}: {exc.response.text[:400]}"
-    except httpx.HTTPError as exc:
-        primary_err = f"request failed: {exc}"
-    except (KeyError, IndexError, ValueError) as exc:
-        raise LLMError(f"LLM response malformed: {exc}")
-=======
     attempts: list[dict] = []
 
     def _post(base_url_: str, bearer: str, m: str) -> str:
@@ -600,25 +427,7 @@ def chat(
             " || ".join(f"{a['provider']}[{a['model']}]: {a['error']}"
                         for a in attempts))
     )
->>>>>>> Stashed changes
 
-    failures: list[dict] = []
-    for fb in _fallback_chain():
-        if not fb.get("base") or not fb.get("key"):
-            continue
-        try:
-            with httpx.Client(timeout=timeout) as client:
-                return _post_sync(client, fb["base"], fb["key"], messages,
-                                  fb["model"] or model, temperature, max_tokens)
-        except httpx.HTTPStatusError as exc:
-            failures.append({"name": fb["name"],
-                             "error": f"HTTP {exc.response.status_code}: {exc.response.text[:400]}"})
-        except httpx.HTTPError as exc:
-            failures.append({"name": fb["name"], "error": f"request failed: {exc}"})
-        except (KeyError, IndexError, ValueError) as exc:
-            failures.append({"name": fb["name"], "error": f"malformed response: {exc}"})
-
-    raise _aggregate_error(primary_err, failures)
 
 
 async def achat(
@@ -654,65 +463,6 @@ async def achat(
             "MEM20_LLM_API_KEY. Refusing to fabricate reasoning output."
         )
 
-<<<<<<< Updated upstream
-    last_exc = None
-    for attempt in range(max_retries + 1):
-        try:
-            async with httpx.AsyncClient(timeout=timeout) as client:
-                resp = await client.post(
-                    f"{base}/chat/completions",
-                    headers=_headers(key),
-                    json=_payload(messages, model, temperature, max_tokens),
-                )
-                resp.raise_for_status()
-                return _extract(resp.json())
-        except httpx.HTTPStatusError as exc:
-            if exc.response.status_code >= 500 and attempt < max_retries:
-                last_exc = exc
-                import asyncio
-                await asyncio.sleep(2 ** attempt)
-                continue
-            last_exc = exc
-            break
-        except httpx.HTTPError as exc:
-            last_exc = exc
-            if attempt < max_retries:
-                import asyncio
-                await asyncio.sleep(2 ** attempt)
-                continue
-            break
-        except (KeyError, IndexError, ValueError) as exc:
-            raise LLMError(f"LLM response malformed: {exc}")
-
-    import asyncio
-
-    failures: list[dict] = []
-    for fb in _fallback_chain():
-        if not fb.get("base") or not fb.get("key"):
-            continue
-        try:
-            async with httpx.AsyncClient(timeout=timeout) as client:
-                resp = await client.post(
-                    f"{fb['base']}/chat/completions",
-                    headers=_headers(fb["key"]),
-                    json=_payload(messages, fb["model"] or model, temperature, max_tokens),
-                )
-                resp.raise_for_status()
-                return _extract(resp.json())
-        except httpx.HTTPStatusError as exc:
-            failures.append({"name": fb["name"],
-                             "error": f"HTTP {exc.response.status_code}: {exc.response.text[:400]}"})
-        except httpx.HTTPError as exc:
-            failures.append({"name": fb["name"], "error": f"request failed: {exc}"})
-        except (KeyError, IndexError, ValueError) as exc:
-            failures.append({"name": fb["name"], "error": f"malformed response: {exc}"})
-
-    if isinstance(last_exc, httpx.HTTPStatusError):
-        primary = f"HTTP {last_exc.response.status_code}: {last_exc.response.text[:400]}"
-    else:
-        primary = f"request failed: {last_exc}"
-    raise _aggregate_error(primary, failures)
-=======
     import asyncio
 
     attempts: list[dict] = []
@@ -770,4 +520,3 @@ async def achat(
             " || ".join(f"{a['provider']}[{a['model']}]: {a['error']}"
                         for a in attempts))
     )
->>>>>>> Stashed changes

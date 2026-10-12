@@ -17,18 +17,7 @@ def _handler_name(tool_name):
 def test_tool_count_matches_handlers():
     s = server.Mem20MCPServer()
     missing = [n for n in s.tools if not hasattr(s, _handler_name(n))]
-<<<<<<< Updated upstream
     assert len(s.tools) > 0, "expected at least one tool"
-=======
-    missing = [n for n in missing if n not in ("job_status", "job_wait")]
-    # Expected count = deterministic set of tools registered by all mixins
-    # (memory 49 + cognitive 20 + roadmap 4 + world 8 + blender 7 + unity 5 +
-    #  integration 3 + a2a 5 + thought 7 + cloud 10 + cloudstorage 8 + comm 9 +
-    #  database 10 + design 8 + dev 9 + enhanced 20 + filesystem 13 + finance 8 +
-    #  marketing 9 + productivity 10 + search 7 + vcs 11 + webscraping 8 +
-    #  braid 9 + job 2).
-    assert len(s.tools) == 252, f"expected 252 tools, got {len(s.tools)}"
->>>>>>> Stashed changes
     assert not missing, f"tools without handler: {missing}"
 
 
@@ -63,11 +52,7 @@ def test_health_endpoint_serves_metrics():
     try:
         assert httpd is not None, "health server failed to bind"
         data = json.loads(urllib.request.urlopen("http://127.0.0.1:8094/metrics", timeout=2).read())
-<<<<<<< Updated upstream
         assert data["tools_registered"] == len(s.tools)
-=======
-        assert data["tools_registered"] == 252
->>>>>>> Stashed changes
         assert data["service"] == "mem20-mcp"
     finally:
         if httpd is not None:

@@ -1,4 +1,3 @@
-<<<<<<< Updated upstream
 {"id": "1a0bac4ed3aaf0f", "ts": "2026-09-19T17:44:23.098628+00:00", "actor": "gateway", "action": "remember", "topic": "message:gateway:chat:", "tags": ["mem20agentz", "message", "gateway", "chat:"], "priority": "normal", "content": "poll_error: [Errno -3] Temporary failure in name resolution", "valid_from": "2026-09-19T17:44:23.098628+00:00", "valid_to": null, "confidence": null, "epistemic_status": "observed", "source": "mem20agentz", "origin": "grounded", "store": "grounded", "secrets_detected": null}
 {"id": "1a0bac4f99357f7", "ts": "2026-09-19T17:44:26.258994+00:00", "actor": "gateway", "action": "remember", "topic": "message:gateway:chat:", "tags": ["mem20agentz", "message", "gateway", "chat:"], "priority": "normal", "content": "poll_error: [Errno -3] Temporary failure in name resolution", "valid_from": "2026-09-19T17:44:26.258994+00:00", "valid_to": null, "confidence": null, "epistemic_status": "observed", "source": "mem20agentz", "origin": "grounded", "store": "grounded", "secrets_detected": null}
 {"id": "1a0bac505e85cc4", "ts": "2026-09-19T17:44:29.416251+00:00", "actor": "gateway", "action": "remember", "topic": "message:gateway:chat:", "tags": ["mem20agentz", "message", "gateway", "chat:"], "priority": "normal", "content": "poll_error: [Errno -3] Temporary failure in name resolution", "valid_from": "2026-09-19T17:44:29.416251+00:00", "valid_to": null, "confidence": null, "epistemic_status": "observed", "source": "mem20agentz", "origin": "grounded", "store": "grounded", "secrets_detected": null}
@@ -471,7 +470,6 @@
 {"id": "2182733882d247f", "ts": "2026-10-04T14:05:55-0600", "actor": "mem20 production", "action": "pipeline_phase", "topic": "vr-office", "content": "phase 7 polish -> passed: 14 artifacts, 14 checks"}
 {"id": "ca52fb1ebba241a", "ts": "2026-10-04T14:05:56-0600", "actor": "mem20 production", "action": "pipeline_phase", "topic": "vr-office", "content": "phase 8 stress -> passed: adversarial survived: adversary satisfied"}
 {"id": "4edafe3f785748c", "ts": "2026-10-04T14:05:56-0600", "actor": "mem20 production", "action": "pipeline_complete", "topic": "vr-office", "content": "build vr-office-20261004-140544"}
-=======
 {"id": "1a06eaca175a1ce", "ts": "2026-09-04T23:06:42.421485+00:00", "actor": "agent", "action": "remember", "topic": "test_suite", "tags": ["test", "basic"], "priority": "normal", "content": "Test fact: the sky is blue"}
 {"id": "1a06eaca17dd57d", "ts": "2026-09-04T23:06:42.429332+00:00", "actor": "agent", "action": "remember", "topic": "test_contradict", "tags": ["test", "contradict"], "priority": "normal", "content": "The meeting is at 3pm"}
 {"id": "1a06eaca17e3352", "ts": "2026-09-04T23:06:42.430890+00:00", "actor": "agent", "action": "remember", "topic": "test_contradict", "tags": ["test", "contradict"], "priority": "normal", "content": "The meeting is at 4pm"}
@@ -907,4 +905,3 @@
 {"id": "6dbeca5541364e2", "ts": "2026-09-10T22:16:25-0600", "actor": "mem20 production", "action": "pipeline_phase", "topic": "mmorpg", "content": "phase 5 factory -> passed: 14 artifacts, 14 checks"}
 {"id": "fb8989e9e42f474", "ts": "2026-09-10T22:16:25-0600", "actor": "mem20 production", "action": "pipeline_phase", "topic": "mmorpg", "content": "phase 6 beta_test -> passed: 14 artifacts, 14 checks"}
 {"id": "751292ea386d434", "ts": "2026-09-10T22:16:25-0600", "actor": "mem20 production", "action": "pipeline_complete", "topic": "mmorpg", "content": "build mmorpg-20260910-221621"}
->>>>>>> Stashed changes

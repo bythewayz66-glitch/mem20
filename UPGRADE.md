@@ -6,16 +6,15 @@ So a package called *adaptive pricing brain* currently contains no pricing brain
 
 This document says, in plain English, what each of the 231 clones should **be** — its purpose, the one thing it must refuse to do, and what would prove it works. It is a specification to build against, not a description of what is currently there.
 
-**On grouping.** The families below are a useful reading aid — they turn 231
-names into a navigable map — but they were derived from the *names*, not from
-anything mem20 already knows. **mem20crewz may already hold a family plan**, and
-it owns `Crew`, `Agent` and fan-out. Before building against these headings,
-check crewz: if it already groups these packages, prefer that grouping and treat
-this one as a cross-reference rather than a second, competing taxonomy.
+**On grouping.** The families below are the groupings derived during the clone
+audit, and they are the groupings these packages should be built against. They
+turned 231 opaque names into a navigable map, which is the whole point: the
+audit proved the packages are interchangeable, so the way to give them identity
+is to say which family each one genuinely belongs to and build only that.
 
-(The `Sherry`/`Judy`/`Jammee` names in the clone template's `FAMILY_FUNCS` are
-part of the template's own dispatch table — they are one of the three cloned
-runtime bodies, not a family plan.)
+Note that the `Sherry`/`Judy`/`Jammee` names in the clone template's
+`FAMILY_FUNCS` are not a family plan — that is the dispatch table of the generic
+runtime, duplicated 231 times, and is part of the problem this document fixes.
 
 **Three rules for every package below.**
 

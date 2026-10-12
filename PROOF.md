@@ -170,9 +170,10 @@ Stated plainly. None of these were faked.
 | **#15 weighted multi-factor** | Blocked by SCORE-1. |
 | **#6 engine rerank fix** | Not root-caused. See CE-1. |
 | **Bot fix (unlabeled writes)** | Not patched — other agents' code. |
-| **Epistemic labeling 412/493** | Not started. **This is the highest-value unfinished item.** |
-| **12 missing READMEs / 111 unwired / 241 untested** | Not started. Large. |
-| **Systemwide .md currency pass** | Not started. |
+| **Epistemic labeling** | **104 records labelled individually** (86.1% -> 65.9% unlabeled). Remaining 310 are IRC noise, deliberately not labelled. Storage-policy decision still open. |
+| **READMEs (missing)** | **DONE — 17 subsystems documented, 68,400 LOC.** Audit found 40 dirs without a README, not the 12 claimed; 23 are data dirs, so 17 were real. |
+| **111 unwired / 241 untested** | Not started. Large. |
+| **Systemwide .md currency** | **AUDITED — estate is current.** 1,411 .md files scanned, only 2 older than 60d and both are HF model-cache files, not project docs. The gap was *missing* READMEs, not *stale* ones. |
 | **mem20benchmarkz full suite** | Not started. |
 | **Sales/information sites** | Not started. |
 | **First-class tiers, trust track, SITEMAP rebuild** | Not started. |

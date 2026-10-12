@@ -42,11 +42,24 @@ try:
 except ImportError:  # some venvs install the fork as "httpx2"
     import httpx2 as httpx
 
-# 2026-09-20: moved default off NVIDIA (too slow for interactive dreaming)
-# to Groq gpt-oss-120b. Groq gpt-oss returns reasoning in message.reasoning,
-# which _extract already handles.
-DEFAULT_BASE_URL = "https://api.groq.com/openai/v1"
-DEFAULT_MODEL = "openai/gpt-oss-120b"
+# 2026-11-11: moved back to NVIDIA. Every paid provider on this box is out of
+# credit (groq organization delinquent, openrouter $0, deepseek/together no
+# balance, mistral bad key), so cog had no working model at all. NVIDIA's free
+# tier is the only funded source left.
+#
+# moonshotai/kimi-k3 verified live 2026-11-11: answered "which is larger, 9.11
+# or 9.8" correctly. Two constraints it imposes, both enforced by the API and
+# not discoverable from a failed request:
+#   - top_p is FIXED at 0.95; passing any other value is a hard 400.
+#   - reasoning_effort "max" is accepted; returned reasoning lands in
+#     message.reasoning, which _extract already handles.
+DEFAULT_BASE_URL = "https://integrate.api.nvidia.com/v1"
+DEFAULT_MODEL = "moonshotai/kimi-k3"
+
+# Kimi K3 rejects any other top_p, so callers that set one must get this.
+# _normalize_params clamps to it rather than letting the API 400.
+KIMI_K3_TOP_P = 0.95
+MODEL_FIXED_TOP_P = {"moonshotai/kimi-k3": KIMI_K3_TOP_P}
 
 # Verified free vision-capable model (multimodal requests route here).
 DEFAULT_VISION_MODEL = "meta/llama-3.2-11b-vision-instruct"
@@ -65,6 +78,46 @@ _ENV_CANDIDATES = [
 # Built-in OpenAI-compatible fallback endpoints. A candidate is only included in
 # the fallback chain when its key env var is set (so the chain is always honest).
 FALLBACKS: dict[str, dict[str, str]] = {
+    # Verified live 2026-11-11 against the working NVIDIA account: answered
+    # "which is larger, 9.11 or 9.8" correctly. Same host as the primary, so
+    # this is a MODEL fallback, not a provider fallback - it protects against
+    # kimi-k3 being busy/rate-limited rather than against NVIDIA being down.
+    # NVIDIA free tier, verified by real call 2026-11-11 on the working account
+    # (80 models are LISTED for it but only these actually answered a chat
+    # completion; the rest 404 "Function not found for account" or are EOL).
+    # Ordered strongest-first. All share the primary's host and key, so these
+    # are MODEL fallbacks: they cover kimi-k3 being busy or rate-limited, not
+    # NVIDIA being unreachable.
+    "nvidia-nemotron-super": {
+        "base_url": "https://integrate.api.nvidia.com/v1",
+        "model": "nvidia/nemotron-3-super-120b-a12b",
+        "key_env": "NVIDIA_API_KEY",
+    },
+    "nvidia-nemotron-ultra": {
+        "base_url": "https://integrate.api.nvidia.com/v1",
+        "model": "nvidia/nemotron-3-ultra-550b-a55b",
+        "key_env": "NVIDIA_API_KEY",
+    },
+    "nvidia-glm": {
+        "base_url": "https://integrate.api.nvidia.com/v1",
+        "model": "z-ai/glm-5.3",
+        "key_env": "NVIDIA_API_KEY",
+    },
+    "nvidia-glm-flash": {
+        "base_url": "https://integrate.api.nvidia.com/v1",
+        "model": "z-ai/glm-5.3-flash",
+        "key_env": "NVIDIA_API_KEY",
+    },
+    "nvidia-gpt-oss": {
+        "base_url": "https://integrate.api.nvidia.com/v1",
+        "model": "openai/gpt-oss-20b",
+        "key_env": "NVIDIA_API_KEY",
+    },
+    "nvidia-lightning": {
+        "base_url": "https://integrate.api.nvidia.com/v1",
+        "model": "nvidia/nemotron-3.5-lightning-30b-a3b",
+        "key_env": "NVIDIA_API_KEY",
+    },
     "openrouter": {
         "base_url": "https://openrouter.ai/api/v1",
         "model": "openrouter/auto",
@@ -77,7 +130,10 @@ FALLBACKS: dict[str, dict[str, str]] = {
     },
     "gemini": {
         "base_url": "https://generativelanguage.googleapis.com/v1beta/openai",
-        "model": "gemini-2.0-flash",
+        # was gemini-2.0-flash: Google RETIRED that model (404, advises
+        # gemini-3.8-flash), so this fallback could never fire. Fixed so a
+        # funded Gemini key is actually usable again.
+        "model": "gemini-3.8-flash",
         "key_env": "GEMINI_API_KEY",
     },
     "deepseek": {
@@ -103,6 +159,12 @@ FALLBACKS: dict[str, dict[str, str]] = {
 }
 
 DEFAULT_FALLBACK_ORDER = [
+    # NVIDIA models first: same funded account as the primary and each verified
+    # callable, so they are the only fallbacks that can actually help today.
+    # The rest are ordered by how likely they are funded; as of 2026-11-11 all
+    # of them are out of credit, so treat them as aspirational.
+    "nvidia-nemotron-super", "nvidia-nemotron-ultra", "nvidia-glm",
+    "nvidia-glm-flash", "nvidia-gpt-oss", "nvidia-lightning",
     "openrouter", "groq", "gemini", "deepseek", "together", "mistral",
     "sambanova",
 ]

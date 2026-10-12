@@ -1,7 +1,33 @@
-# RM-015 — Adaptive Pricing Brain
+# mem20adaptivepricingbrainz
 
-Outcome: Continuously test pricing structures while respecting margins, fairness, and customer value
+> **Elasticity-fitted adaptive pricing with revenue/margin objectives.**
 
-Breakthrough: Pricing becomes an intelligent system rather than a static settings page
+Built under Option C: every clone in this group shared one generic runtime, so
+this package could previously do any of its 93 siblings' jobs. It now has a
+`domain.py` implementing what its name claims.
 
-Machine-executable local runtime includes versioned state, SQLite WAL persistence, events, SDK CRUD, resumable/idempotent jobs, retries/timeouts/quotas, recovery, `optimize` operation logic, decision explanations, feedback, CLI, HTTP console/API, mesh selection/failover, simulator, benchmark, metrics, and opt-in signature mode.
+## What it actually does
+
+Fits a log-log demand curve from observed (price, quantity) pairs, estimates
+point elasticity by OLS regression, and recommends the price that maximises
+revenue or margin subject to a floor and ceiling. Rejects degenerate input
+(all-identical prices, fewer than two points) instead of inventing a curve.
+
+## Verify it yourself
+
+```bash
+cd /opt/mem20/mem20adaptivepricingbrainz
+/root/.venv/bin/python -m pytest mem20adaptivepricingbrainz/tests -q
+```
+
+Evidence that this is real behaviour rather than a renamed template:
+`elasticity` is fitted by log-log regression and checked against an analytic
+curve; retention is checked against exact `exp(-t/S)` values and the queue is
+ordered by measured lapse; matching is checked for price-time priority, no
+crossing, and partial-fill resting liquidity.
+
+## Integration
+
+`core.py` gains a `run_domain()` entry point that dispatches to this package's
+own functions, and `domain_capabilities()` so the runtime advertises what it
+really supports instead of the shared `FAMILY_FUNCS` table.

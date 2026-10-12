@@ -130,11 +130,42 @@ FALLBACKS: dict[str, dict[str, str]] = {
     },
     "gemini": {
         "base_url": "https://generativelanguage.googleapis.com/v1beta/openai",
-        # was gemini-2.0-flash: Google RETIRED that model (404, advises
-        # gemini-3.8-flash), so this fallback could never fire. Fixed so a
-        # funded Gemini key is actually usable again.
-        "model": "gemini-3.8-flash",
+        # Corrected 2026-11-11. The previous value gemini-3.8-flash was a
+        # GUESS made from the 404 body's wording and does not exist. A live
+        # audit of this key against Google's own model list found
+        # gemini-2.5-flash / -lite / -pro now return 404 "no longer available
+        # to new users", and these are the ones verified answering:
+        #   gemini-flash-latest, gemini-flash-lite-latest, gemini-3-flash-preview
+        # gemini-pro-latest and gemini-3.1-pro-preview return 429 quota
+        # exceeded, so they are deliberately not used.
+        "model": "gemini-flash-latest",
         "key_env": "GEMINI_API_KEY",
+    },
+    "openrouter-nemotron-ultra": {
+        "base_url": "https://openrouter.ai/api/v1",
+        # Verified free-tier models, 2026-11-11. These are a genuinely
+        # different funding pool from the NVIDIA direct account, so they cover
+        # NVIDIA rate-limiting, not just one model being busy.
+        "model": "nvidia/nemotron-3-ultra-550b-a55b:free",
+        "key_env": "OPENROUTER_API_KEY",
+    },
+    "openrouter-nemotron-super": {
+        "base_url": "https://openrouter.ai/api/v1",
+        "model": "nvidia/nemotron-3-super-120b-a12b:free",
+        "key_env": "OPENROUTER_API_KEY",
+    },
+    "openrouter-gemma4": {
+        "base_url": "https://openrouter.ai/api/v1",
+        "model": "google/gemma-4-31b-it:free",
+        "key_env": "OPENROUTER_API_KEY",
+    },
+    "ollama": {
+        "base_url": "http://localhost:11434/v1",
+        # Local models, no network and no quota. Verified serving:
+        # qwen2.5-coder:0.5b and gemma3:1b. Last-resort fallback only - the box
+        # has them pulled but they are small.
+        "model": "qwen2.5-coder:0.5b",
+        "key_env": "OLLAMA_API_KEY",
     },
     "deepseek": {
         "base_url": "https://api.deepseek.com/v1",
@@ -779,3 +810,97 @@ def generate_ui(description: str, max_tokens: int = 4096) -> str:
         timeout=_default_timeout())
     resp.raise_for_status()
     return _extract(resp.json()).strip()
+
+
+# ---------------------------------------------------------------------------
+# Speech synthesis
+# ---------------------------------------------------------------------------
+# The NVIDIA account exposed no audio surface at all (parakeet/canary/magpie
+# absent, and /v1/audio/* 404s at the route level), so TTS had no home. Gemini's
+# free tier provides one: gemini-2.5-flash-preview-tts verified live
+# 2026-11-11 returning 92,864 bytes of audio for one sentence.
+# NOTE: gemini-2.5-pro-preview-tts 429s on this key, so only the flash variant
+# is wired up.
+#
+# IMPORTANT: the response is raw signed 16-bit PCM (mimeType
+# "audio/L16;codec=pcm;rate=24000"), NOT a WAV container - it has no RIFF
+# header, so handing it straight to a WAV decoder raises "file does not start
+# with RIFF id". synthesize_speech therefore wraps the PCM in a proper RIFF/WAVE
+# header so callers get a playable file.
+TTS_MODEL = "gemini-2.5-flash-preview-tts"
+TTS_SAMPLE_RATE = 24000
+
+
+def synthesize_speech(text: str) -> bytes:
+    """Return WAV audio bytes for ``text`` via Gemini's free TTS model."""
+    api_key = _get("GEMINI_API_KEY") or _get("GOOGLE_API_KEY")
+    if not api_key:
+        raise LLMError("No Gemini key for TTS (set GEMINI_API_KEY)")
+    url = ("https://generativelanguage.googleapis.com/v1beta/models/"
+           + _get("MEM20_TTS_MODEL", TTS_MODEL) + ":generateContent?key=" + api_key)
+    resp = httpx.post(
+        url,
+        json={"contents": [{"parts": [{"text": text}]}],
+              "generationConfig": {"responseModalities": ["AUDIO"],
+                                   "maxOutputTokens": 8192}},
+        timeout=_default_timeout())
+    resp.raise_for_status()
+    for part in resp.json()["candidates"][0]["content"]["parts"]:
+        blob = part.get("inlineData") or part.get("inline_data")
+        if blob and blob.get("data"):
+            import base64
+            pcm = base64.b64decode(blob["data"])
+            return _pcm_to_wav(pcm, TTS_SAMPLE_RATE)
+    raise LLMError("TTS returned no audio data")
+
+
+def _pcm_to_wav(pcm: bytes, rate: int, channels: int = 1, width: int = 2) -> bytes:
+    """Wrap raw signed 16-bit PCM in a RIFF/WAVE container."""
+    import struct
+    byte_rate = rate * channels * width
+    block_align = channels * width
+    header = (b"RIFF" + struct.pack("<I", 36 + len(pcm)) + b"WAVE"
+              + b"fmt " + struct.pack("<IHHIIHH", 16, 1, channels, rate,
+                                      byte_rate, block_align, width * 8)
+              + b"data" + struct.pack("<I", len(pcm)))
+    return header + pcm
+
+
+# ---------------------------------------------------------------------------
+# Code generation
+# ---------------------------------------------------------------------------
+# Filled from OpenRouter's free tier. This key has no funded provider of its own
+# (groq restricted, deepseek/together/cerebras 402, mistral/dashscope 401,
+# xAI 403), but OpenRouter serves :free models on a separate quota. Verified
+# live 2026-11-11: cohere/north-mini-code:free, poolside/laguna-s-2.1:free and
+# poolside/laguna-xs-2.1:free all answered. Tried strongest-first.
+CODE_MODELS = [
+    "poolside/laguna-s-2.1:free",
+    "cohere/north-mini-code:free",
+    "poolside/laguna-xs-2.1:free",
+]
+
+
+def generate_code(task: str, max_tokens: int = 4096) -> str:
+    """Generate code for ``task`` using free-tier code models via OpenRouter."""
+    api_key = _get("OPENROUTER_API_KEY")
+    if not api_key:
+        raise LLMError("No OpenRouter key for code generation")
+    last = ""
+    for model in CODE_MODELS:
+        try:
+            resp = httpx.post(
+                "https://openrouter.ai/api/v1/chat/completions",
+                headers={"Authorization": "Bearer " + api_key,
+                         "Content-Type": "application/json"},
+                json={"model": model,
+                      "messages": [{"role": "user", "content": task}],
+                      "max_tokens": max_tokens},
+                timeout=_default_timeout())
+            resp.raise_for_status()
+            out = _extract(resp.json()).strip()
+            if out:
+                return out
+        except (httpx.HTTPStatusError, httpx.HTTPError, KeyError, IndexError, ValueError) as exc:
+            last = _attempt_error(exc)
+    raise LLMError("All free code models failed: " + last)

@@ -85,6 +85,45 @@ context management. Honest count is **~17 distinct, not 25**.
 
 ---
 
+## 1b. THE BIGGEST FINDING — 228 of 293 packages are clones
+
+Auditing the `mem20*z` tree for "incomplete systems" turned up something much
+larger than missing tests. Hashing each package's full source **with its own
+name normalised out**:
+
+| | count |
+|---|---|
+| packages scanned | 293 |
+| **distinct implementations** | **65** |
+| **redundant clone copies** | **228** |
+| genuinely unique packages | 62 |
+
+Three clone groups account for all of it:
+
+| group | copies | LOC each |
+|---|---|---|
+| A | 94 | 273 |
+| B | 93 | 683 |
+| C | 44 | 348 |
+
+Verified by direct diff, not inference. `mem20adaptiveforgettingenginez` and
+`mem20adaptivepricingbrainz` have **identical file structure and byte-identical
+content** once each package's own name is substituted — they differ in nothing
+but their own name. The same holds across all 231 members of the three groups.
+
+So a package name like `mem20adaptivepricingbrainz` describes an
+implementation that is really the adaptive-pricing brain no more than
+`mem20adaptiveforgettingenginez` is. **The names promise distinct capabilities
+that do not exist.**
+
+I have **not** deleted or rewritten anything. 228 packages is a destructive,
+architecture-level decision that is yours, not mine. Full audit with every
+member listed: `bench/clone_audit.json`.
+
+This also explains the "241 untested components" figure in the old roadmap:
+232 of 233 untested packages are real code, but most of them are *the same
+273/348/683 lines under different names*.
+
 ## 2. OPEN DEFECTS — recorded, not hidden
 
 ### CE-1 (high) — cross-encoder rerank silently did nothing

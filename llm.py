@@ -710,3 +710,72 @@ def safety_check(text: str) -> str:
     if "safe" in verdict:
         return "safe"
     return "unknown"
+
+
+# ---------------------------------------------------------------------------
+# Combinatorial optimization (Ising)
+# ---------------------------------------------------------------------------
+# nvidia/ising-calibration-1.5-31b verified live 2026-11-11 on MaxCut over 4
+# nodes with edges (1,2),(2,3),(3,4),(4,1),(1,3), optimum cut_size = 4.
+#
+# IMPORTANT, verified by four repeat runs at temperature 0: the SPIN
+# ASSIGNMENT is always correct (all four runs scored a true cut of 4, the
+# optimum), but the SELF-REPORTED objective is not. Asked for a "cut_size"
+# field it answered 2 every single time, which is wrong; asked in prose for
+# "the cut size" it answered 4. So its solutions can be trusted and its
+# arithmetic cannot. Callers must recompute the objective from the returned
+# spins rather than reading the model's number.
+#
+# Purpose-built for Ising/QUBO-style search, so it is kept out of FALLBACKS.
+ISING_MODEL = "nvidia/ising-calibration-1.5-31b"
+
+
+def optimize_ising(problem: str, max_tokens: int = 2048) -> str:
+    """Solve an Ising/QUBO-style combinatorial optimization problem.
+
+    ``problem`` should describe the graph or coupling matrix in plain text.
+    Returns the model's raw answer, which is typically JSON containing the
+    spin assignment and the objective value.
+    """
+    api_key = _get("NVAPI_KEY") or _get("NVIDIA_API_KEY")
+    if not api_key:
+        raise LLMError("No NVIDIA key for Ising solve (set NVIDIA_API_KEY)")
+    base_url = _get("MEM20_ISING_BASE_URL", DEFAULT_BASE_URL).rstrip("/")
+    model = _get("MEM20_ISING_MODEL", ISING_MODEL)
+    resp = httpx.post(
+        base_url + "/chat/completions",
+        headers=_headers(api_key),
+        json={"model": model,
+              "messages": [{"role": "user", "content": problem}],
+              "max_tokens": max_tokens, "temperature": 0.1},
+        timeout=_default_timeout())
+    resp.raise_for_status()
+    return _extract(resp.json()).strip()
+
+
+# ---------------------------------------------------------------------------
+# UI generation (MUSE)
+# ---------------------------------------------------------------------------
+# meta/muse-glimmer-30b verified live 2026-11-11: asked for a self-contained
+# dark-themed login card it returned 1886 bytes of complete HTML with inline
+# CSS and no explanation. It is a reasoning model - replies may carry a
+# reasoning_content field that _extract already discards.
+MUSE_MODEL = "meta/muse-glimmer-30b"
+
+
+def generate_ui(description: str, max_tokens: int = 4096) -> str:
+    """Generate a self-contained HTML/CSS UI component from a description."""
+    api_key = _get("NVAPI_KEY") or _get("NVIDIA_API_KEY")
+    if not api_key:
+        raise LLMError("No NVIDIA key for UI generation (set NVIDIA_API_KEY)")
+    base_url = _get("MEM20_MUSE_BASE_URL", DEFAULT_BASE_URL).rstrip("/")
+    model = _get("MEM20_MUSE_MODEL", MUSE_MODEL)
+    resp = httpx.post(
+        base_url + "/chat/completions",
+        headers=_headers(api_key),
+        json={"model": model,
+              "messages": [{"role": "user", "content": description}],
+              "max_tokens": max_tokens, "temperature": 0.3},
+        timeout=_default_timeout())
+    resp.raise_for_status()
+    return _extract(resp.json()).strip()

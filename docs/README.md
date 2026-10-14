@@ -80,7 +80,8 @@ Counts obtained by instantiating `Mem20MCPServer` and counting `server.tools`.
 git clone https://github.com/bythewayz66-glitch/mem20.git
 cd mem20
 python3 -m venv .venv
-.venv/bin/pip install -r requirements.txt
+source .venv/bin/activate
+pip install -r requirements.txt
 
 # Configure
 export NVAPI_KEY="your-nvidia-api-key"

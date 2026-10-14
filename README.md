@@ -22,7 +22,7 @@
 
 Exposed to clients over the [Model Context Protocol](https://modelcontextprotocol.io) as a JSON-RPC 2.0 service on stdio. Connect Hermes Agent, Claude Code, or any MCP host.
 
-This repository is a monorepo. Alongside the memory + cognition core it carries **293 native subsystems** (`mem20*z` organs) and the engines they depend on — agent platforms, game tooling, 3D pipelines, model serving, and operations CLIs. See [Repository layout](#repository-layout).
+This repository is a monorepo. Alongside the memory + cognition core it carries **301 native subsystems** (`mem20*z` organs) and the engines they depend on — agent platforms, game tooling, 3D pipelines, model serving, and operations CLIs. See [Repository layout](#repository-layout).
 
 > **v2.1 (frozen):** Pluggable integrations — Blender and Unity ship as optional, separately-installable modules. Code is frozen until the GitHub release is cut.
 
@@ -48,10 +48,10 @@ This repository is a monorepo. Alongside the memory + cognition core it carries 
 ## Architecture
 
 ```
-                        ┌─────────────────────────────────────────┐
-   MCP client  --stdio──▶│  mcp/mcp_server.py  (Mem20MCPServer)     │
+                        ┌──────────────────────────────────────────┐
+   MCP client  --stdio─▶│  mcp/mcp_server.py  (Mem20MCPServer)     │
    (Hermes, Claude,      │  JSON-RPC 2.0 · 257 tools · 26 domains   │
-    any MCP host)        └───────────────┬─────────────────────────┘
+    any MCP host)        └───────────────┬──────────────────────────┘
                                          │ calls
                  ┌───────────────────────┼─────────────────────────┐
                  ▼                        ▼                         ▼
@@ -105,14 +105,14 @@ Counts below are the live surface, obtained by instantiating `Mem20MCPServer` an
 
 | Prefix | Tools | Domain | What it does |
 |--------|------:|--------|-------------|
-| `memory_*` | 52 | Core memory | Store, recall, probe entities, reason across entities, contradiction detection, epistemic audit, namespaces, pins, contamination audit |
-| `cog_*`, `tot_*`, `cognitive_substrate`, `beam_search`, `react_reason`, `least_to_most`, `reflexion` | 18 | Cognitive processing | Reasoning (deductive, inductive, abductive, analogical, causal), planning, reflection, working memory, 28-paradigm substrate, tree-of-thought diagnostics |
-| `world_model_*` | 15 | World forecasting | Variables and rules, record predictions, resolve against observed outcomes |
+| `memory_*` | 49 | Core memory | Store, recall, probe entities, reason across entities, contradiction detection, epistemic audit, namespaces, pins, contamination audit |
+| `cog_*`, `tot_*`, `cognitive_substrate`, `beam_search`, `react_reason`, `least_to_most`, `reflexion` | 15 | Cognitive processing | Reasoning (deductive, inductive, abductive, analogical, causal), planning, reflection, working memory, 28-paradigm substrate, tree-of-thought diagnostics |
+| `world_model_*` | 9 | World forecasting | Variables and rules, record predictions, resolve against observed outcomes |
 | `vcs_*` | 11 | Version control | Git status/diff/log/branch/commit/stash/remote/tag, GitHub issues and PRs |
 | `cloud_*` | 10 | Cloud control planes | AWS EC2/Lambda/S3, Azure blob, GCP storage, Kubernetes, Docker, Heroku, DigitalOcean, Cloudflare Workers |
 | `db_*` | 10 | Databases | SQL across sqlite/postgres/mysql/redis/mongodb, schema inspection, transactions |
 | `prod_*` | 10 | Productivity | Tasks, projects, notes, goals, habits, meetings, time tracking |
-| `fs_*` | 10 | Sandboxed filesystem | Read/write/list/search/watch, permissions, metadata, archives, diff, disk usage |
+| `fs_*` | 13 | Sandboxed filesystem | Read/write/list/search/watch, permissions, metadata, archives, diff, disk usage |
 | `braid_*` | 9 | Content-addressed ledger | Hash, read, write, prove provenance, intent strand, bridge signer |
 | `comm_*` | 9 | Messaging | Email (SMTP/IMAP), Slack, Discord, Telegram, SMS, push, calendar invites, contacts |
 | `dev_*` | 9 | Development | Run tests, lint, format, search code, dependency analysis, sandboxed exec (bash/python/js), API test |
@@ -311,9 +311,6 @@ on `:8080` (`/health`, `/ready`, `/metrics`). Pick whichever fits your environme
 
 ### 1. pip (Python)
 
-> **mem20 is not published on PyPI** — there is no `pip install mem20`. The pip
-> channel builds from the local source tree (`pip install .`); clone the repo first.
-
 ```bash
 pip install .                 # builds the wheel, installs the `mem20-mcp` command
 mem20-mcp                     # starts the MCP server + :8080 health endpoint
@@ -415,7 +412,7 @@ The tree is large, so find code through the sitemap rather than by browsing. `/s
 | `roadmaps/` | Roadmap registry (JSON) |
 | `systemd/` | Service unit templates |
 | `verification/` | Verification scripts |
-| `mem20*z/` | 293 native subsystems ("organs"). 300 of 326 indexed subsystems are organs; the rest are engines and services (see below). |
+| `mem20*z/` | 301 native subsystems ("organs"). The sitemap indexes 326 subsystems in total, of which 300 are categorised `organ`; the rest are engines and services (see below). |
 | `braid/`, `cog/`, `memory_engine/`, `chroma/`, `dashboard/`, `gateway/`, `mcp/`, `kanban/`, `toolchest/`, `reference_store/` | Engines and services. Unprefixed **by design** — they are infrastructure, not organs. Do not rename them. |
 
 Naming is `mem20<name>z` for organs, with deliberate exceptions that must not be "fixed": `mem20agentz_sdk` (the SDK's suffix is its identity), `mem20messenger`, `mem20oreo`, `mem20zimr`, `toolchest`, `mem20ops` (a role over the fleet, not an organ), `mem20sitemapz`.
@@ -472,4 +469,4 @@ Contributions are welcome! Before submitting a PR:
 
 MIT — see [LICENSE](LICENSE).
 
-Built by [bythewayz66-glitch](https://github.com/bythewayz66-glitch).
+Canonical repository: [bythewayz66-glitch/mem20](https://github.com/bythewayz66-glitch/mem20). Originally built by [JaysonAIOnline](https://github.com/JaysonAIOnline).

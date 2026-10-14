@@ -28,7 +28,8 @@ results — those require real participants and cannot be performed by an agent.
 | 20 | Post-Launch Learning & 2.1 Plan | human | `step_20.md` (learning report, next-horizon skeleton) |
 
 ## Engineering work already landed for this roadmap
-- **Step 10**: modular MCP decomposition (`server.py` + per-domain mixins), no file > ~1.8k lines.
+- **Step 10**: modular MCP decomposition (`mcp/server.py` + per-domain mixins); the largest
+  MCP module is `mcp/memory_tools.py` at 2,088 lines.
 - **Step 11 / 16**: `/health` `/ready` `/metrics` endpoint with event taxonomy
   (`tool.call`, `tool.success`, `tool.error`), per-tool call/error counters, request
   totals, and `memory_system_available` flag.

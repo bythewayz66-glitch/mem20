@@ -1347,7 +1347,7 @@ These track values, emotions, and goals — mem20's emotional intelligence layer
   "arguments": {
     "name": "complete_mem20_docs",
     "priority": 1,
-    "target_state": "All 174 tools fully documented"
+    "target_state": "All 257 tools fully documented"
   }
 }
 ```
@@ -3178,7 +3178,7 @@ These are advanced memory operations beyond the core tools.
   "name": "prod_task_create",
   "arguments": {
     "title": "Complete mem20 docs",
-    "description": "Write feature-by-feature documentation for all 174 tools",
+    "description": "Write feature-by-feature documentation for all 257 tools",
     "priority": "high",
     "due_date": "2026-09-07"
   }
@@ -3321,7 +3321,7 @@ These are advanced memory operations beyond the core tools.
   "name": "prod_goal_set",
   "arguments</arg_key>{
     "goal": "Complete all mem20 documentation",
-    "target": "All 20 domains documented",
+    "target": "All 26 domains documented",
     "deadline": "2026-09-15"
   }
 }
@@ -3376,7 +3376,7 @@ These are advanced memory operations beyond the core tools.
 
 ---
 
-## Domain 20: Web Scraping Tools (9 tools)
+## Domain 20: Web Scraping Tools (8 tools)
 
 ### `scrape_page`
 
@@ -3724,7 +3724,7 @@ These are advanced memory operations beyond the core tools.
     "action": "create",
     "repo": "bythewayz66-glitch/mem20",
     "title": "Add tool documentation",
-    "body": "Need comprehensive docs for all 174 tools"
+    "body": "Need comprehensive docs for all 257 tools"
   }
 }
 ```
@@ -4676,4 +4676,4 @@ claude mcp add mem20 -- python3 /path/to/mem20/mcp/mcp_server.py
 | Cloud Storage | 7 | cloudstorage_upload, cloudstorage_download, cloudstorage_list, cloudstorage_delete, cloudstorage_copy, cloudstorage_sync, cloudstorage_metadata, cloudstorage_presigned_url |
 | Marketing | 7 | mkt_seo_analyze, mkt_social_post, mkt_social_analytics, mkt_email_campaign, mkt_content_generate, mkt_ab_test, mkt_analytics, mkt_competitor_analysis, mkt_hashtag_research |
 | Finance | 7 | fin_stock_quote, fin_crypto_price, fin_portfolio, fin_budget, fin_invoice, fin_tax_calc, fin_expense_track, fin_financial_news |
-| **TOTAL** | **~174** | |
+| **TOTAL** | **257** | 26 domains |

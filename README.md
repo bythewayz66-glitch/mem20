@@ -48,10 +48,10 @@ This repository is a monorepo. Alongside the memory + cognition core it carries 
 ## Architecture
 
 ```
-                        ┌─────────────────────────────────────────┐
+                        ┌──────────────────────────────────────────┐
    MCP client  --stdio─▶│  mcp/mcp_server.py  (Mem20MCPServer)     │
    (Hermes, Claude,      │  JSON-RPC 2.0 · 257 tools · 26 domains   │
-    any MCP host)        └───────────────┬─────────────────────────┘
+    any MCP host)        └───────────────┬──────────────────────────┘
                                          │ calls
                  ┌───────────────────────┼─────────────────────────┐
                  ▼                        ▼                         ▼

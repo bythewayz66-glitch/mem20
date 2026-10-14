@@ -1,6 +1,6 @@
 # mem20 MCP Tools Reference
 
-> Complete reference for all 111 tools organized by domain.
+> Complete reference for all 257 tools organized by domain.
 
 
 ## A2A (Agent-to-Agent) Tools (5 tools)

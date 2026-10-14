@@ -21,7 +21,7 @@
 ```
                         ┌──────────────────────────────────────────┐
    MCP client  --stdio──▶│  mcp/mcp_server.py  (Mem20MCPServer)     │
-   (Hermes, Claude,      │  JSON-RPC 2.0 · 111 tools · 15 domains  │
+   (Hermes, Claude,      │  JSON-RPC 2.0 · 257 tools · 26 domains  │
     any MCP host)        └───────────────┬──────────────────────────┘
                                          │ calls
                  ┌────────────────────────┼─────────────────────────┐
@@ -104,7 +104,7 @@ store/
 - **Audit** — `memory_audit_contamination()` returns `contamination_rate`, `violations`
 - **Prediction ledger** — couples forecasts to observed outcomes
 
-### Tool Domains (15 domains, 111 tools)
+### Tool Domains (26 domains, 257 tools)
 
 | Prefix | Domain | Count |
 |--------|--------|-------|

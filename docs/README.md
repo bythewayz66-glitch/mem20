@@ -1,6 +1,6 @@
 # mem20 MCP Server Documentation
 
-> **Version:** 2.1-rc2
+> **Version:** 2.1.0rc2
 > **License:** MIT
 > **Author:** mem20 maintainers (see [../CANONICAL.md](../CANONICAL.md))
 > **Repository:** https://github.com/bythewayz66-glitch/mem20
@@ -10,9 +10,13 @@
 | Document | Description |
 |----------|-------------|
 | [Architecture Overview](01-architecture.md) | System design, memory model, tool domains, deployment |
-| [Tools Reference](02-tools-reference.md) | Complete reference for all 111 MCP tools |
+| [Tools Reference](02-tools-reference.md) | Complete reference for all 257 MCP tools |
 | [Installation Guide](03-installation.md) | Install, configure, and connect MCP hosts |
 | [Usage Examples](04-usage-examples.md) | Practical examples for every tool domain |
+| [C++ SDK](sdk/cpp/README.md) | Native C++17/20 client: quickstart, build, compatibility matrix |
+| [C++ SDK — Protocol](sdk/cpp/protocol.md) | JSON-RPC 2.0 stdio / HTTP+SSE wire contract, MCP handshake |
+| [C++ SDK — API Reference](sdk/cpp/api-reference.md) | Typed surface: session, grounded/simulated partition, read-only ledger |
+| [C++ SDK — Source Ledger](sdk/cpp/source-ledger.md) | Every SDK claim mapped to a repo path + commit |
 
 ## What is mem20?
 
@@ -37,7 +41,7 @@ MCP client --stdio--> Mem20MCPServer (mcp/mcp_server.py)
    (LLM-backed)    (store engine)   (JSON files)
 ```
 
-## 111 Tools Across 15 Domains
+## 257 Tools Across 26 Domains
 
 | Domain | Prefix | Count |
 |--------|--------|-------|

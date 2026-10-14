@@ -349,8 +349,9 @@ Keep pull requests focused, run `npm run lint`, `npm run typecheck`, and `npm ru
 
 ## AI Editing Guardrails
 
-If you use Cursor or another AI-assisted workflow, review the committed project guardrails in [`.cursor/rules/claw3d-project-guardrails.mdc`](.cursor/rules/claw3d-project-guardrails.mdc).
+Shared editing expectations for this repository — the Claw3D-vs-mem20 claw plugin
+boundary, code placement conventions, office-stack distinctions, and
+documentation/test update expectations — are recorded in `AGENTS.md`, which ships
+in this directory.
 
-That rule file captures the shared editing expectations for this repository, including the Claw3D-vs-mem20 claw plugin boundary, code placement conventions, office-stack distinctions, and documentation/test update expectations.
-
-Community expectations live in [`CODE_OF_CONDUCT.md`](CODE_OF_CONDUCT.md). Security reporting instructions live in [`SECURITY.md`](SECURITY.md).
+Community expectations live in [`CODE_OF_CONDUCT.MD`](CODE_OF_CONDUCT.MD). Security reporting instructions live in [`SECURITY.md`](SECURITY.md).

@@ -1,6 +1,9 @@
 # mem20 MCP Tools Reference
 
-> Complete reference for all 257 tools organized by domain.
+> Reference for the MCP tool surface, organised by domain. The live server exposes
+> **257 tools across 26 domains** (verified by instantiating `Mem20MCPServer` and
+> counting `server.tools`); the sections below document the core subset in detail,
+> so a section heading counts the tools listed under it, not the whole domain.
 
 
 ## A2A (Agent-to-Agent) Tools (5 tools)
@@ -613,7 +616,7 @@ Set capability tier (read-only, read-write, admin) for corrigibility
 ---
 
 
-## Imagination / Simulation Tools (9 tools)
+## Imagination / Simulation Tools (8 tools)
 
 ### `imagination_concept`
 

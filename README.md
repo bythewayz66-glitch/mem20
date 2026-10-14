@@ -22,7 +22,7 @@
 
 Exposed to clients over the [Model Context Protocol](https://modelcontextprotocol.io) as a JSON-RPC 2.0 service on stdio. Connect Hermes Agent, Claude Code, or any MCP host.
 
-This repository is a monorepo. Alongside the memory + cognition core it carries **301 native subsystems** (`mem20*z` organs) and the engines they depend on — agent platforms, game tooling, 3D pipelines, model serving, and operations CLIs. See [Repository layout](#repository-layout).
+This repository is a monorepo. Alongside the memory + cognition core it carries **293 `mem20*z` subsystem packages** and the engines they depend on — agent platforms, game tooling, 3D pipelines, model serving, and operations CLIs. See [Repository layout](#repository-layout).
 
 > **v2.1 (frozen):** Pluggable integrations — Blender and Unity ship as optional, separately-installable modules. Code is frozen until the GitHub release is cut.
 
@@ -48,10 +48,10 @@ This repository is a monorepo. Alongside the memory + cognition core it carries 
 ## Architecture
 
 ```
-                        ┌──────────────────────────────────────────┐
+                        ┌─────────────────────────────────────────┐
    MCP client  --stdio─▶│  mcp/mcp_server.py  (Mem20MCPServer)     │
    (Hermes, Claude,      │  JSON-RPC 2.0 · 257 tools · 26 domains   │
-    any MCP host)        └───────────────┬──────────────────────────┘
+    any MCP host)        └───────────────┬─────────────────────────┘
                                          │ calls
                  ┌───────────────────────┼─────────────────────────┐
                  ▼                        ▼                         ▼
@@ -412,7 +412,7 @@ The tree is large, so find code through the sitemap rather than by browsing. `/s
 | `roadmaps/` | Roadmap registry (JSON) |
 | `systemd/` | Service unit templates |
 | `verification/` | Verification scripts |
-| `mem20*z/` | 301 native subsystems ("organs"). The sitemap indexes 326 subsystems in total, of which 300 are categorised `organ`; the rest are engines and services (see below). |
+| `mem20*z/` | 293 `mem20*z` subsystem packages ("organs"). The sitemap indexes 326 subsystems in total, of which 300 are categorised `organ`; the rest are engines and services (see below). |
 | `braid/`, `cog/`, `memory_engine/`, `chroma/`, `dashboard/`, `gateway/`, `mcp/`, `kanban/`, `toolchest/`, `reference_store/` | Engines and services. Unprefixed **by design** — they are infrastructure, not organs. Do not rename them. |
 
 Naming is `mem20<name>z` for organs, with deliberate exceptions that must not be "fixed": `mem20agentz_sdk` (the SDK's suffix is its identity), `mem20messenger`, `mem20oreo`, `mem20zimr`, `toolchest`, `mem20ops` (a role over the fleet, not an organ), `mem20sitemapz`.

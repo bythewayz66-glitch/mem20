@@ -2,7 +2,7 @@
 
 > **Version:** 2.1-rc2
 > **License:** MIT
-> **Author:** mem20 maintainers
+> **Author:** JaysonAIOnline
 
 ## What is mem20?
 
@@ -20,11 +20,11 @@
 
 ```
                         ┌──────────────────────────────────────────┐
-   MCP client  --stdio──▶│  mcp/mcp_server.py  (Mem20MCPServer)     │
+   MCP client  --stdio─▶│  mcp/mcp_server.py  (Mem20MCPServer)     │
    (Hermes, Claude,      │  JSON-RPC 2.0 · 257 tools · 26 domains  │
     any MCP host)        └───────────────┬──────────────────────────┘
                                          │ calls
-                 ┌────────────────────────┼─────────────────────────┐
+                 ┌───────────────────────┼─────────────────────────┐
                  ▼                        ▼                         ▼
         cog/cognitive_engine.py    mem20/mem (store)         roadmaps/*.json
         (plan/chain/reason/        memory.py engine:          (roadmap registry)
@@ -38,15 +38,18 @@
 - **MCP server** (`mcp` package) speaking JSON-RPC 2.0 over stdio
 - `Mem20MCPServer` (in `server.py`) aggregates per-domain mixin classes and dispatches in `_execute_tool()`
 - Tool schemas + handlers live in per-domain modules:
-  - `memory_tools.py` — 39 tools (memory, self-model, multi-agent)
-  - `cognitive_tools.py` — 19 tools (cognitive, imagination, theory-of-mind, corrigibility)
+  - `memory_tools.py` — 39 tools (core memory + self-model)
+  - `tools/enhanced_memory_tools.py` — 13 tools (extended memory)
+  - `cognitive_tools.py` — 18 tools (cognitive, imagination, theory-of-mind, corrigibility)
   - `roadmap_tools.py` — 4 tools (roadmap registry)
-  - `tools/world_tools.py` — 20 tools (world model, procedural, affective)
+  - `tools/world_tools.py` — 14 tools (world model + affective)
+  - `tools/procedural_tools.py` — 6 tools (procedural skill library)
   - `tools/blender_tools.py` — 7 tools (OPTIONAL Blender)
   - `tools/unity_tools.py` — 5 tools (OPTIONAL Unity)
   - `tools/a2a_tools.py` — 5 tools (agent-to-agent)
   - `tools/thought_process.py` — 9 tools (ToT, Reflexion, ReAct, etc.)
   - `tools/integration_tools.py` — 3 tools (filesystem)
+  - the remaining `tools/*.py` domains (braid, cloud, cloudstorage, communication, database, design, dev, finance, irc, job, marketing, productivity, search, version-control, webscraping) — 119 tools
 
 ### Memory Engine (`memory.py`)
 
@@ -106,23 +109,39 @@ store/
 
 ### Tool Domains (26 domains, 257 tools)
 
+Counts obtained by instantiating `Mem20MCPServer` and counting `server.tools`.
+
 | Prefix | Domain | Count |
 |--------|--------|-------|
-| `memory_*` | Core memory | 36 |
-| `cog_*` | Cognitive processing | 6 |
-| `imagination_*` | Counterfactual simulation | 9 |
-| `self_model_*` | Agent self-model | 3 |
-| `theory_of_mind_*` | Perspective simulation | 2 |
-| `corrigibility_*` | Shutdown / capability tiers | 2 |
-| `roadmap_*` | Roadmap registry | 4 |
-| `world_model_*` | World forecasting | 8 |
+| `memory_*` | Core memory | 49 |
+| `cog_*` / `tot_*` / substrate | Cognitive processing | 15 |
+| `world_model_*` | World forecasting | 9 |
+| `vcs_*` | Version control | 11 |
+| `cloud_*` | Cloud control planes | 10 |
+| `db_*` | Databases | 10 |
+| `prod_*` | Productivity | 10 |
+| `fs_*` | Sandboxed filesystem | 13 |
+| `braid_*` | Content-addressed ledger | 9 |
+| `comm_*` | Messaging | 9 |
+| `dev_*` | Development | 9 |
+| `mkt_*` | Marketing | 9 |
+| `scrape_*` | Web scraping | 8 |
+| `cloudstorage_*` | Object storage | 8 |
+| `design_*` | Design | 8 |
+| `fin_*` | Finance | 8 |
+| `blender_*` | Blender automation | 7 |
+| `search_*` | Search | 7 |
 | `affective_*` | Values, emotions, goals | 6 |
 | `procedural_*` | Skill library | 6 |
-| `fs_*` | Sandboxed filesystem | 3 |
-| `blender_*` | Blender automation | 7 |
-| `unity_*` | Unity automation | 5 |
 | `a2a_*` | Agent-to-agent communication | 5 |
-| `tot_*` / `reflexion` / etc. | Thought process / reasoning | 9 |
+| `irc_*` | Shared channel | 5 |
+| `unity_*` | Unity automation | 5 |
+| `imagination_*` | Counterfactual simulation | 8 |
+| `roadmap_*` | Roadmap registry | 4 |
+| `self_model_*` | Agent self-model | 3 |
+| `corrigibility_*` | Shutdown / capability tiers | 2 |
+| `theory_of_mind_*` | Perspective simulation | 2 |
+| `job_*` | Background jobs | 2 |
 
 ### Health & Observability
 

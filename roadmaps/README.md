@@ -34,7 +34,7 @@ All roadmaps for mem20-managed projects. Each roadmap tracks phases from concept
 
 | Phase | Status | Notes |
 |-------|--------|-------|
-| mcp | completed | MCP server at `/home/jayson/mem20/mcp/server.py` with 111 tools |
+| mcp | completed | MCP server at `mcp/server.py` with 257 tools |
 | memory | completed | Memory engine at `/home/jayson/mem20/memory.py` |
 | cognitive | completed | Cognitive engine at `/home/jayson/mem20/cog/cognitive_engine.py` |
 | roadmap | completed | Roadmap system at `/home/jayson/mem20/mcp/roadmap_tools.py` |
@@ -49,7 +49,7 @@ All roadmaps for mem20-managed projects. Each roadmap tracks phases from concept
 | Phase | Status | Notes |
 |-------|--------|-------|
 | 1: Design review | completed | Architecture validated, documented in `/opt/ags-os/docs/` |
-| 2: Schema fix | blocked | `05_hermes_router.py` queries table that `04_kernel` never creates |
+| 2: Schema fix | blocked | `05_hermes_router.py` (Hermes router, outside this repo) queries a table that `04_kernel` never creates |
 | 3-11: Box A/B, SQLite ToT, Quest 3 | planned | Awaiting approval |
 
 ---

@@ -39,6 +39,21 @@ canonical:
 
 Direct pushes to `JaysonAIOnline/*` are read-only for the canonical publishing account.
 
+## Content & editorial surfaces
+
+All user-facing content and editorial assets — the root `README.md`, everything under
+`docs/`, install snippets, badges, clone commands and example tool calls — are re-pointed
+to this canonical repository, so every published copy, install path and link resolves to
+`bythewayz66-glitch/mem20`. Canonical clone + install snippet:
+
+```bash
+git clone https://github.com/bythewayz66-glitch/mem20.git
+cd mem20 && python3 -m venv .venv && .venv/bin/pip install -r requirements.txt
+```
+
+mem20 is distributed from source; it is **not yet published to PyPI**, so every install
+snippet resolves to this repository.
+
 ## Publication routing
 
 Per the project's publication mandate, work is published to the **Sidney** server via

@@ -5,16 +5,16 @@
   <strong>A persistent memory + cognition substrate for AI agents.</strong>
 </p>
 <p align="center">
-  <a href="https://mem20.jaysonai.online"><img src="https://img.shields.io/badge/Website-mem20.jaysonai.online-FFD700?style=for-the-badge" alt="Website"></a>
-  <a href="https://github.com/JaysonAIOnline/mem20/blob/main/LICENSE"><img src="https://img.shields.io/badge/License-MIT-green?style=for-the-badge" alt="License: MIT"></a>
-  <a href="https://github.com/JaysonAIOnline/mem20/releases"><img src="https://img.shields.io/github/v/release/JaysonAIOnline/mem20?style=for-the-badge" alt="Release"></a>
+  <a href="https://github.com/bythewayz66-glitch/mem20"><img src="https://img.shields.io/badge/Repo-bythewayz66--glitch%2Fmem20-6366f1?style=for-the-badge&logo=github" alt="Canonical repository"></a>
+  <a href="https://github.com/bythewayz66-glitch/mem20/blob/main/LICENSE"><img src="https://img.shields.io/badge/License-MIT-green?style=for-the-badge" alt="License: MIT"></a>
+  <a href="https://github.com/bythewayz66-glitch/mem20/releases"><img src="https://img.shields.io/github/v/release/bythewayz66-glitch/mem20?style=for-the-badge" alt="Release"></a>
 </p>
 
 <p align="center">
   <a href="README.md">English</a> | <a href="#documentation">Docs</a> | <a href="#repository-layout">Layout</a> | <a href="#quick-start">Quick Start</a>
 </p>
 
-[![mem20 Dashboard](https://via.placeholder.com/1200x400/1e1b4b/ffffff?text=mem20+Memory+%2B+Cognition+Substrate)](https://mem20.jaysonai.online)
+[![mem20 Dashboard](https://via.placeholder.com/1200x400/1e1b4b/ffffff?text=mem20+Memory+%2B+Cognition+Substrate)](https://github.com/bythewayz66-glitch/mem20)
 
 ---
 
@@ -182,8 +182,10 @@ store/
 
 ### Install from source
 
+> mem20 is distributed from source — it is **not yet published to PyPI**, so always install from the canonical repository shown below.
+
 ```bash
-git clone https://github.com/JaysonAIOnline/mem20.git
+git clone https://github.com/bythewayz66-glitch/mem20.git
 cd mem20
 
 # Create venv and install core deps
@@ -200,7 +202,7 @@ Penguin Linux is Debian-based — the standard systemd install works perfectly:
 
 ```bash
 # Clone and install as a system service (recommended for always-on)
-git clone https://github.com/JaysonAIOnline/mem20.git /opt/mem20
+git clone https://github.com/bythewayz66-glitch/mem20.git /opt/mem20
 sudo /opt/mem20/install.sh --user $USER --dir /opt/mem20
 
 # Verify it's running
@@ -433,7 +435,7 @@ Current index: **326 subsystems, 8,969 source files, 468k code lines**. Per the 
 
 ## Documentation
 
-Full docs live at **[mem20.jaysonai.online](https://mem20.jaysonai.online)**.
+Full docs live in [`docs/`](https://github.com/bythewayz66-glitch/mem20/tree/main/docs) on the canonical repository **[github.com/bythewayz66-glitch/mem20](https://github.com/bythewayz66-glitch/mem20)**.
 
 | Resource | What's covered |
 |----------|----------------|
@@ -469,4 +471,4 @@ Contributions are welcome! Before submitting a PR:
 
 MIT — see [LICENSE](LICENSE).
 
-Built by [JaysonAIOnline](https://github.com/JaysonAIOnline).
+Canonical source: [github.com/bythewayz66-glitch/mem20](https://github.com/bythewayz66-glitch/mem20).

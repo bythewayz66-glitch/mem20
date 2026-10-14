@@ -2,7 +2,7 @@
 
 > **Version:** 2.1-rc2
 > **License:** MIT
-> **Author:** JaysonAIOnline
+> **Author:** mem20 maintainers
 
 ## What is mem20?
 

@@ -35,7 +35,7 @@ The simplest method — installs mem20 as a Python package with the `mem20-mcp` 
 
 ```bash
 # Clone the repository
-git clone https://github.com/JaysonAIOnline/mem20.git
+git clone https://github.com/bythewayz66-glitch/mem20.git
 cd mem20
 
 # Create virtual environment
@@ -62,7 +62,7 @@ Penguin Linux is Debian-based with systemd — the standard systemd install work
 
 ```bash
 # Clone and install as a system service (recommended for always-on)
-git clone https://github.com/JaysonAIOnline/mem20.git /opt/mem20
+git clone https://github.com/bythewayz66-glitch/mem20.git /opt/mem20
 sudo /opt/mem20/install.sh --user $USER --dir /opt/mem20
 
 # Verify it's running

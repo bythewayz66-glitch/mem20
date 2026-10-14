@@ -2,8 +2,8 @@
 
 > **Version:** 2.1-rc2
 > **License:** MIT
-> **Author:** JaysonAIOnline
-> **Repository:** https://github.com/JaysonAIOnline/mem20
+> **Author:** mem20 maintainers (see [../CANONICAL.md](../CANONICAL.md))
+> **Repository:** https://github.com/bythewayz66-glitch/mem20
 
 ## Quick Links
 
@@ -61,7 +61,7 @@ MCP client --stdio--> Mem20MCPServer (mcp/mcp_server.py)
 
 ```bash
 # Install
-git clone https://github.com/JaysonAIOnline/mem20.git
+git clone https://github.com/bythewayz66-glitch/mem20.git
 cd mem20
 python3 -m venv .venv
 .venv/bin/pip install -r requirements.txt
@@ -114,6 +114,6 @@ Both degrade gracefully when the respective application is not installed.
 
 ## License
 
-MIT — see [LICENSE](https://github.com/JaysonAIOnline/mem20/blob/main/LICENSE).
+MIT — see [LICENSE](https://github.com/bythewayz66-glitch/mem20/blob/main/LICENSE).
 
-Built by [JaysonAIOnline](https://github.com/JaysonAIOnline).
+Canonical source: [github.com/bythewayz66-glitch/mem20](https://github.com/bythewayz66-glitch/mem20).

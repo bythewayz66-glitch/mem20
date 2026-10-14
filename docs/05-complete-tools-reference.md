@@ -1,6 +1,6 @@
 # mem20 MCP — Complete Tools Reference
 
-> Every tool, every feature, every command. 174 tools across 20 domains. Written for someone who has never seen mem20 before.
+> Every tool, every feature, every command. 257 tools across 26 domains. Written for someone who has never seen mem20 before.
 
 ---
 
@@ -3722,7 +3722,7 @@ These are advanced memory operations beyond the core tools.
   "name": "vcs_github_issue",
   "arguments": {
     "action": "create",
-    "repo": "JaysonAIOnline/mem20",
+    "repo": "bythewayz66-glitch/mem20",
     "title": "Add tool documentation",
     "body": "Need comprehensive docs for all 174 tools"
   }
@@ -3747,7 +3747,7 @@ These are advanced memory operations beyond the core tools.
   "name": "vcs_github_pr",
   "arguments": {
     "action": "create",
-    "repo": "JaysonAIOnline/mem20",
+    "repo": "bythewayz66-glitch/mem20",
     "title": "Add comprehensive tools reference docs",
     "body": "Feature-by-feature documentation for all mem20 tools"
   }
@@ -4373,7 +4373,7 @@ These are advanced memory operations beyond the core tools.
   "name": "fin_invoice",
   "arguments</arg_key>{
     "action": "create",
-    "client": "JaysonAIOnline",
+    "client": "bythewayz66-glitch",
     "amount": 500
   }
 }

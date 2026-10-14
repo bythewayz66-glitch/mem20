@@ -1,6 +1,8 @@
 # Braid — m1..m13 done (2026-09-10)
 
-Workspace: `/opt/mem20/braid` (Cargo workspace, `edition 2021`)
+Workspace: `braid/` (Cargo workspace, `edition 2021`) — paths below are relative
+to the crate they are listed under (`braid_core/`, `braid_drive/`, `braid_her/`,
+`braid_ui_bridge/`, …).
 Toolchain: rustc/cargo 1.98.1 (rustup stable default)
 Test interpreter note: use `/root/.cargo/bin` for PATH inside shell sessions.
 
@@ -52,8 +54,8 @@ Test interpreter note: use `/root/.cargo/bin` for PATH inside shell sessions.
   - `Shell` route kinds: `page` / `op` / `forge` / `forge_op` / `escalated` / `spatial` / `sound` / `intent` / `eval` / `json`; GET+POST route pairs share one path (respond scans all routes at the path)
 
 ## Root policy
-`/opt/mem20/braid/policy_seed.toml` — genesis: read:timeline / read:world / write:note / **write:world (m9, door3 spatial facts)** / **write:intent:* (m12, spec-forth strand)** / invoke:tool allowed; admin:*:* denied; default_deny.
-`/opt/mem20/braid/policy_escalation_seed.toml` — escalation snapshot (m4): admin:destroy / admin:delete / admin:create allowed; admin:wipe DENIED — the nuclear floor holds even with two tokens.
+`braid/policy_seed.toml` — genesis: read:timeline / read:world / write:note / **write:world (m9, door3 spatial facts)** / **write:intent:* (m12, spec-forth strand)** / invoke:tool allowed; admin:*:* denied; default_deny.
+`braid/policy_escalation_seed.toml` — escalation snapshot (m4): admin:destroy / admin:delete / admin:create allowed; admin:wipe DENIED — the nuclear floor holds even with two tokens.
 
 ## Verification (72 tests, clippy clean)
 - `cargo test --workspace` — 8+2 core (incl. 3 intent strand unit tests), 2 keys, 2 wire lib, **4 m6/m7 shell (routing + routes)**, 2 drive, 2 ui_bridge lib, 2 m3 concurrency (200 concurrent writes, 8 strands), 2 m4 godmode, 2 w4 wire concurrency, **4 m5 quest3d (braid_her) + 2 m5 questdoor (wire) + 2 m6 walk-in + 2 m7 door1 + 3 m8 godmode (shell acceptance) + 3 m9 spatial (walk-in echo, cap/escalation boundary, keyless POST /world) + 1 m10 drive-over-wire (the rib) + 1 m10 convergence (rib/ARP) + 6 braid_sonic (tts: client parrot + dechunk handling) + 4 m11 audio (real-or-honest strand, read-gated not write-gated, unreachable-TTS honest denial, /sound streams real wav) + 1 m11 parity (rib + spatial + escalated destroy + audio at one address) + 4 m12 intent (commit→open→resolve-on-fulfills, write-only read denied, read-only submit denied, keyless /intent GET+POST) + 1 m12 parity (rib + spatial + destroy + intent + fulfilling note at one address, spine speaks first 3 by CID) + 9 m13 terminal (read-gated, tail prev/limit/since/truncated, inspect heads=1 forks=0, shell keyless/real, CLI deterministic, replay matches chain) + 1 m13 parity (rib + spatial + destroy + intent + resolution at one address, tail replays chain, inspect heads=1 forks=0 doors at depth; flaky transport bug noted — engine 204, HTTP/JSON sometimes 203)**

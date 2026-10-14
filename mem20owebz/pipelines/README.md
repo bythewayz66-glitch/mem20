@@ -38,11 +38,11 @@
 
 ## 3. Local High-Quality TTS (Kokoro)
 
-**Location:** `tts/` + `docker-compose.full.yml`
+**Location:** `tts/` + `tts/docker-compose.tts.yml`
 
 **How to start:**
 ```bash
-docker compose -f docker-compose.full.yml up -d
+docker compose -f tts/docker-compose.tts.yml up -d
 ```
 
 TTS will be available at: `http://localhost:8880`
@@ -60,7 +60,7 @@ Now Voice Mode and message read-aloud will use high-quality local TTS.
 
 ## Activation Order Recommendation
 
-1. Start the full stack (`docker-compose.full.yml`)
+1. Start the full stack (`tts/docker-compose.tts.yml`)
 2. Configure Audio in Admin Panel (point to the TTS service)
 3. Turn the Python pipelines into Open WebUI Tools / Functions
 4. Give Jayson access to the 3D screenshot and video tools

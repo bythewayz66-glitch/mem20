@@ -6,7 +6,7 @@ This folder contains installation + connection guides for major AI agent framewo
 
 | Framework              | File                     | Installation detail level |
 |------------------------|--------------------------|---------------------------|
-| mem20 Agent           | `../MEM20_INTEGRATION.md` | Full                     |
+| mem20 Agent           | `../INTEGRATION.md`       | Full                     |
 | mem20 claw plugin               | `mem20 claw plugin.md`            | Expanded                 |
 | Open WebUI Computer    | `openwebui-computer.md`  | Expanded                 |
 | mem20 graph substrate              | `mem20 graph substrate.md`           | Expanded                 |
@@ -27,7 +27,7 @@ This folder contains installation + connection guides for major AI agent framewo
    Make the agent appear as a selectable model.
 
 3. **MCP (Streamable HTTP)**  
-   Already fully supported in Jayson (see `TOOLS_AND_MCP.md`).
+   Already fully supported in Jayson (see `../TOOLS_AND_MCP.md`).
 
 ## Recommended order to try
 

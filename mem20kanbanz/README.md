@@ -14,6 +14,11 @@ The estate had **four** kanban implementations and **two** SQLite files:
 | 3 | `mem20agentz/mem20agentz/kanban.py` | Python client | reads the door |
 | 4 | `kanban-server/server.js` | ad-hoc Node tool | `~/.kanban/kanban.db` (**orphan**) |
 
+> Items 1, 2 and 4 are **not** in this repository: `kanban-mcp/` is a vendored
+gitlink, and `kanban-server/server.js` exists only on the box. They are listed to
+explain what the merge replaced. The only kanban code shipped in this tree is
+item 3 — `mem20agentz/mem20agentz/kanban.py`.
+
 Four paths, two stores, and a real board — *Fleet HQ*, 16 tasks — that existed
 only in the orphan file and was invisible to every other tool. That is the
 drift this package closes.
@@ -23,7 +28,7 @@ After the merge, `mem20-kanban` wins every conflict:
 * **One store.** `kanban_3.db`, owned by the `mem20-kanban.service` unit.
 * **One writer.** Everything goes through the door's REST API. Nothing in
   mem20 issues an `INSERT` against that database.
-* **One Python door.** This package. `mem20agentz/kanban.py` is a client of
+* **One Python door.** This package. `mem20agentz/mem20agentz/kanban.py` is a client of
   the same door, so both agree by construction.
 
 ## The door is authoritative

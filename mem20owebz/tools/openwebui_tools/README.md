@@ -9,7 +9,7 @@
 | `qa_agents_tool.py` | Inspect before delivery |
 | `final_polish_team_tool.py` | ≥94% fidelity vs package |
 | `rpg_orchestrator_tool.py` | RPG stage handoffs |
-| `status_dashboard_tool.py` | Snapshot for `scripts/status_dashboard.py` |
+| `status_dashboard_tool.py` | Snapshot for `../../scripts/status_dashboard.py` |
 
 ## Creative
 

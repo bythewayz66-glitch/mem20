@@ -9,7 +9,7 @@ mistake becomes an immediate, specific report.
 
 ## The catalog
 
-`data/blender_ops.json` is the genuine `bpy.ops` surface captured from
+`mem20_orchestration/data/blender_ops.json` is the genuine `bpy.ops` surface captured from
 **Blender 5.2.0 LTS**: 2 498 operators across 77 modules. `Catalog.exists()` is
 a fact about Blender, not a guess. Tests assert the module counts sum to the
 declared total, so a truncated or corrupted catalog fails the suite rather

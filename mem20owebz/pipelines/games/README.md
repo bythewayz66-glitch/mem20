@@ -35,6 +35,6 @@
 1. Package + engine choice  
 2. Production run Stage 0  
 3. Tight loop + QA each stage  
-4. `scripts/lint_manifest.py` before assemble  
+4. `../../scripts/lint_manifest.py` before assemble  
 5. Polish + accessibility  
 6. Export + store listing  

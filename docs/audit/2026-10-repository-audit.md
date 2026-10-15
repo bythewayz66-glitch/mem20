@@ -50,8 +50,8 @@ it back, in priority order:
    syntax-broken commit from landing, which is exactly what happened to
    `mcp_server_dir/`.
 3. **Generated output is tracked in git** — `build/` (47 files), `__pycache__/`
-   (100 files), `node_modules/` (2,232 files). `.gitignore` already lists
-d   `build/`, `__pycache__/`, and `node_modules/`; they were committed anyway.
+   (100 files), `node_modules/` (2,232 files). `.gitignore` already listsd
+   `build/`, `__pycache__/`, and `node_modules/`; they were committed anyway.
 
 One isolated production bug (`gateway_web.py`, unterminated f-string) was **fixed
 in this branch**. Everything else is recorded as a tracked issue.

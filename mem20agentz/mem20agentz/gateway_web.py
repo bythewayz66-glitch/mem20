@@ -209,11 +209,16 @@ class WebGateway:
             from .cron import Cron
             cron = Cron(backend=self.backend, root=self.root)
             jobs = cron.list_jobs()
-            cron_rows = "".join(
-                f"<li>{self._esc(str(j.get('schedule'))) + ' '
-                 + self._esc(str(j.get('command') or j.get('prompt')))
-                 if isinstance(j, dict) else self._esc(str(j))}</li>"
-                for j in jobs)
+
+            def _cron_row(j):
+                if isinstance(j, dict):
+                    label = (self._esc(str(j.get('schedule'))) + ' '
+                             + self._esc(str(j.get('command') or j.get('prompt'))))
+                else:
+                    label = self._esc(str(j))
+                return f"<li>{label}</li>"
+
+            cron_rows = "".join(_cron_row(j) for j in jobs)
         except Exception:  # noqa: BLE001
             cron_rows = "<li>(sealed)</li>"
         projects_rows = ""

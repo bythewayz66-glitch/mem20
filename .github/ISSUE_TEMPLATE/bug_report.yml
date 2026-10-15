@@ -1,0 +1,83 @@
+name: Bug report
+description: Something in mem20 is broken, crashing, or behaving incorrectly.
+title: "[bug] <short description>"
+labels: ["bug", "severity:medium"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for filing a bug. Fill in every required field - the exact
+        command and version make the report reproducible.
+
+  - type: checkboxes
+    id: preflight
+    attributes:
+      label: Preflight
+      options:
+        - label: I searched existing issues and this is not a duplicate.
+          required: true
+        - label: I am running the latest `main`.
+          required: true
+        - label: I confirmed `git config --get core.symlinks` returns `true` (symlink checkouts corrupt the tree).
+          required: true
+
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: What happened?
+      description: What did you expect, and what actually happened?
+      placeholder: "Expected X, got Y instead."
+    validations:
+      required: true
+
+  - type: textarea
+    id: reproduce
+    attributes:
+      label: Steps to reproduce
+      placeholder: |
+        1. cd ...
+        2. run `...`
+        3. observe ...
+    validations:
+      required: true
+
+  - type: input
+    id: version
+    attributes:
+      label: mem20 version
+      description: Output of `python3 -c "import mem20; print(mem20.__version__)"` or the VERSION file.
+    validations:
+      required: true
+
+  - type: input
+    id: python
+    attributes:
+      label: Python version
+      description: Output of `python3 --version` (mem20 requires >= 3.10).
+    validations:
+      required: true
+
+  - type: dropdown
+    id: area
+    attributes:
+      label: Area
+      options:
+        - mcp / tools
+        - mem20unitiz
+        - mem20runtime
+        - web / gateway
+        - blender / unity bridge
+        - packaging / install
+        - docs
+        - unknown
+    validations:
+      required: true
+
+  - type: textarea
+    id: logs
+    attributes:
+      label: Relevant logs or traceback
+      description: Paste the full traceback. This is redacted from search indexing only if you say so.
+      render: shell
+    validations:
+      required: false

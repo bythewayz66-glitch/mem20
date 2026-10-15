@@ -1,0 +1,11 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Security vulnerability
+    url: https://github.com/bythewayz66-glitch/mem20/security/advisories/new
+    about: Report security issues privately. Do not open a public issue.
+  - name: Documentation index
+    url: https://github.com/bythewayz66-glitch/mem20/blob/main/INDEX.md
+    about: Start here to find the right doc (architecture, tools, install, usage).
+  - name: Agent hand-off protocol
+    url: https://github.com/bythewayz66-glitch/mem20/blob/main/docs/handoff/AGENT-OPERATING-PROTOCOL.md
+    about: Working on mem20 as Teamily, Hermes, or OpenCode? Read this first.

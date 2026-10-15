@@ -2,7 +2,7 @@
 
 **Date:** 2026-10-15 · **Auditor:** Teamily (agent) · **Scope:** `bythewayz66-glitch/mem20` @ `main`
 **Branch with fixes:** `audit/mem20-2026-10`
-**Revised:** 2026-10-15 — feature-removal wording reframed per the standing rule below.
+**Revised:** 2026-10-15 — feature-removal wording reframed per the standing rule below; expanded with a second, file-by-file pass (see "Expanded findings" at the end).
 
 ---
 
@@ -304,3 +304,94 @@ completing a feature is always in scope; **removing one never is**.
 
 > When this report and the live issue list disagree, **the issues win** — they
 > are the moving source of truth.
+
+---
+---
+
+# Expanded findings — second pass (2026-10-15)
+
+A deeper, file-by-file pass across all source languages, CI, tests, docs, TODO
+markers, secrets, hardcoded paths, and dependencies surfaced **13 additional
+findings**, filed as issues **#13–#25**. All are additive; the standing rule
+(**fix or complete — never remove**) applies unchanged.
+
+## Raw scan totals
+
+| Signal | Count |
+|---|---|
+| TODO markers (genuine, excluding risk-scorer/detector literals) | 8 |
+| FIXME / HACK / XXX | 0 |
+| PLACEHOLDER (all benign — template tokens) | 8 |
+| Bare `except:` clauses | **316** |
+| `eval(` / `exec(` in non-test source | 17 |
+| `/home/jayson` occurrences (all text types) | **169** |
+| Rust `.rs` files (`braid/` + `braid_python/`) | 63 |
+| C++ `.cpp` files | 2 |
+| JS files (1,400 of them inside `node_modules/`) | 1,428 |
+| TS files (107 inside `node_modules/`) | 518 |
+| `test_*.py` tracked | 139 |
+| `conftest.py` tracked | 33 |
+| Top-level `mem20*z` package directories | 292 |
+| Byte-identical package `core.py` files (sha1 `3342189f…`) | **100** |
+| Tracked `.pyc` (cpython-311 / cpython-314) | 12 / 84 |
+| Tracked `.env`-named files (both `.env.example`, safe) | 2 |
+
+## New issues
+
+| # | Finding | Area | Sev |
+|---|---|---|---|
+| #13 | 316 bare `except:` clauses swallow errors across the Python estate | robustness | high |
+| #14 | Untrack non-existent `/home/jayson` "spec authority" directories — commit a canonical copy | portability | high |
+| #15 | 169 hardcoded `/home/jayson` paths make the repo non-portable | portability | medium |
+| #16 | Generated state tracked in git — 4.3 MB harness entries, `chroma.sqlite3`, `ledger.jsonl` | hygiene | high |
+| #17 | Estate-wide duplication — 100 byte-identical package `core.py` files (and `mcp/` vs `mcp_server_dir/`) | duplication | high |
+| #18 | `test/` scratch directory breaks a plain `pytest` collection (conftest copy + basename collisions) | tests | medium |
+| #19 | Add Dependabot + a dependency-audit CI job (supply-chain posture) | supply chain | medium |
+| #20 | No Python lockfile; `braid*/Cargo.lock` gitignored — builds are not reproducible | reproducibility | medium |
+| #21 | CI covers Python only — the Rust `braid` workspace has no build/test gate | CI | low |
+| #22 | Tracked `.pyc` bytecode mixes Python 3.11 (12) and 3.14 (84) | hygiene | low |
+| #23 | Add pre-commit hooks (whitespace, large-file, secret scan) to cut churn | tooling | low |
+| #24 | Vendored sub-project committed wholesale: `mem20officez/src_harvest/` brings its own CI, lockfile, and dependency tree | vendoring | medium |
+| #25 | Two `.cpp` files and a root `Makefile`, but no C++ build config — the SDK example is never compiled | tooling | low |
+
+## Notes on the new pass
+
+- **Dependency drift is assessed from the files only** (no registry lookups):
+  `requirements.txt` is floor-pinned, `requirements-optional.txt` lists external
+  *applications* (Blender, Unity — correctly not pip packages), and no lockfile is
+  tracked. `Cargo.lock` is absent for the `braid` workspace.
+- **Secrets:** no committed secrets were found. The only tracked `.env`-named
+  files are two `.env.example` templates (safe). Tracked absolute paths are
+  **leakage of the author's environment**, not credentials.
+- **`test/test_suite_upgraded.py`** is a stale copy of `conftest.py` with no tests
+  — a duplicate, not a feature; the standing rule does not protect a copy.
+- **Duplication (#17) is the root cause behind #1**: the corruption reached one
+  copy of the shared code and not the other. De-duplicating removes the whole
+  class of bug, so it is ranked P0 alongside #1.
+
+## Updated prioritized action plan (supersedes §5)
+
+The original P0/P1/P2 ranks hold; the new issues slot in as follows.
+
+### P0 — first
+
+1. **#1** Fix and complete `mcp_server_dir/` — make all 25 files parse and run
+2. **#2** Land the CI syntax gate (in this branch)
+3. **#3 / #16 / #22** Untrack generated output, state data, and `.pyc`
+4. **#17** De-duplicate the estate `core.py` (root cause of #1's class of bug)
+
+### P1 — next
+
+5. **#13** Replace bare `except:` with logged `except Exception:`
+6. **#15 / #14** Make the repo portable (paths + committed spec inputs)
+7. **#5 / #18** Fix the test layout; split unit vs integration
+8. **#6 / #7** Close the documentation-skew gaps
+9. **#19 / #20** Supply chain + reproducibility (Dependabot, lockfiles)
+
+### P2 — when the tree is stable
+
+10. **#8 / #9 / #10** Smaller robustness + docs items
+11. **#21 / #23 / #24 / #25** Rust CI, pre-commit, vendoring decision, C++ build target
+
+> Standing rule unchanged: **fix or complete — never remove.** The live issue
+> list remains the source of truth wherever this report and the list disagree.

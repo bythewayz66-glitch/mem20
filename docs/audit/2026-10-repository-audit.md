@@ -2,6 +2,17 @@
 
 **Date:** 2026-10-15 · **Auditor:** Teamily (agent) · **Scope:** `bythewayz66-glitch/mem20` @ `main`
 **Branch with fixes:** `audit/mem20-2026-10`
+**Revised:** 2026-10-15 — feature-removal wording reframed per the standing rule below.
+
+---
+
+> ## ⚠️ Standing rule (authoritative — supersedes any earlier wording in this report)
+> **Existing functionality in mem20 is never removed, deleted, quarantined, or
+> dropped. It is fixed or completed.** Any recommendation below that used words
+> like "delete", "remove", or "quarantine" about a feature has been reframed to
+> a fix-or-complete action. This rule overrides every earlier audit
+> recommendation; where this report and the live issue list disagree, **the
+> issues win** — and #1 is now a fix-and-complete task.
 
 ---
 
@@ -30,9 +41,11 @@ mem20 is a genuinely large, ambitious monorepo. Its core trees (`mcp/`,
 `mem20unitiz/`, `mem20runtime/`) are clean and parse correctly. Three things hold
 it back, in priority order:
 
-1. **`mcp_server_dir/` is a corrupt duplicate of `mcp/`.** 25 of its Python files
-   fail to parse — a bulk edit injected stray import lines into docstrings. It is
-   committed to the repo and referenced by `CANONICAL.md` and `SITEMAP.md`.
+1. **`mcp_server_dir/` fails to parse (25 files).** A bulk edit injected stray
+   import lines into docstrings, so the tree cannot be imported, compiled, or
+   linted. It is committed to the repo and referenced by `CANONICAL.md` and
+   `SITEMAP.md`, so the fix is to **repair it** — the standing rule forbids
+   deleting or quarantining it.
 2. **There is no CI.** GitHub Actions is not configured at all; nothing prevents a
    syntax-broken commit from landing, which is exactly what happened to
    `mcp_server_dir/`.
@@ -64,23 +77,27 @@ in this branch**. Everything else is recorded as a tracked issue.
 
 ### A. Build & source integrity
 
-**A1 — `mcp_server_dir/` is a corrupt duplicate of `mcp/` · severity: critical**
+**A1 — `mcp_server_dir/` fails to parse (25 files) · severity: critical**
 - **Area:** `mcp_server_dir/**` (25 files), `CANONICAL.md:23`, `SITEMAP.md:348`
-- **Description:** `mcp_server_dir/` duplicates `mcp/` but every one of its 25
-  Python files is unparseable. The corruption is a mechanical bulk-edit error:
-  the lines
+- **Description:** every one of `mcp_server_dir/`'s 25 Python files is
+  unparseable. The corruption is a mechanical bulk-edit error: the lines
   `from mcp.server import Server` / `from mcp.server.lowlevel.server import ServerRequestContext` /
   `import mcp_types as mt` were injected **inside** module docstrings and at
   arbitrary column offsets. Examples: `search_tools.py` lines 2–4 sit between the
   opening `"""` and the docstring body; `blender_bridge.py:85` is an
   `unexpected indent`.
 - **Impact:** The tree cannot be imported, compiled, or linted by any tool that
-  walks it; it inflates clone size and defeats repo-wide tooling.
-- **Suggested fix (needs a decision):** Determine whether anything still runs
-  `mcp_server_dir/` — `CANONICAL.md` and `SITEMAP.md` name it, but `README.md` and
-  the systemd/`ExecStart` references point at `mcp/mcp_server.py`. If dead, delete
-  it (one commit) and update the two docs; if live, regenerate it from `mcp/`.
-  Do **not** hand-fix 25 files.
+  walks it, so its functionality is invisible to repo-wide tooling and to CI.
+- **Suggested fix (fix and complete — never remove):** `mcp_server_dir/` is
+  existing functionality and must be **repaired**, not deleted or quarantined.
+  Repair the injected lines — move them out of the docstrings back to their
+  correct module-level position, or drop the accidental duplication where they
+  already exist — and fix the indentation at each site; script the repair where
+  the corruption is mechanical. Then settle the tree's relationship with `mcp/`:
+  either make `mcp_server_dir/` canonical, or maintain it as a mirror regenerated
+  from `mcp/`; either way the result must **build and run**. Update `CANONICAL.md`
+  and `SITEMAP.md` to describe the tree's role, and drop the temporary
+  `mcp_server_dir/` exclusion from the CI syntax gate once it parses.
 
 **A2 — `install_tracker.py`: commented-out `try:` leaves a code path without its handler · severity: medium**
 - **Area:** `mcp_server_dir/install_tracker.py` (also present under `mcp/`)
@@ -113,8 +130,11 @@ in this branch**. Everything else is recorded as a tracked issue.
 - **Impact:** Syntax-broken code merged (`mcp_server_dir/`, `gateway_web.py`), and
   will again.
 - **Suggested fix:** ✅ A minimal **syntax gate** workflow is included in this
-  branch (`.github/workflows/ci.yml`), scoped to the non-quarantined tree, plus an
-  advisory test job. Follow-up: make the test job required once the tree is green.
+  branch (`.github/workflows/ci.yml`), scoped for now to the trees that currently
+  parse — `mcp_server_dir/` is temporarily excluded **until its repair lands
+  (#1)**, not quarantined — plus an advisory test job. Follow-up: make the test
+  job required once the tree is green, and drop the temporary exclusion so the
+  gate covers the whole repo.
 
 ### C. Repository hygiene (tracked artefacts)
 
@@ -235,7 +255,7 @@ this rank.
 
 | # | Action | Sev | Layer | Why now |
 |---|---|---|---|---|
-| 1 | **Decide the fate of `mcp_server_dir/`** — delete or regenerate | critical | human + OpenCode | 25 unparseable files poison every repo-wide tool and hide real errors |
+| 1 | **Fix and complete `mcp_server_dir/`** — make all 25 files parse and run | critical | human + OpenCode | 25 unparseable files poison every repo-wide tool and hide the tree's real functionality |
 | 2 | **Land the syntax gate** (`.github/workflows/ci.yml`, in this branch) | high | Teamily | Prevents the class of bug that produced #1 |
 | 3 | **Untrack `build/`, `__pycache__/`, `node_modules/`** | high | Teamily | Removes ~2,400 files of noise and trims the corruption surface |
 
@@ -269,15 +289,16 @@ this rank.
 | CONTRIBUTING / SECURITY / CODE_OF_CONDUCT | repo root |
 | Agent operating protocol, state board, handoff template | `docs/handoff/` |
 
-Everything else is **flagged, not applied** — per the protocol, destructive or
-structural changes need the owner's decision.
+Everything else is **flagged, not applied** — per the protocol, structural
+changes need the owner's decision. Note the standing rule above: fixing or
+completing a feature is always in scope; **removing one never is**.
 
 ---
 
 ## 7. Recommended next steps
 
 1. Review and merge `audit/mem20-2026-10` (or cherry-pick the `gateway_web.py` fix if you want that immediately).
-2. Decide #1 in the action plan — it is the single highest-leverage call.
+2. Fix and complete #1 in the action plan (repair `mcp_server_dir/`; never remove it) — it is the single highest-leverage call.
 3. Adopt `docs/handoff/AGENT-OPERATING-PROTOCOL.md` as the working agreement and have Hermes and OpenCode read it before their next session.
 4. Move the created issues onto the **Repo hygiene & CI — 2026-10 audit** milestone and assign owners.
 

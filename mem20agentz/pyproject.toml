@@ -4,9 +4,12 @@ version = "0.1.0"
 description = "mem20 agent platform — all known agent features, built directly into mem20"
 requires-python = ">=3.11"
 dependencies = [
-  "PyYAML",
-  "aiohttp",
+  "PyYAML>=6.0",
+  "aiohttp>=3.9",
 ]
+
+[project.optional-dependencies]
+dev = ["pytest>=8.0", "ruff>=0.4"]
 
 [project.scripts]
 mem20agentz = "mem20agentz.cli:main"

@@ -1,1 +1,3 @@
-runtime/
+# Runtime state — never ship demo / run artefacts
+outputs/
+*.jsonl

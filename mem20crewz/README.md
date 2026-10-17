@@ -1,4 +1,52 @@
-# 01_mem20crewz — CLEANROOM BUILD MANIFEST (hypo-map-1 phase 01)
+# mem20crewz
+
+**Roadmap-backed multi-agent crews on the mem20 substrate.**
+
+mem20crewz is a cleanroom implementation of Agent / Task / Crew / Flow primitives. Every crew run is a first-class roadmap: phases move planned → in_progress → completed/blocked and are persisted. Reasoning goes through a pluggable Brain (real CogBrain or deterministic FakeBrain for tests). Delegation fans out over A2A peers. Guardrails (epistemic veto, quarantine, plan-execution) are enforced on every step.
+
+Zero dependency on any legacy "mem20 crews" package — this surface imports only mem20 natives.
+
+## Quick start
+
+```bash
+# From a clean environment
+pip install -e "./mem20crewz[dev]"
+python -m pytest mem20crewz/tests -q          # 52 tests
+
+# Offline deterministic demo (no API keys)
+python -m mem20crewz.demo.demo_crew --fake
+```
+
+## Repository layout
+
+```
+mem20crewz/
+  __init__.py      public exports
+  neural.py        Brain (ABC), CogBrain, FakeBrain
+  a2a.py           A2AClient — discover / call / fan-out (JSON-RPC)
+  peers.yaml       peer definitions (ports 9901–9922)
+  crew.py          Crew.kickoff() = roadmap-backed sequential run
+  flow.py          Flow with @start / @listen over roadmap phases
+  agents.py        Agent (self-model + namespace)
+  tasks.py         Task
+  loop.py          ToolLoop (tool | delegate | final)
+  skills.py        Skills registry
+  guardrails.py    epistemic veto, quarantine, plan gate
+  config.py        YAML → runtime wiring
+  roadmap.py       RoadmapRun ledger
+  demo/            demo_crew.py (fake + real modes)
+  runtime/         roadmaps + outputs (gitignored)
+  tests/           52-test suite
+  pyproject.toml
+```
+
+## A2A peer contract
+
+See `peers.yaml` and `a2a.py`. Peers listen on localhost ports 9901–9922 and speak a JSON-RPC v1.0 frame. A full contract document is tracked under issue #51.
+
+---
+
+# CLEANROOM BUILD MANIFEST (hypo-map-1 phase 01)
 
 Green-lit 2026-09-08 by Jayson. Rebuild the mem20 crews surface (Agent / Task / Crew /
 Flow) as a cleanroom on mem20 primitives. ZERO dependency on the `mem20 crews` package —
@@ -41,7 +89,7 @@ abstraction is backed by a mem20 native.
     /opt/mem20/mem20crewz/
         __init__.py     exports: Agent, Task, Crew, Flow, start, listen, A2AClient, build_crew, ...
         _substrate.py   lazy import shims over memory / cog / llm + injectable seams (tests stay hermetic)
-        neural.py       Brain, CogBrain (real), FakeBrain (deterministic)
+        neural.py       Brain (ABC), CogBrain (real), FakeBrain (deterministic)
         context.py      TaskContext assembly (gap #1)
         loop.py         ToolLoop — tool-callback loop (gap #2)
         skills.py       Skills registry (procedural skills + callables)
@@ -70,7 +118,7 @@ abstraction is backed by a mem20 native.
 
 ## VERIFY (update after run)
 
-- [ ] tests pass (python3 -m unittest mem20crewz.tests.test_mem20crewz)
+- [x] tests pass from a clean install (`pip install -e "./mem20crewz[dev]"` → `pytest`)
 - [ ] demo_crew.py runs against real cog + real A2A peers
 - [ ] phase 01 status bumped in hypo-map-1.json
 

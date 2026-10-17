@@ -1,7 +1,9 @@
 """Cognitive brain for mem20crewz agents.
 
-- Brain: protocol. Agent reasoning goes through this so tests can be
+- Brain: abstract base. Agent reasoning goes through this so tests can be
   deterministic (FakeBrain) while production runs real cog (CogBrain).
+  Incomplete subclasses fail at construction (TypeError) rather than at
+  call time.
 - CogBrain: real path. plan/reason/reflect/tot use the mem20 cog engine;
   propose() uses llm.chat with a strict JSON action contract for the
   tool-callback loop. Uses mem20 llm which RAISES LLMError with no key —
@@ -11,6 +13,7 @@
 
 from __future__ import annotations
 
+import abc
 import json
 import os
 import re
@@ -23,25 +26,34 @@ class BrainError(RuntimeError):
     """Raised when the brain cannot produce a valid decision."""
 
 
-class Brain:
-    """Protocol for agent reasoning."""
+class Brain(abc.ABC):
+    """Abstract base for agent reasoning.
+
+    Subclasses that omit any abstract method raise TypeError at
+    instantiation instead of failing deep inside a run.
+    """
 
     name = "brain"
 
+    @abc.abstractmethod
     def plan(self, goal: str, constraints: Optional[list] = None,
              resources: Optional[list] = None) -> str:
-        raise NotImplementedError
+        """Produce a plan for the goal."""
 
+    @abc.abstractmethod
     def reason(self, problem: str, reasoning_type: str = "deductive",
                depth: int = 5) -> str:
-        raise NotImplementedError
+        """Reason about a problem."""
 
+    @abc.abstractmethod
     def reflect(self, thought_process: str, outcome: str = "") -> str:
-        raise NotImplementedError
+        """Reflect on a thought process and optional outcome."""
 
+    @abc.abstractmethod
     def tot(self, problem: str, branches: int = 3, depth: int = 3) -> str:
-        raise NotImplementedError
+        """Tree-of-thought style search."""
 
+    @abc.abstractmethod
     def propose(self, goal: str, tools_blob: str,
                 observations: list[str],
                 require_tool_before_final: bool = False) -> dict:
@@ -50,7 +62,6 @@ class Brain:
         {"action": "delegate", "capability": ..., "message": ...}
         {"action": "final", "final": output_text}
         """
-        raise NotImplementedError
 
 
 class CogBrain(Brain):

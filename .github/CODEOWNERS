@@ -1,0 +1,6 @@
+# Default owner for everything in mem20.
+*                       @bythewayz66-glitch
+
+# The collaboration surface must stay reviewable by the human owner.
+/docs/handoff/          @bythewayz66-glitch
+/.github/               @bythewayz66-glitch

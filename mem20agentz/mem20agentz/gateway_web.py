@@ -219,18 +219,23 @@ class WebGateway:
                 return f"<li>{label}</li>"
 
             cron_rows = "".join(_cron_row(j) for j in jobs)
-        except Exception:  # noqa: BLE001
-            cron_rows = "<li>(sealed)</li>"
+        except Exception as exc:  # noqa: BLE001
+            cron_rows = (
+                f'<li class="degraded">[degraded] cron unavailable: '
+                f'{self._esc(str(exc))}</li>'
+            )
         projects_rows = ""
         try:
             from .projects import Projects
             projects = Projects(backend=self.backend, root=self.root)
-            import json as _json
             projects_rows = "".join(
                 f"<li>{self._esc(p.get('name', str(p)))}</li>"
                 for p in projects.list_projects())
-        except Exception:  # noqa: BLE001
-            projects_rows = "<li>(sealed)</li>"
+        except Exception as exc:  # noqa: BLE001
+            projects_rows = (
+                f'<li class="degraded">[degraded] projects unavailable: '
+                f'{self._esc(str(exc))}</li>'
+            )
         return f"""<!doctype html>
 <html><head><meta charset="utf-8">
 <title>mem20agentz dashboard</title>
@@ -239,6 +244,7 @@ class WebGateway:
  h1{{font-size:1.3rem}} section{{margin:1.5rem 0}}
  h2{{font-size:1rem;color:#9aa4b1;border-bottom:1px solid #262b33;padding-bottom:.25rem}}
  ul{{padding-left:1.2rem}} li{{margin:.15rem 0}}
+ li.degraded{{color:#f0a0a0}}
  code{{background:#1b1f27;padding:.05rem .4rem;border-radius:4px}}
 </style></head><body>
 <h1>mem20agentz</h1>

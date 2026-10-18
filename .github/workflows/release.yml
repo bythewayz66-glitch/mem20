@@ -1,0 +1,96 @@
+name: Ruby SDK release
+
+# Publishes the gem to RubyGems when a release tag is pushed.
+#
+#   git tag -a mem20-sdk-ruby-v0.2.0 -m "mem20-sdk 0.2.0"
+#   git push origin mem20-sdk-ruby-v0.2.0
+#
+# The workflow refuses to publish when the tag does not match the version in
+# mem20-sdk-ruby/lib/mem20/version.rb, so a mistyped tag can never ship a gem
+# whose contents disagree with its version.
+#
+# One-time setup: add a repository secret named RUBYGEMS_API_KEY holding a
+# RubyGems API key scoped to push the mem20-sdk gem
+# (https://rubygems.org/profile/edit -> API keys). Until that secret exists the
+# publish job fails loudly instead of silently skipping.
+on:
+  push:
+    tags:
+      - "mem20-sdk-ruby-v*"
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: "Build and verify only; do not push to RubyGems"
+        type: boolean
+        default: true
+
+permissions:
+  contents: read
+
+jobs:
+  release:
+    name: Build and publish mem20-sdk
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: mem20-sdk-ruby
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: "3.3"
+          bundler-cache: true
+          working-directory: mem20-sdk-ruby
+
+      - name: Run the test suite before publishing
+        run: bundle exec rspec --format progress
+
+      - name: Check the tag matches the gem version
+        id: version
+        run: |
+          gem_version="$(ruby -Ilib -r mem20/version -e 'print Mem20::VERSION')"
+          echo "version=${gem_version}" >> "$GITHUB_OUTPUT"
+          if [ "${{ github.event_name }}" = "push" ]; then
+            tag_version="${GITHUB_REF_NAME#mem20-sdk-ruby-v}"
+            if [ "${gem_version}" != "${tag_version}" ]; then
+              echo "::error::tag ${GITHUB_REF_NAME} does not match Mem20::VERSION ${gem_version}"
+              exit 1
+            fi
+            echo "publishing=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "publishing=${{ github.event.inputs.dry_run == 'false' }}" >> "$GITHUB_OUTPUT"
+          fi
+          echo "Building mem20-sdk ${gem_version}"
+
+      - name: Build gem
+        run: gem build mem20-sdk.gemspec
+
+      - name: Verify the built gem installs and loads
+        run: |
+          gem install --local ./mem20-sdk-${{ steps.version.outputs.version }}.gem --no-document
+          cd /tmp
+          ruby -e 'require "mem20"; abort "bad version" unless Mem20::VERSION == "'"${{ steps.version.outputs.version }}"'"
+
+      - name: Publish to RubyGems
+        if: steps.version.outputs.publishing == 'true'
+        env:
+          GEM_HOST_API_KEY: ${{ secrets.RUBYGEMS_API_KEY }}
+        run: |
+          if [ -z "${GEM_HOST_API_KEY}" ]; then
+            echo "::error::RUBYGEMS_API_KEY is not set - add it in Settings > Secrets and variables > Actions"
+            exit 1
+          fi
+          mkdir -p ~/.gem
+          printf -- "---\n:rubygems_api_key: %s\n" "${GEM_HOST_API_KEY}" > ~/.gem/credentials
+          chmod 0600 ~/.gem/credentials
+          gem push "./mem20-sdk-${{ steps.version.outputs.version }}.gem"
+          rm -f ~/.gem/credentials
+
+      - name: Upload the built gem
+        uses: actions/upload-artifact@v4
+        with:
+          name: mem20-sdk-${{ steps.version.outputs.version }}
+          path: mem20-sdk-ruby/mem20-sdk-${{ steps.version.outputs.version }}.gem
+          if-no-files-found: error

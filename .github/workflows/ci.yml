@@ -32,6 +32,69 @@ jobs:
             | xargs -0 -n1 python3 -m py_compile
           echo "syntax gate passed"
 
+  # Guards against the class of accident that broke the Pages build: a nested
+  # working tree added with a bare `git add`, which records a gitlink (mode
+  # 160000) but writes no .gitmodules entry. GitHub's legacy Pages builder runs
+  # `actions/checkout` with `submodules: recursive`, which then aborts with
+  #   fatal: No url found for submodule path '<path>' in .gitmodules
+  # and fails the whole build before any site content is touched. See issue #54.
+  gitlink-guard:
+    name: Gitlink guard
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          # The index is all we inspect; recursing would defeat the purpose.
+          submodules: false
+
+      - name: Fail on dangling gitlinks (mode 160000)
+        run: |
+          set -uo pipefail
+
+          # `grep` exits 1 when it finds nothing; `|| true` keeps that from
+          # failing the step, so an empty index is a pass, not an error.
+          matches="$(git ls-files --stage | grep '^160000' || true)"
+
+          if [ -z "$matches" ]; then
+            echo "OK: No gitlinks (mode 160000) in the index."
+            exit 0
+          fi
+
+          # `git ls-files --stage` prints "<mode> <sha> <stage>\t<path>".
+          paths="$(printf '%s\n' "$matches" | sed 's/^[^\t]*\t//')"
+          count="$(printf '%s\n' "$paths" | grep -c .)"
+
+          echo "::error::Found $count gitlink(s) in the index (mode 160000)."
+          while IFS= read -r p; do
+            [ -z "$p" ] && continue
+            echo "  - $p"
+          done <<< "$paths"
+
+          fail=0
+
+          # Every gitlink must be declared in .gitmodules, or it is dangling.
+          if [ ! -f .gitmodules ]; then
+            echo "::error::.gitmodules is missing, but the index contains gitlinks."
+            fail=1
+          else
+            declared="$(git config -f .gitmodules --get-regexp '^submodule\..*\.path$' 2>/dev/null | sed 's/^[^ ]* //' || true)"
+            while IFS= read -r p; do
+              [ -z "$p" ] && continue
+              if ! printf '%s\n' "$declared" | grep -qxF "$p"; then
+                echo "::error::gitlink '$p' has no matching path entry in .gitmodules"
+                fail=1
+              fi
+            done <<< "$paths"
+          fi
+
+          if [ "$fail" -ne 0 ]; then
+            echo "Fix: either remove the gitlink from the index, or declare it with"
+            echo "     'git submodule add <url> <path>' so .gitmodules carries its URL."
+            exit 1
+          fi
+
+          echo "OK: all gitlinks are declared in .gitmodules."
+
   tests:
     name: Tests (advisory)
     runs-on: ubuntu-latest

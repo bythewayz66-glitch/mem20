@@ -1,0 +1,72 @@
+name: Pages
+
+# Publishes docs/ to GitHub Pages using the GitHub Actions source.
+#
+# Why this workflow exists: the repository carries three gitlink entries
+# (mode 160000) with no .gitmodules file. GitHub's legacy Pages builder runs
+# actions/checkout with `submodules: recursive`, which aborts on the first
+# gitlink and fails the whole build before any site content is touched:
+#
+#   fatal: No url found for submodule path 'kanban-mcp' in .gitmodules
+#
+# This workflow checks out without recursion (the site needs no submodule)
+# AND the dangling gitlinks are removed in the same change. See issue #54.
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'docs/**'
+      - '.github/workflows/pages.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# One deployment at a time; never cancel a deploy already in flight.
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    name: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          # Site content lives entirely in docs/. Recursing into submodules is
+          # unnecessary and is what broke the legacy builder.
+          submodules: false
+          persist-credentials: false
+
+      - name: Verify the published root
+        run: |
+          test -f docs/index.html || {
+            echo "::error::docs/index.html is missing; nothing to publish"
+            exit 1
+          }
+          echo "docs/index.html present ($(wc -c < docs/index.html) bytes)"
+
+      - name: Configure Pages
+        uses: actions/configure-pages@v5
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: docs
+
+  deploy:
+    name: deploy
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

@@ -13,6 +13,20 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      # A mode-160000 entry with no .gitmodules URL aborts `git submodule
+      # update --recursive` (exit 128) and takes the Pages build down with it.
+      # This guard fails fast so the accident cannot land again. See #54.
+      - name: Guard against dangling gitlinks
+        run: |
+          bad=$(git ls-files --stage | awk '$1=="160000"{print $4}')
+          if [ -n "$bad" ]; then
+            echo "::error::Dangling gitlink(s) found (mode 160000) - these break recursive checkout (Pages)."
+            echo "$bad"
+            echo "Fix: add a real .gitmodules entry with a reachable URL, or vendor the content as plain tracked files."
+            exit 1
+          fi
+          echo "no gitlinks - ok"
+
       - uses: actions/setup-python@v5
         with:
           python-version: '3.11'

@@ -1,0 +1,18 @@
+# frozen_string_literal: true
+
+require "rspec/core/rake_task"
+
+RSpec::Core::RakeTask.new(:spec)
+
+desc "Run RuboCop"
+task :rubocop do
+  require "rubocop"
+  exit RuboCop::CLI.new.run(["--format", "simple"])
+end
+
+desc "Build the gem"
+task :build do
+  sh "gem build mem20-sdk.gemspec"
+end
+
+task default: :spec

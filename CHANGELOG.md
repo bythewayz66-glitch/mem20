@@ -3,6 +3,74 @@
 All notable changes to mem20 are documented here. The format is based on
 [Keep a Changelog](https://keepachangelog.com/).
 
+## [3.0.0] — 2026-10-18 (consolidation baseline)
+
+3.0.0 is the **consolidation release**: every outstanding agent branch is merged into
+`main`, generated output is out of the index, the SDKs and the benchmark suite are
+published from `main`, and the tree is guarded by CI. No capability was removed to
+achieve this — conflicts were resolved as unions, and repairs were made in place.
+
+### Added
+- **Benchmark suite on `main`** — `benchmarks/results/latest.json` and
+  `benchmarks/results/latest.md`, the published output of `mem20benchmarkz run`,
+  covering retrieval quality (hit rate, MRR, leak rate), latency percentiles and the
+  trustworthiness axis (contamination 0.0, stale pointers 0.000000). `mem20api/` and
+  `mem20benchmarkz/` travel with it.
+- **Ruby SDK 0.2.0** (`mem20-sdk-ruby/`) — transport, client, config, errors, examples,
+  docs and specs; plus root `.github/workflows/ruby-sdk.yml` and `release.yml`.
+- **C++ SDK documentation set** (`docs/sdk/cpp/`) — protocol, API reference, source
+  ledger and the `store_recall_audit.cpp` example.
+- **CI** (`.github/workflows/ci.yml`) — Python syntax gate plus a `gitlink-guard` job
+  that fails on any mode-160000 entry, so dangling submodules cannot return.
+- **Pages publishing** (`.github/workflows/pages.yml`) — publishes `docs/` via GitHub
+  Actions, removing the recursive submodule checkout that broke the legacy builder.
+- **Repo governance files** — `CANONICAL.md`, `CODE_OF_CONDUCT.md`, `CONTRIBUTING.md`,
+  `SECURITY.md`, issue/PR templates and `CODEOWNERS`.
+- **`VERSION`** — single-file version marker, kept in step with `pyproject.toml`.
+
+### Changed
+- **`README.md` is now the union of both development lines.** The narrative positioning
+  ("What this is", "The honest claim", "Benchmarks", "The estate") sits above the
+  operational reference ("What you can do", "Architecture", "Tool domains", "Memory
+  model", "Governance", "Quick Start", "Installation"), so no section from either side
+  was dropped. The duplicate `## Development` headings were merged into one.
+- **Version is 3.0.0** across `pyproject.toml`, `VERSION`, the README badge and
+  `docs/README.md`; the release badge moved off the 2.1-rc2 static badge.
+- **Tool counts reconciled to the single house number: 257 tools across 26 domains.**
+  Prose that had drifted to 258 or 260 is corrected; the 26 domain modules are
+  unchanged. The domain table labels its rows as tool *prefixes*, since several
+  prefixes share one domain.
+- **Repository URLs updated** from `JaysonAIOnline/mem20` to
+  `bythewayz66-glitch/mem20` across README, docs and the release badge, which
+  previously queried the retired org and would have rendered against the wrong
+  repository. Historical credit to the JaysonAIOnline project is retained in prose.
+- **Generated output untracked** — `build/`, `__pycache__/`, `node_modules/`,
+  `dashboard/dist/`, `mem20.egg-info/` and `*.pyc` are out of the index; `.gitignore`
+  gained `.mypy_cache/`. Source is untouched: the build step still regenerates these
+  locally.
+- **Dangling gitlinks removed** — `kanban-mcp`, `mem20oreo` and `mem20kilnz/engine`
+  were mode-160000 entries pointing at commits that do not exist in this repository,
+  so every recursive checkout failed. They are now ordinary untracked paths; the
+  guard job prevents reintroduction.
+
+### Fixed
+- **`mem20agentz` desktop path resolution** — `CREWZ_ROOT`/`GAMEZ_ROOT` no longer
+  hardcode `/opt/mem20`; they resolve from `MEM20_CREWZ_ROOT`/`MEM20_GAMEZ_ROOT` with
+  a repo-relative fallback, so the office surface works from a checkout.
+- **`docs/README.md` stale links** — removed references to files that do not exist
+  (`reproduce-not-1386`, `CLAUDE.md`, `notes`), which rendered as dead links.
+
+### Merged branches
+`gtm-optionc-conversion`, `ruby-sdk-0.2.0`, `chore/repo-cleanup-2026-10`,
+`ci/gitlink-guard`, `fix/pages-submodule-checkout`, `fix/mem20agentz-hygiene`.
+`fix/mem20crewz-hygiene` was closed as stale: it carried 0 unique commits and was 16
+commits behind `main`, so there was no work to preserve.
+
+### Note on house numbers
+The commercial figures are **unchanged by this release** and are deliberately not
+restated as new measurements: 257 tools / 26 domains, TAM $1.28B / SAM $282M / SOM
+$1.68M, blended ACV $14,000.
+
 ## [2.2.0-dev] — 2026-09-04 (cognitive substrate + A2A tools)
 
 2.2 is the "cognitive substrate + A2A inter-bot communication" increment.
@@ -23,8 +91,6 @@ All notable changes to mem20 are documented here. The format is based on
 ### Changed
 - Tool domain count: 13 → 16 (added `a2a_*`, `tot_*`, `cognitive_substrate`).
 - Total tools: ~80 → ~95.
-- README.md fully updated with new tool domains, A2A tools table, thought process tools table,
-  and cognitive substrate documentation.
 
 ## [2.1.0-rc2] — 2026-08-28 (frozen; QA audit → GitHub release)
 

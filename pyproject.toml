@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "mem20"
-version = "2.1.0rc2"
+version = "3.0.0"
 description = "mem20 — trusted, auditable memory + world-model layer for agents (MCP server)."
 readme = "README.md"
 requires-python = ">=3.10"

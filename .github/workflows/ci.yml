@@ -31,15 +31,16 @@ jobs:
         with:
           python-version: '3.11'
 
-      # Only the trees that are known-green are gated. `mcp_server_dir/` is a
-      # corrupt duplicate of `mcp/` (25 files fail to parse) and is excluded
-      # until it is resolved - see the repo audit issues.
-      - name: Compile every module outside the quarantined trees
+      # Scope note: this gate compiles every tracked module in the repo. The
+      # previous `mcp_server_dir/` exclusion was a temporary scope limit for a
+      # corrupt duplicate tree; that tree no longer exists (the mirror now lives
+      # at `mem20_mcp/`, which parses clean), so excluding it only narrowed the
+      # gate without buying anything. Only generated/vendor trees are skipped.
+      - name: Compile every tracked module
         run: |
           find . \
             -path ./.git -prune -o \
             -path ./build -prune -o \
-            -path ./mcp_server_dir -prune -o \
             -path ./node_modules -prune -o \
             -name __pycache__ -prune -o \
             -name '*.py' -print0 \

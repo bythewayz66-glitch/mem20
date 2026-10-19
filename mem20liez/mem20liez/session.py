@@ -10,7 +10,7 @@ from .pipeline import LieDetector
 from .types import DetectionResult, EarpieceCue, SignalType
 from .cues import CueGenerator
 
-SessionMode = Literal["interrogation", "therapy", "clinical", "generic"]
+SessionMode = Literal["interrogation", "therapy", "clinical", "government", "generic"]
 
 
 class LiveLieSession:
@@ -32,6 +32,7 @@ class LiveLieSession:
         self._all_detections: List[DetectionResult] = []
         self.started_at = time.time()
         self.sealed = False
+        self._meta: dict = {}
 
     def feed_audio(self, chunk: Any, timestamp: Optional[float] = None) -> List[DetectionResult]:
         results = self.detector.process_audio(chunk, timestamp=timestamp)
@@ -91,6 +92,7 @@ class LiveLieSession:
             "detections": [d.model_dump() for d in self._all_detections],
             "cues": [c.model_dump() for c in self._cues],
             "annotations": annotations or {},
+            "meta": self._meta,
             "disclaimer": (
                 "All behavioural signals are probabilistic observations only. "
                 "They do not constitute definitive proof of deception, emotion, "

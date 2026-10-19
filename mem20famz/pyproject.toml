@@ -1,0 +1,15 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "mem20famz"
+version = "0.1.0"
+description = "Family registry for the mem20*z packages: which family each package belongs to, what that family is for, and what would prove it."
+requires-python = ">=3.9"
+
+[project.scripts]
+mem20famz = "mem20famz.__main__:main"
+
+[tool.setuptools.packages.find]
+include = ["mem20famz*"]

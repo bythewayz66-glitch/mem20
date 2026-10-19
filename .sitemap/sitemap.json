@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-03T20:58:26-0600",
+  "generated_at": "2026-10-11T18:25:06-0600",
   "root": "/opt/mem20",
   "root_files": [
     ".gitignore",
@@ -29,6 +29,8 @@
     "mem20_pathfix.py",
     "mem20path.py",
     "memory.db",
+    "memory.db-shm",
+    "memory.db-wal",
     "memory.py",
     "memory.py.broken",
     "metrics_collector.py",
@@ -60,7 +62,7 @@
     "/opt/mem20",
     "/sb"
   ],
-  "scan_seconds": 1.65,
+  "scan_seconds": 4.88,
   "schema": "mem20-sitemap-v1",
   "subsystems": [
     {
@@ -93,6 +95,39 @@
       "subdirs": [
         "adr",
         "human_package"
+      ],
+      "test_files": 0,
+      "version": null
+    },
+    {
+      "bytes": 17135,
+      "category": "other",
+      "code_lines": 0,
+      "dependencies": [],
+      "description": "",
+      "dir": "benchmarks",
+      "docs": [],
+      "entry_points": {},
+      "file_count": 2,
+      "keywords": [],
+      "languages": {
+        "json": 1,
+        "markdown": 1
+      },
+      "license": null,
+      "line_count": 714,
+      "lines_by_language": {
+        "json": 660,
+        "markdown": 54
+      },
+      "modules": [],
+      "name": "benchmarks",
+      "packaged": false,
+      "readme_summary": "",
+      "readme_text": "",
+      "requires_python": null,
+      "subdirs": [
+        "results"
       ],
       "test_files": 0,
       "version": null
@@ -477,9 +512,9 @@
       "version": null
     },
     {
-      "bytes": 628784,
+      "bytes": 630333,
       "category": "service",
-      "code_lines": 12984,
+      "code_lines": 13011,
       "dependencies": [],
       "description": "",
       "dir": "mcp",
@@ -492,10 +527,10 @@
         "python": 37
       },
       "license": null,
-      "line_count": 13112,
+      "line_count": 13139,
       "lines_by_language": {
         "json": 128,
-        "python": 12984
+        "python": 13011
       },
       "modules": [
         "__init__",
@@ -714,9 +749,9 @@
       "version": null
     },
     {
-      "bytes": 71893,
+      "bytes": 72834,
       "category": "organ",
-      "code_lines": 1548,
+      "code_lines": 1564,
       "dependencies": [],
       "description": "Generate verified onboarding packs for newly-hired mem20 agents: hire guide, orientation, governance, self-model setup, and pinned-block delivery.",
       "dir": "mem20AIonbordz",
@@ -741,10 +776,10 @@
         "toml": 1
       },
       "license": "MIT",
-      "line_count": 1645,
+      "line_count": 1661,
       "lines_by_language": {
         "markdown": 78,
-        "python": 1548,
+        "python": 1564,
         "toml": 19
       },
       "modules": [
@@ -1773,6 +1808,56 @@
       "version": null
     },
     {
+      "bytes": 27754,
+      "category": "organ",
+      "code_lines": 469,
+      "dependencies": [],
+      "description": "Stable Python API over the mem20 memory engine: bind a store, read and write through one object, and get index-health and contamination diagnostics with every retrieval result.",
+      "dir": "mem20api",
+      "docs": [
+        "mem20api/README.md"
+      ],
+      "entry_points": {
+        "mem20-api-health": "mem20api.cli:main"
+      },
+      "file_count": 5,
+      "keywords": [
+        "mem20",
+        "memory",
+        "retrieval",
+        "api",
+        "grounded",
+        "simulated"
+      ],
+      "languages": {
+        "markdown": 1,
+        "python": 3,
+        "toml": 1
+      },
+      "license": "MIT",
+      "line_count": 593,
+      "lines_by_language": {
+        "markdown": 96,
+        "python": 469,
+        "toml": 28
+      },
+      "modules": [
+        "__init__",
+        "api",
+        "cli"
+      ],
+      "name": "mem20api",
+      "packaged": true,
+      "readme_summary": "mem20api",
+      "readme_text": "# mem20api\n\na stable python api over the mem20 memory engine.\n\n## why this exists\n\nthe engine (`memory_engine/memory.py`) resolves every store path at import time:\n\n```python\nstore_dir = os.environ.get(\"mem20_store_path\") or os.path.expanduser(\"~/.mem20/store\")\nledger = os.path.join(store_dir, \"ledger.jsonl\")\n```\n\ncallers therefore had to reassign a dozen module globals before every operation, and the mcp handlers were running `sys.path.insert(...)` plus a fresh `from memory import ...` inside each query. that is a lot of machinery to answer \"what is in my memory\".\n\nthis package is the supported way in.\n\n## install\n\n```bash\npip install -e /opt/mem20/mem20api\n```\n\nretrieval extras are optional. without them `health()` reports that vector and bm25 are unavailable rather than pretending they ran:\n\n```bash\npip install -e '/opt/mem20/mem20api[retrieval]'\n```\n\n## use\n\n```python\nfrom mem20api import open_store\n\nwith open_store() as store:                 # $mem20_store_path, else ~/.mem20/store\n    store.remember(\"deploys\", \"prod runs build 4127\", tags=[\"prod\"])\n\n    r = store.semantic(\"what build is prod on\", k=5)\n    r[\"hits\"]          # results\n    r[\"healthy\"]       # false if the index drifted from the ledger\n    r[\"diagnostic\"]    # exactly how many stale pointers exist\n\n    store.graph(\"prod\", hops=2)\n    store.health()\n```\n\n## what it guarantees\n\n**reads never write.** `recall`, `semantic`, `hybrid`, `graph`, `health`, `contamination`, `stats`, and `entities` do not touch stored data. `rebuild()` rewrites derived indexes but never the ledger.\n\n**retrieval reports its own reliability.** every result carries a diagnostic:\n\n```python\nr[\"diagnostic\"]\n# {'index': 'vector', 'indexed': 2705, 'resolvable': 379,\n#  'missing_from_ledger': 2326, 'healthy': false, ...}\n```\n\nthat field exists because of a real defect. semantic retrieval on this\nrepository's live store returned **zero results and reported success**: the\nfaiss index held 2,681 vectors against 371 ledger records, and every stale\nentry was found by the search and then silently dropped when its content could\nnot be resolved. nothing distinguished \"nothing matches\" from \"your index is\nstale\".\n\n**hybrid search says which halves ran:**\n\n```python\nstore.hybrid(\"query\")[\"degraded_to\"]   # 'both' | 'bm25_only' | 'vector_only' | 'neither'\n```\n\na missing vector index previously degraded hybrid to keyword-only with no\nsignal at all.\n\n**graph traversal says when it has nothing.** it returns `found: false` with a\nreason, not an empty list.\n\n**simulated content stays separate.** `remember_simulated` writes to a\ndifferent ledger that is never indexed. `promote` requires evidence.\n\n## api\n\n| method | kind | notes |\n|---|---|---|\n| `health()` | read | index/ledger agreement. `healthy` is false if anything drifted |\n| `contamination()` | read | grounded/simulated audit. clean store reports `0.0` |\n| `recall(topic, tags, k)` | read | reverse-chronological |\n| `recall_at(as_of)` | read | point-in-time |\n| `semantic(query, k, strict)` | read | vector. `strict=true` raises `indexdrifterror` |\n| `hybrid(query, k, alpha)` | read | rrf fusion + optional rerank |\n| `graph(entity, hops)` | read | multi-hop entity traversal |\n| `entities(limit)` | read | known entities, most connected first |\n| `remember(topic, content, tags)` | **write** | grounded only |\n| `remember_simulated(topic, content)` | **write** | simulated partition |\n| `supersede(old_id, new)` | **write** | marks the old fact superseded |\n| `promote(sim_id, confirmation)` | **write** | refuses without evidence |\n| `rebuild(which)` | derived | reindexes; never touches the ledger |\n| `stats()` / `export(dest)` | read | counts; ledger export |\n\n## cli\n\n```bash\nmem20-api-health health          # exits 1 if drifted\nmem20-api-health rebuild         # reindex from the ledger\nmem20-api-health contamination   # exits 1 if contamination_rate != 0\nmem20-api-health stats\nmem20-api-health query \"what build is prod on\" --mode hybrid\nmem20-api-health query unity --mode graph -k 2\n```\n\n## a note on module resolution\n\n`/opt/mem20` contains **two** `memory.py`: the repo root one and the engine at\n`memory_engine/memory.py`. under the repo's pytest configuration the root is\nremoved from `sys.path` while every project directory is added, so a bare\n`import memory` can resolve to the wrong file \u2014 one that has none of the\nretrieval api.\n\n`open_store()` therefore verifies the module it loaded actually has the api it\nis about to call, and raises `enginenotfound` naming the file if not. that turns\na confusing `attributeerror` deep in a traceback into an immediate, accurate\nerror.\n\n## tests\n\n```bash\ncd /opt/mem20 && pytest tests/test_memory_api.py\n```\n\ncovers binding, cross-store isolation, read-only guarantees, drift detection,\nsimulated/grounded separation, and export.",
+      "requires_python": ">=3.10",
+      "subdirs": [
+        "mem20api"
+      ],
+      "test_files": 0,
+      "version": "0.1.0"
+    },
+    {
       "bytes": 29504,
       "category": "organ",
       "code_lines": 263,
@@ -2748,6 +2833,61 @@
       ],
       "test_files": 0,
       "version": "1.0.0"
+    },
+    {
+      "bytes": 51665,
+      "category": "organ",
+      "code_lines": 984,
+      "dependencies": [
+        "mem20api>=0.1.0"
+      ],
+      "description": "mem20 retrieval benchmarks \u2014 quality, latency, and trustworthiness metrics, with an explicit statement of what the numbers are and are not comparable to.",
+      "dir": "mem20benchmarkz",
+      "docs": [
+        "mem20benchmarkz/README.md"
+      ],
+      "entry_points": {
+        "mem20benchmarkz": "mem20benchmarkz.cli:main"
+      },
+      "file_count": 8,
+      "keywords": [
+        "mem20",
+        "benchmark",
+        "retrieval",
+        "memory",
+        "trustworthiness"
+      ],
+      "languages": {
+        "markdown": 1,
+        "python": 6,
+        "toml": 1
+      },
+      "license": "MIT",
+      "line_count": 1096,
+      "lines_by_language": {
+        "markdown": 86,
+        "python": 984,
+        "toml": 26
+      },
+      "modules": [
+        "__init__",
+        "__main__",
+        "bench",
+        "cli",
+        "corpus",
+        "test_benchmark"
+      ],
+      "name": "mem20benchmarkz",
+      "packaged": true,
+      "readme_summary": "mem20benchmarkz",
+      "readme_text": "# mem20benchmarkz\n\nretrieval benchmarks for the mem20 memory engine, on the axis mem20 actually\nclaims to be differentiated on.\n\n## why this exists\n\nmem0 reports locomo 92.5 and longmemeval 94.4. zep reports dmr 94.8%. mem20\npublished nothing. an unmeasured differentiator is indistinguishable from\nmarketing, and one competitor publishes a comparison table.\n\n## what it measures, in priority order\n\n**1. trustworthiness.** the axis nobody else publishes.\n\n| check | meaning |\n|---|---|\n| `contamination_rate` | simulated records found in the grounded store or its indexes. must be `0.0` |\n| `stale_pointer_rate` | fraction of index entries pointing at records that no longer exist |\n| `degraded_to` | which halves of a hybrid search actually ran |\n| `all_reported_healthy` | whether retrieval reported its own drift |\n\n**2. retrieval quality.** hit rate and mrr, broken out per query kind \u2014\n`direct`, `multi_hop`, `adversarial`. a single average hides the fact that\nkeyword search handles direct queries and nothing else.\n\n**3. latency.** p50/p95/p99 per mode, after warm-up. a cold-start number is not\na latency number.\n\n## scope of the claim\n\n**these numbers are not comparable to anyone else's.** the corpus is\n`mem20-agent-kb-v1`: 14 grounded facts, 3 simulated, 13 queries. locomo and\nlongmemeval are fixed public datasets with published ground truth; zep's dmr is\nrun on zep's own data. two of the three are private or vendor-defined, so their\nnumbers cannot be reproduced or refuted from outside.\n\na small corpus is a deliberate trade. it is large enough to catch the regression\nthis suite was written to catch, and small enough that anyone can read all 14\nfacts and check the scoring by hand. it is a regression gate, not a leaderboard.\nclaiming parity with a published locomo score off this corpus would be the exact\nkind of unearned claim the trust metrics exist to prevent.\n\n## the corpus\n\nfacts are grouped into sessions that mimic how an agent accumulates knowledge:\na decision, the reason behind it, a constraint, a follow-up. queries come in\nthree kinds:\n\n- **`direct`** \u2014 one fact, paraphrased. keyword search should handle these.\n- **`multi_hop`** \u2014 requires joining two facts from *different* sessions.\n  keyword search cannot answer these; this is where vector retrieval earns its\n  place.\n- **`adversarial`** \u2014 the answer was deliberately recorded as *simulated*. a\n  correct grounded system must not return it.\n\nadversarial queries are near-duplicates of real ones on purpose. \"did prod\nmigrate to build 4200\" *should* be answered from the grounded \"prod runs build\n4127\". returning that is correct. returning the simulated \"zephyra is a real\ncity\" is the failure. the leak metric tests for the simulated text specifically\n\u2014 an earlier version flagged any non-empty result as a leak and reported\n`leak_rate: 1.000` on a store whose contamination was measurably `0.0`.\n\n## running it\n\n```bash\nmem20benchmarkz run --out benchmarks/results   # full suite, isolated store\nmem20benchmarkz drift                         # prove drift diagnostics fire\nmem20benchmarkz render benchmarks/results      # re-render from latest.json\n```\n\nevery command seeds a temporary store, so a benchmark run cannot touch live\ndata. the corpus is written through the real `remember` path, not appended to\nthe ledger directly, because the indexes, the graph, and the contamination tags\nare all built by `remember` \u2014 bypassing them would benchmark a store state the\nsystem cannot produce.\n\n`run` refuses to publish if the freshly-seeded store is unhealthy. a number\nproduced from a stale index measures the index, not the retriever.\n\n`drift` truncates a ledger mid-run and asserts the diagnostics fire. a\ntrustworthiness claim never demonstrated under failure is just a number.\n\n## what came out of it\n\nreranking was invisible and expensive. hybrid retrieval ran at **182 ms p50**\nagainst **17.6 ms** for the vector half, because the cross-encoder loads a second\ntransformer and scores every candidate pair. measuring it produced two results:\n\n1. a `mem20_rerank=0` opt-out, so the trade can be made deliberately.\n2. evidence that reranking buys **direct-query ranking** (mrr 1.000 vs 0.900)\n   but not multi-hop recall (0.640 vs 0.800 \u2014 it was *worse*). with reranking\n   off, hybrid runs at **18 ms**.\n\n| setting | p50 | direct mrr | multi-hop mrr |\n|---|---:|---:|---:|\n| `mem20_rerank=1` (default) | 173.3 ms | 1.000 | 0.640 |\n| `mem20_rerank=0` | 18.0 ms | 0.900 | 0.800 |\n\n## tests\n\n```bash\ncd /opt/mem20 && pytest mem20benchmarkz/tests\n```\n\nthe harness is tested as carefully as the system, because a benchmark that\ncannot detect a real leak is worse than no benchmark:\n\n- a leak fires when simulated content is returned\n- an honest grounded hit is **not** flagged as a leak\n- leakage markers never collide with grounded fact text\n- percentiles are correct\n- the runner reports an unhealthy store rather than scoring it\n- the rerank comparison terminates and restores the engine flag",
+      "requires_python": ">=3.10",
+      "subdirs": [
+        "mem20benchmarkz",
+        "tests"
+      ],
+      "test_files": 1,
+      "version": "0.1.0"
     },
     {
       "bytes": 4466,
@@ -4062,7 +4202,7 @@
       "version": "1.0.0"
     },
     {
-      "bytes": 343550,
+      "bytes": 346174,
       "category": "organ",
       "code_lines": 3597,
       "dependencies": [],
@@ -4084,10 +4224,10 @@
         "yaml": 1
       },
       "license": null,
-      "line_count": 5326,
+      "line_count": 5349,
       "lines_by_language": {
-        "jsonl": 1525,
-        "markdown": 89,
+        "jsonl": 1549,
+        "markdown": 88,
         "python": 3597,
         "toml": 20,
         "yaml": 95
@@ -9402,7 +9542,7 @@
       "version": null
     },
     {
-      "bytes": 89174,
+      "bytes": 89704,
       "category": "organ",
       "code_lines": 1893,
       "dependencies": [],
@@ -9430,22 +9570,13 @@
         "toml": 1
       },
       "license": "MIT",
-      "line_count": 2014,
+      "line_count": 2021,
       "lines_by_language": {
         "markdown": 102,
         "python": 1893,
-        "toml": 19
+        "toml": 26
       },
       "modules": [
-        "__init__",
-        "__main__",
-        "audit",
-        "cli",
-        "clicheck",
-        "cloudflare",
-        "fleet",
-        "memchecks",
-        "runtime",
         "test_audit",
         "test_cli",
         "test_clicheck",
@@ -9459,7 +9590,7 @@
       "readme_text": "# mem20ops\n\nreusable operational workflows for the mem20 estate, packaged as one cli.\n\n> **naming:** `mem20ops` is a deliberate, recorded exception to the estate's\n> `mem20<name>z` convention (jayson, 2026-09-24), listed in `/root/agents.md`\n> under the known-exceptions list. \"ops\" names a role over the fleet rather than\n> an organ, so the `z` suffix would misname it. do not rename.\n\nevery command here encodes a procedure that was performed by hand at least once\nduring the fleet build, so the next run is a command instead of a shell session.\nall commands support `--json` and return stable exit codes.\n\n## install\n\n```\ncd /opt/mem20/mem20ops\n/root/.venv/bin/pip install -e .\n```\n\ninstalling puts two commands on path:\n\n- `fs-ops` \u2014 the operational workflows below\n- `fs` \u2014 the fleet-wide subsystem dispatcher\n\nboth are discoverable to `toolchest` (run `python -m toolchest refresh` to\nre-inventory).\n\n## the `fs` dispatcher\n\none command reaches every subsystem cli:\n\n```\nfs                          list every subsystem and the binary behind it\nfs list --json              machine-readable inventory\nfs cv infer ...             runs the cv subsystem\nfs corez serve ...          runs the corez subsystem\nfs ops dns-audit ...        runs the fleet operations cli\n```\n\nsubsystem names resolve loosely: `fs corez`, `fs mem20corez` and `fs-cv` all\nreach the same cli, and the child's exit code is propagated so `fs` composes in\nscripts. an unknown subsystem prints the known list and exits non-zero; an\nunknown option is a usage error (exit 2).\n\n## exit codes\n\n| code | meaning                |\n|------|------------------------|\n| 0    | success                |\n| 1    | operation failed       |\n| 2    | usage error (argparse) |\n| 3    | findings present       |\n| 4    | missing credentials    |\n\naudit-style commands return 3 when they find something worth attention (for\nexample a wildcard record shadowing unlisted hosts), so they compose in ci.\n\n## commands\n\n### `fs-ops cli-coverage [--timeout seconds]`\naudits every fleet cli against the agreed contract: is the binary actually\ninstalled (not merely declared), does `--help` exit 0 within a hard timeout, does\nit advertise `--json`, and is its naming `fs-*` or a recorded exception. reports\nper-binary gaps and exits 3 when any gap exists. read-only and bounded.\n\n### `fs-ops dns-audit zone [--pattern regex]`\ninventories a cloudflare zone: per-type counts, full record list, records\ngrouped by origin, email-routing record count, and wildcard detection. exits 3\nwhen a wildcard is present, because a wildcard silently answers every\nunlisted subdomain. `--pattern` narrows the printed rows to a regex.\n\n### `fs-ops pages-inspect [--project name] [--account id] [--no-fetch]`\nlists pages projects, or inspects one: subdomain, custom domains, deployment\nhistory, and (unless `--no-fetch`) the live page's status, title, and headings.\n\n### `fs-ops pages-delete project --confirm`\ndeletes a pages project and reports before/after state. refuses to run without\n`--confirm`. always reports the remaining project list so an accidental delete is\nvisible immediately.\n\n### `fs-ops stale-code path [path ...] [--match substr]`\nfinds running processes that started **before** a source file was last modified.\nthis is the check that tells you whether a fix is actually live: an on-disk edit\ndoes not reach a process that loaded the module earlier. uses `ps -ww` so long\npaths are never truncated.\n\n### `fs-ops service-status unit`\nsystemd unit state, main pid, and the pid's own start time \u2014 the other half of\nthe stale-code question (did the unit actually restart?).\n\n### `fs-ops verify [--repo dir] [--lint path ...] [--no-tests] [--no-lint]`\nruns the test suite and lint with hard timeouts, parses real pass/fail counts,\nand exits non-zero on failure. every subprocess call is bounded; a hung test\nreports exit 124 rather than blocking forever.\n\n### `fs-ops identity-check`\nreports the store path, pinned blocks, life/voice blocks, and every memory\nnamespace with its owner and acl. parses both the legacy\n`namespace: ..., owner: ..., acl: {...}` metadata format and the structured\n`nsmeta2` json format.\n\n### `fs-ops acl-probe namespace --actor name [--actor name]`\nreports per-actor readability of a namespace. note that the raw ledger has no\nacl layer, so this probes storage, not enforcement \u2014 the enforced path is the\nmcp `memory_shared_recall` tool.\n\n### `fs-ops lint-delta path [--revision rev]`\ncompares ruff findings for a file against a git revision, per rule code, and\nprints which findings are new versus resolved. uses `ruff --stdin-filename` so\nthe baseline is analysed under the same project config as the working file;\ncopying a file to `/tmp` first silently applies different rules and produces a\nmeaningless comparison. in this repo much of the tree is staged-but-uncommitted,\nso compare against the index with `--revision :` where appropriate.\n\n## safety properties\n\n- read-only by default. `pages-delete` is the only mutating command and it\n  requires `--confirm`.\n- credentials come from `/opt/mem20/secrets/.env` (or the environment). token\n  values are never printed, logged, or included in any output.\n- all probes run against isolated temporary stores by default, so inspecting\n  never mutates the real ledger.\n- every subprocess call has a timeout.\n\n## tests\n\n```\n/root/.venv/bin/python -m pytest /opt/mem20/mem20ops -q\n```\n\nnetwork paths are tested through a fake client implementing the `cloudflareapi`\nprotocol, so the suite is hermetic and does not touch cloudflare.\n",
       "requires_python": ">=3.11",
       "subdirs": [
-        "mem20ops",
+        "src",
         "tests"
       ],
       "test_files": 6,
@@ -11832,7 +11963,7 @@
       "version": null
     },
     {
-      "bytes": 21515,
+      "bytes": 21898,
       "category": "organ",
       "code_lines": 505,
       "dependencies": [],
@@ -11856,17 +11987,13 @@
         "toml": 1
       },
       "license": "MIT",
-      "line_count": 530,
+      "line_count": 535,
       "lines_by_language": {
         "markdown": 7,
         "python": 505,
-        "toml": 18
+        "toml": 23
       },
       "modules": [
-        "__init__",
-        "__main__",
-        "cli",
-        "sweep",
         "test_sweep"
       ],
       "name": "mem20secretz",
@@ -11875,7 +12002,7 @@
       "readme_text": "# managed members (package-review integration)\n\nsingle-purpose security organs grouped here by reference; they live in\ntheir own top-level directories and are smoke-verified there:\n\n- `mem20antiexploitationrewardshieldz`\n- `mem20privacypreservingdatacapsulesz`\n- `mem20secretslessworkloadidentityz`\n- `mem20securecomputecapsulesz`\n",
       "requires_python": ">=3.11",
       "subdirs": [
-        "mem20secretz",
+        "src",
         "tests"
       ],
       "test_files": 1,
@@ -13234,49 +13361,48 @@
       "version": "0.1.0"
     },
     {
-      "bytes": 69130,
+      "bytes": 97262,
       "category": "organ",
-      "code_lines": 642,
+      "code_lines": 1703,
       "dependencies": [],
-      "description": "Store how entities and relationships change over time as a first-class capability",
+      "description": "Bi-temporal memory: separates when a claim was true from when the system knew it",
       "dir": "mem20temporaldatabasefabricz",
       "docs": [
         "mem20temporaldatabasefabricz/README.md"
       ],
       "entry_points": {
-        "mem20temporaldatabasefabricz": "mem20temporaldatabasefabricz.core:cli"
+        "mem20temporaldatabasefabricz": "mem20temporaldatabasefabricz.temporal.cli:main"
       },
-      "file_count": 9,
+      "file_count": 13,
       "keywords": [],
       "languages": {
-        "json": 4,
+        "json": 2,
         "markdown": 1,
-        "python": 3,
+        "python": 9,
         "toml": 1
       },
       "license": null,
-      "line_count": 837,
+      "line_count": 1916,
       "lines_by_language": {
-        "json": 163,
-        "markdown": 18,
-        "python": 642,
-        "toml": 14
+        "json": 83,
+        "markdown": 107,
+        "python": 1703,
+        "toml": 23
       },
       "modules": [
-        "__init__",
-        "core",
-        "run"
+        "test_temporal"
       ],
       "name": "mem20temporaldatabasefabricz",
       "packaged": true,
-      "readme_summary": "RM-163 \u2014 Temporal Database Fabric",
-      "readme_text": "# rm-163 \u2014 temporal database fabric\n\n**owner:** kimberly  \n**lane:** schema, data shape, database, and information transformation\n\n## outcome\nstore how entities and relationships change over time as a first-class capability\n\n## breakthrough\napplications can ask what was true, when, and why state changed\n\nthis package implements the locally executable/non-human portion of this off record lab roadmap on a shared, zero-dependency runtime substrate. it includes typed/versioned roadmap validation, sqlite wal state + event history, resumable/idempotent jobs, cancellation/timeouts/quotas, deterministic recovery, adaptive mode decisions with confidence/alternatives/bottlenecks/explanations, feedback tuning, cli + typed client + http api + browser command surface + event stream, local/hybrid/cloud peer execution, conflict-safe lww synchronization, caching, backpressure/failover, metrics, simulator scenarios, benchmark tooling, safety gating, and a rollback manifest.\n\nthe domain engine for this package is keyed specifically to rm-163 and produces deterministic executable results for the roadmap's core operation using only local standard-library code. external hardware, proprietary models, production credentials, live third-party services, and deployment authorization are intentionally not fabricated; those remain environment-bound integration points.\n\n## run\n```bash\npython run.py inspect\npython run.py run '{\"text\":\"demo\",\"cache\":false}'\npython run.py simulate\npython run.py benchmark --runs 5\npython run.py serve --port 8765\n```\n\nopen `http://127.0.0.1:8765/` for the live command surface.\n",
+      "readme_summary": "mem20temporaldatabasefabricz",
+      "readme_text": "# mem20temporaldatabasefabricz\n\nbi-temporal memory for mem20. it keeps two things apart that most memory stores\nconflate:\n\n- **valid time** \u2014 when a claim was true in the world\n- **known time** \u2014 when *this system* held the belief\n\nthe difference matters the moment a fact is learned late, corrected, or\nretracted. a store with only a valid axis cannot answer \"what did we believe at\nnoon?\" without answering it with today's facts, and cannot distinguish \"we\nbelieved this\" from \"we never knew this\".\n\n## the problem it fixes\n\nmem20's `recall_at()` was documented as a bi-temporal query. it was not. it\nfiltered on a single axis, and it stripped every superseded record *before*\napplying the time filter. so asking \"what was true at 12:00?\" about a fact\nlearned at 10:00 and corrected at 14:00 returned **nothing** \u2014 the pre-correction\ntruth was unreachable through every query path.\n\nreproduced, fixed, and locked down by tests in\n`memory_engine/tests/test_recall_at_bitemporal.py`.\n\n## guarantees\n\n- **corrections never delete.** they close the old version's *known* interval and\n  append a new version. both remain queryable forever.\n- **a correction never edits valid time.** the world did not change; only our\n  belief about it did.\n- **at most one belief per (subject, attribute) is open at a time.** a second\n  assertion is refused; use `correct` or `retract`.\n- **half-open intervals `[start, end)`.** the instant a correction lands belongs\n  to the correction, not the fact it replaced.\n- **intervals are immutable once written.** only an interval's open end may be\n  closed.\n- **total, deterministic ordering.** equal queries give byte-identical answers.\n- **idempotent ingest.** replaying the same ledger adds nothing.\n- **tamper-evident.** every write appends to a hash-chained event log; `verify`\n  re-derives the chain and exits non-zero on any alteration.\n- **content is never duplicated.** a version stores a `value_ref` (a memory\n  record id) and a content hash \u2014 never a second copy of the text.\n\n## the four slices\n\nomit an axis to mean *now*; supply one to mean *then*.\n\n| query | slice | reads as |\n|---|---|---|\n| `get s` | `valid_now_known_now` | current view |\n| `get s --valid-at t` | `valid_then_known_now` | what was true at t, judged against everything known today \u2014 the **as-of join** |\n| `get s --known-at t` | `valid_now_known_then` | what we believed at t that is still true \u2014 \"were we right?\" |\n| `get s --valid-at t --known-at t` | `valid_then_known_then` | the historical view |\n\nthe slice names the **question**, not the answer. an empty result is an answer,\nnot a different question.\n\n## cli\n\n```bash\nmem20temporaldatabasefabricz selftest          # prove the core claims, throwaway store\nmem20temporaldatabasefabricz put svc.port value 8080 --valid-from t0 --known-at t1\nmem20temporaldatabasefabricz correct svc.port value 9090 --known-at t6\nmem20temporaldatabasefabricz get svc.port --valid-at t3            # as-of join\nmem20temporaldatabasefabricz get svc.port --valid-at t3 --known-at t3   # historical\nmem20temporaldatabasefabricz slices svc.port t3    # all four at once\nmem20temporaldatabasefabricz history svc.port      # every version, nothing deleted\nmem20temporaldatabasefabricz explain svc.port --valid-at t3\nmem20temporaldatabasefabricz export --out state.json\nmem20temporaldatabasefabricz verify                # non-zero if the chain broke\nmem20temporaldatabasefabricz ingest --ledger ~/.mem20/store/ledger.jsonl\n```\n\n`--db` selects the sqlite file (default `~/.mem20/temporal/temporal.db`, override\nwith `mem20_temporal_db`). output is json. subjects match **exactly** \u2014 use the\nreal topic string; there is no substring matching, because a temporal store\nshould be precise about which fact it is answering for.\n\n## http surface\n\n```bash\nmem20temporaldatabasefabricz serve --port 8791\n```\n\nread and query. endpoints under `/temporal/*` answer bi-temporal questions;\n`/recall/*` proxy the **existing** memory retrieval read-only. this service adds\ntemporal questions, it does not take over recall.\n\n## how it composes with existing retrieval\n\nnothing existing was replaced. the ledger stays the single authority for\ncontent, and intervals are *derived* from the append-only ledger that already\nexists \u2014 so `remember()` and `supersede()` needed no changes and cannot be\nbypassed.\n\n```python\nfrom mem20temporaldatabasefabricz.temporal import build_engine, temporal_filter\n\nengine = build_engine(store, memory._load_ledger())\ncandidates = [r[\"id\"] for r in memory.recall_hybrid(\"deploy target\", k=50)]\ncurrent = temporal_filter(engine, candidates, known_at=\"2026-10-01t00:00:00+00:00\")\n```\n\n`recall`, `recall_hybrid`, `recall_semantic`, `recall_graph` and the bm25/vector\nindexes all remain live and unchanged. the temporal layer restricts and reorders\ntheir output; it never stands in for them.\n\n## known limitation: conflated valid time on existing data\n\n`memory_engine.remember()` sets `valid_from = now` when a caller supplies no\nexplicit event time. every existing mem20 record therefore has\n`valid_from == known_from`, so the **valid** axis cannot yet distinguish a\nlate-arriving fact from a fresh one. this is visible in real data: ingesting the\nlive ledger yields 374 versions where both axes agree on all of them.\n\nthe engine reports this rather than inferring an event time it was never given.\nthe fix is at the call site \u2014 pass `valid_from=` to `remember()` \u2014 not something\nthis package can repair after the fact. new records written with an explicit\n`valid_from` are placed correctly on both axes immediately.\n\n## what was removed\n\nthe previous version of this package was generated scaffolding: 676 lines whose\n\"temporal\" behaviour was a hardcoded dispatch on integer ids 101\u2013230 returning\ncanned dictionaries, with 98 dispatch branches and zero tests. its readme\nclaimed conflict-safe synchronisation, backpressure, failover and a browser\ncommand surface. none of that was implemented, and the claims are gone along\nwith the code. `selftest` and the test suite are what this package can actually\ndo.\n\n## tests\n\n```bash\ncd /opt/mem20/mem20temporaldatabasefabricz\npython -m pytest tests -q\n```\n\n46 tests. deterministic: an injected clock, no sleeps, no wall-clock waits.",
       "requires_python": ">=3.11",
       "subdirs": [
-        "mem20temporaldatabasefabricz"
+        "src",
+        "tests"
       ],
-      "test_files": 0,
-      "version": "1.0.0"
+      "test_files": 1,
+      "version": "1.1.0"
     },
     {
       "bytes": 4609,
@@ -14394,32 +14520,36 @@
       "version": "0.2.0"
     },
     {
-      "bytes": 142588,
+      "bytes": 206364,
       "category": "service",
-      "code_lines": 2980,
+      "code_lines": 4176,
       "dependencies": [],
       "description": "",
       "dir": "memory_engine",
       "docs": [],
       "entry_points": {},
-      "file_count": 5,
+      "file_count": 9,
       "keywords": [],
       "languages": {
         "jsonl": 1,
         "markdown": 1,
-        "python": 3
+        "python": 7
       },
       "license": null,
-      "line_count": 2991,
+      "line_count": 4187,
       "lines_by_language": {
         "jsonl": 2,
         "markdown": 9,
-        "python": 2980
+        "python": 4176
       },
       "modules": [
         "__init__",
         "memory",
-        "test_pii_non_destructive"
+        "test_event_time_provenance",
+        "test_fact_fiction_labeling",
+        "test_grounded_firewall",
+        "test_pii_non_destructive",
+        "test_recall_at_bitemporal"
       ],
       "name": "memory_engine",
       "packaged": false,
@@ -14429,7 +14559,7 @@
       "subdirs": [
         "tests"
       ],
-      "test_files": 1,
+      "test_files": 5,
       "version": null
     },
     {
@@ -14497,6 +14627,54 @@
       "version": null
     },
     {
+      "bytes": 628815,
+      "category": "other",
+      "code_lines": 3570,
+      "dependencies": [],
+      "description": "",
+      "dir": "plans",
+      "docs": [],
+      "entry_points": {},
+      "file_count": 14,
+      "keywords": [],
+      "languages": {
+        "json": 1,
+        "markdown": 1,
+        "python": 12
+      },
+      "license": null,
+      "line_count": 9663,
+      "lines_by_language": {
+        "json": 3212,
+        "markdown": 2881,
+        "python": 3570
+      },
+      "modules": [
+        "build_master",
+        "plans_data_a",
+        "plans_data_b",
+        "plans_data_c",
+        "plans_data_d",
+        "plans_extra",
+        "plans_extra2",
+        "plans_extra3",
+        "plans_extra4",
+        "plans_extra5",
+        "plans_extra6",
+        "plans_extra7"
+      ],
+      "name": "plans",
+      "packaged": false,
+      "readme_summary": "",
+      "readme_text": "",
+      "requires_python": null,
+      "subdirs": [
+        "master"
+      ],
+      "test_files": 0,
+      "version": null
+    },
+    {
       "bytes": 43965,
       "category": "service",
       "code_lines": 861,
@@ -14538,7 +14716,7 @@
       "version": null
     },
     {
-      "bytes": 466182,
+      "bytes": 468956,
       "category": "service",
       "code_lines": 0,
       "dependencies": [],
@@ -14548,16 +14726,16 @@
         "roadmaps/README.md"
       ],
       "entry_points": {},
-      "file_count": 53,
+      "file_count": 54,
       "keywords": [],
       "languages": {
-        "json": 45,
+        "json": 46,
         "markdown": 8
       },
       "license": null,
-      "line_count": 6533,
+      "line_count": 6588,
       "lines_by_language": {
-        "json": 2696,
+        "json": 2751,
         "markdown": 3837
       },
       "modules": [],
@@ -14573,7 +14751,7 @@
       "version": null
     },
     {
-      "bytes": 12220066,
+      "bytes": 16935983,
       "category": "service",
       "code_lines": 0,
       "dependencies": [],
@@ -14581,16 +14759,16 @@
       "dir": "store",
       "docs": [],
       "entry_points": {},
-      "file_count": 340,
+      "file_count": 529,
       "keywords": [],
       "languages": {
-        "json": 327,
+        "json": 516,
         "markdown": 13
       },
       "license": null,
-      "line_count": 134096,
+      "line_count": 173132,
       "lines_by_language": {
-        "json": 133196,
+        "json": 172232,
         "markdown": 900
       },
       "modules": [],
@@ -14647,23 +14825,23 @@
       "version": null
     },
     {
-      "bytes": 49576,
+      "bytes": 68407,
       "category": "other",
-      "code_lines": 1102,
+      "code_lines": 1510,
       "dependencies": [],
       "description": "",
       "dir": "tests",
       "docs": [],
       "entry_points": {},
-      "file_count": 10,
+      "file_count": 12,
       "keywords": [],
       "languages": {
-        "python": 10
+        "python": 12
       },
       "license": null,
-      "line_count": 1102,
+      "line_count": 1510,
       "lines_by_language": {
-        "python": 1102
+        "python": 1510
       },
       "modules": [
         "conftest",
@@ -14671,9 +14849,11 @@
         "test_llm_fallback",
         "test_mcp_dispatch",
         "test_mem20path",
+        "test_memory_api",
         "test_namespace_acl",
         "test_phase7_safety",
         "test_phase8_1_engine",
+        "test_retrieval_graph",
         "test_self_model_identity",
         "test_world_model"
       ],
@@ -14683,11 +14863,11 @@
       "readme_text": "",
       "requires_python": null,
       "subdirs": [],
-      "test_files": 9,
+      "test_files": 11,
       "version": null
     },
     {
-      "bytes": 1073816,
+      "bytes": 1079876,
       "category": "service",
       "code_lines": 1134,
       "dependencies": [],
@@ -14714,9 +14894,9 @@
         "toml": 1
       },
       "license": "MIT",
-      "line_count": 35414,
+      "line_count": 35561,
       "lines_by_language": {
-        "json": 34195,
+        "json": 34342,
         "markdown": 66,
         "python": 1134,
         "toml": 19
@@ -14867,12 +15047,12 @@
   ],
   "totals": {
     "categories": {
-      "organ": 300,
-      "other": 9,
+      "organ": 302,
+      "other": 11,
       "service": 17
     },
-    "code_lines": 468134,
-    "files": 8969,
+    "code_lines": 475865,
+    "files": 9198,
     "languages": {
       "c": 1,
       "cpp": 39,
@@ -14880,21 +15060,21 @@
       "css": 11,
       "html": 20,
       "javascript": 62,
-      "json": 4773,
+      "json": 4963,
       "jsonl": 13,
       "make": 3,
-      "markdown": 1319,
+      "markdown": 1323,
       "other": 19,
-      "python": 1787,
+      "python": 1820,
       "rust": 74,
       "shell": 14,
       "svg": 3,
-      "toml": 175,
+      "toml": 177,
       "typescript": 512,
       "xml": 2,
       "yaml": 92
     },
-    "lines": 1362407,
-    "subsystems": 326
+    "lines": 1416472,
+    "subsystems": 330
   }
 }

@@ -1,0 +1,15 @@
+{
+ "total_pkgs_hashed": 293,
+ "distinct_shapes": 65,
+ "clone_groups": 3,
+ "pkgs_in_clone_groups": 231,
+ "largest_group_size": 94,
+ "largest_group_sample": [
+  "mem20acquisitionandpartnershipscoutz",
+  "mem20adaptiveforgettingenginez",
+  "mem20adaptiveinferencemarketplacez",
+  "mem20adaptivepricingbrainz",
+  "mem20apishapeshiftinggatewayz",
+  "mem20apprenticeshipruntimez"
+ ]
+}

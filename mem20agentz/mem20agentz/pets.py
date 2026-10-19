@@ -35,7 +35,8 @@ class Petdex:
     def adopt(self, name: str, species: str) -> Pet:
         pet = Pet(name=name, species=species).clamp()
         self._b.remember(topic=TOPIC, content=_encode(pet),
-                         tags=["mem20agentz", "pet", name], actor="mem20agentz")
+                         tags=["mem20agentz", "pet", name], actor="mem20agentz",
+                         epistemic_status="observed")
         return pet
 
     def list(self) -> list[Pet]:
@@ -71,7 +72,8 @@ class Petdex:
             pet.stats["energy"] += 20
         pet.clamp()
         self._b.remember(topic=TOPIC, content=_encode(pet),
-                         tags=["mem20agentz", "pet", name], actor="mem20agentz")
+                         tags=["mem20agentz", "pet", name], actor="mem20agentz",
+                         epistemic_status="observed")
         return pet
 
 

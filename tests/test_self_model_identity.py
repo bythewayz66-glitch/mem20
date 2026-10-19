@@ -116,6 +116,7 @@ def test_legacy_records_are_attributed_to_their_identity():
         ),
         tags=["self_model", "identity", "core"],
         priority="high",
+        epistemic_status="observed",
     )
     out = call("_self_model_get", {"identity": "big-pickle"})
     assert "legacy-build" in out, out
@@ -136,6 +137,7 @@ def test_roster_separates_legacy_from_new_records():
         ),
         tags=["self_model", "identity", "core"],
         priority="high",
+        epistemic_status="observed",
     )
     call("_self_model_create", {
         "identity": "space-bunny", "actor": "space-bunny", "capabilities": ["new"],
@@ -180,6 +182,7 @@ def test_incumbent_legacy_identity_cannot_be_claimed_by_another_actor():
         ),
         tags=["self_model", "identity", "core"],
         priority="high",
+        epistemic_status="observed",
     )
     denied = call("_self_model_create", {
         "identity": "big-pickle", "actor": "space-bunny", "capabilities": ["annexed"],
@@ -202,6 +205,7 @@ def test_incumbent_identity_may_adopt_its_own_records():
         ),
         tags=["self_model", "identity", "core"],
         priority="high",
+        epistemic_status="observed",
     )
     allowed = call("_self_model_create", {
         "identity": "big-pickle", "actor": "big-pickle", "capabilities": ["continued"],
@@ -236,6 +240,7 @@ def test_busy_store_does_not_hide_an_incumbent_from_authorization():
         ),
         tags=["self_model", "identity", "core"],
         priority="high",
+        epistemic_status="observed",
     )
     for i in range(12):
         out = call("_self_model_create", {
@@ -261,6 +266,7 @@ def test_legacy_history_survives_many_other_identities():
         ),
         tags=["self_model", "identity", "core"],
         priority="high",
+        epistemic_status="observed",
     )
     for i in range(10):
         call("_self_model_create", {

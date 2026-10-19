@@ -160,7 +160,7 @@ class Mem20MCPServer(MemoryToolsMixin, CognitiveToolsMixin, RoadmapToolsMixin,
     # mem20_job_wait (job_* tools) until complete.
     # ------------------------------------------------------------------
     LONG_RUNNING_TOOLS = {
-        "imagination_concept", "imagination_critique",
+        "imagination_concept", "imagination_dream", "imagination_critique",
         "imagination_simulate", "imagination_counterfactual", "imagination_recombine",
         "imagination_model", "imagination_visualize",
         "cog_process", "cog_chain", "cog_reason", "cog_plan", "cog_reflect",
@@ -325,6 +325,8 @@ class Mem20MCPServer(MemoryToolsMixin, CognitiveToolsMixin, RoadmapToolsMixin,
             return await self._memory_recall_hybrid(arguments)
         elif tool_name == "memory_recall_graph":
             return await self._memory_recall_graph(arguments)
+        elif tool_name == "memory_index_health":
+            return await self._memory_index_health(arguments)
         elif tool_name == "memory_entity_extract":
             return await self._memory_entity_extract(arguments)
         elif tool_name == "memory_auto_consolidate":
@@ -394,6 +396,10 @@ class Mem20MCPServer(MemoryToolsMixin, CognitiveToolsMixin, RoadmapToolsMixin,
             return await self._memory_quarantine_simulated(arguments)
         elif tool_name == "memory_audit_contamination":
             return await self._memory_audit_contamination(arguments)
+        elif tool_name == "memory_label_coverage":
+            return await self._memory_label_coverage(arguments)
+        elif tool_name == "memory_backfill_labels":
+            return await self._memory_backfill_labels(arguments)
         elif tool_name == "memory_epistemic_veto":
             return await self._memory_epistemic_veto(arguments)
         # Pinned Blocks tools

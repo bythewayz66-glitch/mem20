@@ -1,0 +1,86 @@
+{
+ "total_unique_facts": 504,
+ "unlabeled": 434,
+ "label_dist": {
+  "unlabeled": 412,
+  "observed": 64,
+  "MISSING": 22,
+  "agent_generated": 5,
+  "inferred": 1
+ },
+ "by_source": {
+  "none": 434
+ },
+ "by_topic": {
+  "irc:mem20": 330,
+  "session-outcome": 67,
+  "project": 17,
+  "self_model__mem20-agent-with-access-to-mem20-tools-toolchest-and-skills-capable-of-filesystem-ops-web-search-memory-cognitive-tools-and-code-execution": 5,
+  "general": 3,
+  "self_model__spacebunny": 3,
+  "tool": 2,
+  "self_model_identity__mem20-agent-with-access-to-mem20-tools-toolchest-and-skills-capable-of-filesystem-ops-web-search-memory-cognitive-tools-and-code-execution": 1
+ },
+ "sample": [
+  {
+   "content": "[#mem20] sdk: sdk here. Try !help for what I can do.",
+   "source": null,
+   "topic": "irc:mem20"
+  },
+  {
+   "content": "[#mem20] graph: graph here. Try !help for what I can do.",
+   "source": null,
+   "topic": "irc:mem20"
+  },
+  {
+   "content": "[#mem20] crewbot: crewbot here. Try !help for what I can do.",
+   "source": null,
+   "topic": "irc:mem20"
+  },
+  {
+   "content": "[#mem20] adk: adk here. Try !help for what I can do.",
+   "source": null,
+   "topic": "irc:mem20"
+  },
+  {
+   "content": "[#mem20] swarm: swarm here. Try !help for what I can do.",
+   "source": null,
+   "topic": "irc:mem20"
+  },
+  {
+   "content": "[#mem20] kanban: kanban: new job on Fleet HQ \u2014 27b8fff3 \u201cStep 9: Streaming message and part renderer - all part types, no viewport",
+   "source": null,
+   "topic": "irc:mem20"
+  },
+  {
+   "content": "[#mem20] kanban: kanban: new job on Fleet HQ \u2014 1dd8ae4a \u201cStep 8: Sessions and project scope - list, create, fork, tree\u201d (!accept 1",
+   "source": null,
+   "topic": "irc:mem20"
+  },
+  {
+   "content": "[#mem20] kanban: kanban: new job on Fleet HQ \u2014 ea2f2009 \u201cStep 7: Event stream - SSE with reconnect, backoff, resync\u201d (!accept ea2f",
+   "source": null,
+   "topic": "irc:mem20"
+  },
+  {
+   "content": "[#mem20] kanban: kanban: new job on Fleet HQ \u2014 d039ba7f \u201cStep 6: Typed client layer - generated, zero hand-written fetch\u201d (!accept",
+   "source": null,
+   "topic": "irc:mem20"
+  },
+  {
+   "content": "[#mem20] kanban: kanban: new job on Fleet HQ \u2014 63f5999e \u201cStep 5: Process broker - single owner of the opencode process, systemd\u201d (",
+   "source": null,
+   "topic": "irc:mem20"
+  },
+  {
+   "content": "[#mem20] kanban: kanban: new job on Fleet HQ \u2014 1946fd90 \u201cStep 4: Repo and design system - tokens, components, nav shell\u201d (!accept ",
+   "source": null,
+   "topic": "irc:mem20"
+  },
+  {
+   "content": "[#mem20] kanban: kanban: new job on Fleet HQ \u2014 8408678f \u201cStep 3: Security and network posture - bind, auth, CORS, fail closed\u201d (!a",
+   "source": null,
+   "topic": "irc:mem20"
+  }
+ ]
+}

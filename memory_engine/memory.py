@@ -51,6 +51,7 @@ import shutil
 import sys
 import time
 import glob
+import re
 import hashlib
 from datetime import datetime, timezone, timedelta
 from dataclasses import dataclass
@@ -76,8 +77,19 @@ except ImportError:
     CROSS_ENCODER_AVAILABLE = False
 
 # Cross-encoder configuration
-USE_CROSS_ENCODER = CROSS_ENCODER_AVAILABLE
-CROSS_ENCODER_MODEL = "cross-encoder/ms-marco-MiniLM-L-6-v2"
+#
+# Reranking is on by default when the dependency is installed, and it is not
+# cheap: measured on this host, hybrid retrieval with reranking runs at ~158ms
+# p50 against ~15ms for the vector half alone, because every candidate pair goes
+# through a second transformer pass. That is a large, silent tax on latency
+# paid for a quality gain that is not always wanted.
+#
+# MEM20_RERANK=0 turns it off without uninstalling anything, so an operator can
+# trade quality for latency and measure the difference rather than guess.
+USE_CROSS_ENCODER = CROSS_ENCODER_AVAILABLE and \
+    os.environ.get("MEM20_RERANK", "1").strip().lower() not in ("0", "false", "no", "off")
+CROSS_ENCODER_MODEL = os.environ.get(
+    "MEM20_RERANK_MODEL", "cross-encoder/ms-marco-MiniLM-L-6-v2")
 _CROSS_ENCODER = None
 
 def _get_cross_encoder():
@@ -104,6 +116,9 @@ VECTOR_INDEX = os.path.join(STORE_DIR, "vector_index.faiss")
 VECTOR_META = os.path.join(STORE_DIR, "vector_meta.jsonl")
 BM25_INDEX = os.path.join(STORE_DIR, "bm25_index.pkl")
 BM25_CORPUS = os.path.join(STORE_DIR, "bm25_corpus.jsonl")
+# Entity/edge index, written at remember() time. See _add_to_graph_index and
+# _graph_extract_entities for why it cannot be rebuilt on demand from a query.
+GRAPH_INDEX = os.path.join(STORE_DIR, "memory_graph.json")
 
 # Step 7.4 — separate partition for SIMULATED / imagined content (never touches the
 # grounded ledger or the vector/BM25 indexes), plus its decay window.
@@ -358,21 +373,43 @@ def _detect_only(content: str) -> list[str]:
     return labels
 
 
-def pin_block(block_id: str, content: str, reason: str = "", actor: str = "agent") -> dict:
-    """Pin a memory block as a core reference (immune to pruning/supersede)."""
+def pin_block(block_id: str, content: str, reason: str = "", actor: str = "agent",
+              origin: str = "grounded", store: str = "grounded",
+              epistemic_status: str = "user_stated", source: str | None = None) -> dict:
+    """Pin a memory block as a core reference (immune to pruning/supersede).
+
+    A pinned block is a grounded retrieval surface: it is injected at session
+    start, and because it is immune to pruning and supersede it is never
+    corrected in place. It therefore carries the same grounded/simulated
+    firewall as the vector, BM25 and graph indexes, and records the provenance
+    the audit needs to tell an authored block from a copied one.
+
+    The firewall can only enforce *declared* provenance - no text-level check at
+    write time can know that a string came from the simulated partition. The
+    complementary half is audit_contamination(), which compares pinned block
+    content against the simulated ledger and reports matches non-destructively.
+    """
+    _assert_grounded({"id": f"pin:{block_id}", "origin": origin, "store": store}, "pinned")
+
     data = _load_pinned()
     if block_id in data["blocks"]:
         raise ValueError(f"Block {block_id} already pinned")
-    
+
     data["blocks"][block_id] = {
         "content": content,
         "reason": reason,
         "pinned_ts": _now(),
         "actor": actor,
+        "origin": origin,
+        "store": store,
+        "epistemic_status": epistemic_status,
+        "source": source,
+        "content_hash": hashlib.md5(content.encode()).hexdigest()[:16],
     }
     data["order"].append(block_id)
     _save_pinned(data)
-    return {"block_id": block_id, "pinned": True}
+    return {"block_id": block_id, "pinned": True, "origin": origin,
+            "epistemic_status": epistemic_status}
 
 
 def unpin_block(block_id: str, actor: str = "agent") -> dict:
@@ -409,6 +446,110 @@ EMBEDDING_DIM = 384
 
 def _now() -> str:
     return datetime.now(timezone.utc).isoformat()
+
+
+# How a record's valid_from came to be. The distinction matters to any bi-temporal
+# reader: "we learned this now" and "this became true now" are different claims,
+# and when a caller supplies no event time the store can only record the second by
+# ASSUMPTION. Marking the basis keeps that assumption visible instead of letting an
+# inferred timestamp be read later as an authoritative event time.
+EVENT_TIME_DECLARED = "declared"
+EVENT_TIME_ASSUMED = "assumed_ingestion"
+# Sanity bounds for a caller-supplied event time. These reject typos ("2026" instead
+# of "2026-10-07") and impossible futures; they do NOT reject old history, because
+# remembering something from years ago is legitimate.
+EVENT_TIME_MAX_PAST_DAYS = 365 * 50
+EVENT_TIME_MAX_FUTURE_SKEW_MINUTES = 5
+
+
+def _event_time_basis(valid_from: str | None) -> str:
+    return EVENT_TIME_DECLARED if valid_from else EVENT_TIME_ASSUMED
+
+
+def validate_event_time(valid_from: str, now: str | None = None) -> str:
+    """Validate a caller-supplied event time, returning it normalised.
+
+    Raises rather than silently coercing: a wrong event time is worse than a
+    refused one, because it lands on the valid axis and quietly corrupts every
+    as-of answer that spans it.
+    """
+    reference = now or _now()
+    try:
+        declared = datetime.fromisoformat(valid_from.replace("Z", "+00:00"))
+    except (ValueError, AttributeError) as exc:
+        raise ValueError(
+            f"valid_from must be an ISO-8601 timestamp, got {valid_from!r}"
+        ) from exc
+    if declared.tzinfo is None:
+        raise ValueError(
+            f"valid_from must carry a timezone, got {valid_from!r}; refusing to "
+            f"assume one, since a fact whose event time is uncertain to within "
+            f"hours cannot be placed on the valid axis honestly"
+        )
+    now_dt = datetime.fromisoformat(reference)
+    if declared > now_dt + timedelta(minutes=EVENT_TIME_MAX_FUTURE_SKEW_MINUTES):
+        raise ValueError(
+            f"valid_from {valid_from} is in the future (now is {reference}); a "
+            f"claim cannot be valid before it is true"
+        )
+    if declared < now_dt - timedelta(days=EVENT_TIME_MAX_PAST_DAYS):
+        raise ValueError(
+            f"valid_from {valid_from} is more than {EVENT_TIME_MAX_PAST_DAYS} days "
+            f"before now ({reference}); check for a typo such as a missing century"
+        )
+    return declared.astimezone(timezone.utc).isoformat()
+
+
+# =============================================================================
+# EPISTEMIC VOCABULARY — what kind of claim is this?
+# =============================================================================
+# A stored fact is only trustworthy if a reader can tell WHAT KIND of claim it is.
+# Before this vocabulary existed the field defaulted to None, and measured on the
+# live store 393 of 447 grounded facts carried no label at all (87.9%). Worse, a
+# missing label was the MOST trusted state: epistemic_veto() only fired on
+# imagined/hypothesis/agent_generated, so an unlabeled fact - or a fact ID that
+# did not exist at all - silently passed the "may I rely on this?" gate.
+#
+# The six declared statuses say how the claim came to be known. UNLABELED is the
+# seventh and is deliberately honest rather than convenient: it marks a claim
+# whose basis was never established. Backfilling legacy records to `observed`
+# would manufacture provenance that nobody witnessed, which is precisely the
+# failure this vocabulary exists to prevent.
+#
+# Promotion evidence strength decides which status a promoted simulation gets,
+# so fiction cannot launder itself into an observation through one line of text.
+EPISTEMIC_STATUSES = ["observed", "inferred", "imagined", "user_stated",
+                      "hypothesis", "agent_generated"]
+UNLABELED = "unlabeled"
+
+# Statuses that may NOT be relied on without further validation. UNLABELED is in
+# this set because "we never established the basis" is not the same as "verified".
+UNVALIDATED_STATUSES = {"imagined", "hypothesis", "agent_generated", UNLABELED}
+
+
+def validate_epistemic_status(status: str | None, *, required: bool = True,
+                              context: str = "remember") -> str:
+    """Return a validated epistemic status, or raise.
+
+    Raises rather than defaulting. A silently-defaulted label is indistinguishable
+    from an asserted one at every later read, so the whole point of the field is
+    lost at exactly the moment it matters most.
+    """
+    if status is None:
+        if not required:
+            return UNLABELED
+        raise ValueError(
+            f"{context}() requires an explicit epistemic_status. Declare how this "
+            f"claim was learned; one of {EPISTEMIC_STATUSES + [UNLABELED]}. Refusing "
+            "an unlabeled write rather than storing a fact nobody can vouch for. "
+            f"Use epistemic_status='{UNLABELED}' if the basis is genuinely unknown."
+        )
+    if status not in EPISTEMIC_STATUSES and status != UNLABELED:
+        raise ValueError(
+            f"Invalid epistemic_status {status!r}. Must be one of: "
+            f"{EPISTEMIC_STATUSES + [UNLABELED]}"
+        )
+    return status
 
 
 def _slug(topic: str) -> str:
@@ -493,81 +634,130 @@ def _append_ledger(rec: dict) -> None:
         pass
 
 
-def remember(topic: str, content: str, tags: list[str] | None = None,
-             priority: str = "normal", actor: str = "agent",
-             valid_from: str | None = None, valid_to: str | None = None,
-             confidence: float | None = None, epistemic_status: str | None = None,
-             source: str | None = None, scrub_secrets: bool = True,
-             _allow_simulated: bool = False) -> dict:
-    """Append a GROUNDED fact to the ledger.
 
-    Step 7.4 lock: simulated/imagined content MUST NOT enter here. The only
-    sanctioned write path for simulation is remember_simulated(). An explicit
-    `_allow_simulated=True` is rejected on purpose so no future refactor can
-    silently route simulation through remember().
+
+class IndexDriftError(RuntimeError):
+    """Raised when a retrieval index and the ledger describe different worlds.
+
+    The indexes are append-only; the ledger is not. When the two disagree, a
+    search silently returns fewer results than the caller asked for and reports
+    nothing. That is the failure this exception exists to stop.
     """
-    if _allow_simulated:
-        raise PermissionError(
-            "remember() is grounded-only. Simulated content must use "
-            "remember_simulated(); this call is refused to protect Step 7.4 separation.")
-    os.makedirs(ENTRIES, exist_ok=True)
-    now = _now()
-    
-    cleaned_content = content
-    detected_secrets = _detect_only(content) if scrub_secrets else []
-    if detected_secrets:
-        print(
-            f"Warning: {len(detected_secrets)} possible secret(s) detected; "
-            "stored text left unmodified",
-            file=sys.stderr,
-        )
-    
-    rec = {
-        "id": f"{int(time.time()*1000):x}{os.urandom(2).hex()}",
-        "ts": now,
-        "actor": actor,
-        "action": "remember",
-        "topic": topic,
-        "tags": tags or [],
-        "priority": priority,
-        "content": cleaned_content,
-        "valid_from": valid_from or now,
-        "valid_to": valid_to,
-        "confidence": confidence,
-        "epistemic_status": epistemic_status,
-        "source": source,
-        "secrets_detected": detected_secrets if detected_secrets else None,
+
+
+def _ledger_remember_by_id() -> dict:
+    """Map of grounded `remember` id -> record, for O(1) content resolution.
+
+    recall_semantic and recall_hybrid both used to call _load_ledger() inside
+    their per-result loops and then linear-scan it for a matching id, which is
+    a full ledger read per candidate. One pass, one dict.
+    """
+    out = {}
+    for r in _load_ledger():
+        if r.get("action") == "remember" and r.get("id"):
+            out[r["id"]] = r
+    return out
+
+
+def _index_drift(kind: str, meta: list[dict],
+                 index_ntotal: int | None = None) -> dict:
+    """Measure how far an index has drifted from the ledger.
+
+    An index entry whose id has no ledger record is a pointer to a record that
+    no longer exists: the search will find it, fail to resolve its content, and
+    drop it. Counting these is the difference between "no results" and "no
+    results because your index is stale".
+
+    Two independent kinds of drift are reported:
+
+      * ledger drift -- an indexed id with no ledger record.
+      * metadata drift -- the vector index and its sidecar disagree with each
+        other. FAISS holds positional vectors and vector_meta.jsonl holds the
+        parallel id list; if those files were written at different times, a
+        vector can be returned for an id that belongs to a different record.
+        Checking only ledger drift would call that store healthy.
+    """
+    by_id = _ledger_remember_by_id()
+    meta_ids = [m.get("id") for m in meta if m.get("id")]
+    resolvable = sum(1 for i in meta_ids if i in by_id)
+    missing = len(meta_ids) - resolvable
+
+    drift = {
+        "index": kind,
+        "indexed": len(meta_ids),
+        "resolvable": resolvable,
+        "missing_from_ledger": missing,
+        "ledger_records": len(by_id),
+        "healthy": missing == 0,
     }
-    _append_ledger(rec)
 
-    path = os.path.join(ENTRIES, _mirror_filename(topic))
-    header = f"\n\n## {now}  (pri={priority}, tags={tags or []})\\\\n"
-    if valid_from:
-        header += f"  **Valid from:** {valid_from}\\\\n"
-    if valid_to:
-        header += f"  **Valid to:** {valid_to}\\\\n"
-    if confidence is not None:
-        header += f"  **Confidence:** {confidence:.2f}\\\\n"
-    if epistemic_status:
-        header += f"  **Epistemic status:** {epistemic_status}\\\\n"
-    if source:
-        header += f"  **Source:** {source}\\\\n"
-    mode = "a" if os.path.exists(path) else "w"
-    with open(path, mode, encoding="utf-8") as f:
-        if mode == "w":
-            f.write(f"# {topic}\\\\n")
-        f.write(header + content.strip() + "\\\\n")
+    if index_ntotal is not None:
+        meta_matches = (index_ntotal == len(meta))
+        drift["index_ntotal"] = index_ntotal
+        drift["meta_matches_index"] = meta_matches
+        drift["healthy"] = drift["healthy"] and meta_matches
+        if not meta_matches:
+            drift["metadata_mismatch"] = (
+                f"index holds {index_ntotal} vectors but metadata has "
+                f"{len(meta)} rows; a returned id may belong to another record")
+    return drift
 
-    # Add to vector index
-    if VECTOR_AVAILABLE:
-        try:
-            _add_to_vector_index(rec)
-        except Exception as e:
-            # Don't fail the remember operation if vector indexing fails
-            print(f"Warning: vector indexing failed: {e}", file=sys.stderr)
 
-    rebuild_index()
-    return rec
+def index_health() -> dict:
+    """Report whether every retrieval index still matches the ledger.
+
+    Callers use this to decide whether search results can be trusted at all.
+    """
+    out = {"store": STORE_DIR, "indexes": {}}
+
+    ledger_n = len(_ledger_remember_by_id())
+    out["ledger_records"] = ledger_n
+
+    try:
+        meta = _load_vector_meta()
+        if not os.path.exists(VECTOR_INDEX):
+            out["indexes"]["vector"] = {"index": "vector", "present": False,
+                                        "healthy": False}
+        else:
+            idx = _get_vector_index()
+            d = _index_drift("vector", meta, index_ntotal=int(idx.ntotal))
+            d["present"] = True
+            d["faiss_ntotal"] = int(idx.ntotal)
+            out["indexes"]["vector"] = d
+    except Exception as e:
+        out["indexes"]["vector"] = {"index": "vector", "error": str(e),
+                                    "healthy": False}
+
+    try:
+        corpus = _load_bm25_corpus()
+        if not os.path.exists(BM25_INDEX):
+            out["indexes"]["bm25"] = {"index": "bm25", "present": False,
+                                      "healthy": False}
+        else:
+            d = _index_drift("bm25", corpus)
+            d["present"] = True
+            d["healthy"] = d["healthy"] and (d["indexed"] > 0 or ledger_n == 0)
+            out["indexes"]["bm25"] = d
+    except Exception as e:
+        out["indexes"]["bm25"] = {"index": "bm25", "error": str(e),
+                                  "healthy": False}
+
+    if os.path.exists(GRAPH_INDEX):
+        g = _load_graph()
+        fact_ids = {fid for n in g["nodes"].values() for fid in n["facts"]}
+        out["indexes"]["graph"] = {
+            "index": "graph", "present": True,
+            "entities": len(g["nodes"]),
+            "edges": len(g["edges"]) // 2,
+            "facts_referenced": len(fact_ids),
+            "healthy": True,
+        }
+    else:
+        out["indexes"]["graph"] = {"index": "graph", "present": False,
+                                   "healthy": False}
+
+    out["healthy"] = all(i.get("healthy") for i in out["indexes"].values())
+    return out
 
 
 def _load_ledger() -> list[dict]:
@@ -596,45 +786,77 @@ def recall(topic: str | None = None, tags: list[str] | None = None,
     return recall_at(as_of=None, topic=topic, tags=tags, k=k, include_simulated=include_simulated)
 
 
+def _correction_axes(recs: list[dict]) -> tuple[dict, dict]:
+    """Map superseded record id -> (known_to, valid_to) from supersede markers.
+
+    `supersede()` writes a marker row carrying the OLD fact's validity window
+    and leaves the original `remember` row on disk untouched. The original
+    therefore still reads `valid_to: null` and looks current forever. A
+    single-axis reader has only two options, both wrong: hide the original
+    (history unreachable) or show it beside its replacement (two answers to one
+    question).
+
+    Splitting the axes resolves it. The original's valid interval ends at the
+    correction because the world changed; its known interval ends at the same
+    instant because our belief changed. They coincide here, but they are
+    independent axes and only the known axis would move if a belief were merely
+    retracted. See mem20temporaldatabasefabricz.temporal for the general engine.
+    """
+    known_to: dict[str, str] = {}
+    valid_to: dict[str, str] = {}
+    for r in recs:
+        if r.get("action") == "supersede" and r.get("supersedes_id"):
+            target = str(r["supersedes_id"])
+            if r.get("valid_to"):
+                valid_to[target] = r["valid_to"]
+                known_to[target] = r["valid_to"]
+            elif r.get("ts"):
+                known_to[target] = r["ts"]
+    return known_to, valid_to
+
+
 def recall_at(as_of: str | None = None, topic: str | None = None, 
               tags: list[str] | None = None, k: int = 5,
               include_simulated: bool = False) -> list[dict]:
-    """Recall facts as they existed at a specific point in time (bi-temporal query).
-    
+    """Recall facts as they existed, and were known, at a specific instant.
+
     Args:
         as_of: ISO timestamp to query state as of that moment (None = now)
         topic: Filter by topic
         tags: Filter by tags
         k: Maximum results
         include_simulated: if True, also surface active simulated records
-    
-    Returns facts that were valid at the given time (valid_from <= as_of < valid_to).
+
+    With `as_of` set, both axes are resolved: the record must have been VALID at
+    that instant AND still be one we BELIEVED then. A fact corrected afterwards
+    is therefore returned, because it was the truth we held at the time asked
+    about; the correction itself is returned for any later instant.
+
+    This is additive. With `as_of=None` the current view is byte-identical to
+    before: superseded rows stay hidden, because the present has one answer.
     """
     recs = _load_ledger()
-    # Filter to remember actions, exclude superseded (content marker OR
-    # supersede-event reference — supersede() appends an event with
-    # supersedes_id pointing at the original row rather than rewriting it).
-    superseded_ids = {
-        str(r.get("supersedes_id"))
-        for r in recs
-        if r.get("action") == "supersede" and r.get("supersedes_id")
-    }
-    recs = [r for r in recs if r.get("action") == "remember"
-            and SUPERSEDED not in r.get("content", "")
-            and str(r.get("id")) not in superseded_ids]
+    superseded_known_to, superseded_valid_to = _correction_axes(recs)
+
+    if as_of is not None:
+        # An as-of query must see the version that was current at that instant,
+        # including one superseded later. Only the non-temporal view hides history.
+        candidates = [r for r in recs if r.get("action") == "remember"
+                      and SUPERSEDED not in r.get("content", "")]
+        recs = [r for r in candidates
+                if _visible_as_of(r, as_of, superseded_known_to, superseded_valid_to)]
+    else:
+        superseded_ids = set(superseded_known_to)
+        recs = [r for r in recs if r.get("action") == "remember"
+                and SUPERSEDED not in r.get("content", "")
+                and str(r.get("id")) not in superseded_ids]
 
     if include_simulated:
         sim = [r for r in _load_simulated_ledger()
                if r.get("action") == "simulate" and not r.get("quarantined")
                and (r.get("valid_to") is None or r.get("valid_to") >= _now())]
         recs = recs + sim
-    
-    # Apply temporal filter
-    if as_of is not None:
-        recs = [r for r in recs 
-                if r.get("valid_from", "") <= as_of 
-                and (r.get("valid_to") is None or r.get("valid_to", "") > as_of)]
-    
+
     if topic:
         recs = [r for r in recs if topic.lower() in r.get("topic", "").lower()]
     if tags:
@@ -644,6 +866,27 @@ def recall_at(as_of: str | None = None, topic: str | None = None,
     # extra event-sourced resolution is needed here.
     recs = list(reversed(recs))
     return recs[:k]
+
+
+def _visible_as_of(rec: dict, as_of: str, known_to: dict, valid_to: dict) -> bool:
+    """Was this record both true and still believed at `as_of`? Half-open."""
+    rid = str(rec.get("id"))
+    start = rec.get("valid_from") or rec.get("ts") or ""
+    if not start or start > as_of:
+        return False
+    end = valid_to.get(rid)
+    if end is None:
+        end = rec.get("valid_to")
+    if end is not None and end <= as_of:
+        return False
+    # If we had already stopped believing it by then, it is not what we held.
+    learned = rec.get("ts") or ""
+    if learned and learned > as_of:
+        return False
+    stopped = known_to.get(rid)
+    if stopped is not None and stopped <= as_of:
+        return False
+    return True
 
 
 def rebuild_index() -> str:
@@ -1017,6 +1260,344 @@ def rebuild_bm25() -> str:
     return f"BM25 index rebuilt with {len(remember_recs)} entries"
 
 
+# =============================================================================
+# Entity / edge graph index
+# =============================================================================
+#
+# The graph is maintained at WRITE time rather than derived per query.
+#
+# The previous implementation rebuilt the whole graph inside every
+# memory_recall_graph call, and it extracted entities by lowercasing the fact
+# and then testing `clean[0].isupper()`. A lowercased character is never
+# uppercase, so the entity set was always empty and the graph had zero nodes
+# and zero edges for every store. Measured on this host's live ledger: 0
+# entities, 0 edges; 1,051 candidate tokens before the lowercase, 0 after.
+#
+# Deriving per query was also the wrong shape independently of the bug. It
+# re-read the whole ledger and re-extracted every entity on each call, and it
+# could not be extended with edges learned after a fact was written.
+
+# Words that carry no entity signal. Without this, "The" and "It" become graph
+# nodes and every sentence collapses into one dense component.
+# Filename-ish tokens: an extension, a path separator, or markdown emphasis.
+# Used to stop adjacent filenames being glued into one fake entity name.
+_GRAPH_FILENAMEISH = re.compile(
+    r"\.(md|py|json|toml|yaml|yml|txt|sh|c|cpp|h|hpp|rs|js|ts|html|css|faiss|db)$",
+    re.IGNORECASE)
+
+_GRAPH_STOPWORDS = frozenset("""
+a an the and or but if then than that this these those is are was were be been
+being have has had do does did will would shall should can could may might must
+it its he she they them his her their we you i me my our your not no nor so as
+at by for from in into of on onto to with without about over under again further
+once here there when where why how all any both each few more most other some
+such only own same too very just also while during before after because between
+out up down off through against among within
+""".split())
+
+
+def _graph_extract_entities(rec: dict) -> list[str]:
+    """Extract entity names from a record's topic, tags, and content.
+
+    Deliberately dependency-free. spaCy is used by the MCP entity_extract tool
+    when the model is installed, but the graph must not silently degrade to an
+    empty graph when it is not, which is exactly what happened before.
+
+    Rules, in priority order:
+      1. The topic, when it is not generic. Topics are the most reliable signal
+         in this store because the author chose them deliberately.
+      2. Every tag. Tags are explicit by definition.
+      3. Proper-noun runs from the content: capitalised word sequences, checked
+         BEFORE any case folding so that `isupper()` can actually be true.
+    """
+    out: list[str] = []
+    seen: set[str] = set()
+
+    def add(raw: str) -> None:
+        name = raw.strip(" \t.,;:!?\"'()[]{}")
+        if not name or len(name) < 2:
+            return
+        # Single capitalised words that are ordinary sentence starters are not
+        # entities. A capitalised run of two or more words always is.
+        if name.lower() in _GRAPH_STOPWORDS:
+            return
+        key = name.lower()
+        if key in seen:
+            return
+        seen.add(key)
+        out.append(name)
+
+    topic = (rec.get("topic") or "").strip()
+    if topic and topic.lower() not in _GRAPH_STOPWORDS:
+        add(topic)
+
+    for tag in rec.get("tags") or []:
+        add(str(tag))
+
+    # Proper-noun runs. Iterate the ORIGINAL string; folding case first is what
+    # made this a no-op.
+    content = rec.get("content") or ""
+    run: list[str] = []
+
+    def flush() -> None:
+        if not run:
+            return
+        if len(run) == 1:
+            add(run[0])
+        else:
+            # A run that contains two filename-like tokens is not one phrase.
+            # "roadmap.md agents.md" is two files, and gluing them produced
+            # entities that match no real name and never get queried. Split the
+            # run at each filename-ish token and keep each piece on its own.
+            if sum(1 for w in run if _GRAPH_FILENAMEISH.match(w)) >= 2:
+                for w in run:
+                    add(w)
+            else:
+                add(" ".join(run))
+
+    for word in content.split():
+        bare = word.strip(" \t.,;:!?\"'()[]{}")
+        if not bare:
+            continue
+        # A filename is an entity whatever its case: "roadmap.md" is a real
+        # named artifact even when lowercase, and excluding it because it does
+        # not start with a capital is how the graph lost every path reference.
+        is_file = bool(_GRAPH_FILENAMEISH.search(bare))
+        if is_file:
+            # A filename starts its own entity: it is a named artifact, never
+            # part of a neighbouring phrase. Flush first so "Read roadmap.md"
+            # does not become one entity, and split so "a.md b.md" does not
+            # become another.
+            flush()
+            add(bare)
+            run = []
+            continue
+        if bare[0].isupper() and bare.lower() not in _GRAPH_STOPWORDS:
+            run.append(bare)
+        else:
+            flush()
+            run = []
+    flush()
+
+    return out
+
+
+def _load_graph() -> dict:
+    """Load the persisted entity/edge graph."""
+    if not os.path.exists(GRAPH_INDEX):
+        return {"nodes": {}, "edges": {}}
+    try:
+        with open(GRAPH_INDEX, "r", encoding="utf-8") as f:
+            g = json.load(f)
+    except Exception:
+        return {"nodes": {}, "edges": {}}
+    g.setdefault("nodes", {})
+    g.setdefault("edges", {})
+    return g
+
+
+def _save_graph(g: dict) -> None:
+    tmp = GRAPH_INDEX + ".tmp"
+    with open(tmp, "w", encoding="utf-8") as f:
+        json.dump(g, f, ensure_ascii=False)
+    os.replace(tmp, GRAPH_INDEX)
+
+
+def _add_to_graph_index(rec: dict) -> None:
+    """Fold a record's entities into the persisted graph."""
+    _assert_grounded(rec, "graph")
+
+    ents = _graph_extract_entities(rec)
+    if not ents:
+        return
+
+    g = _load_graph()
+    rid = rec["id"]
+    key = rec.get("content_hash") or hashlib.md5(
+        rec["content"].encode()).hexdigest()[:16]
+
+    for name in ents:
+        nk = name.lower()
+        node = g["nodes"].get(nk)
+        if node is None:
+            g["nodes"][nk] = {
+                "name": name, "facts": {}, "topics": {}, "first_seen": rec["ts"]}
+            node = g["nodes"][nk]
+        node["facts"][rid] = key
+        topic = rec.get("topic")
+        if topic:
+            node["topics"][topic] = node["topics"].get(topic, 0) + 1
+        node["last_seen"] = rec["ts"]
+
+    # Co-occurrence edges. Every pair of entities in one fact is related, so a
+    # fact naming A and B means B is reachable from A and vice versa.
+    for i, a in enumerate(ents):
+        ak = a.lower()
+        for b in ents[i + 1:]:
+            bk = b.lower()
+            ek = f"{ak}\x00{bk}"
+            rev = f"{bk}\x00{ak}"
+            g["edges"].setdefault(ek, {"a": ak, "b": bk, "facts": {}})
+            g["edges"].setdefault(rev, {"a": bk, "b": ak, "facts": {}})
+            g["edges"][ek]["facts"][rid] = key
+            g["edges"][rev]["facts"][rid] = key
+
+    _save_graph(g)
+
+
+def recall_graph(entity: str, hops: int = 2, max_results: int = 20,
+                 min_facts: int = 1, topic: str | None = None) -> dict:
+    """Traverse the persisted entity graph from `entity`.
+
+    Reads the graph built at write time (see _add_to_graph_index) instead of
+    re-deriving entities per query. The old per-query implementation lowercased
+    each fact and then tested `token[0].isupper()`, which is never true for a
+    lowercased character, so the graph was always empty and this tool could not
+    return a result for any input on any store.
+
+    Returns a dict with `found`, `entities` (each with hop distance and the fact
+    ids that support it), and `facts` resolved from the ledger.
+    """
+    if not entity:
+        return {"found": False, "error": "entity is required", "entities": [],
+                "facts": []}
+
+    if not os.path.exists(GRAPH_INDEX):
+        return {"found": False,
+                "error": "graph index not built; run rebuild_graph()",
+                "entities": [], "facts": [], "graph_present": False}
+
+    g = _load_graph()
+    key = entity.strip().lower()
+
+    # Exact match, then case-insensitive, then substring on the node name so a
+    # partial like "unity" still finds "Unity Editor".
+    if key in g["nodes"]:
+        start = key
+    else:
+        cands = [k for k in g["nodes"] if k == key or key in k]
+        if not cands:
+            return {"found": False,
+                    "error": f"entity not found in graph: {entity!r}",
+                    "known_entities": len(g["nodes"]), "entities": [], "facts": []}
+        start = min(cands, key=lambda k: (abs(len(k) - len(key)), k))
+
+    start_node = g["nodes"][start]
+    if min_facts > 1 and len(start_node["facts"]) < min_facts:
+        return {"found": False,
+                "error": (f"entity {start_node['name']!r} has "
+                          f"{len(start_node['facts'])} facts, "
+                          f"fewer than min_facts={min_facts}"),
+                "entities": [], "facts": []}
+
+    # BFS over co-occurrence edges, recording the hop each entity was reached at.
+    hop_of: dict[str, int] = {start: 0}
+    frontier = [start]
+    for hop in range(1, max(1, hops) + 1):
+        nxt = []
+        for k in frontier:
+            for ek, e in g["edges"].items():
+                if e["a"] != k:
+                    continue
+                nb = e["b"]
+                if nb not in hop_of:
+                    hop_of[nb] = hop
+                    nxt.append(nb)
+        frontier = nxt
+        if not frontier:
+            break
+
+    by_id = _ledger_remember_by_id()
+    entities_out = []
+    fact_ids: list[str] = []
+    for k, hop in sorted(hop_of.items(), key=lambda kv: (kv[1], kv[0])):
+        n = g["nodes"][k]
+        fids = sorted(n["facts"].keys())
+        if topic and not any(topic.lower() in t.lower() for t in n["topics"]):
+            continue
+        entities_out.append({
+            "entity": n["name"],
+            "key": k,
+            "hop": hop,
+            "is_start": k == start,
+            "fact_count": len(fids),
+            "topics": sorted(n["topics"].keys()),
+            "fact_ids": fids,
+            "first_seen": n.get("first_seen"),
+            "last_seen": n.get("last_seen"),
+        })
+        if k != start:
+            fact_ids.extend(fids)
+
+    facts_out = []
+    seen = set()
+    for fid in fact_ids:
+        if fid in seen:
+            continue
+        seen.add(fid)
+        r = by_id.get(fid)
+        if r is None:
+            continue
+        facts_out.append({
+            "id": fid, "ts": r.get("ts"), "topic": r.get("topic"),
+            "tags": r.get("tags"), "priority": r.get("priority"),
+            "content": (r.get("content") or "")[:500],
+        })
+
+    return {
+        "found": True,
+        "start": start_node["name"],
+        "hops": hops,
+        "entities": entities_out[:max_results],
+        "facts": facts_out[:max_results],
+        "entity_count": len(entities_out),
+        "fact_count": len(facts_out),
+        "graph_entities": len(g["nodes"]),
+        "graph_edges": len(g["edges"]) // 2,
+    }
+
+
+def rebuild_graph() -> str:
+    """Rebuild the entity/edge graph from the ledger.
+
+    The graph is derived state, so the ledger stays the single source of truth.
+    """
+    recs = _load_ledger()
+    remember_recs = [r for r in recs if r.get("action") == "remember"
+                     and SUPERSEDED not in r.get("content", "")]
+
+    g: dict = {"nodes": {}, "edges": {}}
+    n_entities = 0
+    for rec in remember_recs:
+        ents = _graph_extract_entities(rec)
+        if not ents:
+            continue
+        n_entities += len(ents)
+        rid = rec["id"]
+        key = hashlib.md5(rec["content"].encode()).hexdigest()[:16]
+        for name in ents:
+            nk = name.lower()
+            node = g["nodes"].setdefault(nk, {
+                "name": name, "facts": {}, "topics": {},
+                "first_seen": rec["ts"], "last_seen": rec["ts"]})
+            node["facts"][rid] = key
+            topic = rec.get("topic")
+            if topic:
+                node["topics"][topic] = node["topics"].get(topic, 0) + 1
+            node["last_seen"] = rec["ts"]
+        for i, a in enumerate(ents):
+            for b in ents[i + 1:]:
+                for ak, bk in ((a.lower(), b.lower()), (b.lower(), a.lower())):
+                    e = g["edges"].setdefault(
+                        f"{ak}\x00{bk}", {"a": ak, "b": bk, "facts": {}})
+                    e["facts"][rid] = key
+
+    _save_graph(g)
+    return (f"Graph index rebuilt: {len(g['nodes'])} entities, "
+            f"{len(g['edges']) // 2} undirected edges, "
+            f"from {len(remember_recs)} facts ({n_entities} entity mentions)")
+
+
 def remember(topic: str, content: str, tags: list[str] | None = None,
              priority: str = "normal", actor: str = "agent",
              valid_from: str | None = None, valid_to: str | None = None,
@@ -1029,13 +1610,28 @@ def remember(topic: str, content: str, tags: list[str] | None = None,
     sanctioned write path for simulation is remember_simulated(). An explicit
     `_allow_simulated=True` is rejected on purpose so no future refactor can
     silently route simulation through remember().
+
+    Trust lock: `epistemic_status` is REQUIRED and validated. Before this, the
+    field defaulted to None and 87.9% of the live store carried no label, while
+    the veto treated a missing label as grounds for trust rather than doubt. A
+    caller that genuinely does not know must say so with
+    epistemic_status='unlabeled', which is honest and refused by the veto.
     """
     if _allow_simulated:
         raise PermissionError(
             "remember() is grounded-only. Simulated content must use "
             "remember_simulated(); this call is refused to protect Step 7.4 separation.")
+    epistemic_status = validate_epistemic_status(epistemic_status, context="remember")
     os.makedirs(ENTRIES, exist_ok=True)
     now = _now()
+
+    # An explicit event time is validated and normalised; a missing one is
+    # recorded as assumed rather than silently stored, so a bi-temporal reader
+    # can tell a declared event time from a defaulted one. See
+    # EVENT_TIME_DECLARED / EVENT_TIME_ASSUMED.
+    if valid_from:
+        valid_from = validate_event_time(valid_from, now=now)
+    event_time_basis = _event_time_basis(valid_from)
     
     cleaned_content = content
     detected_secrets = _detect_only(content) if scrub_secrets else []
@@ -1056,6 +1652,9 @@ def remember(topic: str, content: str, tags: list[str] | None = None,
         "priority": priority,
         "content": cleaned_content,
         "valid_from": valid_from or now,
+        # Declared or assumed. A reader must never mistake an event time that
+        # was defaulted to ingestion time for one a caller actually supplied.
+        "event_time_basis": event_time_basis,
         "valid_to": valid_to,
         "confidence": confidence,
         "epistemic_status": epistemic_status,
@@ -1103,18 +1702,33 @@ def remember(topic: str, content: str, tags: list[str] | None = None,
         except Exception as e:
             print(f"Warning: BM25 indexing failed: {e}", file=sys.stderr)
 
+    # Fold entities into the graph. Derived state, so a failure here is
+    # recoverable with rebuild_graph() and must not fail the write.
+    try:
+        _add_to_graph_index(rec)
+    except Exception as e:
+        print(f"Warning: graph indexing failed: {e}", file=sys.stderr)
+
     rebuild_index()
     return rec
 
 
 def supersede(old_id: str, new_content: str, tags: list[str] | None = None,
-              priority: str = "normal", actor: str = "agent") -> dict:
-    """Supersede an existing fact with new content. Old fact gets marked with SUPERSEDED."""
+              priority: str = "normal", actor: str = "agent",
+              epistemic_status: str | None = None) -> dict:
+    """Supersede an existing fact with new content. Old fact gets marked with SUPERSEDED.
+
+    A correction is a new claim about the world, not a re-statement of the old one,
+    so it is labelled independently. The supersede marker row inherits the OLD fact's
+    status rather than the new one's: it is a statement about the old claim.
+    """
     recs = _load_ledger()
     old_rec = next((r for r in recs if r.get("id") == old_id), None)
     if not old_rec:
         raise ValueError(f"Fact with id {old_id} not found")
-    
+    epistemic_status = validate_epistemic_status(epistemic_status, context="supersede")
+    old_status = old_rec.get("epistemic_status") or UNLABELED
+
     # Mark old fact as superseded
     old_rec["content"] = SUPERSEDED + " " + old_rec.get("content", "")
     _append_ledger({
@@ -1127,10 +1741,11 @@ def supersede(old_id: str, new_content: str, tags: list[str] | None = None,
         "priority": priority,
         "content": SUPERSEDED + " " + old_rec.get("content", ""),
         "supersedes_id": old_id,
+        "epistemic_status": old_status,
         "valid_from": old_rec.get("valid_from"),
         "valid_to": _now(),
     })
-    
+
     # Create new fact
     return remember(
         topic=old_rec.get("topic"),
@@ -1138,12 +1753,20 @@ def supersede(old_id: str, new_content: str, tags: list[str] | None = None,
         tags=tags or old_rec.get("tags", []),
         priority=priority,
         actor=actor,
+        epistemic_status=epistemic_status,
     )
 
 
+
+
 def update_validity(fact_id: str, valid_from: str | None = None, 
                     valid_to: str | None = None, actor: str = "agent") -> dict:
-    """Update the validity window of a fact."""
+    """Update the validity window of a fact.
+
+    The event row restates an existing claim, so it inherits that claim's
+    epistemic status. Changing WHEN a fact held is not a new claim about the
+    world and must not silently acquire a label of its own.
+    """
     recs = _load_ledger()
     old_rec = next((r for r in recs if r.get("id") == fact_id), None)
     if not old_rec:
@@ -1161,38 +1784,7 @@ def update_validity(fact_id: str, valid_from: str | None = None,
         "tags": old_rec.get("tags", []),
         "priority": old_rec.get("priority", "normal"),
         "content": old_rec.get("content", ""),
-        "valid_from": new_valid_from,
-        "valid_to": new_valid_to,
-        "updates_id": fact_id,
-    })
-    
-    return {
-        "id": fact_id,
-        "valid_from": new_valid_from,
-        "valid_to": new_valid_to,
-    }
-
-
-def update_validity(fact_id: str, valid_from: str | None = None, 
-                    valid_to: str | None = None, actor: str = "agent") -> dict:
-    """Update the validity window of a fact."""
-    recs = _load_ledger()
-    old_rec = next((r for r in recs if r.get("id") == fact_id), None)
-    if not old_rec:
-        raise ValueError(f"Fact with id {fact_id} not found")
-    
-    new_valid_from = valid_from if valid_from is not None else old_rec.get("valid_from")
-    new_valid_to = valid_to if valid_to is not None else old_rec.get("valid_to")
-    
-    _append_ledger({
-        "id": f"{int(time.time()*1000):x}{os.urandom(2).hex()}",
-        "ts": _now(),
-        "actor": actor,
-        "action": "update_validity",
-        "topic": old_rec.get("topic"),
-        "tags": old_rec.get("tags", []),
-        "priority": old_rec.get("priority", "normal"),
-        "content": old_rec.get("content", ""),
+        "epistemic_status": old_rec.get("epistemic_status") or UNLABELED,
         "valid_from": new_valid_from,
         "valid_to": new_valid_to,
         "updates_id": fact_id,
@@ -1210,7 +1802,12 @@ def update_validity(fact_id: str, valid_from: str | None = None,
 # =============================================================================
 
 def assess_confidence(fact_id: str, confidence: float, actor: str = "agent") -> dict:
-    """Explicitly set or update confidence score for a fact."""
+    """Explicitly set or update confidence score for a fact.
+
+    Confidence is a separate axis from epistemic status: how sure we are, versus
+    what kind of claim it is. Re-stating the claim here inherits its status rather
+    than acquiring a fresh one.
+    """
     recs = _load_ledger()
     old_rec = next((r for r in _load_ledger() if r.get("id") == fact_id), None)
     if not old_rec:
@@ -1225,6 +1822,7 @@ def assess_confidence(fact_id: str, confidence: float, actor: str = "agent") -> 
         "tags": old_rec.get("tags", []),
         "priority": old_rec.get("priority", "normal"),
         "content": old_rec.get("content", ""),
+        "epistemic_status": old_rec.get("epistemic_status") or UNLABELED,
         "confidence": confidence,
         "updates_id": fact_id,
     })
@@ -1282,13 +1880,24 @@ def _stamp_entry_epistemic_status(topic: str, new_status: str) -> None:
 def set_epistemic_status(fact_id: str, epistemic_status: str, actor: str = "agent") -> dict:
     """Set the epistemic status tag on the ORIGINAL fact record.
 
-    Accepted values: observed, inferred, imagined, user_stated, hypothesis, agent_generated.
-    Stamps the field directly onto the grounded ledger entry and the deep-store header
-    (no event-sourced workaround), so veto/audit/recall read the authoritative value.
+    Accepted values: observed, inferred, imagined, user_stated, hypothesis,
+    agent_generated, unlabeled. Stamps the field directly onto the grounded
+    ledger entry and the deep-store header (no event-sourced workaround), so
+    veto/audit/recall read the authoritative value.
+
+    Re-labelling a SIMULATED record is refused. The simulated partition's
+    `imagined` status is the firewall's anchor; letting it be rewritten would
+    turn the one door that is supposed to be narrow into a revolving one.
     """
-    valid_statuses = ["observed", "inferred", "imagined", "user_stated", "hypothesis", "agent_generated"]
-    if epistemic_status not in valid_statuses:
-        raise ValueError(f"Invalid epistemic_status. Must be one of: {valid_statuses}")
+    epistemic_status = validate_epistemic_status(epistemic_status,
+                                                 context="set_epistemic_status")
+    sim = next((r for r in _load_simulated_ledger()
+                if r.get("id") == fact_id and r.get("action") == "simulate"), None)
+    if sim is not None:
+        raise PermissionError(
+            f"Fact {fact_id} lives in the simulated partition, where epistemic_status "
+            "is immutable ('imagined'). To ground it, use promote_simulated_to_grounded() "
+            "so the promotion and its evidence are recorded.")
 
     old_rec = next((r for r in _load_ledger() if r.get("id") == fact_id and r.get("action") == "remember"), None)
     if not old_rec:
@@ -1362,6 +1971,9 @@ def self_audit(fact_id: str = None, topic: str = None, actor: str = "agent") -> 
         "tags": ["metacognitive", "self_audit"],
         "priority": "normal",
         "content": f"Self-audit initiated for {fact_id or topic or 'general knowledge'}",
+        # The audit event is an observation about the store, not a claim about
+        # the world, so it is labelled as such rather than left blank.
+        "epistemic_status": "observed",
         "audit_target": fact_id,
     })
     
@@ -1638,9 +2250,18 @@ def promote_simulated_to_grounded(sim_id: str, confirmation: str | None = None,
             evidence_hash = hashlib.sha256(
                 json.dumps(ev, sort_keys=True, ensure_ascii=False).encode("utf-8")).hexdigest()
         gate_ok = True
+        # The real world resolved in favour of a previously recorded prediction.
+        # That is the only evidence here strong enough to call the claim observed.
+        promoted_status = "observed"
     else:
         gate_ok = bool(confirmation and str(confirmation).strip())
         evidence_hash = None
+        # A free-text confirmation string is an assertion, not an observation. It
+        # used to stamp "observed", which let any imagined claim be promoted into
+        # a fact that the veto then trusted by writing one line of prose. The
+        # grounding is real - the record exists - but the epistemic claim is a
+        # hypothesis someone made in passing, and it is labelled as one.
+        promoted_status = "hypothesis"
 
     if not gate_ok:
         raise PermissionError(
@@ -1654,7 +2275,7 @@ def promote_simulated_to_grounded(sim_id: str, confirmation: str | None = None,
         priority=sim.get("priority", "normal"),
         actor=actor,
         confidence=sim.get("confidence"),
-        epistemic_status="observed",
+        epistemic_status=promoted_status,
         source=f"promoted:{sim_id}",
         scrub_secrets=True,
     )
@@ -1665,6 +2286,7 @@ def promote_simulated_to_grounded(sim_id: str, confirmation: str | None = None,
         "action": "promote",
         "sim_id": sim_id,
         "promoted_to": grounded["id"],
+        "promoted_status": promoted_status,
         "confirmation": (confirmation or "")[:200],
         "resolution_note": resolution_note[:300],
         "resolved_via_prediction_error": bool(resolved_via_prediction_error),
@@ -1672,6 +2294,7 @@ def promote_simulated_to_grounded(sim_id: str, confirmation: str | None = None,
         "prediction_error_evidence": (prediction_error_evidence if resolved_via_prediction_error else None),
     })
     return {"promoted": True, "sim_id": sim_id, "grounded_id": grounded["id"],
+            "epistemic_status": promoted_status,
             "evidence_hash": evidence_hash,
             "note": "Simulated content promoted to grounded memory via explicit gate."}
 
@@ -1700,11 +2323,106 @@ def quarantine_expired_simulated(actor: str = "agent") -> dict:
     return {"quarantined": quarantined_ids, "count": len(quarantined_ids)}
 
 
+# A pinned block is only flagged when simulated content is substantial enough to
+# be a copied claim rather than incidental shared phrasing. Below this length a
+# match is noise, and a false CONTAMINATED on the live estate is worse than the
+# leak it reports.
+MIN_SIM_CONTENT_MATCH = 24
+
+
+def label_coverage() -> dict:
+    """How many grounded facts carry an epistemic label, and what they say.
+
+    This is the number that answers "is every stored fact labelled as a fact?"
+    Coverage was never reported before: the field existed, the write path
+    defaulted it to None, and nothing ever counted the gap, so 87.9% of the live
+    store was unlabelled and the system reported no problem at all.
+    """
+    recs = [r for r in _load_ledger()
+            if r.get("action") == "remember" and SUPERSEDED not in r.get("content", "")]
+    by_status: dict[str, int] = {}
+    unlabeled: list[str] = []
+    for r in recs:
+        status = r.get("epistemic_status")
+        if not status:
+            # Genuinely absent. Counted as unlabeled and tallied separately from
+            # rows that already carry the literal 'unlabeled', so the two do not
+            # double-count each other in the total below.
+            status = UNLABELED
+            unlabeled.append(r.get("id"))
+        else:
+            by_status[status] = by_status.get(status, 0) + 1
+    by_status[UNLABELED] = by_status.get(UNLABELED, 0) + len(unlabeled)
+    total = len(recs)
+    # 'unlabeled' is the ABSENCE of a finding, so it is not coverage. Counting it
+    # as labeled would mean backfilling the backlog moved the number from 0% to
+    # 100% without establishing a single fact's basis - the audit would report a
+    # fixed store where nothing was actually vouched for.
+    unlabeled_total = by_status.get(UNLABELED, 0)
+    labeled = total - unlabeled_total
+    # An empty store has nothing to cover, and "100% of zero facts are labelled"
+    # is a vacuous claim, not a clean one. Report None so a caller has to decide
+    # what an empty estate means rather than being handed a perfect score.
+    coverage = round(labeled / total, 4) if total else None
+    return {
+        "total": total,
+        "labeled": labeled,
+        "unlabeled": unlabeled_total,
+        "coverage": coverage,
+        "empty": total == 0,
+        "by_status": by_status,
+        "unlabeled_ids": unlabeled[:200],
+        "unlabeled_truncated": len(unlabeled) > 200,
+    }
+
+
+def backfill_epistemic_labels(actor: str = "agent", dry_run: bool = False) -> dict:
+    """Give pre-existing unlabeled grounded facts the honest `unlabeled` label.
+
+    Facts stored before labels were mandatory have no recoverable basis, and the
+    only defensible thing to say about them is that we do not know. Backfilling
+    them `observed` would assert provenance nobody witnessed - manufacturing
+    exactly the confidence this system exists to prevent.
+
+    Only the label field is written. Content, topics and ids are untouched, and
+    the simulated partition is never read or written: its `imagined` status is
+    immutable and it has no unlabeled rows to fix.
+    """
+    recs = _load_ledger()
+    targets = [r for r in recs
+               if r.get("action") == "remember" and not r.get("epistemic_status")]
+    if dry_run:
+        return {"backfilled": 0, "would_backfill": len(targets), "dry_run": True}
+
+    by_topic: dict[str, list[str]] = {}
+    for r in targets:
+        _stamp_grounded_record(r["id"], epistemic_status=UNLABELED)
+        by_topic.setdefault(r.get("topic", ""), []).append(r["id"])
+    for topic, ids in by_topic.items():
+        _stamp_entry_epistemic_status(topic, UNLABELED)
+
+    return {
+        "backfilled": len(targets),
+        "labeled_as": UNLABELED,
+        "topics": len(by_topic),
+        "note": ("Pre-existing unlabeled facts marked 'unlabeled': their basis was "
+                 "never established and cannot be reconstructed after the fact. "
+                 "They are refused by epistemic_veto until a human labels them."),
+    }
+
+
 def audit_contamination(actor: str = "agent") -> dict:
     """Periodic audit: find high-confidence memories whose provenance is simulation."""
     grounded = [r for r in _load_ledger()
                 if r.get("action") == "remember" and SUPERSEDED not in r.get("content", "")]
     simulated = [r for r in _load_simulated_ledger() if r.get("action") == "simulate"]
+
+    # Violation 0: grounded facts with no established epistemic basis. An
+    # unlabeled fact is not a proven contamination, but it is a fact the system
+    # cannot vouch for, and reporting CLEAN while most of the store carries no
+    # label at all was the silence this audit existed to end.
+    coverage = label_coverage()
+    unlabeled_facts = coverage["unlabeled"]
 
     # Violation 1: any grounded fact whose origin is not 'grounded'
     bad_origin = [r["id"] for r in grounded if r.get("origin") not in (None, "grounded")]
@@ -1729,6 +2447,52 @@ def audit_contamination(actor: str = "agent") -> dict:
     except Exception:
         sim_in_bm25 = []
 
+    # Violation 4: any simulated record present in the entity graph.
+    # The graph is a third retrieval surface. Its write path is guarded by
+    # _assert_grounded, but that guard was never checked here, so a leaked id
+    # would have been invisible to the audit.
+    sim_in_graph = []
+    try:
+        g = _load_graph()
+        graph_ids: set[str] = set()
+        for node in (g.get("nodes") or {}).values():
+            graph_ids.update((node.get("facts") or {}).keys())
+        for edge in (g.get("edges") or {}).values():
+            graph_ids.update((edge.get("facts") or {}).keys())
+        sim_in_graph = [r["id"] for r in simulated if r["id"] in graph_ids]
+    except Exception:
+        sim_in_graph = []
+
+    # Violation 5: simulated content reachable through a pinned block.
+    # Pinned blocks are injected at session start and are immune to pruning and
+    # supersede, so a simulated claim pinned once is immortal and cannot be
+    # corrected in place. Detected two ways:
+    #   (a) declared provenance on the block is not grounded
+    #   (b) simulated content appears verbatim inside a block, which is the case
+    #       no write-time firewall can catch (an agent copying imagined text
+    #       into a pin declares nothing)
+    # Reported, never repaired: detection must not rewrite stored content.
+    pinned_bad_origin = []
+    pinned_sim_content = []
+    try:
+        sim_text = []
+        for r in simulated:
+            c = (r.get("content") or "").strip()
+            if len(c) >= MIN_SIM_CONTENT_MATCH:
+                sim_text.append((c, r["id"]))
+        for bid, b in (_load_pinned().get("blocks") or {}).items():
+            if b.get("origin") not in (None, "grounded"):
+                pinned_bad_origin.append(bid)
+            text = (b.get("content") or "").strip()
+            if not text:
+                continue
+            for c, sid in sim_text:
+                if c == text or c in text:
+                    pinned_sim_content.append({"block_id": bid, "simulated_id": sid})
+                    break
+    except Exception:
+        pass
+
     # Validated promotions: grounded facts derived from simulation via an explicit gate
     validated_simulation_derived = [
         {"grounded_id": r["id"], "source": r.get("source")}
@@ -1741,30 +2505,73 @@ def audit_contamination(actor: str = "agent") -> dict:
 
     total_grounded = len(grounded)
     total_sim = len(simulated)
-    violations = len(bad_origin) + len(sim_in_grounded) + len(sim_in_bm25)
+    violations = (len(bad_origin) + len(sim_in_grounded) + len(sim_in_bm25)
+                  + len(sim_in_graph) + len(pinned_bad_origin) + len(pinned_sim_content))
     contamination_rate = round(violations / total_grounded, 4) if total_grounded else 0.0
+
+    # status and recommendation derive from the same determination. Keying the
+    # recommendation off contamination_rate alone reports "no action needed"
+    # while the store is contaminated whenever there are no grounded facts to
+    # divide by - which is exactly the state of a fresh install.
+    #
+    # Unlabeled facts count toward the verdict. They are not proven fiction, but
+    # a store whose facts cannot say what kind of claim they are has not earned
+    # a CLEAN, and the number is reported so the gap can be closed deliberately.
+    clean = not (bad_origin or sim_in_grounded or sim_in_bm25 or sim_in_graph
+                 or pinned_bad_origin or pinned_sim_content or unlabeled_facts)
+
+    if clean:
+        recommendation = "No action needed."
+    else:
+        parts = []
+        if unlabeled_facts:
+            parts.append(
+                f"{unlabeled_facts} grounded fact(s) have no established epistemic "
+                f"basis (coverage {coverage['coverage']:.1%}). Run "
+                "backfill_epistemic_labels() to mark them 'unlabeled', then label "
+                "them individually with set_epistemic_status().")
+        if bad_origin or sim_in_grounded or sim_in_bm25 or sim_in_graph:
+            parts.append("Investigate grounded facts with simulated origin / indexed "
+                         "simulated content.")
+        if pinned_bad_origin or pinned_sim_content:
+            parts.append("Simulated content is pinned as a grounded block.")
+        recommendation = " ".join(parts)
 
     return {
         "grounded_facts": total_grounded,
         "simulated_facts": total_sim,
         "validated_simulation_derived": validated_simulation_derived,
         "promoted_count": len(promoted_ids),
+        "label_coverage": coverage,
         "violations_origin_not_grounded": bad_origin,
         "violations_simulated_in_grounded_index": sim_in_grounded,
         "violations_simulated_in_bm25_corpus": sim_in_bm25,
+        "violations_simulated_in_graph": sim_in_graph,
+        "violations_pinned_origin_not_grounded": pinned_bad_origin,
+        "violations_pinned_simulated_content": pinned_sim_content,
         "contamination_rate": contamination_rate,
-        "status": "CLEAN" if (contamination_rate == 0.0 and not bad_origin
-                             and not sim_in_grounded and not sim_in_bm25) else "CONTAMINATED",
-        "recommendation": "No action needed." if contamination_rate == 0.0 else
-                          "Investigate grounded facts with simulated origin / indexed simulated content.",
+        "status": "CLEAN" if clean else "CONTAMINATED",
+        "recommendation": recommendation,
     }
 
 
 def epistemic_veto(fact_ids: list[str], actor: str = "agent") -> dict:
-    """Epistemic-layer veto: refuse plans resting primarily on unvalidated simulated beliefs.
+    """Epistemic-layer veto: refuse plans resting primarily on unvalidated beliefs.
 
     Any relied-upon fact that is simulated, or grounded but unvalidated
-    (imagined/hypothesis/agent_generated without a promotion source), triggers a veto.
+    (imagined/hypothesis/agent_generated/unlabeled without a promotion source),
+    triggers a veto.
+
+    Two changes close holes this gate previously had, both of which made silence
+    look like trust:
+
+      * A fact id that resolves to NOTHING used to `continue`, so a typo or a
+        hallucinated id produced "OK: plan rests on validated grounded memory."
+        That is the most dangerous possible answer to this question, so an
+        unknown id is now an offender in its own right.
+      * `unlabeled` is now refused. A missing label used to pass because the
+        check only fired on an explicit set of statuses, which made the
+        un-annotated state the most trusted state a fact could be in.
     """
     grounded = {r["id"]: r for r in _load_ledger()
                 if r.get("action") == "remember" and SUPERSEDED not in r.get("content", "")}
@@ -1773,24 +2580,52 @@ def epistemic_veto(fact_ids: list[str], actor: str = "agent") -> dict:
     # veto reads the authoritative current status from the record.
 
     offenders = []
+    unresolved = []
     for fid in fact_ids:
         if fid in simulated:
-            offenders.append({"fact_id": fid, "reason": "relies on unvalidated simulated content"})
+            offenders.append({"fact_id": fid, "kind": "simulated",
+                              "reason": "relies on unvalidated simulated content"})
             continue
         rec = grounded.get(fid)
-        if not rec:
+        if rec is None:
+            # An unverifiable premise is not a validated one. Kept as its own kind
+            # so a caller can tell "we checked and this is bad" from "we could
+            # not check", and appended to offenders as well so a consumer reading
+            # only that list cannot mistake silence for clearance.
+            entry = {"fact_id": fid, "kind": "unverifiable",
+                     "reason": "fact id not found in grounded or simulated store"}
+            unresolved.append(entry)
+            offenders.append(entry)
             continue
-        status = rec.get("epistemic_status")
+        status = rec.get("epistemic_status") or UNLABELED
         src = rec.get("source") or ""
-        if status in ("imagined", "hypothesis", "agent_generated") and not src.startswith("promoted:"):
-            offenders.append({"fact_id": fid, "reason": f"unvalidated epistemic status '{status}'"})
+        # The `promoted:` bypass used to exempt EVERY promotion, because promotion
+        # stamped "observed" unconditionally. A free-text confirmation is not an
+        # observation, so the bypass now applies only where the promotion earned
+        # an observed status through a recorded prediction-error resolution.
+        # Without this narrowing, grounding a guess through one line of prose
+        # produced a record that passed the veto while carrying a hypothesis.
+        promoted_with_evidence = src.startswith("promoted:") and status == "observed"
+        if status in UNVALIDATED_STATUSES and not promoted_with_evidence:
+            offenders.append({"fact_id": fid, "kind": "unvalidated",
+                              "reason": f"unvalidated epistemic status '{status}'"})
 
-    veto = len(offenders) > 0
+    veto = len(offenders) > 0 or len(unresolved) > 0
+    if offenders and unresolved:
+        message = ("VETO: plan relies on unvalidated simulated/imagined beliefs, and "
+                   f"{len(unresolved)} cited fact id(s) could not be verified.")
+    elif offenders:
+        message = "VETO: plan relies on unvalidated simulated/imagined beliefs."
+    elif unresolved:
+        message = ("VETO: cited fact id(s) could not be found. An unverifiable premise "
+                   "is not a validated one.")
+    else:
+        message = "OK: plan rests on validated grounded memory."
     return {
         "veto": veto,
         "offenders": offenders,
-        "message": ("VETO: plan relies on unvalidated simulated/imagined beliefs."
-                    if veto else "OK: plan rests on validated grounded memory."),
+        "unresolved": unresolved,
+        "message": message,
     }
 
 
@@ -1804,9 +2639,10 @@ def require_epistemic_clearance(fact_ids: list[str], actor: str = "agent") -> di
     """
     result = epistemic_veto(fact_ids, actor=actor)
     if result.get("veto"):
+        detail = (result.get("offenders") or []) + (result.get("unresolved") or [])
         raise PermissionError(
             "Epistemic clearance denied: " + result.get("message", "") +
-            " Offenders: " + json.dumps(result.get("offenders", []), ensure_ascii=False))
+            " Problems: " + json.dumps(detail, ensure_ascii=False))
     return result
 
 
@@ -2745,56 +3581,102 @@ def rebuild_vectors() -> str:
 
 
 def recall_semantic(query: str, k: int = 5, topic: str | None = None,
-                    tags: list[str] | None = None) -> list[dict]:
-    """Semantic search using vector embeddings."""
+                    tags: list[str] | None = None,
+                    strict: bool = False) -> list[dict]:
+    """Semantic search using vector embeddings.
+
+    The vector index and the ledger can disagree: the index is append-only and
+    the ledger is not, so a compaction or truncation leaves index entries
+    pointing at records that no longer exist. The previous implementation looked
+    content up by scanning the ledger for each hit and silently dropped every
+    entry it could not resolve, so a store with 2,681 vectors and 371 live
+    records returned zero results while reporting no error. Callers could not
+    distinguish "nothing matches" from "the index is stale".
+
+    Now the desync is measured and returned as a `_index_drift` diagnostic on
+    every result, and `strict=True` turns a drifted store into a loud error
+    instead of a short list.
+    """
     if not VECTOR_AVAILABLE:
         return [{"error": "Vector dependencies not installed"}]
-    
+
     embedder = _get_embedder()
     index = _get_vector_index()
     meta = _load_vector_meta()
-    
+
     if index.ntotal == 0:
         return []
-    
+
+    drift = _index_drift("vector", meta, index_ntotal=int(index.ntotal))
+
+    if strict and drift["missing_from_ledger"]:
+        raise IndexDriftError(
+            f"vector index holds {drift['indexed']} entries but "
+            f"{drift['missing_from_ledger']} of them have no ledger record; "
+            f"only {drift['resolvable']} are retrievable. "
+            f"Run rebuild_vectors() to reindex from the ledger.")
+
+    by_id = _ledger_remember_by_id()
+
     # Encode query
     query_embedding = embedder.encode([query], convert_to_numpy=True)[0]
     query_embedding = _normalize(query_embedding.reshape(1, -1)).astype(np.float32)
-    
-    # Search
-    search_k = min(k * 3, index.ntotal)  # oversample for filtering
+
+    # Oversample hard: filtering and orphan-skipping both discard candidates, so
+    # asking for exactly k can leave far fewer than k usable hits.
+    search_k = min(max(k * 10, 50), index.ntotal)
     scores, indices = index.search(query_embedding, search_k)
-    
+
     results = []
     for score, idx in zip(scores[0], indices[0]):
         if idx == -1:
             continue
+        if idx >= len(meta):
+            # Index and metadata disagree with each other, which is a different
+            # and worse failure than ledger drift. Surface it rather than
+            # indexing past the end of the list.
+            drift.setdefault("meta_out_of_range", 0)
+            drift["meta_out_of_range"] += 1
+            continue
         m = meta[idx]
-        
+
         # Apply filters
         if topic and topic.lower() not in m.get("topic", "").lower():
             continue
         if tags and not any(t in m.get("tags", []) for t in tags):
             continue
-        
-        # Load full content from ledger
-        recs = _load_ledger()
-        full_rec = next((r for r in recs if r.get("id") == m["id"]), None)
-        
-        if full_rec:
-            results.append({
-                "score": float(score),
-                "id": m["id"],
-                "ts": m["ts"],
-                "topic": m["topic"],
-                "tags": m["tags"],
-                "priority": m["priority"],
-                "content": full_rec.get("content", "")[:500],
-            })
-        
+
+        # Resolve content from the ledger. An index entry with no ledger record
+        # is a stale pointer, counted in the diagnostic rather than dropped in
+        # silence.
+        full_rec = by_id.get(m["id"])
+        if full_rec is None:
+            drift["dropped_orphans"] = drift.get("dropped_orphans", 0) + 1
+            continue
+
+        results.append({
+            "score": float(score),
+            "id": m["id"],
+            "ts": m["ts"],
+            "topic": m["topic"],
+            "tags": m["tags"],
+            "priority": m["priority"],
+            # The epistemic label travels with the result. A search that resolves
+            # the claim but drops its kind returns fiction indistinguishably from
+            # fact, which defeats the point of labelling it at write time.
+            "epistemic_status": full_rec.get("epistemic_status") or UNLABELED,
+            "confidence": full_rec.get("confidence"),
+            "source": full_rec.get("source"),
+            "content": full_rec.get("content", "")[:500],
+        })
+
         if len(results) >= k:
             break
-    
+
+    for r in results:
+        r["_index_drift"] = drift
+    if results:
+        results[0]["_index_drift"]["returned"] = len(results)
     return results
 
 
@@ -2815,13 +3697,18 @@ def recall_hybrid(query: str, k: int = 5, topic: str | None = None,
     if not VECTOR_AVAILABLE and not BM25_AVAILABLE:
         return [{"error": "No search dependencies installed"}]
     
-    # Vector search
+    # Vector search. A drifted vector index used to be swallowed by the bare
+    # except here, so hybrid recall quietly degraded to BM25-only while the
+    # caller believed both halves ran. Capture the drift instead.
     vector_results = []
+    vector_error = None
     if VECTOR_AVAILABLE:
         try:
-            vector_results = recall_semantic(query, k * 3, topic, tags)
-        except Exception:
-            pass
+            vector_results = recall_semantic(query, max(k * 3, 30), topic, tags)
+        except IndexDriftError as e:
+            vector_error = str(e)
+        except Exception as e:
+            vector_error = f"{type(e).__name__}: {e}"
     
     # BM25 search
     bm25_results = []
@@ -2832,25 +3719,23 @@ def recall_hybrid(query: str, k: int = 5, topic: str | None = None,
                 corpus = _load_bm25_corpus()
                 query_tokens = query.lower().split()
                 scores = bm25.get_scores(query_tokens)
-                
+
                 # Get top candidates
                 top_indices = np.argsort(scores)[::-1][:k * 3]
-                
+
+                by_id = _ledger_remember_by_id()
                 for idx in top_indices:
                     if idx >= len(corpus):
                         continue
                     m = corpus[idx]
-                    
+
                     # Apply filters
                     if topic and topic.lower() not in m.get("topic", "").lower():
                         continue
                     if tags and not any(t in m.get("tags", []) for t in tags):
                         continue
-                    
-                    # Load full content from ledger
-                    recs = _load_ledger()
-                    full_rec = next((r for r in recs if r.get("id") == m["id"]), None)
-                    
+
+                    full_rec = by_id.get(m["id"])
                     if full_rec:
                         bm25_results.append({
                             "score": float(scores[idx]),
@@ -2859,6 +3744,11 @@ def recall_hybrid(query: str, k: int = 5, topic: str | None = None,
                             "topic": m["topic"],
                             "tags": m["tags"],
                             "priority": m["priority"],
+                            # Both halves of the fusion must carry the label, or
+                            # a BM25-only hit would lose it while a vector hit kept it.
+                            "epistemic_status": full_rec.get("epistemic_status") or UNLABELED,
+                            "confidence": full_rec.get("confidence"),
+                            "source": full_rec.get("source"),
                             "content": full_rec.get("content", "")[:500],
                             "_bm25_score": float(scores[idx]),
                         })
@@ -2929,12 +3819,46 @@ def recall_hybrid(query: str, k: int = 5, topic: str | None = None,
             "topic": r["topic"],
             "tags": r["tags"],
             "priority": r["priority"],
+            # The label survives fusion: whichever half of the hybrid found the
+            # claim, the caller still learns what KIND of claim it is.
+            "epistemic_status": r.get("epistemic_status") or UNLABELED,
+            "confidence": r.get("confidence"),
+            "source": r.get("source"),
             "content": r["content"],
             "_vector_rank": r.get("_vector_rank"),
             "_bm25_rank": r.get("_bm25_rank"),
             "_ce_score": r.get("_ce_score"),
         })
-    
+
+    # Report which halves actually contributed. Previously a dead vector index
+    # was indistinguishable from a store with no semantic matches.
+    #
+    # The halves are judged by whether they ran, not by whether they raised:
+    # a missing vector_index.faiss makes recall_semantic return [] without
+    # raising, so "vector_ran" is the signal and vector_error alone is not.
+    vector_ran = bool(vector_results)
+    bm25_ran = bool(bm25_results)
+    if vector_ran and bm25_ran:
+        degraded = "both"
+    elif bm25_ran:
+        degraded = "bm25_only"
+    elif vector_ran:
+        degraded = "vector_only"
+    else:
+        degraded = "neither"
+    retrieval = {
+        "vector_ran": vector_ran,
+        "bm25_ran": bm25_ran,
+        "vector_error": vector_error,
+        "vector_available": VECTOR_AVAILABLE,
+        "bm25_available": BM25_AVAILABLE,
+        "degraded_to": degraded,
+        "cross_encoder": USE_CROSS_ENCODER and any(
+            r.get("_ce_score") is not None for r in results),
+    }
+    for r in results:
+        r["_retrieval"] = retrieval
+
     return results
 
 
@@ -2948,7 +3872,10 @@ def main(argv=None):
     pr.add_argument("--tags", default="")
     pr.add_argument("--priority", default="normal")
     pr.add_argument("--confidence", type=float)
-    pr.add_argument("--epistemic-status", choices=["observed", "inferred", "imagined", "user_stated", "hypothesis", "agent_generated"])
+    pr.add_argument("--epistemic-status",
+                    choices=EPISTEMIC_STATUSES + [UNLABELED],
+                    help="Required: how this claim was learned. Refuses to store "
+                         "a fact whose epistemic basis is undeclared.")
     pr.add_argument("--source")
     pr.add_argument("--valid-from")
     pr.add_argument("--valid-to")
@@ -2970,6 +3897,9 @@ def main(argv=None):
     ps.add_argument("--content", required=True)
     ps.add_argument("--tags", default="")
     ps.add_argument("--priority", default="normal")
+    ps.add_argument("--epistemic-status",
+                    choices=EPISTEMIC_STATUSES + [UNLABELED],
+                    help="Required: how the corrected claim was learned.")
 
     pu = sub.add_parser("update_validity")
     pu.add_argument("--id", required=True)
@@ -2979,6 +3909,11 @@ def main(argv=None):
     pl = sub.add_parser("ledger")
     pl.add_argument("--k", type=int, default=20)
     pl.add_argument("--since")
+
+    sub.add_parser("label_coverage")
+
+    pbl = sub.add_parser("backfill_labels")
+    pbl.add_argument("--dry-run", action="store_true")
 
     pv = sub.add_parser("rebuild_vectors")
     pv.add_argument("--k", type=int, default=5)
@@ -3128,6 +4063,22 @@ def main(argv=None):
             print()
     elif args.cmd == "ledger":
         print(ledger_view(args.k, args.since))
+    elif args.cmd == "label_coverage":
+        cov = label_coverage()
+        pct = "n/a (store is empty)" if cov["empty"] else f"{cov['coverage']:.1%}"
+        print(f"label coverage: {cov['labeled']}/{cov['total']} ({pct})")
+        for status, n in sorted(cov["by_status"].items(), key=lambda kv: -kv[1]):
+            print(f"  {status:16s} {n}")
+        if cov["unlabeled"]:
+            print(f"unlabeled (no established basis): {cov['unlabeled']}")
+            print("run: memory.py backfill_labels   (marks them 'unlabeled')")
+    elif args.cmd == "backfill_labels":
+        rep = backfill_epistemic_labels(dry_run=getattr(args, "dry_run", False))
+        if rep.get("dry_run"):
+            print(f"would backfill {rep['would_backfill']} fact(s) -> {UNLABELED}")
+        else:
+            print(f"backfilled {rep['backfilled']} fact(s) -> {rep['labeled_as']}")
+            print(rep["note"])
     elif args.cmd == "recall_at":
         as_of = args.as_of
         tags = [t.strip() for t in args.tags.split(",") if t.strip()] if args.tags else []
@@ -3141,7 +4092,8 @@ def main(argv=None):
             print()
     elif args.cmd == "supersede":
         tags = [t.strip() for t in args.tags.split(",") if t.strip()] if args.tags else []
-        r = supersede(args.id, args.content, tags, args.priority)
+        r = supersede(args.id, args.content, tags, args.priority,
+                      epistemic_status=getattr(args, "epistemic_status", None))
         print(f"superseded -> {r['id']} ({r['topic']})")
     elif args.cmd == "update_validity":
         r = update_validity(args.id, args.valid_from, args.valid_to)

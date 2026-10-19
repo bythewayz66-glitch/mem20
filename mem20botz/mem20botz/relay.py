@@ -22,7 +22,11 @@ Losing the scribe must never take the crew offline.
 
 from __future__ import annotations
 
+import json
+import os
 import re
+import time
+from pathlib import Path
 from typing import Any, Callable, Optional
 
 from .base import Bot
@@ -46,6 +50,17 @@ SECRET_PATTERNS = (
     re.compile(r"\bxox[baprs]-[A-Za-z0-9-]{10,}\b"),
     re.compile(r"\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}\b"),
 )
+
+
+def _transcript_path() -> str:
+    """Where the channel transcript lives.
+
+    Deliberately beside the memory store rather than inside it: the transcript
+    must be greppable history without ever entering the fact store, where it
+    would be retrieved as if it were knowledge.
+    """
+    base = os.environ.get("MEM20_STORE_PATH") or os.path.expanduser("~/.mem20/store")
+    return os.path.join(base, "irc_transcript.jsonl")
 
 
 def mask_secrets(text: str) -> str:
@@ -97,37 +112,40 @@ class RelayBot(Bot):
         self.warned = 0
         super().__init__(
             nick=nick, name="relay", channel=channel, host=host, port=port,
-            purpose=("the scribe — stores a redacted digest of the channel "
-                     "into mem20 memory so the conversation is searchable "
-                     "afterwards"),
-            source_of_truth=("mem20 memory (a reader only: it never speaks, "
-                             "never claims work, and never rewrites the "
-                             "channel transcript — secret-shaped text is "
-                             "masked on the value being stored)"),
+            purpose=("the scribe — keeps a redacted transcript of the channel "
+                     "so the conversation stays searchable afterwards"),
+            source_of_truth=("a dedicated append-only transcript file, NOT the "
+                             "fact store (it never speaks, never claims work, "
+                             "and secret-shaped text is masked on the value "
+                             "being written)"),
             commands={"relaystatus": self.cmd_status},
-            help_text="relay: !relaystatus — channel digest → mem20 memory",
+            help_text="relay: !relaystatus — channel transcript status",
         )
 
     # ------------------------------------------------------------- storage
-    #: The real mem20 memory entry point. Resolved once, lazily, because
-    #: importing it at module load would make the relay unusable (and its
-    #: tests unrunnable) outside the estate.
-    def _store_fn(self) -> Optional[Callable[..., object]]:
-        if self._store is not None:
-            return self._store
-        if self._resolved is not False:
-            return self._resolved
-        try:
-            import memory_engine.memory as mem  # type: ignore
-            self._resolved = getattr(mem, "remember", None)
-        except Exception:  # noqa: BLE001
-            self._resolved = None
-        return self._resolved
+    # The former _store_fn() resolver lived here and is gone: it existed only
+    # to hand record() a memory.remember callable, and record() no longer
+    # writes to the fact store. Leaving it would leave a dead import path that
+    # still looks like the thing persisting chat.
 
     def record(self, nick: str, text: str) -> bool:
-        """Store one message. Returns True when it actually landed.
+        """Append one message to the channel transcript. True when it landed.
 
-        Never raises: a memory failure is a scribe problem, not a channel
+        2026-10-12: this used to call memory.remember(topic="irc:mem20").
+        That was wrong twice over. IRC lines are ephemeral chat, not durable
+        knowledge, so storing them as facts polluted recall - 330 of the 434
+        unlabeled live facts were IRC presence chatter such as "sdk here. Try
+        !help for what I can do.". And the write carried no
+        epistemic_status, so the enforcement contract refused it, surfacing as
+        background errors for the operator.
+
+        The scribe's actual purpose is still worth keeping: the conversation
+        should be searchable afterwards. So the digest now goes to a dedicated
+        append-only transcript instead of the fact store. Same masking, same
+        counters, same never-raise contract - it just stops claiming that chat
+        is knowledge.
+
+        Never raises: a write failure is a scribe problem, not a channel
         problem, and must not stop the relay from reading the next line.
         """
         body = (text or "").strip()[:MAX_STORE_CHARS]
@@ -136,23 +154,13 @@ class RelayBot(Bot):
         safe = mask_secrets(body)
         if safe != body:
             self.masked += 1
-        content = f"[#mem20] {nick}: {safe}"
-        fn = self._store_fn()
-        if fn is None:
-            self.failures += 1
-            self._warn_once()
-            return False
+        line = {"ts": time.time(), "channel": self.channel, "nick": nick,
+                "text": safe}
         try:
-            fn(topic="irc:mem20", content=content,
-               tags=["irc", "#mem20", "crew-chat"])
-        except TypeError:
-            # Tolerate a simpler signature rather than losing the line.
-            try:
-                fn(content)
-            except Exception:  # noqa: BLE001
-                self.failures += 1
-                self._warn_once()
-                return False
+            path = Path(_transcript_path())
+            path.parent.mkdir(parents=True, exist_ok=True)
+            with path.open("a", encoding="utf-8") as fh:
+                fh.write(json.dumps(line, ensure_ascii=False) + "\n")
         except Exception:  # noqa: BLE001
             self.failures += 1
             self._warn_once()
@@ -184,6 +192,12 @@ class RelayBot(Bot):
         super().on_message(msg)
 
     def cmd_status(self, bot: Bot, msg: Message, args: str) -> str:
-        health = "connected" if self._store_fn() else "memory UNREACHABLE"
-        return (f"relay: {health} | stored {self.stored} | masked {self.masked} "
+        # Health is whether the transcript is writable, not whether memory is
+        # reachable: the relay no longer depends on the fact store at all.
+        try:
+            Path(_transcript_path()).parent.mkdir(parents=True, exist_ok=True)
+            health = "transcript OK"
+        except Exception:  # noqa: BLE001
+            health = "transcript UNWRITABLE"
+        return (f"relay: {health} | written {self.stored} | masked {self.masked} "
                 f"| failures {self.failures} | uptime {int(self.uptime())}s")

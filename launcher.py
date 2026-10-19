@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
 """Console-script entry point for mem20 (`mem20-mcp`).
 
-The real MCP server lives in the local `mcp/` directory and is designed to be
-run as a *script* (``python mcp/mcp_server.py``), not imported as a package.
-Importing it as ``mcp.mcp_server`` would shadow the ``mcp`` SDK package and
-break ``from mcp.server import Server``.
+The MCP server lives at ``/opt/mem20/mcp/`` (the single canonical copy) and is
+designed to be run as a *script* (``python mcp/mcp_server.py``), not imported
+as a package. Importing it as ``mcp.mcp_server`` would shadow the ``mcp`` SDK
+package and break ``from mcp.server import Server``.
 
 This launcher finds the bundled server directory, puts it on ``sys.path``, and
 runs ``mcp_server.py`` via runpy — exactly as ``python mcp/mcp_server.py``
@@ -29,9 +29,8 @@ def _mcp_dir() -> str:
     # Installed-package fallback: MCP files shipped as package data.
     try:
         p = files("mem20_runtime").joinpath("mcp")
-        path = Path(p)
-        if path.is_dir():
-            return str(path)
+        if p.is_dir():
+            return str(p)
     except Exception:
         pass
     raise RuntimeError("Could not locate the bundled mem20 MCP server directory.")
@@ -41,7 +40,7 @@ def main() -> None:
     mcp_dir = _mcp_dir()
     if mcp_dir not in sys.path:
         sys.path.insert(0, mcp_dir)
-    # Run the bundled entry-point exactly like `python mcp/mcp_server.py`.
+    # Run the entry-point exactly like `python mcp/mcp_server.py`.
     runpy.run_path(os.path.join(mcp_dir, "mcp_server.py"), run_name="__main__")
 
 

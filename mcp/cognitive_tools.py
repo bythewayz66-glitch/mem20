@@ -13,7 +13,13 @@ import time
 from pathlib import Path
 from typing import Any, Dict, List, Optional
 
-import mcp_types as mt
+try:
+    from mcp.server import Server
+    from mcp.server.lowlevel.server import ServerRequestContext
+    import mcp_types as mt
+except ImportError:
+    print("Error: mcp package not installed. Please install with: pip install mcp")
+    sys.exit(1)
 
 sys.path.insert(0, os.environ.get("MEM20_STORE_PATH", os.path.expanduser("~/.mem20/store")))
 try:
@@ -29,7 +35,7 @@ class CognitiveToolsMixin:
             name="cog_process",
             title="Cognitive Process",
             description="Process a thought through mem20's cognitive engine",
-            input_schema={
+            inputSchema={
                 "type": "object",
                 "properties": {
                     "thought": {"type": "string", "description": "The thought to process"},
@@ -43,7 +49,7 @@ class CognitiveToolsMixin:
             name="cog_chain",
             title="Cognitive Chain",
             description="Run a chain of cognitive operations",
-            input_schema={
+            inputSchema={
                 "type": "object",
                 "properties": {
                     "steps": {"type": "array", "items": {"type": "string"}, "description": "Sequence of thought steps"},
@@ -56,7 +62,7 @@ class CognitiveToolsMixin:
             name="cog_reason",
             title="Cognitive Reason",
             description="Structured multi-step reasoning with explicit working memory and metacognition",
-            input_schema={
+            inputSchema={
                 "type": "object",
                 "properties": {
                     "problem": {"type": "string", "description": "Problem or question to reason about"},
@@ -72,7 +78,7 @@ class CognitiveToolsMixin:
             name="cog_plan",
             title="Cognitive Plan",
             description="Explicit planning with hierarchical decomposition, resource estimation, and dependency tracking",
-            input_schema={
+            inputSchema={
                 "type": "object",
                 "properties": {
                     "goal": {"type": "string", "description": "Goal to plan for"},
@@ -88,7 +94,7 @@ class CognitiveToolsMixin:
             name="cog_reflect",
             title="Cognitive Reflect",
             description="Metacognitive reflection - evaluate own thinking process, identify biases, improve future reasoning",
-            input_schema={
+            inputSchema={
                 "type": "object",
                 "properties": {
                     "thought_process": {"type": "string", "description": "Description of the thought process to reflect on"},
@@ -102,7 +108,7 @@ class CognitiveToolsMixin:
             name="cog_working_memory",
             title="Cognitive Working Memory",
             description="Simulate working memory - hold, manipulate, and transform information chunks",
-            input_schema={
+            inputSchema={
                 "type": "object",
                 "properties": {
                     "operation": {"type": "string", "enum": ["store", "retrieve", "transform", "combine", "clear"], "description": "Working memory operation"},
@@ -117,7 +123,7 @@ class CognitiveToolsMixin:
             name="theory_of_mind_simulate",
             title="Theory of Mind Simulation",
             description="Simulate another agent's knowledge, beliefs, and reasoning",
-            input_schema={
+            inputSchema={
                 "type": "object",
                 "properties": {
                     "agent_model": {"type": "object", "description": "Model of other agent {knowledge, beliefs, goals}"},
@@ -131,7 +137,7 @@ class CognitiveToolsMixin:
             name="theory_of_mind_perspective",
             title="Perspective Taking",
             description="Generate perspective-taking: 'what this looks like from X's knowledge/values'",
-            input_schema={
+            inputSchema={
                 "type": "object",
                 "properties": {
                     "entity": {"type": "string", "description": "Entity to take perspective of"},
@@ -145,7 +151,7 @@ class CognitiveToolsMixin:
             name="corrigibility_shutdown",
             title="Corrigible Shutdown",
             description="Initiate controlled shutdown with memory export",
-            input_schema={
+            inputSchema={
                 "type": "object",
                 "properties": {
                     "reason": {"type": "string", "description": "Shutdown reason", "default": "User requested"},
@@ -159,7 +165,7 @@ class CognitiveToolsMixin:
             name="corrigibility_capability_tier",
             title="Set Capability Tier",
             description="Set capability tier (read-only, read-write, admin) for corrigibility",
-            input_schema={
+            inputSchema={
                 "type": "object",
                 "properties": {
                     "tier": {"type": "string", "enum": ["read_only", "read_write", "admin"], "description": "Capability tier"},
@@ -172,7 +178,7 @@ class CognitiveToolsMixin:
             name="imagination_concept",
             title="Imagination Concept",
             description="Generate and explore creative concepts using memory + cognitive synthesis",
-            input_schema={
+            inputSchema={
                 "type": "object",
                 "properties": {
                     "seed": {"type": "string", "description": "Seed idea or prompt"},
@@ -187,7 +193,7 @@ class CognitiveToolsMixin:
             name="imagination_visualize",
             title="Imagination Visualize",
             description="Create a 3D scene in Blender representing a concept",
-            input_schema={
+            inputSchema={
                 "type": "object",
                 "properties": {
                     "concept": {"type": "string", "description": "Concept to visualize"},
@@ -202,7 +208,7 @@ class CognitiveToolsMixin:
             name="imagination_prototype",
             title="Imagination Prototype",
             description="Generate a Unity prototype from a concept",
-            input_schema={
+            inputSchema={
                 "type": "object",
                 "properties": {
                     "concept": {"type": "string", "description": "Concept to prototype"},
@@ -213,11 +219,26 @@ class CognitiveToolsMixin:
                 "required": ["concept", "project_path"],
             },
         )
+        self.tools["imagination_dream"] = mt.Tool(
+            name="imagination_dream",
+            title="Imagination Dream",
+            description="Free-form creative exploration: memory -> cognitive -> visualize -> prototype loop",
+            inputSchema={
+                "type": "object",
+                "properties": {
+                    "prompt": {"type": "string", "description": "Starting prompt or theme"},
+                    "iterations": {"type": "integer", "description": "Number of dream cycles", "default": 3},
+                    "output_mode": {"type": "string", "enum": ["concepts", "blender", "unity", "all"], "description": "What to produce", "default": "all"},
+                    "memory_topics": {"type": "array", "items": {"type": "string"}, "description": "Memory topics to draw from", "default": []},
+                },
+                "required": ["prompt"],
+            },
+        )
         self.tools["imagination_critique"] = mt.Tool(
             name="imagination_critique",
             title="Imagination Critique",
             description="Critique and refine a concept using adversarial cognitive evaluation",
-            input_schema={
+            inputSchema={
                 "type": "object",
                 "properties": {
                     "concept": {"type": "string", "description": "Concept to critique"},
@@ -231,7 +252,7 @@ class CognitiveToolsMixin:
             name="imagination_simulate",
             title="Imagination Simulate",
             description="Generative simulation - run mental simulations of scenarios with branching futures",
-            input_schema={
+            inputSchema={
                 "type": "object",
                 "properties": {
                     "scenario": {"type": "string", "description": "Initial scenario to simulate"},
@@ -259,7 +280,7 @@ class CognitiveToolsMixin:
             name="imagination_counterfactual",
             title="Imagination Counterfactual",
             description="Counterfactual reasoning - explore 'what if' alternatives to past or present decisions",
-            input_schema={
+            inputSchema={
                 "type": "object",
                 "properties": {
                     "factual_premise": {"type": "string", "description": "What actually happened / current state"},
@@ -274,7 +295,7 @@ class CognitiveToolsMixin:
             name="imagination_recombine",
             title="Imagination Recombine",
             description="Creative recombination - blend concepts, transfer patterns across domains, generate novel combinations",
-            input_schema={
+            inputSchema={
                 "type": "object",
                 "properties": {
                     "concepts": {"type": "array", "items": {"type": "string"}, "description": "Concepts to recombine (2-5)"},
@@ -289,7 +310,7 @@ class CognitiveToolsMixin:
             name="imagination_model",
             title="Imagination Model",
             description="Mental modeling - build and query explicit mental models of systems, dynamics, and relationships",
-            input_schema={
+            inputSchema={
                 "type": "object",
                 "properties": {
                     "system": {"type": "string", "description": "System to model (e.g., 'game economy', 'user onboarding', 'neural network training')"},
@@ -412,7 +433,9 @@ class CognitiveToolsMixin:
                 topic="corrigibility_tier",
                 content=f"Capability tier set to: {tier} by {actor}",
                 tags=["corrigibility", "tier", tier, f"actor_{actor}"],
-                priority="high"
+                priority="high",
+                # An access-control fact set by a named actor: observed.
+                epistemic_status="observed"
             )
             
             tier_descriptions = {
@@ -717,6 +740,73 @@ class CognitiveToolsMixin:
             return out
         except Exception as e:
             return f"[imagination_critique] Error: {e}"
+    async def _imagination_dream(self, args: Dict) -> str:
+        """Free-form creative exploration: memory -> cognitive -> visualize -> prototype loop.
+
+        Routes to the mem20dreamz engine: creates an active lineage from the seed,
+        claims the idle run lock, and runs up to `iterations` real iteration cycles
+        (critique, verdict, invent, forecast, accept/reject). Output is a summary
+        of the lineage; the full artifact lives in the dream store and its braid.
+        """
+        prompt = args.get("prompt", "")
+        iterations = min(int(args.get("iterations", 3)), 5)
+        output_mode = args.get("output_mode", "all")
+        memory_topics = args.get("memory_topics", [])
+
+        if not prompt:
+            return "Error: prompt is required"
+        try:
+            sys.path.insert(0, "/opt/mem20")
+            from mem20dreamz import engine as dreamz_engine
+            from mem20dreamz import idle as dreamz_idle
+            from mem20dreamz import ledger as dreamz_ledger
+            from mem20dreamz.lineage import Lineage
+
+            foundation = ", ".join(memory_topics) or ""
+            lineage = dreamz_engine.new_dream(prompt, kind="active", foundation=foundation)
+            claim = dreamz_idle.claim_active(lineage.dream_id)
+            if not claim.get("claimed"):
+                return (
+                    f"Error: another dream run is active: "
+                    f"{claim.get('reason', 'the run lock is held')}"
+                )
+            run = 0
+            paused = None
+            try:
+                while run < iterations and not lineage.done:
+                    run += 1
+                    n = lineage.iteration_count + 1
+                    try:
+                        iteration = dreamz_engine.run_iteration(lineage, n)
+                    except Exception as exc:
+                        lineage.paused = True
+                        lineage.pause_reason = str(exc)[:400]
+                        lineage.save()
+                        paused = str(exc)
+                        break
+                    lineage.record(iteration)
+                    try:
+                        dreamz_ledger.commit_iteration(lineage, iteration)
+                    except Exception:
+                        pass
+            finally:
+                dreamz_idle.release_active()
+            lineage.save()
+            artifact = lineage.current_artifact()
+            summary = {
+                "dream_id": lineage.dream_id,
+                "iterations_run": run,
+                "iteration_count": lineage.iteration_count,
+                "done": lineage.done,
+                "output_mode": output_mode,
+                "artifact_chars": len(artifact),
+                "paused": paused,
+                "preview": artifact[:800],
+            }
+            self._persist_simulated(args, json.dumps(summary)[:2000], "dream")
+            return json.dumps(summary)
+        except Exception as e:
+            return f"[imagination_dream] Error: {e}"
     async def _imagination_simulate(self, args: Dict) -> str:
         """Generative simulation - run mental simulations of scenarios with branching futures."""
         scenario = args.get("scenario", "")

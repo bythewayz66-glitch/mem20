@@ -1,0 +1,221 @@
+{
+ "frozen": true,
+ "frozen_at": "2026-10-12",
+ "rule": "NO ADDITIONS unless a NEW method is demonstrated to beat every existing method on the same benchmark under the same harness. Prose claims do not count. Rename/recomposition of an existing method is not a new method.",
+ "harness": {
+  "corpus": "opencode.db, READ-ONLY via sqlite URI mode=ro",
+  "chunks": 21449,
+  "sessions": 158,
+  "queries": 1124,
+  "query_types": [
+   "q_idf",
+   "q_head",
+   "q_mixed"
+  ],
+  "store": "ISOLATED: MEM20_STORE_PATH=/opt/mem20/bench/store (live store never a target)",
+  "embedder": "local all-MiniLM-L6-v2 384-dim, offline (HF_HUB_OFFLINE=1)",
+  "reranker": "local cross-encoder/ms-marco-MiniLM-L-6-v2, offline"
+ },
+ "competitor_bar": {
+  "target": "beat Hindsight 94.6% on agentmemorybenchmark longmemeval setup",
+  "reference_only": "Stashbird arXiv 2609.34242 - only common-harness comparison",
+  "warning": "Published numbers are NOT comparable across harnesses. Zep ranges 58.5-94.7, Mem0 ranges 24.5-94.4. MemPalace 96.6 is R@5 with verbatim storage - a retrieval-only ceiling, NOT an end-to-end judge number."
+ },
+ "methods": [
+  {
+   "n": 3,
+   "name": "dense vector",
+   "entry": "memory.recall_semantic",
+   "status": "working"
+  },
+  {
+   "n": 4,
+   "name": "BM25 sparse",
+   "entry": "memory recall_hybrid (sparse half)",
+   "status": "working"
+  },
+  {
+   "n": 5,
+   "name": "hybrid",
+   "entry": "memory.recall_hybrid",
+   "status": "working_but_score_degenerate",
+   "note": "score field has ~0 dynamic range (0.007576 for real AND nonsense queries)"
+  },
+  {
+   "n": 6,
+   "name": "cross-encoder rerank",
+   "entry": "retrieval_v2.rerank",
+   "status": "working_in_v2",
+   "note": "ENGINE DEFECT OPEN: memory.py recompute block emits no scores; see open_defects"
+  },
+  {
+   "n": 7,
+   "name": "metadata filters",
+   "entry": "memory.recall(topic=,tags=)",
+   "status": "working"
+  },
+  {
+   "n": 8,
+   "name": "bi-temporal",
+   "entry": "memory.recall_at",
+   "status": "working_exceeds_spec",
+   "note": "valid-time AND transaction-time; exceeds plain time filtering"
+  },
+  {
+   "n": 9,
+   "name": "graph traversal",
+   "entry": "memory.recall_graph",
+   "status": "working"
+  },
+  {
+   "n": 1,
+   "name": "recency/decay",
+   "entry": "retrieval_v2.recency_decay",
+   "status": "working_unverified_on_corpus",
+   "note": "mechanism verified; bench corpus timestamps are all ~now so decay is not differentiated"
+  },
+  {
+   "n": 14,
+   "name": "multi-query",
+   "entry": "retrieval_v2.hyde_expand",
+   "status": "working",
+   "note": "deterministic offline HyDE (no LLM) - pseudo-doc from store vocabulary"
+  },
+  {
+   "n": 16,
+   "name": "MMR diversity",
+   "entry": "retrieval_v2.mmr",
+   "status": "working",
+   "proof": "mean pairwise similarity 0.0465 -> 0.0225 (52% redundancy cut)"
+  },
+  {
+   "n": 18,
+   "name": "KV exact lookup",
+   "entry": "retrieval_v2.get_by_id",
+   "status": "working",
+   "proof": "bogus id -> found=False; real id -> found=True over 483 records"
+  },
+  {
+   "n": 21,
+   "name": "failure memory",
+   "entry": "retrieval_v2.failure_memory",
+   "status": "working",
+   "proof": "examined 15 candidates, surfaced 2 post-mortem records"
+  },
+  {
+   "n": 23,
+   "name": "associative reconstruction",
+   "entry": "retrieval_v2.associative_reconstruct",
+   "status": "working",
+   "proof": "4 seeds, 1 hop, 12 graph facts fused"
+  },
+  {
+   "n": 24,
+   "name": "procedural/skill",
+   "entry": "memory.procedural_get_skill",
+   "status": "working",
+   "proof": "6 skills in procedural_memory.json"
+  }
+ ],
+ "modality_slots": [
+  {
+   "slot": "chat primary",
+   "model": "moonshotai/kimi-k3",
+   "status": "working"
+  },
+  {
+   "slot": "chat fallback x6",
+   "model": "nemotron-3-super/ultra, glm-5.3/-flash, gpt-oss-20b, nemotron-3.5-lightning",
+   "status": "working"
+  },
+  {
+   "slot": "translate",
+   "model": "nvidia/riva-translate-4b-instruct-v2",
+   "status": "working"
+  },
+  {
+   "slot": "embed",
+   "model": "nvidia/nemotron-3-embed-1b",
+   "status": "working",
+   "proof": "2048-dim"
+  },
+  {
+   "slot": "safety",
+   "model": "nvidia/nemotron-3.5-content-safety",
+   "status": "working",
+   "proof": "unsafe/safe"
+  },
+  {
+   "slot": "optimize",
+   "model": "nvidia/ising-calibration-1.5-31b",
+   "status": "working_with_caveat",
+   "caveat": "spin assignment verified correct 4/4 runs; self-reported objective WRONG every run"
+  },
+  {
+   "slot": "generate_ui",
+   "model": "meta/muse-glimmer-30b",
+   "status": "working",
+   "proof": "1886B HTML"
+  },
+  {
+   "slot": "code",
+   "model": "OpenRouter :free (laguna-s-2.1, north-mini-code, laguna-xs)",
+   "status": "working"
+  },
+  {
+   "slot": "tts",
+   "model": "gemini-2.5-flash-preview-tts",
+   "status": "working",
+   "proof": "2.25s 24kHz mono WAV"
+  },
+  {
+   "slot": "asr",
+   "model": "Systran/faster-whisper-base (local)",
+   "status": "working",
+   "proof": "TTS->ASR round-trip exact"
+  }
+ ],
+ "open_defects": [
+  {
+   "id": "CE-1",
+   "severity": "high",
+   "summary": "recall_hybrid cross-encoder block computes scores but none reach the output",
+   "evidence": "/tmp/opencode/proof/ce_probe_final.json",
+   "observed": [
+    "USE_CROSS_ENCODER True",
+    "_get_cross_encoder() called",
+    "predict() returns 10 scores",
+    "no failure warning emitted",
+    "all returned _ce_score = None"
+   ],
+   "impact": "every hybrid rerank on the live system silently did nothing",
+   "mitigation": "retrieval_v2.rerank() implements and verifies the same thing"
+  },
+  {
+   "id": "SCORE-1",
+   "severity": "high",
+   "summary": "recall_hybrid score has no dynamic range (0.007576 real vs 0.007576 nonsense)",
+   "impact": "blocks #15 weighted multi-factor scoring; RRF + learned weights are incompatible without it"
+  },
+  {
+   "id": "EPI-1",
+   "severity": "high",
+   "summary": "412/493 live facts (84%) epistemically unlabeled; bot agents write with no status",
+   "impact": "epistemic veto refuses them; surfaces as background errors"
+  },
+  {
+   "id": "REC-1",
+   "severity": "low",
+   "summary": "recency decay unverified on bench corpus - all timestamps ~now",
+   "impact": "mechanism works but this corpus cannot demonstrate differentiation"
+  }
+ ],
+ "excluded_as_non_methods": {
+  "5_is_composition": "#3 + #4 fused",
+  "13_is_orchestration": "LLM routing, not retrieval",
+  "20_is_composition": "#9 traversal + community summarisation",
+  "22_restates_11": "top-down == hierarchical",
+  "2_is_infrastructure": "rolling summary = context management",
+  "12_is_infrastructure": "MemGPT paging = context management"
+ }
+}

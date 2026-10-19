@@ -1,0 +1,40 @@
+{
+ "planned": 102,
+ "by_status": {
+  "observed": 76,
+  "agent_generated": 23,
+  "inferred": 3
+ },
+ "path_verification": {
+  "checked": 21,
+  "exist": 19,
+  "missing": 2
+ },
+ "sample": [
+  {
+   "id": "1a104a6213ab642",
+   "status": "agent_generated",
+   "why": "agent's own self-description, not an independent observation"
+  },
+  {
+   "id": "1a104a6314e3b7a",
+   "status": "agent_generated",
+   "why": "agent's own self-description, not an independent observation"
+  },
+  {
+   "id": "1a104cc8924b864",
+   "status": "agent_generated",
+   "why": "agent's own self-description, not an independent observation"
+  },
+  {
+   "id": "1a104df6cd7fc84",
+   "status": "agent_generated",
+   "why": "agent narrating its own process"
+  },
+  {
+   "id": "1a104df7b1999ee",
+   "status": "observed",
+   "why": "built tool whose path exists"
+  }
+ ]
+}

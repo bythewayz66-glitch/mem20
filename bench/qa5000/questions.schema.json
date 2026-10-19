@@ -1,0 +1,56 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "mem20 5000QA question",
+  "description": "One question in the 5000QA evaluation set. Stored as JSONL, one object per line.",
+  "type": "object",
+  "required": ["id", "category", "question", "expected_answer"],
+  "additionalProperties": false,
+  "properties": {
+    "id": {
+      "type": "string",
+      "pattern": "^[a-z0-9_-]+$",
+      "description": "Stable unique id, e.g. q00001"
+    },
+    "category": {
+      "type": "string",
+      "enum": [
+        "factual_recall",
+        "temporal_recall",
+        "partition_integrity",
+        "epistemic_provenance",
+        "multi_hop",
+        "negative_control"
+      ]
+    },
+    "question": {
+      "type": "string",
+      "minLength": 1,
+      "description": "The natural-language query sent to the MCP server"
+    },
+    "expected_answer": {
+      "type": "string",
+      "description": "Reference answer. Empty string is allowed for expect_refusal questions."
+    },
+    "evidence_ids": {
+      "type": "array",
+      "items": {"type": "string"},
+      "description": "Record ids that must appear in the retrieved set"
+    },
+    "difficulty": {
+      "type": "string",
+      "enum": ["easy", "medium", "hard"]
+    },
+    "partition_probe": {
+      "type": "boolean",
+      "description": "True if this question tests grounded/simulated separation"
+    },
+    "expect_refusal": {
+      "type": "boolean",
+      "description": "True if the correct behaviour is to report absence rather than answer"
+    },
+    "metadata": {
+      "type": "object",
+      "description": "Free-form provenance: source, author, date"
+    }
+  }
+}

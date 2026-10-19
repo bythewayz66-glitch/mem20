@@ -154,6 +154,7 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
             print(json.dumps(store.join(args.room, args.profile, args.kind)))
         elif args.command == "post":
             record = route(store, args.room, args.sender, args.text)
+            # teamz's own local Memory class, not the mem20 engine.
             memory.remember(args.room, args.sender, args.text)
             print(json.dumps({"kind": record["kind"],
                               "woken": [w["profile"]

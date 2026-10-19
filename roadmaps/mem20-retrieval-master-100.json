@@ -1,0 +1,55 @@
+{
+  "name": "mem20-retrieval-master-100",
+  "description": "100 plans / 2305 items, each plan 20-30 roadmap items, every plan grounded in a 2026-10-11 measurement. Artifact: /opt/mem20/plans/master/MASTER_TODO.md (+ master_todo.json), generator build_master.py validates the spec and exits non-zero on violation. CRITICAL PATH: R01 fix the huggingface_hub network hang (blocks every test and benchmark; hangs mem20benchmarkz tests and test_recall_at_bitemporal.py at test 3 of 14, exit 124) -> B01 scale corpus 14->1500 facts -> B02 build the 5000-pair QA conversation benchmark from opencode.db (200 sessions, 40,847 messages, 5,304 user turns; verified no such corpus exists on the box) -> C01 implement index_health() (MISSING, MCP tool raises AttributeError while real drift exists 449/448/448) -> T01 single verification command. Also P0: fix false-green memory_status reporting MEMORY.md/USER.md 'OK' for files that are ABSENT. User priorities encoded: temporal retrieval expanded, bidirectional temporal, first-class tiers, rival-Zap quality, win on trust AND quality, benchmarkz expanded to a full suite, more facts stored, 5000 QA benchmark, READMEs updated systemwide, sales/information sites up.",
+  "phases": [
+    {
+      "name": "P0 unblock: network hang, index_health, false-green status",
+      "status": "planned",
+      "notes": "",
+      "jobid": "66b64396-48d6-4bbb-9000-c3f1fef009f3"
+    },
+    {
+      "name": "Corpus: 14 to 1500 facts, 5000-pair QA benchmark",
+      "status": "planned",
+      "notes": "",
+      "jobid": "03e2e27a-2c6c-49b0-848c-0598ede6d533"
+    },
+    {
+      "name": "Retrieval: every mode upgraded, fusion, rerank policy, abstention",
+      "status": "planned",
+      "notes": "",
+      "jobid": "2eba5c1a-c628-45cd-b211-5d33114e09b8"
+    },
+    {
+      "name": "Temporal: bidirectional bi-temporal, four-slice model, temporal index",
+      "status": "planned",
+      "notes": "",
+      "jobid": "cb568bf3-1123-4519-9e97-572ed184cbd6"
+    },
+    {
+      "name": "Trust: provenance, calibration, poisoning resistance, audit",
+      "status": "planned",
+      "notes": "",
+      "jobid": "a541b22c-28c3-4eb8-b620-0a91f6b57467"
+    },
+    {
+      "name": "Benchmark suite: statistics, CI gate, latency, adversarial track",
+      "status": "planned",
+      "notes": "",
+      "jobid": "c87c0afb-7135-45a4-a1b8-e7ef025a2876"
+    },
+    {
+      "name": "Documentation: 12 missing READMEs, 111 unwired, 241 untested",
+      "status": "planned",
+      "notes": "",
+      "jobid": "cf82ccdc-ebee-4a42-afc5-119f28aa4681"
+    },
+    {
+      "name": "Operations: packaging, MCP repair, health, verification command",
+      "status": "planned",
+      "notes": "",
+      "jobid": "3b3bada0-356a-46c5-9183-4b5d84011257"
+    }
+  ],
+  "created": "1789604765.3759632"
+}

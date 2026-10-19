@@ -23,11 +23,19 @@ try:
 except ImportError as _exc:  # never fail silently: a hidden fallback looks like success
     import sys as _sys
 
+    # CPython deletes the `except ... as _exc` binding when the except block ends
+    # (to break reference cycles), so the closure below could not see it: calling
+    # any decorated command raised `NameError: name '_exc' is not defined` — the
+    # warning path crashed instead of warning, which is worse than the silent
+    # fallback it was written to avoid. Capture the message as a plain string now.
+    _IMPORT_ERROR = str(_exc)
+
     def json_main(func):
         @functools.wraps(func)
         def _warn(*a, **k):
             _sys.stderr.write(
-                "warning: mem20cliz unavailable, --json disabled for this CLI (%s)\n" % _exc
+                "warning: mem20cliz unavailable, --json disabled for this CLI (%s)\n"
+                % _IMPORT_ERROR
             )
             return func(*a, **k)
 

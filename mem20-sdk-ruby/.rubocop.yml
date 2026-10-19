@@ -1,0 +1,68 @@
+AllCops:
+  NewCops: enable
+  TargetRubyVersion: 3.1
+  SuggestExtensions: false
+  Exclude:
+    - "mem20-sdk.gemspec"
+
+# This SDK is documented through the README and docs/ rather than per-class
+# RDOC, so the class-comment cop is not useful here.
+Style/Documentation:
+  Enabled: false
+
+Style/FrozenStringLiteralComment:
+  Enabled: true
+
+Style/StringLiterals:
+  EnforcedStyle: double_quotes
+
+Style/StringLiteralsInInterpolation:
+  EnforcedStyle: double_quotes
+
+# Literal word arrays are written plainly (["a", "b"]) throughout.
+Style/WordArray:
+  EnforcedStyle: brackets
+
+# Config::DEFAULTS and friends are frozen explicitly; the one mutable constant
+# is the Session struct, which must not be frozen.
+Style/MutableConstant:
+  Enabled: false
+
+# ENV[...] is used deliberately so a missing variable stays nil and falls back
+# to the documented default rather than raising.
+Style/FetchEnvVar:
+  Enabled: false
+
+# `"jsonrpc" => "2.0".merge(payload)` and `**options` forwarding read more
+# clearly here than the cops' preferred forms.
+Style/KeywordArgumentsMerging:
+  Enabled: false
+Naming/BlockForwarding:
+  Enabled: false
+Style/ArgumentsForwarding:
+  Enabled: false
+Naming/PredicateMethod:
+  Enabled: false
+
+Layout/LineLength:
+  Max: 100
+
+# The stdio transport is a protocol state machine whose handshake, read loop
+# and process teardown are intrinsically longer and branchier than ordinary
+# application code; specs, examples and the stdio test stub are test/sample
+# code, not shipped library surface.
+Metrics:
+  Exclude:
+    - "lib/mem20/transport/stdio.rb"
+    - "spec/**/*"
+    - "examples/**/*"
+
+Metrics/BlockLength:
+  Exclude:
+    - "spec/**/*"
+
+# Config carries both the documented defaults and their validation; splitting
+# the class to fit the default 100-line budget would add indirection without
+# making anything clearer, so the budget is raised deliberately.
+Metrics/ClassLength:
+  Max: 130

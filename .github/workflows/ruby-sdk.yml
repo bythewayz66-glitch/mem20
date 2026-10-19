@@ -1,0 +1,59 @@
+name: Ruby SDK
+
+# CI for the mem20 Ruby SDK (mem20-sdk-ruby/).
+# This workflow lives at the REPOSITORY ROOT on purpose: GitHub only executes
+# workflows from .github/workflows/ at the repo root, so a workflow nested
+# inside mem20-sdk-ruby/.github/ would never run.
+on:
+  push:
+    branches: [main]
+    paths:
+      - "mem20-sdk-ruby/**"
+      - ".github/workflows/ruby-sdk.yml"
+  pull_request:
+    branches: [main]
+    paths:
+      - "mem20-sdk-ruby/**"
+      - ".github/workflows/ruby-sdk.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    name: Ruby ${{ matrix.ruby }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        ruby: ["3.1", "3.2", "3.3"]
+    defaults:
+      run:
+        working-directory: mem20-sdk-ruby
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: ${{ matrix.ruby }}
+          bundler-cache: true
+          working-directory: mem20-sdk-ruby
+
+      - name: Syntax check
+        run: |
+          for f in $(find lib -name '*.rb'); do
+            ruby -c "$f"
+          done
+
+      - name: RSpec
+        # Hermetic: the transport specs spawn spec/support/mini_mcp_server.rb,
+        # so CI needs neither Python nor a running mem20 server.
+        run: bundle exec rspec --format documentation
+
+      - name: RuboCop
+        run: bundle exec rubocop --format simple
+
+      - name: Build gem
+        run: gem build mem20-sdk.gemspec

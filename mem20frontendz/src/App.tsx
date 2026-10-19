@@ -239,9 +239,7 @@ export default function App() {
                   onNavigate={(name) => navigate('kanban', encodeURIComponent(name))}
                 />
               ) : null}
-              {route.id === 'dreams' ? (
-                <DreamsView param={decodeURIComponent(route.param)} />
-              ) : null}
+              {route.id === 'dreams' ? <DreamsView param={decodeURIComponent(route.param)} /> : null}
               {route.id === 'agents' ? <AgentsView /> : null}
               {route.id === 'teamz' ? <TeamView /> : null}
               {route.id === 'tools' ? <ToolsView /> : null}

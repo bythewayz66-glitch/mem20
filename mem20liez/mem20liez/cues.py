@@ -1,4 +1,4 @@
-\"\"\"Turn detection results into short TTS-ready earpiece cues.\"\"\"
+"""Turn detection results into short TTS-ready earpiece cues."""
 
 from __future__ import annotations
 
@@ -18,8 +18,9 @@ class CueGenerator:
         cues: List[EarpieceCue] = []
 
         for r in results:
-            if r.confidence.score < 0.55:
-                continue  # too weak to bother the professional
+            # Real voice-stress can now produce usable confidence
+            if r.confidence.score < 0.45:
+                continue
 
             text = self._render(r, mode)
             if not text:
@@ -38,9 +39,24 @@ class CueGenerator:
         return cues
 
     def _render(self, r: DetectionResult, mode: str) -> str:
-        # Scaffold language — deliberately cautious.
         if r.signal == SignalType.VOICE_STRESS:
-            return "Voice stress indicator elevated."
+            val = r.value or {}
+            if val.get("status") != "ok":
+                return ""
+            interp = val.get("interpretation", "")
+            dev = val.get("baseline_deviation")
+            if interp == "elevated_stress_indicator":
+                if mode in ("interrogation", "government"):
+                    return f"Voice stress elevated (deviation {dev:.2f}). Consider slowing pace."
+                if mode == "clinical":
+                    return f"Patient voice stress elevated (deviation {dev:.2f})."
+                if mode == "therapy":
+                    return f"Voice stress rise noted (deviation {dev:.2f})."
+                return f"Voice stress indicator elevated (deviation {dev:.2f})."
+            if interp == "mild_deviation":
+                return "Mild voice stress deviation."
+            return ""
+
         if r.signal == SignalType.MICRO_EXPRESSION:
             return "Possible micro-expression detected."
         if r.signal == SignalType.EMOTION:
@@ -52,6 +68,8 @@ class CueGenerator:
         return ""
 
     def _priority(self, r: DetectionResult) -> int:
+        if r.signal == SignalType.VOICE_STRESS and (r.baseline_deviation or 0) >= 0.55:
+            return 3
         if r.signal == SignalType.DECEPTION and r.confidence.score >= 0.75:
             return 3
         if r.confidence.score >= 0.7:

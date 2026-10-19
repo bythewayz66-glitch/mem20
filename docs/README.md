@@ -1,8 +1,8 @@
 # mem20 MCP Server Documentation
 
-> **Version:** 2.1-rc2
+> **Version:** 3.0.0
 > **License:** MIT
-> **Author:** JaysonAIOnline
+> **Maintainer:** bythewayz66-glitch
 > **Repository:** https://github.com/bythewayz66-glitch/mem20
 
 ## Quick Links
@@ -122,6 +122,14 @@ claude mcp add mem20 -- python3 /path/to/mem20/mcp/mcp_server.py
 - `/ready` — readiness probe
 - `/metrics` — tool counters, contamination rate, event taxonomy
 
+## SDKs
+
+| SDK | Location | Status |
+|---|---|---|
+| Python | `mem20api/` | Published — the stable API over the engine |
+| Ruby | `mem20-sdk-ruby/` | 0.2.0 |
+| C++ | `docs/sdk/cpp/` | Documentation set |
+
 ## Optional Integrations
 
 - **Blender** — 3D modeling, rendering, scene manipulation
@@ -133,4 +141,4 @@ Both degrade gracefully when the respective application is not installed.
 
 MIT — see [LICENSE](https://github.com/bythewayz66-glitch/mem20/blob/main/LICENSE).
 
-Canonical repository: [bythewayz66-glitch/mem20](https://github.com/bythewayz66-glitch/mem20). Originally built by [JaysonAIOnline](https://github.com/JaysonAIOnline).
+Canonical repository: [bythewayz66-glitch/mem20](https://github.com/bythewayz66-glitch/mem20). Originally built by the JaysonAIOnline project.

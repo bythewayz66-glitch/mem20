@@ -118,3 +118,6 @@ mem20owebz/data/uploads/
 # Point-in-time kanban snapshots taken by hand before the 2026-10-01 merge.
 # Superseded by the live board; the source of truth is kanban/.
 backups/kanban-merge-*/
+
+# Type-checking cache (mypy)
+.mypy_cache/

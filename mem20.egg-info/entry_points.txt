@@ -1,4 +1,0 @@
-[console_scripts]
-mem20-mcp = launcher:main
-mem20-metrics = metrics_collector:main
-mem20-path = mem20path:main

@@ -1,4 +1,4 @@
-\"\"\"mem20liez — real-time behavioural signal detection for mem20.\"\"\"
+"""mem20liez — real-time behavioural signal detection for mem20."""
 
 from .types import (
     DetectionResult,
@@ -19,7 +19,6 @@ __all__ = [
     "LiveLieSession",
 ]
 
-# Optional live path
 try:
     from .live import LiveCapture, EarpieceTTS, run_live_session
     __all__ += ["LiveCapture", "EarpieceTTS", "run_live_session"]

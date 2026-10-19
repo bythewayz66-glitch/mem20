@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "mem20liez"
-version = "0.1.0"
+version = "0.2.0"
 description = "Real-time micro-expression, voice-stress, emotion, manipulation and deception detection for mem20"
 readme = "README.md"
 requires-python = ">=3.11"
@@ -17,8 +17,9 @@ dependencies = [
 
 [project.optional-dependencies]
 dev = ["pytest", "pytest-cov"]
-vision = []          # future: mediapipe / opencv extras
-audio = []           # future: librosa / praat extras
+vision = ["Pillow"]
+audio = ["sounddevice", "pyttsx3"]
+live = ["sounddevice", "pyttsx3", "Pillow"]
 
 [project.scripts]
 fs-lie = "mem20liez.cli:main"

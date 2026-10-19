@@ -18,8 +18,9 @@ class CueGenerator:
         cues: List[EarpieceCue] = []
 
         for r in results:
-            # Real voice-stress can now produce usable confidence
-            if r.confidence.score < 0.45:
+            # Gate: require usable confidence; micro can fire a bit lower when status=ok
+            min_conf = 0.40 if r.signal == SignalType.MICRO_EXPRESSION else 0.45
+            if r.confidence.score < min_conf:
                 continue
 
             text = self._render(r, mode)
@@ -58,7 +59,19 @@ class CueGenerator:
             return ""
 
         if r.signal == SignalType.MICRO_EXPRESSION:
-            return "Possible micro-expression detected."
+            val = r.value or {}
+            if val.get("status") != "ok":
+                return ""
+            interp = val.get("interpretation", "")
+            score = val.get("micro_score")
+            if interp == "micro_expression_candidate":
+                if mode in ("interrogation", "government"):
+                    return f"Facial micro-motion candidate (score {score:.2f})."
+                return f"Micro-expression candidate (score {score:.2f})."
+            if interp == "mild_facial_motion":
+                return "Mild facial motion noted."
+            return ""
+
         if r.signal == SignalType.EMOTION:
             return "Emotional shift noted."
         if r.signal == SignalType.MANIPULATION:
@@ -69,6 +82,8 @@ class CueGenerator:
 
     def _priority(self, r: DetectionResult) -> int:
         if r.signal == SignalType.VOICE_STRESS and (r.baseline_deviation or 0) >= 0.55:
+            return 3
+        if r.signal == SignalType.MICRO_EXPRESSION and (r.baseline_deviation or 0) >= 0.55:
             return 3
         if r.signal == SignalType.DECEPTION and r.confidence.score >= 0.75:
             return 3

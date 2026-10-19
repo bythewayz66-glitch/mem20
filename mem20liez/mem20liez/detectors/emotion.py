@@ -1,8 +1,4 @@
-\"\"\"Real-time emotion detector (scaffold).
-
-Combines facial + vocal cues into valence/arousal and optional
-categorical labels. Always returns confidence.
-\"\"\"
+"""Real-time emotion detector (scaffold)."""
 
 from __future__ import annotations
 
@@ -26,7 +22,6 @@ class EmotionDetector:
         timestamp: Optional[float] = None,
     ) -> DetectionResult:
         ts = timestamp or time.time()
-
         if not self.enabled:
             return DetectionResult(
                 signal=SignalType.EMOTION,
@@ -39,7 +34,6 @@ class EmotionDetector:
                     notes="detector disabled",
                 ),
             )
-
         return DetectionResult(
             signal=SignalType.EMOTION,
             timestamp=ts,

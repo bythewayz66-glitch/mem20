@@ -1,9 +1,4 @@
-\"\"\"Manipulation indicator detector (scaffold).
-
-Looks for linguistic and behavioural patterns commonly associated
-with attempts to control the conversation (topic steering, excessive
-flattery, sudden friendliness after threat, etc.).
-\"\"\"
+"""Manipulation indicator detector (scaffold)."""
 
 from __future__ import annotations
 
@@ -27,7 +22,6 @@ class ManipulationDetector:
         timestamp: Optional[float] = None,
     ) -> DetectionResult:
         ts = timestamp or time.time()
-
         if not self.enabled:
             return DetectionResult(
                 signal=SignalType.MANIPULATION,
@@ -40,7 +34,6 @@ class ManipulationDetector:
                     notes="detector disabled",
                 ),
             )
-
         return DetectionResult(
             signal=SignalType.MANIPULATION,
             timestamp=ts,

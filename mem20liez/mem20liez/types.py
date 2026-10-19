@@ -1,4 +1,4 @@
-\"\"\"Shared types for mem20liez.\"\"\"
+"""Shared types for mem20liez."""
 
 from __future__ import annotations
 
@@ -17,7 +17,7 @@ class SignalType(str, Enum):
 
 
 class Confidence(BaseModel):
-    \"\"\"Explicit confidence envelope — never omit.\"\"\"
+    """Explicit confidence envelope — never omit."""
     score: float = Field(..., ge=0.0, le=1.0)
     model_id: str
     model_version: str
@@ -25,10 +25,10 @@ class Confidence(BaseModel):
 
 
 class DetectionResult(BaseModel):
-    \"\"\"One atomic detection event.\"\"\"
+    """One atomic detection event."""
     signal: SignalType
     timestamp: float = Field(default_factory=time.time)
-    value: Any                          # detector-specific payload
+    value: Any
     confidence: Confidence
     baseline_deviation: Optional[float] = None
     raw_features: Optional[dict] = None
@@ -39,10 +39,10 @@ class DetectionResult(BaseModel):
 
 
 class EarpieceCue(BaseModel):
-    \"\"\"Short, speakable cue for the professional's earpiece.\"\"\"
+    """Short, speakable cue for the professional's earpiece."""
     id: str
-    text: str                           # TTS-ready, concise
-    priority: int = 1                   # 1=info, 2=notable, 3=urgent
+    text: str
+    priority: int = 1
     related_signals: list[SignalType] = Field(default_factory=list)
     confidence: float
     timestamp: float = Field(default_factory=time.time)

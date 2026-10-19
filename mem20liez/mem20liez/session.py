@@ -1,4 +1,4 @@
-\"\"\"Live session wrapper that ties detectors to the AV memory pipeline.\"\"\"
+"""Live session wrapper that ties detectors to the AV memory pipeline."""
 
 from __future__ import annotations
 
@@ -14,7 +14,7 @@ SessionMode = Literal["interrogation", "therapy", "clinical", "government", "gen
 
 
 class LiveLieSession:
-    \"\"\"One live professional session with continuous detection + cueing.\"\"\"
+    """One live professional session with continuous detection + cueing."""
 
     def __init__(
         self,
@@ -61,7 +61,6 @@ class LiveLieSession:
     def get_earpiece_cues(self, since_id: Optional[str] = None) -> List[EarpieceCue]:
         if since_id is None:
             return [c for c in self._cues if not c.acknowledged]
-        # simple linear scan for scaffold
         out = []
         seen = False
         for c in self._cues:
@@ -79,7 +78,7 @@ class LiveLieSession:
                 break
 
     def seal(self, annotations: Optional[dict] = None) -> dict:
-        \"\"\"Produce the package that will be written to grounded memory.\"\"\"
+        """Produce the package that will be written to grounded memory."""
         if self.sealed:
             raise RuntimeError("session already sealed")
 

@@ -1,4 +1,4 @@
-\"\"\"Top-level detector that runs all signal extractors.\"\"\"
+"""Top-level detector that runs all signal extractors."""
 
 from __future__ import annotations
 
@@ -16,7 +16,7 @@ from .detectors import (
 
 
 class LieDetector:
-    \"\"\"Orchestrates all behavioural signal detectors.\"\"\"
+    """Orchestrates all behavioural signal detectors."""
 
     def __init__(self, enabled: bool = True):
         self.enabled = enabled
@@ -25,7 +25,6 @@ class LieDetector:
         self.emotion = EmotionDetector(enabled=enabled)
         self.manipulation = ManipulationDetector(enabled=enabled)
         self.deception = DeceptionDetector(enabled=enabled)
-
         self._history: List[DetectionResult] = []
 
     def set_baselines(self, *, face: Optional[dict] = None, voice: Optional[dict] = None) -> None:
@@ -37,26 +36,20 @@ class LieDetector:
     def process_audio(self, chunk: Any, timestamp: Optional[float] = None) -> List[DetectionResult]:
         ts = timestamp or time.time()
         results = []
-
         vs = self.voice.process_audio(chunk, timestamp=ts)
         results.append(vs)
-
         emo = self.emotion.process(audio_chunk=chunk, timestamp=ts)
         results.append(emo)
-
         self._history.extend(results)
         return results
 
     def process_video(self, frame: Any, timestamp: Optional[float] = None) -> List[DetectionResult]:
         ts = timestamp or time.time()
         results = []
-
         me = self.micro.process_frame(frame, timestamp=ts)
         results.append(me)
-
         emo = self.emotion.process(video_frame=frame, timestamp=ts)
         results.append(emo)
-
         self._history.extend(results)
         return results
 

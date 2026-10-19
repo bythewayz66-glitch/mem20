@@ -1,4 +1,4 @@
-\"\"\"Individual signal detectors.\"\"\"
+"""Individual signal detectors."""
 
 from .micro_expression import MicroExpressionDetector
 from .voice_stress import VoiceStressDetector

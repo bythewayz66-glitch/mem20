@@ -1,8 +1,4 @@
-\"\"\"Deception indicator fusion (scaffold).
-
-Combines micro-expression, voice-stress, emotion and manipulation
-signals together with baseline deviation. Never claims certainty.
-\"\"\"
+"""Deception indicator fusion (scaffold)."""
 
 from __future__ import annotations
 
@@ -25,7 +21,6 @@ class DeceptionDetector:
         timestamp: Optional[float] = None,
     ) -> DetectionResult:
         ts = timestamp or time.time()
-
         if not self.enabled:
             return DetectionResult(
                 signal=SignalType.DECEPTION,
@@ -38,9 +33,6 @@ class DeceptionDetector:
                     notes="detector disabled",
                 ),
             )
-
-        # Scaffold: real fusion logic (weighted, calibrated, baseline-aware)
-        # will live here. For now we stay explicitly non-claiming.
         return DetectionResult(
             signal=SignalType.DECEPTION,
             timestamp=ts,

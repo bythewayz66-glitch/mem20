@@ -1,53 +1,55 @@
-# UC-MEM-AV-001 — Live Audio/Video Memory Inputs + Professional Assistance
+# UC-MEM-AV-001 — Live Audio/Video Memory + Professional Assistance
 
-**Status:** Active development  
-**Subsystem:** mem20liez + future live AV pipeline  
-**Related:** UC-MEM-AV-GOV-001 (government)
+**Status:** Implemented (voice stress + micro-expression + live path + MCP)  
+**Subsystem:** mem20liez  
+**Related:** [UC-MEM-AV-GOV-001](./UC-MEM-AV-GOV-001.md)
 
 ## Goal
 
-Accept live and recorded audio/video as grounded memory inputs. Provide real-time probabilistic behavioural signals (voice stress, micro-expression, emotion, manipulation, deception indicators) and deliver cautious TTS earpiece cues to the professional. On session end, seal a complete, braid-provable package suitable for later audit or court use.
+Accept live and recorded audio/video as grounded memory inputs. Provide real-time probabilistic behavioural signals and TTS earpiece cues. On session end, seal an immutable package for audit or court use.
 
-## Core Capabilities
+## Implemented capabilities
 
-- Live session management (`lie_start_session` … `lie_seal_session`)
-- Real voice-stress detection (numpy acoustic features + optional personal baseline)
-- Scaffold detectors for micro-expression, emotion, manipulation, deception fusion
-- Earpiece cue generation (priority-ranked, confidence-gated)
-- Immutable sealed package with mandatory disclaimer
+| Capability | Implementation |
+|------------|----------------|
+| Voice stress | `detectors/voice_stress.py` — real numpy features + baseline |
+| Micro-expression | `detectors/micro_expression.py` — real numpy/PIL motion + regions |
+| Live capture | `live.py` — mic (sounddevice/pyaudio) or WAV |
+| Earpiece cues | `cues.py` + `EarpieceTTS` |
+| Session lifecycle | `LiveLieSession` + MCP `lie_*` tools |
+| Grounded seal | `lie_seal_session` → `remember()` + braid |
 
-## Scenarios Covered
+## Scenarios
 
-1. **Interrogation assistance** — officer receives voice-stress and other indicators via earpiece; full transcript + signals sealed for court.
-2. **Therapy support** — therapist receives optional low-intrusion cues; grounded session log with voice-change and topic links.
-3. **Clinical encounter** — physician receives history-relevant cues and stress indicators; package sealed to medical record.
+1. **Interrogation** — officer receives stress / micro-motion cues; sealed package for record.
+2. **Therapy** — optional low-intrusion cues; grounded session log.
+3. **Clinical** — stress indicators + history context (history recall is separate memory tools).
 
-## Non-negotiable Rules
+## How to run
 
-- All signals are probabilistic observations only.
-- Never written as definitive “the subject is lying”.
-- Grounded partition only; contamination firewall enforced.
-- Consent required for interrogation / clinical / government modes.
-- Full provenance and model version recorded.
+```bash
+pip install -e mem20liez[live]
+fs-lie live --wav interview.wav --mode interrogation --out sealed.json
+```
 
-## MCP Tools
+```python
+from mem20liez.live import run_live_session
+run_live_session(mode="interrogation", wav_path="interview.wav")
+```
 
-See `mem20liez/mem20liez/mcp_tools.py`:
+MCP: `lie_start_session` → `lie_feed_audio` / `lie_set_baseline` → `lie_get_cues` → `lie_seal_session`.
 
-- `lie_start_session`
-- `lie_set_baseline`
-- `lie_feed_audio`
-- `lie_feed_transcript`
-- `lie_get_cues`
-- `lie_acknowledge_cue`
-- `lie_seal_session`
-- `lie_list_sessions`
+## Rules
 
-## Acceptance Criteria (current)
+- Signals are observations with confidence only.
+- Consent required for interrogation / clinical / government.
+- Sealed package always includes the probabilistic disclaimer.
 
-- [x] Voice-stress detector produces real features and baseline deviation scores
-- [x] MCP tool surface defined and callable
-- [x] Sealed package contains detections, cues, disclaimer
-- [ ] Full video / micro-expression engine
-- [ ] Automatic write of sealed package into main grounded store + braid
-- [ ] End-to-end live microphone → earpiece path
+## Acceptance (current)
+
+- [x] Real voice-stress features and baseline deviation
+- [x] Real micro-expression motion/region scoring
+- [x] Live/WAV path + TTS fallback
+- [x] MCP tools + grounded/braid seal
+- [ ] Full face-detector / learned AU model (optional upgrade)
+- [ ] Always-on production mic service unit

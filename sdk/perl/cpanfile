@@ -1,0 +1,16 @@
+name: Mem20
+abstract: Perl SDK for the mem20 memory + cognition server
+version: 0.1.0
+license: MIT
+author: mem20 contributors
+
+# No phase blocks: this distribution has no non-core runtime prerequisites. The
+# whole point of the SDK is that it installs on a stock perl with no CPAN
+# access. JSON::PP, IPC::Open3, IO::Select, HTTP::Tiny, Time::HiRes and POSIX
+# all ship with the interpreter.
+
+requires:
+  perl: 5.20.0
+
+test_requires:
+  Test::More: 0

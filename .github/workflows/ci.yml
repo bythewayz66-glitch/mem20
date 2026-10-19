@@ -111,19 +111,60 @@ jobs:
           echo "OK: all gitlinks are declared in .gitmodules."
 
   tests:
-    name: Tests (advisory)
+    name: Tests
     runs-on: ubuntu-latest
-    # Advisory until the tree is fully green: the runtime needs heavy optional
-    # deps (embedding models, blender) that are not installed in CI yet.
-    continue-on-error: true
+    # REQUIRED. This job gates merges; it carries no continue-on-error.
+    #
+    # It was advisory until the 3.0 baseline. Advisory CI on a tree with known-red
+    # packages is how 132 tests came to be reported green while 1,400 never ran —
+    # the status was decorative, not a signal. See issues #5 and #54.
+    #
+    # Scope: GREEN is the set of packages that pass in a clean environment with
+    # nothing but the dependencies installed below. It is the regression gate, and
+    # the count is pinned so a package cannot silently drop out of the set. The
+    # remaining packages are tracked by their own open issues: they need optional
+    # native deps (torch, stripe, blender) or are still red for the reasons those
+    # issues record. Widening this list is how each one gets burned down.
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
         with:
           python-version: '3.11'
+
       - name: Install test deps
         run: |
           python3 -m pip install --upgrade pip
-          python3 -m pip install pytest
-      - name: Run tests
-        run: python3 -m pytest -q
+          python3 -m pip install \
+            pytest \
+            "mcp>=1.0" \
+            cryptography \
+            httpx \
+            aiohttp \
+            PyYAML \
+            "pydantic>=2" \
+            numpy
+
+      - name: Run the green package set
+        run: |
+          set -euo pipefail
+          GREEN="mem20adaptiveinterfacecomposerz mem20assistz mem20autoz mem20biz
+                 mem20boxz mem20enginez mem20executablegameconceptandscopepipelinez
+                 mem20fabricz mem20facez mem20graphz mem20greenz mem20labz
+                 mem20orcaz mem20pipelinez mem20selfz mem20sensorz mem20simz
+                 mem20sitemapz mem20studioz mem20teamz mem20twinz mem20zimr"
+          ROOTS=""
+          COUNT=0
+          for pkg in $GREEN; do
+            ROOTS="$ROOTS $pkg/tests"
+            COUNT=$((COUNT + 1))
+          done
+          if [ "$COUNT" -ne 22 ]; then
+            echo "::error::Expected 22 packages in the green set, found $COUNT"
+            exit 1
+          fi
+          python3 -m pytest -q $ROOTS
+
+      - name: Verify the Perl SDK
+        run: |
+          set -euo pipefail
+          prove -Isdk/perl/lib sdk/perl/t/*.t

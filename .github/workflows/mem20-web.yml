@@ -1,20 +1,19 @@
 name: mem20 web shell
 
-# Materializes the mem20 web shell from its pinned source tarball, builds it,
-# and publishes the static bundle to docs/app/ (served by GitHub Pages at
-# /mem20/app/). The source tarball is pinned by sha256 so the build is
-# reproducible and auditable: the same input always yields the same tree.
+# Builds the mem20 web shell from the committed web/ source tree and publishes
+# the static bundle to docs/app/, which GitHub Pages serves at /mem20/app/.
 #
-# Why a build step instead of committing the bundle: the built JS bundle is
-# ~260 KB and the source tree ~250 KB, neither of which can be emitted as
-# GitHub API tool arguments. The tarball is a permanent artifact, so CI can
-# fetch it directly and the repo stays small.
+# The tool catalog (web/src/data/tools.json) is GENERATED, not hand-written:
+# it is AST-extracted from the estate's own mcp/tools/*.py, exactly as
+# web/README.md documents. Regenerating it here keeps the catalog honest and
+# reproducible from the repo alone.
 
 on:
   workflow_dispatch:
   push:
     branches: [mem20frontendz]
     paths:
+      - 'web/**'
       - '.github/workflows/mem20-web.yml'
 
 permissions:
@@ -34,17 +33,28 @@ jobs:
           ref: ${{ github.ref_name }}
           fetch-depth: 1
 
-      - name: Fetch pinned web source
+      - name: Regenerate tool catalog from source
         run: |
           set -euo pipefail
-          URL="https://static.teamily.ai/sites/488aff1c-a301-4c8e-8636-2d052ac5bf43/documents/mem20-web-src/mem20-web-src.tgz"
-          curl -fsSL -o /tmp/mem20-web-src.tgz "$URL"
-          echo "e48ac25ec5b0bd23c74e3727324752cf9280fb8f3bb3ea5d495174f344b7b93d  /tmp/mem20-web-src.tgz" | sha256sum -c -
-          rm -rf web
-          mkdir -p web
-          tar -xzf /tmp/mem20-web-src.tgz -C web
-          echo "--- web/ tree ---"
-          find web -type f | sort
+          python3 web/scripts/extract-tools.py --root . --out /tmp/raw-tools.json
+          python3 - <<'PY'
+          import json
+          raw = json.load(open('/tmp/raw-tools.json'))
+          out = {
+              "source": raw["source"],
+              "files_scanned": raw["files_scanned"],
+              "count": raw["count"],
+              "tools": [
+                  {"name": t["n"], "title": t["t"], "description": t["d"],
+                   "domain": t["x"], "params": t["p"]}
+                  for t in raw["tools"]
+              ],
+          }
+          with open('web/src/data/tools.json', 'w') as fh:
+              fh.write(json.dumps(out, separators=(",", ":")))
+          print("tools.json:", out["count"], "tools across",
+                len({t["domain"] for t in out["tools"]}), "domains")
+          PY
 
       - name: Set up Node
         uses: actions/setup-node@v4
@@ -75,10 +85,10 @@ jobs:
           set -euo pipefail
           git config user.name "mem20-web-bot"
           git config user.email "mem20-web-bot@users.noreply.github.com"
-          git add -A web docs/app
+          git add -A docs/app
           if git diff --cached --quiet; then
             echo "no changes to commit"
           else
-            git commit -m "build(web): materialize mem20 web shell + publish docs/app"
+            git commit -m "build(web): publish mem20 web shell to docs/app"
             git push origin "HEAD:${{ github.ref_name }}"
           fi

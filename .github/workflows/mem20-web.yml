@@ -1,0 +1,84 @@
+name: mem20 web shell
+
+# Materializes the mem20 web shell from its pinned source tarball, builds it,
+# and publishes the static bundle to docs/app/ (served by GitHub Pages at
+# /mem20/app/). The source tarball is pinned by sha256 so the build is
+# reproducible and auditable: the same input always yields the same tree.
+#
+# Why a build step instead of committing the bundle: the built JS bundle is
+# ~260 KB and the source tree ~250 KB, neither of which can be emitted as
+# GitHub API tool arguments. The tarball is a permanent artifact, so CI can
+# fetch it directly and the repo stays small.
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [mem20frontendz]
+    paths:
+      - '.github/workflows/mem20-web.yml'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: mem20-web-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  build-and-publish:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.ref_name }}
+          fetch-depth: 1
+
+      - name: Fetch pinned web source
+        run: |
+          set -euo pipefail
+          URL="https://static.teamily.ai/sites/488aff1c-a301-4c8e-8636-2d052ac5bf43/documents/mem20-web-src/mem20-web-src.tgz"
+          curl -fsSL -o /tmp/mem20-web-src.tgz "$URL"
+          echo "e48ac25ec5b0bd23c74e3727324752cf9280fb8f3bb3ea5d495174f344b7b93d  /tmp/mem20-web-src.tgz" | sha256sum -c -
+          rm -rf web
+          mkdir -p web
+          tar -xzf /tmp/mem20-web-src.tgz -C web
+          echo "--- web/ tree ---"
+          find web -type f | sort
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install, typecheck, build
+        working-directory: web
+        run: |
+          set -euo pipefail
+          npm install --no-audit --no-fund
+          npm run typecheck
+          npm run build
+
+      - name: Publish bundle to docs/app
+        run: |
+          set -euo pipefail
+          rm -rf docs/app
+          mkdir -p docs/app
+          cp -r web/dist/. docs/app/
+          touch docs/app/.nojekyll
+          echo "--- docs/app ---"
+          find docs/app -type f | sort
+          grep -o '<title>[^<]*</title>' docs/app/index.html
+
+      - name: Commit and push
+        run: |
+          set -euo pipefail
+          git config user.name "mem20-web-bot"
+          git config user.email "mem20-web-bot@users.noreply.github.com"
+          git add -A web docs/app
+          if git diff --cached --quiet; then
+            echo "no changes to commit"
+          else
+            git commit -m "build(web): materialize mem20 web shell + publish docs/app"
+            git push origin "HEAD:${{ github.ref_name }}"
+          fi

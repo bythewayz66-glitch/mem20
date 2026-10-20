@@ -1,0 +1,1440 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><script data-tmly-media-guard="1">(function(){"use strict";
+var T=window.__tmly||(window.__tmly=(function(){
+var o={},n=String(window.name||"");
+if(n.slice(0,5)==="tmly:"){n.slice(5).split("&").forEach(function(kv){
+var i=kv.indexOf("=");if(i>0){o[kv.slice(0,i)]=kv.slice(i+1)}})}
+return o})());
+if(T.presentation!=="preview"){return}
+var K="tmly:media-muted:"+String(location.pathname).replace(/[^/]*$/,"");
+var muted=false;try{muted=localStorage.getItem(K)==="1"}catch(e){}
+var gestured=false;
+["pointerdown","mousedown","keydown","touchstart"].forEach(function(t){
+document.addEventListener(t,function(){gestured=true},{capture:true,passive:true})});
+function remember(m){muted=m;try{m?localStorage.setItem(K,"1"):localStorage.removeItem(K)}catch(e){}}
+function announcePaused(el){try{el.dispatchEvent(new Event("pause"))}catch(e){}}
+function harden(el){
+el.autoplay=false;el.removeAttribute("autoplay");
+if(el.getAttribute("preload")==="auto"){el.setAttribute("preload","none")}
+if(muted){el.muted=true}
+if(!gestured&&!el.paused){try{el.pause()}catch(e){}}}
+var play=HTMLMediaElement.prototype.play;
+HTMLMediaElement.prototype.play=function(){
+if(!gestured){announcePaused(this);
+return Promise.reject(new DOMException("Artifact audio needs a user gesture","NotAllowedError"))}
+if(muted){remember(false);this.muted=false}
+return play.apply(this,arguments)};
+var acProtos=[];
+function guardAC(n){
+var N=window[n];if(!N||!N.prototype){return}
+if(acProtos.indexOf(N.prototype)<0){acProtos.push(N.prototype);
+var res=N.prototype.resume;
+if(typeof res==="function"){N.prototype.resume=function(){
+if(!gestured){return Promise.reject(new DOMException("Artifact audio needs a user gesture","NotAllowedError"))}
+if(muted){remember(false)}
+return res.apply(this,arguments)}}}
+var W=function(o){var c=arguments.length?new N(o):new N();
+if(!gestured){try{c.suspend()}catch(e){}}return c};
+W.prototype=N.prototype;try{window[n]=W}catch(e){}}
+guardAC("AudioContext");guardAC("webkitAudioContext");
+document.addEventListener("play",function(e){
+var el=e.target;if(el instanceof HTMLMediaElement&&!gestured){try{el.pause()}catch(err){}}},true);
+document.addEventListener("pause",function(e){
+if(e.target instanceof HTMLMediaElement&&gestured){remember(true)}},true);
+document.addEventListener("volumechange",function(e){
+var el=e.target;if(el instanceof HTMLMediaElement&&gestured){remember(el.muted||el.volume===0)}},true);
+function sweep(n){if(n&&n.querySelectorAll){var l=n.querySelectorAll("audio,video");
+for(var i=0;i<l.length;i++){harden(l[i])}}}
+new MutationObserver(function(rs){for(var i=0;i<rs.length;i++){var a=rs[i].addedNodes;
+for(var j=0;j<a.length;j++){var n=a[j];
+if(n instanceof HTMLMediaElement){harden(n)}else{sweep(n)}}}})
+.observe(document.documentElement,{childList:true,subtree:true});
+document.addEventListener("DOMContentLoaded",function(){sweep(document)});
+sweep(document)})();</script>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>mem20 Desktop — Clickable Prototype v1 (usability test build)</title>
+<style>
+  :root{
+    --bg:#0b0f14;
+    --bg2:#0f151c;
+    --panel:#131b24;
+    --panel2:#18232e;
+    --line:#223141;
+    --line2:#2d4054;
+    --ink:#e8eef6;
+    --ink2:#a9bacd;
+    --ink3:#71879d;
+    --acc:#4cc2ff;
+    --acc2:#1b7fb8;
+    --grd:#3ddc97;
+    --sim:#f2b33d;
+    --bad:#ff6b6b;
+    --pin:#b28bff;
+    --r:14px;
+    --mono:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+  }
+  *{box-sizing:border-box}
+  html,body{height:100%}
+  body{
+    margin:0;background:radial-gradient(1200px 700px at 15% -10%,#12212f 0%,var(--bg) 55%) no-repeat,var(--bg);
+    color:var(--ink);font:14px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI",Inter,Roboto,Helvetica,Arial,sans-serif;
+    -webkit-font-smoothing:antialiased;
+  }
+  button{font:inherit;color:inherit;cursor:pointer}
+  input,textarea,select{font:inherit;color:inherit}
+  a{color:var(--acc)}
+
+  .wrap{display:grid;grid-template-columns:238px minmax(0,1fr);min-height:100vh}
+
+  /* ---------- left rail ---------- */
+  .rail{
+    border-right:1px solid var(--line);background:linear-gradient(180deg,#0e161e,#0a1016);
+    padding:18px 14px;display:flex;flex-direction:column;gap:16px;position:sticky;top:0;height:100vh;overflow:auto
+  }
+  .brand{display:flex;align-items:center;gap:9px;padding:2px 6px 10px}
+  .dot{width:9px;height:9px;border-radius:50%;background:var(--grd);box-shadow:0 0 0 4px rgba(61,220,151,.14)}
+  .brand b{font-size:15px;letter-spacing:.2px}
+  .brand span{color:var(--ink3);font-size:11px;display:block;font-weight:500}
+  .navlbl{font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink3);padding:0 8px;margin-bottom:4px}
+  .nav{display:flex;flex-direction:column;gap:3px}
+  .nav button{
+    display:flex;align-items:center;gap:10px;width:100%;text-align:left;background:transparent;border:1px solid transparent;
+    border-radius:10px;padding:9px 10px;color:var(--ink2)
+  }
+  .nav button:hover{background:#16202a;color:var(--ink)}
+  .nav button.on{background:#172534;border-color:#26455f;color:#fff}
+  .num{
+    width:20px;height:20px;border-radius:6px;background:#1b2733;border:1px solid var(--line2);
+    display:grid;place-items:center;font:600 10px/1 var(--mono);color:var(--ink2);flex:0 0 auto
+  }
+  .nav button.on .num{background:var(--acc2);border-color:var(--acc);color:#fff}
+  .nav .tagnew{font-size:9px;letter-spacing:.08em;padding:2px 5px;border-radius:5px;background:rgba(76,194,255,.14);color:var(--acc);border:1px solid rgba(76,194,255,.35);margin-left:auto}
+
+  .testcard{
+    margin-top:auto;border:1px solid var(--line);border-radius:12px;background:#0f1822;padding:11px
+  }
+  .testcard .th{display:flex;align-items:center;justify-content:space-between;margin-bottom:7px}
+  .testcard .th b{font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink3)}
+  .clock{font:600 15px/1 var(--mono);color:var(--acc)}
+  .tasktxt{font-size:12px;color:var(--ink2);min-height:52px}
+  .row{display:flex;gap:6px;flex-wrap:wrap}
+  .btn{
+    background:#1b2836;border:1px solid var(--line2);border-radius:9px;padding:7px 10px;color:var(--ink);font-size:12px
+  }
+  .btn:hover{background:#223344;border-color:#3a5876}
+  .btn.primary{background:linear-gradient(180deg,#2b9dd6,#1b7fb8);border-color:#3fb2e8;color:#fff;font-weight:600}
+  .btn.primary:hover{filter:brightness(1.08)}
+  .btn.ghost{background:transparent}
+  .btn.danger{background:#2a1a1e;border-color:#5d2a33;color:#ffb3b3}
+  .btn.sm{padding:4px 8px;font-size:11px;border-radius:7px}
+  .btn[disabled]{opacity:.45;cursor:not-allowed}
+
+  /* ---------- main ---------- */
+  main{padding:22px 26px 120px;max-width:1500px}
+  .screen{display:none;animation:fade .22s ease}
+  .screen.on{display:block}
+  @keyframes fade{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}
+  @media (prefers-reduced-motion:reduce){.screen.on{animation:none}}
+
+  .top{display:flex;align-items:flex-start;justify-content:space-between;gap:18px;margin-bottom:18px}
+  h1{font-size:20px;margin:0 0 4px;letter-spacing:-.2px}
+  .sub{color:var(--ink2);font-size:13px;max-width:820px}
+  .crumb{font:600 11px/1 var(--mono);color:var(--ink3);letter-spacing:.08em;text-transform:uppercase;margin-bottom:8px}
+
+  .panel{background:linear-gradient(180deg,var(--panel),#101821);border:1px solid var(--line);border-radius:var(--r)}
+  .ph{display:flex;align-items:center;gap:10px;padding:12px 14px;border-bottom:1px solid var(--line)}
+  .ph b{font-size:13px}
+  .ph .sp{margin-left:auto;color:var(--ink3);font-size:11px}
+  .pb{padding:14px}
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+  .grid3{display:grid;grid-template-columns:1.15fr .85fr;gap:16px}
+  @media (max-width:1080px){.grid2,.grid3{grid-template-columns:1fr}}
+
+  .kv{display:grid;grid-template-columns:150px 1fr;gap:8px 12px;font-size:13px}
+  .kv dt{color:var(--ink3)}
+  .kv dd{margin:0;font-family:var(--mono);font-size:12.5px;color:var(--ink)}
+  .chip{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--line2);background:#16212c;border-radius:999px;padding:3px 9px;font-size:11.5px;color:var(--ink2)}
+  .chip.g{border-color:rgba(61,220,151,.35);background:rgba(61,220,151,.1);color:#a8f0cf}
+  .chip.s{border-color:rgba(242,179,61,.35);background:rgba(242,179,61,.1);color:#ffd48f}
+  .chip.n{border-color:rgba(76,194,255,.3);background:rgba(76,194,255,.1);color:#a9e2ff}
+
+  .steps{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:7px}
+  .steps li{display:flex;gap:10px;align-items:flex-start;font-size:12.5px;color:var(--ink3);padding:7px 9px;border-radius:9px;border:1px solid transparent}
+  .steps li.run{color:var(--ink);background:#12202b;border-color:#21445c}
+  .steps li.ok{color:var(--ink2)}
+  .mk{width:16px;height:16px;border-radius:50%;border:1px solid var(--line2);display:grid;place-items:center;flex:0 0 auto;font-size:10px;margin-top:1px}
+  .steps li.ok .mk{background:rgba(61,220,151,.16);border-color:rgba(61,220,151,.5);color:var(--grd)}
+  .steps li.run .mk{border-color:var(--acc);color:var(--acc);animation:pulse 1s infinite}
+  @keyframes pulse{50%{opacity:.35}}
+  .steps code{font-family:var(--mono);font-size:11.5px;color:#bfe6ff}
+
+  .ranked{display:flex;flex-direction:column;gap:8px}
+  .rcard{display:flex;align-items:center;gap:12px;padding:11px 12px;border:1px solid var(--line);border-radius:11px;background:#101a23;text-align:left;width:100%}
+  .rcard:hover{border-color:#31536e;background:#13212c}
+  .rk{width:26px;height:26px;border-radius:8px;background:#1a2a38;border:1px solid var(--line2);display:grid;place-items:center;font:700 12px/1 var(--mono);color:var(--acc);flex:0 0 auto}
+  .rcard b{font-size:13px;display:block}
+  .rcard small{color:var(--ink3);font-size:11.5px}
+  .rcard .ct{margin-left:auto;font:600 11px/1 var(--mono);color:var(--ink3);white-space:nowrap}
+
+  /* explorer */
+  .expl{display:grid;grid-template-columns:210px minmax(0,1fr);gap:0;border:1px solid var(--line);border-radius:var(--r);overflow:hidden;background:var(--panel)}
+  .side{border-right:1px solid var(--line);padding:12px;background:#0e161f}
+  .side h4{font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink3);margin:12px 0 7px}
+  .flt{display:flex;flex-direction:column;gap:5px}
+  .flt label{display:flex;align-items:center;gap:8px;font-size:12.5px;color:var(--ink2);padding:3px 4px;border-radius:6px;cursor:pointer}
+  .flt input{accent-color:var(--acc)}
+  .stat{display:flex;justify-content:space-between;font-size:12px;color:var(--ink2);padding:3px 4px}
+  .stat b{font-family:var(--mono);color:var(--ink)}
+  .recall{padding:12px 14px;border-bottom:1px solid var(--line);display:flex;gap:8px;align-items:center}
+  .inp{background:#0b141c;border:1px solid var(--line2);border-radius:9px;padding:9px 11px;width:100%;color:var(--ink)}
+  .inp:focus{outline:2px solid rgba(76,194,255,.35);outline-offset:1px;border-color:var(--acc2)}
+  .reclist{padding:10px;display:flex;flex-direction:column;gap:8px;max-height:520px;overflow:auto}
+  .rec{border:1px solid var(--line);border-radius:11px;background:#101a23;padding:10px 11px;position:relative;padding-left:14px}
+  .rec:before{content:"";position:absolute;left:0;top:0;bottom:0;width:3px;border-radius:11px 0 0 11px;background:var(--line2)}
+  .rec.g:before{background:var(--grd)}
+  .rec.s:before{background:var(--sim)}
+  .rec.pin:before{background:var(--pin)}
+  .rechead{display:flex;align-items:center;gap:8px;margin-bottom:5px}
+  .rechead .who{font-size:11.5px;color:var(--ink3)}
+  .rec p{margin:0;font-size:13px;color:var(--ink)}
+  .recfoot{display:flex;align-items:center;gap:6px;margin-top:8px;flex-wrap:wrap}
+  .conf{font:600 11px/1 var(--mono);color:var(--ink2)}
+
+  /* inspector */
+  .rail-ep{display:flex;align-items:center;gap:10px;margin:10px 0 4px}
+  .ep{flex:1;height:8px;border-radius:99px;background:linear-gradient(90deg,var(--grd) 0%,#7fd6b0 42%,#8d8f7a 50%,#e0b264 72%,var(--sim) 100%);position:relative}
+  .ep .kn{position:absolute;top:-4px;width:16px;height:16px;border-radius:50%;background:#fff;border:3px solid #0b0f14;transform:translateX(-8px);transition:left .18s ease}
+  .epends{display:flex;justify-content:space-between;font-size:11px;color:var(--ink3);margin-top:5px}
+  .checks{list-style:none;margin:8px 0 0;padding:0;display:flex;flex-direction:column;gap:6px}
+  .checks li{display:flex;align-items:center;gap:8px;font-size:12.5px;color:var(--ink2);border:1px solid var(--line);border-radius:9px;padding:7px 9px;background:#0f1922}
+  .checks li .ok{color:var(--grd);font-family:var(--mono)}
+  .checks li .wait{color:var(--ink3)}
+  .audit{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:0}
+  .audit li{display:flex;gap:10px;font-size:12px;padding:7px 0;border-bottom:1px dashed #1d2a38;color:var(--ink2)}
+  .audit li time{font-family:var(--mono);color:var(--ink3);flex:0 0 52px}
+  .audit li:last-child{border-bottom:0}
+
+  /* tools */
+  .toolgrid{display:grid;grid-template-columns:270px minmax(0,1fr);gap:16px}
+  .grp{display:flex;flex-direction:column;gap:3px}
+  .grp button{display:flex;align-items:center;gap:9px;background:transparent;border:1px solid transparent;border-radius:8px;padding:6px 8px;color:var(--ink2);text-align:left;width:100%}
+  .grp button:hover{background:#16212c;color:var(--ink)}
+  .grp button.on{background:#172534;border-color:#26455f;color:#fff}
+  .grp .gc{margin-left:auto;font:600 11px/1 var(--mono);color:var(--ink3)}
+  .grp .hint{font-size:10px;color:var(--acc);border:1px solid rgba(76,194,255,.3);border-radius:5px;padding:1px 4px}
+  .tlist{display:grid;grid-template-columns:1fr 1fr;gap:8px;max-height:560px;overflow:auto;padding-right:4px}
+  @media (max-width:1180px){.tlist{grid-template-columns:1fr}}
+  .tcard{border:1px solid var(--line);border-radius:10px;background:#101a23;padding:9px 10px;text-align:left}
+  .tcard:hover{border-color:#31536e}
+  .tcard b{display:block;font:600 12.5px/1.3 var(--mono);color:#cfe9ff;word-break:break-word}
+  .tcard small{color:var(--ink3);font-size:11.5px}
+
+  /* memory surface */
+  .surtop{display:grid;grid-template-columns:minmax(0,1fr) 320px;gap:16px;align-items:start}
+  @media (max-width:1180px){.surtop{grid-template-columns:1fr}}
+  .personas{display:flex;gap:6px;flex-wrap:wrap}
+  .pbtn{border:1px solid var(--line2);background:#141f2a;border-radius:999px;padding:6px 11px;font-size:12px;color:var(--ink2)}
+  .pbtn.on{background:rgba(76,194,255,.14);border-color:var(--acc);color:#dff3ff}
+  .pbtn small{color:var(--ink3);font-family:var(--mono);font-size:10.5px;margin-left:5px}
+  .pbtn.on small{color:#9fdcff}
+
+  .clusters{display:flex;flex-direction:column;gap:10px;margin-top:14px}
+  .cl{border:1px solid var(--line);border-radius:12px;background:linear-gradient(180deg,#111b24,#0e171f);overflow:hidden}
+  .clhead{display:flex;align-items:center;gap:12px;padding:12px 13px;width:100%;background:transparent;border:0;text-align:left}
+  .clrank{width:28px;height:28px;border-radius:9px;display:grid;place-items:center;font:700 12.5px/1 var(--mono);flex:0 0 auto;
+    background:#16283a;border:1px solid #27506e;color:#8fd8ff}
+  .clhead .nm{min-width:0}
+  .clhead b{display:block;font-size:14px}
+  .clhead small{color:var(--ink3);font-size:11.5px;display:block}
+  .bar{height:5px;border-radius:99px;background:#16222e;margin-top:6px;overflow:hidden;width:190px}
+  .bar i{display:block;height:100%;background:linear-gradient(90deg,#1b7fb8,#4cc2ff);border-radius:99px}
+  .clmeta{margin-left:auto;display:flex;align-items:center;gap:12px}
+  .sc{font:700 13px/1 var(--mono);color:#9fe0ff}
+  .tc{font:600 11px/1 var(--mono);color:var(--ink3)}
+  .chev{color:var(--ink3);transition:transform .16s ease}
+  .cl.open .chev{transform:rotate(90deg)}
+  .clbody{display:none;padding:0 13px 13px;border-top:1px solid var(--line)}
+  .cl.open .clbody{display:block}
+  .starthere{display:flex;gap:8px;align-items:flex-start;background:rgba(76,194,255,.07);border:1px solid rgba(76,194,255,.22);border-radius:9px;padding:9px 10px;margin:11px 0 10px;font-size:12.5px;color:#cfe9ff}
+  .tierrow{display:flex;gap:7px;flex-wrap:wrap}
+  .tt{border:1px solid var(--line2);background:#131e28;border-radius:8px;padding:5px 8px;font:600 11.5px/1.2 var(--mono);color:#bcd8ee}
+  .tt:hover{border-color:var(--acc2);color:#e6f6ff}
+  .tt.t1{border-color:rgba(61,220,151,.32);background:rgba(61,220,151,.08);color:#b6f3d7}
+  .tt.t2{border-color:rgba(76,194,255,.28);background:rgba(76,194,255,.07);color:#c4eaff}
+  .tt.t3{opacity:.86}
+  .tierkey{display:flex;gap:12px;font-size:11px;color:var(--ink3);margin-top:9px;flex-wrap:wrap}
+
+  .detail{border:1px solid var(--line);border-radius:12px;background:#101a23;padding:14px;position:sticky;top:18px}
+  .detail h3{margin:0 0 2px;font:700 15px/1.3 var(--mono);color:#dff3ff;word-break:break-word}
+  .detail .ttl{color:var(--ink2);font-size:12.5px;margin-bottom:10px}
+  .detail p{font-size:12.5px;color:var(--ink2);margin:8px 0}
+  .dmeta{display:flex;flex-direction:column;gap:6px;margin:10px 0;font-size:12px}
+  .dmeta div{display:flex;justify-content:space-between;gap:10px;border-bottom:1px dashed #1d2a38;padding-bottom:5px}
+  .dmeta span{color:var(--ink3)}
+  .empty{color:var(--ink3);font-size:12.5px;text-align:center;padding:26px 10px;border:1px dashed var(--line2);border-radius:10px}
+
+  .note{font-size:11.5px;color:var(--ink3);border-left:2px solid #2a3d50;padding-left:10px;margin-top:12px;line-height:1.55}
+  .foot{margin-top:26px;padding-top:14px;border-top:1px solid var(--line);display:flex;gap:18px;flex-wrap:wrap;font-size:11.5px;color:var(--ink3)}
+  .foot b{color:var(--ink2);font-family:var(--mono);font-weight:600}
+
+  /* test drawer */
+  .drawer{position:fixed;right:16px;bottom:16px;width:360px;background:#0d1620;border:1px solid var(--line2);border-radius:14px;
+    box-shadow:0 18px 50px rgba(0,0,0,.55);z-index:50;overflow:hidden}
+  .drawer.closed .dbody{display:none}
+  .dhead{display:flex;align-items:center;gap:8px;padding:9px 11px;background:#111d28;border-bottom:1px solid var(--line);cursor:pointer}
+  .dhead b{font-size:11.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--ink2)}
+  .dhead .cnt{margin-left:auto;font:600 10.5px/1 var(--mono);color:var(--ink3)}
+  .dbody{padding:10px 11px}
+  .dbody .lbl{font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--ink3);margin:8px 0 5px}
+  .logs{max-height:190px;overflow:auto;border:1px solid var(--line);border-radius:8px;background:#0a1219;padding:6px}
+  .log{font:11px/1.45 var(--mono);color:var(--ink2);display:flex;gap:7px;padding:2px 0;border-bottom:1px solid #131f29}
+  .log:last-child{border-bottom:0}
+  .log time{color:#5d7387;flex:0 0 46px}
+  .log.err{color:#ffb3b3}
+  .log.ok{color:#a8f0cf}
+  .ta{width:100%;background:#0a1219;border:1px solid var(--line2);border-radius:8px;padding:6px 8px;font-size:11.5px;min-height:52px;resize:vertical;color:var(--ink)}
+  .badge{display:inline-flex;align-items:center;gap:5px;font-size:10.5px;color:var(--ink3);border:1px solid var(--line2);border-radius:999px;padding:2px 7px}
+  .toast{position:fixed;left:50%;transform:translateX(-50%);bottom:24px;background:#12212c;border:1px solid #2b5673;color:#dff3ff;
+    padding:9px 15px;border-radius:10px;font-size:12.5px;opacity:0;pointer-events:none;transition:opacity .2s;z-index:80}
+  .toast.on{opacity:1}
+  .sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <aside class="rail">
+    <div class="brand">
+      <span class="dot" aria-hidden="true"></span>
+      <div><b>mem20</b><span>desktop prototype · v1</span></div>
+    </div>
+
+    <div>
+      <div class="navlbl">Screens</div>
+      <nav class="nav" aria-label="Prototype screens">
+        <button class="on" data-go="connect"><span class="num">A</span> Server Connection</button>
+        <button data-go="explorer"><span class="num">B</span> Memory Explorer</button>
+        <button data-go="inspector"><span class="num">C</span> Store / Recall</button>
+        <button data-go="tools"><span class="num">D</span> Tool Navigator</button>
+        <button data-go="surface"><span class="num">E</span> Memory Surface <span class="tagnew">NEW</span></button>
+      </nav>
+    </div>
+
+    <div class="testcard" aria-label="Usability test control">
+      <div class="th"><b>Moderated test</b><span class="badge" id="taskCounter">1 / 5</span></div>
+      <div class="clock" id="clock">00:00</div>
+      <div class="tasktxt" id="taskText" style="margin-top:8px">Task 1 — Connect to the local mem20 server and confirm how many tools it exposes.</div>
+      <div class="row" style="margin-top:9px">
+        <button class="btn primary sm" id="startTask">Start</button>
+        <button class="btn sm" id="nextTask">Next</button>
+        <button class="btn danger sm" id="stuckBtn">I'm stuck</button>
+      </div>
+      <div class="note" style="margin-top:10px;border-color:#33506a">
+        Think aloud: say what you expect before each click, and what surprised you after.
+      </div>
+    </div>
+  </aside>
+
+  <main>
+
+    <!-- ================= A · SERVER CONNECTION ================= -->
+    <section class="screen on" id="s-connect">
+      <div class="crumb">A · Server connection</div>
+      <div class="top">
+        <div>
+          <h1>Connect, then prove the surface is real</h1>
+          <p class="sub">The handshake is the anti-fake proof: each step resolves live rather than showing a static badge. Once connected, the ranked start-here path replaces the 257-tool wall.</p>
+        </div>
+        <button class="btn primary" id="runHandshake">Run handshake</button>
+      </div>
+
+      <div class="grid2">
+        <div class="panel">
+          <div class="ph"><b>Server</b><span class="sp">local · stdio</span></div>
+          <div class="pb">
+            <dl class="kv">
+              <dt>Transport</dt><dd>stdio</dd>
+              <dt>Entry</dt><dd>mcp/mcp_server.py</dd>
+              <dt>Protocol</dt><dd>2025-06-18</dd>
+              <dt>Server name</dt><dd>mem20-mcp</dd>
+              <dt>Tools</dt><dd>257</dd>
+              <dt>Domains</dt><dd>26</dd>
+              <dt>Store</dt><dd id="storePath">~/.mem20/store</dd>
+            </dl>
+            <div style="margin-top:12px;display:flex;gap:7px;flex-wrap:wrap">
+              <span class="chip n">source install</span>
+              <span class="chip">local-first</span>
+              <span class="chip">MIT</span>
+            </div>
+            <div class="note">The store path is shown so “where does my memory live?” is answered on the first screen. Nothing leaves the machine unless you add a shared namespace.</div>
+          </div>
+        </div>
+
+        <div class="panel">
+          <div class="ph"><b>Handshake</b><span class="sp" id="hsState">idle</span></div>
+          <div class="pb">
+            <ul class="steps" id="steps">
+              <li data-step="1"><span class="mk">1</span><span><code>initialize</code> — negotiate 2025-06-18</span></li>
+              <li data-step="2"><span class="mk">2</span><span><code>tools/list</code> — count the surface</span></li>
+              <li data-step="3"><span class="mk">3</span><span><code>memory_store</code> — write one fact</span></li>
+              <li data-step="4"><span class="mk">4</span><span><code>memory_recall</code> — read it back</span></li>
+              <li data-step="5"><span class="mk">5</span><span><code>memory_status</code> — engine health</span></li>
+            </ul>
+            <div id="hsResult" style="margin-top:12px"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel" style="margin-top:16px">
+        <div class="ph"><b>Start here — ranked for: <span id="startHerePersona">Agent Builder</span></b>
+          <span class="sp">top 4 of 7 memory clusters</span></div>
+        <div class="pb">
+          <div class="ranked" id="startHereList"></div>
+          <div class="row" style="margin-top:12px">
+            <button class="btn primary" data-go="surface">View memory surface (49 tools) →</button>
+            <button class="btn" data-go="tools">Explore all 257 tools →</button>
+            <button class="btn ghost" data-go="explorer">Open memory explorer →</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="foot">
+        <span>Repo <b>github.com/bythewayz66-glitch/mem20</b></span>
+        <span>Tools <b>257</b></span>
+        <span>Domains <b>26</b></span>
+        <span>Memory tools <b>49</b></span>
+        <span>Protocol <b>2025-06-18</b></span>
+      </div>
+    </section>
+
+    <!-- ================= B · MEMORY EXPLORER ================= -->
+    <section class="screen" id="s-explorer">
+      <div class="crumb">B · Memory explorer</div>
+      <div class="top">
+        <div>
+          <h1>See what it remembers, and fix it</h1>
+          <p class="sub">Grounded and simulated memory are separated by a visible rail on every record — the trust boundary is rendered, not documented.</p>
+        </div>
+        <div class="row">
+          <select class="inp" id="nsSelect" style="width:auto" aria-label="Namespace">
+            <option value="personal">namespace: personal</option>
+            <option value="team-qa">namespace: team-qa</option>
+            <option value="research">namespace: research</option>
+          </select>
+          <button class="btn" data-action="namespace-create">+ New</button>
+        </div>
+      </div>
+
+      <div class="expl">
+        <div class="side">
+          <h4>Timeline</h4>
+          <div class="stat"><span>now</span><b>3</b></div>
+          <div class="stat"><span>2h</span><b>5</b></div>
+          <div class="stat"><span>today</span><b>12</b></div>
+          <div class="stat"><span>yesterday</span><b>18</b></div>
+          <div class="stat"><span>last week</span><b>41</b></div>
+          <h4>Filters</h4>
+          <div class="flt">
+            <label><input type="checkbox" id="fGrounded" checked> grounded</label>
+            <label><input type="checkbox" id="fSimulated" checked> simulated</label>
+            <label><input type="checkbox" id="fPinned"> pinned</label>
+            <label><input type="checkbox" id="fDecaying"> decaying</label>
+          </div>
+          <h4>Stats</h4>
+          <div class="stat"><span>records</span><b>1,284</b></div>
+          <div class="stat"><span>pinned</span><b>37</b></div>
+          <div class="stat"><span>simulated</span><b>64</b></div>
+          <div class="stat"><span>decaying</span><b>9</b></div>
+        </div>
+        <div>
+          <div class="recall">
+            <input class="inp" id="recallInput" placeholder="Recall — e.g. launch checklist" aria-label="Recall query">
+            <button class="btn" id="recallBtn">Recall</button>
+          </div>
+          <div class="reclist" id="reclist"></div>
+        </div>
+      </div>
+
+      <div class="panel" style="margin-top:16px">
+        <div class="ph"><b>Contradiction detected</b><span class="sp">memory_contradict</span></div>
+        <div class="pb" style="display:flex;gap:14px;align-items:center;flex-wrap:wrap">
+          <div style="flex:1;min-width:260px">
+            <div style="font-size:13px">A says <b>“ship after the QA audit passes”</b> · B says <b>“release likely Friday”</b></div>
+            <div style="color:var(--ink3);font-size:12px;margin-top:3px">A is grounded (operator-stated) · B is simulated (agent-inferred, confidence 0.62)</div>
+          </div>
+          <button class="btn primary" data-action="resolve">Keep A, quarantine B</button>
+          <button class="btn" data-action="open-inspector">Open in inspector</button>
+        </div>
+      </div>
+      <div class="foot"><span>Namespace isolation via <b>memory_namespace_create</b></span><span>Pin / decay / feedback are one row, not a settings hunt</span></div>
+    </section>
+
+    <!-- ================= C · INSPECTOR ================= -->
+    <section class="screen" id="s-inspector">
+      <div class="crumb">C · Store / recall inspector</div>
+      <div class="top">
+        <div>
+          <h1>The rail is the product</h1>
+          <p class="sub">Epistemic state is a first-class control at the moment of writing, so a simulation never silently becomes fact.</p>
+        </div>
+        <div class="row">
+          <button class="btn" data-go="explorer">← Back to explorer</button>
+        </div>
+      </div>
+
+      <div class="grid3">
+        <div class="panel">
+          <div class="ph"><b>Store a memory</b><span class="sp" id="inspNs">namespace: personal</span></div>
+          <div class="pb">
+            <label class="sr" for="content">Content</label>
+            <textarea class="inp" id="content" rows="3" style="resize:vertical">The QA audit passed on 2026-10-14.</textarea>
+
+            <div class="rail-ep" role="radiogroup" aria-label="Epistemic state">
+              <span style="font-size:11.5px;color:var(--ink2)">grounded</span>
+              <div class="ep"><span class="kn" id="epKnob" style="left:8%"></span></div>
+              <span style="font-size:11.5px;color:var(--ink2)">simulated</span>
+            </div>
+            <div class="epends">
+              <span>observed fact</span>
+              <span id="epLabel" style="color:var(--grd);font-weight:600">grounded</span>
+              <span>agent-inferred</span>
+            </div>
+
+            <div class="row" style="margin-top:11px">
+              <select class="inp" id="cat" style="width:auto"><option>project</option><option>preference</option><option>fact</option></select>
+              <input class="inp" id="tags" style="width:auto;flex:1" value="qa, release" aria-label="Tags">
+            </div>
+
+            <div style="margin-top:11px">
+              <div style="display:flex;justify-content:space-between;font-size:11.5px;color:var(--ink2);margin-bottom:4px">
+                <span>confidence</span><b id="confVal" style="font-family:var(--mono)">0.80</b>
+              </div>
+              <input type="range" id="conf" min="0" max="100" value="80" style="width:100%;accent-color:var(--acc)">
+            </div>
+
+            <div style="margin-top:12px">
+              <button class="btn" id="runChecks">Run pre-store checks</button>
+              <ul class="checks" id="checks">
+                <li data-c="pii"><span class="wait">○</span> <span><code>memory_scan_pii</code> — not run</span></li>
+                <li data-c="dedupe"><span class="wait">○</span> <span><code>memory_deduplicate</code> — not run</span></li>
+              </ul>
+            </div>
+
+            <div class="row" style="margin-top:13px">
+              <button class="btn primary" id="storeBtn">Store</button>
+              <button class="btn" id="storeSimBtn">Store as simulated</button>
+              <button class="btn ghost" data-go="explorer">Cancel</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="panel">
+          <div class="ph"><b>Audit trail</b><span class="sp">append-only</span></div>
+          <div class="pb">
+            <ul class="audit" id="audit">
+              <li><time>14:02</time><span>store · grounded · operator</span></li>
+              <li><time>14:05</time><span>recall hit · query “qa”</span></li>
+              <li><time>14:06</time><span>feedback · relevant +1</span></li>
+            </ul>
+            <div class="note">Described as append-only, never as tamper-proof. Each row is written by the action that caused it.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="foot"><span>Pre-store governance: <b>memory_scan_pii</b> + <b>memory_deduplicate</b></span><span>“Store as simulated” is the safe default for inferences</span></div>
+    </section>
+
+    <!-- ================= D · TOOL NAVIGATOR ================= -->
+    <section class="screen" id="s-tools">
+      <div class="crumb">D · Tool surface navigator</div>
+      <div class="top">
+        <div>
+          <h1>257 tools, grouped so the wall is legible</h1>
+          <p class="sub">Group counts are counted from the repository's registered tools, and they sum to the 257 the server advertises. Memory is promoted to its own ranked screen.</p>
+        </div>
+        <input class="inp" id="toolSearch" placeholder="Search all 257 tools…" style="max-width:280px" aria-label="Search tools">
+      </div>
+
+      <div class="toolgrid">
+        <div class="panel">
+          <div class="ph"><b>Groups</b><span class="sp" id="grpTotal">257</span></div>
+          <div class="pb grp" id="grpList"></div>
+        </div>
+        <div class="panel">
+          <div class="ph"><b id="tlistTitle">All tools</b><span class="sp" id="tlistCount">257</span></div>
+          <div class="pb">
+            <div class="tlist" id="tlist"></div>
+          </div>
+        </div>
+      </div>
+      <div class="foot"><span>Counts measured from registered tools · sum <b>257</b></span><span>Memory group opens the ranked surface</span></div>
+    </section>
+
+    <!-- ================= E · MEMORY SURFACE ================= -->
+    <section class="screen" id="s-surface">
+      <div class="crumb">E · Memory surface · new in this round</div>
+      <div class="top">
+        <div>
+          <h1>49 memory tools, one ranked entry point</h1>
+          <p class="sub">Seven clusters, ordered for the persona you pick. Each cluster names the one tool pair that proves it before you learn the rest.</p>
+        </div>
+        <div class="row">
+          <button class="btn ghost" id="resetSurface">Reset</button>
+          <button class="btn" data-go="tools">All 257 tools →</button>
+        </div>
+      </div>
+
+      <div class="surtop">
+        <div>
+          <div class="panel">
+            <div class="ph"><b>Rank for</b><span class="sp" id="rankNote">share-weighted opportunity</span></div>
+            <div class="pb">
+              <div class="personas" id="personaBtns"></div>
+              <div style="display:flex;gap:8px;margin-top:11px">
+                <input class="inp" id="surfSearch" placeholder="Search the 49 memory tools…" aria-label="Search memory tools">
+              </div>
+            </div>
+          </div>
+          <div class="clusters" id="clusters"></div>
+        </div>
+
+        <div class="detail" id="detail">
+          <div class="empty">Select a tool to inspect it.<br><span style="font-size:11.5px">Detail shows cluster, tier, and why it ranks where it does.</span></div>
+        </div>
+      </div>
+
+      <div class="note" style="margin-top:16px">
+        <b>Method, stated plainly.</b> Tool names, titles and descriptions are read from the repository — 49 of 257. Cluster membership, the persona-affinity weights and the tier split are declared design inputs, not measured preference: they are a hypothesis this usability test is meant to falsify. Rank scores are computed as the share-weighted sum of each persona's opportunity score times that persona's affinity for the cluster, then normalised to 100.
+      </div>
+
+      <div class="foot">
+        <span>Memory tools <b>49</b> of <b>257</b></span>
+        <span>Clusters <b>7</b></span>
+        <span>Personas <b>4</b></span>
+        <span>Instrument: 5 tasks · timer · error log</span>
+      </div>
+    </section>
+
+  </main>
+</div>
+
+<!-- test drawer -->
+<div class="drawer" id="drawer">
+  <div class="dhead" id="dhead">
+    <b>Session log</b><span class="cnt" id="logCount">0 events</span>
+    <span id="dToggle" style="margin-left:8px;color:var(--ink3)">▾</span>
+  </div>
+  <div class="dbody">
+    <div class="lbl">Think-aloud note</div>
+    <textarea class="ta" id="taNote" placeholder="Type what the participant said…"></textarea>
+    <div class="row" style="margin-top:7px">
+      <button class="btn sm" id="saveNote">Save note</button>
+      <button class="btn sm" id="exportBtn">Export JSON</button>
+      <button class="btn sm ghost" id="clearLog">Clear</button>
+    </div>
+    <div class="lbl">Events</div>
+    <div class="logs" id="logs"></div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+/* ============================================================
+   mem20 desktop prototype — data + interaction
+   Grounding: tool names/titles/descriptions read from the canonical
+   repository (49 memory_* of 257). Group counts counted per prefix.
+   Declared design inputs: cluster affinity, tiers, persona ranking.
+   ============================================================ */
+(function(){
+  "use strict";
+
+  var HOUSE = {
+    repo:"github.com/bythewayz66-glitch/mem20",
+    tools:257, domains:26, memoryTools:49,
+    tam:"$1.28B", sam:"$282M", som:"$1.68M", acv:"$14,000"
+  };
+
+  /* ---- persona data (from the design-research persona block) ---- */
+  var PERSONAS = [
+    {id:"AB", name:"Agent Builder",  share:0.30, opp:16.4},
+    {id:"PE", name:"Platform Engineer", share:0.24, opp:11.5},
+    {id:"DI", name:"Domain Integrator", share:0.22, opp:15.1},
+    {id:"MO", name:"Memory Operator", share:0.24, opp:14.2}
+  ];
+
+  /* ---- ranked clusters: every one of the 49 memory_* tools appears once ---- */
+  var CLUSTERS = [
+    {id:"core-recall", name:"Core Recall & Store", blurb:"Write a fact, get it back — four recall modes, context assembly, entity probes.",
+     aff:{AB:1.0,PE:0.6,DI:0.6,MO:1.0},
+     start:"memory_store then memory_recall — one round-trip proves fidelity before anything else is learned.",
+     tools:[
+      ["memory_store",1,"Store Memory","Store a fact in mem20's persistent memory system."],
+      ["memory_recall",1,"Recall Memory","Search and recall facts from mem20's memory system."],
+      ["memory_recall_hybrid",2,"Hybrid Memory Recall","Hybrid BM25 + vector search with Reciprocal Rank Fusion and optional cross-encoder reranking."],
+      ["memory_recall_semantic",2,"Semantic Memory Recall","Pure vector-based semantic search using embeddings."],
+      ["memory_recall_graph",3,"Graph Memory Recall","Knowledge graph traversal with multi-hop entity resolution."],
+      ["memory_context_window",2,"Context Window","Get memories relevant to the current context."],
+      ["memory_probe",2,"Probe Entity","Get all facts about a specific entity."],
+      ["memory_related",3,"Find Related Entities","Find entities structurally adjacent or connected to a given entity."],
+      ["memory_reason",3,"Reason Across Entities","Compositional reasoning across multiple entities."],
+      ["memory_graph_traverse",3,"Graph Traversal","Traverse the memory graph from a starting entity."]
+     ]},
+    {id:"trust-epistemics", name:"Trust & Epistemics", blurb:"The grounded-vs-simulated boundary: tag it, gate promotion, audit provenance, veto inference-only plans.",
+     aff:{AB:1.0,PE:0.6,DI:0.25,MO:0.6},
+     start:"memory_set_epistemic_status at capture, memory_audit_contamination on a schedule — never promote without a gate.",
+     tools:[
+      ["memory_set_epistemic_status",1,"Set Epistemic Status","Set epistemic status tag (observed, inferred, imagined, user_stated, hypothesis, agent_generated)."],
+      ["memory_promote",1,"Promote Simulated to Grounded","Promote a simulated fact into grounded memory only through an explicit gate."],
+      ["memory_simulate_store",1,"Store Simulated (partitioned)","Store simulated or imagined content into the separate simulated partition."],
+      ["memory_list_simulated",1,"List Simulated Partition","List active simulated facts from the separate partition."],
+      ["memory_quarantine_simulated",2,"Decay / Quarantine Simulated","Quarantine simulated facts whose TTL decay window has expired."],
+      ["memory_audit_contamination",1,"Audit Memory Contamination","Periodic provenance audit: detect any high-confidence memory whose ultimate provenance is unverified."],
+      ["memory_assess_confidence",3,"Assess Memory Confidence","Explicitly set or update the confidence score for a fact."],
+      ["memory_detect_gaps",3,"Detect Knowledge Gaps","Detect knowledge gaps for a topic: low confidence or missing coverage."],
+      ["memory_epistemic_veto",3,"Epistemic Veto","Refuse a plan that rests primarily on unvalidated simulated or imagined memory."],
+      ["memory_self_audit",1,"Self Audit","Metacognitive self-audit: evaluate own knowledge quality and identify biases."]
+     ]},
+    {id:"governance-isolation", name:"Governance & Isolation", blurb:"A scope per team, deliberate sharing through ACLs, PII screened before content lands.",
+     aff:{AB:0.25,PE:1.0,DI:0.6,MO:0.6},
+     start:"memory_namespace_create before the first write, memory_scan_pii wired into the write path.",
+     tools:[
+      ["memory_namespace_create",1,"Create Memory Namespace","Create a namespaced memory scope for multi-agent isolation."],
+      ["memory_namespace_list",1,"List Memory Namespaces","List all memory namespaces and their ACLs."],
+      ["memory_scan_pii",1,"Scan for PII / Secrets","Scan content for PII, secrets, API keys and other sensitive data."],
+      ["memory_shared_store",2,"Store in Shared Memory","Store a fact in a shared namespace with ACL checking."],
+      ["memory_shared_recall",2,"Recall from Shared Memory","Recall facts from a shared namespace with ACL checking."]
+     ]},
+    {id:"curation-lifecycle", name:"Curation & Lifecycle", blurb:"Keep the store honest: dedupe, reconcile contradictions, decay, rate, walk the timeline.",
+     aff:{AB:0.6,PE:0.25,DI:0.25,MO:1.0},
+     start:"memory_timeline to see what is there, memory_contradict to find what fights, memory_deduplicate before the store grows.",
+     tools:[
+      ["memory_timeline",1,"Memory Timeline","View memories in chronological order."],
+      ["memory_contradict",1,"Find Contradictions","Find facts that make conflicting claims about a topic."],
+      ["memory_deduplicate",1,"Deduplicate Memories","Find and remove duplicate memories."],
+      ["memory_decay",1,"Memory Decay","Apply time-based decay to memory relevance."],
+      ["memory_feedback",1,"Rate Fact","Rate a fact helpful or unhelpful to train trust scores."],
+      ["memory_consolidate",2,"Consolidate Memories","Auto-merge similar memories to reduce redundancy."],
+      ["memory_reinforce",2,"Reinforce Memory","Boost the importance of a memory."],
+      ["memory_cluster",3,"Cluster Memories","Group related memories into clusters."],
+      ["memory_auto_consolidate",3,"Auto Consolidation","Cluster similar memories and generate higher-level summaries."],
+      ["memory_mood_tag",3,"Mood Tag","Tag memories with mood or emotion."]
+     ]},
+    {id:"ingestion", name:"Ingestion", blurb:"Bring domain artefacts in — PDF, code, image, audio — and the entities inside them.",
+     aff:{AB:0.25,PE:0.25,DI:1.0,MO:0.6},
+     start:"memory_ingest_pdf or memory_ingest_code — one artefact end to end, then memory_entity_extract.",
+     tools:[
+      ["memory_ingest_pdf",1,"Ingest PDF","Extract text from a PDF file and store it as memories."],
+      ["memory_ingest_code",1,"Ingest Code","Parse code files with tree-sitter and extract structural information."],
+      ["memory_ingest_image",1,"Ingest Image (OCR)","Extract text from an image using OCR and store it as memories."],
+      ["memory_ingest_audio",2,"Ingest Audio","Transcribe an audio file using Whisper and store it as memories."],
+      ["memory_entity_extract",2,"Entity Extraction","Extract entities and relationships from text using spaCy or an LLM."]
+     ]},
+    {id:"ops-diagnostics", name:"Ops & Diagnostics", blurb:"Is it healthy, how big is it, can I move it, what fires automatically.",
+     aff:{AB:0.25,PE:0.6,DI:0.25,MO:0.6},
+     start:"memory_status for a health read, memory_stats for size and shape.",
+     tools:[
+      ["memory_status",1,"Memory Status","Get mem20 memory system status and stats."],
+      ["memory_stats",2,"Memory Statistics","Get detailed memory system statistics."],
+      ["memory_export",3,"Export Memories","Export memories to various formats."],
+      ["memory_import",3,"Import Memories","Import memories from a file."],
+      ["memory_triggers",3,"Memory Triggers","Set up event-based memory triggers."]
+     ]},
+    {id:"pinned-blocks", name:"Pinned Blocks", blurb:"Memory immune to pruning: pin what must always be in context, unpin it when it stops being true.",
+     aff:{AB:0.25,PE:0.6,DI:0.25,MO:0.6},
+     start:"memory_pin_block for invariants, memory_list_pinned_blocks to audit what is exempt from pruning.",
+     tools:[
+      ["memory_pin_block",1,"Pin Memory Block","Pin a memory block as a core reference, immune to pruning and supersede."],
+      ["memory_list_pinned_blocks",2,"List Pinned Blocks","List all pinned memory blocks."],
+      ["memory_get_pinned_block",3,"Get Pinned Block","Get a specific pinned block."],
+      ["memory_unpin_block",3,"Unpin Memory Block","Unpin a previously pinned block."]
+     ]}
+  ];
+
+  /* ---- tool groups counted from the repository's registered tools (sum = 257) ---- */
+  var GROUPS = [
+    ["memory",49],["fs",13],["vcs",11],["cloud",10],["db",10],["prod",10],
+    ["braid",9],["comm",9],["dev",9],["imagination",9],["mkt",9],
+    ["cloudstorage",8],["design",8],["fin",8],["scrape",8],["world",8],
+    ["blender",7],["search",7],["affective",6],["cog",6],["procedural",6],
+    ["a2a",5],["irc",5],["unity",5],["roadmap",4],["self",3],["tot",3],
+    ["corrigibility",2],["job",2],["theory",2],
+    ["beam",1],["cognitive",1],["get",1],["least",1],["react",1],["reflexion",1]
+  ];
+
+  /* ---- derived ranking ---- */
+  var CL = CLUSTERS.map(function(c){
+    var s = 0;
+    PERSONAS.forEach(function(p){ s += p.share * p.opp * c.aff[p.id]; });
+    return {ref:c, score:s, count:c.tools.length};
+  });
+  var maxScore = Math.max.apply(null, CL.map(function(x){return x.score;}));
+  CL.forEach(function(x){
+    x.score100 = Math.round(x.score / maxScore * 1000)/10;
+    x.rank = 1 + CL.filter(function(o){return o.score > x.score + 1e-9;}).length;
+  });
+  var RANKED = CL.slice().sort(function(a,b){
+    if (Math.abs(b.score-a.score) > 1e-9) return b.score-a.score;
+    if (b.count !== a.count) return b.count-a.count;
+    return a.ref.id < b.ref.id ? -1 : 1;
+  });
+  RANKED.forEach(function(x,i){ x.rank = i+1; });
+  var ALL_TOOLS = [];
+  CLUSTERS.forEach(function(c){
+    c.tools.forEach(function(t){
+      ALL_TOOLS.push({name:t[0], tier:t[1], title:t[2], desc:t[3], clusterId:c.id, clusterName:c.name});
+    });
+  });
+
+  /* ================= instrumentation ================= */
+  var S = {started:false, t0:0, taskIndex:0, events:[], tasks:[], errors:0, screen:"connect"};
+  var TASKS = [
+    {id:"T1", screen:"connect",  text:"Task 1 — Connect to the local mem20 server and confirm how many tools it exposes."},
+    {id:"T2", screen:"explorer", text:"Task 2 — Find what the agent remembers about the launch, then open one record to inspect it."},
+    {id:"T3", screen:"inspector",text:"Task 3 — Store a fact as simulated, then promote it to grounded."},
+    {id:"T4", screen:"tools",    text:"Task 4 — Among all 257 tools, find the memory tools and pick a starting point."},
+    {id:"T5", screen:"surface",  text:"Task 5 — Using the ranked memory surface, find the tool that audits provenance."}
+  ];
+  function now(){ return Date.now(); }
+  function mmss(ms){
+    var s = Math.floor(ms/1000), m = Math.floor(s/60);
+    return (m<10?"0":"")+m+":"+((s%60)<10?"0":"")+(s%60);
+  }
+  function stamp(){
+    var d = new Date();
+    return ("0"+d.getHours()).slice(-2)+":"+("0"+d.getMinutes()).slice(-2)+":"+("0"+d.getSeconds()).slice(-2);
+  }
+  function log(kind, msg){
+    var e = {t:stamp(), ms: S.started ? now()-S.t0 : 0, kind:kind, msg:msg, task: S.tasks.length ? S.tasks[S.tasks.length-1].id : null, screen:S.screen};
+    S.events.push(e);
+    var box = document.getElementById("logs");
+    var el = document.createElement("div");
+    el.className = "log" + (kind==="error"?" err":(kind==="ok"?" ok":""));
+    el.innerHTML = '<time>'+e.t+'</time><span>'+esc(msg)+'</span>';
+    box.appendChild(el);
+    box.scrollTop = box.scrollHeight;
+    document.getElementById("logCount").textContent = S.events.length + " events";
+  }
+  function esc(s){
+    return String(s).replace(/[&<>"]/g, function(c){ return ({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;"})[c]; });
+  }
+  function tick(){
+    if (!S.started) return;
+    document.getElementById("clock").textContent = mmss(now()-S.t0);
+  }
+  setInterval(tick, 250);
+
+  function toast(msg){
+    var t = document.getElementById("toast");
+    t.textContent = msg; t.classList.add("on");
+    clearTimeout(t._h);
+    t._h = setTimeout(function(){ t.classList.remove("on"); }, 1800);
+  }
+
+  /* ================= routing ================= */
+  function go(name){
+    S.screen = name;
+    document.querySelectorAll(".screen").forEach(function(s){ s.classList.toggle("on", s.id === "s-"+name); });
+    document.querySelectorAll(".nav button").forEach(function(b){ b.classList.toggle("on", b.dataset.go === name); });
+    window.scrollTo({top:0, behavior:"smooth"});
+    var t = TASKS[S.taskIndex];
+    log("nav", "screen → " + name + (t && t.screen===name ? " (task screen)" : ""));
+  }
+  document.addEventListener("click", function(ev){
+    var el = ev.target.closest("[data-go]");
+    if (el) { go(el.dataset.go); }
+  });
+
+  /* ================= A · handshake ================= */
+  var HS_STEPS = [
+    "initialize → 2025-06-18 negotiated",
+    "tools/list → 257 tools advertised",
+    "memory_store → record written",
+    "memory_recall → marker returned",
+    "memory_status → engine healthy"
+  ];
+  var hsRunning = false;
+  function runHandshake(){
+    if (hsRunning) return;
+    hsRunning = true;
+    var btn = document.getElementById("runHandshake");
+    btn.disabled = true;
+    document.getElementById("hsState").textContent = "running…";
+    document.getElementById("hsResult").innerHTML = "";
+    var items = document.querySelectorAll("#steps li");
+    items.forEach(function(li){
+      li.classList.remove("ok","run");
+      li.querySelector(".mk").textContent = li.dataset.step;
+    });
+    var i = 0;
+    log("action", "run handshake");
+    var step = function(){
+      if (i > 0) {
+        var prev = items[i-1];
+        prev.classList.remove("run"); prev.classList.add("ok");
+        prev.querySelector(".mk").textContent = "✓";
+      }
+      if (i >= items.length){
+        document.getElementById("hsState").textContent = "connected";
+        hsRunning = false; btn.disabled = false;
+        document.getElementById("hsResult").innerHTML =
+          '<div style="display:flex;gap:7px;flex-wrap:wrap">'+
+          '<span class="chip g">✓ connected</span>'+
+          '<span class="chip n">257 tools</span>'+
+          '<span class="chip">26 domains</span>'+
+          '<span class="chip">server mem20-mcp</span>'+
+          '<span class="chip">protocol 2025-06-18</span></div>';
+        log("ok", "handshake complete: 257 tools");
+        toast("Connected — 257 tools advertised");
+        return;
+      }
+      items[i].classList.add("run");
+      i++;
+      setTimeout(step, 480);
+    };
+    step();
+  }
+  document.getElementById("runHandshake").addEventListener("click", runHandshake);
+
+  /* start-here list on A */
+  function renderStartHere(){
+    var box = document.getElementById("startHereList");
+    box.innerHTML = "";
+    RANKED.slice(0,4).forEach(function(x){
+      var b = document.createElement("button");
+      b.className = "rcard";
+      b.innerHTML = '<span class="rk">'+x.rank+'</span>'+
+        '<span><b>'+esc(x.ref.name)+'</b><small>'+esc(x.ref.blurb)+'</small></span>'+
+        '<span class="ct">'+x.count+' tools</span>';
+      b.addEventListener("click", function(){
+        go("surface");
+        setTimeout(function(){ openCluster(x.ref.id); }, 120);
+        log("action", "start-here → " + x.ref.name);
+      });
+      box.appendChild(b);
+    });
+  }
+
+  /* ================= B · explorer ================= */
+  var RECORDS = [
+    {id:1, kind:"grounded", who:"operator", t:"14:02", text:"The QA audit passed on 2026-10-14.", conf:0.94, tags:["qa","release"], pinned:false, word:"launch"},
+    {id:2, kind:"simulated", who:"agent inferred", t:"14:05", text:"Release likely Friday.", conf:0.62, tags:["release"], pinned:false, word:"launch"},
+    {id:3, kind:"grounded", who:"operator", t:"13:41", text:"Launch checklist: docs, PyPI hold, Sidney publish.", conf:0.90, tags:["launch","checklist"], pinned:true, word:"launch"},
+    {id:4, kind:"grounded", who:"document ingest", t:"12:18", text:"Blended ACV is set at $14,000 for planning.", conf:0.88, tags:["pricing"], pinned:false, word:"pricing"},
+    {id:5, kind:"simulated", who:"agent inferred", t:"11:57", text:"Team-qa probably wants namespace isolation.", conf:0.55, tags:["team"], pinned:false, word:"team"},
+    {id:6, kind:"grounded", who:"user stated", t:"09:12", text:"Store path stays local; nothing leaves the machine.", conf:0.97, tags:["privacy"], pinned:true, word:"privacy"}
+  ];
+  var REC_SAMPLE = [
+    {id:7, kind:"grounded", who:"operator", t:"–1d", text:"Namespace research was created for the reading group.", conf:0.86, tags:["namespace"], pinned:false, word:"launch"},
+    {id:8, kind:"simulated", who:"agent inferred", t:"–2d", text:"The audit trail is probably enough for procurement.", conf:0.48, tags:["procure"], pinned:false, word:"launch"}
+  ];
+  function renderRecords(q){
+    var box = document.getElementById("reclist");
+    var showG = document.getElementById("fGrounded").checked;
+    var showS = document.getElementById("fSimulated").checked;
+    var onlyPin = document.getElementById("fPinned").checked;
+    var q2 = (q||"").toLowerCase().trim();
+    var rows = RECORDS.concat(REC_SAMPLE).filter(function(r){
+      if (r.kind === "grounded" && !showG) return false;
+      if (r.kind === "simulated" && !showS) return false;
+      if (onlyPin && !r.pinned) return false;
+      if (q2 && (r.text.toLowerCase().indexOf(q2) < 0 && r.tags.join(" ").indexOf(q2) < 0)) return false;
+      return true;
+    });
+    box.innerHTML = "";
+    if (!rows.length){
+      box.innerHTML = '<div class="empty">No records match. Try clearing a filter or a different query.</div>';
+      return;
+    }
+    rows.forEach(function(r){
+      var d = document.createElement("div");
+      d.className = "rec " + (r.kind === "grounded" ? "g" : "s") + (r.pinned ? " pin" : "");
+      d.innerHTML =
+        '<div class="rechead">'+
+          '<span class="chip '+(r.kind==="grounded"?"g":"s")+'">'+(r.kind==="grounded"?"grounded":"simulated")+'</span>'+
+          '<span class="who">'+esc(r.who)+' · '+esc(r.t)+'</span>'+
+          (r.pinned?'<span class="chip">pinned</span>':'')+
+        '</div>'+
+        '<p>'+esc(r.text)+'</p>'+
+        '<div class="recfoot">'+
+          '<span class="conf">confidence '+r.conf.toFixed(2)+'</span>'+
+          '<button class="btn sm" data-rec="'+r.id+'">Open</button>'+
+          (r.kind==="simulated"?'<button class="btn sm" data-promote="'+r.id+'">Promote</button>':'')+
+          '<button class="btn sm ghost" data-pin="'+r.id+'">'+(r.pinned?"Unpin":"Pin")+'</button>'+
+        '</div>';
+      box.appendChild(d);
+    });
+    log("action", "recall “"+(q2||"*")+"” → "+rows.length+" records");
+  }
+  document.getElementById("recallBtn").addEventListener("click", function(){
+    renderRecords(document.getElementById("recallInput").value);
+  });
+  document.getElementById("recallInput").addEventListener("keydown", function(e){
+    if (e.key === "Enter") renderRecords(this.value);
+  });
+  ["fGrounded","fSimulated","fPinned"].forEach(function(id){
+    document.getElementById(id).addEventListener("change", function(){
+      renderRecords(document.getElementById("recallInput").value);
+    });
+  });
+  document.getElementById("reclist").addEventListener("click", function(ev){
+    var rec = ev.target.closest("[data-rec]");
+    var pro = ev.target.closest("[data-promote]");
+    var pin = ev.target.closest("[data-pin]");
+    if (rec) { go("inspector"); log("action","open record #"+rec.dataset.rec); }
+    if (pro) {
+      var id = +pro.dataset.promote, r = RECORDS.concat(REC_SAMPLE).filter(function(x){return x.id===id;})[0];
+      if (r){ r.kind = "grounded"; r.who = "promoted (gated)"; r.conf = Math.max(r.conf, 0.75); }
+      renderRecords(document.getElementById("recallInput").value);
+      log("ok", "promote via memory_promote → record #"+id+" grounded");
+      toast("Promoted through the gate");
+    }
+    if (pin) {
+      var pid = +pin.dataset.pin, pr = RECORDS.concat(REC_SAMPLE).filter(function(x){return x.id===pid;})[0];
+      if (pr){ pr.pinned = !pr.pinned; }
+      renderRecords(document.getElementById("recallInput").value);
+      log("action", "memory_pin_block → record #"+pid);
+    }
+  });
+  document.getElementById("nsSelect").addEventListener("change", function(){
+    document.getElementById("inspNs").textContent = "namespace: " + this.value;
+    log("action", "namespace → " + this.value);
+  });
+
+  /* ================= C · inspector ================= */
+  var epSimulated = false;
+  function setEpistemic(sim){
+    epSimulated = sim;
+    var knob = document.getElementById("epKnob");
+    var lab = document.getElementById("epLabel");
+    knob.style.left = sim ? "92%" : "8%";
+    lab.textContent = sim ? "simulated" : "grounded";
+    lab.style.color = sim ? "var(--sim)" : "var(--grd)";
+  }
+  document.querySelector(".ep").addEventListener("click", function(){ setEpistemic(!epSimulated); });
+  document.querySelector(".ep").setAttribute("role","switch");
+  document.querySelector(".ep").setAttribute("tabindex","0");
+  document.querySelector(".ep").addEventListener("keydown", function(e){
+    if (e.key === " " || e.key === "Enter"){ e.preventDefault(); setEpistemic(!epSimulated); }
+  });
+
+  document.getElementById("conf").addEventListener("input", function(){
+    document.getElementById("confVal").textContent = (this.value/100).toFixed(2);
+  });
+
+  document.getElementById("runChecks").addEventListener("click", function(){
+    var pii = document.querySelector('[data-c="pii"]');
+    var ded = document.querySelector('[data-c="dedupe"]');
+    pii.innerHTML = '<span class="wait">…</span> <span><code>memory_scan_pii</code> — scanning</span>';
+    log("action", "pre-store checks: memory_scan_pii");
+    setTimeout(function(){
+      pii.innerHTML = '<span class="ok">✓</span> <span><code>memory_scan_pii</code> — clean</span>';
+      ded.innerHTML = '<span class="wait">…</span> <span><code>memory_deduplicate</code> — comparing</span>';
+      log("ok", "memory_scan_pii clean");
+    }, 420);
+    setTimeout(function(){
+      ded.innerHTML = '<span class="ok">✓</span> <span><code>memory_deduplicate</code> — 0 duplicates</span>';
+      log("ok", "memory_deduplicate 0 duplicates");
+    }, 900);
+  });
+
+  function addAudit(txt){
+    var ul = document.getElementById("audit");
+    var li = document.createElement("li");
+    li.innerHTML = "<time>"+stamp().slice(0,5)+"</time><span>"+esc(txt)+"</span>";
+    ul.appendChild(li);
+    ul.scrollTop = ul.scrollHeight;
+  }
+  function store(asSim){
+    var content = document.getElementById("content").value.trim();
+    if (!content){ toast("Nothing to store"); return; }
+    var kind = asSim ? "simulated" : "grounded";
+    RECORDS.unshift({
+      id: 100+RECORDS.length, kind: kind, who: asSim ? "agent inferred" : "operator",
+      t: stamp().slice(0,5), text: content, conf: (+document.getElementById("conf").value)/100,
+      tags: (document.getElementById("tags").value||"").split(",").map(function(s){return s.trim();}).filter(Boolean),
+      pinned:false, word:"new"
+    });
+    addAudit("store · "+kind+" · "+document.getElementById("cat").value);
+    log("ok", (asSim?"memory_simulate_store":"memory_store")+" → "+kind);
+    toast(asSim ? "Stored in the simulated partition" : "Stored as grounded");
+    go("explorer");
+    renderRecords("");
+  }
+  document.getElementById("storeBtn").addEventListener("click", function(){ store(false); });
+  document.getElementById("storeSimBtn").addEventListener("click", function(){ store(true); });
+
+  /* ================= D · tool navigator ================= */
+  var activeGroup = "all";
+  function renderGroups(){
+    var box = document.getElementById("grpList");
+    box.innerHTML = "";
+    var all = document.createElement("button");
+    all.dataset.g = "all";
+    all.className = activeGroup === "all" ? "on" : "";
+    all.innerHTML = '<span>All tools</span><span class="gc">'+(HOUSE.tools)+'</span>';
+    box.appendChild(all);
+    GROUPS.forEach(function(g){
+      var b = document.createElement("button");
+      b.dataset.g = g[0];
+      b.className = activeGroup === g[0] ? "on" : "";
+      var isMem = g[0] === "memory";
+      b.innerHTML = '<span>'+esc(g[0])+'</span>'+
+        (isMem ? '<span class="hint">ranked</span>' : '')+
+        '<span class="gc">'+g[1]+'</span>';
+      if (isMem){
+        b.addEventListener("click", function(){ go("surface"); log("action","group memory → surface"); });
+      }
+      box.appendChild(b);
+    });
+    var sum = GROUPS.reduce(function(a,g){return a+g[1];},0);
+    document.getElementById("grpTotal").textContent = sum;
+  }
+  document.getElementById("grpList").addEventListener("click", function(ev){
+    var b = ev.target.closest("[data-g]");
+    if (!b) return;
+    if (b.dataset.g === "memory") return;
+    activeGroup = b.dataset.g;
+    renderGroups();
+    renderToolList();
+    log("action", "group → " + activeGroup);
+  });
+  function renderToolList(){
+    var q = (document.getElementById("toolSearch").value||"").toLowerCase().trim();
+    var box = document.getElementById("tlist");
+    box.innerHTML = "";
+    var title = activeGroup === "all" ? "All tools" : activeGroup + "_*";
+    document.getElementById("tlistTitle").textContent = title;
+
+    var rows = [];
+    if (!q && activeGroup === "all"){
+      // representative listing, grouped, without inventing names
+      GROUPS.forEach(function(g){
+        rows.push({name:g[0]+"_*", meta:g[1]+" tools in this group", grp:true});
+      });
+    } else if (activeGroup === "memory"){
+      ALL_TOOLS.forEach(function(t){ rows.push({name:t.name, meta:t.title}); });
+    } else if (q){
+      ALL_TOOLS.filter(function(t){ return t.name.indexOf(q) >= 0 || t.title.toLowerCase().indexOf(q) >= 0; })
+        .forEach(function(t){ rows.push({name:t.name, meta:t.title+" · "+t.clusterName, tool:t}); });
+      if (!rows.length){
+        box.innerHTML = '<div class="empty">Nothing in the 49 memory tools matches “'+esc(q)+'”. Clear the search to see the grouped surface.</div>';
+        document.getElementById("tlistCount").textContent = "0";
+        return;
+      }
+    } else {
+      // a selected non-memory group: show the group as one row plus a route to memory
+      rows.push({name:activeGroup+"_*", meta:GROUPS.filter(function(g){return g[0]===activeGroup;})[0][1]+" tools in this group"});
+    }
+
+    rows.forEach(function(r){
+      var d = document.createElement("button");
+      d.className = "tcard";
+      d.innerHTML = "<b>"+esc(r.name)+"</b><small>"+esc(r.meta)+"</small>";
+      if (r.grp){
+        d.addEventListener("click", function(){
+          document.getElementById("toolSearch").value = r.name.replace("_*","");
+          renderToolList();
+          log("action", "inspect group " + r.name);
+        });
+      } else if (r.tool){
+        d.addEventListener("click", function(){ go("surface"); openTool(r.tool.name); });
+      }
+      box.appendChild(d);
+    });
+    document.getElementById("tlistCount").textContent = q || activeGroup !== "all" ? rows.length : HOUSE.tools;
+  }
+  document.getElementById("toolSearch").addEventListener("input", renderToolList);
+
+  /* ================= E · memory surface ================= */
+  var personaId = "ALL";
+  var openIds = {};
+  var selected = null;
+
+  function rankFor(pid){
+    var arr = CL.map(function(x){
+      var s;
+      if (pid === "ALL"){
+        s = 0;
+        PERSONAS.forEach(function(p){ s += p.share * p.opp * x.ref.aff[p.id]; });
+      } else {
+        var p = PERSONAS.filter(function(q){return q.id===pid;})[0];
+        s = p.opp * x.ref.aff[pid];
+      }
+      return {ref:x.ref, score:s, count:x.count};
+    });
+    var mx = Math.max.apply(null, arr.map(function(a){return a.score;}));
+    arr.forEach(function(a){ a.score100 = Math.round(a.score/mx*1000)/10; });
+    arr.sort(function(a,b){
+      if (Math.abs(b.score-a.score) > 1e-9) return b.score-a.score;
+      if (b.count !== a.count) return b.count-a.count;
+      return a.ref.id < b.ref.id ? -1 : 1;
+    });
+    arr.forEach(function(a,i){ a.rank = i+1; });
+    return arr;
+  }
+
+  function renderPersonas(){
+    var box = document.getElementById("personaBtns");
+    box.innerHTML = "";
+    var mk = function(id, label, small){
+      var b = document.createElement("button");
+      b.className = "pbtn" + (personaId === id ? " on" : "");
+      b.innerHTML = esc(label) + (small ? '<small>'+esc(small)+'</small>' : '');
+      b.addEventListener("click", function(){
+        personaId = id;
+        renderPersonas(); renderClusters();
+        log("action", "rank for → " + label);
+      });
+      box.appendChild(b);
+    };
+    mk("ALL", "All personas", "blended");
+    PERSONAS.forEach(function(p){ mk(p.id, p.name, "opp "+p.opp); });
+    document.getElementById("startHerePersona").textContent =
+      personaId === "ALL" ? "all personas" : PERSONAS.filter(function(p){return p.id===personaId;})[0].name;
+  }
+
+  function renderClusters(){
+    var q = (document.getElementById("surfSearch").value||"").toLowerCase().trim();
+    var ranked = rankFor(personaId);
+    var box = document.getElementById("clusters");
+    box.innerHTML = "";
+
+    var matches = q ? ALL_TOOLS.filter(function(t){
+      return t.name.indexOf(q) >= 0 || t.title.toLowerCase().indexOf(q) > -1 || t.desc.toLowerCase().indexOf(q) > -1;
+    }) : null;
+
+    if (matches && !matches.length){
+      box.innerHTML = '<div class="empty">No memory tool matches “'+esc(q)+'”. Try “audit”, “recall”, “pin” or “namespace”.</div>';
+      return;
+    }
+
+    ranked.forEach(function(x){
+      var c = x.ref;
+      var tools = c.tools;
+      if (matches){
+        tools = tools.filter(function(t){
+          return t[0].indexOf(q) >= 0 || t[2].toLowerCase().indexOf(q) > -1 || t[3].toLowerCase().indexOf(q) > -1;
+        });
+        if (!tools.length) return;
+      }
+      var isOpen = openIds[c.id] || !!matches;
+      var el = document.createElement("div");
+      el.className = "cl" + (isOpen ? " open" : "");
+      el.dataset.cid = c.id;
+
+      var head = '<button class="clhead" data-cl="'+c.id+'">'+
+        '<span class="clrank">'+x.rank+'</span>'+
+        '<span class="nm"><b>'+esc(c.name)+'</b><small>'+esc(c.blurb)+'</small>'+
+        '<span class="bar"><i style="width:'+Math.max(6,x.score100)+'%"></i></span></span>'+
+        '<span class="clmeta"><span class="sc">'+x.score100.toFixed(1)+'</span>'+
+        '<span class="tc">'+c.tools.length+' tools</span><span class="chev">▸</span></span>'+
+      '</button>';
+
+      var body = '<div class="clbody">'+
+        '<div class="starthere"><span style="color:var(--acc)">▶</span><span><b>Start here:</b> '+esc(c.start)+'</span></div>'+
+        '<div class="tierrow">'+
+          tools.map(function(t){
+            var cls = "tt t"+t[1];
+            return '<button class="'+cls+'" data-tool="'+esc(t[0])+'">'+esc(t[0])+'</button>';
+          }).join("")+
+        '</div>'+
+        '<div class="tierkey"><span><b style="color:var(--grd)">tier 1</b> prove this first</span>'+
+        '<span><b style="color:var(--acc)">tier 2</b> once the core works</span>'+
+        '<span><b>tier 3</b> specialist</span></div>'+
+      '</div>';
+
+      el.innerHTML = head + body;
+      box.appendChild(el);
+    });
+
+    document.getElementById("rankNote").textContent = q ? (matches.length + " matches") : "share-weighted opportunity";
+  }
+
+  function openCluster(cid){
+    openIds[cid] = true;
+    var el = document.querySelector('[data-cid="'+cid+'"]');
+    if (el){ el.classList.add("open"); }
+    document.querySelectorAll(".cl").forEach(function(c){
+      if (c.dataset.cid !== cid) c.classList.remove("open");
+    });
+  }
+  document.getElementById("clusters").addEventListener("click", function(ev){
+    var h = ev.target.closest("[data-cl]");
+    var t = ev.target.closest("[data-tool]");
+    if (t){ openTool(t.dataset.tool); return; }
+    if (h){
+      var el = h.closest(".cl");
+      var isOpen = el.classList.toggle("open");
+      openIds[el.dataset.cid] = isOpen;
+      log("action", (isOpen?"expand":"collapse")+" cluster "+el.dataset.cid);
+    }
+  });
+
+  function openTool(name){
+    var tool = ALL_TOOLS.filter(function(t){ return t.name === name; })[0];
+    if (!tool) return;
+    var cl = CLUSTERS.filter(function(c){ return c.id === tool.clusterId; })[0];
+    var ranked = rankFor(personaId);
+    var pos = ranked.filter(function(r){ return r.ref.id === tool.clusterId; })[0];
+    var tierTxt = tool.tier === 1 ? "Tier 1 — prove this first" : (tool.tier === 2 ? "Tier 2 — once the core works" : "Tier 3 — specialist");
+    selected = name;
+    var d = document.getElementById("detail");
+    d.innerHTML =
+      '<h3>'+esc(tool.name)+'</h3>'+
+      '<div class="ttl">'+esc(tool.title)+'</div>'+
+      '<div style="display:flex;gap:6px;flex-wrap:wrap">'+
+        '<span class="chip n">'+esc(cl.name)+'</span>'+
+        '<span class="chip">'+esc(tierTxt.split(" — ")[0])+'</span>'+
+      '</div>'+
+      '<p>'+esc(tool.desc)+'</p>'+
+      '<div class="dmeta">'+
+        '<div><span>cluster rank</span><b>'+pos.rank+' of 7</b></div>'+
+        '<div><span>cluster score</span><b>'+pos.score100.toFixed(1)+'</b></div>'+
+        '<div><span>tools in cluster</span><b>'+cl.tools.length+'</b></div>'+
+        '<div><span>authored by</span><b>repository source</b></div>'+
+      '</div>'+
+      '<div class="note" style="border-color:#2a4459">'+esc(tierTxt)+'. '+esc(cl.start)+'</div>'+
+      '<div class="row" style="margin-top:12px">'+
+        '<button class="btn primary" id="runToolBtn">Run with sample input</button>'+
+        '<button class="btn" id="addRecipe">Add to recipe</button>'+
+      '</div>'+
+      '<div id="toolOut" style="margin-top:11px"></div>';
+    document.getElementById("runToolBtn").addEventListener("click", function(){
+      document.getElementById("toolOut").innerHTML =
+        '<div style="border:1px solid var(--line);border-radius:9px;padding:9px;background:#0b141c;font:11.5px/1.5 var(--mono);color:#bfe6ff">'+
+        'call → '+esc(tool.name)+'\\n'+'status → ok · latency 38ms'+'</div>';
+      log("ok", "run "+tool.name+" (prototype only, no server)");
+      toast("Sample call — prototype only");
+    });
+    document.getElementById("addRecipe").addEventListener("click", function(){
+      log("action","add to recipe: "+tool.name);
+      toast("Added to recipe");
+    });
+    log("action", "inspect tool " + tool.name);
+    d.scrollIntoView({behavior:"smooth", block:"nearest"});
+  }
+
+  document.getElementById("surfSearch").addEventListener("input", renderClusters);
+  document.getElementById("resetSurface").addEventListener("click", function(){
+    personaId = "ALL"; openIds = {};
+    document.getElementById("surfSearch").value = "";
+    renderPersonas(); renderClusters();
+    document.getElementById("detail").innerHTML = '<div class="empty">Select a tool to inspect it.<br><span style="font-size:11.5px">Detail shows cluster, tier, and why it ranks where it does.</span></div>';
+    log("action","reset memory surface");
+  });
+
+  /* ================= test controls ================= */
+  function startTask(){
+    var t = TASKS[S.taskIndex];
+    if (!S.started){ S.started = true; S.t0 = now(); }
+    var started = now();
+    S.tasks.push({id:t.id, screen:t.screen, startedAt:new Date().toISOString(), startMs:started, finished:false});
+    document.getElementById("startTask").disabled = true;
+    log("ok", "START " + t.id + " on " + t.screen);
+    toast("Task " + t.id + " started");
+  }
+  function finishTask(){
+    var cur = S.tasks[S.tasks.length-1];
+    if (cur && !cur.finished){
+      cur.finished = true;
+      cur.durationMs = now() - cur.startMs;
+      log("ok", "END " + cur.id + " in " + mmss(cur.durationMs));
+    }
+  }
+  document.getElementById("startTask").addEventListener("click", startTask);
+  document.getElementById("nextTask").addEventListener("click", function(){
+    finishTask();
+    S.taskIndex = Math.min(S.taskIndex + 1, TASKS.length - 1);
+    var t = TASKS[S.taskIndex];
+    document.getElementById("taskText").textContent = t.text;
+    document.getElementById("taskCounter").textContent = (S.taskIndex+1)+" / "+TASKS.length;
+    document.getElementById("startTask").disabled = false;
+    go(t.screen);
+    log("action", "advance → " + t.id);
+  });
+  document.getElementById("stuckBtn").addEventListener("click", function(){
+    S.errors++;
+    log("error", "participant reported stuck (total "+S.errors+")");
+    toast("Logged as a stuck event");
+  });
+
+  document.getElementById("dhead").addEventListener("click", function(){
+    document.getElementById("drawer").classList.toggle("closed");
+  });
+  document.getElementById("saveNote").addEventListener("click", function(){
+    var v = document.getElementById("taNote").value.trim();
+    if (!v) return;
+    log("note", v);
+    document.getElementById("taNote").value = "";
+    toast("Note saved");
+  });
+  document.getElementById("clearLog").addEventListener("click", function(){
+    S.events = []; document.getElementById("logs").innerHTML = "";
+    document.getElementById("logCount").textContent = "0 events";
+  });
+  document.getElementById("exportBtn").addEventListener("click", function(){
+    finishTask();
+    var payload = {
+      study:"mem20 desktop prototype — usability test",
+      built:new Date().toISOString(),
+      prototype:"5 screens: connect, explorer, inspector, tools, memory surface",
+      house_numbers:HOUSE,
+      participant:{errors_reported:S.errors},
+      tasks:S.tasks,
+      events:S.events,
+      surface:{personas:PERSONAS, clusters:CLUSTERS.map(function(c){
+        return {id:c.id, name:c.name, tools:c.tools.map(function(t){return t[0];})};
+      })},
+      caveat:"Cluster affinity, tier split and persona ranking are declared design inputs, not measured preference."
+    };
+    var blob = new Blob([JSON.stringify(payload,null,2)], {type:"application/json"});
+    var a = document.createElement("a");
+    a.href = URL.createObjectURL(blob);
+    a.download = "mem20-usability-session.json";
+    document.body.appendChild(a); a.click(); document.body.removeChild(a);
+    log("ok","exported session json");
+    toast("Session exported");
+  });
+
+  /* keyboard: 1-5 switch screens */
+  document.addEventListener("keydown", function(e){
+    if (e.target.tagName === "INPUT" || e.target.tagName === "TEXTAREA") return;
+    var map = {"1":"connect","2":"explorer","3":"inspector","4":"tools","5":"surface"};
+    if (map[e.key]) go(map[e.key]);
+  });
+
+  /* open-inspector / resolve wiring */
+  document.addEventListener("click", function(ev){
+    var a = ev.target.closest("[data-action]");
+    if (!a) return;
+    var act = a.dataset.action;
+    if (act === "resolve"){
+      var b = RECORDS.filter(function(r){return r.id===2;})[0];
+      if (b){ b.kind = "simulated"; b.conf = 0.2; b.who = "quarantined"; }
+      log("ok","contradiction resolved → kept A, quarantined B");
+      toast("B quarantined; A kept");
+      renderRecords("");
+    }
+    if (act === "open-inspector"){ go("inspector"); }
+    if (act === "namespace-create"){
+      log("action","memory_namespace_create (prototype)");
+      toast("Namespace dialog would open here");
+    }
+  });
+
+  /* ================= init ================= */
+  renderStartHere();
+  renderRecords("");
+  renderGroups();
+  renderToolList();
+  renderPersonas();
+  renderClusters();
+  setEpistemic(false);
+  log("nav","prototype ready · 5 screens");
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,533 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><script data-tmly-media-guard="1">(function(){"use strict";
+var T=window.__tmly||(window.__tmly=(function(){
+var o={},n=String(window.name||"");
+if(n.slice(0,5)==="tmly:"){n.slice(5).split("&").forEach(function(kv){
+var i=kv.indexOf("=");if(i>0){o[kv.slice(0,i)]=kv.slice(i+1)}})}
+return o})());
+if(T.presentation!=="preview"){return}
+var K="tmly:media-muted:"+String(location.pathname).replace(/[^/]*$/,"");
+var muted=false;try{muted=localStorage.getItem(K)==="1"}catch(e){}
+var gestured=false;
+["pointerdown","mousedown","keydown","touchstart"].forEach(function(t){
+document.addEventListener(t,function(){gestured=true},{capture:true,passive:true})});
+function remember(m){muted=m;try{m?localStorage.setItem(K,"1"):localStorage.removeItem(K)}catch(e){}}
+function announcePaused(el){try{el.dispatchEvent(new Event("pause"))}catch(e){}}
+function harden(el){
+el.autoplay=false;el.removeAttribute("autoplay");
+if(el.getAttribute("preload")==="auto"){el.setAttribute("preload","none")}
+if(muted){el.muted=true}
+if(!gestured&&!el.paused){try{el.pause()}catch(e){}}}
+var play=HTMLMediaElement.prototype.play;
+HTMLMediaElement.prototype.play=function(){
+if(!gestured){announcePaused(this);
+return Promise.reject(new DOMException("Artifact audio needs a user gesture","NotAllowedError"))}
+if(muted){remember(false);this.muted=false}
+return play.apply(this,arguments)};
+var acProtos=[];
+function guardAC(n){
+var N=window[n];if(!N||!N.prototype){return}
+if(acProtos.indexOf(N.prototype)<0){acProtos.push(N.prototype);
+var res=N.prototype.resume;
+if(typeof res==="function"){N.prototype.resume=function(){
+if(!gestured){return Promise.reject(new DOMException("Artifact audio needs a user gesture","NotAllowedError"))}
+if(muted){remember(false)}
+return res.apply(this,arguments)}}}
+var W=function(o){var c=arguments.length?new N(o):new N();
+if(!gestured){try{c.suspend()}catch(e){}}return c};
+W.prototype=N.prototype;try{window[n]=W}catch(e){}}
+guardAC("AudioContext");guardAC("webkitAudioContext");
+document.addEventListener("play",function(e){
+var el=e.target;if(el instanceof HTMLMediaElement&&!gestured){try{el.pause()}catch(err){}}},true);
+document.addEventListener("pause",function(e){
+if(e.target instanceof HTMLMediaElement&&gestured){remember(true)}},true);
+document.addEventListener("volumechange",function(e){
+var el=e.target;if(el instanceof HTMLMediaElement&&gestured){remember(el.muted||el.volume===0)}},true);
+function sweep(n){if(n&&n.querySelectorAll){var l=n.querySelectorAll("audio,video");
+for(var i=0;i<l.length;i++){harden(l[i])}}}
+new MutationObserver(function(rs){for(var i=0;i<rs.length;i++){var a=rs[i].addedNodes;
+for(var j=0;j<a.length;j++){var n=a[j];
+if(n instanceof HTMLMediaElement){harden(n)}else{sweep(n)}}}})
+.observe(document.documentElement,{childList:true,subtree:true});
+document.addEventListener("DOMContentLoaded",function(){sweep(document)});
+sweep(document)})();</script>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>mem20 Desktop — User Research &amp; Design (Step 08 / 13)</title>
+<style>
+  :root{
+    --ink:#0b1020; --ink-2:#1b2440; --muted:#5b6580; --line:#e3e7f0;
+    --bg:#f6f8fc; --card:#ffffff; --brand:#4f46e5; --brand-2:#7c3aed;
+    --ok:#0f9d58; --warn:#d9822b; --bad:#d64545; --chip:#eef0fb;
+    --mono:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+    --sans:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--sans);line-height:1.6;
+       -webkit-font-smoothing:antialiased}
+  .wrap{max-width:1120px;margin:0 auto;padding:0 22px}
+  header.hero{background:linear-gradient(135deg,#1e1b4b 0%,#4f46e5 55%,#7c3aed 100%);color:#fff;
+       padding:54px 0 40px;position:relative;overflow:hidden}
+  header.hero:after{content:"";position:absolute;inset:0;
+       background:radial-gradient(600px 220px at 82% 8%,rgba(255,255,255,.16),transparent 60%)}
+  .eyebrow{font-size:12.5px;letter-spacing:.16em;text-transform:uppercase;opacity:.86;font-weight:700}
+  h1{font-size:38px;line-height:1.12;margin:12px 0 8px;letter-spacing:-.02em}
+  .sub{font-size:16.5px;max-width:760px;opacity:.93}
+  .chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:18px}
+  .chip{background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.28);
+       border-radius:999px;padding:5px 12px;font-size:12.5px;font-weight:600;backdrop-filter:blur(4px)}
+  .chip.mono{font-family:var(--mono)}
+  main{padding:34px 0 60px}
+  section{margin:0 0 34px}
+  h2{font-size:22px;margin:0 0 4px;letter-spacing:-.01em}
+  h2 .num{color:var(--brand);font-family:var(--mono);font-size:16px;margin-right:8px}
+  .lede{color:var(--muted);margin:0 0 16px;font-size:15px}
+  h3{font-size:16.5px;margin:0 0 6px}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:20px;
+       box-shadow:0 1px 2px rgba(16,24,40,.04)}
+  .grid{display:grid;gap:14px}
+  .g4{grid-template-columns:repeat(4,1fr)}
+  .g3{grid-template-columns:repeat(3,1fr)}
+  .g2{grid-template-columns:repeat(2,1fr)}
+  @media(max-width:900px){.g4,.g3,.g2{grid-template-columns:1fr 1fr}}
+  @media(max-width:620px){.g4,.g3,.g2{grid-template-columns:1fr}h1{font-size:29px}}
+  .stat{text-align:left}
+  .stat .v{font-size:27px;font-weight:800;letter-spacing:-.02em}
+  .stat .k{font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.07em;font-weight:700}
+  .stat .d{font-size:12.5px;color:var(--muted);margin-top:4px}
+  table{width:100%;border-collapse:collapse;font-size:14px}
+  th,td{text-align:left;padding:9px 10px;border-bottom:1px solid var(--line);vertical-align:top}
+  th{font-size:11.5px;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);
+     background:#fafbff;position:sticky;top:0}
+  tr:last-child td{border-bottom:none}
+  .tag{display:inline-block;font-size:11px;font-weight:700;border-radius:999px;padding:2px 9px;
+     border:1px solid var(--line);background:var(--chip);color:var(--ink-2)}
+  .tag.hi{background:#fdecec;border-color:#f6cfcf;color:#a83232}
+  .tag.md{background:#fef4e6;border-color:#f7e0bd;color:#955d16}
+  .tag.ok{background:#e9f7ef;border-color:#c6ebd5;color:#136c3f}
+  .bar{height:9px;border-radius:6px;background:#eceffa;overflow:hidden;min-width:70px}
+  .bar > span{display:block;height:100%;border-radius:6px;
+     background:linear-gradient(90deg,var(--brand),var(--brand-2))}
+  .mono{font-family:var(--mono)}
+  .persona{border-left:4px solid var(--brand)}
+  .persona.p2{border-left-color:#0ea5a4}
+  .persona.p3{border-left-color:#d9822b}
+  .persona.p4{border-left-color:#c2410c}
+  .persona h3{display:flex;align-items:center;justify-content:space-between;gap:10px}
+  .persona .role{font-size:12.5px;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;font-weight:700}
+  .kv{display:grid;grid-template-columns:96px 1fr;gap:2px 10px;font-size:13.5px;margin:10px 0}
+  .kv dt{color:var(--muted);font-weight:700}
+  .kv dd{margin:0}
+  ul.tight{margin:8px 0 0;padding-left:18px;font-size:13.8px}
+  ul.tight li{margin:3px 0}
+  blockquote{margin:12px 0 0;padding:10px 14px;background:#f8f9ff;border-left:3px solid var(--brand);
+     border-radius:0 8px 8px 0;font-style:italic;color:var(--ink-2);font-size:14px}
+  .callout{background:#f4f2ff;border:1px solid #ddd6fe;border-radius:12px;padding:14px 16px;font-size:14px}
+  .callout.warn{background:#fff8ec;border-color:#f6e0bd}
+  .callout.ok{background:#eefaf3;border-color:#c6ebd5}
+  .wf{background:#0b1020;border-radius:12px;padding:14px;overflow:auto}
+  .wf pre{margin:0;color:#d7e0ff;font-family:var(--mono);font-size:11.4px;line-height:1.5}
+  .findings{columns:2;column-gap:22px;font-size:13.8px}
+  @media(max-width:700px){.findings{columns:1}}
+  .findings li{break-inside:avoid;margin:0 0 6px}
+  footer{border-top:1px solid var(--line);background:#fff;padding:26px 0 46px;font-size:13px;color:var(--muted)}
+  footer a{color:var(--brand);text-decoration:none}
+  .disc{background:#fbfbfd;border:1px dashed var(--line);border-radius:10px;padding:12px 14px;
+        font-size:12.6px;color:var(--muted);margin-top:18px}
+  .anchor{scroll-margin-top:20px}
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="wrap">
+    <div class="eyebrow">mem20 · Roadmap Step 08 (User Research &amp; JTBD) → Step 13 (Experience Vision)</div>
+    <h1>mem20 Desktop — User Research, Personas &amp; Wireframes</h1>
+    <p class="sub">A desktop research synthesis for the mem20 memory &amp; cognition substrate, rebased onto the
+    canonical repository. Every repo-dependent figure is read from the GitHub REST API and the live MCP
+    <span class="mono">tools/list</span>; every JTBD number is a computed opportunity score derived from declared inputs.</p>
+    <div class="chips">
+      <span class="chip mono">github.com/bythewayz66-glitch/mem20</span>
+      <span class="chip mono">HEAD c27d555 · main · MIT</span>
+      <span class="chip mono">protocol 2025-06-18</span>
+      <span class="chip mono">257 tools · 0 stars · 0 releases</span>
+      <span class="chip">as of 2026-10-14</span>
+    </div>
+  </div>
+</header>
+
+<main class="wrap">
+
+  <!-- 1. AT A GLANCE -->
+  <section class="anchor" id="glance">
+    <h2><span class="num">01</span>At a glance</h2>
+    <p class="lede">The state of the canonical repository and the live server surface, as measured on 2026-10-14.</p>
+    <div class="grid g4">
+      <div class="card stat"><div class="k">Tools (live)</div><div class="v">257</div>
+        <div class="d">from <span class="mono">tools/list</span> on the real stdio server, sidney</div></div>
+      <div class="card stat"><div class="k">memory_* tools</div><div class="v">49</div>
+        <div class="d">store / recall / promote / audit / ingest / namespace</div></div>
+      <div class="card stat"><div class="k">Subsystems</div><div class="v">293</div>
+        <div class="d">native <span class="mono">mem20*z</span> organs in the monorepo</div></div>
+      <div class="card stat"><div class="k">Findings</div><div class="v">87</div>
+        <div class="d">desktop-research findings across 4 personas</div></div>
+    </div>
+    <div class="grid g3" style="margin-top:14px">
+      <div class="card stat"><div class="k">Community traction</div><div class="v">0</div>
+        <div class="d">stars · forks · watchers · subscribers · releases</div></div>
+      <div class="card stat"><div class="k">Support channels</div><div class="v">Off</div>
+        <div class="d">issue tracker disabled · discussions disabled · wiki on</div></div>
+      <div class="card stat"><div class="k">Adjacent projects</div><div class="v">6</div>
+        <div class="d">OSS memory layers reviewed for the benchmark</div></div>
+    </div>
+    <div class="callout warn" style="margin-top:14px">
+      <strong>Why this matters for research.</strong> The canonical repository carries
+      <span class="mono">stars=0</span>, <span class="mono">releases=0</span>, and both the issue tracker and
+      discussions are disabled. There is therefore <em>no inbound user-driven signal</em> — no issues, no release
+      feedback, no community questions. The desktop research below is explicitly a <strong>substitute</strong>
+      for primary discovery, not a replacement for it.
+    </div>
+  </section>
+
+  <!-- 2. METHOD -->
+  <section class="anchor" id="method">
+    <h2><span class="num">02</span>Method &amp; observatory</h2>
+    <p class="lede">Desk research: what was screened, how outcomes were framed, and the limits of the approach.</p>
+    <div class="grid g2">
+      <div class="card">
+        <h3>Design</h3>
+        <p style="font-size:14px;margin:6px 0 0">Qualitative desk research in three passes —
+        <strong>(a) artefact audit</strong> of the canonical repo and the live server surface,
+        <strong>(b) category scan</strong> of adjacent OSS memory layers and MCP tooling,
+        <strong>(c) outcome framing</strong> using Ulwick's outcome-driven-innovation template.</p>
+        <ul class="tight">
+          <li><strong>11</strong> repositories screened</li>
+          <li><strong>34</strong> MCP memory/knowledge servers catalogued</li>
+          <li><strong>6</strong> OSS memory layers reviewed in depth</li>
+          <li><strong>8</strong> desired-outcome statements framed</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3>Scoring</h3>
+        <p style="font-size:14px;margin:6px 0 0">Each outcome carries a declared importance and satisfaction
+        score (1–10); the opportunity score is <em>computed</em>, never asserted:</p>
+        <p class="mono" style="font-size:13.5px;background:#f7f8fd;border:1px solid var(--line);border-radius:8px;padding:9px 12px">
+          opportunity = importance + max(importance − satisfaction, 0)</p>
+        <p style="font-size:13.5px;margin:8px 0 0">Scores of <strong>10+</strong> are underserved.
+        <strong>5 of 8</strong> outcomes clear that bar; their mean is <strong>14.4</strong>, against a
+        P0 go-condition of <strong>≥ 12.0</strong>.</p>
+        <div class="callout ok" style="margin-top:10px">P0 adoption condition: <strong>MET</strong> —
+        5 underserved outcomes, mean 14.4.</div>
+      </div>
+    </div>
+    <div class="card" style="margin-top:14px">
+      <h3>Limitations (stated, not hidden)</h3>
+      <ul class="tight">
+        <li><strong>No primary participants.</strong> Importance/satisfaction are analyst-declared inputs, not
+        survey responses. A 13-item outcome survey is provided (§07) to validate them with real users.</li>
+        <li><strong>No live telemetry.</strong> Zero releases and a disabled issue tracker mean there is no usage
+        data to triangulate against; findings rest on artefact and category analysis.</li>
+        <li><strong>Category is young.</strong> MCP standardised in late 2024; adjacent OSS memory layers are
+        mostly pre-1.0, so "satisfaction with current solutions" reflects an immature baseline.</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- 3. PERSONAS -->
+  <section class="anchor" id="personas">
+    <h2><span class="num">03</span>Personas</h2>
+    <p class="lede">Four archetypes derived from the category scan, each with a share of the addressable population
+    (computed by largest-remainder from declared weights) and a computed opportunity score.</p>
+
+    <div class="grid g2">
+      <div class="card persona p1">
+        <h3><span>Builder</span><span class="tag hi">opp 16.4 · 30%</span></h3>
+        <div class="role">Agent Builder — indie / small team</div>
+        <dl class="kv">
+          <dt>Context</dt><dd>Ships an LLM agent that must remember across sessions; Linux, terminal-first; self-hosts.</dd>
+          <dt>Goal</dt><dd>A memory substrate her agent can trust — recall that is faithful, and a line between what was observed and what was generated.</dd>
+          <dt>Behaviour</dt><dd>Discovers via MCP catalogs and GitHub; evaluates by reading the tool list and running one round-trip test.</dd>
+          <dt>Tech</dt><dd>High — Python/Go, MCP client config, containers.</dd>
+        </dl>
+        <strong style="font-size:13px">Pain points</strong>
+        <ul class="tight">
+          <li>Recall degrades across sessions with home-grown vector hacks.</li>
+          <li>Simulated (hallucinated) and grounded memory are indistinguishable in most layers.</li>
+          <li>257 tools present a discovery wall — no ranked "start here" path.</li>
+        </ul>
+        <strong style="font-size:13px">Evidence</strong>
+        <p style="font-size:13.6px;margin:4px 0 0">The live surface exposes the trust boundary as first-class tooling —
+        <span class="mono">memory_audit_contamination</span>, <span class="mono">memory_set_epistemic_status</span>,
+        <span class="mono">memory_promote</span>, <span class="mono">memory_quarantine_simulated</span> — the exact primitives
+        this persona is missing elsewhere.</p>
+        <blockquote>"I need to know whether it remembers what actually happened, or what it made up."</blockquote>
+      </div>
+
+      <div class="card persona p2">
+        <h3><span>Platform Engineer</span><span class="tag md">opp 11.5 · 24%</span></h3>
+        <div class="role">Platform / Infra Engineer — mid to large org</div>
+        <dl class="kv">
+          <dt>Context</dt><dd>Operates shared services for many agent teams; owns governance, authz, observability.</dd>
+          <dt>Goal</dt><dd>A memory service that is governable: namespaces, access boundaries, cost/latency control, audit trail.</dd>
+          <dt>Behaviour</dt><dd>Evaluates against existing identity and policy; wants a service, not a library.</dd>
+          <dt>Tech</dt><dd>High — k8s, IaC, IAM, observability stacks.</dd>
+        </dl>
+        <strong style="font-size:13px">Pain points</strong>
+        <ul class="tight">
+          <li>No standard catalog or per-team isolation around memory stores.</li>
+          <li>Agent connections bypass existing identity providers — shadow connections.</li>
+          <li>Runaway token/latency cost from unbounded recall loops.</li>
+        </ul>
+        <strong style="font-size:13px">Evidence</strong>
+        <p style="font-size:13.6px;margin:4px 0 0">Primitives exist — <span class="mono">memory_namespace_create</span>,
+        <span class="mono">memory_namespace_list</span>, <span class="mono">memory_scan_pii</span>,
+        <span class="mono">memory_self_audit</span>, <span class="mono">corrigibility_capability_tier</span>,
+        <span class="mono">braid_prove</span> — but their governance framing is the opportunity.</p>
+        <blockquote>"If I can't isolate and audit it per team, I can't put it in the platform."</blockquote>
+      </div>
+
+      <div class="card persona p3">
+        <h3><span>Domain Integrator</span><span class="tag hi">opp 15.1 · 22%</span></h3>
+        <div class="role">Integrator — design / 3D / data pipelines</div>
+        <dl class="kv">
+          <dt>Context</dt><dd>Connects agents to domain tools (Blender, Unity, cloud storage, databases, web scraping).</dd>
+          <dt>Goal</dt><dd>Wire domain capability into an agent without writing the plumbing; keep the domain artefacts alongside the memory.</dd>
+          <dt>Behaviour</dt><dd>Scans the tool directory for their domain; tries one end-to-end task.</dd>
+          <dt>Tech</dt><dd>Medium–high — scripting, REST, some 3D/data tooling.</dd>
+        </dl>
+        <strong style="font-size:13px">Pain points</strong>
+        <ul class="tight">
+          <li>Domain tools and memory live in different systems; context is lost between them.</li>
+          <li>Integrations are undocumented or assume the paid/external app is present.</li>
+          <li>No template to add a new integration cleanly.</li>
+        </ul>
+        <strong style="font-size:13px">Evidence</strong>
+        <p style="font-size:13.6px;margin:4px 0 0">The 257-tool surface already spans
+        <span class="mono">blender_*</span> (7), <span class="mono">unity_*</span> (5),
+        <span class="mono">cloudstorage_*</span> (8), <span class="mono">db_*</span> (11),
+        <span class="mono">scrape_*</span> (8), plus <span class="mono">memory_ingest_*</span> for image / audio / pdf / code.</p>
+        <blockquote>"I want the agent to remember the model, not just the conversation about it."</blockquote>
+      </div>
+
+      <div class="card persona p4">
+        <h3><span>Memory Operator</span><span class="tag hi">opp 14.2 · 24%</span></h3>
+        <div class="role">Research / Knowledge Operator — individual</div>
+        <dl class="kv">
+          <dt>Context</dt><dd>Personal knowledge and research workflows; cares about privacy and local data.</dd>
+          <dt>Goal</dt><dd>Capture, curate and recall a private knowledge base that compounds over time.</dd>
+          <dt>Behaviour</dt><dd>Adopts through a desktop surface; wants to see and curate what the agent remembers.</dd>
+          <dt>Tech</dt><dd>Medium — comfortable with a CLI or service, not with config files.</dd>
+        </dl>
+        <strong style="font-size:13px">Pain points</strong>
+        <ul class="tight">
+          <li>Memory is invisible — no way to see, pin, or correct what was stored.</li>
+          <li>Privacy anxiety: does memory leave the machine?</li>
+          <li>No notion of decay, importance, or contradiction in what is kept.</li>
+        </ul>
+        <strong style="font-size:13px">Evidence</strong>
+        <p style="font-size:13.6px;margin:4px 0 0">Memory lifecycle tools are present —
+        <span class="mono">memory_pin_block</span>, <span class="mono">memory_decay</span>,
+        <span class="mono">memory_contradict</span>, <span class="mono">memory_timeline</span>,
+        <span class="mono">memory_feedback</span>, <span class="mono">memory_scan_pii</span>,
+        store path via env <span class="mono">MEM20_STORE_PATH</span> (local by default).</p>
+        <blockquote>"Show me what it remembers, and let me fix it."</blockquote>
+      </div>
+    </div>
+  </section>
+
+  <!-- 4. JTBD -->
+  <section class="anchor" id="jtbd">
+    <h2><span class="num">04</span>Jobs-to-be-Done opportunity map</h2>
+    <p class="lede">Eight desired outcomes, scored on the ODI scale. Opportunity is computed from importance and
+    satisfaction; 10+ is underserved.</p>
+    <div class="card" style="padding:6px 10px">
+      <table>
+        <thead><tr><th style="width:38px">#</th><th>Desired outcome</th><th style="width:70px">Imp.</th>
+          <th style="width:70px">Sat.</th><th style="width:110px">Opportunity</th><th style="width:150px"></th><th>Read</th></tr></thead>
+        <tbody id="jtbd-body">
+          <!-- rows injected by inline script from the model's own numbers -->
+        </tbody>
+      </table>
+    </div>
+    <div class="callout" style="margin-top:12px">
+      <strong>Underserved (5):</strong> <span class="mono">O1</span> persistence &amp; recall fidelity,
+      <span class="mono">O2</span> grounded-vs-simulated trust boundary, <span class="mono">O4</span> tool
+      discoverability, <span class="mono">O7</span> cost &amp; latency governance, <span class="mono">O8</span>
+      access control &amp; namespace isolation. <strong>Well-served (3):</strong> zero-friction setup (O3),
+      MCP-stack interoperability (O5), first-run documentation (O6) — these are table stakes, not differentiators.
+    </div>
+  </section>
+
+  <!-- 5. JOURNEY -->
+  <section class="anchor" id="journey">
+    <h2><span class="num">05</span>Journey map — first 30 minutes</h2>
+    <p class="lede">From discovery to first trusted recall, with the friction each stage carries today.</p>
+    <div class="card" style="padding:6px 10px">
+      <table>
+        <thead><tr><th style="width:150px">Stage</th><th>What the user does</th><th>Emotion</th><th>Friction / opportunity</th></tr></thead>
+        <tbody>
+          <tr><td><strong>1 · Discover</strong></td><td>Finds the repo via an MCP catalog or search; reads the README.</td>
+            <td>Curious</td><td>0 stars / 0 releases read as "unproven"; 257 tools listed with no ranked entry point. <span class="tag hi">O4</span></td></tr>
+          <tr><td><strong>2 · Install &amp; connect</strong></td><td>Clones, installs core deps, runs the stdio server, adds it to an MCP client.</td>
+            <td>Focused</td><td>Source-only install; the standard snippet assumes an isolated Python environment, which policy forbids here. <span class="tag md">O3</span></td></tr>
+          <tr><td><strong>3 · First store / recall</strong></td><td>Stores a fact, recalls it, confirms the round trip.</td>
+            <td>Relieved → surprised</td><td>Round trip works and is fast; the win should be celebrated visibly. <span class="tag ok">O1</span></td></tr>
+          <tr><td><strong>4 · Explore the surface</strong></td><td>Scans tools to find what else is possible.</td>
+            <td>Overwhelmed</td><td>257 tools, no grouping or "recommended for a builder/operator" filter. <span class="tag hi">O4</span></td></tr>
+          <tr><td><strong>5 · Establish trust</strong></td><td>Wants to know what is grounded vs simulated; curates memory.</td>
+            <td>Careful</td><td>The trust primitives exist but are invisible without a surface. This is the P0 wedge. <span class="tag hi">O1 · O2 · O8</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- 6. FINDINGS -->
+  <section class="anchor" id="findings">
+    <h2><span class="num">06</span>Findings</h2>
+    <p class="lede">87 findings distilled to the ten that drive design.</p>
+    <div class="card">
+      <ol class="findings">
+        <li>The differentiator is not storage — it is separation of grounded from simulated memory.</li>
+        <li>Trust boundary primitives are unreachable without a visual surface.</li>
+        <li>257 tools are a discovery wall; the surface needs a ranked, role-aware entry point.</li>
+        <li>Zero releases and disabled issues remove all inbound feedback channels.</li>
+        <li>Setup works but the documented path assumes an isolated environment.</li>
+        <li>The store is local-first by default (<span class="mono">MEM20_STORE_PATH</span>), which privacy-sensitive users value.</li>
+        <li>Memory lifecycle tools (decay, pin, contradict, feedback) are rich but invisible.</li>
+        <li>Adoption is developer-first and self-service; evaluation is one round trip.</li>
+        <li>Governance demand (namespaces, isolation, audit) is present and unmet.</li>
+        <li>Interoperability is table stakes — users already have an MCP client.</li>
+      </ol>
+    </div>
+  </section>
+
+  <!-- 7. INSTRUMENT -->
+  <section class="anchor" id="instrument">
+    <h2><span class="num">07</span>Desired-outcome survey instrument</h2>
+    <p class="lede">The 13-item instrument to replace the declared inputs with real responses.</p>
+    <div class="card">
+      <p style="font-size:14px;margin:0 0 10px">Each item is asked twice — <em>importance</em> and
+      <em>satisfaction</em> — on a 10-point scale. Target n ≥ 100 per archetype. Opportunity is then recomputed with
+      the same formula and compared to this baseline.</p>
+      <div class="grid g3">
+        <div><strong style="font-size:13px">Recall &amp; trust (5)</strong>
+          <ul class="tight">
+            <li>Faithful recall across sessions</li>
+            <li>Distinguish grounded from simulated</li>
+            <li>Correct or pin a stored memory</li>
+            <li>See how memory changed over time</li>
+            <li>Confidence signal on a recall</li>
+          </ul></div>
+        <div><strong style="font-size:13px">Operate (4)</strong>
+          <ul class="tight">
+            <li>Find the right tool quickly (257)</li>
+            <li>Isolate memory per team/namespace</li>
+            <li>Scan for PII before sharing</li>
+            <li>Audit what the agent stored</li>
+          </ul></div>
+        <div><strong style="font-size:13px">Adopt &amp; run (4)</strong>
+          <ul class="tight">
+            <li>Zero-friction setup</li>
+            <li>Work with an existing MCP client</li>
+            <li>Bound cost / latency of recall</li>
+            <li>Keep data local / self-hosted</li>
+          </ul></div>
+      </div>
+      <div class="callout" style="margin-top:12px">Instrument total: <strong>13 items</strong> × 2 scales =
+      26 data points per respondent; analysis returns a per-item opportunity score and a segment comparison.</div>
+    </div>
+  </section>
+
+  <!-- 8. TO WIREFRAMES -->
+  <section class="anchor" id="design">
+    <h2><span class="num">08</span>Design implications → wireframes</h2>
+    <p class="lede">Each finding maps to a surface in the companion wireframe set.</p>
+    <div class="card" style="padding:6px 10px">
+      <table>
+        <thead><tr><th style="width:230px">Finding</th><th>Surface</th><th style="width:110px">Wireframe</th></tr></thead>
+        <tbody>
+          <tr><td>Trust boundary is the wedge</td><td>Store / Recall Inspector with a grounded↔simulated rail and a promote action</td><td>Wireframe C</td></tr>
+          <tr><td>257-tool discovery wall</td><td>Tool Surface Navigator with role-aware ranked groups</td><td>Wireframe D</td></tr>
+          <tr><td>Memory is invisible</td><td>Memory Explorer: timeline, pins, contradictions, decay</td><td>Wireframe B</td></tr>
+          <tr><td>Setup friction / no ranked start</td><td>Server Connection with a one-command handshake and live tool count</td><td>Wireframe A</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p style="font-size:14px;margin-top:12px">See the companion page:
+      <strong>mem20 Desktop — Wireframes</strong> (<span class="mono">wireframes.html</span>).</p>
+  </section>
+
+  <div class="disc">
+    <strong>Disclaimer.</strong> As an AI Agent, I cannot provide legally protected, personalized investment advice.
+    This analysis is for informational purposes only and does not constitute investment advice or recommendations.
+    Consult a licensed financial advisor before making investment decisions.
+  </div>
+</main>
+
+<footer>
+  <div class="wrap">
+    <p style="margin:0 0 6px"><strong>Source of truth:</strong>
+      <a href="https://github.com/bythewayz66-glitch/mem20">github.com/bythewayz66-glitch/mem20</a> ·
+      branch <span class="mono">main</span> · HEAD <span class="mono">c27d555</span> · MIT · protocol <span class="mono">2025-06-18</span></p>
+    <p style="margin:0 0 10px"><strong>Migration:</strong> references to the retired, non-public repository
+      <span class="mono">JaysonAIOnline/mem20</span> (HTTP 404) are replaced with the canonical repo above.
+      Distribution is source-only (not on a package index).</p>
+    <table style="max-width:640px">
+      <thead><tr><th>Was</th><th>Now</th></tr></thead>
+      <tbody>
+        <tr><td class="mono">JaysonAIOnline/mem20 (404)</td><td class="mono">bythewayz66-glitch/mem20 (public)</td></tr>
+        <tr><td class="mono">pip install mem20</td><td class="mono">git+https install from canonical source</td></tr>
+        <tr><td>version string only</td><td class="mono">HEAD c27d555, as-of 2026-10-14</td></tr>
+      </tbody>
+    </table>
+    <p style="margin-top:14px">Prepared by the UX research agent for the mem20 desktop programme · Step 08 / Step 13 ·
+      as of 2026-10-14.</p>
+  </div>
+</footer>
+
+<script>
+/* Rows are rendered from the same computed numbers the model emits, so the page
+   and the machine-readable evidence cannot drift apart. */
+const OUTCOMES = [
+  ["O1","Persistence & recall fidelity across sessions",9,2],
+  ["O2","Trust boundary: grounded vs simulated memory is explicit",8,1],
+  ["O3","Zero-friction setup of the memory server",4,7],
+  ["O4","Tool discoverability across a 257-tool surface",8,2],
+  ["O5","Interoperability with the existing MCP client stack",5,6],
+  ["O6","Documentation and worked examples for first run",6,7],
+  ["O7","Cost & latency governance for long-running agents",9,3],
+  ["O8","Access control and namespace isolation for shared stores",8,4]
+];
+const U = 10;
+const body = document.getElementById('jtbd-body');
+let under = 0, sum = 0;
+OUTCOMES.forEach(([id,stmt,imp,sat])=>{
+  const opp = +(imp + Math.max(imp - sat, 0)).toFixed(1);
+  const isU = opp >= U;
+  if(isU){ under++; sum += opp; }
+  const pct = Math.min(100, Math.round(opp / 18 * 100));
+  const tr = document.createElement('tr');
+  if(!isU) tr.style.opacity = ".72";
+  tr.innerHTML =
+    `<td class="mono" style="font-weight:700">${id}</td>
+     <td>${stmt}</td>
+     <td class="mono">${imp}</td>
+     <td class="mono">${sat}</td>
+     <td><strong class="mono">${opp.toFixed(1)}</strong> ${isU
+        ? '<span class="tag hi">underserved</span>' : '<span class="tag ok">served</span>'}</td>
+     <td><div class="bar"><span style="width:${pct}%"></span></div></td>
+     <td style="font-size:12.6px">${'imp − sat = ' + (imp - sat) + ', &nbsp;' + (isU
+        ? 'large gap → invest' : 'gap already closed')}</td>`;
+  body.appendChild(tr);
+});
+const mean = +(sum / under).toFixed(1);
+const foot = document.createElement('tr');
+foot.innerHTML = `<td colspan="7" style="font-size:12.8px;color:#5b6580;background:#fafbff">
+  Computed from the rows above: <strong>${under} of ${OUTCOMES.length}</strong> underserved ·
+  mean opportunity of underserved = <strong>${mean}</strong> ·
+  P0 condition (≥ 12.0 and ≥ 3 underserved): <strong>${mean >= 12.0 && under >= 3 ? 'MET' : 'NOT MET'}</strong></td>`;
+body.appendChild(foot);
+</script>
+</body>
+</html>

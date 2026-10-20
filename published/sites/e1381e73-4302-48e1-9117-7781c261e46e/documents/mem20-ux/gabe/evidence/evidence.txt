@@ -1,0 +1,19 @@
+# mem20 UX lane — gabe evidence
+generated: 2026-10-18T06:25:26Z
+host: a7ed59c7-ce4d-40ff-83de-c2f97a35b78c
+repo: github.com/bythewayz66-glitch/mem20 (clone HEAD 8e2f803)
+
+## positive run (exit 0)
+tools_total=257
+memory_tools=49
+grouping_entries=49
+clusters=7
+leading_cluster=core-recall
+prototype_groups=36
+prototype_group_sum=257
+exit=0
+
+## negative control (must be non-zero)
+    raise RuntimeError(message)
+RuntimeError: grouping omits registered memory tools: ['memory_store']
+exit=1

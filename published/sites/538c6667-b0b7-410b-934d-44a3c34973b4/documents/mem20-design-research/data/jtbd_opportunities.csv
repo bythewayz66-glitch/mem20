@@ -1,0 +1,9 @@
+outcome_id,desired_outcome,importance,satisfaction,opportunity,underserved,read
+O1,Persistence & recall fidelity across sessions,9,2,16.0,TRUE,invest
+O2,Trust boundary: grounded vs simulated is explicit,8,1,15.0,TRUE,invest
+O3,Zero-friction setup of the memory server,4,7,4.0,FALSE,table stakes
+O4,Tool discoverability across a 257-tool surface,8,2,14.0,TRUE,invest
+O5,Interoperability with the existing MCP client stack,5,6,5.0,FALSE,table stakes
+O6,Documentation and worked examples for first run,6,7,6.0,FALSE,table stakes
+O7,Cost & latency governance for long-running agents,9,3,15.0,TRUE,invest
+O8,Access control and namespace isolation for shared stores,8,4,12.0,TRUE,invest

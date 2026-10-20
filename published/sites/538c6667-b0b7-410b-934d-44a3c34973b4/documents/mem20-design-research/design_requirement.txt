@@ -1,0 +1,45 @@
+Requirement - the mem20 desktop user research & design model (design_model.py).
+
+The artifact is the deterministic model behind the mem20 desktop user-research
+and design deliverable (Step 08 user research / JTBD, Step 13 experience vision
+and wireframes), rebased onto the canonical repository
+github.com/bythewayz66-glitch/mem20.
+
+Clauses:
+C1. The repository figures must come from run-time sources, not constants: the
+    marker document fetched from
+    https://raw.githubusercontent.com/bythewayz66-glitch/mem20/main/CANONICAL.md
+    supplies the repository identity, and the repository's own Git data API,
+    queried with that identity, supplies the tracked-file count and the
+    subsystem-package count. The derived figures are then validated against the
+    required values: repository bythewayz66-glitch/mem20, default branch main,
+    license MIT, 9,882 tracked files, 293 subsystem packages, no package-index
+    entry.
+C2. The live tool surface must be derived from two independent initialize and
+    tools/list handshakes on the canonical stdio server at
+    /opt/mem20/mem20/mcp/mcp_server.py. The two handshakes must agree, and the
+    derived surface is then validated against the required values: 257 tools,
+    protocol 2025-06-18, server name mem20-mcp.
+C3. The run exits non-zero instead of emitting a figure when a fetch fails, when a
+    handshake fails, when two independent derivations disagree, or when a derived
+    figure does not equal its required value.
+C4. The model carries four personas (Agent Builder, Platform Engineer, Domain
+    Integrator, Memory Operator) and eight desired outcomes, and requires each
+    persona's cited evidence tools to be present in the live tool inventory before
+    that persona is reported.
+C5. The model computes an opportunity score of declared importance plus the
+    positive part of declared importance minus declared satisfaction, computes the
+    archetype person-count shares from the declared weights so that they sum to 100
+    exactly, and validates the required research figures: eight outcomes, four
+    personas, five underserved outcomes, underserved mean opportunity 14.4, and
+    weighted opportunity index 14.41.
+C6. The model evaluates a P0 adoption condition against the rule: underserved mean
+    at least 12.0 and at least three underserved outcomes.
+C7. The model enforces its invariants with explicit exceptions rather than assert,
+    because the interpreter strips assert under -O.
+C8. The model supplies its builder with no defaulted source, declares itself as its
+    own runnable self-check fixture (gaben_export_a) so a plain run exits zero and
+    prints its comparisons, exposes a self-test mode that feeds an altered marker
+    and leaves the resulting invariant failure uncaught so the process exits
+    non-zero, and contains no placeholder, hardcoded or fabricated repository
+    number.

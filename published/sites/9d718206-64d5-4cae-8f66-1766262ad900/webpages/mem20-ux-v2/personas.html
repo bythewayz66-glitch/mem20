@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><script data-tmly-media-guard="1">(function(){"use strict";
+var T=window.__tmly||(window.__tmly=(function(){
+var o={},n=String(window.name||"");
+if(n.slice(0,5)==="tmly:"){n.slice(5).split("&").forEach(function(kv){
+var i=kv.indexOf("=");if(i>0){o[kv.slice(0,i)]=kv.slice(i+1)}})}
+return o})());
+if(T.presentation!=="preview"){return}
+var K="tmly:media-muted:"+String(location.pathname).replace(/[^/]*$/,"");
+var muted=false;try{muted=localStorage.getItem(K)==="1"}catch(e){}
+var gestured=false;
+["pointerdown","mousedown","keydown","touchstart"].forEach(function(t){
+document.addEventListener(t,function(){gestured=true},{capture:true,passive:true})});
+function remember(m){muted=m;try{m?localStorage.setItem(K,"1"):localStorage.removeItem(K)}catch(e){}}
+function announcePaused(el){try{el.dispatchEvent(new Event("pause"))}catch(e){}}
+function harden(el){
+el.autoplay=false;el.removeAttribute("autoplay");
+if(el.getAttribute("preload")==="auto"){el.setAttribute("preload","none")}
+if(muted){el.muted=true}
+if(!gestured&&!el.paused){try{el.pause()}catch(e){}}}
+var play=HTMLMediaElement.prototype.play;
+HTMLMediaElement.prototype.play=function(){
+if(!gestured){announcePaused(this);
+return Promise.reject(new DOMException("Artifact audio needs a user gesture","NotAllowedError"))}
+if(muted){remember(false);this.muted=false}
+return play.apply(this,arguments)};
+var acProtos=[];
+function guardAC(n){
+var N=window[n];if(!N||!N.prototype){return}
+if(acProtos.indexOf(N.prototype)<0){acProtos.push(N.prototype);
+var res=N.prototype.resume;
+if(typeof res==="function"){N.prototype.resume=function(){
+if(!gestured){return Promise.reject(new DOMException("Artifact audio needs a user gesture","NotAllowedError"))}
+if(muted){remember(false)}
+return res.apply(this,arguments)}}}
+var W=function(o){var c=arguments.length?new N(o):new N();
+if(!gestured){try{c.suspend()}catch(e){}}return c};
+W.prototype=N.prototype;try{window[n]=W}catch(e){}}
+guardAC("AudioContext");guardAC("webkitAudioContext");
+document.addEventListener("play",function(e){
+var el=e.target;if(el instanceof HTMLMediaElement&&!gestured){try{el.pause()}catch(err){}}},true);
+document.addEventListener("pause",function(e){
+if(e.target instanceof HTMLMediaElement&&gestured){remember(true)}},true);
+document.addEventListener("volumechange",function(e){
+var el=e.target;if(el instanceof HTMLMediaElement&&gestured){remember(el.muted||el.volume===0)}},true);
+function sweep(n){if(n&&n.querySelectorAll){var l=n.querySelectorAll("audio,video");
+for(var i=0;i<l.length;i++){harden(l[i])}}}
+new MutationObserver(function(rs){for(var i=0;i<rs.length;i++){var a=rs[i].addedNodes;
+for(var j=0;j<a.length;j++){var n=a[j];
+if(n instanceof HTMLMediaElement){harden(n)}else{sweep(n)}}}})
+.observe(document.documentElement,{childList:true,subtree:true});
+document.addEventListener("DOMContentLoaded",function(){sweep(document)});
+sweep(document)})();</script>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>mem20 personas — UX research v2</title>
+<link rel="stylesheet" href="assets/style.css">
+<style>
+.friction{width:100%;border-collapse:collapse;font-size:13.5px;margin-top:12px}
+.friction th,.friction td{text-align:left;padding:9px 11px;border-bottom:1px solid var(--line);vertical-align:top}
+.friction th{font-family:var(--mono);font-size:11px;text-transform:uppercase;letter-spacing:.07em;color:var(--ink3)}
+.friction td:first-child{white-space:nowrap}
+</style>
+</head>
+<body>
+<header class="top"><div class="topin">
+  <div class="brand"><span class="dot"></span> mem20 · UX asset deck v2</div>
+  <nav class="links">
+    <a href="index.html">Overview</a>
+    <a href="personas.html" class="on">Personas</a>
+    <a href="task-flows.html">Task flows</a>
+    <a href="wireframes.html">Wireframes</a>
+    <a href="high-fidelity.html">Hi-fi design</a>
+    <a href="https://github.com/JaysonAIOnline/mem20" target="_blank" rel="noopener">Canonical repo ↗</a>
+  </nav>
+</div></header>
+
+<main class="wrap">
+  <section class="hero">
+    <p class="eyebrow">UX research · personas · v2 · 2026-10-14</p>
+    <h1>Personas <span class="thin">re-derived from the current segments</span></h1>
+    <p class="lede">Four personas cover the verified audience for mem20 — an MIT-licensed Python MCP server for auditable agent memory, 257 tools across 26 domains. The v1 personas were written around a <code>pip install</code> world. That world no longer exists: there is no published package, so the install path is a clone. Each persona below therefore carries a <b>ranked onboarding friction list</b> scored against the install path that actually exists today.</p>
+    <div class="note warn"><b>Evidence base.</b> Personas are synthesized from the program's segment definition, the verified product surfaces (repo README, landing-site content) and the recorded install blocker. They are <b>segmented personas, not interview-validated personas</b> — no user interviews were conducted for this refresh, and none are claimed. Where a persona assertion is an inference, it is marked. This is stated up front because a persona deck that hides its evidence basis is worse than no persona deck.</div>
+  </section>
+
+  <h2><span class="num">P1</span>Primary — the platform engineer who has to ship memory this quarter</h2>
+  <div class="persona">
+    <div class="phead">
+      <div class="av" style="background:#39d98a">MR</div>
+      <div>
+        <div class="pname">Maya Reyes</div>
+        <div class="prole">Senior AI platform engineer · Series-B SaaS · 40-person eng org</div>
+      </div>
+    </div>
+    <div class="meta2">
+      <div><span>Segment</span>Primary — AI platform / infra engineer</div>
+      <div><span>Stack</span>LangGraph, CrewAI, Pydantic AI, MCP clients</div>
+      <div><span>Mandate</span>Ship agent memory into production this quarter</div>
+      <div><span>Devices</span>macOS laptop, dev container, remote Linux</div>
+    </div>
+    <div class="quote">"I don't need another memory library. I need to be able to answer the auditor's question: <em>why does the agent believe that?</em> — in one screen, on demand."</div>
+    <h4>Behavior &amp; goals</h4>
+    <p>Maya evaluates by time-to-first-working-call, not by feature list. She will read the install block before the README prose. She runs everything in a container, wires the server into an MCP client config, and only then reads architecture. Her success criterion is a teammate recreating her setup from the same instructions without asking her a question.</p>
+    <h4>Ranked onboarding friction against the verified install path</h4>
+    <table class="friction">
+      <thead><tr><th>Gate</th><th>Friction</th><th>Why it bites Maya</th></tr></thead>
+      <tbody>
+        <tr><td><span class="pill b">blocking</span></td><td>Canonical repo returns 404</td><td>The clone command in the install block is the first thing she runs. It fails. She stops and closes the tab — she will not hunt for an alternate repo.</td></tr>
+        <tr><td><span class="pill b">blocking</span></td><td>No PyPI package</td><td><code>pip install mem20</code> is her default reflex. A 404 there reads as "project is not real" far more strongly than "install from source".</td></tr>
+        <tr><td><span class="pill w">high</span></td><td>Clone → editable install → MCP config is 3 steps, not 1</td><td>Three steps is acceptable <em>if</em> the first-run verification is a copy-pasteable command that prints something. It is not acceptable if verification is prose.</td></tr>
+        <tr><td><span class="pill w">high</span></td><td>Tool breadth (257 across 26 domains) with no task-oriented entry point</td><td>A 257-tool server with no "start here" path forces her to read a catalogue before she can get value.</td></tr>
+        <tr><td><span class="pill s">medium</span></td><td>No stated Python version in the install block</td><td>Python ≥ 3.11 matters in a locked image; discovering it from a traceback costs a cycle.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h2><span class="num">P2</span>Secondary — the regulated-industry AI lead who cannot ship an unexplainable model</h2>
+  <div class="persona">
+    <div class="phead">
+      <div class="av" style="background:#6aa8ff">DA</div>
+      <div>
+        <div class="pname">Daniel Achterberg</div>
+        <div class="prole">Head of applied AI · regulated fintech · model risk committee member</div>
+      </div>
+    </div>
+    <div class="meta2">
+      <div><span>Segment</span>Secondary — regulated-industry AI teams</div>
+      <div><span>Context</span>Fintech / healthcare / legal / gov</div>
+      <div><span>Buying role</span>Evaluator and internal sponsor</div>
+      <div><span>Devices</span>Windows desktop, on-prem Linux</div>
+    </div>
+    <div class="quote">"Retrieval quality is a benchmark argument. Auditability is a committee argument. Only one of those gets me sign-off."</div>
+    <h4>Behavior &amp; goals</h4>
+    <p>Daniel does not run code; he reviews the evidence chain and delegates the technical evaluation. He needs a desktop surface he can open <em>with</em> the model-risk committee: what is grounded, what is simulated, how a record crossed the line, and what the ledger shows. He is the persona the audit surfaces exist for.</p>
+    <h4>Ranked onboarding friction against the verified install path</h4>
+    <table class="friction">
+      <thead><tr><th>Gate</th><th>Friction</th><th>Why it bites Daniel</th></tr></thead>
+      <tbody>
+        <tr><td><span class="pill b">blocking</span></td><td>No packaged, versioned artifact to hand to IT</td><td>"Clone from a 404 repo" cannot enter a procurement or change-control process. He needs a released artifact with a version number.</td></tr>
+        <tr><td><span class="pill w">high</span></td><td>Audit story is CLI-shaped, not screen-shaped</td><td>A terminal transcript is not a committee artefact. He needs an inspectable view he can put on a projector.</td></tr>
+        <tr><td><span class="pill w">high</span></td><td>0.000 adversarial hit rate is a real weakness he will find</td><td>It must be visible to <em>him</em> before he finds it in a competitor's analysis — disclosed weakness is survivable, discovered weakness is not.</td></tr>
+        <tr><td><span class="pill s">medium</span></td><td>No LoCoMo / LongMemEval comparable</td><td>His framework expects a standard benchmark row. The absence is fine; an unexplained absence is not.</td></tr>
+        <tr><td><span class="pill s">medium</span></td><td>Self-attestation hole in the promotion gate (flagged in a prior internal audit)</td><td>If a record can be promoted on user assertion alone, the gate is described as evidence-based <em>with an audit trail</em> — never tamper-proof.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h2><span class="num">P3</span>Tertiary — the self-host-first builder</h2>
+  <div class="persona">
+    <div class="phead">
+      <div class="av" style="background:#f2b134">K</div>
+      <div>
+        <div class="pname">Kai (handle)</div>
+        <div class="prole">Independent OSS maintainer · MCP-ecosystem builder · self-hosts everything</div>
+      </div>
+    </div>
+    <div class="meta2">
+      <div><span>Segment</span>Tertiary — OSS / self-host-first, MCP builders</div>
+      <div><span>Channels</span>GitHub, HN, MCP directories, Discord</div>
+      <div><span>Trigger</span>Zero lock-in, MIT, runs offline</div>
+      <div><span>Devices</span>Linux desktop, homelab</div>
+    </div>
+    <div class="quote">"If I can't run it air-gapped from a clone with no network calls, it isn't self-hosting — it's someone else's SaaS with extra steps."</div>
+    <h4>Behavior &amp; goals</h4>
+    <p>Kai is the fastest to value and the harshest critic. He clones, reads the tree, runs the tests, and judges the project in ten minutes. He is also the amplifier: his GitHub issue or HN comment is how P1 and P2 first hear about mem20. His friction is mostly <em>legibility</em> — a repo that doesn't state its runtime, license and transport in the first screen loses him.</p>
+    <h4>Ranked onboarding friction against the verified install path</h4>
+    <table class="friction">
+      <thead><tr><th>Gate</th><th>Friction</th><th>Why it bites Kai</th></tr></thead>
+      <tbody>
+        <tr><td><span class="pill b">blocking</span></td><td>Dead canonical repo</td><td>He judges the project by whether <code>git clone</code> works on the first line of the README. It does not.</td></tr>
+        <tr><td><span class="pill w">high</span></td><td>Test command and expected result not stated up front</td><td>He wants to run the suite before reading features; an unstated test path reads as "no tests".</td></tr>
+        <tr><td><span class="pill w">high</span></td><td>Docs drift (tool counts quoted as 111 / 97 / 258 / 260 across surfaces)</td><td>Inconsistent counts across docs signal a project that doesn't verify its own claims — fatal for a product whose wedge is verification.</td></tr>
+        <tr><td><span class="pill s">medium</span></td><td>Air-gapped claim needs a stated dependency list</td><td>"Local-first, SQLite + FTS5" is the right claim; he wants the dependency surface spelled out to believe it.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h2><span class="num">P4</span>Tertiary — the audit &amp; compliance reviewer (the persona the wedge is built for)</h2>
+  <div class="persona">
+    <div class="phead">
+      <div class="av" style="background:#f8705f">SR</div>
+      <div>
+        <div class="pname">Sofia Ramírez</div>
+        <div class="prole">Internal audit / AI assurance · second line of defence</div>
+      </div>
+    </div>
+    <div class="meta2">
+      <div><span>Segment</span>Regulated-adjacent · assurance &amp; audit</div>
+      <div><span>Need</span>Prove what the agent believed and why</div>
+      <div><span>Frequency</span>Periodic review + incident-driven</div>
+      <div><span>Devices</span>Corporate desktop, locked-down</div>
+    </div>
+    <div class="quote">"Show me the record, its origin tag, and the moment it was promoted — and make the trail append-only. Then we can talk about trusting the agent."</div>
+    <h4>Behavior &amp; goals</h4>
+    <p>Sofia is not an engineer and never will be. She needs three things from the product: a partition she can point at (grounded vs simulated), a promotion event she can inspect, and a ledger she can trust because it is append-only. If the desktop app cannot give her those three in a single navigable surface, mem20's differentiator is invisible to the only persona who can veto the deployment.</p>
+    <h4>Ranked onboarding friction against the verified install path</h4>
+    <table class="friction">
+      <thead><tr><th>Gate</th><th>Friction</th><th>Why it bites Sofia</th></tr></thead>
+      <tbody>
+        <tr><td><span class="pill b">blocking</span></td><td>No install path that doesn't involve a terminal</td><td>She cannot run the product at all today. She depends entirely on P1 to stand it up — which means the audit surface must be reachable by a non-engineer once someone else installed it.</td></tr>
+        <tr><td><span class="pill w">high</span></td><td>Promotion described in engineering terms</td><td>"Evidence-based promotion with an append-only audit trail" is the correct, defensible phrasing. Anything stronger ("tamper-proof", "provably secure") is a liability she will strike.</td></tr>
+        <tr><td><span class="pill w">high</span></td><td>Ledger entries without human-readable origin</td><td>An origin tag that is a machine identifier is not audit evidence. It must render as a readable provenance line.</td></tr>
+        <tr><td><span class="pill s">medium</span></td><td>No export / evidence-pack view</td><td>Her output is a document for a committee. If she can't export the inspected trail, the audit ends in screenshots.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h2><span class="num">SYNTH</span>What the four personas agree on</h2>
+  <div class="grid">
+    <div class="card"><span class="tag">Convergent finding 1</span><h3>A dead install command ends the evaluation</h3><p>Three of four personas hit the 404 in their first two minutes, and P4 cannot start at all without P1. Install reliability is not a documentation task — it is the top of the funnel.</p></div>
+    <div class="card"><span class="tag">Convergent finding 2</span><h3>The wedge needs a surface, not a paragraph</h3><p>All four describe mem20's differentiator as <em>provable</em> memory. None of them can see it today, because the audit story lives in a terminal. The desktop app's job is to make the partition, the promotion gate and the ledger navigable.</p></div>
+    <div class="card"><span class="tag">Convergent finding 3</span><h3>Disclosed weakness is survivable; discovered weakness is fatal</h3><p>Kai, Daniel and Sofia all independently reach the adversarial 0.000 row and the missing standard benchmark. Keeping both visible — as the program guardrails already require — converts the weakest fact into evidence of rigour.</p></div>
+  </div>
+
+  <div class="note"><b>Recommendation carried into the flows and designs:</b> make the desktop app's default landing surface the <b>audit ledger with the partition view one click away</b>, and make the first-run experience end in a verified empty-state ledger rather than a features tour. That single decision serves P4 directly, gives P2 a committee artefact, and gives P1 a "something printed, it works" verification moment.</div>
+
+  <footer><div class="wrap">
+    <div>mem20 UX research · personas · v2 · built 2026-10-14 · UX Researcher agent</div>
+    <div class="guard">Segmented personas — not interview-validated.<br>No LoCoMo/LongMemEval claim. Adversarial 0.000 disclosed.</div>
+  </div></footer>
+</main>
+</body>
+</html>

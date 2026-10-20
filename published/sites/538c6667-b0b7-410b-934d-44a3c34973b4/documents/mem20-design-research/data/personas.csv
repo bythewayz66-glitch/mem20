@@ -1,0 +1,5 @@
+persona,population_share_pct,opportunity_score,primary_underserved_outcomes,evidence_tools
+Agent Builder,30,16.4,"O1 persistence; O2 trust boundary; O4 discoverability","memory_store; memory_recall; memory_audit_contamination; memory_promote; memory_set_epistemic_status"
+Platform Engineer,24,11.5,"O8 access control; O7 cost & latency","memory_namespace_create; memory_namespace_list; memory_scan_pii; memory_self_audit; corrigibility_capability_tier; braid_prove"
+Domain Integrator,22,15.1,"O4 discoverability; O1 fidelity","blender_*; unity_*; cloudstorage_*; db_*; scrape_*; memory_ingest_image; memory_ingest_pdf; memory_ingest_code"
+Memory Operator,24,14.2,"O1 fidelity; O2 trust boundary","memory_pin_block; memory_decay; memory_contradict; memory_timeline; memory_feedback; memory_scan_pii; memory_status"

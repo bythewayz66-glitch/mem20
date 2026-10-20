@@ -1,0 +1,203 @@
+{
+  "schema": "mem20.memory_surface/1",
+  "meta": {
+    "title": "mem20 Memory Surface — ranked entry point for the 49 memory_* tools",
+    "repo": "https://github.com/bythewayz66-glitch/mem20",
+    "lane": "UX Research — desktop design (wireframes A-D -> clickable prototype)",
+    "house_numbers": {
+      "tools_total": 257,
+      "domains_total": 26,
+      "memory_tools": 49,
+      "tam_usd": 1280000000,
+      "sam_usd": 282000000,
+      "som_usd": 1680000,
+      "blended_acv_usd": 14000,
+      "note": "mem20 house positioning numbers. Not investment guidance; market sizing is a product-positioning input, not financial advice."
+    },
+    "sources": {
+      "tool_surface": "AST extraction of mt.Tool(name=...) across mcp/ and mcp_server_dir/ in the canonical repo (extract_memory_surface.py) — 49 memory_* of 257 total",
+      "personas": "mem20 design research, personas block (shares + opportunity scores): Agent Builder 30% / 16.4, Platform Engineer 24% / 11.5, Domain Integrator 22% / 15.1, Memory Operator 24% / 14.2",
+      "wireframes": "Wireframes A Server Connection, B Memory Explorer, C Store/Recall Inspector, D Tool Surface Navigator"
+    },
+    "honesty": {
+      "what_is_measured": "Tool names, titles and descriptions are read from the repository. Counts (257 / 49) are counted, not asserted.",
+      "what_is_declared": "Cluster membership, the persona-affinity matrix and per-tool tiers are DECLARED DESIGN INPUTS, not measured user preference. They make the 49-tool wall navigable; they are a hypothesis for the usability test to falsify.",
+      "instrument": "The prototype carries the usability-test task set, per-task timer and error log, so these rankings can be replaced by observed behaviour rather than kept as opinion."
+    }
+  },
+  "outcome_index": {
+    "O1": "Persistence & recall fidelity",
+    "O2": "Grounded vs simulated trust boundary",
+    "O4": "Tool discoverability",
+    "O7": "Cost & latency governance",
+    "O8": "Access control & namespace isolation"
+  },
+  "personas": [
+    { "id": "AB", "name": "Agent Builder", "share": 0.30, "opportunity": 16.4, "outcomes": ["O1", "O2"], "primary_cluster": "core-recall" },
+    { "id": "PE", "name": "Platform Engineer", "share": 0.24, "opportunity": 11.5, "outcomes": ["O8", "O7"], "primary_cluster": "governance-isolation" },
+    { "id": "DI", "name": "Domain Integrator", "share": 0.22, "opportunity": 15.1, "outcomes": ["O4"], "primary_cluster": "ingestion" },
+    { "id": "MO", "name": "Memory Operator", "share": 0.24, "opportunity": 14.2, "outcomes": ["O1", "O2"], "primary_cluster": "curation-lifecycle" }
+  ],
+  "derivation": {
+    "formula": "score(c) = sum over personas p of (share_p * opportunity_p * affinity_pc)",
+    "affinity_scale": "1.0 primary surface for that persona, 0.6 supporting, 0.25 adjacent",
+    "normalisation": "score_100 = score(c) / max(score) * 100",
+    "tie_break": "higher raw score, then larger tool count, then cluster id (deterministic)"
+  },
+  "clusters": [
+    {
+      "id": "core-recall",
+      "name": "Core Recall & Store",
+      "rank": 1,
+      "score": 11.977,
+      "score_100": 100.0,
+      "blurb": "Write a fact, get it back. The four recall modes plus context assembly and entity probes.",
+      "outcomes": ["O1", "O4"],
+      "affinity": { "AB": 1.0, "PE": 0.6, "DI": 0.6, "MO": 1.0 },
+      "persona_ranks": { "AB": 1, "PE": 2, "DI": 2, "MO": 1 },
+      "start_here": "memory_store then memory_recall — one round-trip proves fidelity before anything else is learned.",
+      "tools": [
+        { "name": "memory_store", "title": "Store Memory", "tier": 1, "description": "Store a fact in mem20's persistent memory system." },
+        { "name": "memory_recall", "title": "Recall Memory", "tier": 1, "description": "Search and recall facts from mem20's memory system." },
+        { "name": "memory_recall_hybrid", "title": "Hybrid Memory Recall", "tier": 2, "description": "Hybrid BM25 + vector search with Reciprocal Rank Fusion and optional cross-encoder reranking." },
+        { "name": "memory_recall_semantic", "title": "Semantic Memory Recall", "tier": 2, "description": "Pure vector-based semantic search using embeddings." },
+        { "name": "memory_recall_graph", "title": "Graph Memory Recall", "tier": 3, "description": "Knowledge graph traversal with multi-hop entity resolution." },
+        { "name": "memory_context_window", "title": "Context Window", "tier": 2, "description": "Get memories relevant to the current context." },
+        { "name": "memory_probe", "title": "Probe Entity", "tier": 2, "description": "Get all facts about a specific entity." },
+        { "name": "memory_related", "title": "Find Related Entities", "tier": 3, "description": "Find entities structurally adjacent or connected to a given entity." },
+        { "name": "memory_reason", "title": "Reason Across Entities", "tier": 3, "description": "Compositional reasoning across multiple entities." },
+        { "name": "memory_graph_traverse", "title": "Graph Traversal", "tier": 3, "description": "Traverse the memory graph from a starting entity." }
+      ]
+    },
+    {
+      "id": "trust-epistemics",
+      "name": "Trust & Epistemics",
+      "rank": 2,
+      "score": 9.451,
+      "score_100": 78.9,
+      "blurb": "The grounded-vs-simulated boundary: tag it, gate promotion, audit provenance, veto plans built on inference.",
+      "outcomes": ["O2"],
+      "affinity": { "AB": 1.0, "PE": 0.6, "DI": 0.25, "MO": 0.6 },
+      "persona_ranks": { "AB": 2, "PE": 3, "DI": 4, "MO": 3 },
+      "start_here": "memory_set_epistemic_status at capture, memory_audit_contamination on a schedule — never promote without a gate.",
+      "tools": [
+        { "name": "memory_set_epistemic_status", "title": "Set Epistemic Status", "tier": 1, "description": "Set epistemic status tag (observed, inferred, imagined, user_stated, hypothesis, agent_generated)." },
+        { "name": "memory_promote", "title": "Promote Simulated -> Grounded", "tier": 1, "description": "Promote a simulated fact into grounded memory only through an explicit gate." },
+        { "name": "memory_simulate_store", "title": "Store Simulated (Partitioned)", "tier": 1, "description": "Store simulated or imagined content into the separate simulated partition." },
+        { "name": "memory_list_simulated", "title": "List Simulated Partition", "tier": 1, "description": "List active (non-quarantined, non-expired) simulated facts from the separate partition." },
+        { "name": "memory_quarantine_simulated", "title": "Decay / Quarantine Simulated", "tier": 2, "description": "Quarantine simulated facts whose TTL decay window has expired." },
+        { "name": "memory_audit_contamination", "title": "Audit Memory Contamination", "tier": 1, "description": "Periodic provenance audit: detect any high-confidence memory whose ultimate provenance is unverified." },
+        { "name": "memory_assess_confidence", "title": "Assess Memory Confidence", "tier": 3, "description": "Explicitly set or update the confidence score for a fact." },
+        { "name": "memory_detect_gaps", "title": "Detect Knowledge Gaps", "tier": 3, "description": "Detect knowledge gaps for a topic: areas with low confidence or missing coverage." },
+        { "name": "memory_epistemic_veto", "title": "Epistemic Veto", "tier": 3, "description": "Epistemic-layer veto: refuse a plan that rests primarily on unvalidated simulated or imagined memory." },
+        { "name": "memory_self_audit", "title": "Self Audit", "tier": 1, "description": "Metacognitive self-audit: evaluate own knowledge quality and identify biases." }
+      ]
+    },
+    {
+      "id": "governance-isolation",
+      "name": "Governance & Isolation",
+      "rank": 3,
+      "score": 8.028,
+      "score_100": 67.0,
+      "blurb": "Give each team its own scope, share deliberately through ACLs, screen content for PII before it lands.",
+      "outcomes": ["O8"],
+      "affinity": { "AB": 0.25, "PE": 1.0, "DI": 0.6, "MO": 0.6 },
+      "persona_ranks": { "AB": 4, "PE": 1, "DI": 3, "MO": 4 },
+      "start_here": "memory_namespace_create before the first write, memory_scan_pii wired into the write path.",
+      "tools": [
+        { "name": "memory_namespace_create", "title": "Create Memory Namespace", "tier": 1, "description": "Create a namespaced memory scope for multi-agent isolation." },
+        { "name": "memory_namespace_list", "title": "List Memory Namespaces", "tier": 1, "description": "List all memory namespaces and their ACLs." },
+        { "name": "memory_scan_pii", "title": "Scan for PII / Secrets", "tier": 1, "description": "Scan content for PII, secrets, API keys and other sensitive data." },
+        { "name": "memory_shared_store", "title": "Store in Shared Memory", "tier": 2, "description": "Store a fact in a shared namespace with ACL checking." },
+        { "name": "memory_shared_recall", "title": "Recall from Shared Memory", "tier": 2, "description": "Recall facts from a shared namespace with ACL checking." }
+      ]
+    },
+    {
+      "id": "curation-lifecycle",
+      "name": "Curation & Lifecycle",
+      "rank": 4,
+      "score": 7.880,
+      "score_100": 65.8,
+      "blurb": "Keep the store honest over time: dedupe, reconcile contradictions, decay, rate, and walk the timeline.",
+      "outcomes": ["O1", "O2"],
+      "affinity": { "AB": 0.6, "PE": 0.25, "DI": 0.25, "MO": 1.0 },
+      "persona_ranks": { "AB": 3, "PE": 6, "DI": 5, "MO": 2 },
+      "start_here": "memory_timeline to see what is there, memory_contradict to find what fights, memory_deduplicate before the store grows.",
+      "tools": [
+        { "name": "memory_timeline", "title": "Memory Timeline", "tier": 1, "description": "View memories in chronological order." },
+        { "name": "memory_contradict", "title": "Find Contradictions", "tier": 1, "description": "Find facts that make conflicting claims about a topic." },
+        { "name": "memory_deduplicate", "title": "Deduplicate Memories", "tier": 1, "description": "Find and remove duplicate memories." },
+        { "name": "memory_decay", "title": "Memory Decay", "tier": 1, "description": "Apply time-based decay to memory relevance." },
+        { "name": "memory_feedback", "title": "Rate Fact", "tier": 1, "description": "Rate a fact helpful or unhelpful to train trust scores." },
+        { "name": "memory_consolidate", "title": "Consolidate Memories", "tier": 2, "description": "Auto-merge similar memories to reduce redundancy." },
+        { "name": "memory_reinforce", "title": "Reinforce Memory", "tier": 2, "description": "Boost the importance of a memory." },
+        { "name": "memory_cluster", "title": "Cluster Memories", "tier": 3, "description": "Group related memories into clusters." },
+        { "name": "memory_auto_consolidate", "title": "Auto Consolidation", "tier": 3, "description": "Cluster similar memories and generate higher-level summaries." },
+        { "name": "memory_mood_tag", "title": "Mood Tag", "tier": 3, "description": "Tag memories with mood or emotion." }
+      ]
+    },
+    {
+      "id": "ingestion",
+      "name": "Ingestion",
+      "rank": 5,
+      "score": 7.287,
+      "score_100": 60.8,
+      "blurb": "Bring domain artefacts in: PDF, code, image, audio, and the entities inside them.",
+      "outcomes": ["O4"],
+      "affinity": { "AB": 0.25, "PE": 0.25, "DI": 1.0, "MO": 0.6 },
+      "persona_ranks": { "AB": 5, "PE": 7, "DI": 1, "MO": 5 },
+      "start_here": "memory_ingest_pdf or memory_ingest_code — one artefact end to end, then memory_entity_extract.",
+      "tools": [
+        { "name": "memory_ingest_pdf", "title": "Ingest PDF", "tier": 1, "description": "Extract text from a PDF file and store it as memories." },
+        { "name": "memory_ingest_code", "title": "Ingest Code (AST Parsing)", "tier": 1, "description": "Parse code files with tree-sitter and extract structural information." },
+        { "name": "memory_ingest_image", "title": "Ingest Image (OCR)", "tier": 1, "description": "Extract text from an image using OCR and store it as memories." },
+        { "name": "memory_ingest_audio", "title": "Ingest Audio (Transcription)", "tier": 2, "description": "Transcribe an audio file using Whisper and store it as memories." },
+        { "name": "memory_entity_extract", "title": "Entity Extraction", "tier": 2, "description": "Extract entities and relationships from text using spaCy or an LLM." }
+      ]
+    },
+    {
+      "id": "ops-diagnostics",
+      "name": "Ops & Diagnostics",
+      "rank": 6,
+      "score": 5.761,
+      "score_100": 48.1,
+      "blurb": "Is it healthy, how big is it, can I move it, what fires automatically.",
+      "outcomes": ["O7"],
+      "affinity": { "AB": 0.25, "PE": 0.6, "DI": 0.25, "MO": 0.6 },
+      "persona_ranks": { "AB": 6, "PE": 4, "DI": 6, "MO": 6 },
+      "start_here": "memory_status for a health read, memory_stats for size and shape.",
+      "tools": [
+        { "name": "memory_status", "title": "Memory Status", "tier": 1, "description": "Get mem20 memory system status and stats." },
+        { "name": "memory_stats", "title": "Memory Statistics", "tier": 2, "description": "Get detailed memory system statistics." },
+        { "name": "memory_export", "title": "Export Memories", "tier": 3, "description": "Export memories to various formats." },
+        { "name": "memory_import", "title": "Import Memories", "tier": 3, "description": "Import memories from a file." },
+        { "name": "memory_triggers", "title": "Memory Triggers", "tier": 3, "description": "Set up event-based memory triggers." }
+      ]
+    },
+    {
+      "id": "pinned-blocks",
+      "name": "Pinned Blocks",
+      "rank": 7,
+      "score": 5.761,
+      "score_100": 48.1,
+      "blurb": "Memory immune to pruning: pin the block that must always be in context, and unpin it when it stops being true.",
+      "outcomes": ["O1"],
+      "affinity": { "AB": 0.25, "PE": 0.6, "DI": 0.25, "MO": 0.6 },
+      "persona_ranks": { "AB": 7, "PE": 5, "DI": 7, "MO": 7 },
+      "start_here": "memory_pin_block for the invariants, memory_list_pinned_blocks to audit what is exempt from pruning.",
+      "tools": [
+        { "name": "memory_pin_block", "title": "Pin Memory Block", "tier": 1, "description": "Pin a memory block as a core reference, immune to pruning and supersede." },
+        { "name": "memory_list_pinned_blocks", "title": "List Pinned Blocks", "tier": 2, "description": "List all pinned memory blocks." },
+        { "name": "memory_get_pinned_block", "title": "Get Pinned Block", "tier": 3, "description": "Get a specific pinned block." },
+        { "name": "memory_unpin_block", "title": "Unpin Memory Block", "tier": 3, "description": "Unpin a previously pinned block." }
+      ]
+    }
+  ],
+  "assertions": {
+    "clusters": 7,
+    "tools_assigned": 49,
+    "unique_tools": 49,
+    "every_tool_assigned_once": true,
+    "cluster_tool_sum": 49
+  }
+}

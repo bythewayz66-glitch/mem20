@@ -1,0 +1,36 @@
+def mem20_ux_requirement
+  artifact: mem20 desktop clickable prototype and ranked memory surface
+  repo: github.com/bythewayz66-glitch/mem20
+
+  clause 1 — tool surface is counted twice, from two independent sources
+    Source A instantiates the repository's server class and reads the registered tool mapping.
+    Source B parses every Python module under the server package with the abstract syntax tree module and collects each tool declaration.
+    Both sources must yield the same set of tool names.
+    The size of that set must equal 257.
+    The number of names beginning with the memory prefix must equal 49.
+
+  clause 2 — every memory tool appears in the ranked grouping exactly once
+    The delivered grouping document must contain, across all clusters, each of the 49 memory tool names.
+    No memory tool name may be absent from the grouping.
+    No memory tool name may appear more than once.
+    The grouping must not introduce a name the server does not register.
+
+  clause 3 — the grouping is ordered and its order is derived, not typed
+    Each cluster carries an affinity weight for each of the four personas.
+    Each persona carries a share and an opportunity score.
+    A cluster rank score equals the sum across personas of share times opportunity times affinity.
+    Ranks follow descending score.
+    Recomputing the scores from the persona and affinity inputs must reproduce the delivered ranks.
+
+  clause 4 — the prototype renders the same surface the server registers
+    The delivered prototype document must mention every one of the 49 memory tool names.
+    The prototype must carry the group totals whose sum equals 257.
+    The prototype must not reference the retired repository.
+
+  clause 5 — house positioning numbers are consistent
+    The grouping document declares total tools 257, memory tools 49, total addressable market 1280000000, serviceable addressable market 282000000, serviceable obtainable market 1680000, and blended annual contract value 14000.
+
+  clause 6 — the artifact proves itself by running
+    The artifact declares itself as the runnable fixture.
+    It raises an error rather than asserting.
+    Its self-test feeds an altered grouping and the resulting error escapes uncaught.

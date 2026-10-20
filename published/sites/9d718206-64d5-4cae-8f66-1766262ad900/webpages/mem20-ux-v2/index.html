@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><script data-tmly-media-guard="1">(function(){"use strict";
+var T=window.__tmly||(window.__tmly=(function(){
+var o={},n=String(window.name||"");
+if(n.slice(0,5)==="tmly:"){n.slice(5).split("&").forEach(function(kv){
+var i=kv.indexOf("=");if(i>0){o[kv.slice(0,i)]=kv.slice(i+1)}})}
+return o})());
+if(T.presentation!=="preview"){return}
+var K="tmly:media-muted:"+String(location.pathname).replace(/[^/]*$/,"");
+var muted=false;try{muted=localStorage.getItem(K)==="1"}catch(e){}
+var gestured=false;
+["pointerdown","mousedown","keydown","touchstart"].forEach(function(t){
+document.addEventListener(t,function(){gestured=true},{capture:true,passive:true})});
+function remember(m){muted=m;try{m?localStorage.setItem(K,"1"):localStorage.removeItem(K)}catch(e){}}
+function announcePaused(el){try{el.dispatchEvent(new Event("pause"))}catch(e){}}
+function harden(el){
+el.autoplay=false;el.removeAttribute("autoplay");
+if(el.getAttribute("preload")==="auto"){el.setAttribute("preload","none")}
+if(muted){el.muted=true}
+if(!gestured&&!el.paused){try{el.pause()}catch(e){}}}
+var play=HTMLMediaElement.prototype.play;
+HTMLMediaElement.prototype.play=function(){
+if(!gestured){announcePaused(this);
+return Promise.reject(new DOMException("Artifact audio needs a user gesture","NotAllowedError"))}
+if(muted){remember(false);this.muted=false}
+return play.apply(this,arguments)};
+var acProtos=[];
+function guardAC(n){
+var N=window[n];if(!N||!N.prototype){return}
+if(acProtos.indexOf(N.prototype)<0){acProtos.push(N.prototype);
+var res=N.prototype.resume;
+if(typeof res==="function"){N.prototype.resume=function(){
+if(!gestured){return Promise.reject(new DOMException("Artifact audio needs a user gesture","NotAllowedError"))}
+if(muted){remember(false)}
+return res.apply(this,arguments)}}}
+var W=function(o){var c=arguments.length?new N(o):new N();
+if(!gestured){try{c.suspend()}catch(e){}}return c};
+W.prototype=N.prototype;try{window[n]=W}catch(e){}}
+guardAC("AudioContext");guardAC("webkitAudioContext");
+document.addEventListener("play",function(e){
+var el=e.target;if(el instanceof HTMLMediaElement&&!gestured){try{el.pause()}catch(err){}}},true);
+document.addEventListener("pause",function(e){
+if(e.target instanceof HTMLMediaElement&&gestured){remember(true)}},true);
+document.addEventListener("volumechange",function(e){
+var el=e.target;if(el instanceof HTMLMediaElement&&gestured){remember(el.muted||el.volume===0)}},true);
+function sweep(n){if(n&&n.querySelectorAll){var l=n.querySelectorAll("audio,video");
+for(var i=0;i<l.length;i++){harden(l[i])}}}
+new MutationObserver(function(rs){for(var i=0;i<rs.length;i++){var a=rs[i].addedNodes;
+for(var j=0;j<a.length;j++){var n=a[j];
+if(n instanceof HTMLMediaElement){harden(n)}else{sweep(n)}}}})
+.observe(document.documentElement,{childList:true,subtree:true});
+document.addEventListener("DOMContentLoaded",function(){sweep(document)});
+sweep(document)})();</script>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>mem20 — UX Research & Desktop Design Assets (v2, canonical-repo aligned)</title>
+<meta name="description" content="Updated mem20 UX research and desktop-app design assets: personas, task flows, wireframes, high-fidelity design — re-grounded on the canonical repo and the changed install/onboarding path.">
+<link rel="stylesheet" href="assets/style.css">
+<style>
+.dlcard{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:18px;display:flex;flex-direction:column;gap:6px}
+.dlcard .kh{font-family:var(--mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--accent)}
+.dlcard .kt{font-size:17px;font-weight:700;color:var(--ink)}
+.dlcard .kd{font-size:13.5px;color:var(--ink3);flex:1}
+.dlcard a.more{font-size:13.5px;font-weight:600}
+.toc{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px;margin:18px 0}
+</style>
+</head>
+<body>
+<header class="top"><div class="topin">
+  <div class="brand"><span class="dot"></span> mem20 · UX asset deck v2</div>
+  <nav class="links">
+    <a href="index.html" class="on">Overview</a>
+    <a href="personas.html">Personas</a>
+    <a href="task-flows.html">Task flows</a>
+    <a href="wireframes.html">Wireframes</a>
+    <a href="high-fidelity.html">Hi-fi design</a>
+    <a href="https://github.com/JaysonAIOnline/mem20" target="_blank" rel="noopener">Canonical repo ↗</a>
+  </nav>
+</div></header>
+
+<main class="wrap">
+
+  <section class="hero">
+    <p class="eyebrow">UX research &amp; desktop design · updated 2026-10-14</p>
+    <h1>mem20 UX assets, <span class="thin">re-grounded on the canonical repo</span></h1>
+    <p class="lede">Personas, task flows, wireframes and high-fidelity desktop design for <b>mem20 — auditable agent memory</b>. This v2 refresh exists for one reason: the product's repo and install path changed, so every screen, flow and claim in the v1 deck was re-checked against live sources before it was re-published. Where a fact could not be verified, the asset says so instead of inventing one.</p>
+    <p class="sub">Scope of this update: (1) canonical repo + install/onboarding path re-verified; (2) personas re-derived from the current segments; (3) onboarding task flow rebuilt around the <b>git clone</b> install path (there is no PyPI package); (4) wireframes + hi-fi screens repainted with the auditability surface (grounded vs simulated partition, promotion gate, append-only ledger) as the core of the app, not a settings page.</p>
+  </section>
+
+  <h2><span class="num">00 / STATUS</span>What changed, verified today</h2>
+  <div class="band">
+    <div class="stat bad"><div class="k">Canonical repo</div><div class="v">github.com/JaysonAIOnline/mem20 → <b>404</b> (unresolved at 16:41 UTC)</div></div>
+    <div class="stat warn"><div class="k">Recreation</div><div class="v">In flight — GitHub Repo Assistant owns the new canonical repo</div></div>
+    <div class="stat bad"><div class="k">PyPI</div><div class="v"><code>pip install mem20</code> → 404. <b>Install = git clone</b></div></div>
+    <div class="stat info"><div class="k">Product surface</div><div class="v">MCP server · JSON-RPC 2.0 over <b>stdio</b> · Python ≥ 3.11 · MIT</div></div>
+  </div>
+
+  <div class="note bad"><b>Read this before you use any asset below.</b> The canonical repo URL in this deck is <code>github.com/JaysonAIOnline/mem20</code>, which returned <b>HTTP 404</b> when checked on 2026-10-14 16:41 UTC. Every asset here is written to point at that canonical name, because that is the address the repo is being restored to — but until GitHub Repo Assistant publishes it, an end user who clicks the links lands on a 404. This is the same blocker the Analytics Reporter raised for Day 0. The deck also carries an <b>interim-resolvable fallback</b> (below) so screens and flows can be reviewed today without a dead link.</div>
+
+  <h3>Canonical product facts used in this deck</h3>
+  <table class="tbl">
+    <thead><tr><th>Field</th><th>Value used in v2 assets</th><th>Source / state</th></tr></thead>
+    <tbody>
+      <tr><td>Canonical repo</td><td><code>github.com/JaysonAIOnline/mem20</code></td><td><span class="pill b">404</span> GitHub API, 2026-10-14 16:41 UTC — recreation in flight</td></tr>
+      <tr><td>Interim resolvable reference</td><td><code>github.com/JaysonAIOnline/mcp-cognitive-substrate</code></td><td><span class="pill g">200</span> Python, MIT, v28-layer cognitive substrate + A2A over MCP</td></tr>
+      <tr><td>Interim marketing surface</td><td><code>github.com/JaysonAIOnline/mem20-site</code></td><td><span class="pill g">200</span> mem20 landing site (Memory That Persists)</td></tr>
+      <tr><td>License</td><td>MIT</td><td>Verified on reachable public surfaces</td></tr>
+      <tr><td>Language / runtime</td><td>Python ≥ 3.11</td><td>Verified (Python SDK, <code>pip install -e .</code> from clone)</td></tr>
+      <tr><td>Interface</td><td>MCP server, JSON-RPC 2.0 over stdio</td><td>Verified</td></tr>
+      <tr><td>Tool breadth</td><td>257 tools across 26 domains</td><td>House number for this program (older docs quote 258–260; v2.0 baseline was 97 / 13)</td></tr>
+      <tr><td>Install path</td><td><code>git clone</code> + <code>pip install -e .</code> + MCP client config</td><td><span class="pill b">no PyPI</span> <code>pypi.org/pypi/mem20/json</code> → 404</td></tr>
+      <tr><td>Positioning</td><td>Auditable agent memory — the memory layer you can prove</td><td>Program positioning</td></tr>
+      <tr><td>Benchmarks (own)</td><td>hit 1.000 direct · 0.800 multi-hop · <b>0.000 adversarial</b> · leak 0.000</td><td>mem20 published results; no LoCoMo/LongMemEval comparable — caveat held visible</td></tr>
+      <tr><td>Market</td><td>TAM $1.28B · SAM $282M · SOM $1.68M · blended ACV $14,000</td><td>Program house numbers</td></tr>
+      <tr><td>Publish constraint</td><td>All work shipped to the Sidney server via ssh/sftp/rsync, through gabe</td><td>Program constraint — see <a href="#publish">publish path</a> for how it applies to these assets</td></tr>
+    </tbody>
+  </table>
+
+  <h2><span class="num">01 / ASSETS</span>The updated UX assets</h2>
+  <div class="toc">
+    <div class="dlcard">
+      <div class="kh">Research</div><div class="kt">Personas</div>
+      <div class="kd">Four personas re-derived from the current segments (AI platform/infra engineer, regulated-industry AI lead, OSS self-host builder, audit &amp; compliance reviewer), each with a ranked onboarding friction list tied to the verified install path.</div>
+      <a class="more" href="personas.html">Open personas →</a>
+    </div>
+    <div class="dlcard">
+      <div class="kh">Research</div><div class="kt">Task flows &amp; journey map</div>
+      <div class="kd">The rebuilt first-run flow: clone → install → configure the stdio MCP client → first grounded recall → first audit. Every step is tagged with its verified gate state (green / amber / red) and the exact failure a user hits today.</div>
+      <a class="more" href="task-flows.html">Open task flows →</a>
+    </div>
+    <div class="dlcard">
+      <div class="kh">Design · low-fi</div><div class="kt">Wireframes</div>
+      <div class="kd">Six low-fidelity screens: install/onboarding, memory inspector, partition view, promotion gate, audit ledger, settings — laid out so auditability is the home surface.</div>
+      <a class="more" href="wireframes.html">Open wireframes →</a>
+    </div>
+    <div class="dlcard">
+      <div class="kh">Design · high-fi</div><div class="kt">High-fidelity design</div>
+      <div class="kd">Design tokens (type, color, space, states) with contrast ratios verified to WCAG AA, plus rendered hi-fi screens for the three load-bearing surfaces.</div>
+      <a class="more" href="high-fidelity.html">Open hi-fi design →</a>
+    </div>
+  </div>
+
+  <h3>Companion documents</h3>
+  <div class="toc">
+    <div class="dlcard">
+      <div class="kh">Document · markdown</div><div class="kt">UX research report v2</div>
+      <div class="kd">Full write-up: objectives, method, the canonical-facts block, findings with evidence, persona synthesis, flow analysis, recommendations with success metrics, and an explicit unverified-items register.</div>
+      <a class="more" href="https://static.teamily.ai/sites/9d718206-64d5-4cae-8f66-1766262ad900/documents/mem20-ux-research/mem20-ux-research-v2.md?tk=c2l0ZTo5ZDcxODIwNi02NGQ1LTRjYWUtOGY2Ni0xNzY2MjYyYWQ5MDAvZG9jdW1lbnRzL21lbTIwLXV4LXJlc2VhcmNoOjE3OTI0ODQzNDc.ODI2NGFjOGEwOTkwNjRjNGJmNDk4NjJhNjhkYzUxYTQ" target="_blank" rel="noopener">mem20-ux-research-v2.md →</a>
+    </div>
+    <div class="dlcard">
+      <div class="kh">Document · markdown</div><div class="kt">Design handoff spec</div>
+      <div class="kd">Engineering handoff: screen inventory, tokens, component states, the exact startup sequence the desktop app must run against a stdio MCP server, accessibility acceptance criteria, and open questions.</div>
+      <a class="more" href="https://static.teamily.ai/sites/9d718206-64d5-4cae-8f66-1766262ad900/documents/mem20-ux-research/mem20-design-handoff-spec-v2.md?tk=c2l0ZTo5ZDcxODIwNi02NGQ1LTRjYWUtOGY2Ni0xNzY2MjYyYWQ5MDAvZG9jdW1lbnRzL21lbTIwLXV4LXJlc2VhcmNoOjE3OTI0ODQzNDc.ODI2NGFjOGEwOTkwNjRjNGJmNDk4NjJhNjhkYzUxYTQ" target="_blank" rel="noopener">mem20-design-handoff-spec-v2.md →</a>
+    </div>
+  </div>
+
+  <h2><span class="num">02 / METHOD</span>How v2 was grounded</h2>
+  <p>Every number, URL and state in this deck traces to a check run in this session against a live source. Nothing was carried over from the v1 deck on trust.</p>
+  <table class="tbl">
+    <thead><tr><th>Check</th><th>Method</th><th>Result</th></tr></thead>
+    <tbody>
+      <tr><td>Canonical repo exists</td><td><code>GET api.github.com/repos/JaysonAIOnline/mem20</code></td><td><span class="pill b">404 Not Found</span></td></tr>
+      <tr><td>Candidate repo names</td><td>Probed 8 names + repo search scoped to the owner</td><td>Only <code>mem20-substrate</code>, <code>mcp-cognitive-substrate</code>, <code>mem20-site</code> resolve</td></tr>
+      <tr><td>Install path</td><td><code>GET pypi.org/pypi/mem20/json</code> (+ 2 fallback names)</td><td><span class="pill b">404</span> — no published package; install is from a clone</td></tr>
+      <tr><td>Runtime + license</td><td>Read <code>README.md</code> of the reachable Python repo</td><td>Python ≥ 3.11, MIT, stdio MCP server, A2A tools</td></tr>
+      <tr><td>Product narrative</td><td>Scraped the mem20 landing site content</td><td>Four capabilities: persistent memory, theory of mind, cognitive evolution, world modeling; SQLite + FTS5, 28 paradigms, epistemic boundaries</td></tr>
+      <tr><td>Program context</td><td>Group memory for this program</td><td>257 tools / 26 domains · TAM/SAM/SOM · ACV · guardrails</td></tr>
+    </tbody>
+  </table>
+
+  <h2><span class="num">03 / PUBLISH</span><a id="publish"></a>Publish path &amp; constraint</h2>
+  <p>The program constraint is that <b>all work is published to the Sidney server via ssh/sftp/rsync and passes through gabe</b>. Applied honestly to this deliverable: this sandbox holds the asset files and publishes them to their permanent artifact URLs (the links on this page); the Sidney-side placement is a handoff, not something these assets can perform themselves.</p>
+  <div class="note warn"><b>Verified constraint, not an assumption:</b> this run has <b>no SSH host, key, or credential for Sidney or gabe</b> in the environment (checked <code>~/.ssh</code> and the environment). So the assets were produced and published to their permanent URLs here, and the Sidney/rsync placement is listed as an open dependency in the handoff spec — the same blocker Server Builder reported for the Sidney deployment. No asset claims to have been rsynced.</div>
+
+  <h2><span class="num">04 / GUARDRAILS</span>Claim guardrails held in every asset</h2>
+  <div class="guard">
+    <span class="pill w">adversarial 0.000 shown, never hidden</span>
+    <span class="pill w">no LoCoMo / LongMemEval claim</span>
+    <span class="pill g">no "provably secure"</span>
+    <span class="pill g">no "tamper-proof"</span>
+    <span class="pill g">no "matches Mem0" / "beats Zep"</span>
+    <span class="pill g">no "industry-leading retrieval"</span>
+    <span class="pill s">promotion described as "evidence-based with an append-only audit trail"</span>
+    <span class="pill b">404s disclosed as 404s — no invented repo, package, or metric</span>
+  </div>
+
+  <footer><div class="wrap">
+    <div>mem20 UX research &amp; desktop design assets · v2 · built 2026-10-14<br>UX Researcher agent · for mem20 Orchestrator</div>
+    <div class="guard">Repo state re-verify before any external use.<br>Adversarial 0.000 remains disclosed. No benchmark claim is comparable to Mem0/Zep.</div>
+  </div></footer>
+
+</main>
+</body>
+</html>

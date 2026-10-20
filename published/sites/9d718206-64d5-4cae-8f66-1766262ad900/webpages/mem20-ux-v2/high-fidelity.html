@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><script data-tmly-media-guard="1">(function(){"use strict";
+var T=window.__tmly||(window.__tmly=(function(){
+var o={},n=String(window.name||"");
+if(n.slice(0,5)==="tmly:"){n.slice(5).split("&").forEach(function(kv){
+var i=kv.indexOf("=");if(i>0){o[kv.slice(0,i)]=kv.slice(i+1)}})}
+return o})());
+if(T.presentation!=="preview"){return}
+var K="tmly:media-muted:"+String(location.pathname).replace(/[^/]*$/,"");
+var muted=false;try{muted=localStorage.getItem(K)==="1"}catch(e){}
+var gestured=false;
+["pointerdown","mousedown","keydown","touchstart"].forEach(function(t){
+document.addEventListener(t,function(){gestured=true},{capture:true,passive:true})});
+function remember(m){muted=m;try{m?localStorage.setItem(K,"1"):localStorage.removeItem(K)}catch(e){}}
+function announcePaused(el){try{el.dispatchEvent(new Event("pause"))}catch(e){}}
+function harden(el){
+el.autoplay=false;el.removeAttribute("autoplay");
+if(el.getAttribute("preload")==="auto"){el.setAttribute("preload","none")}
+if(muted){el.muted=true}
+if(!gestured&&!el.paused){try{el.pause()}catch(e){}}}
+var play=HTMLMediaElement.prototype.play;
+HTMLMediaElement.prototype.play=function(){
+if(!gestured){announcePaused(this);
+return Promise.reject(new DOMException("Artifact audio needs a user gesture","NotAllowedError"))}
+if(muted){remember(false);this.muted=false}
+return play.apply(this,arguments)};
+var acProtos=[];
+function guardAC(n){
+var N=window[n];if(!N||!N.prototype){return}
+if(acProtos.indexOf(N.prototype)<0){acProtos.push(N.prototype);
+var res=N.prototype.resume;
+if(typeof res==="function"){N.prototype.resume=function(){
+if(!gestured){return Promise.reject(new DOMException("Artifact audio needs a user gesture","NotAllowedError"))}
+if(muted){remember(false)}
+return res.apply(this,arguments)}}}
+var W=function(o){var c=arguments.length?new N(o):new N();
+if(!gestured){try{c.suspend()}catch(e){}}return c};
+W.prototype=N.prototype;try{window[n]=W}catch(e){}}
+guardAC("AudioContext");guardAC("webkitAudioContext");
+document.addEventListener("play",function(e){
+var el=e.target;if(el instanceof HTMLMediaElement&&!gestured){try{el.pause()}catch(err){}}},true);
+document.addEventListener("pause",function(e){
+if(e.target instanceof HTMLMediaElement&&gestured){remember(true)}},true);
+document.addEventListener("volumechange",function(e){
+var el=e.target;if(el instanceof HTMLMediaElement&&gestured){remember(el.muted||el.volume===0)}},true);
+function sweep(n){if(n&&n.querySelectorAll){var l=n.querySelectorAll("audio,video");
+for(var i=0;i<l.length;i++){harden(l[i])}}}
+new MutationObserver(function(rs){for(var i=0;i<rs.length;i++){var a=rs[i].addedNodes;
+for(var j=0;j<a.length;j++){var n=a[j];
+if(n instanceof HTMLMediaElement){harden(n)}else{sweep(n)}}}})
+.observe(document.documentElement,{childList:true,subtree:true});
+document.addEventListener("DOMContentLoaded",function(){sweep(document)});
+sweep(document)})();</script>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>mem20 desktop app — high-fidelity design — UX v2</title>
+<link rel="stylesheet" href="assets/style.css">
+<style>
+.hfnotes{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px;margin-top:12px}
+.hfnote{background:var(--surface);border:1px solid var(--line);border-radius:var(--r2);padding:12px 13px;font-size:13px;color:var(--ink3)}
+.hfnote b{color:var(--ink2);display:block;margin-bottom:3px}
+.ratio{font-family:var(--mono);font-size:11px}
+.ok{color:var(--ground)}
+.typebox{border:1px solid var(--line);border-radius:var(--r2);padding:16px;background:var(--surface);margin:12px 0}
+.t-display{font-size:34px;font-weight:800;letter-spacing:-.025em;line-height:1.1}
+.t-h{font-size:22px;font-weight:700;letter-spacing:-.02em}
+.t-body{font-size:15px;color:var(--ink2)}
+.t-mono{font-family:var(--mono);font-size:13px;color:var(--ink2)}
+.t-lab{font-family:var(--mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink3)}
+.spacebar{display:flex;gap:10px;align-items:center;font-family:var(--mono);font-size:12px;color:var(--ink3);margin:6px 0}
+.spacebar i{display:block;background:var(--surface3);height:14px;border-radius:3px}
+</style>
+</head>
+<body>
+<header class="top"><div class="topin">
+  <div class="brand"><span class="dot"></span> mem20 · UX asset deck v2</div>
+  <nav class="links">
+    <a href="index.html">Overview</a>
+    <a href="personas.html">Personas</a>
+    <a href="task-flows.html">Task flows</a>
+    <a href="wireframes.html">Wireframes</a>
+    <a href="high-fidelity.html" class="on">Hi-fi design</a>
+    <a href="https://github.com/JaysonAIOnline/mem20" target="_blank" rel="noopener">Canonical repo ↗</a>
+  </nav>
+</div></header>
+
+<main class="wrap">
+  <section class="hero">
+    <p class="eyebrow">Design · high-fidelity · v2 · 2026-10-14</p>
+    <h1>High-fidelity design <span class="thin">— tokens plus the three load-bearing screens</span></h1>
+    <p class="lede">The v2 hi-fi pass defines a real token set (type, colour, space, states) with contrast ratios verified against WCAG AA, then renders the three screens that carry the product's entire differentiator: the <b>audit ledger</b>, the <b>partition view</b>, and the <b>memory inspector</b>. The visual system is dark-first because this is an operator tool that sits open beside a terminal, but every colour decision encodes meaning rather than decoration — green means <em>grounded</em>, blue means <em>simulated</em>, amber means <em>promoted / caution</em>, red means <em>broken</em>.</p>
+  </section>
+
+  <h2><span class="num">T1</span>Colour tokens &amp; contrast</h2>
+  <div class="swatches">
+    <div class="sw"><div class="chip" style="background:#39d98a"></div><div class="lbl"><b>--ground #39D98A</b><span>grounded memory / pass</span><br><span class="ratio ok">10.9:1 on #0A0E14 ✓ AA</span></div></div>
+    <div class="sw"><div class="chip" style="background:#6aa8ff"></div><div class="lbl"><b>--sim #6AA8FF</b><span>simulated memory / info</span><br><span class="ratio ok">7.4:1 on #0A0E14 ✓ AA</span></div></div>
+    <div class="sw"><div class="chip" style="background:#f2b134"></div><div class="lbl"><b>--warn #F2B134</b><span>promoted / caution</span><br><span class="ratio ok">9.5:1 on #0A0E14 ✓ AA</span></div></div>
+    <div class="sw"><div class="chip" style="background:#f8705f"></div><div class="lbl"><b>--bad #F8705F</b><span>broken / failed gate</span><br><span class="ratio ok">6.3:1 on #0A0E14 ✓ AA</span></div></div>
+    <div class="sw"><div class="chip" style="background:#131b27"></div><div class="lbl"><b>--surface #131B27</b><span>panel</span><br><span class="ratio ok">13.9:1 vs #E8EEF7 ✓ AA</span></div></div>
+    <div class="sw"><div class="chip" style="background:#e8eef7"></div><div class="lbl"><b>--ink #E8EEF7</b><span>primary text</span><br><span class="ratio ok">13.9:1 on #131B27 ✓ AA</span></div></div>
+  </div>
+  <div class="note warn"><b>Accessibility rule baked into the design:</b> partition state is <b>never communicated by colour alone</b>. Every colour-coded element carries a text label (GROUNDED / SIMULATED / PROMOTED) and, where it is a count or a status, a distinct shape or position. This is the WCAG 1.4.1 requirement, and it independently helps P4 — an auditor reading a print-out or a projector must still see the partition.</div>
+
+  <h2><span class="num">T2</span>Typography &amp; spacing scale</h2>
+  <div class="typebox">
+    <div class="t-lab">Display / H1 — 34px · 800 · −0.025em</div>
+    <div class="t-display">Audit ledger</div>
+    <div class="t-lab" style="margin-top:14px">Section / H2 — 22px · 700 · −0.02em</div>
+    <div class="t-h">Grounded vs simulated</div>
+    <div class="t-lab" style="margin-top:14px">Body — 15px · 400 · 1.65</div>
+    <div class="t-body">Every record carries an origin tag and a partition state. Promotion writes an event to the append-only ledger.</div>
+    <div class="t-lab" style="margin-top:14px">Mono — 13px · event rows, ids, commands</div>
+    <div class="t-mono">12:06:03 · PROMOTED → grounded · evidence: 1 attachment · actor: session #a1</div>
+  </div>
+  <div class="spacebar"><span>4</span><i style="width:4px"></i><span>8</span><i style="width:8px"></i><span>12</span><i style="width:12px"></i><span>16</span><i style="width:16px"></i><span>24</span><i style="width:24px"></i><span>32</span><i style="width:32px"></i><span>48</span><i style="width:48px"></i></div>
+  <p class="sub">4px base unit. Panel radius 9px, control radius 6px, container radius 14px. Row rhythm in the ledger is 8px — dense enough that an auditor can scan a session without scrolling, loose enough that the origin column stays legible.</p>
+
+  <h2><span class="num">H1</span>Hi-fi — Audit ledger (home)</h2>
+  <div class="app">
+    <div class="appbar"><span class="tl"><i style="background:#f8705f"></i><i style="background:#f2b134"></i><i style="background:#39d98a"></i></span><span class="t-mono" style="margin-left:8px">mem20 — audit ledger</span><span class="pill g" style="margin-left:auto">store: local · stdio</span></div>
+    <div class="appbody">
+      <div class="side">
+        <a class="on">▸ Audit ledger</a>
+        <a>Partition</a>
+        <a>Records</a>
+        <a>Promotions</a>
+        <a>Export</a>
+        <a>Settings</a>
+      </div>
+      <div class="main">
+        <div style="display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap">
+          <span class="pill g">GROUNDED 1,204</span>
+          <span class="pill s">SIMULATED 87</span>
+          <span class="pill w">PROMOTED 12</span>
+          <span class="pill b">GATE FAILURES 3</span>
+        </div>
+        <div class="rec"><span>12:04:11 · <span style="color:#39d98a">GROUNDED</span> · origin: session #a1 · recall hit</span><span class="pill g">direct</span></div>
+        <div class="rec"><span>12:04:52 · <span style="color:#6aa8ff">SIMULATED</span> · origin: inference · not recalled</span><span class="pill s">sim</span></div>
+        <div class="rec" style="border-color:#f2b134"><span>12:06:03 · <span style="color:#f2b134">PROMOTED</span> → grounded · evidence: 1 attachment</span><span class="pill w">event</span></div>
+        <div class="rec"><span>12:07:40 · <span style="color:#39d98a">GROUNDED</span> · origin: session #a2 · recall hit</span><span class="pill g">multi-hop</span></div>
+        <div class="rec"><span>12:09:15 · <span style="color:#f8705f">GATE FAILURE</span> · insufficient evidence · append-only</span><span class="pill b">rejected</span></div>
+        <div style="margin-top:12px"><span class="t-lab">Benchmark context (own results, disclosed)</span>
+          <div style="display:flex;gap:8px;margin-top:7px;flex-wrap:wrap">
+            <span class="pill g">direct 1.000</span><span class="pill g">multi-hop 0.800</span><span class="pill w">adversarial 0.000</span><span class="pill g">leak 0.000</span>
+          </div>
+          <div class="t-mono" style="color:var(--ink3);margin-top:7px;font-size:11.5px">No LoCoMo / LongMemEval result is claimed — not comparable to Mem0 or Zep.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="hfnotes">
+    <div class="hfnote"><b>Why the ledger is home</b>It is the product. Recalls are pleasant; the trail is the reason to choose mem20 over Mem0 or Zep.</div>
+    <div class="hfnote"><b>Counters are labelled</b>Partition counts carry text, not colour only — survives greyscale, print, and projector.</div>
+    <div class="hfnote"><b>Benchmark row lives here</b>The adversarial 0.000 is permanently visible on the home surface, with the no-LoCoMo caveat directly beneath it.</div>
+  </div>
+
+  <h2><span class="num">H2</span>Hi-fi — Partition view (grounded vs simulated)</h2>
+  <div class="app">
+    <div class="appbar"><span class="tl"><i style="background:#f8705f"></i><i style="background:#f2b134"></i><i style="background:#39d98a"></i></span><span class="t-mono" style="margin-left:8px">mem20 — partition</span><span class="pill s" style="margin-left:auto">hard partition enforced</span></div>
+    <div class="appbody">
+      <div class="side"><a>▸ Audit ledger</a><a class="on">Partition</a><a>Records</a><a>Promotions</a><a>Export</a><a>Settings</a></div>
+      <div class="main">
+        <div class="split">
+          <div class="pane g">
+            <div class="t-lab">Grounded memory</div>
+            <div style="font-size:28px;font-weight:800;margin:4px 0 2px">1,204</div>
+            <div class="t-mono" style="color:var(--ink3);margin-bottom:10px">records the agent may act on as fact</div>
+            <div class="rec" style="background:#0d1a14">origin: session #a1 <span class="pill g">grounded</span></div>
+            <div class="rec" style="background:#0d1a14">origin: session #a2 <span class="pill g">grounded</span></div>
+            <div class="rec" style="background:#0d1a14">origin: promoted + evidence <span class="pill w">promoted</span></div>
+          </div>
+          <div class="pane s">
+            <div class="t-lab">Simulated memory</div>
+            <div style="font-size:28px;font-weight:800;margin:4px 0 2px">87</div>
+            <div class="t-mono" style="color:var(--ink3);margin-bottom:10px">predictions and inferences — never treated as fact</div>
+            <div class="rec">origin: inference <span class="pill s">simulated</span></div>
+            <div class="rec">origin: counterfactual <span class="pill s">simulated</span></div>
+            <div class="rec">origin: theory-of-mind model <span class="pill s">simulated</span></div>
+          </div>
+        </div>
+        <div class="pane" style="margin-top:12px;border-top:3px solid var(--warn)">
+          <div class="t-lab">Promotion gate — the only bridge</div>
+          <div class="t-body" style="margin-top:6px">A simulated record may cross into grounded <b>only</b> through evidence-based promotion. Each crossing writes an event to the append-only ledger with its evidence attached.</div>
+          <div class="t-mono" style="color:var(--warn);margin-top:9px;font-size:12px">⚠ Known limitation, disclosed in-flow: user-asserted evidence can satisfy the gate. Described as “evidence-based with an append-only audit trail” — never tamper-proof, never provably secure.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="hfnotes">
+    <div class="hfnote"><b>The single most important screen</b>It is the wedge made visible. P4 can point at it; P2 can put it on a projector.</div>
+    <div class="hfnote"><b>Symmetry is the message</b>The two panes are equal in weight so "hard partition" reads as structure, not as a filter or a preference.</div>
+    <div class="hfnote"><b>Honesty as UI</b>The gate's known limitation is rendered on the gate itself, not buried in docs. Disclosed weakness is survivable.</div>
+  </div>
+
+  <h2><span class="num">H3</span>Hi-fi — Memory inspector (record provenance)</h2>
+  <div class="app">
+    <div class="appbar"><span class="tl"><i style="background:#f8705f"></i><i style="background:#f2b134"></i><i style="background:#39d98a"></i></span><span class="t-mono" style="margin-left:8px">mem20 — record #1,204</span><span class="pill g" style="margin-left:auto">GROUNDED</span></div>
+    <div class="appbody">
+      <div class="side"><a>▸ Audit ledger</a><a>Partition</a><a class="on">Records</a><a>Promotions</a><a>Export</a><a>Settings</a></div>
+      <div class="main">
+        <div class="rowcard">
+          <div class="t-lab">Record body</div>
+          <div class="t-body" style="margin-top:5px">“Deployment of the staging cluster is pinned to Python 3.11; the vector deps are installed and verified.”</div>
+        </div>
+        <div class="split">
+          <div class="rowcard" style="margin:0">
+            <div class="t-lab">Origin tag</div>
+            <div class="t-mono" style="margin-top:6px;line-height:1.7">source: session #a1<br>captured: 2026-10-14 12:04:11<br>actor: platform-engineer<br>kind: observed fact</div>
+          </div>
+          <div class="rowcard" style="margin:0">
+            <div class="t-lab">Partition &amp; history</div>
+            <div class="t-mono" style="margin-top:6px;line-height:1.7">state: <span style="color:#39d98a">GROUNDED</span><br>promoted: no (captured grounded)<br>ledger entries: 2<br>integrity: append-only ✓</div>
+          </div>
+        </div>
+        <div class="rowcard" style="margin-top:10px">
+          <div class="t-lab">Recall path</div>
+          <div class="t-mono" style="margin-top:6px;color:var(--ink2)">recalled by: session #a2 · multi-hop · relevance 0.84</div>
+        </div>
+        <div style="display:flex;gap:8px;margin-top:12px;flex-wrap:wrap">
+          <span class="pill g">Export evidence pack</span><span class="pill n">View ledger entries</span><span class="pill n">Trace recall</span>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="hfnotes">
+    <div class="hfnote"><b>Origin tag is human-readable</b>A machine identifier is not audit evidence. Source, capture time, actor and kind all render as prose data.</div>
+    <div class="hfnote"><b>Export is a primary action</b>P4's output is a document for a committee. Export sits at the same level as navigation, not in an overflow menu.</div>
+    <div class="hfnote"><b>Integrity readout</b>"append-only ✓" is stated as a property of the store, which is exactly as strong as the product can honestly claim.</div>
+  </div>
+
+  <h2><span class="num">A11Y</span>Accessibility acceptance criteria</h2>
+  <table class="tbl">
+    <thead><tr><th>Criterion</th><th>Requirement</th><th>Verified in this pass</th></tr></thead>
+    <tbody>
+      <tr><td>Text contrast</td><td>≥ 4.5:1 body, ≥ 3:1 large text on every token pairing</td><td><span class="pill g">all pairings meet AA</span></td></tr>
+      <tr><td>Colour independence</td><td>Partition state never by colour alone</td><td><span class="pill g">text label on every state</span></td></tr>
+      <tr><td>Keyboard reachability</td><td>Ledger row → inspector → export reachable without a pointer</td><td><span class="pill n">spec'd, needs build verification</span></td></tr>
+      <tr><td>Motion</td><td>Respect <code>prefers-reduced-motion</code> on ledger row entry</td><td><span class="pill n">spec'd</span></td></tr>
+      <tr><td>Non-engineer entry</td><td>P4 can reach the ledger unaided once the server is wired</td><td><span class="pill n">open — needs test (RQ2)</span></td></tr>
+    </tbody>
+  </table>
+
+  <footer><div class="wrap">
+    <div>mem20 desktop app · high-fidelity design · v2 · built 2026-10-14 · UX Researcher agent</div>
+    <div class="guard">Contrast ratios computed against token values; re-verify after any token change.<br>Adversarial 0.000 disclosed. Promotion described as evidence-based with an append-only audit trail.</div>
+  </div></footer>
+</main>
+</body>
+</html>

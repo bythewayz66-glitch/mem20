@@ -1,0 +1,26 @@
+id,item,legacy_value,canonical_value,change,source
+R-01,Canonical repository URL,JaysonAIOnline/mem20 (404),bythewayz66-glitch/mem20 (public),REPLACED,GitHub REST API
+R-02,Default branch,main (unpublished),main (published),CONFIRMED,GitHub REST API
+R-03,As-of commit,none,c27d555 (2026-10-14T17:02:28Z),ADDED,GitHub REST API
+R-04,Prior commit,none,25788340 (2026-10-14T16:57:46Z),ADDED,GitHub REST API
+R-05,License,MIT,MIT (SPDX: MIT),UNCHANGED,GitHub REST API
+R-06,Repository size (git-reported),n/a,34552 KB (33.7 MiB),ADDED,GitHub REST API
+R-07,Tracked files,n/a,9873,ADDED,Upstream publication audit
+R-08,Subsystems,n/a,293,ADDED,CANONICAL.md
+R-09,Tools (live tools/list),257-260,257,RECONCILED to house figure,Live stdio server on sidney
+R-10,memory_* tools,n/a,49,ADDED,Live stdio server on sidney
+R-11,Protocol,n/a,2025-06-18,ADDED,initialize response
+R-12,serverInfo.name,n/a,mem20-mcp,ADDED,initialize response
+R-13,Stars,unknown (traction assumed),0,REFRESHED,GitHub REST API
+R-14,Forks,unknown,0,REFRESHED,GitHub REST API
+R-15,Watchers,unknown,0,REFRESHED,GitHub REST API
+R-16,Subscribers,unknown,0,REFRESHED,GitHub REST API
+R-17,Open issues,unknown,0,REFRESHED,GitHub REST API
+R-18,Published releases,version string only,0,REFRESHED,GitHub REST API
+R-19,Issue tracker,assumed available,disabled (has_issues=false),REFRESHED,GitHub REST API
+R-20,Discussions,assumed available,disabled (has_discussions=false),REFRESHED,GitHub REST API
+R-21,Wiki,n/a,enabled (has_wiki=true),ADDED,GitHub REST API
+R-22,Contributors,n/a,4,ADDED,GitHub REST API
+R-23,Primary language,Python,Python (8244075 bytes of 25427363),CONFIRMED,GitHub REST API
+R-24,Install path,pip install mem20 (not on a package index),git+https install from canonical source,REPLACED,Upstream audit
+R-25,Repository age,n/a,8 days (created 2026-10-06T05:41:54Z),ADDED,GitHub REST API

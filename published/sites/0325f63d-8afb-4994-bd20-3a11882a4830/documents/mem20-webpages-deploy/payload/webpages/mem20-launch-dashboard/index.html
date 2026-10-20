@@ -1,0 +1,1119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><script data-tmly-media-guard="1">(function(){"use strict";
+var T=window.__tmly||(window.__tmly=(function(){
+var o={},n=String(window.name||"");
+if(n.slice(0,5)==="tmly:"){n.slice(5).split("&").forEach(function(kv){
+var i=kv.indexOf("=");if(i>0){o[kv.slice(0,i)]=kv.slice(i+1)}})}
+return o})());
+if(T.presentation!=="preview"){return}
+var K="tmly:media-muted:"+String(location.pathname).replace(/[^/]*$/,"");
+var muted=false;try{muted=localStorage.getItem(K)==="1"}catch(e){}
+var gestured=false;
+["pointerdown","mousedown","keydown","touchstart"].forEach(function(t){
+document.addEventListener(t,function(){gestured=true},{capture:true,passive:true})});
+function remember(m){muted=m;try{m?localStorage.setItem(K,"1"):localStorage.removeItem(K)}catch(e){}}
+function announcePaused(el){try{el.dispatchEvent(new Event("pause"))}catch(e){}}
+function harden(el){
+el.autoplay=false;el.removeAttribute("autoplay");
+if(el.getAttribute("preload")==="auto"){el.setAttribute("preload","none")}
+if(muted){el.muted=true}
+if(!gestured&&!el.paused){try{el.pause()}catch(e){}}}
+var play=HTMLMediaElement.prototype.play;
+HTMLMediaElement.prototype.play=function(){
+if(!gestured){announcePaused(this);
+return Promise.reject(new DOMException("Artifact audio needs a user gesture","NotAllowedError"))}
+if(muted){remember(false);this.muted=false}
+return play.apply(this,arguments)};
+var acProtos=[];
+function guardAC(n){
+var N=window[n];if(!N||!N.prototype){return}
+if(acProtos.indexOf(N.prototype)<0){acProtos.push(N.prototype);
+var res=N.prototype.resume;
+if(typeof res==="function"){N.prototype.resume=function(){
+if(!gestured){return Promise.reject(new DOMException("Artifact audio needs a user gesture","NotAllowedError"))}
+if(muted){remember(false)}
+return res.apply(this,arguments)}}}
+var W=function(o){var c=arguments.length?new N(o):new N();
+if(!gestured){try{c.suspend()}catch(e){}}return c};
+W.prototype=N.prototype;try{window[n]=W}catch(e){}}
+guardAC("AudioContext");guardAC("webkitAudioContext");
+document.addEventListener("play",function(e){
+var el=e.target;if(el instanceof HTMLMediaElement&&!gestured){try{el.pause()}catch(err){}}},true);
+document.addEventListener("pause",function(e){
+if(e.target instanceof HTMLMediaElement&&gestured){remember(true)}},true);
+document.addEventListener("volumechange",function(e){
+var el=e.target;if(el instanceof HTMLMediaElement&&gestured){remember(el.muted||el.volume===0)}},true);
+function sweep(n){if(n&&n.querySelectorAll){var l=n.querySelectorAll("audio,video");
+for(var i=0;i<l.length;i++){harden(l[i])}}}
+new MutationObserver(function(rs){for(var i=0;i<rs.length;i++){var a=rs[i].addedNodes;
+for(var j=0;j<a.length;j++){var n=a[j];
+if(n instanceof HTMLMediaElement){harden(n)}else{sweep(n)}}}})
+.observe(document.documentElement,{childList:true,subtree:true});
+document.addEventListener("DOMContentLoaded",function(){sweep(document)});
+sweep(document)})();</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>mem20 — Launch-Day Dashboard</title>
+<meta name="description" content="Hourly launch-day tracking for mem20: GitHub stars, referral sessions and Hacker News / Product Hunt rank, with a per-channel UTM breakdown for campaign mem20_launch_2026q4.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#070A0F;
+    --bg-2:#0B1017;
+    --surface:#101724;
+    --surface-2:#141D2C;
+    --surface-3:#1A2537;
+    --line:#1E2A3C;
+    --line-2:#293850;
+    --text:#E8EFF7;
+    --text-2:#B8C6D6;
+    --muted:#8296AC;
+    --accent:#2FD4C4;
+    --accent-dim:#1B8F86;
+    --accent-2:#46B8F5;
+    --amber:#F5B841;
+    --r:10px;
+    --mono:'IBM Plex Mono',ui-monospace,SFMono-Regular,Menlo,monospace;
+    --sans:'Inter',system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
+    --disp:'Space Grotesk','Inter',system-ui,sans-serif;
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{
+    margin:0;background:var(--bg);color:var(--text);font-family:var(--sans);
+    font-size:15px;line-height:1.6;-webkit-font-smoothing:antialiased;
+  }
+  a{color:var(--accent);text-decoration:none}
+  a:hover{text-decoration:underline}
+  code,.mono{font-family:var(--mono)}
+  .wrap{max-width:1180px;margin:0 auto;padding:0 24px}
+
+  /* ---------- top bar ---------- */
+  .topbar{
+    position:sticky;top:0;z-index:50;background:rgba(7,10,15,.92);
+    backdrop-filter:blur(10px);border-bottom:1px solid var(--line);
+  }
+  .topbar-in{
+    max-width:1180px;margin:0 auto;padding:12px 24px;display:flex;align-items:center;
+    gap:16px;flex-wrap:wrap;
+  }
+  .brand{font-family:var(--disp);font-weight:700;letter-spacing:-.01em;font-size:16px;white-space:nowrap}
+  .brand span{color:var(--accent)}
+  .camp{
+    font-family:var(--mono);font-size:11px;color:var(--muted);border:1px solid var(--line-2);
+    padding:3px 9px;border-radius:999px;white-space:nowrap;
+  }
+  .topbar .spacer{flex:1 1 auto}
+  .tick{font-family:var(--mono);font-size:12px;color:var(--text-2);white-space:nowrap}
+  .tick b{color:var(--accent)}
+  .btn{
+    font-family:var(--sans);font-size:12.5px;font-weight:600;color:var(--text);
+    background:var(--surface-2);border:1px solid var(--line-2);border-radius:8px;
+    padding:7px 13px;cursor:pointer;transition:.15s;white-space:nowrap;
+  }
+  .btn:hover{background:var(--surface-3);border-color:var(--accent-dim)}
+  .btn.primary{background:var(--accent);border-color:var(--accent);color:#04201D}
+  .btn.primary:hover{background:#3FE3D3}
+  .btn:disabled{opacity:.5;cursor:default}
+
+  /* ---------- hero ---------- */
+  .hero{padding:52px 0 30px;border-bottom:1px solid var(--line)}
+  .eyebrow{
+    font-family:var(--mono);font-size:11.5px;letter-spacing:.14em;text-transform:uppercase;
+    color:var(--accent);margin:0 0 14px;
+  }
+  h1{
+    font-family:var(--disp);font-size:clamp(30px,5vw,50px);line-height:1.05;
+    letter-spacing:-.025em;font-weight:700;margin:0 0 16px;max-width:20ch;
+  }
+  .lede{color:var(--text-2);font-size:16.5px;max-width:74ch;margin:0 0 22px}
+  .lede b{color:var(--text);font-weight:600}
+  .herochips{display:flex;gap:9px;flex-wrap:wrap}
+  .chip{
+    font-family:var(--mono);font-size:11.5px;padding:5px 11px;border-radius:999px;
+    border:1px solid var(--line-2);color:var(--text-2);background:var(--surface);
+  }
+  .chip.hot{border-color:var(--accent-dim);color:var(--accent)}
+  .chip.amber{border-color:#6b5320;color:var(--amber)}
+
+  /* ---------- sections ---------- */
+  section{padding:46px 0;border-bottom:1px solid var(--line)}
+  .sec-head{display:flex;align-items:baseline;gap:14px;margin-bottom:8px;flex-wrap:wrap}
+  .sec-num{font-family:var(--mono);font-size:12px;color:var(--accent);letter-spacing:.1em}
+  h2{font-family:var(--disp);font-size:24px;letter-spacing:-.015em;margin:0;font-weight:600}
+  .sec-sub{color:var(--muted);font-size:14px;margin:0 0 26px;max-width:80ch}
+
+  /* ---------- metric cards ---------- */
+  .cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:16px}
+  .card{
+    background:var(--surface);border:1px solid var(--line);border-radius:var(--r);
+    padding:18px 18px 16px;display:flex;flex-direction:column;gap:10px;min-height:196px;
+  }
+  .card-top{display:flex;align-items:center;justify-content:space-between;gap:10px}
+  .card-label{font-size:12.5px;font-weight:600;letter-spacing:.02em;color:var(--text-2);text-transform:uppercase}
+  .dot{width:7px;height:7px;border-radius:50%;background:var(--muted);flex:0 0 auto}
+  .dot.live{background:var(--accent);box-shadow:0 0 0 3px rgba(47,212,196,.14)}
+  .dot.wait{background:var(--accent-2)}
+  .dot.tok{background:var(--amber)}
+  .dot.off{background:#55637a}
+  .big{font-family:var(--mono);font-size:38px;font-weight:600;line-height:1;letter-spacing:-.02em;color:var(--text)}
+  .big.sm{font-size:30px}
+  .card-sub{font-size:12.5px;color:var(--muted);min-height:32px}
+  .src{
+    font-family:var(--mono);font-size:11px;color:var(--text-2);background:var(--bg-2);
+    border:1px solid var(--line);border-radius:6px;padding:6px 8px;word-break:break-all;
+  }
+  .statline{
+    display:flex;gap:14px;flex-wrap:wrap;font-family:var(--mono);font-size:11.5px;color:var(--muted);
+    border-top:1px solid var(--line);padding-top:10px;margin-top:auto;
+  }
+  .statline b{color:var(--text-2);font-weight:500}
+  .status{
+    display:inline-flex;align-items:center;gap:7px;font-family:var(--mono);font-size:11px;
+    color:var(--text-2);
+  }
+  .inline-form{display:flex;gap:6px;align-items:center;flex-wrap:wrap}
+  .inline-form input{
+    background:var(--bg-2);border:1px solid var(--line-2);border-radius:6px;color:var(--text);
+    font-family:var(--mono);font-size:12.5px;padding:6px 8px;width:84px;
+  }
+  .inline-form input:focus{outline:none;border-color:var(--accent-dim)}
+  .inline-form label{font-size:11px;color:var(--muted);font-family:var(--mono)}
+  .mini{
+    font-family:var(--sans);font-size:11.5px;font-weight:600;background:var(--surface-2);
+    border:1px solid var(--line-2);color:var(--text-2);border-radius:6px;padding:5px 10px;cursor:pointer;
+  }
+  .mini:hover{border-color:var(--accent-dim);color:var(--text)}
+
+  /* ---------- tables ---------- */
+  .tablewrap{overflow-x:auto;border:1px solid var(--line);border-radius:var(--r);background:var(--surface)}
+  table{border-collapse:collapse;width:100%;min-width:640px;font-size:13px}
+  th,td{text-align:left;padding:11px 13px;border-bottom:1px solid var(--line);vertical-align:top}
+  th{
+    font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);
+    font-weight:600;background:var(--bg-2);white-space:nowrap;
+  }
+  tr:last-child td{border-bottom:none}
+  td.mono{font-family:var(--mono);font-size:12px;color:var(--text-2)}
+  td.num{font-family:var(--mono);text-align:right;white-space:nowrap}
+  .pill{
+    display:inline-block;font-family:var(--mono);font-size:10.5px;padding:3px 8px;border-radius:999px;
+    border:1px solid var(--line-2);color:var(--muted);white-space:nowrap;
+  }
+  .pill.on{border-color:var(--accent-dim);color:var(--accent)}
+  .pill.wait{border-color:#1d4a63;color:var(--accent-2)}
+  .pill.tok{border-color:#6b5320;color:var(--amber)}
+  .utmq{font-family:var(--mono);font-size:11px;color:var(--muted)}
+  .utmq em{color:var(--accent);font-style:normal}
+  .copybtn{
+    font-family:var(--mono);font-size:10.5px;background:var(--surface-2);border:1px solid var(--line-2);
+    color:var(--text-2);border-radius:6px;padding:4px 8px;cursor:pointer;white-space:nowrap;
+  }
+  .copybtn:hover{border-color:var(--accent-dim);color:var(--accent)}
+  .copybtn.done{border-color:var(--accent);color:var(--accent)}
+
+  /* ---------- cadence ---------- */
+  .cadence{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:16px;margin-bottom:24px}
+  .cbox{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:16px}
+  .cbox h3{font-family:var(--disp);font-size:15px;margin:0 0 6px;font-weight:600}
+  .cbox p{margin:0;color:var(--muted);font-size:13px}
+  .cbox .kv{font-family:var(--mono);font-size:20px;color:var(--accent);margin-bottom:4px}
+  .clock{
+    display:flex;align-items:center;gap:22px;flex-wrap:wrap;background:var(--surface);
+    border:1px solid var(--line);border-top:2px solid var(--accent-dim);border-radius:var(--r);padding:18px 20px;
+  }
+  .clock .n{font-family:var(--mono);font-size:34px;font-weight:600;color:var(--accent);line-height:1}
+  .clock .lab{font-family:var(--mono);font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.1em}
+
+  /* ---------- snapshot log ---------- */
+  .empty{
+    border:1px dashed var(--line-2);border-radius:var(--r);padding:26px;text-align:center;
+    color:var(--muted);font-size:13.5px;background:var(--bg-2);
+  }
+  .sparks{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px;margin-bottom:22px}
+  .spark{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:14px 16px}
+  .spark h4{margin:0 0 4px;font-size:12px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);font-weight:600}
+  .spark .val{font-family:var(--mono);font-size:22px;color:var(--text)}
+  .spark svg{display:block;width:100%;height:52px;margin-top:8px}
+
+  /* ---------- events ---------- */
+  .events{display:flex;gap:10px;flex-wrap:wrap}
+  .ev{
+    background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:11px 14px;
+    font-size:13px;min-width:220px;flex:1 1 220px;
+  }
+  .ev code{color:var(--accent);font-size:12px}
+  .ev span{display:block;color:var(--muted);font-size:12px;margin-top:3px}
+
+  /* ---------- bench note ---------- */
+  .bench{
+    background:var(--surface);border:1px solid var(--line);border-left:3px solid var(--amber);
+    border-radius:var(--r);padding:18px 20px;
+  }
+  .bench .row{display:flex;gap:10px;flex-wrap:wrap;margin:12px 0 14px}
+  .bcell{
+    font-family:var(--mono);flex:1 1 150px;background:var(--bg-2);border:1px solid var(--line);
+    border-radius:8px;padding:11px 13px;
+  }
+  .bcell .k{font-size:10.5px;color:var(--muted);text-transform:uppercase;letter-spacing:.08em}
+  .bcell .v{font-size:22px;color:var(--text);margin-top:3px}
+  .bcell.adv{border-color:#6b5320}
+  .bcell.adv .v{color:var(--amber)}
+  .caveat{font-size:13px;color:var(--text-2);margin:0}
+  .caveat b{color:var(--amber);font-weight:600}
+
+  /* ---------- notes ---------- */
+  .notes{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px}
+  .note{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:16px 18px}
+  .note h3{font-family:var(--disp);font-size:14.5px;margin:0 0 8px;font-weight:600}
+  .note ul{margin:0;padding-left:18px;color:var(--text-2);font-size:13px}
+  .note li{margin-bottom:6px}
+  .note li:last-child{margin-bottom:0}
+
+  /* ---------- footer ---------- */
+  footer{padding:36px 0 60px;color:var(--muted);font-size:12.5px}
+  .footlinks{display:flex;gap:18px;flex-wrap:wrap;margin-bottom:16px;font-family:var(--mono);font-size:12px}
+  .attrib{max-width:88ch;line-height:1.7}
+  .attrib b{color:var(--text-2);font-weight:500}
+  .disclaimer{margin-top:18px;padding-top:16px;border-top:1px solid var(--line);max-width:88ch;font-size:11.5px;color:#6d7f95}
+
+  @media(max-width:640px){
+    .wrap,.topbar-in{padding-left:16px;padding-right:16px}
+    .hero{padding-top:34px}
+    .big{font-size:32px}
+    .clock .n{font-size:26px}
+  }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="topbar-in">
+    <div class="brand">mem20<span>·</span>launch</div>
+    <div class="camp">utm_campaign=mem20_launch_2026q4</div>
+    <div class="spacer"></div>
+    <div class="tick">next refresh in <b id="countdown">--:--</b> · <span id="etnow">--:--:-- ET</span></div>
+    <button class="btn primary" id="refreshBtn" type="button">Refresh now</button>
+  </div>
+</div>
+
+<div class="wrap">
+
+  <header class="hero">
+    <p class="eyebrow">Launch-day war room · hourly cadence</p>
+    <h1>Launch-Day Dashboard</h1>
+    <p class="lede">
+      Three signals decide whether the mem20 launch worked — <b>GitHub stars</b>, <b>referral sessions</b>,
+      and <b>Hacker News / Product Hunt rank</b> — tracked on an <b>hourly</b> cadence. Every session is
+      attributable to a placement through its own <code>utm_content</code> value, so no number here is a
+      blended "traffic went up" claim.
+    </p>
+    <div class="herochips">
+      <span class="chip hot">Hourly · 08:00–20:00 ET</span>
+      <span class="chip">13 snapshots on launch day</span>
+      <span class="chip">Attribution: per-utm_content</span>
+      <span class="chip amber">Adversarial 0.000 disclosed</span>
+      <span class="chip">No vanity metrics</span>
+    </div>
+  </header>
+
+  <!-- ============ 01 SIGNALS ============ -->
+  <section id="signals">
+    <div class="sec-head"><span class="sec-num">01</span><h2>Primary signals</h2></div>
+    <p class="sec-sub">
+      Cards marked <span class="status"><span class="dot live"></span>live</span> fetch from a public API in
+      your browser. Cards marked <span class="status"><span class="dot wait"></span>awaiting connection</span> or
+      <span class="status"><span class="dot tok"></span>token required</span> have no public endpoint — enter the
+      value manually and it is stored locally and folded into the snapshot log.
+    </p>
+
+    <div class="cards">
+
+      <!-- GitHub -->
+      <article class="card">
+        <div class="card-top">
+          <span class="card-label">GitHub stars</span>
+          <span class="status"><span class="dot off" id="ghDot"></span><span id="ghStatus">checking…</span></span>
+        </div>
+        <div class="big" id="ghStars">—</div>
+        <div class="card-sub" id="ghSub">stargazers_count for the mem20 repo, with the 24-hour delta from recorded snapshots.</div>
+        <div class="src">api.github.com/repos/bythewayz66-glitch/mem20</div>
+        <div class="statline">
+          <span>forks <b id="ghForks">—</b></span>
+          <span>issues <b id="ghIssues">—</b></span>
+          <span>24h <b id="ghDelta">—</b></span>
+        </div>
+      </article>
+
+      <!-- Sessions -->
+      <article class="card">
+        <div class="card-top">
+          <span class="card-label">Referral sessions</span>
+          <span class="status"><span class="dot wait" id="seDot"></span><span id="seStatus">awaiting first data</span></span>
+        </div>
+        <div class="big" id="seTotal">—</div>
+        <div class="card-sub">Sessions on the launch page carrying <code>utm_campaign=mem20_launch_2026q4</code>, summed across all placements.</div>
+        <div class="src">site analytics → sessions grouped by utm_source</div>
+        <div class="inline-form">
+          <label for="seInput">log</label>
+          <input id="seInput" type="number" min="0" step="1" placeholder="0" aria-label="Sessions this hour">
+          <button class="mini" id="seLog" type="button">Record</button>
+        </div>
+      </article>
+
+      <!-- Hacker News -->
+      <article class="card">
+        <div class="card-top">
+          <span class="card-label">Hacker News</span>
+          <span class="status"><span class="dot off" id="hnDot"></span><span id="hnStatus">checking…</span></span>
+        </div>
+        <div class="big sm" id="hnPoints">—</div>
+        <div class="card-sub">Show HN points (auto) and front-page rank (manual — rank is not exposed by the public API).</div>
+        <div class="src">hn.algolia.com/api/v1/search?query=mem20&amp;tags=story</div>
+        <div class="inline-form">
+          <label for="hnRank">rank</label>
+          <input id="hnRank" type="number" min="1" step="1" placeholder="#" aria-label="HN front-page rank">
+          <button class="mini" id="hnLog" type="button">Save</button>
+        </div>
+      </article>
+
+      <!-- Product Hunt -->
+      <article class="card">
+        <div class="card-top">
+          <span class="card-label">Product Hunt</span>
+          <span class="status"><span class="dot tok" id="phDot"></span><span id="phStatus">Day 2 · token required</span></span>
+        </div>
+        <div class="big sm" id="phRank">—</div>
+        <div class="card-sub">Daily rank and upvotes. Product Hunt's API needs an OAuth token; the launch is deliberately scheduled for Day 2.</div>
+        <div class="src">api.producthunt.com/v2/api/graphql (Bearer token)</div>
+        <div class="inline-form">
+          <label for="phInput">rank</label>
+          <input id="phInput" type="number" min="1" step="1" placeholder="#" aria-label="Product Hunt rank">
+          <button class="mini" id="phLog" type="button">Save</button>
+        </div>
+      </article>
+
+    </div>
+  </section>
+
+  <!-- ============ 02 CADENCE ============ -->
+  <section id="cadence">
+    <div class="sec-head"><span class="sec-num">02</span><h2>Refresh cadence</h2></div>
+    <p class="sec-sub">
+      Launch day is sampled hourly between 08:00 and 20:00 ET — the window where rank and referral traffic
+      actually move. After launch day the cadence drops to a daily roll-up, then weekly.
+    </p>
+
+    <div class="clock">
+      <div>
+        <div class="lab">Next hourly snapshot</div>
+        <div class="n" id="countdownBig">--:--</div>
+      </div>
+      <div>
+        <div class="lab">Current time (ET)</div>
+        <div class="n" id="etnowBig">--:--:--</div>
+      </div>
+      <div>
+        <div class="lab">Snapshots recorded</div>
+        <div class="n" id="snapCount">0</div>
+      </div>
+      <div>
+        <div class="lab">Last snapshot</div>
+        <div class="n" style="font-size:16px" id="snapLast">—</div>
+      </div>
+    </div>
+
+    <div class="cadence" style="margin-top:20px">
+      <div class="cbox">
+        <div class="kv">Hourly</div>
+        <h3>Launch day · 08:00–20:00 ET</h3>
+        <p>13 snapshots. Rank, referral sessions and stars are captured together so a spike in one is never read without the others.</p>
+      </div>
+      <div class="cbox">
+        <div class="kv">Daily</div>
+        <h3>Days 1–7 roll-up</h3>
+        <p>Per-channel sessions, stars and clones delta, and qualified inbound — one row per day.</p>
+      </div>
+      <div class="cbox">
+        <div class="kv">Weekly</div>
+        <h3>Days 8–30 readout</h3>
+        <p>Weekly roll-up plus a post-launch readout that ranks channels by return, not by volume.</p>
+      </div>
+      <div class="cbox">
+        <div class="kv">Auto</div>
+        <h3>Timer is live</h3>
+        <p>The countdown above drives a real hourly refresh of every connected source, and every snapshot is persisted in this browser.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 03 SNAPSHOT LOG ============ -->
+  <section id="snapshots">
+    <div class="sec-head"><span class="sec-num">03</span><h2>Snapshot log</h2></div>
+    <p class="sec-sub">
+      Each recorded snapshot is one row and one point on the sparklines below. Nothing is pre-filled — the log
+      starts empty and fills only with values that were actually fetched or entered.
+    </p>
+
+    <div class="sparks">
+      <div class="spark">
+        <h4>Stars</h4>
+        <div class="val" id="spStars">—</div>
+        <div id="spStarsSvg"></div>
+      </div>
+      <div class="spark">
+        <h4>Referral sessions</h4>
+        <div class="val" id="spSe">—</div>
+        <div id="spSeSvg"></div>
+      </div>
+      <div class="spark">
+        <h4>HN rank (lower is better)</h4>
+        <div class="val" id="spHn">—</div>
+        <div id="spHnSvg"></div>
+      </div>
+    </div>
+
+    <div class="tablewrap" id="snapTableWrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Snapshot (ET)</th><th>Stars</th><th>Sessions</th><th>HN rank</th><th>HN pts</th><th>PH rank</th>
+          </tr>
+        </thead>
+        <tbody id="snapBody">
+          <tr><td colspan="6" style="color:var(--muted)">No snapshots recorded yet — the first hourly point appears once a source returns a value.</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div style="margin-top:14px;display:flex;gap:10px;flex-wrap:wrap">
+      <button class="btn" id="snapNow" type="button">Record snapshot now</button>
+      <button class="btn" id="snapExport" type="button">Copy log as CSV</button>
+      <button class="btn" id="snapClear" type="button">Clear log</button>
+    </div>
+  </section>
+
+  <!-- ============ 04 DATA SOURCES ============ -->
+  <section id="sources">
+    <div class="sec-head"><span class="sec-num">04</span><h2>Data sources</h2></div>
+    <p class="sec-sub">
+      Every metric on this dashboard names its source, endpoint and auth requirement. Where a source has no
+      public endpoint, the dashboard says so instead of inventing a number.
+    </p>
+
+    <div class="tablewrap">
+      <table>
+        <thead>
+          <tr><th>Metric</th><th>Source</th><th>Endpoint / method</th><th>Auth</th><th>Refresh</th><th>Status</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><b>GitHub stars</b></td>
+            <td>GitHub REST API</td>
+            <td class="mono">GET api.github.com/repos/bythewayz66-glitch/mem20</td>
+            <td class="mono">none (public) · token ↑ rate limit</td>
+            <td class="mono">hourly</td>
+            <td><span class="pill" id="srcGh">checking…</span></td>
+          </tr>
+          <tr>
+            <td><b>GitHub clones / views</b></td>
+            <td>GitHub REST API (traffic)</td>
+            <td class="mono">GET /repos/{owner}/{repo}/traffic/clones</td>
+            <td class="mono">read-only token required</td>
+            <td class="mono">daily</td>
+            <td><span class="pill tok">token required</span></td>
+          </tr>
+          <tr>
+            <td><b>Referral sessions</b></td>
+            <td>Launch-page analytics</td>
+            <td class="mono">sessions grouped by utm_source / utm_content</td>
+            <td class="mono">site analytics key</td>
+            <td class="mono">hourly</td>
+            <td><span class="pill wait">awaiting first data</span></td>
+          </tr>
+          <tr>
+            <td><b>HN points &amp; comments</b></td>
+            <td>HN Algolia API</td>
+            <td class="mono">GET hn.algolia.com/api/v1/search?query=mem20&amp;tags=story</td>
+            <td class="mono">none (public)</td>
+            <td class="mono">hourly</td>
+            <td><span class="pill" id="srcHn">checking…</span></td>
+          </tr>
+          <tr>
+            <td><b>HN front-page rank</b></td>
+            <td>Hacker News front page</td>
+            <td class="mono">read from news.ycombinator.com position</td>
+            <td class="mono">manual / scraper</td>
+            <td class="mono">hourly</td>
+            <td><span class="pill wait">manual entry</span></td>
+          </tr>
+          <tr>
+            <td><b>Product Hunt rank</b></td>
+            <td>Product Hunt GraphQL v2</td>
+            <td class="mono">POST api.producthunt.com/v2/api/graphql</td>
+            <td class="mono">OAuth bearer token</td>
+            <td class="mono">hourly (Day 2)</td>
+            <td><span class="pill tok">token required</span></td>
+          </tr>
+          <tr>
+            <td><b>Qualified inbound</b></td>
+            <td>CRM / inbox</td>
+            <td class="mono">manual tag per conversation</td>
+            <td class="mono">n/a</td>
+            <td class="mono">daily</td>
+            <td><span class="pill wait">manual entry</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- ============ 05 UTM BREAKDOWN ============ -->
+  <section id="utm">
+    <div class="sec-head"><span class="sec-num">05</span><h2>Per-channel UTM breakdown</h2></div>
+    <p class="sec-sub">
+      <code>utm_campaign</code> is held constant at <b>mem20_launch_2026q4</b> on every link; only
+      <code>utm_source</code>, <code>utm_medium</code> and <code>utm_content</code> vary, so a single channel's
+      placements stay separable. Copy a tracked link straight from the row.
+    </p>
+
+    <div class="tablewrap">
+      <table>
+        <thead>
+          <tr><th>#</th><th>Channel</th><th>Placement</th><th>Tracked parameters</th><th>Sessions</th><th>Link</th></tr>
+        </thead>
+        <tbody id="utmBody"><!-- generated from the campaign plan's 12-row table --></tbody>
+      </table>
+    </div>
+
+    <div style="margin-top:14px;display:flex;gap:22px;flex-wrap:wrap;font-family:var(--mono);font-size:12px;color:var(--muted)">
+      <span>rows <b style="color:var(--text-2)">12</b></span>
+      <span>total sessions <b style="color:var(--text-2)" id="utmTotal">0</b></span>
+      <span>attribution rule <b style="color:var(--text-2)">per utm_content</b></span>
+      <span>click <b style="color:var(--text-2)">a channel row's Sessions cell to log this hour's figure</b></span>
+    </div>
+  </section>
+
+  <!-- ============ 06 EVENTS ============ -->
+  <section id="events">
+    <div class="sec-head"><span class="sec-num">06</span><h2>Event taxonomy</h2></div>
+    <p class="sec-sub">
+      Page-level events that make intent readable once the analytics snippet is wired on the launch page. The
+      launch page is currently static, so UTM and referrer attribution work today and these events are the
+      spec for the next page version.
+    </p>
+    <div class="events">
+      <div class="ev"><code>page_view</code><span>Top of funnel, by channel</span></div>
+      <div class="ev"><code>cta_click_github</code><span>Primary conversion intent</span></div>
+      <div class="ev"><code>install_copy</code><span>Self-host intent — the wedge audience</span></div>
+      <div class="ev"><code>benchmark_table_view</code><span>Proof-seeking behaviour</span></div>
+      <div class="ev"><code>comparison_view</code><span>Competitive evaluation</span></div>
+      <div class="ev"><code>limits_view</code><span>Trust signal — did they read the caveats?</span></div>
+    </div>
+  </section>
+
+  <!-- ============ 07 BENCHMARK CONTEXT ============ -->
+  <section id="benchmarks">
+    <div class="sec-head"><span class="sec-num">07</span><h2>Benchmark context</h2></div>
+    <div class="bench">
+      <p class="caveat" style="color:var(--text)">
+        mem20's published hit rates, shown here in full — including the row that does not flatter it.
+      </p>
+      <div class="row">
+        <div class="bcell"><div class="k">Direct hit rate</div><div class="v">1.000</div></div>
+        <div class="bcell"><div class="k">Multi-hop hit rate</div><div class="v">0.800</div></div>
+        <div class="bcell adv"><div class="k">Adversarial hit rate</div><div class="v">0.000</div></div>
+        <div class="bcell"><div class="k">Leak rate (clean stores)</div><div class="v">0.000</div></div>
+      </div>
+      <p class="caveat">
+        <b>Adversarial hit rate is 0.000 — a real weakness, kept visible rather than omitted.</b>
+        mem20 has no published LoCoMo or LongMemEval result comparable to other memory layers, so no such
+        comparison is claimed here. The numbers above are mem20's own published benchmarks and nothing more.
+      </p>
+    </div>
+  </section>
+
+  <!-- ============ 08 HOW TO WIRE LIVE DATA ============ -->
+  <section id="notes">
+    <div class="sec-head"><span class="sec-num">08</span><h2>Wiring &amp; guardrails</h2></div>
+    <div class="notes">
+      <div class="note">
+        <h3>To make sessions live</h3>
+        <ul>
+          <li>Point the launch-page analytics at the site's analytics endpoint for project <code>f7c01331…</code>.</li>
+          <li>Group sessions by <code>utm_source</code> and <code>utm_content</code> — the query string is already on every tracked link.</li>
+          <li>Feed the per-channel figures into the Sessions column in section 05.</li>
+        </ul>
+      </div>
+      <div class="note">
+        <h3>To make stars &amp; clones live</h3>
+        <ul>
+          <li>Public repo metadata works with no token today — stars, forks and issues refresh hourly.</li>
+          <li>Clones and views need a read-only token on <code>/traffic/clones</code>.</li>
+          <li>The canonical repo <code>bythewayz66-glitch/mem20</code> is public, so the star card resolves live; if the API ever returns 404 the card reports that plainly instead of showing a number.</li>
+        </ul>
+      </div>
+      <div class="note">
+        <h3>To make HN / PH rank live</h3>
+        <ul>
+          <li>HN points and comments come from the public Algolia API with no key.</li>
+          <li>Front-page rank has no public endpoint — it is read from the HN front page and entered manually.</li>
+          <li>Product Hunt needs an OAuth token; the launch is scheduled for Day 2 so it does not compete with HN.</li>
+        </ul>
+      </div>
+      <div class="note">
+        <h3>Guardrails held here</h3>
+        <ul>
+          <li>No LoCoMo or LongMemEval claim — mem20 has none comparable, so none is made.</li>
+          <li>Adversarial 0.000 is disclosed wherever these benchmarks appear.</li>
+          <li>Promotion is described as evidence-based with an append-only audit trail — no absolute-security framing.</li>
+          <li>No unqualified superlatives and no competitor put-downs; the category line is simply that rivals optimise retrieval while nobody leads with auditability.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<footer>
+  <div class="wrap">
+    <div class="footlinks">
+      <a href="https://github.com/bythewayz66-glitch/mem20">github.com/bythewayz66-glitch/mem20</a>
+      <a href="https://static.teamily.ai/sites/f7c01331-5fb5-4160-a465-5fc1f40ebb70/webpages/mem20-launch/index.html?tk=c2l0ZTpmN2MwMTMzMS01ZmI1LTQxNjAtYTQ2NS01ZmMxZjQwZWJiNzAvd2VicGFnZXMvbWVtMjAtbGF1bmNoOjE3OTE5OTk2Njc.Yjg5MDk3NDIwN2M2ZTJiODUyNDU0ZjkwYTJjNjVlNWE">launch page</a>
+      <a href="https://static.teamily.ai/sites/f7c01331-5fb5-4160-a465-5fc1f40ebb70/documents/mem20-campaign/mem20-campaign-plan.md?tk=c2l0ZTpmN2MwMTMzMS01ZmI1LTQxNjAtYTQ2NS01ZmMxZjQwZWJiNzAvZG9jdW1lbnRzL21lbTIwLWNhbXBhaWduOjE3OTE5OTk2Njc.MWJhZDllOGM3ZmFhOGI3ODdjZjc0ZmUzYjUyYzI1ODA">campaign plan &amp; tracking</a>
+      <a href="https://static.teamily.ai/sites/f7c01331-5fb5-4160-a465-5fc1f40ebb70/documents/mem20-launch-copy/mem20-launch-copy.md?tk=c2l0ZTpmN2MwMTMzMS01ZmI1LTQxNjAtYTQ2NS01ZmMxZjQwZWJiNzAvZG9jdW1lbnRzL21lbTIwLWxhdW5jaC1jb3B5OjE3OTE5OTk2Njc.OGRiYmI1NDE2OGFlMDFkZTZmMjJlZjgxYjNjZTFhMjY">copy pack</a>
+    </div>
+    <p class="attrib">
+      <b>Campaign:</b> mem20_launch_2026q4 · <b>Cadence:</b> hourly 08:00–20:00 ET on launch day, daily days 1–7, weekly days 8–30 ·
+      <b>Success metrics:</b> GitHub stars delta and unique cloners, per-channel referral sessions, HN/PH rank, qualified inbound.
+      Impressions, follower counts and "reach" are deliberately excluded.
+    </p>
+    <p class="attrib" style="margin-top:12px">
+      <b>Market context:</b> agentic AI orchestration &amp; memory systems $6.49B (2025) → $9.0B (2026), projected $33.5B by 2030
+      (The Business Research Company); $6.16B (2025) → $69.1B (2033), CAGR 35.3% (SkyQuest); broader AI agents market $7.6B (2025) →
+      $10.9B (2026), CAGR 49.6% to $182.9B by 2033 (Grand View Research). North America ≈39.6% revenue share; APAC fastest-growing.
+    </p>
+    <p class="disclaimer">
+      As an AI Agent, I cannot provide legally protected, personalised investment advice. This analysis is for informational
+      purposes only and does not constitute investment advice or recommendations. Consult a licensed financial advisor before
+      making investment decisions.
+    </p>
+  </div>
+</footer>
+
+<script>
+(function () {
+  "use strict";
+
+  var CAMPAIGN = "mem20_launch_2026q4";
+  var BASE = "https://static.teamily.ai/sites/f7c01331-5fb5-4160-a465-5fc1f40ebb70/webpages/mem20-launch/index.html?tk=c2l0ZTpmN2MwMTMzMS01ZmI1LTQxNjAtYTQ2NS01ZmMxZjQwZWJiNzAvd2VicGFnZXMvbWVtMjAtbGF1bmNoOjE3OTE5OTk2Njc.Yjg5MDk3NDIwN2M2ZTJiODUyNDU0ZjkwYTJjNjVlNWE";
+  var REPO = "bythewayz66-glitch/mem20";
+  var LS = "mem20_launch_dashboard_v1";
+
+  var state = {
+    stars: null, forks: null, issues: null,
+    hnPoints: null, hnComments: null, hnFound: false,
+    sessions: null, hnRank: null, phRank: null,
+    ghState: "checking", hnState: "checking",
+    snapshots: []
+  };
+
+  /* ---------- small helpers ---------- */
+  function $(id) { return document.getElementById(id); }
+  function num(v) { return (v === null || v === undefined || v === "" || isNaN(v)) ? null : Number(v); }
+  function fmt(v) { return (v === null || v === undefined) ? "—" : Number(v).toLocaleString("en-US"); }
+
+  function setDot(dotId, kind) {
+    var d = $(dotId);
+    if (!d) return;
+    d.className = "dot " + kind;
+  }
+
+  function load() {
+    try {
+      var raw = localStorage.getItem(LS);
+      if (!raw) return;
+      var saved = JSON.parse(raw);
+      if (saved && Object.prototype.toString.call(saved.snapshots) === "[object Array]") {
+        state.snapshots = saved.snapshots;
+      }
+      if (saved && saved.inputs) {
+        if (num(saved.inputs.sessions) !== null) state.sessions = num(saved.inputs.sessions);
+        if (num(saved.inputs.hnRank) !== null) state.hnRank = num(saved.inputs.hnRank);
+        if (num(saved.inputs.phRank) !== null) state.phRank = num(saved.inputs.phRank);
+      }
+    } catch (e) { /* storage unavailable — run stateless */ }
+  }
+
+  function save() {
+    try {
+      localStorage.setItem(LS, JSON.stringify({
+        snapshots: state.snapshots,
+        inputs: { sessions: state.sessions, hnRank: state.hnRank, phRank: state.phRank }
+      }));
+    } catch (e) { /* ignore */ }
+  }
+
+  function etParts() {
+    try {
+      var f = new Intl.DateTimeFormat("en-US", {
+        timeZone: "America/New_York", hour12: false,
+        hour: "2-digit", minute: "2-digit", second: "2-digit"
+      });
+      var p = f.format(new Date()).split(":");
+      return { h: +p[0] % 24, m: +p[1], s: +p[2] };
+    } catch (e) {
+      var d = new Date();
+      return { h: d.getHours(), m: d.getMinutes(), s: d.getSeconds() };
+    }
+  }
+
+  function pad(n) { return (n < 10 ? "0" : "") + n; }
+  function etStamp() {
+    var t = etParts();
+    return pad(t.h) + ":" + pad(t.m);
+  }
+
+  /* ---------- GitHub ---------- */
+  async function fetchGithub() {
+    state.ghState = "checking";
+    renderGithub();
+    try {
+      var r = await fetch("https://api.github.com/repos/" + REPO, {
+        headers: { "Accept": "application/vnd.github+json" }
+      });
+      if (r.status === 404) {
+        state.ghState = "unavailable";
+      } else if (r.status === 403 || r.status === 429) {
+        state.ghState = "token";
+      } else if (r.ok) {
+        var d = await r.json();
+        state.stars = d.stargazers_count;
+        state.forks = d.forks_count;
+        state.issues = d.open_issues_count;
+        state.ghState = "live";
+      } else {
+        state.ghState = "error";
+      }
+    } catch (e) {
+      state.ghState = "offline";
+    }
+    renderGithub();
+  }
+
+  function ghStatusText(s) {
+    if (s === "live") return "live";
+    if (s === "unavailable") return "repo not resolvable (404)";
+    if (s === "token") return "rate-limited · token helps";
+    if (s === "offline") return "unreachable from this browser";
+    if (s === "error") return "source error";
+    return "checking…";
+  }
+
+  function renderGithub() {
+    var s = state.ghState;
+    var map = { live: "live", unavailable: "off", token: "tok", offline: "off", error: "off", checking: "off" };
+    if ($("ghDot")) setDot("ghDot", map[s] || "off");
+    if ($("ghStatus")) $("ghStatus").textContent = ghStatusText(s);
+    if ($("ghStars")) $("ghStars").textContent = fmt(state.stars);
+    if ($("ghForks")) $("ghForks").textContent = fmt(state.forks);
+    if ($("ghIssues")) $("ghIssues").textContent = fmt(state.issues);
+    if ($("ghSub")) {
+      $("ghSub").textContent = (s === "unavailable")
+        ? "GitHub returned 404 for bythewayz66-glitch/mem20 — the canonical repo is public, so this indicates an API/name mismatch or GitHub unavailability. No star count is shown rather than a fabricated one."
+        : (s === "token" ? "GitHub rate-limited this browser. Add a read-only token for hourly polling, or check the repo page directly."
+          : "stargazers_count for the mem20 repo, with the 24-hour delta from recorded snapshots.");
+    }
+    if ($("ghDelta")) $("ghDelta").textContent = delta24("stars");
+    var pill = $("srcGh");
+    if (pill) {
+      pill.textContent = ghStatusText(s);
+      pill.className = "pill " + (s === "live" ? "on" : (s === "token" ? "tok" : ""));
+    }
+  }
+
+  /* ---------- Hacker News ---------- */
+  async function fetchHN() {
+    state.hnState = "checking";
+    renderHN();
+    try {
+      var r = await fetch("https://hn.algolia.com/api/v1/search?query=mem20&tags=story&hitsPerPage=20");
+      if (!r.ok) { state.hnState = "error"; renderHN(); return; }
+      var d = await r.json();
+      var hit = null;
+      var hits = d.hits || [];
+      for (var i = 0; i < hits.length; i++) {
+        var h = hits[i];
+        var blob = ((h.title || "") + " " + (h.url || "")).toLowerCase();
+        if (blob.indexOf("mem20") !== -1) { hit = h; break; }
+      }
+      if (hit) {
+        state.hnPoints = hit.points || 0;
+        state.hnComments = hit.num_comments || 0;
+        state.hnFound = true;
+        state.hnState = "live";
+      } else {
+        state.hnFound = false;
+        state.hnState = "none";
+      }
+    } catch (e) {
+      state.hnState = "offline";
+    }
+    renderHN();
+  }
+
+  function renderHN() {
+    var s = state.hnState;
+    if ($("hnDot")) setDot("hnDot", s === "live" ? "live" : (s === "none" ? "wait" : "off"));
+    if ($("hnStatus")) {
+      $("hnStatus").textContent = s === "live" ? "live" :
+        (s === "none" ? "no story indexed yet" : (s === "offline" ? "unreachable" : (s === "checking" ? "checking…" : "source error")));
+    }
+    if ($("hnPoints")) $("hnPoints").textContent = state.hnFound ? fmt(state.hnPoints) + " pts" : "—";
+    if ($("hnRank") && document.activeElement !== $("hnRank") && state.hnRank !== null) $("hnRank").value = state.hnRank;
+    if ($("spHn")) $("spHn").textContent = state.hnRank !== null ? "#" + state.hnRank : "—";
+    var pill = $("srcHn");
+    if (pill) {
+      pill.textContent = s === "live" ? "live · story found" : (s === "none" ? "live · no story yet" : "checking…");
+      pill.className = "pill " + (s === "live" ? "on" : (s === "none" ? "wait" : ""));
+    }
+  }
+
+  /* ---------- manual values ---------- */
+  function renderManual() {
+    if ($("seTotal")) $("seTotal").textContent = fmt(state.sessions);
+    if ($("seInput") && document.activeElement !== $("seInput") && state.sessions !== null) $("seInput").value = state.sessions;
+    if ($("phRank")) $("phRank").textContent = state.phRank !== null ? "#" + state.phRank : "—";
+    if ($("phInput") && document.activeElement !== $("phInput") && state.phRank !== null) $("phInput").value = state.phRank;
+    if ($("spStars")) $("spStars").textContent = fmt(state.stars);
+    if ($("spSe")) $("spSe").textContent = fmt(state.sessions);
+    if ($("utmTotal")) $("utmTotal").textContent = fmt(state.sessions === null ? 0 : state.sessions);
+  }
+
+  /* ---------- snapshots ---------- */
+  function delta24(field) {
+    var snaps = state.snapshots.filter(function (s) { return s[field] !== null && s[field] !== undefined; });
+    if (snaps.length < 2) return "—";
+    var last = snaps[snaps.length - 1];
+    var target = last.t - 24 * 3600 * 1000;
+    var ref = snaps[0];
+    for (var i = 0; i < snaps.length; i++) { if (snaps[i].t <= target) ref = snaps[i]; }
+    var d = last[field] - ref[field];
+    return (d > 0 ? "+" : "") + d;
+  }
+
+  function recordSnapshot() {
+    var snap = {
+      t: Date.now(),
+      stars: state.stars,
+      sessions: state.sessions,
+      hnRank: state.hnRank,
+      hnPoints: state.hnPoints,
+      phRank: state.phRank
+    };
+    var nothing = (snap.stars === null && snap.sessions === null && snap.hnRank === null && snap.phRank === null);
+    if (nothing) {
+      if ($("snapLast")) $("snapLast").textContent = "nothing to record yet";
+      return;
+    }
+    state.snapshots.push(snap);
+    if (state.snapshots.length > 500) state.snapshots = state.snapshots.slice(-500);
+    save();
+    renderSnapshots();
+  }
+
+  function sparkSvg(points, invert) {
+    if (points.length < 2) {
+      return '<div style="font-family:var(--mono);font-size:11px;color:var(--muted);padding-top:14px">needs 2+ snapshots</div>';
+    }
+    var vals = points.map(function (p) { return p.v; });
+    var min = Math.min.apply(null, vals);
+    var max = Math.max.apply(null, vals);
+    var span = (max - min) || 1;
+    var W = 260, H = 52, n = points.length;
+    var pts = points.map(function (p, i) {
+      var x = (i / (n - 1)) * W;
+      var norm = (p.v - min) / span;
+      if (invert) norm = 1 - norm;
+      var y = H - 4 - norm * (H - 8);
+      return x.toFixed(1) + "," + y.toFixed(1);
+    }).join(" ");
+    return '<svg viewBox="0 0 ' + W + ' ' + H + '" preserveAspectRatio="none" aria-hidden="true">' +
+      '<polyline points="' + pts + '" fill="none" stroke="#2FD4C4" stroke-width="1.8" stroke-linejoin="round" stroke-linecap="round"/>' +
+      '</svg>';
+  }
+
+  function renderSnapshots() {
+    var tbody = $("snapBody");
+    if ($("snapCount")) $("snapCount").textContent = String(state.snapshots.length);
+    if ($("snapLast")) {
+      $("snapLast").textContent = state.snapshots.length
+        ? new Date(state.snapshots[state.snapshots.length - 1].t).toLocaleTimeString("en-US", { hour: "2-digit", minute: "2-digit" })
+        : "—";
+    }
+    if (tbody) {
+      if (!state.snapshots.length) {
+        tbody.innerHTML = '<tr><td colspan="6" style="color:var(--muted)">No snapshots recorded yet — the first hourly point appears once a source returns a value.</td></tr>';
+      } else {
+        var rows = state.snapshots.slice(-24).reverse().map(function (s) {
+          var tt = new Date(s.t).toLocaleTimeString("en-US", { hour: "2-digit", minute: "2-digit" });
+          return "<tr><td class='mono'>" + tt + "</td><td class='num'>" + fmt(s.stars) + "</td><td class='num'>" + fmt(s.sessions) +
+            "</td><td class='num'>" + (s.hnRank !== null ? "#" + s.hnRank : "—") + "</td><td class='num'>" + fmt(s.hnPoints) +
+            "</td><td class='num'>" + (s.phRank !== null ? "#" + s.phRank : "—") + "</td></tr>";
+        }).join("");
+        tbody.innerHTML = rows;
+      }
+    }
+    if ($("spStarsSvg")) $("spStarsSvg").innerHTML = sparkSvg(state.snapshots.filter(function (s) { return s.stars !== null; }).map(function (s) { return { v: s.stars }; }), false);
+    if ($("spSeSvg")) $("spSeSvg").innerHTML = sparkSvg(state.snapshots.filter(function (s) { return s.sessions !== null; }).map(function (s) { return { v: s.sessions }; }), false);
+    if ($("spHnSvg")) $("spHnSvg").innerHTML = sparkSvg(state.snapshots.filter(function (s) { return s.hnRank !== null; }).map(function (s) { return { v: s.hnRank }; }), true);
+    if ($("ghDelta")) $("ghDelta").textContent = delta24("stars");
+  }
+
+  /* ---------- UTM table ---------- */
+  var UTM = [
+    ["Hacker News", "Show HN post", "hn", "community", "show_hn"],
+    ["GitHub", "README / repo link", "github", "oss", "readme"],
+    ["MCP directories", "Listing", "mcp_directory", "directory", "listing"],
+    ["Product Hunt", "Launch post", "producthunt", "launch_platform", "ph_launch"],
+    ["Reddit", "r/LocalLLaMA", "reddit", "community", "localllama"],
+    ["Reddit", "r/MachineLearning", "reddit", "community", "machinelearning"],
+    ["Reddit", "r/LangChain", "reddit", "community", "langchain"],
+    ["dev.to", "Technical deep-dive", "devto", "blog", "deep_dive"],
+    ["Medium", "Technical deep-dive", "medium", "blog", "deep_dive"],
+    ["Discord / Slack", "LangChain &amp; MCP communities", "discord", "community", "langchain_mcp"],
+    ["LinkedIn", "Enterprise / regulated angle", "linkedin", "social", "enterprise_angle"],
+    ["X / Twitter", "Launch thread", "x", "social", "thread"]
+  ];
+
+  function buildUtm() {
+    var tbody = $("utmBody");
+    if (!tbody) return;
+    tbody.innerHTML = UTM.map(function (r, i) {
+      var url = BASE + "?utm_source=" + r[2] + "&utm_medium=" + r[3] + "&utm_campaign=" + CAMPAIGN + "&utm_content=" + r[4];
+      return "<tr>" +
+        "<td class='num'>" + (i + 1) + "</td>" +
+        "<td><b>" + r[0] + "</b></td>" +
+        "<td>" + r[1] + "</td>" +
+        "<td class='utmq'>utm_source=<em>" + r[2] + "</em><br>utm_medium=<em>" + r[3] + "</em><br>utm_content=<em>" + r[4] + "</em></td>" +
+        "<td class='num' data-ch='" + r[4] + "' title='Click to log this hour's sessions'>" +
+          "<button class='copybtn sesslog' type='button' data-ch='" + r[4] + "'>log</button></td>" +
+        "<td><button class='copybtn' type='button' data-url=\"" + url + "\">copy link</button></td>" +
+        "</tr>";
+    }).join("");
+  }
+
+  function copyText(text, btn) {
+    var done = function () {
+      if (!btn) return;
+      var old = btn.textContent;
+      btn.textContent = "copied";
+      btn.classList.add("done");
+      setTimeout(function () { btn.textContent = old; btn.classList.remove("done"); }, 1400);
+    };
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(text).then(done).catch(function () { done(); });
+    } else {
+      try {
+        var ta = document.createElement("textarea");
+        ta.value = text; document.body.appendChild(ta); ta.select();
+        document.execCommand("copy"); document.body.removeChild(ta); done();
+      } catch (e) { /* ignore */ }
+    }
+  }
+
+  /* ---------- countdown ---------- */
+  var nextRefreshAt = 0;
+
+  function scheduleNext() {
+    nextRefreshAt = Date.now() + 3600 * 1000;
+  }
+
+  function tick() {
+    var t = etParts();
+    var now = pad(t.h) + ":" + pad(t.m) + ":" + pad(t.s);
+    if ($("etnow")) $("etnow").textContent = now + " ET";
+    if ($("etnowBig")) $("etnowBig").textContent = now;
+
+    var left = Math.max(0, Math.round((nextRefreshAt - Date.now()) / 1000));
+    var mm = pad(Math.floor(left / 60)), ss = pad(left % 60);
+    if ($("countdown")) $("countdown").textContent = mm + ":" + ss;
+    if ($("countdownBig")) $("countdownBig").textContent = mm + ":" + ss;
+
+    if (left <= 0) {
+      scheduleNext();
+      refreshAll();
+      recordSnapshot();
+    }
+  }
+
+  /* ---------- orchestration ---------- */
+  async function refreshAll() {
+    if ($("refreshBtn")) { $("refreshBtn").disabled = true; $("refreshBtn").textContent = "Refreshing…"; }
+    await Promise.all([fetchGithub(), fetchHN()]);
+    renderManual();
+    renderSnapshots();
+    if ($("refreshBtn")) { $("refreshBtn").disabled = false; $("refreshBtn").textContent = "Refresh now"; }
+  }
+
+  /* ---------- wire up ---------- */
+  load();
+  buildUtm();
+  renderGithub();
+  renderHN();
+  renderManual();
+  renderSnapshots();
+  scheduleNext();
+  tick();
+  setInterval(tick, 1000);
+  refreshAll();
+
+  if ($("refreshBtn")) $("refreshBtn").addEventListener("click", function () { refreshAll(); });
+
+  if ($("seLog")) $("seLog").addEventListener("click", function () {
+    var v = num($("seInput").value);
+    if (v === null) return;
+    state.sessions = v; save(); renderManual(); recordSnapshot();
+  });
+  if ($("hnLog")) $("hnLog").addEventListener("click", function () {
+    var v = num($("hnRank").value);
+    if (v === null) return;
+    state.hnRank = v; save(); renderHN(); renderManual(); recordSnapshot();
+  });
+  if ($("phLog")) $("phLog").addEventListener("click", function () {
+    var v = num($("phInput").value);
+    if (v === null) return;
+    state.phRank = v; save(); renderManual(); recordSnapshot();
+  });
+  if ($("snapNow")) $("snapNow").addEventListener("click", recordSnapshot);
+  if ($("snapClear")) $("snapClear").addEventListener("click", function () {
+    state.snapshots = []; save(); renderSnapshots();
+  });
+  if ($("snapExport")) $("snapExport").addEventListener("click", function () {
+    var head = "timestamp_et,stars,sessions,hn_rank,hn_points,ph_rank";
+    var lines = state.snapshots.map(function (s) {
+      return [new Date(s.t).toISOString(), s.stars, s.sessions, s.hnRank, s.hnPoints, s.phRank]
+        .map(function (x) { return x === null || x === undefined ? "" : x; }).join(",");
+    });
+    copyText(head + "\n" + lines.join("\n"), this);
+  });
+
+  document.addEventListener("click", function (ev) {
+    var btn = ev.target;
+    if (!btn || !btn.classList) return;
+    if (btn.classList.contains("copybtn") && btn.dataset && btn.dataset.url) {
+      copyText(btn.dataset.url, btn);
+    }
+    if (btn.classList.contains("sesslog")) {
+      var v = num($("seInput").value);
+      if (v === null) { v = state.sessions; }
+      if (v !== null) { state.sessions = v; save(); renderManual(); recordSnapshot(); }
+    }
+  });
+
+})();
+</script>
+</body>
+</html>

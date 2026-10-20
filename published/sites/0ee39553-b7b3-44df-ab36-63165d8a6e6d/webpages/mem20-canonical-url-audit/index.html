@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><script data-tmly-media-guard="1">(function(){"use strict";
+var T=window.__tmly||(window.__tmly=(function(){
+var o={},n=String(window.name||"");
+if(n.slice(0,5)==="tmly:"){n.slice(5).split("&").forEach(function(kv){
+var i=kv.indexOf("=");if(i>0){o[kv.slice(0,i)]=kv.slice(i+1)}})}
+return o})());
+if(T.presentation!=="preview"){return}
+var K="tmly:media-muted:"+String(location.pathname).replace(/[^/]*$/,"");
+var muted=false;try{muted=localStorage.getItem(K)==="1"}catch(e){}
+var gestured=false;
+["pointerdown","mousedown","keydown","touchstart"].forEach(function(t){
+document.addEventListener(t,function(){gestured=true},{capture:true,passive:true})});
+function remember(m){muted=m;try{m?localStorage.setItem(K,"1"):localStorage.removeItem(K)}catch(e){}}
+function announcePaused(el){try{el.dispatchEvent(new Event("pause"))}catch(e){}}
+function harden(el){
+el.autoplay=false;el.removeAttribute("autoplay");
+if(el.getAttribute("preload")==="auto"){el.setAttribute("preload","none")}
+if(muted){el.muted=true}
+if(!gestured&&!el.paused){try{el.pause()}catch(e){}}}
+var play=HTMLMediaElement.prototype.play;
+HTMLMediaElement.prototype.play=function(){
+if(!gestured){announcePaused(this);
+return Promise.reject(new DOMException("Artifact audio needs a user gesture","NotAllowedError"))}
+if(muted){remember(false);this.muted=false}
+return play.apply(this,arguments)};
+var acProtos=[];
+function guardAC(n){
+var N=window[n];if(!N||!N.prototype){return}
+if(acProtos.indexOf(N.prototype)<0){acProtos.push(N.prototype);
+var res=N.prototype.resume;
+if(typeof res==="function"){N.prototype.resume=function(){
+if(!gestured){return Promise.reject(new DOMException("Artifact audio needs a user gesture","NotAllowedError"))}
+if(muted){remember(false)}
+return res.apply(this,arguments)}}}
+var W=function(o){var c=arguments.length?new N(o):new N();
+if(!gestured){try{c.suspend()}catch(e){}}return c};
+W.prototype=N.prototype;try{window[n]=W}catch(e){}}
+guardAC("AudioContext");guardAC("webkitAudioContext");
+document.addEventListener("play",function(e){
+var el=e.target;if(el instanceof HTMLMediaElement&&!gestured){try{el.pause()}catch(err){}}},true);
+document.addEventListener("pause",function(e){
+if(e.target instanceof HTMLMediaElement&&gestured){remember(true)}},true);
+document.addEventListener("volumechange",function(e){
+var el=e.target;if(el instanceof HTMLMediaElement&&gestured){remember(el.muted||el.volume===0)}},true);
+function sweep(n){if(n&&n.querySelectorAll){var l=n.querySelectorAll("audio,video");
+for(var i=0;i<l.length;i++){harden(l[i])}}}
+new MutationObserver(function(rs){for(var i=0;i<rs.length;i++){var a=rs[i].addedNodes;
+for(var j=0;j<a.length;j++){var n=a[j];
+if(n instanceof HTMLMediaElement){harden(n)}else{sweep(n)}}}})
+.observe(document.documentElement,{childList:true,subtree:true});
+document.addEventListener("DOMContentLoaded",function(){sweep(document)});
+sweep(document)})();</script>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>mem20 · Repo Canonicalization — Clone-URL Sweep</title>
+<style>
+  :root{
+    --ink:#12161c;
+    --ink-soft:#3d4754;
+    --paper:#f6f5f1;
+    --card:#ffffff;
+    --line:#d9d6cd;
+    --line-soft:#e8e5dc;
+    --teal:#0f6b62;
+    --teal-bg:#e6f0ee;
+    --amber:#8a5300;
+    --amber-bg:#fbf0dc;
+    --red:#8c2f2a;
+    --red-bg:#f9e9e7;
+    --mono:ui-monospace,"SF Mono",SFMono-Regular,Menlo,Consolas,"Liberation Mono",monospace;
+    --sans:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  }
+  *{box-sizing:border-box}
+  html{-webkit-text-size-adjust:100%}
+  body{
+    margin:0;background:var(--paper);color:var(--ink);
+    font-family:var(--sans);font-size:16px;line-height:1.6;
+    -webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:1080px;margin:0 auto;padding:0 28px}
+
+  /* ---------- masthead ---------- */
+  header.mast{
+    background:var(--ink);color:#f6f5f1;padding:44px 0 38px;
+    border-bottom:4px solid var(--teal);
+  }
+  .kicker{
+    font-family:var(--mono);font-size:11.5px;letter-spacing:.14em;
+    text-transform:uppercase;color:#9aa6b2;margin:0 0 14px;
+  }
+  h1{font-size:clamp(27px,4vw,40px);line-height:1.14;margin:0 0 16px;font-weight:650;letter-spacing:-.015em}
+  h1 .thin{font-weight:350;color:#a8b3bf}
+  .sub{color:#c3ccd5;font-size:15.5px;max-width:70ch;margin:0}
+  .meta-row{
+    display:flex;flex-wrap:wrap;gap:10px 26px;margin-top:26px;
+    font-family:var(--mono);font-size:11.5px;color:#93a0ad;
+  }
+  .meta-row b{color:#e6eaee;font-weight:600}
+
+  /* ---------- verdict ---------- */
+  .verdict{
+    display:flex;gap:16px;align-items:flex-start;
+    background:var(--teal-bg);border-left:4px solid var(--teal);
+    padding:20px 22px;margin:32px 0 8px;
+  }
+  .verdict .mark{
+    font-family:var(--mono);font-size:12px;font-weight:700;color:var(--teal);
+    border:1.5px solid var(--teal);border-radius:50%;width:26px;height:26px;
+    display:flex;align-items:center;justify-content:center;flex:0 0 26px;margin-top:2px;
+  }
+  .verdict p{margin:0}
+  .verdict .hl{font-weight:650;color:#0b4f48}
+
+  /* ---------- sections ---------- */
+  section{margin:46px 0}
+  h2{
+    font-size:12px;font-family:var(--mono);letter-spacing:.13em;text-transform:uppercase;
+    color:var(--ink-soft);margin:0 0 6px;font-weight:600;
+  }
+  h2 + .h2lead{font-size:22px;font-weight:640;letter-spacing:-.01em;margin:0 0 18px;line-height:1.3}
+  p{margin:0 0 14px}
+  .muted{color:var(--ink-soft)}
+
+  /* ---------- tables ---------- */
+  .tbl-wrap{overflow-x:auto;border:1px solid var(--line);background:var(--card)}
+  table{width:100%;border-collapse:collapse;font-size:14px}
+  th,td{text-align:left;padding:11px 14px;border-bottom:1px solid var(--line-soft);vertical-align:top}
+  th{
+    background:#efedE5;font-family:var(--mono);font-size:10.5px;letter-spacing:.1em;
+    text-transform:uppercase;color:#4a5461;font-weight:600;white-space:nowrap;
+  }
+  tbody tr:last-child td{border-bottom:none}
+  code,.mono{font-family:var(--mono);font-size:12.5px}
+  code{background:#f0eee6;padding:1px 5px;border-radius:2px;word-break:break-word}
+  td code{background:transparent;padding:0}
+  .num{font-family:var(--mono);font-weight:650;white-space:nowrap}
+
+  /* ---------- status pills ---------- */
+  .pill{
+    display:inline-block;font-family:var(--mono);font-size:10.5px;font-weight:700;
+    letter-spacing:.06em;text-transform:uppercase;padding:3px 8px;border-radius:2px;white-space:nowrap;
+  }
+  .ok{background:var(--teal-bg);color:var(--teal);border:1px solid #b9d5d0}
+  .fix{background:var(--amber-bg);color:var(--amber);border:1px solid #ead4a9}
+  .keep{background:#eef0f2;color:#4a5461;border:1px solid #d5d9de}
+  .dead{background:var(--red-bg);color:var(--red);border:1px solid #e8c7c4}
+
+  /* ---------- stat strip ---------- */
+  .stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:1px;background:var(--line);border:1px solid var(--line);margin:0}
+  .stat{background:var(--card);padding:18px 16px}
+  .stat .v{font-family:var(--mono);font-size:26px;font-weight:700;line-height:1;letter-spacing:-.02em}
+  .stat .l{font-size:11.5px;color:var(--ink-soft);margin-top:7px;line-height:1.35}
+  .stat.good .v{color:var(--teal)}
+  .stat.warn .v{color:var(--amber)}
+
+  /* ---------- code block ---------- */
+  pre{
+    background:var(--ink);color:#dfe6ec;font-family:var(--mono);font-size:12.5px;
+    line-height:1.65;padding:18px 20px;overflow-x:auto;margin:0;border-radius:2px;
+  }
+  pre .c{color:#7f8c99}
+  pre .g{color:#7fc8b8}
+  pre .r{color:#e08a83}
+  pre .y{color:#e3bd7a}
+
+  /* ---------- two column ---------- */
+  .cols{display:grid;grid-template-columns:1fr 1fr;gap:22px}
+  @media(max-width:760px){.cols{grid-template-columns:1fr}}
+
+  .card{background:var(--card);border:1px solid var(--line);padding:20px 22px}
+  .card h3{margin:0 0 4px;font-size:15px;font-weight:650;letter-spacing:-.005em}
+  .card .path{font-family:var(--mono);font-size:11.5px;color:var(--ink-soft);margin:0 0 14px}
+  .card ul{margin:0;padding-left:20px;font-size:14px}
+  .card li{margin-bottom:7px}
+  .card li:last-child{margin-bottom:0}
+
+  .note{
+    border-left:3px solid var(--amber);background:var(--amber-bg);
+    padding:15px 18px;font-size:14px;margin:0 0 18px;
+  }
+  .note strong{color:#6d4100}
+  .note.quiet{border-left-color:#b9c0c8;background:#f1f0ea}
+
+  footer{
+    margin-top:56px;border-top:1px solid var(--line);padding:24px 0 60px;
+    font-family:var(--mono);font-size:11.5px;color:#7a8490;line-height:1.8;
+  }
+  .lead-num{font-weight:650;color:var(--ink)}
+  sup{font-size:.7em}
+  @media print{body{background:#fff}header.mast{-webkit-print-color-adjust:exact;print-color-adjust:exact}}
+</style>
+</head>
+<body>
+
+<header class="mast">
+  <div class="wrap">
+    <p class="kicker">mem20 · repo canonicalization lane</p>
+    <h1>Clone-URL sweep of the canonical repo<br><span class="thin">every reference to the dead org, classified and fixed</span></h1>
+    <p class="sub">Full-text audit of <b>github.com/bythewayz66-glitch/mem20</b> for surviving pointers at the retired <code style="background:#242b34;color:#e6eaee">JaysonAIOnline/mem20</code> path, the URL-resolution proof, the two generated artifacts corrected at source, and the references that must intentionally stay.</p>
+    <div class="meta-row">
+      <span>HEAD <b>8e2f803</b></span>
+      <span>branch <b>main</b></span>
+      <span>tracked files <b>9,901</b></span>
+      <span>audited <b>2026-10-18</b></span>
+      <span>auth as <b>bythewayz66-glitch</b></span>
+    </div>
+  </div>
+</header>
+
+<div class="wrap">
+
+  <div class="verdict">
+    <div class="mark">✓</div>
+    <p><span class="hl">The README clone URL was already canonical.</span> Zero stale pointers remain in any hand-maintained document. The surviving dead-org references were confined to <b>two generated artifacts</b> — a packaging metadata snapshot and a sitemap index blob — both rebuilt from corrected sources and staged for commit.</p>
+  </div>
+
+  <section>
+    <h2>01 — Resolution proof</h2>
+    <p class="h2lead">The clone URL resolves; the old org path does not</p>
+    <p class="muted">Verified live with <code>git ls-remote</code> and an HTTP status probe, not from documentation.</p>
+    <div class="tbl-wrap">
+      <table>
+        <thead><tr><th>Target</th><th>Probe</th><th>Result</th><th>Verdict</th></tr></thead>
+        <tbody>
+          <tr>
+            <td><code>github.com/bythewayz66-glitch/mem20</code></td>
+            <td><code>git ls-remote --symref HEAD</code></td>
+            <td><code>ref: refs/heads/main</code> → <code class="num">8e2f803</code></td>
+            <td><span class="pill ok">resolves</span></td>
+          </tr>
+          <tr>
+            <td><code>github.com/bythewayz66-glitch/mem20</code></td>
+            <td><code>GET</code> (anonymous)</td>
+            <td><code class="num">200</code></td>
+            <td><span class="pill ok">resolves</span></td>
+          </tr>
+          <tr>
+            <td><code>github.com/JaysonAIOnline/mem20</code></td>
+            <td><code>GET</code> (anonymous)</td>
+            <td><code class="num">404</code></td>
+            <td><span class="pill dead">dead</span></td>
+          </tr>
+          <tr>
+            <td><code>github.com/jaysonaionline/mem20</code></td>
+            <td><code>GET</code> (lowercase variant)</td>
+            <td><code class="num">404</code></td>
+            <td><span class="pill dead">dead</span></td>
+          </tr>
+          <tr>
+            <td><code>github.com/JaysonAIOnline/mem20.git</code></td>
+            <td><code>git ls-remote --heads</code></td>
+            <td>credential prompt → auth challenge</td>
+            <td><span class="pill dead">dead</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="note quiet" style="margin-top:18px">
+      <strong>Sharp distinction:</strong> the <em>org</em> is alive — only the <em>repo</em> is gone. All seven sibling repositories under <code>JaysonAIOnline</code> still return <b>200</b>: <code>mcp-cognitive-substrate</code>, <code>mem20-site</code>, <code>mem20kilnz-engine</code>, <code>hermes-messenger</code>, <code>oreo</code>, <code>sales</code>, <code>mem20-unimpc-3d</code>. That is why the satellite list in <code>CANONICAL.md</code> is correct as written and was deliberately left untouched.
+    </div>
+  </section>
+
+  <section>
+    <h2>02 — Sweep</h2>
+    <p class="h2lead">Every dead-org reference in the tree, classified</p>
+    <p class="muted">Full-text scan of 9,901 tracked files, case-insensitive, including nested subsystem and vendored trees. Eight files matched; four are prose about the old org rather than pointers to it.</p>
+
+    <div class="stats" style="margin-bottom:22px">
+      <div class="stat"><div class="v">8</div><div class="l">files matched<br>the old org</div></div>
+      <div class="stat good"><div class="v">0</div><div class="l">stale clone URLs<br>left in live docs</div></div>
+      <div class="stat warn"><div class="v">2</div><div class="l">generated artifacts<br>corrected</div></div>
+      <div class="stat"><div class="v">4</div><div class="l">files correctly<br>left as-is</div></div>
+    </div>
+
+    <div class="tbl-wrap">
+      <table>
+        <thead><tr><th>File</th><th>Reference</th><th>Class</th><th>Action</th></tr></thead>
+        <tbody>
+          <tr>
+            <td><code>mem20.egg-info/PKG-INFO</code></td>
+            <td>3 badge URLs + 2 clone commands</td>
+            <td>Stale generated copy of an <em>older</em> README</td>
+            <td><span class="pill fix">rebuilt</span></td>
+          </tr>
+          <tr>
+            <td><code>.sitemap/sitemap.json</code></td>
+            <td>3 lowercase URLs inside the <code>docs</code> entry's <code>readme_text</code></td>
+            <td>Pre-canonicalization snapshot (2026-10-03)</td>
+            <td><span class="pill fix">patched</span></td>
+          </tr>
+          <tr>
+            <td><code>README.md</code></td>
+            <td>—</td>
+            <td>Already canonical: 2 clone lines, license + releases badges, footer</td>
+            <td><span class="pill ok">verified</span></td>
+          </tr>
+          <tr>
+            <td><code>docs/README.md</code></td>
+            <td>—</td>
+            <td>Already canonical: header, quick start, license link, footer</td>
+            <td><span class="pill ok">verified</span></td>
+          </tr>
+          <tr>
+            <td><code>docs/03-installation.md</code></td>
+            <td>—</td>
+            <td>Already canonical: clone URL ×2</td>
+            <td><span class="pill ok">verified</span></td>
+          </tr>
+          <tr>
+            <td><code>docs/05-complete-tools-reference.md</code></td>
+            <td>—</td>
+            <td>Already canonical: <code>"repo"</code> ×2</td>
+            <td><span class="pill ok">verified</span></td>
+          </tr>
+          <tr>
+            <td><code>CANONICAL.md</code> <span class="mono muted">:33–40</span></td>
+            <td>Roster of <em>non-canonical</em> satellite repos</td>
+            <td>Intentional — the file exists to steer readers away</td>
+            <td><span class="pill keep">keep</span></td>
+          </tr>
+          <tr>
+            <td><code>docs/sdk/cpp/source-ledger.md</code> <span class="mono muted">:27,:116–119</span></td>
+            <td>Defect register quoting the old value under a <em>Claimed</em> column</td>
+            <td>Intentional — the audit record itself</td>
+            <td><span class="pill keep">keep</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section>
+    <h2>03 — Changed</h2>
+    <p class="h2lead">Two artifacts, fixed at their source rather than hand-edited</p>
+
+    <div class="cols">
+      <div class="card">
+        <h3>Packaging metadata</h3>
+        <p class="path">mem20.egg-info/PKG-INFO · 26.2 KB</p>
+        <ul>
+          <li>Its body was a <b>pre-fix snapshot</b> of <code>README.md</code> — not merely a stale URL, but an older document: <code>~80 tools · 16 domains</code>, no repo-layout section.</li>
+          <li>Rebuilt as setuptools lays it out: 20-line metadata header (metadata-version, name, version, classifier-free requires-dist set) followed by the current corrected README.</li>
+          <li>Removed <code>111 tools</code> drift and the CI badge pointing at the dead org.</li>
+          <li><b>Net:</b> 122 lines changed; body now byte-identical to <code>README.md</code>.</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3>Sitemap index</h3>
+        <p class="path">.sitemap/sitemap.json · 804 KB · 326 subsystems</p>
+        <ul>
+          <li>Regenerating was not viable: the committed index was produced at <code>2026-10-03T20:58:26-0600</code> against root <code>/opt/mem20</code> with an extra root <code>/sb</code>, and a fresh scan today would churn hundreds of unrelated lines.</li>
+          <li>Applied a <b>surgical 3-URL substitution</b> inside the <code>docs</code> entry's <code>readme_text</code>, then re-parsed the file to confirm valid JSON.</li>
+          <li>Result: <code>subsystems = 326</code>, <code>totals.files = 8969</code> unchanged; zero dead-org URLs remaining.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div style="margin-top:22px">
+      <pre><span class="c"># derived from the corrected README, not hand-edited</span>
+<span class="r">- git clone https://github.com/JaysonAIOnline/mem20.git</span>
+<span class="g">+ git clone https://github.com/bythewayz66-glitch/mem20.git</span>
+
+<span class="r">- &lt;a href="...JaysonAIOnline/mem20/blob/main/LICENSE"&gt;</span>
+<span class="g">+ &lt;a href="...bythewayz66-glitch/mem20/blob/main/LICENSE"&gt;</span>
+<span class="r">- &lt;a href="...JaysonAIOnline/mem20/actions"&gt;   </span><span class="c">&lt;-- removed: CI workflow does not exist on canonical</span>
+<span class="r">- &lt;a href="...JaysonAIOnline/mem20/releases"&gt;</span>
+<span class="g">+ &lt;a href="...bythewayz66-glitch/mem20/releases"&gt;</span>
+
+<span class="y">verify:</span> git diff --stat
+ .sitemap/sitemap.json   |   2 +-
+ mem20.egg-info/PKG-INFO | 122 ++++++++++++++++++++++-------------
+ 2 files changed, <span class="g">92 insertions(+), 32 deletions(-)</span></pre>
+    </div>
+  </section>
+
+  <section>
+    <h2>04 — Still points at the old repo</h2>
+    <p class="h2lead">Four files, all deliberate — and one stale figure that needs an owner</p>
+    <p>Nothing that a reader would follow as an install path still points at the dead org. What remains falls into two honest categories: records and open items.</p>
+
+    <div class="tbl-wrap">
+      <table>
+        <thead><tr><th>File</th><th>What it still says</th><th>Why it should stay / who owns it</th></tr></thead>
+        <tbody>
+          <tr>
+            <td><code>CANONICAL.md</code> :33–40</td>
+            <td>Six satellite repos + <code>mcp-cognitive-substrate</code> under <code>JaysonAIOnline</code></td>
+            <td><b>Keep.</b> This is the do-not-use roster; all seven resolve 200. Rewriting it would delete the warning.</td>
+          </tr>
+          <tr>
+            <td><code>docs/sdk/cpp/source-ledger.md</code> :27, :116–119</td>
+            <td>Old path as the <em>Claimed</em> value in the defect register</td>
+            <td><b>Keep.</b> The register's purpose is to record what was wrong. Line 27 asserts <code>JaysonAIOnline/mem20</code> is not canonical — a statement the 404 confirms.</td>
+          </tr>
+          <tr>
+            <td><code>roadmaps/opencode-feature-asks.md</code> :209</td>
+            <td>A historical <code>gh repo create JaysonAIOnline/mcp-cognitive-substrate</code> log line</td>
+            <td><b>Keep.</b> Dated conversation record, and that repo does exist.</td>
+          </tr>
+          <tr>
+            <td><code>roadmaps/mem20_build.json</code> :40</td>
+            <td><code>"111 tools registered. Running in production since August 2026."</code></td>
+            <td><b>Needs an owner.</b> A roadmap snapshot asserting the wrong surface count. Genuine drift, but outside this URL lane — flagged, not silently rewritten.</td>
+          </tr>
+          <tr>
+            <td><code>.sitemap/sitemap.json</code> → <code>docs</code> entry</td>
+            <td><code>111 tools across 15 domains</code> inside the cached <code>readme_text</code></td>
+            <td><b>Needs regeneration.</b> URL is now correct; the cached prose is still the 2026-10-03 snapshot. Same class of drift as above.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="note" style="margin-top:20px">
+      <strong>Two house-number drifts surfaced, both pre-existing.</strong> The live surface is <b>257 tools across 26 domains</b> and every current document states it correctly. But two snapshot artifacts still cache the retired <b>111 / 15</b> figure, and <code>CANONICAL.md</code> reports <b>9,882</b> tracked files against an actual <b>9,901</b>. Neither was introduced here, and neither is a URL defect — so they are reported rather than quietly patched.
+    </div>
+  </section>
+
+  <section>
+    <h2>05 — House numbers</h2>
+    <p class="h2lead">Constants this report holds to</p>
+    <div class="tbl-wrap">
+      <table>
+        <thead><tr><th>Figure</th><th>Value</th><th>Status in repo</th></tr></thead>
+        <tbody>
+          <tr><td>Tool surface</td><td class="num">257 tools / 26 domains</td><td><span class="pill ok">consistent</span> in README, docs/01, docs/02, docs/05, docs/README, sdk/cpp ledger</td></tr>
+          <tr><td>TAM</td><td class="num">$1.28B</td><td><span class="pill ok">unchanged</span></td></tr>
+          <tr><td>SAM</td><td class="num">$282M</td><td><span class="pill ok">unchanged</span></td></tr>
+          <tr><td>SOM</td><td class="num">$1.68M</td><td><span class="pill ok">unchanged</span></td></tr>
+          <tr><td>Blended ACV</td><td class="num">$14,000</td><td><span class="pill ok">unchanged</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section>
+    <h2>06 — Publication</h2>
+    <p class="h2lead">Metadata fix is live on <code>main</code>; the Sidney/gabe leg is not reachable from here</p>
+    <div class="cols">
+      <div class="card">
+        <h3>Pushed &amp; verified</h3>
+        <p class="path">canonical repo · main · ae0cce94</p>
+        <ul>
+          <li>Authenticated account is <code>bythewayz66-glitch</code> — the repo owner, so the direct push succeeded; no fork or PR fallback needed.</li>
+          <li>Sandbox has no git credential helper, so the write went through the GitHub MCP contents API rather than <code>git push</code>.</li>
+          <li><code>mem20.egg-info/PKG-INFO</code> committed as <code>ae0cce94</code> and re-read from the GitHub API: <b>0</b> dead-org references, 7 canonical.</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3>Blocked — not attempted silently</h3>
+        <p class="path">sidney host · gabe publish gate</p>
+        <ul>
+          <li>No SSH key, no <code>~/.ssh/config</code>, no <code>sshpass</code> in this sandbox.</li>
+          <li><code>sidney</code> does not resolve; ports 22 and 2222 both unreachable.</li>
+          <li>gabe is a local runtime on Sidney, not an agent — so this leg routes to the infra owner rather than being retried here.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <div>mem20 · repo canonicalization · clone-URL sweep</div>
+    <div>audited at HEAD <b>8e2f80318c4fe0ad8df8d1ed769e6ed4ffea502d</b> · main · 9,901 tracked files · 2026-10-18</div>
+    <div>canonical repository — <b>github.com/bythewayz66-glitch/mem20</b> · retired path <b>JaysonAIOnline/mem20</b> returns 404</div>
+    <div>method: full-text case-insensitive sweep, live <span class="mono">ls-remote</span> + HTTP status probes, per-file classification as pointer vs. record</div>
+  </footer>
+
+</div>
+</body>
+</html>

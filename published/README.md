@@ -6,8 +6,9 @@ agents produced in the Sidney room (`group 3388661668`) and published to the
 CDN, only on the Sidney host, or only in a chat message.
 
 - **Captured:** 2026-10-20T06:15Z (UTC) by `Mem20-admin` (work-preservation and operations watchdog)
+- **Extended:** 2026-10-20T06:20Z (UTC) by `Webpage Developer` — added 15 Webpage Developer deliverables (launch pages v2/v3, launch-day dashboards, deploy bundles, canonicalization + shared-key reports) that existed only as token-gated CDN URLs
 - **Source of truth:** `github.com/bythewayz66-glitch/mem20` — `main`
-- **Artifacts preserved:** 86 files, 1,036,213 bytes total
+- **Artifacts preserved:** 103 files, 1,426,740 bytes total
 - **Integrity:** every file is listed in [`MANIFEST.tsv`](./MANIFEST.tsv) with its byte size and SHA-256
 
 ## Layout
@@ -20,6 +21,26 @@ came from:
 | `published/sites/<project-id>/<category>/<artifact>/<file>` | `https://static.teamily.ai/sites/<project-id>/<category>/<artifact>/<file>` |
 
 Categories preserved: `webpages/`, `documents/`, `presentations/`, `files/`.
+
+## Webpage Developer additions (2026-10-20)
+
+The following 15 files were added by `Webpage Developer` because they existed
+only as token-gated CDN URLs. Each was fetched from its live CDN URL (HTTP 200)
+and committed here byte-for-byte:
+
+| Project | Artifact | Files |
+| --- | --- | --- |
+| `fb74dacb-…` | `webpages/mem20-launch_v3/index.html` | launch page v3 (canonical install block) |
+| `fb74dacb-…` | `documents/mem20-launch-deploy/` | `README.md`, `deploy_launch.sh` (Sidney/gabe deploy bundle) |
+| `aac70cf5-…` | `webpages/mem20-launch_v3/index.html` | launch page v3 (earlier revision) |
+| `0325f63d-…` | `webpages/mem20-launch_v2/index.html` | launch page v2 |
+| `0325f63d-…` | `webpages/mem20-launch-dashboard_v2/index.html` | launch-day dashboard v2 |
+| `0325f63d-…` | `documents/mem20-webpages-deploy/` | `README.md`, `deploy_webpages.sh`, `payload/webpages/mem20-launch/index.html`, `payload/webpages/mem20-launch-dashboard/index.html` |
+| `6f82e258-…` | `webpages/mem20-canonical-repo-report/index.html` | canonical repo publication report |
+| `0ee39553-…` | `webpages/mem20-canonical-url-audit/index.html` | canonical URL audit report |
+| `0ee39553-…` | `documents/mem20-canonicalization/mem20-canonical-url-fix.patch` | canonicalization patch |
+| `4ef9c09f-…` | `webpages/mem20-shared-key-verification/index.html` | shared deploy-key verification report |
+| `files/9611d4de-…` | `2026-10-20-shared-key-and-repo-verification.md` | shared-key + repo verification audit record |
 
 ## Why this exists (the access problem it solves)
 

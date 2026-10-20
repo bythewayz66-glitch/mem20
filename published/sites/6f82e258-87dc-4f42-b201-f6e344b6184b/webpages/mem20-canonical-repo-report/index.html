@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><script data-tmly-media-guard="1">(function(){"use strict";
+var T=window.__tmly||(window.__tmly=(function(){
+var o={},n=String(window.name||"");
+if(n.slice(0,5)==="tmly:"){n.slice(5).split("&").forEach(function(kv){
+var i=kv.indexOf("=");if(i>0){o[kv.slice(0,i)]=kv.slice(i+1)}})}
+return o})());
+if(T.presentation!=="preview"){return}
+var K="tmly:media-muted:"+String(location.pathname).replace(/[^/]*$/,"");
+var muted=false;try{muted=localStorage.getItem(K)==="1"}catch(e){}
+var gestured=false;
+["pointerdown","mousedown","keydown","touchstart"].forEach(function(t){
+document.addEventListener(t,function(){gestured=true},{capture:true,passive:true})});
+function remember(m){muted=m;try{m?localStorage.setItem(K,"1"):localStorage.removeItem(K)}catch(e){}}
+function announcePaused(el){try{el.dispatchEvent(new Event("pause"))}catch(e){}}
+function harden(el){
+el.autoplay=false;el.removeAttribute("autoplay");
+if(el.getAttribute("preload")==="auto"){el.setAttribute("preload","none")}
+if(muted){el.muted=true}
+if(!gestured&&!el.paused){try{el.pause()}catch(e){}}}
+var play=HTMLMediaElement.prototype.play;
+HTMLMediaElement.prototype.play=function(){
+if(!gestured){announcePaused(this);
+return Promise.reject(new DOMException("Artifact audio needs a user gesture","NotAllowedError"))}
+if(muted){remember(false);this.muted=false}
+return play.apply(this,arguments)};
+var acProtos=[];
+function guardAC(n){
+var N=window[n];if(!N||!N.prototype){return}
+if(acProtos.indexOf(N.prototype)<0){acProtos.push(N.prototype);
+var res=N.prototype.resume;
+if(typeof res==="function"){N.prototype.resume=function(){
+if(!gestured){return Promise.reject(new DOMException("Artifact audio needs a user gesture","NotAllowedError"))}
+if(muted){remember(false)}
+return res.apply(this,arguments)}}}
+var W=function(o){var c=arguments.length?new N(o):new N();
+if(!gestured){try{c.suspend()}catch(e){}}return c};
+W.prototype=N.prototype;try{window[n]=W}catch(e){}}
+guardAC("AudioContext");guardAC("webkitAudioContext");
+document.addEventListener("play",function(e){
+var el=e.target;if(el instanceof HTMLMediaElement&&!gestured){try{el.pause()}catch(err){}}},true);
+document.addEventListener("pause",function(e){
+if(e.target instanceof HTMLMediaElement&&gestured){remember(true)}},true);
+document.addEventListener("volumechange",function(e){
+var el=e.target;if(el instanceof HTMLMediaElement&&gestured){remember(el.muted||el.volume===0)}},true);
+function sweep(n){if(n&&n.querySelectorAll){var l=n.querySelectorAll("audio,video");
+for(var i=0;i<l.length;i++){harden(l[i])}}}
+new MutationObserver(function(rs){for(var i=0;i<rs.length;i++){var a=rs[i].addedNodes;
+for(var j=0;j<a.length;j++){var n=a[j];
+if(n instanceof HTMLMediaElement){harden(n)}else{sweep(n)}}}})
+.observe(document.documentElement,{childList:true,subtree:true});
+document.addEventListener("DOMContentLoaded",function(){sweep(document)});
+sweep(document)})();</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>mem20 — Canonical Repository Report</title>
+<style>
+  :root{
+    --ink:#0b1017;
+    --panel:#121a24;
+    --panel-2:#16202c;
+    --line:#243244;
+    --line-soft:#1b2735;
+    --text:#e6edf6;
+    --muted:#8ea2ba;
+    --accent:#2fd6c3;
+    --accent-dim:#12463f;
+    --warn:#f0b429;
+    --warn-dim:#3d2f0a;
+    --ok:#4ade80;
+    --no:#f87171;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:var(--ink);
+    color:var(--text);
+    font-family:"SF Mono",ui-monospace,"JetBrains Mono",Menlo,Consolas,monospace;
+    font-size:14px;
+    line-height:1.6;
+    -webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:1080px;margin:0 auto;padding:40px 22px 70px;}
+
+  header.top{
+    border:1px solid var(--line);
+    background:var(--panel);
+    padding:26px 26px 24px;
+    position:relative;
+  }
+  header.top::before{
+    content:"";
+    position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--accent);
+  }
+  .eyebrow{
+    font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:var(--accent);
+    margin:0 0 10px;
+  }
+  h1{font-size:27px;line-height:1.2;margin:0 0 8px;letter-spacing:-.4px;font-weight:600;}
+  .sub{color:var(--muted);font-size:13px;margin:0;}
+  .badges{display:flex;flex-wrap:wrap;gap:8px;margin-top:18px;}
+  .badge{
+    font-size:11px;letter-spacing:.08em;text-transform:uppercase;
+    border:1px solid var(--line);background:var(--panel-2);
+    padding:5px 10px;color:var(--muted);
+  }
+  .badge.live{border-color:var(--accent-dim);color:var(--accent);}
+
+  h2{
+    font-size:12px;letter-spacing:.2em;text-transform:uppercase;color:var(--muted);
+    margin:44px 0 14px;padding-bottom:9px;border-bottom:1px solid var(--line-soft);
+    font-weight:600;
+  }
+
+  .grid{display:grid;gap:12px;}
+  .g3{grid-template-columns:repeat(3,1fr);}
+  .g2{grid-template-columns:repeat(2,1fr);}
+  .cell{
+    border:1px solid var(--line);background:var(--panel);padding:16px 16px 15px;
+  }
+  .cell .k{font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);margin-bottom:7px;}
+  .cell .v{font-size:19px;color:var(--text);letter-spacing:-.2px;word-break:break-word;}
+  .cell .v small{display:block;font-size:11.5px;color:var(--muted);margin-top:5px;letter-spacing:0;}
+  .cell.hi{border-color:var(--accent-dim);}
+  .cell.hi .v{color:var(--accent);}
+
+  a{color:var(--accent);text-decoration:none;border-bottom:1px dotted var(--accent-dim);}
+  a:hover{border-bottom-style:solid;}
+
+  table{width:100%;border-collapse:collapse;font-size:13px;}
+  th{
+    text-align:left;font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;
+    color:var(--muted);font-weight:600;padding:9px 12px;
+    border-bottom:1px solid var(--line);background:var(--panel-2);
+  }
+  td{padding:10px 12px;border-bottom:1px solid var(--line-soft);vertical-align:top;}
+  tr:last-child td{border-bottom:none;}
+  .tbl{border:1px solid var(--line);background:var(--panel);overflow-x:auto;}
+  code{
+    background:var(--panel-2);border:1px solid var(--line-soft);
+    padding:1px 6px;font-size:12.5px;color:#cfe6ff;white-space:nowrap;
+  }
+  .mono-url{font-size:12.5px;word-break:break-all;}
+
+  .tag{font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;padding:2px 8px;border:1px solid var(--line);display:inline-block;}
+  .tag.ok{color:var(--ok);border-color:#1e4630;background:#0d1f16;}
+  .tag.no{color:var(--no);border-color:#4a2222;background:#1e0f0f;}
+  .tag.wa{color:var(--warn);border-color:var(--warn-dim);background:#1c1508;}
+  .tag.n{color:var(--muted);}
+
+  ul.clean{margin:0;padding-left:0;list-style:none;}
+  ul.clean li{padding:7px 0 7px 20px;position:relative;border-bottom:1px solid var(--line-soft);font-size:13px;}
+  ul.clean li:last-child{border-bottom:none;}
+  ul.clean li::before{content:"\203A";position:absolute;left:4px;color:var(--accent);}
+
+  .note{
+    border:1px solid var(--warn-dim);background:#17130a;padding:16px 18px;margin-top:14px;
+  }
+  .note .hd{color:var(--warn);font-size:11px;letter-spacing:.16em;text-transform:uppercase;margin-bottom:9px;}
+  .note p{margin:0 0 9px;font-size:13px;color:#e3d9c0;}
+  .note p:last-child{margin-bottom:0;}
+
+  .flow{display:grid;grid-template-columns:1fr auto 1fr;gap:12px;align-items:stretch;}
+  .flow .node{border:1px solid var(--line);background:var(--panel);padding:15px;}
+  .flow .arrow{display:flex;align-items:center;justify-content:center;color:var(--accent);font-size:20px;}
+  .flow .node .t{font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--accent);margin-bottom:7px;}
+  .flow .node .d{font-size:12px;color:var(--muted);}
+
+  footer{margin-top:52px;padding-top:18px;border-top:1px solid var(--line-soft);color:var(--muted);font-size:11.5px;}
+  footer p{margin:0 0 6px;}
+
+  @media (max-width:820px){
+    .g3,.g2{grid-template-columns:1fr;}
+    .flow{grid-template-columns:1fr;}
+    .flow .arrow{transform:rotate(90deg);}
+    h1{font-size:22px;}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="top">
+    <p class="eyebrow">Repository Publication Report</p>
+    <h1>mem20 — Canonical Repository</h1>
+    <p class="sub">Full codebase published &middot; default branch <code>main</code> &middot; public &middot; MIT</p>
+    <div class="badges">
+      <span class="badge live">Published</span>
+      <span class="badge">Public</span>
+      <span class="badge">Default: main</span>
+      <span class="badge">9,873 tracked files</span>
+      <span class="badge">MIT</span>
+      <span class="badge">2026-10-14</span>
+    </div>
+  </header>
+
+  <h2>1 &nbsp;Repository</h2>
+  <div class="tbl">
+    <table>
+      <tr><th style="width:210px">Field</th><th>Value</th></tr>
+      <tr><td>Repository URL</td><td class="mono-url"><a href="https://github.com/bythewayz66-glitch/mem20">https://github.com/bythewayz66-glitch/mem20</a></td></tr>
+      <tr><td>Clone URL</td><td class="mono-url"><code>https://github.com/bythewayz66-glitch/mem20.git</code></td></tr>
+      <tr><td>Full name</td><td><code>bythewayz66-glitch/mem20</code></td></tr>
+      <tr><td>Default branch</td><td><code>main</code></td></tr>
+      <tr><td>Visibility</td><td>Public</td></tr>
+      <tr><td>License</td><td>MIT License</td></tr>
+      <tr><td>Primary language</td><td>Python</td></tr>
+      <tr><td>Push permission</td><td><span class="tag ok">granted</span> admin / push / maintain</td></tr>
+      <tr><td>Latest commit on <code>main</code></td><td class="mono-url"><code>c274404a116f203b0ed99ab7156e3752f0953ea8</code></td></tr>
+      <tr><td>Recorded</td><td>2026-10-14 16:39 UTC</td></tr>
+    </table>
+  </div>
+
+  <h2>2 &nbsp;What was pushed</h2>
+  <div class="grid g3">
+    <div class="cell hi"><div class="k">Tracked files</div><div class="v">9,873<small>full working tree, depth-1 clone verified</small></div></div>
+    <div class="cell hi"><div class="k">mem20*z subsystems</div><div class="v">293<small>self-contained subsystem packages</small></div></div>
+    <div class="cell"><div class="k">Working-tree size</div><div class="v">222 MB<small>repo on Git: 34,552 KB</small></div></div>
+  </div>
+
+  <div class="grid g2" style="margin-top:12px;">
+    <div class="cell"><div class="k">Python / JavaScript / TypeScript</div><div class="v" style="font-size:15px">1,709 &middot; 1,428 &middot; 599<small>.py &middot; .js &middot; .ts + .tsx</small></div></div>
+    <div class="cell"><div class="k">Rust / C# / JSON / Markdown</div><div class="v" style="font-size:15px">65 &middot; 50 &middot; 3,754 &middot; 845<small>.rs &middot; .cs &middot; .json &middot; .md</small></div></div>
+  </div>
+
+  <p style="color:var(--muted);font-size:12.5px;margin-top:16px;">
+    Committed to <code>main</code>: <strong>CANONICAL.md</strong> — the canonical-designation marker that records the
+    repository as the authoritative mem20 source of truth together with this verified snapshot.
+  </p>
+
+  <h2>3 &nbsp;Repository map (major trees)</h2>
+  <div class="tbl">
+    <table>
+      <tr><th style="width:290px">Tree</th><th>Contents</th></tr>
+      <tr><td><code>mem20_mcp/</code> &middot; <code>mcp/</code> &middot; <code>mcp_server_dir/</code></td><td>Python MCP server and tool surface</td></tr>
+      <tr><td><code>braid/</code> (Rust workspace)</td><td>braid_core, braid_drive, braid_her, braid_keys, braid_sonic, braid_ui_bridge, braid_wire + tests</td></tr>
+      <tr><td><code>dashboard/</code> &middot; <code>gateway/</code> &middot; <code>kanban/</code></td><td>Operator surfaces and service entry points</td></tr>
+      <tr><td><code>roadmaps/</code> &middot; <code>2.0_roadmap/</code></td><td>Planning, ADRs, build manifests, epic breakdowns</td></tr>
+      <tr><td><code>memory_engine/</code> &middot; <code>reference_store/</code></td><td>Memory core, indexing, retrieval store</td></tr>
+      <tr><td><code>tests/</code> &middot; <code>test/</code> &middot; <code>verification/</code></td><td>Test suites and verification harness</td></tr>
+      <tr><td><code>packaging/</code> &middot; <code>systemd/</code> &middot; <code>Dockerfile</code></td><td>Debian package build, service units, container build</td></tr>
+      <tr><td><code>toolchest/</code> &middot; <code>chroma/</code> &middot; <code>cog/</code> &middot; <code>data/</code> &middot; <code>docs/</code></td><td>Tooling, embeddings, docs and data assets</td></tr>
+    </table>
+  </div>
+
+  <h2>4 &nbsp;Canonical designation</h2>
+  <div class="tbl">
+    <table>
+      <tr><th style="width:330px">Repository</th><th style="width:150px">Role</th><th>Note</th></tr>
+      <tr><td><code>bythewayz66-glitch/mem20</code></td><td><span class="tag ok">Canonical</span></td><td>Full codebase — 9,873 files, 293 subsystems</td></tr>
+      <tr><td><code>JaysonAIOnline/mcp-cognitive-substrate</code></td><td><span class="tag n">Reference</span></td><td>Earlier 11-file Python MCP server (v1.0.1). Historical only.</td></tr>
+      <tr><td><code>JaysonAIOnline/mem20-site</code></td><td><span class="tag n">Satellite</span></td><td>Marketing website, not the codebase</td></tr>
+      <tr><td><code>JaysonAIOnline/mem20kilnz-engine</code>, <code>/hermes-messenger</code>, <code>/oreo</code>, <code>/sales</code>, <code>/mem20-unimpc-3d</code></td><td><span class="tag n">Satellite</span></td><td>Component repositories</td></tr>
+      <tr><td><code>JaysonAIOnline/mem20</code></td><td><span class="tag no">Does not exist</span></td><td>Returns 404 — no repository by that name</td></tr>
+    </table>
+  </div>
+
+  <h2>5 &nbsp;Publication routing</h2>
+  <div class="flow">
+    <div class="node">
+      <div class="t">GitHub channel</div>
+      <div class="d">Full codebase published to <code>bythewayz66-glitch/mem20</code> on <code>main</code> — this report's subject.</div>
+    </div>
+    <div class="arrow">&#10230;</div>
+    <div class="node">
+      <div class="t">Sidney server channel</div>
+      <div class="d">Target delivery: publish to the <strong>Sidney</strong> server via <code>ssh</code> / <code>sftp</code> / <code>rsync</code>, <strong>routed through gabe</strong>.</div>
+    </div>
+  </div>
+
+  <div class="note">
+    <div class="hd">Hand-off required — Sidney server publication</div>
+    <p>
+      The <strong>Sidney server</strong> leg cannot be executed from this sandbox: there are no SSH keys,
+      no SSH config, no <code>known_hosts</code>, and no reachable <code>sidney</code> / <code>gabe</code> host
+      from this environment. There is also no agent named <em>gabe</em> in this group.
+    </p>
+    <p>
+      This group is itself named <strong>sidney</strong> and contains the <strong>Server Builder</strong> agent —
+      the infrastructure owner for the server leg. The step has therefore been routed to it: publish the finished
+      mem20 codebase to the Sidney server over ssh/sftp/rsync, with <em>gabe</em> as the routing contact.
+    </p>
+  </div>
+
+  <h2>6 &nbsp;Verification</h2>
+  <ul class="clean">
+    <li>Repository reachable and public — API returns HTTP 200 for <code>bythewayz66-glitch/mem20</code>.</li>
+    <li>Default branch confirmed as <code>main</code>.</li>
+    <li>Working tree re-cloned and counted: <strong>9,873 tracked files</strong> across 293 <code>mem20*z</code> subsystem packages.</li>
+    <li>Canonical commit landed on <code>main</code>: <code>c274404</code>, parent <code>64c7335</code> (no history rewrite, fast-forward append).</li>
+    <li>Push permissions verified for the publishing account: <code>admin: true, push: true, maintain: true</code>.</li>
+    <li>Not performed — no <code>git push</code> from the sandbox was attempted (no git credentials exist in this environment); all GitHub writes went through the authenticated GitHub integration.</li>
+  </ul>
+
+  <h2>7 &nbsp;Open items</h2>
+  <ul class="clean">
+    <li>Sidney server delivery (ssh/sftp/rsync, routed through gabe) — handed to the infrastructure owner.</li>
+    <li>Repository description is still the placeholder <code>"mem20 memory"</code>.</li>
+    <li>No topics/tags set; Issues and Downloads are disabled on the repository.</li>
+  </ul>
+
+  <footer>
+    <p>mem20 canonical repository report &middot; generated 2026-10-14 &middot; repository HEAD <code>c274404</code> on <code>main</code></p>
+    <p>All figures were read from the live repository API and a fresh depth-1 clone during this run.</p>
+  </footer>
+
+</div>
+</body>
+</html>

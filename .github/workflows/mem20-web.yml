@@ -1,0 +1,94 @@
+name: mem20 web shell
+
+# Builds the mem20 web shell from the committed web/ source tree and publishes
+# the static bundle to docs/app/, which GitHub Pages serves at /mem20/app/.
+#
+# The tool catalog (web/src/data/tools.json) is GENERATED, not hand-written:
+# it is AST-extracted from the estate's own mcp/tools/*.py, exactly as
+# web/README.md documents. Regenerating it here keeps the catalog honest and
+# reproducible from the repo alone.
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [mem20frontendz]
+    paths:
+      - 'web/**'
+      - '.github/workflows/mem20-web.yml'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: mem20-web-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  build-and-publish:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.ref_name }}
+          fetch-depth: 1
+
+      - name: Regenerate tool catalog from source
+        run: |
+          set -euo pipefail
+          python3 web/scripts/extract-tools.py --root . --out /tmp/raw-tools.json
+          python3 - <<'PY'
+          import json
+          raw = json.load(open('/tmp/raw-tools.json'))
+          out = {
+              "source": raw["source"],
+              "files_scanned": raw["files_scanned"],
+              "count": raw["count"],
+              "tools": [
+                  {"name": t["n"], "title": t["t"], "description": t["d"],
+                   "domain": t["x"], "params": t["p"]}
+                  for t in raw["tools"]
+              ],
+          }
+          with open('web/src/data/tools.json', 'w') as fh:
+              fh.write(json.dumps(out, separators=(",", ":")))
+          print("tools.json:", out["count"], "tools across",
+                len({t["domain"] for t in out["tools"]}), "domains")
+          PY
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install, typecheck, build
+        working-directory: web
+        run: |
+          set -euo pipefail
+          npm install --no-audit --no-fund
+          npm run typecheck
+          npm run build
+
+      - name: Publish bundle to docs/app
+        run: |
+          set -euo pipefail
+          rm -rf docs/app
+          mkdir -p docs/app
+          cp -r web/dist/. docs/app/
+          touch docs/app/.nojekyll
+          echo "--- docs/app ---"
+          find docs/app -type f | sort
+          grep -o '<title>[^<]*</title>' docs/app/index.html
+
+      - name: Commit and push
+        run: |
+          set -euo pipefail
+          git config user.name "mem20-web-bot"
+          git config user.email "mem20-web-bot@users.noreply.github.com"
+          git add -A docs/app
+          if git diff --cached --quiet; then
+            echo "no changes to commit"
+          else
+            git commit -m "build(web): publish mem20 web shell to docs/app"
+            git push origin "HEAD:${{ github.ref_name }}"
+          fi

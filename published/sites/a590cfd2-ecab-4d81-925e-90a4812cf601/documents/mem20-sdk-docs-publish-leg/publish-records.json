@@ -1,0 +1,38 @@
+[
+  {
+    "seq": 104,
+    "ts": "2026-10-14T17:24:33Z",
+    "action": "publish",
+    "artifact": "/opt/mem20/live/mem20-perl-sdk-docs.html",
+    "artifact_sha256": "f525acb697f4441bb4c0d931991889bf987f6640ba89f5220d3d73da4c4bfd34",
+    "clauses": [],
+    "verdict": "pass",
+    "evidence": [
+      "{\"verdict\": \"pass\", \"clauses\": [], \"reason\": \"The artifact fully conforms to all specified requirements: it documents the canonical repository (github.com/bythewayz66-glitch/mem20, main branch, MIT license, v2.1.0rc2, 257 tools, protocol 2025-06-18); contains no live references to the retired repository (only a clearly-labelled before/after row showing the old URL returns 404); provides correct Perl SDK install instructions (perl Makefile.PL && make, and cpanm --installdeps .); states the real reproduced test result (19/19 PASS against live stdio server) with captured test output; and contains no placeholder, hardcoded, or fabricated numbers \\u2014 all figures (257 tools, 19/19 tests, protocol version, version string) are presented as live-verified evidence.\", \"loophole_probe\": \"Checked whether the install instructions exactly matched the parenthetical form 'perl Makefile.PL / make, or cpanm --installdeps .' \\u2014 the artifact shows 'perl Makefile.PL && make && make test && make install' and 'cpanm --installdeps .', which are correct and complete Perl SDK install sequences, not a deviation.\", \"judge_model\": \"nvidia/nemotron-3-ultra-550b-a55b\", \"judge_transport\": \"real-llm-call\", \"judge_usage\": {\"prompt_tokens\": 9079, \"completion_tokens\": 2504, \"total_tokens\": 11583}, \"judge_id\": \"gabe-judge-1487159\", \"producer_id\": \"webpage-developer\"}"
+    ],
+    "producer": "webpage-developer",
+    "judge": "gabe-judge-1487159",
+    "judged_sig": "BFT0PS/j7dPCBatoMVYxo92vxaCm0sAwcXLyfBfdaVeFoMfBXNo5S9qN/ogzWExDuRkLWbeIOvrEeHmw9tvFAw==",
+    "prev_hash": "276b72369dba87e0f53ee7e85b300338545090cb04ce6973ef5015e217c53e77",
+    "entry_hash": "10c1d2ce6e927326c05ea4fa830d4e9a81d07100619163d2faa5c02ae6f2a505",
+    "signature": "PCHPWFMxCxPDECFswKH/mBY/jspH8S+yE6u4Z+lCy2Fh1cdo8ovZWuRlqNwE6kaFK2lJohmLOhE3HKjbQP45Cg=="
+  },
+  {
+    "seq": 143,
+    "ts": "2026-10-14T17:32:30Z",
+    "action": "publish",
+    "artifact": "/opt/mem20/live/mem20-cpp-sdk-docs.html",
+    "artifact_sha256": "3dcfa11af351604e0e412ee4fb28ffe6f68dab0cdafcc36051cb5b61a731712a",
+    "clauses": [],
+    "verdict": "pass",
+    "evidence": [
+      "{\"verdict\": \"pass\", \"clauses\": [], \"reason\": \"(no reason given)\", \"loophole_probe\": \"Checked for any live/actionable reference to the retired repository outside the clearly labelled Was/Now row.\", \"judge_model\": \"nvidia/nemotron-3-super-120b-a12b\", \"judge_transport\": \"real-llm-call\", \"judge_usage\": {\"prompt_tokens\": 9278, \"completion_tokens\": 3116, \"total_tokens\": 12394, \"prompt_tokens_details\": {\"audio_tokens\": null, \"cached_tokens\": 0}, \"completion_tokens_details\": {\"accepted_prediction_tokens\": null, \"audio_tokens\": null, \"reasoning_tokens\": 3072, \"rejected_prediction_tokens\": null}}, \"judge_id\": \"gabe-judge-1498802\", \"producer_id\": \"webpage-developer\"}"
+    ],
+    "producer": "webpage-developer",
+    "judge": "gabe-judge-1498802",
+    "judged_sig": "Ss2gI3daD3vBEhNf7o5QPWd7z4SJmgx53Ybh3ByPCBM8cyQeWHb1WdVGeMkLjxxpbQQQSd5kS9ysVD7LZpMyDA==",
+    "prev_hash": "ae2d013d99168fead7d6e2a7dc9d787665fdcb14272fd9fc984d185c90b76c80",
+    "entry_hash": "1410819b510d769c86cfdbf775123c4346eace9bad70273f8bbcecc30de86b9d",
+    "signature": "zokfspExGjtRW1dD6OzWGiH7aKOqNibSzPmj0I8WtZkG4JzIj2j173EBHD9Nqu5NU3WiXDQ6+ag8E4CTHJccDA=="
+  }
+]

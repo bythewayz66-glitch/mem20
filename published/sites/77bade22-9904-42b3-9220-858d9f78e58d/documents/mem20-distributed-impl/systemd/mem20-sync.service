@@ -1,0 +1,24 @@
+[Unit]
+Description=mem20 distributed sync (origin-tagged event log anti-entropy)
+Documentation=https://static.teamily.ai/sites/18a07cdd-0e4e-446d-a109-8861f5cfd7e5/webpages/mem20-distributed-design_v2/index.html
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+# Absolute interpreter + absolute paths: no venv, no inherited environment.
+EnvironmentFile=-/etc/mem20-sync/mem20-sync.env
+WorkingDirectory=/opt/mem20-sync
+ExecStart=/usr/bin/python3 /opt/mem20-sync/sync_cli.py --db ${MEM20_SYNC_DB} --node ${MEM20_SYNC_NODE_ID} sync
+# journald captures stdout/stderr; the CLI prints a JSON result per run.
+StandardOutput=journal
+StandardError=journal
+# Fail closed on a non-zero exit (a divergence returns 1) so the timer's
+# failure is visible in `systemctl --failed` and journalctl.
+SuccessExitStatus=0
+# Harden: the sync only needs the DB file and outbound SSH.
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=full
+ProtectHome=read-only
+ReadWritePaths=/var/lib/mem20 /opt/mem20-sync

@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><script data-tmly-media-guard="1">(function(){"use strict";
+var T=window.__tmly||(window.__tmly=(function(){
+var o={},n=String(window.name||"");
+if(n.slice(0,5)==="tmly:"){n.slice(5).split("&").forEach(function(kv){
+var i=kv.indexOf("=");if(i>0){o[kv.slice(0,i)]=kv.slice(i+1)}})}
+return o})());
+if(T.presentation!=="preview"){return}
+var K="tmly:media-muted:"+String(location.pathname).replace(/[^/]*$/,"");
+var muted=false;try{muted=localStorage.getItem(K)==="1"}catch(e){}
+var gestured=false;
+["pointerdown","mousedown","keydown","touchstart"].forEach(function(t){
+document.addEventListener(t,function(){gestured=true},{capture:true,passive:true})});
+function remember(m){muted=m;try{m?localStorage.setItem(K,"1"):localStorage.removeItem(K)}catch(e){}}
+function announcePaused(el){try{el.dispatchEvent(new Event("pause"))}catch(e){}}
+function harden(el){
+el.autoplay=false;el.removeAttribute("autoplay");
+if(el.getAttribute("preload")==="auto"){el.setAttribute("preload","none")}
+if(muted){el.muted=true}
+if(!gestured&&!el.paused){try{el.pause()}catch(e){}}}
+var play=HTMLMediaElement.prototype.play;
+HTMLMediaElement.prototype.play=function(){
+if(!gestured){announcePaused(this);
+return Promise.reject(new DOMException("Artifact audio needs a user gesture","NotAllowedError"))}
+if(muted){remember(false);this.muted=false}
+return play.apply(this,arguments)};
+var acProtos=[];
+function guardAC(n){
+var N=window[n];if(!N||!N.prototype){return}
+if(acProtos.indexOf(N.prototype)<0){acProtos.push(N.prototype);
+var res=N.prototype.resume;
+if(typeof res==="function"){N.prototype.resume=function(){
+if(!gestured){return Promise.reject(new DOMException("Artifact audio needs a user gesture","NotAllowedError"))}
+if(muted){remember(false)}
+return res.apply(this,arguments)}}}
+var W=function(o){var c=arguments.length?new N(o):new N();
+if(!gestured){try{c.suspend()}catch(e){}}return c};
+W.prototype=N.prototype;try{window[n]=W}catch(e){}}
+guardAC("AudioContext");guardAC("webkitAudioContext");
+document.addEventListener("play",function(e){
+var el=e.target;if(el instanceof HTMLMediaElement&&!gestured){try{el.pause()}catch(err){}}},true);
+document.addEventListener("pause",function(e){
+if(e.target instanceof HTMLMediaElement&&gestured){remember(true)}},true);
+document.addEventListener("volumechange",function(e){
+var el=e.target;if(el instanceof HTMLMediaElement&&gestured){remember(el.muted||el.volume===0)}},true);
+function sweep(n){if(n&&n.querySelectorAll){var l=n.querySelectorAll("audio,video");
+for(var i=0;i<l.length;i++){harden(l[i])}}}
+new MutationObserver(function(rs){for(var i=0;i<rs.length;i++){var a=rs[i].addedNodes;
+for(var j=0;j<a.length;j++){var n=a[j];
+if(n instanceof HTMLMediaElement){harden(n)}else{sweep(n)}}}})
+.observe(document.documentElement,{childList:true,subtree:true});
+document.addEventListener("DOMContentLoaded",function(){sweep(document)});
+sweep(document)})();</script>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>mem20 — Auditable agent memory</title>
+<meta name="description" content="mem20 is an MIT-licensed MCP server giving AI agents persistent memory with a hard, storage-level partition between grounded and simulated content.">
+<style>
+  :root{
+    --ink:#0d1117; --ink-2:#151b23; --line:#232b36;
+    --fg:#e6edf3; --fg-dim:#9aa7b4; --fg-mute:#6e7b8a;
+    --signal:#f0b429; --ok:#3fb950; --accent:#2f81f7;
+    --mono:ui-monospace,SFMono-Regular,"SF Mono",Menlo,Consolas,monospace;
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{margin:0;background:var(--ink);color:var(--fg);
+    font:16px/1.62 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    -webkit-font-smoothing:antialiased}
+  .wrap{max-width:1000px;margin:0 auto;padding:0 24px}
+  a{color:var(--accent);text-decoration:none}
+  a:hover{text-decoration:underline}
+  code{font-family:var(--mono);font-size:.88em;background:var(--ink-2);
+    border:1px solid var(--line);border-radius:4px;padding:1px 5px;color:#c9d1d9}
+
+  header.top{border-bottom:1px solid var(--line);position:sticky;top:0;
+    background:rgba(13,17,23,.92);backdrop-filter:blur(8px);z-index:10}
+  header.top .wrap{display:flex;align-items:center;gap:16px;height:60px}
+  .brandmark{font-weight:700;letter-spacing:-.02em;font-size:19px}
+  .brandmark span{color:var(--fg-mute);font-weight:400;font-size:14px;margin-left:8px}
+  header.top nav{margin-left:auto;display:flex;gap:20px;font-size:14px}
+  header.top nav a{color:var(--fg-dim)}
+
+  .badges{display:flex;gap:8px;flex-wrap:wrap;margin:0 0 26px}
+  .badge{font:12px/1 var(--mono);border:1px solid var(--line);border-radius:999px;
+    padding:6px 11px;color:var(--fg-dim);background:var(--ink-2)}
+  .badge.mit{color:#7ee787;border-color:#2b4a33}
+  .badge.beta{color:var(--signal);border-color:#4a3d1a}
+
+  section{padding:64px 0;border-bottom:1px solid var(--line)}
+  section:last-of-type{border-bottom:0}
+  h1{font-size:clamp(30px,5.2vw,50px);line-height:1.1;letter-spacing:-.032em;margin:0 0 20px;font-weight:750}
+  h1 em{font-style:normal;color:var(--signal)}
+  h2{font-size:clamp(21px,3vw,29px);letter-spacing:-.022em;margin:0 0 8px;font-weight:700}
+  h3{font-size:15px;margin:34px 0 12px;letter-spacing:.09em;text-transform:uppercase;color:var(--fg-mute);font-weight:600}
+  .lede{font-size:clamp(16px,2.1vw,19px);color:var(--fg-dim);max-width:74ch;margin:0 0 8px}
+  .sub{color:var(--fg-mute);font-size:14.5px;max-width:74ch}
+  p{margin:0 0 14px;max-width:76ch}
+
+  .hero{padding:76px 0 64px;border-bottom:1px solid var(--line)}
+  .cta{display:flex;gap:12px;flex-wrap:wrap;margin-top:30px;align-items:center}
+  .btn{display:inline-block;padding:13px 22px;border-radius:8px;font-weight:650;font-size:15px;
+    background:var(--fg);color:var(--ink);border:1px solid var(--fg)}
+  .btn:hover{text-decoration:none;opacity:.88}
+  .btn.ghost{background:transparent;color:var(--fg);border:1px solid var(--line)}
+  .btn.ghost:hover{border-color:var(--fg-mute);opacity:1}
+
+  .grid3{display:grid;grid-template-columns:repeat(auto-fit,minmax(258px,1fr));gap:18px;margin-top:30px}
+  .card{background:var(--ink-2);border:1px solid var(--line);border-radius:10px;padding:22px}
+  .card h4{margin:0 0 9px;font-size:16.5px;letter-spacing:-.011em}
+  .card p{margin:0;font-size:14.5px;color:var(--fg-dim)}
+
+  .term{background:#010409;border:1px solid var(--line);border-radius:10px;overflow:hidden;margin:22px 0}
+  .term .bar{background:var(--ink-2);border-bottom:1px solid var(--line);padding:9px 15px;
+    font:12px/1 var(--mono);color:var(--fg-mute);display:flex;gap:7px;align-items:center}
+  .dot{width:10px;height:10px;border-radius:50%;background:#30363d;display:inline-block}
+  .term pre{margin:0;padding:18px;overflow-x:auto;font:13.2px/1.72 var(--mono)}
+  .c-cmd{color:#8b949e} .c-ok{color:#7ee787} .c-err{color:#ff7b72} .c-key{color:#79c0ff} .c-warn{color:var(--signal)}
+
+  table{width:100%;border-collapse:collapse;margin:22px 0;font-size:14.5px;
+    border:1px solid var(--line);border-radius:10px;overflow:hidden}
+  th,td{text-align:left;padding:12px 15px;border-bottom:1px solid var(--line);vertical-align:top}
+  th{background:var(--ink-2);color:var(--fg-mute);font-size:12px;letter-spacing:.07em;
+    text-transform:uppercase;font-weight:650}
+  tbody tr:last-child td{border-bottom:0}
+  .verdict{font:12.5px/1 var(--mono);white-space:nowrap;color:var(--ok)}
+  .verdict.warn{color:var(--signal)}
+
+  .callout{border-left:3px solid var(--signal);background:rgba(240,180,41,.06);
+    border-radius:0 8px 8px 0;padding:18px 22px;margin:26px 0}
+  .callout.ok{border-left-color:var(--ok);background:rgba(63,185,80,.06)}
+  .callout strong{color:var(--fg)}
+  .callout p:last-child{margin-bottom:0}
+
+  .stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:1px;
+    background:var(--line);border:1px solid var(--line);border-radius:10px;overflow:hidden;margin:26px 0}
+  .stat{background:var(--ink);padding:20px 18px}
+  .stat b{display:block;font:700 27px/1.1 var(--mono);letter-spacing:-.03em;margin-bottom:6px}
+  .stat span{font-size:12.5px;color:var(--fg-mute)}
+  .stat.sig b{color:var(--signal)}
+
+  ul.ticks{list-style:none;padding:0;margin:16px 0}
+  ul.ticks li{position:relative;padding-left:26px;margin-bottom:10px;color:var(--fg-dim);font-size:15px}
+  ul.ticks li:before{content:"\2713";position:absolute;left:0;top:-1px;color:var(--ok);font-weight:700}
+  ul.crosses{list-style:none;padding:0;margin:16px 0}
+  ul.crosses li{position:relative;padding-left:26px;margin-bottom:10px;color:var(--fg-dim);font-size:15px}
+  ul.crosses li:before{content:"\2715";position:absolute;left:0;top:-1px;color:var(--signal);font-weight:700}
+
+  footer{padding:44px 0 68px;color:var(--fg-mute);font-size:13.5px}
+  footer .wrap>*{max-width:80ch}
+  footer a{color:var(--fg-dim)}
+  @media(max-width:640px){
+    header.top nav{display:none}
+    section{padding:46px 0}
+    .hero{padding:52px 0}
+  }
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="wrap">
+    <div class="brandmark">mem20<span>memory + cognition substrate</span></div>
+    <nav>
+      <a href="#partition">Partition</a>
+      <a href="#audit">Audit</a>
+      <a href="#limits">Limits</a>
+      <a href="#install">Install</a>
+    </nav>
+  </div>
+</header>
+
+<div class="hero wrap">
+  <div class="badges">
+    <span class="badge mit">MIT licensed</span>
+    <span class="badge">Python 3.10+</span>
+    <span class="badge">MCP · JSON-RPC 2.0 over stdio</span>
+    <span class="badge beta">v2.1.0rc2</span>
+  </div>
+  <h1>Auditable agent memory —<br>the memory layer you can <em>prove</em>.</h1>
+  <p class="lede">mem20 is an MIT-licensed MCP server that gives AI agents persistent memory with a hard partition between grounded and simulated content, contamination auditing, an evidence-gated promotion path, and an append-only origin-tagged ledger.</p>
+  <p class="sub">257 tools across 26 domains. Self-hosted. Zero lock-in. Every claim on this page was re-verified against the shipped source at commit <code>c274404</code> on 2026-10-14.</p>
+  <div class="cta">
+    <a class="btn" href="https://github.com/bythewayz66-glitch/mem20">Get started on GitHub</a>
+    <a class="btn ghost" href="#partition">See the partition in code</a>
+  </div>
+</div>
+
+<section class="wrap">
+  <h2>Three things, and why they matter together</h2>
+  <p class="sub">Every other agent-memory layer competes on retrieval quality. This one is built so you can answer a different question: what does this agent actually know, and where did it learn it?</p>
+  <div class="grid3">
+    <div class="card">
+      <h4>Prove it, don't just retrieve it</h4>
+      <p>Grounded and simulated memory are separate stores — not one store with a flag. Every ledger entry carries its <code>origin</code> and <code>store</code>, so "where did this come from?" is a query rather than a guess.</p>
+    </div>
+    <div class="card">
+      <h4>Catch contamination before it ships</h4>
+      <p>Attempt a grounded write with invented content and the server raises instead of quietly succeeding. The audit reports a contamination rate for your store and names which violation class fired.</p>
+    </div>
+    <div class="card">
+      <h4>Own your memory layer</h4>
+      <p>MIT licensed, Python, self-hosted. No PyPI package to trust and no vendor holding your audit trail — if the memory layer is what you must audit, you can't audit a black box.</p>
+    </div>
+  </div>
+</section>
+
+<section id="partition" class="wrap">
+  <h2>How the partition works</h2>
+  <p class="sub">The boundary is enforced on the write path, not asked for in a prompt. This is a real capture — it is the exact exception the shipped server raises.</p>
+
+  <div class="term">
+    <div class="bar"><span class="dot"></span><span class="dot"></span><span class="dot"></span>&nbsp;partition check · HEAD c274404</div>
+<pre><span class="c-cmd"># grounded write — accepted</span>
+<span class="c-key">&gt;&gt;&gt;</span> remember("mem20-identity", "mem20 is MIT licensed.")
+<span class="c-ok">{'id': '1a13b4b8ea2f3bf', 'origin': 'grounded', 'store': 'grounded',
+ 'action': 'remember'}</span>
+
+<span class="c-cmd"># push invented content down the grounded path — REFUSED</span>
+<span class="c-key">&gt;&gt;&gt;</span> remember("mem20-hypothetical", "...", <span class="c-warn">_allow_simulated=True</span>)
+<span class="c-err">PermissionError: remember() is grounded-only. Simulated content must use
+remember_simulated(); this call is refused to protect Step 7.4 separation.</span>
+
+<span class="c-cmd"># simulated content takes its own path, into its own store</span>
+<span class="c-key">&gt;&gt;&gt;</span> remember_simulated("mem20-hypothetical", "Show HN hits #1 for six hours.")
+<span class="c-ok">{'origin': 'simulated', 'store': 'simulated',
+ 'epistemic_status': 'imagined', 'action': 'simulate'}</span>
+
+<span class="c-cmd"># recall() returns grounded only, unless you explicitly ask</span>
+<span class="c-key">&gt;&gt;&gt;</span> recall("mem20")                        <span class="c-ok">→ 1 result, origins ['grounded']</span>
+<span class="c-key">&gt;&gt;&gt;</span> recall("mem20", include_simulated=True)  <span class="c-ok">→ 2 results, origins ['grounded','simulated']</span></pre>
+  </div>
+
+  <h3>The three tiers</h3>
+  <table>
+    <thead><tr><th>Tier</th><th>What lives here</th><th>How it is enforced</th></tr></thead>
+    <tbody>
+      <tr><td><strong>Grounded</strong></td><td>Facts from real observations, user statements, events</td><td>Indexes are grounded-only; writes to the vector and BM25 paths assert grounded origin</td></tr>
+      <tr><td><strong>Simulated</strong></td><td>Hypotheticals, counterfactuals, model output — <code>epistemic_status: imagined</code></td><td>Separate store that is never indexed into the grounded path</td></tr>
+      <tr><td><strong>Promotion</strong></td><td>Simulated content graduating to grounded</td><td>Evidence gate — a linked prior prediction resolved in its favour, or a registered external verifier</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<section id="audit" class="wrap">
+  <h2>The evidence, not the adjective</h2>
+  <p class="sub">Captured from <code>audit_contamination()</code> against a clean throwaway store at HEAD <code>c274404</code>.</p>
+
+  <div class="stats">
+    <div class="stat"><b>0.0</b><span>contamination_rate</span></div>
+    <div class="stat"><b>CLEAN</b><span>audit status</span></div>
+    <div class="stat"><b>3</b><span>violation classes checked, all empty</span></div>
+    <div class="stat sig"><b>4/4</b><span>promotion paths tested and published</span></div>
+  </div>
+
+  <div class="callout ok">
+    <p><strong>The three violation classes the audit checks at this commit:</strong> <code>violations_origin_not_grounded</code>, <code>violations_simulated_in_grounded_index</code>, <code>violations_simulated_in_bm25_corpus</code>. All empty on a clean store.</p>
+    <p>A clean store reporting <code>0.0</code> is a captured audit output, not a published retrieval benchmark. We are explicit about the difference.</p>
+  </div>
+
+  <h3>The promotion gate — all four paths, including the one we'd rather you didn't have to ask about</h3>
+  <table>
+    <thead><tr><th>Call</th><th>Result</th><th>Verdict</th></tr></thead>
+    <tbody>
+      <tr><td>Bare <code>promote(sim_id)</code></td><td><code>PermissionError: requires explicit external confirmation OR real-world prediction-error resolution</code></td><td class="verdict">refused</td></tr>
+      <tr><td>Prediction-error boolean only</td><td><code>PermissionError: requires structured evidence linking to a recorded prior prediction</code></td><td class="verdict">refused</td></tr>
+      <tr><td>Structured evidence, unrecorded <code>prediction_ref</code></td><td><code>PermissionError: prediction_ref is not a recorded prior prediction</code></td><td class="verdict">refused</td></tr>
+      <tr><td>Free-text <code>confirmation</code> alone</td><td><code>promoted: true</code> — the gate accepts a self-attested string here</td><td class="verdict warn">PROMOTES — open path</td></tr>
+    </tbody>
+  </table>
+
+  <div class="callout">
+    <p><strong>So the gate is narrowed, not closed, and we say so.</strong> Three of four paths are refused outright; the prediction-error path now demands a real recorded prediction rather than a boolean. A free-text <code>confirmation</code> argument still promotes — closing that is the next piece of work.</p>
+    <p>We publish this table rather than describe the gate as airtight. A reader who tests it will find exactly what is written here.</p>
+  </div>
+</section>
+
+<section id="limits" class="wrap">
+  <h2>What we do <em>not</em> claim</h2>
+  <p class="sub">This section exists because the previous version of this page carried numbers the repository cannot reproduce. Here is the corrected position.</p>
+
+  <ul class="crosses">
+    <li><strong>No LoCoMo, LongMemEval or DMR result.</strong> There is no <code>benchmarks/</code> directory in the canonical repo at this commit and no retrieval hit-rate figure anywhere in the tree. We are not claiming parity with Mem0, Zep or Letta — and we are not publishing a table we cannot reproduce from a clone.</li>
+    <li><strong>No "0.0 leak rate" headline.</strong> What exists is the live audit output above — <code>contamination_rate 0.0</code> on a clean store. That is a property of a clean store, not a benchmark score.</li>
+    <li><strong>No "tamper-proof" or "unfakeable" claim.</strong> The ledger is append-only and origin-tagged; the promotion gate still has the residual path documented above.</li>
+    <li><strong>No PyPI package.</strong> <code>pip install mem20</code> will not work. Install is from source.</li>
+  </ul>
+
+  <h3>What we do claim, and how you can check it</h3>
+  <table>
+    <thead><tr><th>Claim</th><th>How to verify it yourself</th></tr></thead>
+    <tbody>
+      <tr><td>Grounded and simulated are separate stores</td><td>Call <code>remember(..., _allow_simulated=True)</code> and read the exception</td></tr>
+      <tr><td>Recall defaults to grounded only</td><td>Compare <code>recall(topic)</code> with <code>recall(topic, include_simulated=True)</code></td></tr>
+      <tr><td>Contamination auditing works</td><td>Call <code>audit_contamination()</code> and read <code>contamination_rate</code> and the <code>violations_*</code> keys</td></tr>
+      <tr><td>Promotion is evidence-gated</td><td>Run all four paths in the table above</td></tr>
+      <tr><td>257 tools across 26 domains</td><td>Count <code>self.tools[...]</code> registrations under <code>mcp/</code>, or greet the server with <code>tools/list</code></td></tr>
+      <tr><td>The codebase audits itself</td><td>Read <code>proof/audit_response.md</code> — including the items it records as <em>not</em> done</td></tr>
+    </tbody>
+  </table>
+
+  <div class="callout ok">
+    <p><strong>The repo ships its own static-audit response and records what it did not finish.</strong> It documents replacing a dynamic <code>eval()</code> on world-model rules with an AST-restricted evaluator that rejects <code>Call</code>, <code>Attribute</code> and <code>Subscript</code> nodes, and splitting a 4,848-line MCP monolith into per-domain modules. It also lists structured logging as still open. "We audited ourselves and published what we found" is not an adjective — it is a file you can read.</p>
+  </div>
+</section>
+
+<section class="wrap">
+  <h2>What is in it</h2>
+  <div class="stats">
+    <div class="stat"><b>257</b><span>MCP tools</span></div>
+    <div class="stat"><b>26</b><span>tool domains</span></div>
+    <div class="stat"><b>293</b><span>mem20*z subsystem packages</span></div>
+    <div class="stat"><b>9,874</b><span>tracked files in the monorepo</span></div>
+  </div>
+  <ul class="ticks">
+    <li><strong>Memory core</strong> — store, recall, entity probing, contradiction detection, epistemic audit, namespaces, pins, contamination audit.</li>
+    <li><strong>Cognition</strong> — deductive/inductive/abductive/analogical/causal reasoning, planning with hierarchical decomposition, reflection, working memory, a 28-paradigm substrate.</li>
+    <li><strong>World forecasting</strong> — variables, rules, a prediction ledger that couples each forecast to its observed outcome and feeds the promotion gate.</li>
+    <li><strong>Hybrid retrieval</strong> — vector index plus BM25 with cross-encoder reranking on by default.</li>
+    <li><strong>Operations</strong> — sandboxed filesystem, version control, cloud control planes, databases, messaging, scheduling, and roadmap tracking.</li>
+  </ul>
+</section>
+
+<section id="install" class="wrap">
+  <h2>Install from source</h2>
+  <p class="sub">Not on PyPI yet. Clone, install, point any MCP host at it.</p>
+
+  <div class="term">
+    <div class="bar"><span class="dot"></span><span class="dot"></span><span class="dot"></span>&nbsp;bash</div>
+<pre><span class="c-cmd">git clone</span> https://github.com/bythewayz66-glitch/mem20.git
+<span class="c-cmd">cd</span> mem20
+
+<span class="c-cmd">python3 -m venv</span> .venv
+.venv/bin/pip install -r requirements.txt
+
+<span class="c-cmd"># run the MCP server over stdio</span>
+MEM20_STORE_PATH=~/.mem20/store .venv/bin/python mcp/mcp_server.py
+
+<span class="c-cmd"># health / readiness / metrics once the service is up</span>
+<span class="c-cmd">curl</span> http://localhost:8080/health
+<span class="c-cmd">curl</span> http://localhost:8080/metrics   <span class="c-ok"># tool counters + contamination_rate</span></pre>
+  </div>
+
+  <p class="sub">Optional Blender and Unity integrations ship as separate pluggable modules and require the respective application installed. When absent, their tools return an informative message instead of failing.</p>
+
+  <div class="cta">
+    <a class="btn" href="https://github.com/bythewayz66-glitch/mem20">Clone on GitHub</a>
+    <a class="btn ghost" href="https://github.com/bythewayz66-glitch/mem20/blob/main/LICENSE">Read the MIT license</a>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <p><strong>mem20</strong> — persistent memory + cognition substrate for AI agents. MIT licensed. Python 3.10+. Exposed over the Model Context Protocol as a JSON-RPC 2.0 service on stdio.</p>
+    <p class="sub">Repository: <a href="https://github.com/bythewayz66-glitch/mem20">github.com/bythewayz66-glitch/mem20</a> · default branch <code>main</code> · verified at commit <code>c274404</code> · version 2.1.0rc2.</p>
+    <p class="sub">Every figure, exception string and table row on this page was re-checked against the shipped source on 2026-10-14 by the mem20 GTM Team Lead. The claim ledger naming each figure and the command behind it accompanies this page. Version 1 of this page referenced a repository that does not resolve and a benchmark table with no source in the tree; both are corrected here.</p>
+  </div>
+</footer>
+
+</body>
+</html>

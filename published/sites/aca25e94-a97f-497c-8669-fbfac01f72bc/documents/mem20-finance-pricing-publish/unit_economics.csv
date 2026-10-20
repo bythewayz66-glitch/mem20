@@ -1,0 +1,37 @@
+metric,value,unit,basis
+Blended ACV,14000,USD/account/yr,Tier mix 72/12/12/4 on 6K/18K/36K/80K - reconciles exactly
+Team tier ACV,6000,USD/account/yr,72% of paying accounts
+Business tier ACV,18000,USD/account/yr,12% of paying accounts
+Scale tier ACV,36000,USD/account/yr,12% of paying accounts
+Enterprise tier ACV,80000,USD/account/yr,4% of paying accounts
+Hosting COGS,1880.0,USD/account/yr,Retained from prior COGS structure
+Support COGS (canonical),2400,USD/account/yr,Direct support; no community deflection
+Support COGS (retired basis),1200,USD/account/yr,Community-deflected assumption
+Total COGS (canonical),4280.0,USD/account/yr,Hosting + direct support
+Gross margin (retired basis),78.0,%,Derived
+Gross margin (canonical),69.4,%,Derived
+Gross profit per account,9720.0,USD/account/yr,Derived
+Blended CAC (canonical),16800,USD,Zero-inbound repo state
+Blended CAC (benchmark),8000,USD,OSS-led benchmark with inbound
+CAC payback (canonical),1.73,years,Derived
+CAC payback (benchmark),0.73,years,Derived
+Logo churn,12.0,%,House assumption
+Average account life,8.33,years,1 / churn
+"LTV (gross profit, full life)",81000,USD,Derived
+LTV:CAC (full life),4.82,x,Derived
+NRR,115, %,House assumption
+3-yr GP multiplier (NRR-compounded),3.4725,x,1 + NRR + NRR^2
+"3-yr LTV:CAC (Y1 cohort, benchmark)",4.74,x,Derived
+"3-yr LTV:CAC (Y1 cohort, canonical)",2.01,x,Derived; below 3x hurdle
+SOM accounts (3-yr obtainable),120,accounts,House SOM / ACV
+SOM exit ARR,1680000,USD,"120 x 14,000"
+SOM gross profit (annual),1166400,USD,SOM ARR x canonical GM
+SOM acquisition cost (canonical),2016000,USD,"120 x 16,800"
+SOM acquisition cost (benchmark),960000,USD,"120 x 8,000"
+SOM acquisition cost delta,1056000,USD,Repo-state driven
+Year 1 accounts,40,accounts,Ramp
+Year 1 exit ARR,560000,USD,"40 x 14,000"
+Year 2 accounts,80,accounts,Ramp
+Year 2 exit ARR,1120000,USD,"80 x 14,000"
+Year 3 accounts,120,accounts,= SOM
+Year 3 exit ARR,1680000,USD,"120 x 14,000"

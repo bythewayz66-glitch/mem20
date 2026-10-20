@@ -1,0 +1,781 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><script data-tmly-media-guard="1">(function(){"use strict";
+var T=window.__tmly||(window.__tmly=(function(){
+var o={},n=String(window.name||"");
+if(n.slice(0,5)==="tmly:"){n.slice(5).split("&").forEach(function(kv){
+var i=kv.indexOf("=");if(i>0){o[kv.slice(0,i)]=kv.slice(i+1)}})}
+return o})());
+if(T.presentation!=="preview"){return}
+var K="tmly:media-muted:"+String(location.pathname).replace(/[^/]*$/,"");
+var muted=false;try{muted=localStorage.getItem(K)==="1"}catch(e){}
+var gestured=false;
+["pointerdown","mousedown","keydown","touchstart"].forEach(function(t){
+document.addEventListener(t,function(){gestured=true},{capture:true,passive:true})});
+function remember(m){muted=m;try{m?localStorage.setItem(K,"1"):localStorage.removeItem(K)}catch(e){}}
+function announcePaused(el){try{el.dispatchEvent(new Event("pause"))}catch(e){}}
+function harden(el){
+el.autoplay=false;el.removeAttribute("autoplay");
+if(el.getAttribute("preload")==="auto"){el.setAttribute("preload","none")}
+if(muted){el.muted=true}
+if(!gestured&&!el.paused){try{el.pause()}catch(e){}}}
+var play=HTMLMediaElement.prototype.play;
+HTMLMediaElement.prototype.play=function(){
+if(!gestured){announcePaused(this);
+return Promise.reject(new DOMException("Artifact audio needs a user gesture","NotAllowedError"))}
+if(muted){remember(false);this.muted=false}
+return play.apply(this,arguments)};
+var acProtos=[];
+function guardAC(n){
+var N=window[n];if(!N||!N.prototype){return}
+if(acProtos.indexOf(N.prototype)<0){acProtos.push(N.prototype);
+var res=N.prototype.resume;
+if(typeof res==="function"){N.prototype.resume=function(){
+if(!gestured){return Promise.reject(new DOMException("Artifact audio needs a user gesture","NotAllowedError"))}
+if(muted){remember(false)}
+return res.apply(this,arguments)}}}
+var W=function(o){var c=arguments.length?new N(o):new N();
+if(!gestured){try{c.suspend()}catch(e){}}return c};
+W.prototype=N.prototype;try{window[n]=W}catch(e){}}
+guardAC("AudioContext");guardAC("webkitAudioContext");
+document.addEventListener("play",function(e){
+var el=e.target;if(el instanceof HTMLMediaElement&&!gestured){try{el.pause()}catch(err){}}},true);
+document.addEventListener("pause",function(e){
+if(e.target instanceof HTMLMediaElement&&gestured){remember(true)}},true);
+document.addEventListener("volumechange",function(e){
+var el=e.target;if(el instanceof HTMLMediaElement&&gestured){remember(el.muted||el.volume===0)}},true);
+function sweep(n){if(n&&n.querySelectorAll){var l=n.querySelectorAll("audio,video");
+for(var i=0;i<l.length;i++){harden(l[i])}}}
+new MutationObserver(function(rs){for(var i=0;i<rs.length;i++){var a=rs[i].addedNodes;
+for(var j=0;j<a.length;j++){var n=a[j];
+if(n instanceof HTMLMediaElement){harden(n)}else{sweep(n)}}}})
+.observe(document.documentElement,{childList:true,subtree:true});
+document.addEventListener("DOMContentLoaded",function(){sweep(document)});
+sweep(document)})();</script>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>mem20 — UX Research Findings (v2.0, post repo-migration refresh)</title>
+<meta name="description" content="Updated UX research findings for mem20, refreshed to reference the new canonical repository github.com/bythewayz66-glitch/mem20.">
+<style>
+  :root{
+    --ink:#0b1424;
+    --ink-2:#12203a;
+    --navy:#152a52;
+    --paper:#f6f8fc;
+    --card:#ffffff;
+    --line:#dde5f1;
+    --line-strong:#c3d0e4;
+    --text:#16233b;
+    --muted:#5b6a85;
+    --muted-2:#7b8aa6;
+    --amber:#b45309;
+    --amber-bg:#fef3c7;
+    --teal:#0f766e;
+    --teal-bg:#ccfbf1;
+    --red:#b91c1c;
+    --red-bg:#fee2e2;
+    --green:#15803d;
+    --green-bg:#dcfce7;
+    --radius:14px;
+    --shadow:0 1px 2px rgba(11,20,36,.06), 0 8px 24px rgba(11,20,36,.06);
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{
+    margin:0;
+    background:var(--paper);
+    color:var(--text);
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    font-size:16px;
+    line-height:1.62;
+    -webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:1080px;margin:0 auto;padding:0 22px}
+
+  /* ---------- HERO ---------- */
+  .hero{
+    background:
+      radial-gradient(1100px 320px at 12% -10%, #1d3a6b 0%, rgba(29,58,107,0) 60%),
+      linear-gradient(180deg,#0b1424 0%, #101f39 100%);
+    color:#eaf1fb;
+    padding:44px 0 38px;
+    border-bottom:4px solid var(--amber);
+  }
+  .eyebrow{
+    display:inline-block;
+    font-size:12px;letter-spacing:.16em;text-transform:uppercase;
+    color:#93c5fd;font-weight:700;margin:0 0 12px
+  }
+  .hero h1{
+    margin:0 0 10px;font-size:clamp(28px,4.4vw,44px);line-height:1.12;letter-spacing:-.02em;font-weight:800
+  }
+  .hero .sub{margin:0 0 20px;color:#c3d4ee;font-size:clamp(15px,2vw,18px);max-width:820px}
+  .chips{display:flex;flex-wrap:wrap;gap:9px;margin-top:18px}
+  .chip{
+    display:inline-flex;align-items:center;gap:7px;
+    background:rgba(255,255,255,.07);
+    border:1px solid rgba(255,255,255,.16);
+    color:#dbe7f8;border-radius:999px;padding:6px 13px;font-size:12.5px;font-weight:600
+  }
+  .dot{width:7px;height:7px;border-radius:50%;background:#22c55e;box-shadow:0 0 0 3px rgba(34,197,94,.18)}
+  .dot.amber{background:#f59e0b;box-shadow:0 0 0 3px rgba(245,158,11,.2)}
+  .dot.red{background:#ef4444;box-shadow:0 0 0 3px rgba(239,68,68,.2)}
+
+  /* ---------- NAV ---------- */
+  nav.toc{
+    position:sticky;top:0;z-index:40;
+    background:rgba(246,248,252,.94);
+    backdrop-filter:blur(9px);
+    border-bottom:1px solid var(--line);
+  }
+  nav.toc .inner{
+    display:flex;gap:6px;overflow-x:auto;padding:9px 22px;max-width:1080px;margin:0 auto;
+    scrollbar-width:thin;
+  }
+  nav.toc a{
+    white-space:nowrap;text-decoration:none;color:var(--muted);font-size:13px;font-weight:600;
+    padding:6px 11px;border-radius:8px;border:1px solid transparent
+  }
+  nav.toc a:hover{background:#e8eef8;color:var(--ink);border-color:var(--line)}
+
+  /* ---------- SECTIONS ---------- */
+  main{padding:34px 0 10px}
+  section{margin:0 0 40px}
+  h2{
+    font-size:clamp(21px,2.6vw,27px);letter-spacing:-.015em;margin:0 0 6px;color:var(--ink);font-weight:800;
+    display:flex;align-items:center;gap:12px
+  }
+  h2 .num{
+    flex:none;display:inline-flex;align-items:center;justify-content:center;
+    width:34px;height:34px;border-radius:9px;background:var(--navy);color:#fff;font-size:15px;font-weight:800
+  }
+  .rule{height:3px;width:64px;background:var(--amber);border-radius:3px;margin:0 0 20px}
+  h3{font-size:17.5px;margin:26px 0 10px;color:var(--ink-2);font-weight:750;letter-spacing:-.01em}
+  p{margin:0 0 14px}
+  .muted{color:var(--muted)}
+  small{color:var(--muted-2)}
+
+  .card{
+    background:var(--card);border:1px solid var(--line);border-radius:var(--radius);
+    padding:22px 24px;box-shadow:var(--shadow);margin:0 0 18px
+  }
+
+  /* repo banner */
+  .repo-banner{
+    background:linear-gradient(180deg,#ffffff 0%, #f2f7ff 100%);
+    border:1px solid var(--line-strong);border-left:6px solid var(--teal);
+    border-radius:var(--radius);padding:20px 24px;box-shadow:var(--shadow);margin:0 0 22px
+  }
+  .repo-banner h3{margin:0 0 6px}
+  code, .mono{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,"Liberation Mono",monospace}
+  code{
+    background:#eef3fb;border:1px solid var(--line);border-radius:6px;padding:1.5px 6px;font-size:13.5px;color:#123
+  }
+  a{color:#1d4ed8}
+  a:hover{color:#1e3a8a}
+
+  /* KPI strip */
+  .kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:14px;margin:4px 0 6px}
+  .kpi{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px 16px 14px;box-shadow:var(--shadow)}
+  .kpi .v{font-size:26px;font-weight:800;color:var(--ink);letter-spacing:-.02em;line-height:1.1}
+  .kpi .l{font-size:12.5px;color:var(--muted);margin-top:5px;font-weight:600}
+  .kpi.warn{border-color:#f3d19e;background:linear-gradient(180deg,#fffdf5,#fff7e6)}
+  .kpi.warn .v{color:var(--amber)}
+
+  /* tables */
+  .tscroll{overflow-x:auto;border:1px solid var(--line);border-radius:12px;box-shadow:var(--shadow);margin:4px 0 18px;background:#fff}
+  table{border-collapse:collapse;width:100%;font-size:14px;min-width:560px}
+  th,td{padding:11px 14px;text-align:left;vertical-align:top;border-bottom:1px solid var(--line)}
+  thead th{background:var(--navy);color:#eaf1fb;font-weight:700;font-size:12.5px;letter-spacing:.03em;text-transform:uppercase;border-bottom:none;white-space:nowrap}
+  tbody tr:nth-child(even){background:#fafcff}
+  tbody tr:last-child td{border-bottom:none}
+  td.ok{color:var(--green);font-weight:700;white-space:nowrap}
+  td.bad{color:var(--red);font-weight:700;white-space:nowrap}
+
+  /* badges */
+  .badge{display:inline-block;border-radius:999px;padding:3px 10px;font-size:11.5px;font-weight:800;letter-spacing:.03em;white-space:nowrap}
+  .b-red{background:var(--red-bg);color:var(--red);border:1px solid #f7c9c9}
+  .b-amber{background:var(--amber-bg);color:var(--amber);border:1px solid #f4d699}
+  .b-teal{background:var(--teal-bg);color:var(--teal);border:1px solid #a7f0e4}
+  .b-green{background:var(--green-bg);color:var(--green);border:1px solid #b6ebc6}
+  .b-slate{background:#eef2f9;color:var(--muted);border:1px solid var(--line-strong)}
+
+  /* callout */
+  .callout{border-radius:12px;padding:16px 18px;margin:16px 0;border:1px solid;font-size:14.5px}
+  .callout strong{font-weight:800}
+  .c-warn{background:var(--amber-bg);border-color:#f3d69a;color:#5c3d05}
+  .c-red{background:var(--red-bg);border-color:#f6c7c7;color:#6b1414}
+  .c-teal{background:var(--teal-bg);border-color:#a7e9de;color:#0b4a44}
+  .c-info{background:#eaf2ff;border-color:#c3d9fb;color:#123a6b}
+
+  /* personas */
+  .personas{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px}
+  .persona{background:#fff;border:1px solid var(--line);border-top:5px solid var(--navy);border-radius:12px;padding:18px 18px 16px;box-shadow:var(--shadow)}
+  .persona:nth-child(2){border-top-color:var(--amber)}
+  .persona:nth-child(3){border-top-color:var(--teal)}
+  .persona h4{margin:0 0 2px;font-size:16.5px;color:var(--ink)}
+  .persona .role{font-size:12.5px;color:var(--muted-2);font-weight:700;text-transform:uppercase;letter-spacing:.05em;margin:0 0 12px}
+  .persona dl{margin:0}
+  .persona dt{font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:.05em;color:var(--navy);margin:12px 0 2px}
+  .persona dd{margin:0;font-size:14px;color:#23324e}
+  .persona blockquote{margin:12px 0 0;padding:10px 13px;background:#f6f9ff;border-left:3px solid var(--amber);border-radius:0 8px 8px 0;font-size:13.5px;color:#33415c;font-style:italic}
+
+  /* finding cards */
+  .finding{background:#fff;border:1px solid var(--line);border-left:6px solid var(--line-strong);border-radius:12px;padding:18px 20px;box-shadow:var(--shadow);margin:0 0 14px}
+  .finding.sev-critical{border-left-color:var(--red)}
+  .finding.sev-high{border-left-color:var(--amber)}
+  .finding.sev-medium{border-left-color:var(--teal)}
+  .finding .head{display:flex;flex-wrap:wrap;align-items:center;gap:10px;margin:0 0 8px}
+  .finding .head h4{margin:0;font-size:16.5px;color:var(--ink)}
+  .finding .meta{font-size:12.5px;color:var(--muted-2);font-weight:600}
+  .finding p{margin:0 0 10px;font-size:14.5px}
+  .finding .impact{background:#f7faff;border:1px dashed var(--line-strong);border-radius:9px;padding:10px 13px;font-size:13.5px;color:#2a3a58}
+  blockquote{
+    margin:12px 0;padding:12px 15px;background:#fbfcfe;border:1px solid var(--line);
+    border-left:3px solid var(--navy);border-radius:0 8px 8px 0;font-size:13.5px;color:#2c3a55;font-style:italic
+  }
+  blockquote cite{display:block;margin-top:6px;font-style:normal;font-size:12px;color:var(--muted-2);font-weight:700}
+
+  /* install snippet */
+  .codeblock{position:relative;background:#0b1424;border-radius:12px;padding:18px 18px 16px;margin:14px 0;overflow:auto;box-shadow:var(--shadow)}
+  .codeblock .lbl{font-size:11.5px;letter-spacing:.12em;text-transform:uppercase;color:#7fa3d6;font-weight:800;margin:0 0 10px}
+  .codeblock pre{margin:0;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:13px;line-height:1.7;color:#dbe7f8;white-space:pre}
+  .codeblock .del{color:#fca5a5}
+  .codeblock .add{color:#86efac}
+  .codeblock .cm{color:#8aa4c8}
+
+  /* recs */
+  .prio{font-weight:800;border-radius:8px;padding:3px 9px;font-size:12px;display:inline-block}
+  .p0{background:var(--red-bg);color:var(--red);border:1px solid #f6c7c7}
+  .p1{background:var(--amber-bg);color:var(--amber);border:1px solid #f4d699}
+  .p2{background:var(--teal-bg);color:var(--teal);border:1px solid #a7f0e4}
+
+  ul.clean{margin:6px 0 14px;padding-left:20px}
+  ul.clean li{margin:6px 0}
+  .grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:16px}
+
+  footer{border-top:1px solid var(--line);background:#0b1424;color:#b9c8e0;margin-top:10px;padding:30px 0 40px}
+  footer .wrap{font-size:13.5px}
+  footer strong{color:#eaf1fb}
+  footer .disc{margin-top:14px;padding:12px 14px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.12);border-radius:10px;font-size:12.5px;color:#9fb3d1}
+  .attest{font-size:12.5px;color:var(--muted-2);margin-top:10px}
+  .print-tip{font-size:12.5px;color:var(--muted-2)}
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="wrap">
+    <p class="eyebrow">User Research Findings · v2.0 · Post Repo-Migration Refresh</p>
+    <h1>mem20 — UX Research Findings</h1>
+    <p class="sub">Auditable agent memory &mdash; the memory layer you can prove. Updated to reference the new canonical repository and to re-verify every repo-dependent link, install snippet, and first-run claim.</p>
+    <div class="chips">
+      <span class="chip"><span class="dot"></span> Canonical repo: <code style="background:rgba(255,255,255,.1);border-color:rgba(255,255,255,.2);color:#dbe7f8">bythewayz66-glitch/mem20</code></span>
+      <span class="chip">Data collected 2026-10-14</span>
+      <span class="chip"><span class="dot amber"></span> Marker commit c274404 · branch main</span>
+      <span class="chip"><span class="dot red"></span> 1 unresolved blocker (marketed site unreachable)</span>
+    </div>
+  </div>
+</header>
+
+<nav class="toc" aria-label="Section navigation">
+  <div class="inner">
+    <a href="#summary">Summary</a>
+    <a href="#scope">Scope &amp; Method</a>
+    <a href="#changes">Repo-Change Log</a>
+    <a href="#inventory">Interface Inventory</a>
+    <a href="#personas">Personas</a>
+    <a href="#journey">Journey Map</a>
+    <a href="#findings">Usability Findings</a>
+    <a href="#recs">Recommendations</a>
+    <a href="#metrics">Success Metrics</a>
+    <a href="#limits">Limitations</a>
+  </div>
+</nav>
+
+<main class="wrap">
+
+  <!-- ================= SUMMARY ================= -->
+  <section id="summary">
+    <h2><span class="num">0</span> Executive Summary</h2>
+    <div class="rule"></div>
+
+    <div class="repo-banner">
+      <h3>What changed in this revision</h3>
+      <p style="margin:0 0 8px">The canonical mem20 repository moved. Every repo-dependent detail in the previous UX findings has been re-pointed at <a href="https://github.com/bythewayz66-glitch/mem20" target="_blank" rel="noopener"><code>github.com/bythewayz66-glitch/mem20</code></a>. The prior target, <code>github.com/JaysonAIOnline/mem20</code>, is <strong>gone (HTTP 404)</strong> &mdash; which turns the redirect itself into the single largest UX issue in this release (see <strong>W1</strong>).</p>
+      <p style="margin:0" class="muted">Facts in this report were re-verified in-sandbox on 2026-10-14 against the GitHub REST API and by direct HTTP probes. Figures a reviewer can reproduce are marked with their probe result.</p>
+    </div>
+
+    <div class="kpis">
+      <div class="kpi"><div class="v">9,873</div><div class="l">Tracked files in canonical repo</div></div>
+      <div class="kpi"><div class="v">293</div><div class="l">mem20*z subsystem packages</div></div>
+      <div class="kpi"><div class="v">257</div><div class="l">MCP tools / 26 domains</div></div>
+      <div class="kpi warn"><div class="v">9</div><div class="l">Old-repo references still in README</div></div>
+      <div class="kpi warn"><div class="v">3</div><div class="l">Critical first-run trust breaks</div></div>
+      <div class="kpi"><div class="v">0</div><div class="l">Stars &amp; forks (cold start)</div></div>
+    </div>
+
+    <h3>Six findings that should shape the next design pass</h3>
+    <ul class="clean">
+      <li><strong>W1 &middot; Silent 404 and a dead clone command (<span class="badge b-red">Critical</span>).</strong> The README still tells users to <code>git clone https://github.com/JaysonAIOnline/mem20.git</code> &mdash; a URL that now returns <strong>404</strong>. The very first command a new user runs fails.</li>
+      <li><strong>W2 &middot; Trust badges are broken links (<span class="badge b-red">Critical</span>).</strong> The MIT-license and release badges point at the old org; both resolve to <strong>404</strong>. In a product whose whole pitch is <em>auditability</em>, a broken provenance link is an especially expensive contradiction.</li>
+      <li><strong>W3 &middot; Four install paths, no decision help (<span class="badge b-amber">High</span>).</strong> The Quick Start lists source, Penguin Linux, systemd, and pip installs back-to-back with no "choose this if&hellip;" guidance.</li>
+      <li><strong>W4 &middot; <code>pip install mem20</code> is not live (<span class="badge b-amber">High</span>).</strong> PyPI returns <strong>404</strong>, yet pip appears in the Installation section. The fastest path for a Python dev is a dead end.</li>
+      <li><strong>W5 &middot; Undefined domain nouns create an early cliff (<span class="badge b-amber">High</span>).</strong> "Grounded vs simulated", "promotion", and "ledger" name the core concept but are explained only later in the README.</li>
+      <li><strong>W6 &middot; The 0.000 adversarial hit rate is the right disclosure, but the wrong shape (<span class="badge b-teal">Medium</span>).</strong> Honest, but presented without the "used adversarially only" framing, it reads to a skimming engineer as "the retrieval is broken".</li>
+    </ul>
+
+    <div class="callout c-teal">
+      <strong>The headline.</strong> The product's differentiator is provable, auditable memory &mdash; but the <em>first thirty seconds</em> of the developer experience are currently un-audited: a dead clone URL, dead provenance badges, and a pip command that 404s. Fixing those three costs almost nothing and removes the contradiction that undermines the entire positioning.
+    </div>
+  </section>
+
+  <!-- ================= SCOPE ================= -->
+  <section id="scope">
+    <h2><span class="num">1</span> Scope, Method &amp; Evidence</h2>
+    <div class="rule"></div>
+    <p>This refresh re-ran a lightweight, evidence-first usability pass focused on the <strong>first-run developer experience</strong> of the canonical repository and its install documentation. It is a documentation-and-interface audit triangulated with reproducible probes, not a recruited-participant study (see <a href="#limits">Limitations</a> for sample and confidence caveats).</p>
+
+    <div class="grid2">
+      <div class="card">
+        <h3 style="margin-top:0">Methods used</h3>
+        <ul class="clean">
+          <li><strong>Interface inventory</strong> &mdash; enumerate every surface a new user meets, in order.</li>
+          <li><strong>Heuristic walkthrough</strong> &mdash; evaluate each surface against time-to-first-success.</li>
+          <li><strong>Link &amp; path integrity probes</strong> &mdash; HTTP HEAD/GET every repo-dependent URL and the git protocol endpoint.</li>
+          <li><strong>Content analysis</strong> &mdash; README quick-start, install matrix, and technical-claim sections.</li>
+          <li><strong>Journey mapping</strong> &mdash; model the ideal path and mark the actual friction points.</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3 style="margin-top:0">Research questions</h3>
+        <ul class="clean">
+          <li>Can a new user reach a working memory server from the canonical repo without hitting a dead end?</li>
+          <li>Do the repo's own trust signals (license, release, provenance) resolve?</li>
+          <li>Is the install decision unambiguous for each of the three target segments?</li>
+          <li>Does the core concept survive a five-minute skim, or does it cliff?</li>
+        </ul>
+      </div>
+    </div>
+
+    <h3>Evidence table &mdash; reproducible, in-sandbox 2026-10-14</h3>
+    <div class="tscroll">
+      <table>
+        <thead>
+          <tr><th>Probe</th><th>Target</th><th>Result</th><th>Reads as</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Canonical repo</td><td class="mono">github.com/bythewayz66-glitch/mem20</td><td class="ok">HTTP 200</td><td>Reachable (new canonical)</td></tr>
+          <tr><td>Legacy repo</td><td class="mono">github.com/JaysonAIOnline/mem20</td><td class="bad">HTTP 404</td><td>Dead &mdash; stale references break</td></tr>
+          <tr><td>Clone command in README</td><td class="mono">github.com/JaysonAIOnline/mem20.git</td><td class="bad">HTTP 401</td><td>Not a usable public clone source</td></tr>
+          <tr><td>License badge target</td><td class="mono">&hellip;/JaysonAIOnline/mem20/blob/main/LICENSE</td><td class="bad">HTTP 404</td><td>Provenance link broken</td></tr>
+          <tr><td>Release badge target</td><td class="mono">&hellip;/JaysonAIOnline/mem20/releases</td><td class="bad">HTTP 404</td><td>Version signal broken</td></tr>
+          <tr><td>PyPI package</td><td class="mono">pypi.org/pypi/mem20/json</td><td class="bad">HTTP 404</td><td><code>pip install mem20</code> unavailable</td></tr>
+          <tr><td>Marketed website</td><td class="mono">mem20.jaysonai.online</td><td class="bad">no response</td><td>Blocker &mdash; re-point not yet confirmed</td></tr>
+          <tr><td>Repo metadata (API)</td><td class="mono">api.github.com/repos/bythewayz66-glitch/mem20</td><td class="ok">JSON 200</td><td>Public · MIT · branch <code>main</code></td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="attest">Evidence captured by the UX Researcher in the project sandbox; results are point-in-time and should be re-run at release cut.</p>
+  </section>
+
+  <!-- ================= CHANGES ================= -->
+  <section id="changes">
+    <h2><span class="num">2</span> Repo-Dependent Details, Refreshed</h2>
+    <div class="rule"></div>
+    <p>Every repo-dependent value that appeared in prior UX artefacts has been re-derived from the canonical source. Cells marked <span class="badge b-red">changed</span> previously pointed at the legacy org.</p>
+    <div class="tscroll">
+      <table>
+        <thead>
+          <tr><th>Detail</th><th>Before (legacy)</th><th>After (canonical, verified)</th><th>Status</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Canonical repository</td><td class="mono">JaysonAIOnline/mem20</td><td class="mono">bythewayz66-glitch/mem20</td><td><span class="badge b-red">changed</span></td></tr>
+          <tr><td>Default branch</td><td class="mono">main</td><td class="mono">main</td><td><span class="badge b-slate">unchanged</span></td></tr>
+          <tr><td>Marker commit</td><td>64c7335 (base)</td><td class="mono">c274404 (on 64c7335)</td><td><span class="badge b-red">changed</span></td></tr>
+          <tr><td>License</td><td>MIT</td><td>MIT</td><td><span class="badge b-slate">unchanged</span></td></tr>
+          <tr><td>Tracked files</td><td>&mdash;</td><td>9,873</td><td><span class="badge b-teal">new basis</span></td></tr>
+          <tr><td>mem20*z subsystems</td><td>&mdash;</td><td>293</td><td><span class="badge b-teal">new basis</span></td></tr>
+          <tr><td>MCP surface</td><td>257 tools / 26 domains</td><td>257 tools / 26 domains</td><td><span class="badge b-slate">unchanged</span></td></tr>
+          <tr><td>Clone command</td><td class="mono">git clone &hellip;JaysonAIOnline/mem20.git</td><td class="mono">git clone &hellip;bythewayz66-glitch/mem20.git</td><td><span class="badge b-red">changed</span></td></tr>
+          <tr><td>License / release links</td><td class="mono">&hellip;JaysonAIOnline&hellip;</td><td class="mono">&hellip;bythewayz66-glitch/mem20/releases</td><td><span class="badge b-red">changed</span></td></tr>
+          <tr><td>Website link</td><td class="mono">mem20.jaysonai.online</td><td>unresolved &mdash; confirm at cut</td><td><span class="badge b-amber">blocked</span></td></tr>
+          <tr><td>PyPI distribution</td><td>not published</td><td>not published (404)</td><td><span class="badge b-amber">blocked</span></td></tr>
+          <tr><td>Licensing model</td><td>MIT, self-hosted</td><td>MIT, self-hosted</td><td><span class="badge b-slate">unchanged</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3>Corrected install snippet (source path)</h3>
+    <p class="muted">This is the snippet a new user should be able to paste and run. The README currently ships the <span style="color:#b91c1c;font-weight:700">removed</span> lines.</p>
+    <div class="codeblock">
+      <div class="lbl">Corrected Quick Start — install from source</div>
+<pre><span class="del">- git clone https://github.com/JaysonAIOnline/mem20.git</span>
+<span class="add">+ git clone https://github.com/bythewayz66-glitch/mem20.git</span>
+cd mem20
+
+<span class="cm"># Create venv and install core deps</span>
+python3 -m venv .venv
+.venv/bin/pip install -r requirements.txt
+
+<span class="cm"># Run the server (stdio)</span>
+MEM20_STORE_PATH=~/.mem20/store .venv/bin/python mcp/mcp_server.py</pre>
+    </div>
+  </section>
+
+  <!-- ================= INVENTORY ================= -->
+  <section id="inventory">
+    <h2><span class="num">3</span> Interface Inventory</h2>
+    <div class="rule"></div>
+    <p>The first-run surface of mem20 is a short, ordered sequence. Each item below is a place where a design decision determines whether the user converts to a running server.</p>
+    <div class="card">
+      <ul class="clean" style="margin-bottom:0">
+        <li><strong>S1 &middot; Discovery</strong> &mdash; how the repo is found: HN/Reddit post, directory listing, or a blog link.</li>
+        <li><strong>S2 &middot; Repo landing</strong> &mdash; README header, status badges, one-line positioning, monorepo warning.</li>
+        <li><strong>S3 &middot; Concept</strong> &mdash; the grounded/simulated partition, promotion, and ledger &mdash; the product's whole reason to exist.</li>
+        <li><strong>S4 &middot; Capability scan</strong> &mdash; the 26-domain / 257-tool table that establishes breadth.</li>
+        <li><strong>S5 &middot; Install decision</strong> &mdash; source, Penguin Linux, systemd, or pip.</li>
+        <li><strong>S6 &middot; First run</strong> &mdash; <code>MEM20_STORE_PATH</code> + stdio server, or the HTTP health endpoint.</li>
+        <li><strong>S7 &middot; Connect</strong> &mdash; wire the server into an MCP host (Hermes, Claude Code, Cursor).</li>
+        <li><strong>S8 &middot; Assemble the bundle</strong> &mdash; the full SDK/platform corpus (293 subsystems) and where a newcomer should look first.</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- ================= PERSONAS ================= -->
+  <section id="personas">
+    <h2><span class="num">4</span> Personas</h2>
+    <div class="rule"></div>
+    <p>Three archetypes drive first-run behaviour. They were synthesised from the market positioning brief and the repository's own stated target segments; treat them as directional and validate with recruited participants (next-step research, &sect;9).</p>
+    <div class="personas">
+      <div class="persona">
+        <h4>Devon</h4>
+        <p class="role">AI platform / infra engineer</p>
+        <dl>
+          <dt>Goal</dt>
+          <dd>Give an agent memory that survives sessions, then get back to the actual agent.</dd>
+          <dt>Context</dt>
+          <dd>Terminal-first, five minutes of patience, expects <code>git clone</code> &rarr; run.</dd>
+          <dt>Pain points</dt>
+          <dd>Dead clone URLs; four install options with no guidance; undefined nouns.</dd>
+          <dt>Success signal</dt>
+          <dd>A green <code>/health</code> response within ten minutes.</dd>
+        </dl>
+        <blockquote>"If the clone command 404s I'm gone &mdash; I'll assume the project is abandoned."</blockquote>
+      </div>
+      <div class="persona">
+        <h4>Priya</h4>
+        <p class="role">Evaluator, regulated-industry AI team</p>
+        <dl>
+          <dt>Goal</dt>
+          <dd>Decide whether mem20's audit story is real enough to bring to a compliance review.</dd>
+          <dt>Context</dt>
+          <dd>Reads the governance section before installing anything.</dd>
+          <dt>Pain points</dt>
+          <dd>Broken license/provenance links on an "auditable" product; self-attestation hole in the promotion gate.</dd>
+          <dt>Success signal</dt>
+          <dd>A clean, verifiable audit-trail story with no hand-waving.</dd>
+        </dl>
+        <blockquote>"You're selling auditability. A 404 on the license link is not a good opening argument."</blockquote>
+      </div>
+      <div class="persona">
+        <h4>Sam</h4>
+        <p class="role">OSS / self-host-first builder</p>
+        <dl>
+          <dt>Goal</dt>
+          <dd>Run mem20 entirely on their own box, no vendor, no lock-in.</dd>
+          <dt>Context</dt>
+          <dd>ChromeOS / Penguin Linux or a small VPS; wants a systemd unit and a store path.</dd>
+          <dt>Pain points</dt>
+          <dd>Unclear which install path actually applies to their machine.</dd>
+          <dt>Success signal</dt>
+          <dd>A persistent service that survives reboot with their data on their disk.</dd>
+        </dl>
+        <blockquote>"Tell me which install is mine &mdash; don't make me read four of them to find out."</blockquote>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= JOURNEY ================= -->
+  <section id="journey">
+    <h2><span class="num">5</span> User Journey Map &mdash; First Run</h2>
+    <div class="rule"></div>
+    <p>The table below reads left to right as the user's actual path. Red cells are points where the current build stalls or loses trust.</p>
+    <div class="tscroll">
+      <table>
+        <thead>
+          <tr><th>Stage</th><th>What the user does</th><th>Emotion</th><th>Friction</th><th>Opportunity</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>1 · Discover</strong></td>
+            <td>Clicks a Show HN / Reddit / directory link.</td>
+            <td><span class="badge b-slate">Curious</span></td>
+            <td>Page must load anonymously for external traffic to arrive.</td>
+            <td>Confirm public reachability before launch day.</td>
+          </tr>
+          <tr>
+            <td><strong>2 · Land on repo</strong></td>
+            <td>Scans README header and badges.</td>
+            <td><span class="badge b-red">Trust hit</span></td>
+            <td><strong>License &amp; release badges 404.</strong></td>
+            <td>Re-point badges to canonical repo (W2).</td>
+          </tr>
+          <tr>
+            <td><strong>3 · Understand</strong></td>
+            <td>Reads positioning, hits grounded/simulated.</td>
+            <td><span class="badge b-amber">Effort</span></td>
+            <td>Core terms defined much later.</td>
+            <td>One-sentence definition at first mention (W5).</td>
+          </tr>
+          <tr>
+            <td><strong>4 · Size up</strong></td>
+            <td>Scans the 26-domain / 257-tool table.</td>
+            <td><span class="badge b-green">Impressed</span></td>
+            <td>293-subsystem monorepo can overwhelm.</td>
+            <td>Add a "start here" orientation to the tree (W8).</td>
+          </tr>
+          <tr>
+            <td><strong>5 · Install</strong></td>
+            <td>Picks an install path and runs it.</td>
+            <td><span class="badge b-red">Blocked</span></td>
+            <td><strong>Clone URL 404s; pip path 404s.</strong></td>
+            <td>Fix clone URL; mark pip as "coming" (W1, W4).</td>
+          </tr>
+          <tr>
+            <td><strong>6 · First run</strong></td>
+            <td>Starts the stdio server with a store path.</td>
+            <td><span class="badge b-teal">Relief</span></td>
+            <td>Needs a store path and LLM key to be useful.</td>
+            <td>Tighten run recipe + required-key callout (W7).</td>
+          </tr>
+          <tr>
+            <td><strong>7 · Connect</strong></td>
+            <td>Wires mem20 into an MCP host.</td>
+            <td><span class="badge b-green">Success</span></td>
+            <td>Host-specific snippets are thin.</td>
+            <td>Add one copy-paste block per host.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- ================= FINDINGS ================= -->
+  <section id="findings">
+    <h2><span class="num">6</span> Usability Findings</h2>
+    <div class="rule"></div>
+    <p>Each finding pairs an observed defect with its user impact and a minimum-cost fix. Quoted README lines are verbatim from the canonical repo at commit <code>c274404</code>.</p>
+
+    <div class="finding sev-critical">
+      <div class="head"><h4>W1 &middot; The first command in the README fails</h4><span class="badge b-red">Critical</span><span class="meta">Severity: breaks first run · Effort: 1 line</span></div>
+      <p>Quick Start instructs users to clone the legacy org. The old repo returns <strong>404</strong> and the git endpoint rejects the request, so a new user's very first action errors out &mdash; before they ever experience the product.</p>
+      <blockquote>git clone https://github.com/JaysonAIOnline/mem20.git<cite>README.md · Quick Start &rarr; Install from source (line 186) and Penguin Linux (line 203)</cite></blockquote>
+      <div class="impact"><strong>Impact:</strong> Highest-severity, lowest-cost defect in the release. A 404 on step one converts a curious evaluator into a churned visitor, and it directly contradicts a product whose thesis is verifiable provenance.</div>
+    </div>
+
+    <div class="finding sev-critical">
+      <div class="head"><h4>W2 &middot; Trust badges link to a dead repository</h4><span class="badge b-red">Critical</span><span class="meta">Severity: breaks trust · Effort: 2 lines</span></div>
+      <p>The MIT-license badge and the release badge both resolve against the legacy org and return <strong>404</strong>. On an <em>auditable</em> memory product, a broken license link is the most expensive possible broken link.</p>
+      <div class="impact"><strong>Impact:</strong> Priya's compliance review opens on a dead provenance link. Fix before any launch post goes out.</div>
+    </div>
+
+    <div class="finding sev-high">
+      <div class="head"><h4>W3 &middot; Four install paths, no decision aid</h4><span class="badge b-amber">High</span><span class="meta">Severity: slows to first value · Effort: low</span></div>
+      <p>Quick Start presents <em>source</em>, <em>Penguin Linux</em>, <em>systemd</em>, and (later) <em>pip</em> consecutively without a "choose this if&hellip;" table. The user must read all four to discover which one is theirs.</p>
+      <div class="impact"><strong>Impact:</strong> Every segment (Devon, Sam, Priya) pays an avoidable decision cost. A 3-row chooser table removes it entirely.</div>
+    </div>
+
+    <div class="finding sev-high">
+      <div class="head"><h4>W4 &middot; <code>pip install mem20</code> is offered but unavailable</h4><span class="badge b-amber">High</span><span class="meta">Severity: dead end · Effort: label now, publish later</span></div>
+      <p>The Installation section documents a pip channel; PyPI returns <strong>404</strong>. The fastest path for a Python developer is therefore a dead end unless they fall back to source.</p>
+      <div class="impact"><strong>Impact:</strong> Re-frame as "pip channel &mdash; coming" until the package is live, and point pip-first users at the source path meanwhile.</div>
+    </div>
+
+    <div class="finding sev-high">
+      <div class="head"><h4>W5 &middot; The core concept cliffs after one paragraph</h4><span class="badge b-amber">High</span><span class="meta">Severity: comprehension · Effort: low</span></div>
+      <p>The README opens by naming "grounded", "simulated", "promotion", and the append-only ledger. The definitions and the five hard invariants appear only much later, so a skimming reader loses the thread exactly where the differentiator is introduced.</p>
+      <div class="impact"><strong>Impact:</strong> Move the two-line partition definition to first mention; keep the invariant list where it is for depth.</div>
+    </div>
+
+    <div class="finding sev-medium">
+      <div class="head"><h4>W6 &middot; The adversarial 0.000 needs a frame, not just a number</h4><span class="badge b-teal">Medium</span><span class="meta">Severity: misread risk · Effort: low</span></div>
+      <p>Disclosing an adversarial hit rate of 0.000 is the honest move &mdash; but shown without the "this measures resistance under adversarial conditions" framing, it can read to a scanning engineer as "retrieval is broken". Keep the number; add the frame.</p>
+      <div class="impact"><strong>Impact:</strong> Preserves honesty while preventing the most likely misreading of the benchmark table.</div>
+    </div>
+
+    <div class="finding sev-medium">
+      <div class="head"><h4>W7 &middot; First-run prerequisites are easy to miss</h4><span class="badge b-teal">Medium</span><span class="meta">Severity: silent failure · Effort: low</span></div>
+      <p>Useful operation depends on a store path and an LLM bearer token (<code>NVAPI_KEY</code> / <code>NVIDIA_API_KEY</code> / <code>MEM20_LLM_API_KEY</code>). These live in the configuration table, well below the run recipe, so a user can start the server and still get nothing useful back.</p>
+      <div class="impact"><strong>Impact:</strong> Pull the two required settings up beside the run command; keep the full table for reference.</div>
+    </div>
+
+    <div class="finding sev-medium">
+      <div class="head"><h4>W8 &middot; The monorepo needs an orientation aid</h4><span class="badge b-teal">Medium</span><span class="meta">Severity: overwhelm · Effort: low</span></div>
+      <p>293 <code>mem20*z</code> subsystems plus the full platform tree make the repository impressive but disorienting. The "Repository layout" section explains it, but only after the tool table.</p>
+      <div class="impact"><strong>Impact:</strong> A four-item "start here" list at the top of the tree &mdash; core memory engine, MCP server, cognitive layer, one representative subsystem &mdash; turns breadth from intimidating into credible.</div>
+    </div>
+  </section>
+
+  <!-- ================= RECS ================= -->
+  <section id="recs">
+    <h2><span class="num">7</span> Prioritised Recommendations</h2>
+    <div class="rule"></div>
+    <p>Ordered by user impact per unit of effort. P0 items are prerequisites to any launch post.</p>
+    <div class="tscroll">
+      <table>
+        <thead>
+          <tr><th>#</th><th>Recommendation</th><th>Fixes</th><th>Priority</th><th>Impact</th><th>Effort</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>R1</td>
+            <td>Re-point the clone command to <code>bythewayz66-glitch/mem20</code> in every install block (source + Penguin Linux).</td>
+            <td><span class="badge b-red">W1</span></td>
+            <td><span class="prio p0">P0</span></td>
+            <td>Unblocks first run</td>
+            <td>Minutes</td>
+          </tr>
+          <tr>
+            <td>R2</td>
+            <td>Re-point the license and release badge hrefs to the canonical repo; verify both resolve 200.</td>
+            <td><span class="badge b-red">W2</span></td>
+            <td><span class="prio p0">P0</span></td>
+            <td>Restores trust signal</td>
+            <td>Minutes</td>
+          </tr>
+          <tr>
+            <td>R3</td>
+            <td>Replace the four parallel install paths with a 3-row "choose your path" chooser above the snippets.</td>
+            <td><span class="badge b-amber">W3</span></td>
+            <td><span class="prio p0">P0</span></td>
+            <td>Cuts time-to-value</td>
+            <td>Low</td>
+          </tr>
+          <tr>
+            <td>R4</td>
+            <td>Label the pip channel "coming &mdash; use source for now" and add a PyPI publish to the release checklist.</td>
+            <td><span class="badge b-amber">W4</span></td>
+            <td><span class="prio p0">P0</span></td>
+            <td>Removes dead end</td>
+            <td>Low</td>
+          </tr>
+          <tr>
+            <td>R5</td>
+            <td>Add a one-sentence grounded/simulated definition at first mention; keep the invariant list as the depth section.</td>
+            <td><span class="badge b-amber">W5</span></td>
+            <td><span class="prio p1">P1</span></td>
+            <td>Improves comprehension</td>
+            <td>Low</td>
+          </tr>
+          <tr>
+            <td>R6</td>
+            <td>Frame the adversarial 0.000 with a one-line "measures resistance under adversarial conditions" caption; keep the number.</td>
+            <td><span class="badge b-teal">W6</span></td>
+            <td><span class="prio p1">P1</span></td>
+            <td>Prevents misread</td>
+            <td>Low</td>
+          </tr>
+          <tr>
+            <td>R7</td>
+            <td>Surface <code>MEM20_STORE_PATH</code> and the required LLM key beside the run command, not only in the config table.</td>
+            <td><span class="badge b-teal">W7</span></td>
+            <td><span class="prio p1">P1</span></td>
+            <td>Avoids silent no-op</td>
+            <td>Low</td>
+          </tr>
+          <tr>
+            <td>R8</td>
+            <td>Add a "start here" four-item orientation to the monorepo tree.</td>
+            <td><span class="badge b-teal">W8</span></td>
+            <td><span class="prio p2">P2</span></td>
+            <td>Reduces overwhelm</td>
+            <td>Low</td>
+          </tr>
+          <tr>
+            <td>R9</td>
+            <td>Resolve the website link (<code>mem20.jaysonai.online</code> unreachable) or remove it until it serves.</td>
+            <td><span class="badge b-amber">Blocker</span></td>
+            <td><span class="prio p2">P2</span></td>
+            <td>Removes dead end</td>
+            <td>Depends</td>
+          </tr>
+          <tr>
+            <td>R10</td>
+            <td>Run a 5-participant moderated first-run test (see &sect;9) to validate R1&ndash;R4 before launch day.</td>
+            <td><span class="badge b-slate">Method</span></td>
+            <td><span class="prio p2">P2</span></td>
+            <td>Confidence</td>
+            <td>Medium</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- ================= METRICS ================= -->
+  <section id="metrics">
+    <h2><span class="num">8</span> Success Metrics</h2>
+    <div class="rule"></div>
+    <p>How we will know these changes worked. Baselines for the first-run metrics are currently <em>unmeasured</em> &mdash; instrument them before the launch window.</p>
+    <div class="grid2">
+      <div class="card">
+        <h3 style="margin-top:0">Quantitative</h3>
+        <ul class="clean">
+          <li><strong>Link integrity:</strong> 100% of repo-dependent links in README/site return HTTP 200 (baseline: 9 stale references).</li>
+          <li><strong>Time to first green health check:</strong> median &le; 10 min from clone (baseline: unmeasured).</li>
+          <li><strong>Install-path selection errors:</strong> &rarr; 0 after the chooser table ships.</li>
+          <li><strong>pip channel:</strong> published and installable (&ge;1 PyPI release).</li>
+          <li><strong>Stars / clones:</strong> baseline 0 &mdash; track delta from launch, not absolute.</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3 style="margin-top:0">Qualitative</h3>
+        <ul class="clean">
+          <li>Evaluators can articulate the grounded/simulated split <em>after a 2-minute skim</em>.</li>
+          <li>No reviewer reports a broken link in the first-run path.</li>
+          <li>The adversarial metric is understood as a resistance measure, not a failure.</li>
+          <li>Support/questions trend toward advanced topics, not "install didn't work".</li>
+        </ul>
+      </div>
+    </div>
+    <div class="callout c-info"><strong>Measurement plan:</strong> re-run the &sect;1 evidence table at release cut; log time-to-first-health in the launch-day dashboard; re-survey the first ten inbound questions for install-path confusion.</div>
+  </section>
+
+  <!-- ================= LIMITS ================= -->
+  <section id="limits">
+    <h2><span class="num">9</span> Limitations &amp; Next-Step Research</h2>
+    <div class="rule"></div>
+    <div class="callout c-warn">
+      <strong>Honesty note.</strong> This revision is a documentation-and-interface audit triangulated with reproducible link probes. The three personas are <em>hypothesis</em> personas synthesised from the positioning brief, not recruited participants. Treat findings W1&ndash;W8 as high-confidence (they are mechanically verifiable) and the persona detail as directional.
+    </div>
+    <h3>Recommended next research</h3>
+    <ul class="clean">
+      <li><strong>N1 &middot; Moderated first-run test</strong> &mdash; five developers, think-aloud, <em>clone &rarr; green health</em>, scored on time-to-first-success. Validates R1&ndash;R4 in one session.</li>
+      <li><strong>N2 &middot; Comprehension recall</strong> &mdash; after a two-minute skim, can participants explain grounded vs simulated? Tests R5.</li>
+      <li><strong>N3 &middot; Evaluator trust probe</strong> &mdash; does a clean audit story survive contact with a compliance-minded reader? Tests the auditability wedge.</li>
+      <li><strong>N4 &middot; Accessibility pass</strong> &mdash; contrast, keyboard order, and screen-reader traversal of the README-to-docs path (WCAG 2.2 AA).</li>
+    </ul>
+    <h3>Repo-state caveats carried forward</h3>
+    <ul class="clean">
+      <li>The canonical repo is public (MIT, <code>main</code>) but shows zero stars/forks &mdash; a cold start; treat any launch-time numbers as a delta from zero.</li>
+      <li>The marketed website did not respond during data collection; do not send launch traffic to it until confirmed.</li>
+      <li><code>pip install mem20</code> is not yet available; the source path is the only verified install route today.</li>
+    </ul>
+  </section>
+
+</main>
+
+<footer>
+  <div class="wrap">
+    <p><strong>mem20 — UX Research Findings</strong> &middot; v2.0 (post repo-migration refresh) &middot; Prepared by the UX Researcher &middot; Data collected 2026-10-14.</p>
+    <p>Canonical repository: <a href="https://github.com/bythewayz66-glitch/mem20" target="_blank" rel="noopener" style="color:#7fb2ff">github.com/bythewayz66-glitch/mem20</a> &middot; branch <code style="background:rgba(255,255,255,.08);border-color:rgba(255,255,255,.16);color:#dbe7f8">main</code> &middot; marker commit <code style="background:rgba(255,255,255,.08);border-color:rgba(255,255,255,.16);color:#dbe7f8">c274404</code> &middot; MIT.</p>
+    <p class="print-tip">Publication routing for this artefact follows the project mandate: Sidney server via ssh/sftp/rsync, routed through gabe.</p>
+    <div class="disc">
+      <strong>Method &amp; integrity disclosure.</strong> Indicators in this report were re-verified in-sandbox on 2026-10-14 and are point-in-time; link and package states should be re-probed at release cut. Persona detail is hypothesis-level, not recruited-participant evidence. No participant data, credentials, or personal information is included in this artefact.
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>

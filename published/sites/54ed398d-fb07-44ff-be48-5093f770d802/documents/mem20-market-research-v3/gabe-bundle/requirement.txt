@@ -1,0 +1,65 @@
+REQUIREMENT — mem20 Market Research v3: Competitive & Market Analysis, Agent-Memory Category
+Producer lane: market-research
+Artifact: mem20-market-research-v3.html
+Submitted: 2026-10-18
+
+The artifact MUST satisfy every clause below. Each clause is independently checkable
+against the artifact bytes and its sha256 digest.
+
+1. CANONICAL REPOSITORY. The only repository URL present is
+   https://github.com/bythewayz66-glitch/mem20 . The string "JaysonAIOnline" appears
+   0 times. No install, clone, or badge reference points at the superseded
+   JaysonAIOnline/mem20 repository.
+
+2. CANONICAL COMMIT MARKER. The artifact names the analyzed commit as 8e2f803
+   (canonical repo, branch main, dated 2026-10-16) and the release as v2.1-rc2.
+
+3. HOUSE NUMBER — TOOL SURFACE. The artifact states 257 tools across 26 domains.
+   The count 257 appears at least 4 times and the phrase "26 domains" at least 3 times.
+   The artifact does not state "29 domains" as a domain count.
+
+4. HOUSE NUMBER — SIZING. The artifact quotes TAM $1.28B, SAM $282M, SOM $1.68M
+   and a blended ACV of $14,000. Each appears at least 3 times, the ACV at least 5 times,
+   and all four are the values the artifact actually uses (no competing figure set).
+
+5. BANNED BROAD FIGURE. The artifact does NOT present the broad category figure
+   $6.49B as mem20's TAM. Every occurrence of 6.49B is inside a negation, a divisor,
+   a risk disclosure, or an explicit prohibition.
+
+6. ARITHMETIC DISCLOSURE. The artifact discloses the residual from the account-count
+   cross-checks, stating the total residual as -$594,000 and attributing the SAM gap of
+   -$600,000 to rounding. No residual is left unexplained.
+
+7. AUDITABILITY WEDGE. The artifact states that grounded and simulated memory are
+   separated at the storage layer, that promotion is evidence-based, and that the
+   contamination rate is exposed as a metric. It cites the enforcement mechanisms
+   _validate_partition_tags(), require_epistemic_clearance() and
+   memory_audit_contamination().
+
+8. COMPETITIVE COVERAGE. The artifact profiles at least 12 named competitors across
+   four strategic groups, and states each competitor's self-hostability, temporal model,
+   whether grounded/simulated content is separated, and whether provenance lives in the
+   memory store.
+
+9. BENCHMARK HONESTY. The artifact quotes hit rate 1.000 direct, 0.800 multi-hop,
+   0.000 adversarial, leak rate 0.000 and contamination audit 0.0, keeps the adversarial
+   0.000 row visible, and states there is no published LoCoMo or LongMemEval result.
+
+10. REGULATORY ANCHOR. The artifact cites EU AI Act Article 12 record-keeping
+    obligations, the 2 August 2026 enforcement date, the six-month deployer retention
+    duty, and the penalty ceiling of EUR 35 million or 7% of global revenue.
+
+11. DISCLAIMER. The artifact carries the investment-advice disclaimer stating that the
+    producer cannot provide legally protected personalised investment advice and that the
+    figures are product-positioning house numbers, not financial guidance.
+
+12. STRUCTURE. The artifact is well-formed HTML: every opened element is closed, the
+    document contains no unclosed tag, and the CSS blocks are brace-balanced.
+
+13. INTEGRITY. The artifact sha256 equals the digest in the accompanying evidence block,
+    and the artifact contains no secret material, no key material, and no virtualenv
+    reference.
+
+14. SUPERSEDED ITEMS. Any superseded figure (the earlier 9,873 tracked-file count) may
+    appear only where explicitly labelled as stale or superseded. The artifact discloses
+    that tracked files moved 9,873 to 9,901 and does not assert 9,873 as current.

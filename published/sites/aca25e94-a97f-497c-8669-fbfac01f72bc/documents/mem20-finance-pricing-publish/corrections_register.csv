@@ -1,0 +1,27 @@
+id,item,legacy_value,canonical_value,change,source
+C-01,Canonical repository URL,https://github.com/JaysonAIOnline/mem20 (404),https://github.com/bythewayz66-glitch/mem20 (public),REPLACED,GitHub API
+C-02,Default branch,main (unpublished),main (published),CONFIRMED,GitHub API
+C-03,As-of commit,none,c274404 (2026-10-14T16:39:02Z),ADDED,GitHub API
+C-04,Prior commit,none,64c7335 (2026-10-06T05:42:07Z),ADDED,GitHub API
+C-05,License,MIT,MIT (SPDX: MIT),UNCHANGED,GitHub API
+C-06,Repository size (git-reported),n/a,34552 KB (33.7 MiB),ADDED,GitHub API
+C-07,Working tree,n/a,222 MB,ADDED,Upstream publication audit
+C-08,Tracked files,n/a,9873,ADDED,Upstream publication audit
+C-09,Subsystems,n/a,293,ADDED,Upstream publication audit
+C-10,Tools,257-260,257,RECONCILED to house figure,House model
+C-11,Domains,26,26,UNCHANGED,House model
+C-12,Stars,unknown (traction assumed),0,REFRESHED,GitHub API
+C-13,Forks,unknown,0,REFRESHED,GitHub API
+C-14,Watchers,unknown,0,REFRESHED,GitHub API
+C-15,Subscribers,unknown,0,REFRESHED,GitHub API
+C-16,Open issues,unknown,0,REFRESHED,GitHub API
+C-17,Published releases,version string v2.1.0rc2,0,REFRESHED,GitHub API
+C-18,Issue tracker,assumed available,disabled (has_issues=false),REFRESHED,GitHub API
+C-19,Discussions,assumed available,disabled (has_discussions=false),REFRESHED,GitHub API
+C-20,Wiki,n/a,enabled (has_wiki=true),ADDED,GitHub API
+C-21,Contributors,n/a,4,ADDED,GitHub API
+C-22,Primary language,Python,Python (74.34% of source),CONFIRMED,GitHub API
+C-23,Source volume,n/a,"22,184,054 bytes",ADDED,GitHub API
+C-24,Repository age,n/a,8 days (created 2026-10-06T05:41:54Z),ADDED,GitHub API
+C-25,Install path,pip install mem20 (not on PyPI),"pip install ""git+https://github.com/bythewayz66-glitch/mem20.git""",REPLACED,Upstream audit
+C-26,Retired source,github.com/JaysonAIOnline/mcp-cognitive-substrate v1.0.1,retired,RETIRED,Upstream audit

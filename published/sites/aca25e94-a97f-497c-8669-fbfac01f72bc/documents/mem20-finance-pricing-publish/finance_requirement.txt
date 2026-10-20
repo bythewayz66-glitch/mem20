@@ -1,0 +1,19 @@
+Requirement - the mem20 finance model (compute_model.py).
+
+The artifact must be the deterministic finance model behind the mem20 finance
+report, rebased onto the canonical repository
+github.com/bythewayz66-glitch/mem20.
+
+It must:
+  - compute the figures it reports from declared inputs at run time, rather
+    than printing a hardcoded answer;
+  - preserve the house figures exactly: TAM 1.28B USD, SAM 282M USD,
+    SOM 1.68M USD, blended ACV 14,000 USD;
+  - derive the repo-dependent lines from the real canonical repository state
+    (0 stars, 0 forks, 0 releases, issue tracker disabled, discussions
+    disabled, no package-index entry): blended CAC 16,800 USD, support cost
+    2,400 USD per account per year, gross margin 69.4 percent, 3-year
+    LTV:CAC 2.01x;
+  - assert its own invariants (tier shares sum to 1; the weighted tier mix
+    reconciles to 14,000) and fail rather than emit a drifted figure;
+  - contain no placeholder or fabricated number.

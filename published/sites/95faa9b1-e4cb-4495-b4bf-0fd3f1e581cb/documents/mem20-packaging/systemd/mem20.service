@@ -1,0 +1,38 @@
+[Unit]
+Description=mem20 MCP server (persistent memory + cognition substrate for agents)
+Documentation=https://github.com/bythewayz66-glitch/mem20
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+# System interpreter + venv only. No user-level PATH inheritance: every CLI and
+# interpreter is addressed absolutely so the unit behaves identically under
+# systemd, cron and `sh -c`.
+Environment=MEM20_STORE_PATH=/opt/mem20/store
+Environment=MEM20_HEALTH_PORT=8080
+Environment=PYTHONUNBUFFERED=1
+# Do not inherit a caller's virtualenv / import path (gabe rule B2: system
+# python only, no ambient environment).
+UnsetEnvironment=PYTHONPATH PYTHONHOME VIRTUAL_ENV CONDA_PREFIX
+
+WorkingDirectory=/opt/mem20
+ExecStart=/opt/mem20/venv/bin/mem20-mcp
+Restart=on-failure
+RestartSec=5
+
+# Health: the server binds 127.0.0.1:8080/health and /ready (stdlib http.server
+# in a daemon thread, so it never blocks the stdio JSON-RPC transport).
+# Long start period: first start compiles imports for the bundled server tree.
+TimeoutStartSec=120
+
+# Hardening (kept conservative: the server writes to its store and reads its
+# bundled tree, nothing more).
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=full
+ProtectHome=true
+ReadWritePaths=/opt/mem20/store /opt/mem20/live
+
+[Install]
+WantedBy=multi-user.target

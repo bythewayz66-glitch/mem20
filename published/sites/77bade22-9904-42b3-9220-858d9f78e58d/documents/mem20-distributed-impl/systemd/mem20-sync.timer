@@ -1,0 +1,15 @@
+[Unit]
+Description=mem20 distributed sync — 15-minute anti-entropy cadence
+Documentation=https://static.teamily.ai/sites/18a07cdd-0e4e-446d-a109-8861f5cfd7e5/webpages/mem20-distributed-design_v2/index.html
+
+[Timer]
+# Every 15 minutes, plus a short delay after boot so the network is up.
+OnBootSec=3min
+OnUnitActiveSec=15min
+AccuracySec=30s
+# Catch up if the box was asleep (Sidney is a NAS that sleeps).
+Persistent=true
+Unit=mem20-sync.service
+
+[Install]
+WantedBy=timers.target

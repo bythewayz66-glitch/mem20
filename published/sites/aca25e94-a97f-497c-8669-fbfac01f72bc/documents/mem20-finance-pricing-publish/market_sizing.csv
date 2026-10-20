@@ -1,0 +1,7 @@
+layer,value_usd,accounts,share_of_parent,notes
+TAM (agent memory infrastructure),1280000000,91428,,"Bottom-up: 91,428 addressable buying units x 14,000 blended ACV"
+SAM (serviceable addressable),282000000,20142,22.03% of TAM,"Reachable product surface: MCP/Python, NA+EU, self-host-first"
+  self-serve slice of SAM,126900000,9064.0,45% of SAM,Gated on published releases and package availability
+  sales-led slice of SAM,155100000,11078.0,55% of SAM,Reachable today via direct motion
+SOM (3-yr obtainable),1680000,120,0.6% of SAM,"120 accounts x 14,000 = 1.68M ARR; 0.13% of TAM"
+SOM vs sales-led SAM,1680000,120,1.08% of sales-led SAM,Penetration required with the self-serve path unproven

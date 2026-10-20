@@ -1,0 +1,22 @@
+# Research plan for the mem20 distributed research merge engine.
+# Real input file: the engine reads the corpus, the node slice plan, the
+# handshake protocol, the node server path and the network timeouts from here
+# rather than writing any of them into its source. The canonical document URL is
+# the fixed URL named in the requirement and stays in the engine.
+
+server: /opt/mem20/mem20/mcp/mcp_server.py
+protocol: 2025-06-18
+fetch_timeout: 45
+close_timeout: 30
+
+corpus: grounded memory keeps observed facts separate from simulated ones
+corpus: an append-only ledger makes evidence-based promotion auditable
+corpus: hybrid retrieval blends vector search with lexical ranking
+corpus: the canonical repository is bythewayz66-glitch/mem20 on branch main
+corpus: the stdio server exposes its full tool surface over one json-rpc handshake
+corpus: promotion leaves the simulated partition only with recorded evidence
+
+node: node-a holds 0,1,2,3
+node: node-b holds 0,1,4,5
+node: node-c holds 2,3,4,5
+node: node-d holds 0,2,4

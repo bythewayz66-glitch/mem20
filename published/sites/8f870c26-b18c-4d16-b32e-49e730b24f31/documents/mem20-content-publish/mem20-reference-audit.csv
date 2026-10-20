@@ -1,0 +1,11 @@
+file,assertive_stale_toolcount,retired_repo_as_live_url,bare_pip_install_mem20,assertive_banned_phrase,canonical_repo_refs,adversarial_weakness_disclosed,pypi_404_disclosed,migration_row_labeled,verdict
+mem20-content-publish-report.md,0,0,0,0,6,yes,3,2,PASS
+readme-install-block.md,0,0,0,0,2,yes,1,0,PASS
+mem20-launch-copy.md,0,0,0,0,4,yes,2,0,PASS
+show-hn-post.md,0,0,0,0,4,yes,1,0,PASS
+product-hunt-post.md,0,0,0,0,2,yes,1,0,PASS
+social-threads.md,0,0,0,0,12,yes,1,0,PASS
+long-form-article.md,0,0,0,0,2,yes,1,0,PASS
+landing-page-copy-update.md,0,0,0,0,3,n/a,0,1,PASS
+mem20-tracked-links.csv,0,0,0,0,12,n/a,0,0,PASS
+mem20-content-catalog.html,0,0,0,0,0,yes,0,0,PASS

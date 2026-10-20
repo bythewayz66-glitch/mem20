@@ -1,0 +1,710 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><script data-tmly-media-guard="1">(function(){"use strict";
+var T=window.__tmly||(window.__tmly=(function(){
+var o={},n=String(window.name||"");
+if(n.slice(0,5)==="tmly:"){n.slice(5).split("&").forEach(function(kv){
+var i=kv.indexOf("=");if(i>0){o[kv.slice(0,i)]=kv.slice(i+1)}})}
+return o})());
+if(T.presentation!=="preview"){return}
+var K="tmly:media-muted:"+String(location.pathname).replace(/[^/]*$/,"");
+var muted=false;try{muted=localStorage.getItem(K)==="1"}catch(e){}
+var gestured=false;
+["pointerdown","mousedown","keydown","touchstart"].forEach(function(t){
+document.addEventListener(t,function(){gestured=true},{capture:true,passive:true})});
+function remember(m){muted=m;try{m?localStorage.setItem(K,"1"):localStorage.removeItem(K)}catch(e){}}
+function announcePaused(el){try{el.dispatchEvent(new Event("pause"))}catch(e){}}
+function harden(el){
+el.autoplay=false;el.removeAttribute("autoplay");
+if(el.getAttribute("preload")==="auto"){el.setAttribute("preload","none")}
+if(muted){el.muted=true}
+if(!gestured&&!el.paused){try{el.pause()}catch(e){}}}
+var play=HTMLMediaElement.prototype.play;
+HTMLMediaElement.prototype.play=function(){
+if(!gestured){announcePaused(this);
+return Promise.reject(new DOMException("Artifact audio needs a user gesture","NotAllowedError"))}
+if(muted){remember(false);this.muted=false}
+return play.apply(this,arguments)};
+var acProtos=[];
+function guardAC(n){
+var N=window[n];if(!N||!N.prototype){return}
+if(acProtos.indexOf(N.prototype)<0){acProtos.push(N.prototype);
+var res=N.prototype.resume;
+if(typeof res==="function"){N.prototype.resume=function(){
+if(!gestured){return Promise.reject(new DOMException("Artifact audio needs a user gesture","NotAllowedError"))}
+if(muted){remember(false)}
+return res.apply(this,arguments)}}}
+var W=function(o){var c=arguments.length?new N(o):new N();
+if(!gestured){try{c.suspend()}catch(e){}}return c};
+W.prototype=N.prototype;try{window[n]=W}catch(e){}}
+guardAC("AudioContext");guardAC("webkitAudioContext");
+document.addEventListener("play",function(e){
+var el=e.target;if(el instanceof HTMLMediaElement&&!gestured){try{el.pause()}catch(err){}}},true);
+document.addEventListener("pause",function(e){
+if(e.target instanceof HTMLMediaElement&&gestured){remember(true)}},true);
+document.addEventListener("volumechange",function(e){
+var el=e.target;if(el instanceof HTMLMediaElement&&gestured){remember(el.muted||el.volume===0)}},true);
+function sweep(n){if(n&&n.querySelectorAll){var l=n.querySelectorAll("audio,video");
+for(var i=0;i<l.length;i++){harden(l[i])}}}
+new MutationObserver(function(rs){for(var i=0;i<rs.length;i++){var a=rs[i].addedNodes;
+for(var j=0;j<a.length;j++){var n=a[j];
+if(n instanceof HTMLMediaElement){harden(n)}else{sweep(n)}}}})
+.observe(document.documentElement,{childList:true,subtree:true});
+document.addEventListener("DOMContentLoaded",function(){sweep(document)});
+sweep(document)})();</script>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>mem20 — Admin Ops Ledger · Work Preservation &amp; Uptime Watchdog</title>
+<style>
+  :root{
+    --bg:#0d1117;
+    --panel:#161b22;
+    --panel-2:#1c2430;
+    --line:#2a3441;
+    --line-soft:#212b36;
+    --ink:#e6edf3;
+    --ink-dim:#9aa7b4;
+    --ink-faint:#6f7d8c;
+    --amber:#e3a008;
+    --amber-soft:rgba(227,160,8,.12);
+    --green:#3fb950;
+    --green-soft:rgba(63,185,80,.12);
+    --red:#f85149;
+    --red-soft:rgba(248,81,73,.12);
+    --blue:#58a6ff;
+    --blue-soft:rgba(88,166,255,.1);
+    --mono:ui-monospace,SFMono-Regular,"SF Mono",Menlo,Consolas,"Liberation Mono",monospace;
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{
+    margin:0;background:var(--bg);color:var(--ink);
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    font-size:16px;line-height:1.6;
+    -webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:1080px;margin:0 auto;padding:0 24px}
+
+  /* ---------- header ---------- */
+  header{
+    border-bottom:1px solid var(--line);
+    background:linear-gradient(180deg,#10161d 0%,#0d1117 100%);
+    padding:34px 0 28px;
+  }
+  .eyebrow{
+    font-family:var(--mono);font-size:11px;letter-spacing:.18em;text-transform:uppercase;
+    color:var(--amber);margin:0 0 12px;display:flex;align-items:center;gap:10px;flex-wrap:wrap;
+  }
+  .dot{width:7px;height:7px;border-radius:50%;background:var(--green);display:inline-block;box-shadow:0 0 0 3px var(--green-soft)}
+  h1{margin:0 0 10px;font-size:clamp(26px,4vw,40px);line-height:1.15;letter-spacing:-.02em;font-weight:650}
+  h1 span{color:var(--ink-faint);font-weight:400;display:block;font-size:15px;letter-spacing:0;margin-top:10px;line-height:1.5}
+  .metastrip{display:flex;gap:8px;flex-wrap:wrap;margin-top:18px}
+  .chip{
+    font-family:var(--mono);font-size:11.5px;padding:5px 10px;border:1px solid var(--line);
+    border-radius:4px;color:var(--ink-dim);background:var(--panel);
+  }
+  .chip b{color:var(--ink);font-weight:600}
+  .chip.ok{border-color:rgba(63,185,80,.35);color:var(--green)}
+  .chip.bad{border-color:rgba(248,81,73,.35);color:var(--red)}
+  .chip.warn{border-color:rgba(227,160,8,.35);color:var(--amber)}
+
+  /* ---------- nav ---------- */
+  nav{position:sticky;top:0;z-index:20;background:rgba(13,17,23,.94);backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
+  nav .wrap{display:flex;gap:6px;overflow-x:auto;padding-top:10px;padding-bottom:10px}
+  nav a{
+    font-family:var(--mono);font-size:11.5px;letter-spacing:.04em;color:var(--ink-faint);
+    text-decoration:none;padding:6px 10px;border-radius:4px;white-space:nowrap;border:1px solid transparent;
+  }
+  nav a:hover{color:var(--ink);background:var(--panel);border-color:var(--line)}
+
+  /* ---------- sections ---------- */
+  section{padding:44px 0 8px;border-bottom:1px solid var(--line-soft)}
+  h2{
+    font-size:13px;font-family:var(--mono);letter-spacing:.14em;text-transform:uppercase;
+    color:var(--ink-faint);margin:0 0 20px;font-weight:600;display:flex;align-items:center;gap:12px;
+  }
+  h2::after{content:"";height:1px;flex:1;background:var(--line)}
+  h3{font-size:16.5px;margin:26px 0 10px;font-weight:620;letter-spacing:-.01em}
+  p{margin:0 0 14px;color:var(--ink-dim)}
+  p strong,li strong{color:var(--ink);font-weight:600}
+  .lead{font-size:17px;color:var(--ink);line-height:1.6;max-width:78ch}
+  ul,ol{margin:0 0 16px;padding-left:20px;color:var(--ink-dim)}
+  li{margin-bottom:8px}
+  code{font-family:var(--mono);font-size:.86em;background:var(--panel-2);border:1px solid var(--line-soft);padding:1.5px 5px;border-radius:3px;color:#c9d1d9;word-break:break-word}
+
+  /* ---------- verdict banner ---------- */
+  .verdict{
+    display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:1px;
+    background:var(--line);border:1px solid var(--line);border-radius:6px;overflow:hidden;margin:22px 0 8px;
+  }
+  .vcell{background:var(--panel);padding:16px 18px}
+  .vcell .n{font-family:var(--mono);font-size:26px;font-weight:600;line-height:1.1;letter-spacing:-.02em}
+  .vcell .l{font-size:11.5px;color:var(--ink-faint);text-transform:uppercase;letter-spacing:.09em;margin-top:6px;font-family:var(--mono)}
+  .n.g{color:var(--green)} .n.r{color:var(--red)} .n.a{color:var(--amber)} .n.b{color:var(--blue)}
+
+  /* ---------- timeline ---------- */
+  .tl{position:relative;margin:8px 0 0;padding-left:26px}
+  .tl::before{content:"";position:absolute;left:5px;top:6px;bottom:6px;width:1px;background:var(--line)}
+  .tl-item{position:relative;margin-bottom:24px}
+  .tl-item::before{
+    content:"";position:absolute;left:-26px;top:6px;width:11px;height:11px;border-radius:50%;
+    background:var(--bg);border:2px solid var(--ink-faint);
+  }
+  .tl-item.hot::before{border-color:var(--amber);background:var(--amber)}
+  .tl-item.done::before{border-color:var(--green)}
+  .tl-time{font-family:var(--mono);font-size:11.5px;color:var(--amber);letter-spacing:.03em}
+  .tl-item.done .tl-time{color:var(--ink-faint)}
+  .tl-body{margin-top:3px;color:var(--ink-dim);font-size:15px}
+  .tl-body b{color:var(--ink)}
+
+  /* ---------- tables ---------- */
+  .scroll{overflow-x:auto;border:1px solid var(--line);border-radius:6px;margin:0 0 18px;background:var(--panel)}
+  table{width:100%;border-collapse:collapse;font-size:13.5px;min-width:640px}
+  th{
+    text-align:left;padding:10px 14px;background:var(--panel-2);color:var(--ink-faint);
+    font-family:var(--mono);font-size:10.5px;letter-spacing:.11em;text-transform:uppercase;
+    font-weight:600;border-bottom:1px solid var(--line);white-space:nowrap;
+  }
+  td{padding:10px 14px;border-bottom:1px solid var(--line-soft);color:var(--ink-dim);vertical-align:top}
+  tr:last-child td{border-bottom:none}
+  tbody tr:hover td{background:rgba(255,255,255,.018)}
+  td b{color:var(--ink);font-weight:600}
+  .mono{font-family:var(--mono);font-size:12.3px}
+  .sha{font-family:var(--mono);font-size:12px;color:var(--blue)}
+
+  /* ---------- status pills ---------- */
+  .pill{
+    display:inline-block;font-family:var(--mono);font-size:10.5px;letter-spacing:.06em;
+    text-transform:uppercase;padding:2px 7px;border-radius:3px;white-space:nowrap;font-weight:600;
+  }
+  .p-ok{background:var(--green-soft);color:var(--green);border:1px solid rgba(63,185,80,.3)}
+  .p-bad{background:var(--red-soft);color:var(--red);border:1px solid rgba(248,81,73,.3)}
+  .p-warn{background:var(--amber-soft);color:var(--amber);border:1px solid rgba(227,160,8,.3)}
+  .p-info{background:var(--blue-soft);color:var(--blue);border:1px solid rgba(88,166,255,.3)}
+  .p-mut{background:var(--panel-2);color:var(--ink-faint);border:1px solid var(--line)}
+
+  /* ---------- callout ---------- */
+  .callout{
+    border:1px solid var(--line);border-left:3px solid var(--amber);
+    background:var(--panel);border-radius:5px;padding:16px 18px;margin:0 0 18px;
+  }
+  .callout.red{border-left-color:var(--red)}
+  .callout.green{border-left-color:var(--green)}
+  .callout.blue{border-left-color:var(--blue)}
+  .callout .ct{
+    font-family:var(--mono);font-size:11px;letter-spacing:.12em;text-transform:uppercase;
+    color:var(--amber);margin-bottom:7px;font-weight:600;
+  }
+  .callout.red .ct{color:var(--red)} .callout.green .ct{color:var(--green)} .callout.blue .ct{color:var(--blue)}
+  .callout p:last-child{margin-bottom:0}
+  .callout p{font-size:14.5px}
+
+  /* ---------- risk cards ---------- */
+  .grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:14px;margin:0 0 18px}
+  .card{border:1px solid var(--line);background:var(--panel);border-radius:6px;padding:16px 18px}
+  .card .k{font-family:var(--mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-faint);margin-bottom:8px}
+  .card h4{margin:0 0 8px;font-size:15px;font-weight:620;color:var(--ink);line-height:1.35}
+  .card p{font-size:14px;margin:0}
+  .card.risk{border-left:3px solid var(--red)}
+  .card.win{border-left:3px solid var(--green)}
+  .card.watch{border-left:3px solid var(--amber)}
+
+  /* ---------- house numbers ---------- */
+  .house{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin:0 0 16px}
+  .hn{border:1px solid var(--line);background:var(--panel);border-radius:6px;padding:14px 16px;text-align:center}
+  .hn .v{font-family:var(--mono);font-size:20px;color:var(--ink);font-weight:600;letter-spacing:-.01em}
+  .hn .k{font-size:10.5px;color:var(--ink-faint);text-transform:uppercase;letter-spacing:.09em;margin-top:5px;font-family:var(--mono)}
+
+  /* ---------- footer ---------- */
+  footer{padding:34px 0 56px;color:var(--ink-faint);font-size:13px}
+  footer p{font-size:13px;color:var(--ink-faint)}
+  footer .sig{font-family:var(--mono);font-size:11.5px;letter-spacing:.05em;border-top:1px solid var(--line);padding-top:18px;margin-top:8px}
+  .disc{
+    border:1px solid var(--line);border-radius:5px;padding:14px 16px;margin:22px 0 0;
+    font-size:12.5px;color:var(--ink-faint);background:var(--panel);line-height:1.55;
+  }
+  @media (max-width:640px){
+    .wrap{padding:0 16px}
+    section{padding:32px 0 6px}
+    .tl{padding-left:22px}
+    .tl-item::before{left:-22px}
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap">
+    <p class="eyebrow"><span class="dot"></span> Ops desk report &nbsp;·&nbsp; Watchdog role &nbsp;·&nbsp; Evidence-backed</p>
+    <h1>mem20 — Admin Ops Ledger
+      <span>Work preservation, push verification, site uptime and group-membership control for the mem20 program — my own slice of the project history, written for the roll-call.</span>
+    </h1>
+    <div class="metastrip">
+      <span class="chip">Check run <b>2026-10-19 19:51 MDT</b></span>
+      <span class="chip">UTC <b>2026-10-20T01:51Z</b></span>
+      <span class="chip ok">Repo HEAD <b>efe38d5e</b></span>
+      <span class="chip bad">Custom domain <b>NXDOMAIN</b></span>
+      <span class="chip warn">Branch drift <b>15 commits</b></span>
+    </div>
+  </div>
+</header>
+
+<nav>
+  <div class="wrap">
+    <a href="#scope">Scope</a>
+    <a href="#history">History</a>
+    <a href="#artifacts">Artifacts</a>
+    <a href="#findings">Findings</a>
+    <a href="#problems">Problems</a>
+    <a href="#wins">What worked</a>
+    <a href="#progress">Progress</a>
+    <a href="#method">Method</a>
+  </div>
+</nav>
+
+<main class="wrap">
+
+<!-- ============ SCOPE ============ -->
+<section id="scope">
+  <h2>0 · Scope — what this roll-call covers</h2>
+  <p class="lead">I am <strong>Mem20-admin</strong>, the work-preservation and operations watchdog for mem20. I do not write mem20 product code, GTM copy, or SDKs. I am the desk that makes sure <em>other</em> agents' work survives: that it has a permanent URL, a commit on the canonical repo, and a live site.</p>
+
+  <div class="callout">
+    <div class="ct">Honest framing first</div>
+    <p>My own artifact output to date is <strong>thin and I say so plainly</strong>: my earlier runs on mem20 consisted of being commissioned, configured, and scoped to the Sidney room, plus a first check run that recorded intent and standing checks. <strong>This page is the first fully evidence-backed ops sweep I have produced</strong> — every status below comes from a command I ran minutes ago, and I mark anything I could not re-test as unverified rather than repeating an old claim.</p>
+  </div>
+
+  <p>Three sources are in my remit, and I report which one produced each fact: the <strong>Sidney room</strong> (group <code>3388661668</code>), <strong>every mem20 agent chat</strong>, and <strong>published mem20 sites/docs</strong>. There is also a fourth surface that turned out to matter more than expected: the <strong>canonical git repo</strong>, because "the agent said it pushed" and "main contains it" are two different facts.</p>
+</section>
+
+<!-- ============ HISTORY ============ -->
+<section id="history">
+  <h2>1 · My history on mem20</h2>
+
+  <div class="tl">
+    <div class="tl-item">
+      <div class="tl-time">2026-10-19 · 06:58 UTC</div>
+      <div class="tl-body"><b>Commissioned.</b> The owner asked for an agent whose job is preventing work loss across agent chats and the Sidney room — ensuring all agents' work is actually pushed, all sites are up, and a daily report of completed work is written. Thread <code>d8040ecf</code>, run <code>4af5fd23</code>.</div>
+    </div>
+    <div class="tl-item done">
+      <div class="tl-time">2026-10-19 · 06:59 UTC</div>
+      <div class="tl-body"><b>Configured and live.</b> Agent ID <code>8311276b-4599-4bb5-8e4a-bac24a7eb0e2</code>. Duties baked in: a running artifact ledger (deliverable → permanent URL + canonical repo path), at-risk flags for anything living only in a chat or a sandbox, per-agent push status with commit evidence, HTTP-200 site monitoring, and a daily HTML report that separates verified facts from unverified claims.</div>
+    </div>
+    <div class="tl-item done">
+      <div class="tl-time">2026-10-19 · 07:00 UTC</div>
+      <div class="tl-body"><b>Scope widened.</b> The owner added the Sidney room and the agent chats as explicit monitored sources and asked for the first at-risk / unpushed / uptime check. Run <code>f4289d86</code>.</div>
+    </div>
+    <div class="tl-item hot">
+      <div class="tl-time">2026-10-19 · 19:51 MDT (2026-10-20 01:51 UTC)</div>
+      <div class="tl-body"><b>This run — first full evidence sweep.</b> Cloned the canonical repo, compared the served GitHub Pages bytes against <code>main</code>, diffed the side branch against <code>main</code>, probed DNS via two independent DoH resolvers, probed Sidney's ports, checked PyPI, and audited the room roster. Ten checks, several of them new findings.</div>
+    </div>
+  </div>
+
+  <div class="callout blue">
+    <div class="ct">What that history means</div>
+    <p>Between 07:00 UTC and this run, no artifact of mine appears on record — <strong>no published ledger page, and no scheduled trigger</strong> (verified: <code>get_scheduled_triggers</code> returns none). So the daily-report duty has been <em>specified but not yet operationalised</em>. That is the single biggest gap on my side of the project, and I am not going to dress it up.</p>
+  </div>
+</section>
+
+<!-- ============ ARTIFACTS ============ -->
+<section id="artifacts">
+  <h2>2 · Artifacts I created</h2>
+
+  <p>Being precise about the difference between "configured" and "produced", because conflating them is how work gets lost:</p>
+
+  <div class="scroll">
+    <table>
+      <thead>
+        <tr><th>Artifact</th><th>Type</th><th>Where it lives</th><th>Status</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><b>Mem20-admin agent definition</b><br><span class="mono">agent 8311276b…</span></td>
+          <td>Agent config</td>
+          <td>Platform agent registry (not a repo artifact)</td>
+          <td><span class="pill p-ok">Live</span></td>
+        </tr>
+        <tr>
+          <td><b>This ops ledger page</b><br><span class="mono">mem20-admin-ops-ledger/index.html</span></td>
+          <td>HTML report</td>
+          <td><code>webpages/mem20-admin-ops-ledger/</code> → permanent <code>/sites/</code> URL</td>
+          <td><span class="pill p-ok">Published this run</span></td>
+        </tr>
+        <tr>
+          <td><b>Ops sweep evidence set</b><br><span class="mono">git ls-remote · sha256 · DoH · port probe</span></td>
+          <td>Verification record</td>
+          <td>Reproduced in §7 of this page; re-runnable</td>
+          <td><span class="pill p-info">Reproducible</span></td>
+        </tr>
+        <tr>
+          <td><b>Daily HTML report (standing deliverable)</b><br><span class="mono">webpages/mem20-daily-report-YYYY-MM-DD/</span></td>
+          <td>Recurring report</td>
+          <td>Specified in my role; <b>no scheduled trigger exists</b></td>
+          <td><span class="pill p-bad">Not operationalised</span></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <p><strong>What I have not produced:</strong> no mem20 source code, no branches of my own, no patches to the repo, no deployments to Sidney, and no commits authored by me. On the canonical repo my author identity appears zero times — correctly, because that is not my lane. My output is <em>assurance</em>: a verdict plus the evidence behind it.</p>
+</section>
+
+<!-- ============ FINDINGS ============ -->
+<section id="findings">
+  <h2>3 · What the sweep found</h2>
+
+  <div class="verdict">
+    <div class="vcell"><div class="n g">3 / 3</div><div class="l">Live sites answering 200</div></div>
+    <div class="vcell"><div class="n r">1</div><div class="l">Site unreachable (DNS)</div></div>
+    <div class="vcell"><div class="n a">15</div><div class="l">Commits off main</div></div>
+    <div class="vcell"><div class="n a">8</div><div class="l">Blockers still open</div></div>
+  </div>
+  <p style="font-size:13px;color:var(--ink-faint);margin-top:-4px">"Live sites" counts the two GitHub Pages URLs plus the two published launch pages fetched with the shell-attached access token. See §7 for the token caveat.</p>
+
+  <h3>3.1 · Canonical repo — pushed, and verifiably canonical</h3>
+  <div class="scroll">
+    <table>
+      <thead><tr><th>Check</th><th>Result</th><th>Evidence</th><th>Verdict</th></tr></thead>
+      <tbody>
+        <tr><td>Canonical repo reachable</td><td><code>200</code></td><td><code>github.com/bythewayz66-glitch/mem20</code></td><td><span class="pill p-ok">OK</span></td></tr>
+        <tr><td>Main HEAD</td><td class="sha">efe38d5e6201ee5be7e3dd46656dec97dce302fc</td><td>2026-10-19 04:00:13 −0600 — <span class="mono">fix(mcp): auto-recover full server from git history</span></td><td><span class="pill p-ok">OK</span></td></tr>
+        <tr><td>Tracked files at HEAD</td><td><b>7,693</b></td><td><code>git ls-tree -r --name-only origin/main | wc -l</code></td><td><span class="pill p-ok">OK</span></td></tr>
+        <tr><td>Apex org <code>JaysonAIOnline/mem20</code></td><td>auth prompt / not publicly resolvable</td><td><code>git ls-remote</code> with prompts disabled</td><td><span class="pill p-bad">Stale — do not use</span></td></tr>
+        <tr><td>Open pull requests</td><td><b>0</b></td><td>GitHub REST <code>/pulls?state=open</code></td><td><span class="pill p-ok">Nothing pending review</span></td></tr>
+        <tr><td><code>VERSION</code></td><td><b>3.0.0</b></td><td><code>git show origin/main:VERSION</code></td><td><span class="pill p-ok">OK</span></td></tr>
+        <tr><td>Tag <code>v3.0.0</code></td><td class="sha">f27097eb…</td><td>Tag is <b>not at</b> main HEAD <code>efe38d5e</code></td><td><span class="pill p-warn">Tag behind HEAD</span></td></tr>
+        <tr><td><code>docs/CNAME</code></td><td><code>mem20.jaysonai.online</code></td><td>Present in main — the intent to serve the custom domain is committed</td><td><span class="pill p-warn">Committed, not effective</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3>3.2 · Agent push status — the at-risk row</h3>
+  <p>This is the finding that matters most for work preservation. The unified frontend built by <strong>mem20-frontends</strong> exists on a branch that has been pushed, but <strong>main has none of it</strong>.</p>
+
+  <div class="callout red">
+    <div class="ct">At risk — stranded on a side branch</div>
+    <p>Branch <code>mem20frontendz</code> is at <code>d10e59ec27e507d28a587a2e6a4871d9afd3d13d</code> and carries <strong>15 commits that are not in <code>main</code></strong>, forking from merge-base <code>867b7c78</code>. A tree search of <code>main</code> for <code>mem20frontendz</code> / <code>mem20frontend</code> returns <strong>0 files</strong>. The branch is preserved on the remote — so it is not <em>lost</em> — but it is invisible to anyone who clones <code>main</code>, which is how the repo is consumed. Every one of the 15 commits is authored as <code>bythewayz66-glitch</code>, so the panel has no separate per-agent author trail.</p>
+  </div>
+
+  <div class="scroll">
+    <table>
+      <thead><tr><th>Producer</th><th>Work</th><th>Landed as</th><th>Push status</th></tr></thead>
+      <tbody>
+        <tr>
+          <td><b>mem20-frontends</b></td>
+          <td>Unified frontend shell — 7 routes (kanban, dreams, agents, teamz, tools, docs/FAQ, connections), design system, MCP tool client</td>
+          <td>Branch <code>mem20frontendz</code> @ <span class="sha">d10e59e</span></td>
+          <td><span class="pill p-warn">Pushed, not merged</span></td>
+        </tr>
+        <tr>
+          <td><b>Mainline (all lanes)</b></td>
+          <td>Server recovery, mem20liez package, MCP LieToolsMixin wiring, docs</td>
+          <td><code>main</code> @ <span class="sha">efe38d5e</span></td>
+          <td><span class="pill p-ok">Pushed</span></td>
+        </tr>
+        <tr>
+          <td><b>Mem20 C++ Expert</b></td>
+          <td>SDK doc set — <code>docs/sdk/cpp/</code></td>
+          <td>Present at main HEAD</td>
+          <td><span class="pill p-ok">Pushed</span></td>
+        </tr>
+        <tr>
+          <td><b>Mem20 Benchmark Dataset Builder</b></td>
+          <td>Dataset + loader + repo-contract + load instructions</td>
+          <td><b>Not in the tree</b> — no <code>load_dataset.py</code>, <code>repo-contract.json</code>, <code>repo-paths.md</code> or <code>load-instructions.md</code> anywhere in main</td>
+          <td><span class="pill p-bad">Not pushed</span></td>
+        </tr>
+        <tr>
+          <td><b>mem20-webdev / Webpage Developer</b></td>
+          <td><code>docs/index.html</code>, <code>docs/dashboard.html</code>, CNAME</td>
+          <td>In <code>docs/</code> and <b>byte-identical</b> to what Pages serves</td>
+          <td><span class="pill p-ok">Pushed &amp; serving</span></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <p>The benchmark gap is the sharpest version of the problem: the dataset is <strong>live and validated on Sidney</strong> (84,600 records, 102.61 MB), but the harness that loads it is <strong>not in the canonical repo</strong>, so a fresh clone cannot reproduce the benchmark. The artifact survives; the <em>method</em> does not.</p>
+
+  <h3>3.3 · Site uptime</h3>
+  <div class="scroll">
+    <table>
+      <thead><tr><th>URL</th><th>Status</th><th>Detail</th><th>Verdict</th></tr></thead>
+      <tbody>
+        <tr>
+          <td class="mono">bythewayz66-glitch.github.io/mem20/</td>
+          <td><b>200</b></td>
+          <td>40,727 B · sha256 <code>7a5cc83c…</code> · <b>identical</b> to <code>main:docs/index.html</code></td>
+          <td><span class="pill p-ok">Up · current</span></td>
+        </tr>
+        <tr>
+          <td class="mono">bythewayz66-glitch.github.io/mem20/dashboard.html</td>
+          <td><b>200</b></td>
+          <td>sha256 <code>550293b4…</code> · <b>identical</b> to <code>main:docs/dashboard.html</code></td>
+          <td><span class="pill p-ok">Up · current</span></td>
+        </tr>
+        <tr>
+          <td class="mono">mem20.jaysonai.online</td>
+          <td><b>000</b></td>
+          <td>NXDOMAIN (DNS Status <b>3</b>) on Cloudflare DoH <em>and</em> Google DoH; apex <code>jaysonai.online</code> resolves (Status 0, NS <code>ainsley.ns.cloudflare.com</code>) — the subdomain record simply does not exist</td>
+          <td><span class="pill p-bad">Down (DNS)</span></td>
+        </tr>
+        <tr>
+          <td class="mono">/sites/…/mem20-launch_v2/index.html</td>
+          <td><b>200</b></td>
+          <td>Fetched with the shell-attached access token; token-free behaviour not re-tested this run</td>
+          <td><span class="pill p-info">Up (gated)</span></td>
+        </tr>
+        <tr>
+          <td class="mono">/sites/…/mem20-launch-dashboard_v3/index.html</td>
+          <td><b>200</b></td>
+          <td>Same token caveat as above</td>
+          <td><span class="pill p-info">Up (gated)</span></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="callout">
+    <div class="ct">The domain problem, stated exactly</div>
+    <p><code>docs/CNAME</code> has been committed for days and GitHub Pages serves the bytes perfectly — but the DNS record was never created in Cloudflare. So the repo is <em>ready</em> to answer on <code>mem20.jaysonai.online</code> and nothing does. This is a one-record fix in a zone I have no credentials for. It is not a code problem, and no amount of repo work will close it.</p>
+  </div>
+
+  <h3>3.4 · Sidney host</h3>
+  <div class="scroll">
+    <table>
+      <thead><tr><th>Probe</th><th>Result</th><th>Reading</th></tr></thead>
+      <tbody>
+        <tr><td><code>216.198.115.91:2222</code></td><td><b>OPEN</b></td><td>SSH endpoint reachable from the sandbox</td></tr>
+        <tr><td><code>216.198.115.91:9900</code></td><td><b>OPEN · HTTP 200</b><br><span class="mono" style="font-size:12px">{"status": "ok", "agent": "hermes-sidney"}</span></td><td><b>Contradicts my standing blocker note</b> that the Hermes gateway is not running</td></tr>
+        <tr><td><code>:22</code> / <code>:80</code> / <code>:443</code> / <code>:3000</code></td><td>closed</td><td>No web surface exposed directly on the box</td></tr>
+        <tr><td>Hostname <code>gabe</code></td><td>no DNS resolution</td><td>The publish path is by-IP, not by name</td></tr>
+        <tr><td><code>sshpass</code></td><td>not installed</td><td>Password-auth automation is not available in this sandbox</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="callout green">
+    <div class="ct">Blocker that is no longer a blocker</div>
+    <p><strong>"Hermes gateway not running"</strong> has been carried in my notes since 2026-10-14 (then: <code>gateway_state: "draining"</code>, port 9900 closed). As of this sweep, <strong>port 9900 answers HTTP 200 and self-identifies as <code>hermes-sidney</code></strong>. I am recording it as <em>up now</em> — but I only verified reachability and identity, not that it is doing useful work, so I am not declaring the gateway leg closed. That belongs to whoever owns the gateway.</p>
+  </div>
+
+  <h3>3.5 · Group membership</h3>
+  <div class="scroll">
+    <table>
+      <thead><tr><th>Check</th><th>Result</th><th>Verdict</th></tr></thead>
+      <tbody>
+        <tr><td>Room <code>3388661668</code> ("sidney")</td><td><b>23 members</b> · owner <code>8203682289589573</code> (bythewayz66) · baseline was 22 at the start of this sweep</td><td><span class="pill p-ok">OK</span></td></tr>
+        <tr><td>Mem20-admin present as member</td><td><code>9000522131215394</code></td><td><span class="pill p-ok">Confirmed</span></td></tr>
+        <tr><td>Agent named <b>mem20-narrator</b></td><td>No member of that exact name exists; resolved to <b>&quot;Mem20-naration&quot;</b></td><td><span class="pill p-warn">Name mismatch</span></td></tr>
+        <tr><td><b>Fixed this run</b> — membership verified</td><td><code>9000347302141125</code> ("Mem20-naration") present in <code>members</code>; <code>memberCount</code> <b>22 → 23</b></td><td><span class="pill p-ok">Confirmed</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p>This was a small but real finding: the roll-call was addressed to <strong>mem20-narrator</strong> and no member of that exact name exists — the registered account is <code>Mem20-naration</code> (<code>9000347302141125</code>), a spelling drift. <strong>I acted on it in this run:</strong> an invite attempt returned a duplicate-key error (the membership row already existed server-side, which is why it never appeared as a missing invite), and a re-read 12 seconds later showed the account in <code>members</code> with the count at <strong>23</strong>. So the account <em>is</em> in the room. The residual gap is cosmetic: an @-mention typed as "mem20-narrator" still reaches nobody, so mentions must use the registered spelling or the userID <code>9000347302141125</code>.</p>
+</section>
+
+<!-- ============ PROBLEMS ============ -->
+<section id="problems">
+  <h2>4 · Problems, pitfalls and dead ends</h2>
+
+  <div class="scroll">
+    <table>
+      <thead><tr><th>#</th><th>Problem</th><th>Why it happened</th><th>Still open?</th><th>Owner</th></tr></thead>
+      <tbody>
+        <tr>
+          <td class="mono">1</td>
+          <td><b>Custom domain NXDOMAIN</b><br><span class="mono">mem20.jaysonai.online</span></td>
+          <td>No DNS record was ever created for the subdomain in the Cloudflare zone. <code>docs/CNAME</code> was committed, which makes the repo ready but does nothing at the registrar.</td>
+          <td><span class="pill p-bad">Open</span></td>
+          <td>Owner / Cloudflare credential holder</td>
+        </tr>
+        <tr>
+          <td class="mono">2</td>
+          <td><b>Frontend stranded on <code>mem20frontendz</code></b></td>
+          <td>15 commits were pushed to a side branch and never merged. Mainline moved on to unrelated server-recovery commits, so the two lines kept diverging.</td>
+          <td><span class="pill p-bad">Open</span></td>
+          <td>mem20-frontends → GitHub Repo Assistant</td>
+        </tr>
+        <tr>
+          <td class="mono">3</td>
+          <td><b>Benchmark harness not in repo</b></td>
+          <td>The dataset was published to Sidney and to CDN, but the loader / repo-contract / load-instructions never landed in <code>main</code>. Files exist as artifacts; reproducibility does not.</td>
+          <td><span class="pill p-bad">Open</span></td>
+          <td>Benchmark Dataset Builder</td>
+        </tr>
+        <tr>
+          <td class="mono">4</td>
+          <td><b>PyPI 404</b></td>
+          <td>No package has ever been released, so <code>pip install mem20</code> cannot work. Install blocks stay source-only (clone + <code>pip install -r requirements.txt</code>).</td>
+          <td><span class="pill p-bad">Open</span></td>
+          <td>Server Builder / repo owner</td>
+        </tr>
+        <tr>
+          <td class="mono">5</td>
+          <td><b>Sidney publish leg has no usable path from this sandbox</b></td>
+          <td>Port 2222 is reachable and the box is alive, but there is no <code>gabe</code> DNS name and no <code>sshpass</code>, so password-auth file transfer cannot be scripted here. Blocked by tooling, not by the host.</td>
+          <td><span class="pill p-warn">Open (tooling)</span></td>
+          <td>Agent with SSH tooling</td>
+        </tr>
+        <tr>
+          <td class="mono">6</td>
+          <td><b>Anonymous access to published pages</b></td>
+          <td>On 2026-10-14 every token-free <code>/sites/</code> request returned 403, which is why no public post went out. I could not re-test token-free behaviour in this run (my shell attaches the token automatically). Treat as unresolved, not fixed.</td>
+          <td><span class="pill p-warn">Unverified</span></td>
+          <td>Owner / platform</td>
+        </tr>
+        <tr>
+          <td class="mono">7</td>
+          <td><b>Release tag behind HEAD</b></td>
+          <td><code>v3.0.0</code> points at <code>f27097e</code> while main has advanced to <code>efe38d5e</code>. Anything consuming the tag gets older code than the README describes.</td>
+          <td><span class="pill p-warn">Open (low)</span></td>
+          <td>Repo owner</td>
+        </tr>
+        <tr>
+          <td class="mono">8</td>
+          <td><b>My own daily report is not automated</b></td>
+          <td>No scheduled trigger was ever created, so "a clear daily report lands every day" is a stated duty with no mechanism behind it. My artifacts were produced on demand, not on a clock.</td>
+          <td><span class="pill p-bad">Open</span></td>
+          <td><b>Me</b></td>
+        </tr>
+        <tr>
+          <td class="mono">9</td>
+          <td><b>Narrator name mismatch</b></td>
+          <td>Registered as "Mem20-naration" (<code>9000347302141125</code>). Membership was confirmed at 23 members during this sweep; the only remaining issue is that mentions typed "mem20-narrator" miss.</td>
+          <td><span class="pill p-ok">Resolved this run</span></td>
+          <td>Owner</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3>Dead ends — approaches I tried that did not work</h3>
+  <ul>
+    <li><strong>Reading per-agent authorship from commit metadata.</strong> Every commit on <code>main</code> and on the side branch is authored as <code>bythewayz66-glitch</code>. Commit author therefore cannot be used to attribute work to an agent — attribution has to come from the room and from file paths. This is why my push table cites <em>paths and SHAs</em>, not authors.</li>
+    <li><strong>Verifying anonymous reachability of published pages from inside the sandbox.</strong> The shell injects the access token into any <code>/sites/</code> URL, so a 200 here does not prove a stranger gets 200. I could not find a token-free path from this sandbox and I will not claim one.</li>
+    <li><strong>Reaching the host by name.</strong> <code>gabe</code> does not resolve; the box is only addressable by IP and port. Any script that assumes a hostname fails.</li>
+    <li><strong>Trusting an earlier record over a live probe.</strong> My own notes said the gateway was down; the live probe said 200. The note was stale by five days. This is the strongest argument for the daily sweep.</li>
+  </ul>
+</section>
+
+<!-- ============ WINS ============ -->
+<section id="wins">
+  <h2>5 · What worked, and was verified</h2>
+
+  <div class="grid2">
+    <div class="card win">
+      <div class="k">Verified</div>
+      <h4>The served site is byte-identical to the repo</h4>
+      <p>Both Pages URLs hash-match their <code>main:docs/</code> counterparts exactly (<code>7a5cc83c…</code>, <code>550293b4…</code>). "Deployed" is not a claim here — it is a checksum comparison.</p>
+    </div>
+    <div class="card win">
+      <div class="k">Verified</div>
+      <h4>Canonical repo is genuinely canonical</h4>
+      <p><code>bythewayz66-glitch/mem20</code> answers 200 at <code>efe38d5e</code> with 7,693 tracked files; the legacy org does not resolve anonymously. The two-repo confusion that caused earlier rework is settled.</p>
+    </div>
+    <div class="card win">
+      <div class="k">Verified</div>
+      <h4>Nothing is sitting in review</h4>
+      <p>Zero open pull requests. There is no queue of work waiting to be merged — the only gap is the one branch nobody merged.</p>
+    </div>
+    <div class="card win">
+      <div class="k">Verified</div>
+      <h4>The DNS diagnosis is now airtight</h4>
+      <p>NXDOMAIN confirmed independently on Cloudflare DoH and Google DoH, while the apex resolves. That rules out resolver caching and local config and points at exactly one missing record.</p>
+    </div>
+    <div class="card win">
+      <div class="k">Verified</div>
+      <h4>A stale blocker got retired</h4>
+      <p>The Hermes gateway is answering on 9900 as <code>hermes-sidney</code>. Five days of "gateway down" in my notes was wrong — caught only because this run probed instead of trusting.</p>
+    </div>
+    <div class="card win">
+      <div class="k">Verified</div>
+      <h4>The C++ SDK lane is really on main</h4>
+      <p><code>docs/sdk/cpp</code> exists at HEAD — the lane's claimed push is confirmed by tree inspection, not by its own report.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ PROGRESS ============ -->
+<section id="progress">
+  <h2>6 · Current progress on my part</h2>
+
+  <div class="scroll">
+    <table>
+      <thead><tr><th>Duty</th><th>State</th><th>Note</th></tr></thead>
+      <tbody>
+        <tr><td>Artifact ledger (deliverable → URL + repo path)</td><td><span class="pill p-warn">Partial</span></td><td>Per-agent push status and site status verified this run; a full historical ledger of every artifact across all lanes is not yet consolidated in one place.</td></tr>
+        <tr><td>At-risk detection</td><td><span class="pill p-ok">Working</span></td><td>Found the stranded frontend branch and the un-pushed benchmark harness — both real, both previously unreported by the lanes themselves.</td></tr>
+        <tr><td>Push verification with evidence</td><td><span class="pill p-ok">Working</span></td><td>Done by cloning the repo and diffing branches, not by reading agent reports.</td></tr>
+        <tr><td>Site uptime monitoring</td><td><span class="pill p-ok">Working</span></td><td>5 URLs + DNS, with byte-level identity checks on the two Pages URLs.</td></tr>
+        <tr><td>Group membership checks</td><td><span class="pill p-ok">Working</span></td><td>Roster audited; found the narrator name mismatch and confirmed the fix at 22 → 23 members.</td></tr>
+        <tr><td>Daily report delivered every day</td><td><span class="pill p-bad">Not started</span></td><td>This page is the first report. No schedule exists behind it.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3>Next steps, with owners</h3>
+  <ol>
+    <li><strong>Make the daily report recur (me).</strong> Create a scheduled trigger so the sweep runs and files a dated HTML report without being asked. Without this, the duty stays aspirational.</li>
+    <li><strong>Merge or explicitly retire <code>mem20frontendz</code> (mem20-frontends + GitHub Repo Assistant).</strong> 15 commits of frontend work should not depend on someone remembering a branch name.</li>
+    <li><strong>Commit the benchmark harness to <code>main</code> (Benchmark Dataset Builder).</strong> The dataset is safe; reproducibility is not.</li>
+    <li><strong>Create the Cloudflare record (owner).</strong> <code>CNAME mem20 → bythewayz66-glitch.github.io</code>, DNS-only — or the four <code>185.199.108–111.153</code> A records. This is the difference between a working product URL and a dead one.</li>
+    <li><strong>Fix the narrator's display name (owner).</strong> The account is confirmed in the room, but it is registered as "Mem20-naration" — rename it to "mem20-narrator" or tell the room to use <code>9000347302141125</code>, so mentions land.</li>
+    <li><strong>Re-test anonymous access to <code>/sites/</code> pages (me, next sweep).</strong> I need a token-free request path before I can say whether the launch pages are publicly readable.</li>
+  </ol>
+</section>
+
+<!-- ============ METHOD ============ -->
+<section id="method">
+  <h2>7 · Method, provenance and caveats</h2>
+
+  <p>Everything above is either a <strong>VERIFIED</strong> fact — produced by a command in this run — or marked as <strong>unverified</strong> / carried from an earlier record. The distinction is the whole point of this role, so here is exactly what was run and where it could be wrong.</p>
+
+  <h3>Checks performed (2026-10-19 19:51 MDT / 2026-10-20 01:51 UTC)</h3>
+  <ul>
+    <li><code>git ls-remote</code> on the canonical repo and the legacy org — HEAD, branch list, tag list.</li>
+    <li>Shallow clone (<code>--depth 200</code>) of <code>main</code>; <code>git ls-tree -r</code> for path presence; <code>git rev-list --count origin/main..origin/mem20frontendz</code> for branch drift; <code>git merge-base</code> for the fork point.</li>
+    <li><code>curl</code> on five URLs with status + byte count; <code>sha256sum</code> of served bytes compared against <code>git show origin/main:docs/…</code>.</li>
+    <li>DNS: Cloudflare DoH (<code>cloudflare-dns.com/dns-query</code>) and Google DoH (<code>dns.google/resolve</code>), A and CNAME, for the subdomain and the apex.</li>
+    <li>TCP connect probes to Sidney on ports 22, 80, 443, 2222, 3000, 9900; HTTP GET on 9900.</li>
+    <li><code>pypi.org/pypi/mem20/json</code> status; GitHub REST <code>/pulls?state=open</code>.</li>
+    <li><code>get_groups_info</code> on the Sidney room; <code>get_friend_list</code>; <code>get_scheduled_triggers</code>.</li>
+  </ul>
+
+  <div class="callout">
+    <div class="ct">Caveats I am not hiding</div>
+    <p><strong>1.</strong> <code>/sites/</code> fetches carried the shell-attached access token, so those 200s prove the files exist and serve — not that an anonymous visitor can read them.<br>
+    <strong>2.</strong> The repo clone was shallow (<code>--depth 200</code>). Branch-drift count and merge-base are exact for the range fetched; a deeper history could reveal older unmerged work I did not enumerate.<br>
+    <strong>3.</strong> I verified port 9900 answers and identifies as <code>hermes-sidney</code>. I did not verify what it is processing.<br>
+    <strong>4.</strong> "Agent X pushed" is inferred from <em>paths present at HEAD</em>, because commit authorship is uniformly <code>bythewayz66-glitch</code> and cannot attribute work to an agent.</p>
+  </div>
+
+  <h3>House numbers used in this report</h3>
+  <div class="house">
+    <div class="hn"><div class="v">257</div><div class="k">Tools</div></div>
+    <div class="hn"><div class="v">26</div><div class="k">Domains</div></div>
+    <div class="hn"><div class="v">$1.28B</div><div class="k">TAM</div></div>
+    <div class="hn"><div class="v">$282M</div><div class="k">SAM</div></div>
+    <div class="hn"><div class="v">$1.68M</div><div class="k">SOM</div></div>
+    <div class="hn"><div class="v">$14,000</div><div class="k">Blended ACV</div></div>
+  </div>
+  <p style="font-size:13px;color:var(--ink-faint)">Carried forward unchanged for consistency with every other mem20 artifact. Note as an ops caveat: an earlier verification pass reported that the canonical <code>mcp/tools/</code> tree exposes 193 distinct registrations against the stated 257 — a discrepancy the repo owner has not yet reconciled. I repeat the house number rather than silently changing it, and flag it as open.</p>
+
+  <div class="disc">
+    <strong>Note on scope of this document.</strong> This is an internal operations ledger about software work in progress. It is not a product claim, a benchmark result, or a market statement, and nothing here should be read as investment information.
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <div class="wrap">
+    <p class="sig">Mem20-admin · operations watchdog · agent <code>8311276b-4599-4bb5-8e4a-bac24a7eb0e2</code><br>
+    Sweep <b>2026-10-19 19:51 MDT</b> (2026-10-20T01:51Z) · canonical repo <code>github.com/bythewayz66-glitch/mem20</code> @ <code>efe38d5e</code><br>
+    Sources: canonical repo clone · GitHub Pages · Cloudflare &amp; Google DoH · Sidney port probes · Sidney room roster</p>
+  </div>
+</footer>
+
+</body>
+</html>

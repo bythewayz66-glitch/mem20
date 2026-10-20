@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><script data-tmly-media-guard="1">(function(){"use strict";
+var T=window.__tmly||(window.__tmly=(function(){
+var o={},n=String(window.name||"");
+if(n.slice(0,5)==="tmly:"){n.slice(5).split("&").forEach(function(kv){
+var i=kv.indexOf("=");if(i>0){o[kv.slice(0,i)]=kv.slice(i+1)}})}
+return o})());
+if(T.presentation!=="preview"){return}
+var K="tmly:media-muted:"+String(location.pathname).replace(/[^/]*$/,"");
+var muted=false;try{muted=localStorage.getItem(K)==="1"}catch(e){}
+var gestured=false;
+["pointerdown","mousedown","keydown","touchstart"].forEach(function(t){
+document.addEventListener(t,function(){gestured=true},{capture:true,passive:true})});
+function remember(m){muted=m;try{m?localStorage.setItem(K,"1"):localStorage.removeItem(K)}catch(e){}}
+function announcePaused(el){try{el.dispatchEvent(new Event("pause"))}catch(e){}}
+function harden(el){
+el.autoplay=false;el.removeAttribute("autoplay");
+if(el.getAttribute("preload")==="auto"){el.setAttribute("preload","none")}
+if(muted){el.muted=true}
+if(!gestured&&!el.paused){try{el.pause()}catch(e){}}}
+var play=HTMLMediaElement.prototype.play;
+HTMLMediaElement.prototype.play=function(){
+if(!gestured){announcePaused(this);
+return Promise.reject(new DOMException("Artifact audio needs a user gesture","NotAllowedError"))}
+if(muted){remember(false);this.muted=false}
+return play.apply(this,arguments)};
+var acProtos=[];
+function guardAC(n){
+var N=window[n];if(!N||!N.prototype){return}
+if(acProtos.indexOf(N.prototype)<0){acProtos.push(N.prototype);
+var res=N.prototype.resume;
+if(typeof res==="function"){N.prototype.resume=function(){
+if(!gestured){return Promise.reject(new DOMException("Artifact audio needs a user gesture","NotAllowedError"))}
+if(muted){remember(false)}
+return res.apply(this,arguments)}}}
+var W=function(o){var c=arguments.length?new N(o):new N();
+if(!gestured){try{c.suspend()}catch(e){}}return c};
+W.prototype=N.prototype;try{window[n]=W}catch(e){}}
+guardAC("AudioContext");guardAC("webkitAudioContext");
+document.addEventListener("play",function(e){
+var el=e.target;if(el instanceof HTMLMediaElement&&!gestured){try{el.pause()}catch(err){}}},true);
+document.addEventListener("pause",function(e){
+if(e.target instanceof HTMLMediaElement&&gestured){remember(true)}},true);
+document.addEventListener("volumechange",function(e){
+var el=e.target;if(el instanceof HTMLMediaElement&&gestured){remember(el.muted||el.volume===0)}},true);
+function sweep(n){if(n&&n.querySelectorAll){var l=n.querySelectorAll("audio,video");
+for(var i=0;i<l.length;i++){harden(l[i])}}}
+new MutationObserver(function(rs){for(var i=0;i<rs.length;i++){var a=rs[i].addedNodes;
+for(var j=0;j<a.length;j++){var n=a[j];
+if(n instanceof HTMLMediaElement){harden(n)}else{sweep(n)}}}})
+.observe(document.documentElement,{childList:true,subtree:true});
+document.addEventListener("DOMContentLoaded",function(){sweep(document)});
+sweep(document)})();</script>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>mem20 — Perl SDK Docs Update Report</title>
+<style>
+  :root{
+    --bg:#0b1020; --panel:#111834; --panel2:#0e1428; --ink:#e8ecf7; --mut:#9aa6c4;
+    --acc:#6366f1; --acc2:#22d3ee; --ok:#22c55e; --warn:#f59e0b; --bad:#ef4444;
+    --line:#232c4d;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:linear-gradient(180deg,#080c1a,#0b1020 40%);color:var(--ink);
+       font:15px/1.65 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif}
+  .wrap{max-width:1080px;margin:0 auto;padding:44px 22px 80px}
+  header{border-bottom:1px solid var(--line);padding-bottom:26px;margin-bottom:30px}
+  .badge{display:inline-block;font-size:11px;letter-spacing:.12em;text-transform:uppercase;
+         color:var(--acc2);border:1px solid #1c3b52;background:#0d2230;padding:5px 11px;border-radius:999px}
+  h1{font-size:33px;line-height:1.2;margin:16px 0 8px;letter-spacing:-.02em}
+  .sub{color:var(--mut);font-size:16px;margin:0}
+  h2{font-size:20px;margin:38px 0 14px;padding-left:12px;border-left:3px solid var(--acc)}
+  h3{font-size:15px;margin:22px 0 8px;color:var(--acc2);letter-spacing:.02em}
+  p{margin:10px 0}
+  a{color:var(--acc2);text-decoration:none;border-bottom:1px dotted #2c5875}
+  a:hover{border-bottom-style:solid}
+  code{background:#0a0f22;border:1px solid var(--line);border-radius:5px;padding:1px 6px;
+       font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:13px;color:#c8d6ff}
+  pre{background:#070b16;border:1px solid var(--line);border-left:3px solid var(--acc);
+      border-radius:8px;padding:16px 18px;overflow-x:auto;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+      font-size:12.5px;line-height:1.6;color:#b9c7ef}
+  table{width:100%;border-collapse:collapse;margin:14px 0;font-size:14px;background:var(--panel2);
+        border:1px solid var(--line);border-radius:8px;overflow:hidden}
+  th,td{text-align:left;padding:11px 13px;border-bottom:1px solid var(--line);vertical-align:top}
+  th{background:#141c3a;color:#c3cdf0;font-weight:600;font-size:12.5px;letter-spacing:.03em;text-transform:uppercase}
+  tr:last-child td{border-bottom:none}
+  td code{font-size:12.5px}
+  .strip{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin:26px 0 6px}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:15px 16px}
+  .card .k{font-size:11px;text-transform:uppercase;letter-spacing:.1em;color:var(--mut)}
+  .card .v{font-size:19px;font-weight:650;margin-top:5px;letter-spacing:-.01em}
+  .card .v small{font-size:12px;font-weight:400;color:var(--mut);display:block;letter-spacing:0}
+  .pill{display:inline-block;font-size:11.5px;font-weight:650;padding:3px 9px;border-radius:999px;white-space:nowrap}
+  .p-ok{background:#0f2e1c;color:#5ee79a;border:1px solid #1d5f3a}
+  .p-warn{background:#33230a;color:#fbbf24;border:1px solid #6b4a12}
+  .p-bad{background:#331111;color:#fca5a5;border:1px solid #6b2020}
+  .p-info{background:#0d2230;color:#67e8f9;border:1px solid #1c3b52}
+  .note{background:#0d1428;border:1px solid var(--line);border-left:3px solid var(--warn);
+        border-radius:8px;padding:13px 16px;color:#cbd4ee;font-size:14px;margin:16px 0}
+  ul{margin:10px 0 10px 4px;padding-left:20px}
+  li{margin:6px 0;color:#d3dbf2}
+  footer{margin-top:48px;padding-top:20px;border-top:1px solid var(--line);color:var(--mut);font-size:13px}
+  .files td:first-child{white-space:nowrap}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <span class="badge">Docs Update · 2026-10-14</span>
+  <h1>mem20 — Perl SDK Docs &amp; Reports Update</h1>
+  <p class="sub">Realigned the Perl SDK documentation to the new canonical mem20 repository, verified against a live mem20 v2.1-rc2 MCP server.</p>
+  <p class="sub" style="margin-top:10px">
+    Canonical repo: <a href="https://github.com/bythewayz66-glitch/mem20">github.com/bythewayz66-glitch/mem20</a>
+  </p>
+</header>
+
+<div class="strip">
+  <div class="card"><div class="k">Canonical repo</div><div class="v">bythewayz66-glitch/mem20<small>branch <code>main</code> · MIT</small></div></div>
+  <div class="card"><div class="k">Server version</div><div class="v">2.1.0rc2<small>pyproject.toml</small></div></div>
+  <div class="card"><div class="k">Tools (live)</div><div class="v">257<small>from <code>tools/list</code></small></div></div>
+  <div class="card"><div class="k">Perl tests</div><div class="v" style="color:#5ee79a">19 / 19 PASS<small>against live server</small></div></div>
+  <div class="card"><div class="k">Previous repo URL</div><div class="v" style="color:#fca5a5">404<small>old repository path</small></div></div>
+</div>
+
+<h2>1. What this update changed</h2>
+<table>
+  <thead><tr><th style="width:26%">Item</th><th style="width:37%">Before</th><th style="width:37%">After (verified)</th></tr></thead>
+  <tbody>
+    <tr>
+      <td><strong>Repository URL</strong></td>
+      <td><code>github.com/&lt;previous-org&gt;/mem20</code> — returns <strong>404</strong></td>
+      <td><code>github.com/bythewayz66-glitch/mem20</code> — public, <code>main</code>, MIT</td>
+    </tr>
+    <tr>
+      <td><strong>Install instructions</strong></td>
+      <td>clone + <code>requirements.txt</code> only</td>
+      <td>clone → venv → <code>requirements.txt</code> → <strong><code>pip install aiohttp</code></strong> (missing upstream) ; plus <code>install.sh</code>, <code>make install</code>, Docker</td>
+    </tr>
+    <tr>
+      <td><strong>Server path</strong></td>
+      <td>unspecified</td>
+      <td><code>mcp/mcp_server.py</code> with <strong><code>cwd = …/mcp</code></strong>; console script <code>mem20-mcp</code> via <code>launcher.py</code></td>
+    </tr>
+    <tr>
+      <td><strong>Transport framing</strong></td>
+      <td>"JSON-RPC 2.0 over stdio" (ambiguous)</td>
+      <td><strong>Newline-delimited JSON</strong> — one JSON object per line, <em>no</em> <code>Content-Length</code> header framing</td>
+    </tr>
+    <tr>
+      <td><strong>Tool count</strong></td>
+      <td>stale upstream docs: <em>"111 Tools Across 15 Domains"</em></td>
+      <td><strong>257 tools</strong>, 27 registered mixin groups, 26 documented domains</td>
+    </tr>
+    <tr>
+      <td><strong>Protocol version</strong></td>
+      <td>not documented</td>
+      <td><code>2025-06-18</code></td>
+    </tr>
+    <tr>
+      <td><strong>Health endpoint</strong></td>
+      <td><code>:8080/health</code></td>
+      <td><code>:8080/health</code>, <code>/ready</code>, <code>/metrics</code>; <code>MEM20_HEALTH_DISABLE=1</code> for headless runs</td>
+    </tr>
+    <tr>
+      <td><strong>Failure semantics</strong></td>
+      <td>not documented</td>
+      <td>Unknown tool ⇒ <code>result.isError=true</code> (not <code>-32601</code>); unknown method ⇒ <code>-32601</code></td>
+    </tr>
+    <tr>
+      <td><strong>Long-running tools</strong></td>
+      <td>not documented</td>
+      <td>23 LLM-heavy tools return a <code>job_id</code> token; poll <code>job_wait</code></td>
+    </tr>
+  </tbody>
+</table>
+
+<h2>2. Canonical paths &amp; install (as documented now)</h2>
+<table>
+  <thead><tr><th style="width:30%">Path</th><th>Role</th></tr></thead>
+  <tbody>
+    <tr><td><code>mcp/mcp_server.py</code></td><td>stdio entry point (thin shim over <code>server.py</code>)</td></tr>
+    <tr><td><code>mcp/server.py</code></td><td><code>Mem20MCPServer</code> — the real implementation; aggregates 27 mixins</td></tr>
+    <tr><td><code>launcher.py</code></td><td>backs the <code>mem20-mcp</code> console script; puts <code>mcp/</code> on <code>sys.path</code> via <code>runpy</code></td></tr>
+    <tr><td><code>requirements.txt</code></td><td><code>mcp&gt;=2.1.1</code>, <code>pydantic</code>, <code>anyio</code>, <code>numpy</code>, <code>faiss-cpu</code>, <code>sentence-transformers</code></td></tr>
+    <tr><td><code>install.sh</code></td><td>venv + systemd installer (<code>--no-systemd</code> supported)</td></tr>
+    <tr><td><code>CANONICAL.md</code></td><td>canonical-repo marker + publication routing (Sidney via ssh/sftp/rsync, through gabe)</td></tr>
+  </tbody>
+</table>
+
+<h3>Install, as written in the SDK docs</h3>
+<pre>git clone https://github.com/bythewayz66-glitch/mem20.git /opt/mem20
+cd /opt/mem20
+python3 -m pip install --break-system-packages -r requirements.txt
+python3 -m pip install --break-system-packages mcp aiohttp   # required; absent from requirements.txt
+
+# connect from Perl
+MEM20_PY=/usr/bin/python3.14 MEM20_SERVER=/opt/mem20/mcp/mcp_server.py \
+  perl -Ilib examples/quickstart.pl</pre>
+
+<h3>Install the Perl SDK itself</h3>
+<pre># from the SDK directory (lib/Mem20/Client.pm, Makefile.PL, cpanfile)
+perl Makefile.PL &amp;&amp; make &amp;&amp; make test &amp;&amp; make install
+
+# or with cpanm / carton
+cpanm --installdeps .
+
+# run the live test suite (19/19 pass against the live stdio server)
+MEM20_PY=/usr/bin/python3.14 MEM20_SERVER=/opt/mem20/mcp/mcp_server.py \
+  perl -Ilib t/01-client.t</pre>
+
+<h2>3. Claim vs. actual — discrepancies found and handled</h2>
+<p>Every row below was observed live on 2026-10-14 against the canonical repo.<br>
+<span class="pill p-bad">blocks boot</span> <span class="pill p-warn">misleads clients</span> <span class="pill p-info">doc drift</span></p>
+<table>
+  <thead><tr><th style="width:6%">#</th><th style="width:30%">Claim</th><th style="width:38%">Actual (evidence)</th><th style="width:26%">Resolution</th></tr></thead>
+  <tbody>
+    <tr>
+      <td>G1</td>
+      <td><code>requirements.txt</code> is the full core runtime</td>
+      <td><code>mcp/tools/a2a_tools.py:19</code> imports <code>aiohttp</code>, which is not listed ⇒ clean venv fails at import: <code>ModuleNotFoundError: No module named 'aiohttp'</code></td>
+      <td><span class="pill p-bad">blocks boot</span> documented explicit <code>pip install aiohttp</code></td>
+    </tr>
+    <tr>
+      <td>G2</td>
+      <td><code>docs/README.md</code>: "Repository: &lt;previous-org&gt;/mem20" and "111 Tools Across 15 Domains"</td>
+      <td>URL returns 404; live <code>tools/list</code> returns <strong>257</strong> tools. <code>README.md</code> also links the dead URL in 3 places</td>
+      <td><span class="pill p-info">doc drift</span> SDK docs now cite only canonical repo + live count</td>
+    </tr>
+    <tr>
+      <td>G3</td>
+      <td><code>serverInfo.version</code> identifies the server build</td>
+      <td><code>initialize</code> returns <code>"version":""</code> (empty string)</td>
+      <td><span class="pill p-warn">misleads clients</span> documented: do not assert on it</td>
+    </tr>
+    <tr>
+      <td>G4</td>
+      <td>Invalid tool names produce JSON-RPC <code>-32601</code></td>
+      <td><code>no_such_tool_xyz</code> ⇒ success response with <code>isError:true</code>, text <code>Error: Unknown tool</code>. Only unknown <em>methods</em> give <code>-32601</code></td>
+      <td><span class="pill p-warn">misleads clients</span> SDK treats <code>isError</code> as authoritative</td>
+    </tr>
+    <tr>
+      <td>G5</td>
+      <td>MCP <code>resources/*</code> and <code>prompts/*</code> usable</td>
+      <td><code>initialize</code> advertises only <code>capabilities.tools</code>; <code>resources/list</code> ⇒ <code>-32601</code></td>
+      <td><span class="pill p-info">doc drift</span> SDK exposes the tool surface only</td>
+    </tr>
+    <tr>
+      <td>G6</td>
+      <td>A tool call returns its result</td>
+      <td>23 tools (all <code>imagination_*</code>, <code>cog_*</code>, <code>tot_*</code>, <code>beam_search</code>, <code>least_to_most</code>, <code>react_reason</code>, <code>theory_of_mind_*</code>, <code>self_model_reflect</code>, <code>memory_auto_consolidate</code>, <code>cognitive_substrate</code>) return <code>{"job_id":…,"status":"running"}</code></td>
+      <td><span class="pill p-warn">misleads clients</span> <code>call_tool_and_wait</code> polls <code>job_wait</code></td>
+    </tr>
+    <tr>
+      <td>G9</td>
+      <td>Required arguments are enforced (<code>"required":["content"]</code>)</td>
+      <td><code>memory_store {}</code> stores an <strong>empty fact</strong> and returns <code>isError:false</code> ⇒ success reported while nothing was indexed</td>
+      <td><span class="pill p-warn">misleads clients</span> SDK validates required args client-side (<code>validation_error</code>)</td>
+    </tr>
+    <tr>
+      <td>G9b</td>
+      <td><code>isError</code> signals handler failure</td>
+      <td>A handler exception returns plain text with <code>isError:false</code>: <code>Error recalling memory: slice indices must be integers…</code></td>
+      <td><span class="pill p-warn">misleads clients</span> SDK adds a <code>text_error</code> flag</td>
+    </tr>
+  </tbody>
+</table>
+
+<div class="note">
+  <strong>Most load-bearing for a Perl client:</strong> transport framing (NDJSON, not <code>Content-Length</code>),
+  the <code>cwd = …/mcp</code> requirement, and the fact that <code>isError</code> — not a JSON-RPC error object —
+  is the authoritative tool-failure signal. G1 is what stops the server booting at all.
+</div>
+
+<h2>4. Live verification evidence</h2>
+<p>Spawned <code>mcp/mcp_server.py</code> as a subprocess and drove it from Perl over stdio (venv: <code>mcp 2.3.0</code>, Python 3.11.15, Perl v5.36.0).</p>
+<pre>[1] initialize      -&gt; server=mem20-mcp  protocol=2025-06-18  version=(empty)
+[2] tools/list      -&gt; 257 tools
+    memory_*        -&gt; 49 (memory_store, memory_recall, memory_probe, memory_reason, memory_status, …)
+[3] memory_store    -&gt; ok=1  Record ID: 1a13b4c592f7b73
+[4] memory_recall   -&gt; ok=1  ROUND-TRIP CONFIRMED: "Perl SDK quickstart ran at 1791996221"
+[5] unknown tool    -&gt; ok=0 kind=tool_error (isError surfaced, NOT a JSON-RPC error)
+[6] cog_reason      -&gt; job token returned; poll via job_wait
+
+# t/01-client.t against the live server
+ok 1  - initialize returned a result
+ok 2  - serverInfo.name is mem20-mcp
+ok 3  - a protocolVersion is returned
+ok 4  - tools/list returns a list
+ok 5  - tools/list has &gt;= 200 tools
+ok 6  - memory_store is registered
+ok 7  - memory_recall is registered
+ok 8  - memory_status is registered
+ok 9  - every tool has name + description + inputSchema
+ok 10 - memory_store succeeded
+ok 11 - memory_store returned a Record ID
+ok 12 - memory_recall succeeded
+ok 13 - stored marker came back from recall
+ok 14 - unknown tool reports failure
+ok 15 - unknown tool surfaces as a tool error, not -32601
+ok 16 - memory_store without required content is rejected client-side
+ok 17 - rejected with kind=validation_error
+ok 18 - validate=&gt;0 exposes the un-validated upstream behaviour
+ok 19 - handler exception is flagged via text_error despite is_error=0
+Result: PASS   (19/19)</pre>
+
+<h2>5. Deliverables — updated Perl SDK docs</h2>
+<table class="files">
+  <thead><tr><th style="width:26%">File</th><th>Contents</th></tr></thead>
+  <tbody>
+    <tr><td><a href="https://static.teamily.ai/sites/54009941-ffda-4e50-9bd1-8d0b88585a8b/documents/mem20-perl-sdk/README.md?tk=c2l0ZTo1NDAwOTk0MS1mZmRhLTRlNTAtOWJkMS04ZDBiODg1ODVhOGIvZG9jdW1lbnRzL21lbTIwLXBlcmwtc2RrOjE3OTIwMDAwMDA.NWJiZTJlNDAyYzYyZWE1MzE4OGIxMzcwNDdlODg5NGQ">README.md</a></td><td>quickstart, canonical-repo facts, verified-output block</td></tr>
+    <tr><td><a href="https://static.teamily.ai/sites/54009941-ffda-4e50-9bd1-8d0b88585a8b/documents/mem20-perl-sdk/INSTALL.md?tk=c2l0ZTo1NDAwOTk0MS1mZmRhLTRlNTAtOWJkMS04ZDBiODg1ODVhOGIvZG9jdW1lbnRzL21lbTIwLXBlcmwtc2RrOjE3OTIwMDAwMDA.NWJiZTJlNDAyYzYyZWE1MzE4OGIxMzcwNDdlODg5NGQ">INSTALL.md</a></td><td>install paths, spawn recipes, env vars, framing + cwd notes</td></tr>
+    <tr><td><a href="https://static.teamily.ai/sites/54009941-ffda-4e50-9bd1-8d0b88585a8b/documents/mem20-perl-sdk/CHANGES.md?tk=c2l0ZTo1NDAwOTk0MS1mZmRhLTRlNTAtOWJkMS04ZDBiODg1ODVhOGIvZG9jdW1lbnRzL21lbTIwLXBlcmwtc2RrOjE3OTIwMDAwMDA.NWJiZTJlNDAyYzYyZWE1MzE4OGIxMzcwNDdlODg5NGQ">CHANGES.md</a></td><td>0.01 changelog of the canonical-repo realignment</td></tr>
+    <tr><td><a href="https://static.teamily.ai/sites/54009941-ffda-4e50-9bd1-8d0b88585a8b/documents/mem20-perl-sdk/GAPS.md?tk=c2l0ZTo1NDAwOTk0MS1mZmRhLTRlNTAtOWJkMS04ZDBiODg1ODVhOGIvZG9jdW1lbnRzL21lbTIwLXBlcmwtc2RrOjE3OTIwMDAwMDA.NWJiZTJlNDAyYzYyZWE1MzE4OGIxMzcwNDdlODg5NGQ">GAPS.md</a></td><td>9 verified upstream gaps, each with raw evidence + workaround</td></tr>
+    <tr><td><a href="https://static.teamily.ai/sites/54009941-ffda-4e50-9bd1-8d0b88585a8b/documents/mem20-perl-sdk/lib/Mem20/Client.pm?tk=c2l0ZTo1NDAwOTk0MS1mZmRhLTRlNTAtOWJkMS04ZDBiODg1ODVhOGIvZG9jdW1lbnRzL21lbTIwLXBlcmwtc2RrOjE3OTIwMDAwMDA.NWJiZTJlNDAyYzYyZWE1MzE4OGIxMzcwNDdlODg5NGQ">lib/Mem20/Client.pm</a></td><td>stdio JSON-RPC client: handshake, list_tools, call_tool, call_tool_and_wait, client-side schema validation, full POD</td></tr>
+    <tr><td><a href="https://static.teamily.ai/sites/54009941-ffda-4e50-9bd1-8d0b88585a8b/documents/mem20-perl-sdk/examples/quickstart.pl?tk=c2l0ZTo1NDAwOTk0MS1mZmRhLTRlNTAtOWJkMS04ZDBiODg1ODVhOGIvZG9jdW1lbnRzL21lbTIwLXBlcmwtc2RrOjE3OTIwMDAwMDA.NWJiZTJlNDAyYzYyZWE1MzE4OGIxMzcwNDdlODg5NGQ">examples/quickstart.pl</a></td><td>one-command live smoke test</td></tr>
+    <tr><td><a href="https://static.teamily.ai/sites/54009941-ffda-4e50-9bd1-8d0b88585a8b/documents/mem20-perl-sdk/t/01-client.t?tk=c2l0ZTo1NDAwOTk0MS1mZmRhLTRlNTAtOWJkMS04ZDBiODg1ODVhOGIvZG9jdW1lbnRzL21lbTIwLXBlcmwtc2RrOjE3OTIwMDAwMDA.NWJiZTJlNDAyYzYyZWE1MzE4OGIxMzcwNDdlODg5NGQ">t/01-client.t</a></td><td>19 assertions; skips cleanly with no server</td></tr>
+    <tr><td><a href="https://static.teamily.ai/sites/54009941-ffda-4e50-9bd1-8d0b88585a8b/documents/mem20-perl-sdk/Makefile.PL?tk=c2l0ZTo1NDAwOTk0MS1mZmRhLTRlNTAtOWJkMS04ZDBiODg1ODVhOGIvZG9jdW1lbnRzL21lbTIwLXBlcmwtc2RrOjE3OTIwMDAwMDA.NWJiZTJlNDAyYzYyZWE1MzE4OGIxMzcwNDdlODg5NGQ">Makefile.PL</a> · <a href="https://static.teamily.ai/sites/54009941-ffda-4e50-9bd1-8d0b88585a8b/documents/mem20-perl-sdk/cpanfile?tk=c2l0ZTo1NDAwOTk0MS1mZmRhLTRlNTAtOWJkMS04ZDBiODg1ODVhOGIvZG9jdW1lbnRzL21lbTIwLXBlcmwtc2RrOjE3OTIwMDAwMDA.NWJiZTJlNDAyYzYyZWE1MzE4OGIxMzcwNDdlODg5NGQ">cpanfile</a></td><td>CPAN packaging; core-only prereqs (<code>JSON::PP</code>, <code>IPC::Open3</code>, <code>IO::Select</code>)</td></tr>
+  </tbody>
+</table>
+
+<h2>6. Publication status</h2>
+<table>
+  <thead><tr><th style="width:22%">Channel</th><th style="width:20%">State</th><th>Detail</th></tr></thead>
+  <tbody>
+    <tr>
+      <td><strong>GitHub</strong></td>
+      <td><span class="pill p-ok">published</span></td>
+      <td>Canonical repo live at <a href="https://github.com/bythewayz66-glitch/mem20">bythewayz66-glitch/mem20</a> (upstream leg, marker commit <code>c274404</code>).</td>
+    </tr>
+    <tr>
+      <td><strong>Project site (this report)</strong></td>
+      <td><span class="pill p-ok">published</span></td>
+      <td>Report + full docs bundle on the project static site (links above).</td>
+    </tr>
+    <tr>
+      <td><strong>Sidney server, via gabe</strong><br><small>ssh / sftp / rsync</small></td>
+      <td><span class="pill p-warn">relayed</span></td>
+      <td>Not runnable from this sandbox: no SSH keys, no <code>~/.ssh/config</code>, no <code>SIDNEY_*</code>/<code>GABE_*</code> env, and <code>sidney</code>/<code>gabe</code> do not resolve in DNS. Handed to <strong>Server Builder</strong> (infra owner) to publish over ssh/sftp/rsync routed through gabe.</td>
+    </tr>
+  </tbody>
+</table>
+
+<div class="note">
+  <strong>Honest blocker.</strong> The Sidney/gabe publication path is <em>not</em> executed by this task —
+  the credentials and host are absent from the sandbox. It is a real gap, not a skipped step; the exact
+  operations needed are in the hand-off to Server Builder.
+</div>
+
+<footer>
+  Generated 2026-10-14 · mem20 Perl SDK docs update · Canonical repo
+  <a href="https://github.com/bythewayz66-glitch/mem20">github.com/bythewayz66-glitch/mem20</a> ·
+  All claims in this report were reproduced live against mem20 v2.1-rc2, not copied from documentation.
+</footer>
+
+</div>
+</body>
+</html>

@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><script data-tmly-media-guard="1">(function(){"use strict";
+var T=window.__tmly||(window.__tmly=(function(){
+var o={},n=String(window.name||"");
+if(n.slice(0,5)==="tmly:"){n.slice(5).split("&").forEach(function(kv){
+var i=kv.indexOf("=");if(i>0){o[kv.slice(0,i)]=kv.slice(i+1)}})}
+return o})());
+if(T.presentation!=="preview"){return}
+var K="tmly:media-muted:"+String(location.pathname).replace(/[^/]*$/,"");
+var muted=false;try{muted=localStorage.getItem(K)==="1"}catch(e){}
+var gestured=false;
+["pointerdown","mousedown","keydown","touchstart"].forEach(function(t){
+document.addEventListener(t,function(){gestured=true},{capture:true,passive:true})});
+function remember(m){muted=m;try{m?localStorage.setItem(K,"1"):localStorage.removeItem(K)}catch(e){}}
+function announcePaused(el){try{el.dispatchEvent(new Event("pause"))}catch(e){}}
+function harden(el){
+el.autoplay=false;el.removeAttribute("autoplay");
+if(el.getAttribute("preload")==="auto"){el.setAttribute("preload","none")}
+if(muted){el.muted=true}
+if(!gestured&&!el.paused){try{el.pause()}catch(e){}}}
+var play=HTMLMediaElement.prototype.play;
+HTMLMediaElement.prototype.play=function(){
+if(!gestured){announcePaused(this);
+return Promise.reject(new DOMException("Artifact audio needs a user gesture","NotAllowedError"))}
+if(muted){remember(false);this.muted=false}
+return play.apply(this,arguments)};
+var acProtos=[];
+function guardAC(n){
+var N=window[n];if(!N||!N.prototype){return}
+if(acProtos.indexOf(N.prototype)<0){acProtos.push(N.prototype);
+var res=N.prototype.resume;
+if(typeof res==="function"){N.prototype.resume=function(){
+if(!gestured){return Promise.reject(new DOMException("Artifact audio needs a user gesture","NotAllowedError"))}
+if(muted){remember(false)}
+return res.apply(this,arguments)}}}
+var W=function(o){var c=arguments.length?new N(o):new N();
+if(!gestured){try{c.suspend()}catch(e){}}return c};
+W.prototype=N.prototype;try{window[n]=W}catch(e){}}
+guardAC("AudioContext");guardAC("webkitAudioContext");
+document.addEventListener("play",function(e){
+var el=e.target;if(el instanceof HTMLMediaElement&&!gestured){try{el.pause()}catch(err){}}},true);
+document.addEventListener("pause",function(e){
+if(e.target instanceof HTMLMediaElement&&gestured){remember(true)}},true);
+document.addEventListener("volumechange",function(e){
+var el=e.target;if(el instanceof HTMLMediaElement&&gestured){remember(el.muted||el.volume===0)}},true);
+function sweep(n){if(n&&n.querySelectorAll){var l=n.querySelectorAll("audio,video");
+for(var i=0;i<l.length;i++){harden(l[i])}}}
+new MutationObserver(function(rs){for(var i=0;i<rs.length;i++){var a=rs[i].addedNodes;
+for(var j=0;j<a.length;j++){var n=a[j];
+if(n instanceof HTMLMediaElement){harden(n)}else{sweep(n)}}}})
+.observe(document.documentElement,{childList:true,subtree:true});
+document.addEventListener("DOMContentLoaded",function(){sweep(document)});
+sweep(document)})();</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>mem20 Program Status — 2026-10-14</title>
+<style>
+  :root{
+    --ink:#0f172a;
+    --ink-2:#334155;
+    --muted:#64748b;
+    --line:#e2e8f0;
+    --bg:#f5f7fa;
+    --card:#ffffff;
+    --teal:#0f766e;
+    --teal-soft:#e6f4f1;
+    --amber:#b45309;
+    --amber-soft:#fdf3e3;
+    --red:#b91c1c;
+    --red-soft:#fdecec;
+    --green:#15803d;
+    --green-soft:#e7f6ec;
+    --blue:#1d4ed8;
+    --blue-soft:#eaf0fe;
+    --gray-soft:#f1f5f9;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:var(--bg);
+    color:var(--ink);
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    line-height:1.5;
+    -webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:1080px;margin:0 auto;padding:0 20px 64px;}
+
+  header.masthead{
+    background:var(--ink);
+    color:#fff;
+    padding:30px 0 26px;
+    border-bottom:4px solid var(--teal);
+  }
+  header.masthead .wrap{padding-bottom:0;}
+  .brandrow{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap;}
+  .brand{font-size:26px;font-weight:800;letter-spacing:-0.4px;}
+  .brand span{color:#5eead4;}
+  .kicker{font-size:12px;letter-spacing:1.6px;text-transform:uppercase;color:#94a3b8;font-weight:700;}
+  .masthead h1{font-size:19px;font-weight:600;margin:12px 0 4px;}
+  .masthead p{margin:0;color:#cbd5e1;font-size:13.5px;}
+  .stamp{margin-top:14px;font-size:12.5px;color:#94a3b8;}
+  .stamp b{color:#e2e8f0;font-weight:600;}
+
+  .locked{
+    display:flex;flex-wrap:wrap;gap:8px;margin-top:16px;
+  }
+  .chip{
+    background:rgba(94,234,212,.12);
+    border:1px solid rgba(94,234,212,.35);
+    color:#a7f3d0;
+    font-size:12px;
+    font-weight:600;
+    padding:5px 11px;
+    border-radius:999px;
+    white-space:nowrap;
+  }
+
+  section{margin-top:34px;}
+  h2{
+    font-size:13px;letter-spacing:1.5px;text-transform:uppercase;
+    color:var(--muted);margin:0 0 14px;font-weight:800;
+  }
+
+  .alert{
+    background:var(--card);
+    border:1px solid var(--line);
+    border-left:5px solid var(--amber);
+    border-radius:10px;
+    padding:18px 20px;
+    box-shadow:0 1px 2px rgba(15,23,42,.05);
+  }
+  .alert h3{margin:0 0 4px;font-size:15.5px;color:var(--ink);}
+  .alert .sub{font-size:12.5px;color:var(--muted);margin:0 0 12px;}
+  ul.clean{list-style:none;margin:0;padding:0;}
+  ul.clean li{
+    padding:11px 0 11px 30px;
+    position:relative;
+    border-top:1px solid var(--line);
+    font-size:14px;
+    color:var(--ink-2);
+  }
+  ul.clean li:first-child{border-top:none;}
+  ul.clean li::before{
+    content:"";
+    position:absolute;left:6px;top:19px;
+    width:8px;height:8px;border-radius:50%;
+    background:var(--amber);
+  }
+  ul.clean li.owner::before{background:var(--blue);}
+  ul.clean li b{color:var(--ink);}
+
+  table.status{
+    width:100%;border-collapse:separate;border-spacing:0;
+    background:var(--card);border:1px solid var(--line);border-radius:10px;
+    overflow:hidden;box-shadow:0 1px 2px rgba(15,23,42,.05);
+    font-size:13.5px;
+  }
+  table.status th{
+    background:#f8fafc;text-align:left;font-size:11px;letter-spacing:1.1px;
+    text-transform:uppercase;color:var(--muted);font-weight:800;
+    padding:11px 14px;border-bottom:1px solid var(--line);
+  }
+  table.status td{
+    padding:13px 14px;border-bottom:1px solid var(--line);
+    vertical-align:top;color:var(--ink-2);
+  }
+  table.status tr:last-child td{border-bottom:none;}
+  td.agent{font-weight:700;color:var(--ink);white-space:nowrap;}
+  td.agent .lane{display:block;font-weight:500;font-size:11.5px;color:var(--muted);letter-spacing:.2px;}
+
+  .pill{
+    display:inline-block;font-size:11px;font-weight:800;letter-spacing:.6px;
+    padding:3px 9px;border-radius:999px;text-transform:uppercase;white-space:nowrap;
+  }
+  .p-done{background:var(--green-soft);color:var(--green);}
+  .p-prog{background:var(--blue-soft);color:var(--blue);}
+  .p-block{background:var(--red-soft);color:var(--red);}
+  .p-none{background:var(--gray-soft);color:var(--muted);}
+  .p-hold{background:var(--amber-soft);color:var(--amber);}
+
+  .none{color:var(--muted);font-style:italic;}
+
+  .evidence{
+    background:var(--card);border:1px solid var(--line);border-radius:10px;
+    padding:6px 20px 14px;box-shadow:0 1px 2px rgba(15,23,42,.05);
+  }
+  .evidence .row{
+    display:flex;gap:14px;align-items:flex-start;
+    padding:12px 0;border-top:1px solid var(--line);
+  }
+  .evidence .row:first-of-type{border-top:none;}
+  .evidence .tag{
+    font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+    font-size:12px;font-weight:700;color:var(--ink);
+    background:var(--gray-soft);border:1px solid var(--line);
+    padding:3px 8px;border-radius:6px;white-space:nowrap;
+  }
+  .evidence .tag.ok{background:var(--green-soft);border-color:#c7ebd3;color:var(--green);}
+  .evidence .tag.bad{background:var(--red-soft);border-color:#f6cccc;color:var(--red);}
+  .evidence .desc{font-size:13.5px;color:var(--ink-2);}
+  .evidence .desc code{
+    font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+    font-size:12.5px;background:var(--gray-soft);padding:1px 5px;border-radius:4px;
+  }
+
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+  @media (max-width:720px){
+    .grid2{grid-template-columns:1fr;}
+    td.agent{white-space:normal;}
+    .brand{font-size:22px;}
+  }
+  .mini{
+    background:var(--card);border:1px solid var(--line);border-radius:10px;
+    padding:16px 18px;box-shadow:0 1px 2px rgba(15,23,42,.05);
+  }
+  .mini h4{margin:0 0 10px;font-size:13.5px;color:var(--ink);}
+  .mini p{margin:0 0 8px;font-size:13.5px;color:var(--ink-2);}
+  .mini p:last-child{margin-bottom:0;}
+  .mini .num{font-weight:800;color:var(--teal);}
+
+  footer{
+    margin-top:40px;padding-top:18px;border-top:1px solid var(--line);
+    font-size:12px;color:var(--muted);
+  }
+</style>
+</head>
+<body>
+<header class="masthead">
+  <div class="wrap">
+    <div class="brandrow">
+      <div class="brand">mem<span>20</span></div>
+      <div class="kicker">Program Status · Orchestrator Report</div>
+    </div>
+    <h1>Auditable agent memory — program hub report</h1>
+    <p>One scannable pass over every reporting agent: what landed, what is live now, what is next.</p>
+    <div class="locked">
+      <span class="chip">TAM $1.28B</span>
+      <span class="chip">SAM $282M</span>
+      <span class="chip">SOM $1.68M</span>
+      <span class="chip">Blended ACV $14,000</span>
+      <span class="chip">257 tools · 26 domains</span>
+      <span class="chip">Canonical repo main @ c274404</span>
+    </div>
+    <div class="stamp">Report date <b>2026-10-14</b> · Owner: bythewayz66 · Hub: mem20 Orchestrator</div>
+  </div>
+</header>
+
+<div class="wrap">
+
+  <section>
+    <h2>Blockers &amp; decisions needed</h2>
+    <div class="alert">
+      <h3>Four items need a decision or an owner action — everything else is moving.</h3>
+      <p class="sub">Ranked by launch impact. Only the first is on the critical path to a public install.</p>
+      <ul class="clean">
+        <li><b>PyPI release is the hard launch blocker.</b> <code>pip install mem20</code> still returns <b>404</b> (re-verified today). Today the only install path is <code>git clone</code> + Docker. <b>Decision needed:</b> approve the PyPI package name and release scope so Server Builder can publish.</li>
+        <li><b>Sidney publish path.</b> All program artifacts are meant to ship through <b>gabe</b> to the Sidney server. The pricing analysis is delivered (CloudDoc) but <b>not yet published to Sidney</b>. Infra owner: Server Builder.</li>
+        <li><b>TAM bridge in the Market Research brief.</b> The research brief carries the broad <b>$6.49B</b> agentic-memory figure; the house model now uses the honest <b>$1.28B</b> auditable-slice TAM. Pricing has reconciled it — the brief should be re-bridged so the program speaks one number externally.</li>
+        <li><b>Pricing posture — recommended HOLD.</b> Pricing Analyst's sensitivity run shows revenue broadly flat (±20% price band) and margin dollars peaking ~+10%: hold list at the locked <b>$14,000</b> blended ACV and capture upside through realization discipline, not a list hike. <b>Owner sign-off requested.</b></li>
+      </ul>
+    </div>
+  </section>
+
+  <section>
+    <h2>Agent status — one row per reporting agent</h2>
+    <table class="status">
+      <thead>
+        <tr>
+          <th style="width:20%">Agent</th>
+          <th style="width:31%">Yesterday / delivered</th>
+          <th style="width:22%">Today / status</th>
+          <th style="width:27%">Tomorrow / next</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="agent">Pricing Analyst<span class="lane">Pricing &amp; packaging</span></td>
+          <td><b>Pricing Analysis v2</b> updated &amp; posted as a live CloudDoc. Aligned to canonical repo, install path corrected, tool count normalized to 257/26, and the house numbers explicitly bridged to ACV.</td>
+          <td><span class="pill p-done">Done</span><br>Finish condition met — deliverable posted, hub notified.</td>
+          <td>Stand by for owner sign-off on the $14,000 hold; re-run sensitivity if the tier mix shifts.</td>
+        </tr>
+        <tr>
+          <td class="agent">GitHub Repo Assistant<span class="lane">Canonical source of truth</span></td>
+          <td>Canonical repo <code>bythewayz66-glitch/mem20</code> is <b>live</b>; <code>main @ c274404</code> carries the commit designating it canonical and recording full-codebase publication. Dead <code>JaysonAIOnline/mem20</code> reference retired (404).</td>
+          <td><span class="pill p-done">Done</span><br>Verified live today by the hub.</td>
+          <td>Keep README/docs crosschecks in sync with the canonical remote as SDKs land.</td>
+        </tr>
+        <tr>
+          <td class="agent">Server Builder<span class="lane">Infra · gateway · releases</span></td>
+          <td class="none">No verified deliverable reported this cycle.</td>
+          <td><span class="pill p-block">Blocked → needs owner go</span><br>Owns the two open launch dependencies: PyPI release and Sidney publish via gabe.</td>
+          <td><b>Route the PyPI release + Sidney publish</b> (handed off this turn). Verify install path end-to-end once the package is live.</td>
+        </tr>
+        <tr>
+          <td class="agent">Market Research<span class="lane">Segments · positioning</span></td>
+          <td>Brief supplied the broad agentic-memory market context, including the $6.49B top-down figure.</td>
+          <td><span class="pill p-prog">In progress</span><br>Needs to re-bridge its brief to the $1.28B auditable slice so the program quotes one TAM.</td>
+          <td>Re-issue the TAM bridge section; keep the $6.49B as a cited parent market, not the mem20 TAM.</td>
+        </tr>
+        <tr>
+          <td class="agent">Mem20 Benchmark Dataset Builder<span class="lane">LoCoMo · LongMemEval · DMR</span></td>
+          <td class="none">No verified benchmark result or dataset published this cycle.</td>
+          <td><span class="pill p-none">No verified output</span><br>Q1 priority: mem20 still has <b>no published benchmarks</b>.</td>
+          <td>Publish the harness, dataset, results table and reproducible run instructions. Keep the adversarial 0.000 row and the no-LoCoMo caveat visible until own numbers exist.</td>
+        </tr>
+        <tr>
+          <td class="agent">Mem20-Perl-Expert<span class="lane">Alternative SDK</span></td>
+          <td class="none">No verified SDK artifact reported this cycle.</td>
+          <td><span class="pill p-none">No verified output</span></td>
+          <td>Perl SDK: bindings, packaging, docs, examples, CI — published to the canonical repo.</td>
+        </tr>
+        <tr>
+          <td class="agent">Mem20-Ruby-Expert<span class="lane">Alternative SDK</span></td>
+          <td class="none">No verified SDK artifact reported this cycle.</td>
+          <td><span class="pill p-none">No verified output</span></td>
+          <td>Ruby SDK: bindings, packaging, docs, examples, CI — published to the canonical repo.</td>
+        </tr>
+        <tr>
+          <td class="agent">Mem20 C++ Expert<span class="lane">Alternative SDK</span></td>
+          <td class="none">No verified SDK artifact reported this cycle.</td>
+          <td><span class="pill p-none">No verified output</span></td>
+          <td>C++ SDK: bindings, packaging, docs, examples, CI — published to the canonical repo.</td>
+        </tr>
+        <tr>
+          <td class="agent">Mem20 Content Creator<span class="lane">Content crew</span></td>
+          <td class="none">No verified copy artifact reported this cycle.</td>
+          <td><span class="pill p-none">No verified output</span><br>Content should now cite the canonical repo + corrected install path.</td>
+          <td>Long-form / launch copy aligned to the v2 pricing doc and canonical repo.</td>
+        </tr>
+        <tr>
+          <td class="agent">Webpage Developer<span class="lane">Launch page</span></td>
+          <td class="none">No verified page update reported this cycle.</td>
+          <td><span class="pill p-none">No verified output</span></td>
+          <td>Launch page must reflect: canonical repo, git clone + Docker install, 257 tools / 26 domains.</td>
+        </tr>
+        <tr>
+          <td class="agent">Slides Assistant<span class="lane">Deck &amp; copy support</span></td>
+          <td class="none">No verified deck artifact reported this cycle.</td>
+          <td><span class="pill p-none">No verified output</span></td>
+          <td>Launch deck to mirror the v2 pricing pillars (open-core tiers, attestation surface).</td>
+        </tr>
+        <tr>
+          <td class="agent">UX Researcher<span class="lane">mem20 desktop</span></td>
+          <td class="none">No verified research artifact reported this cycle.</td>
+          <td><span class="pill p-none">No verified output</span></td>
+          <td>Personas, task flows, wireframes for the desktop app.</td>
+        </tr>
+        <tr>
+          <td class="agent">Analytics Reporter<span class="lane">Campaign &amp; tracking</span></td>
+          <td class="none">No verified campaign/tracking artifact reported this cycle.</td>
+          <td><span class="pill p-none">No verified output</span></td>
+          <td>Campaign setup + tracking plan; instrument the launch page once it is re-pointed at the canonical repo.</td>
+        </tr>
+        <tr>
+          <td class="agent">Finance Assistant<span class="lane">Model support</span></td>
+          <td class="none">No verified financial artifact reported this cycle.</td>
+          <td><span class="pill p-none">No verified output</span></td>
+          <td>Reconcile the financial model to the v2 pricing structure (70.4% blended gross margin, break-even ≈102 logos).</td>
+        </tr>
+        <tr>
+          <td class="agent">mem20 GTM Team Lead<span class="lane">Go-to-market</span></td>
+          <td class="none">No verified GTM artifact reported this cycle.</td>
+          <td><span class="pill p-none">No verified output</span></td>
+          <td>Sequence launch once PyPI is live and the Sidney publish is done.</td>
+        </tr>
+        <tr>
+          <td class="agent">Experiment Tracker<span class="lane">Research programs</span></td>
+          <td class="none">No verified artifact reported this cycle.</td>
+          <td><span class="pill p-none">No verified output</span></td>
+          <td>Distributed mem20 research track continues.</td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section>
+    <h2>Pricing v2 — the numbers that moved, and the ones that held</h2>
+    <div class="grid2">
+      <div class="mini">
+        <h4>Held (locked house numbers)</h4>
+        <p>TAM <span class="num">$1.28B</span> — the auditable-agent-memory slice, deliberately narrower than the $6.49B broad agentic-memory figure.</p>
+        <p>SAM <span class="num">$282M</span> = 22.0% of TAM · SOM <span class="num">$1.68M</span> = 0.60% of SAM.</p>
+        <p>SOM = <span class="num">120</span> paying logos × <span class="num">$14,000</span> blended ACV = $1,680,000 exactly — the ACV and the funnel are mutually consistent.</p>
+      </div>
+      <div class="mini">
+        <h4>New this version</h4>
+        <p>Aligned to canonical repo <code>bythewayz66-glitch/mem20</code>; dead-repo reference retired.</p>
+        <p>Install path corrected to <code>git clone</code> + Docker, with the PyPI gap flagged as a launch dependency.</p>
+        <p>Tier mix that produces SOM: 80× Team $3k + 20× Business $12k + 20× Enterprise $60k.</p>
+        <p>Economics: <span class="num">70.4%</span> blended gross margin · break-even ≈ <span class="num">102</span> logos (18 logos of headroom inside SOM) · floors Team $1k / Business $4.4k / Enterprise $33k.</p>
+        <p>Competitive reality: Mem0 free/$19/$79/$249 · Zep Flex $125 / Flex Plus $375 · Letta free/$20/$20+$0.10/agent — the self-serve set tops out ~$4.5k/yr, so $14k is defensible <b>only</b> on the audit/attestation axis, never on retrieval price.</p>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2>Verified evidence (checked live this run)</h2>
+    <div class="evidence">
+      <div class="row">
+        <span class="tag ok">HTTP 200</span>
+        <span class="desc">Canonical repo live: <code>github.com/bythewayz66-glitch/mem20</code>, default branch <code>main</code> at <code>c274404a</code> (2026-10-14T16:39:02Z) — commit message <i>“docs: designate canonical repository and record full-codebase publication”</i>.</span>
+      </div>
+      <div class="row">
+        <span class="tag bad">HTTP 404</span>
+        <span class="desc">Retired repo reference confirmed dead: <code>github.com/JaysonAIOnline/mem20</code>.</span>
+      </div>
+      <div class="row">
+        <span class="tag bad">HTTP 404</span>
+        <span class="desc">Launch dependency confirmed open: <code>pypi.org/pypi/mem20/json</code> — <code>pip install mem20</code> is not yet available.</span>
+      </div>
+      <div class="row">
+        <span class="tag ok">CLOUDDOC</span>
+        <span class="desc">Pricing deliverable read back at source: <i>“mem20 Pricing Analysis — Canonical Repo Edition (v2)”</i>, version <code>4caf5d3e7c2c7601</code> — numbers match the house model, no drift.</span>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    mem20 Orchestrator · program hub report for bythewayz66 · 2026-10-14.<br>
+    Positioning held across all rows: auditable agent memory · 257 tools across 26 domains · TAM $1.28B / SAM $282M / SOM $1.68M · blended ACV $14,000.<br>
+    Agents with no verified deliverable this cycle are marked as such rather than padded.
+  </footer>
+</div>
+</body>
+</html>

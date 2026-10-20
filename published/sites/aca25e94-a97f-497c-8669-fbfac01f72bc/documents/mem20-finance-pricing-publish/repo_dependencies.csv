@@ -1,0 +1,15 @@
+id,finance_line,repo_signal,legacy_value,canonical_value,delta,impact
+D-01,SOM self-serve component,Community traction (stars/forks),36 of 120 accounts,0 of 120 accounts,-36 accounts,Self-serve revenue line eliminated at current state
+D-02,Blended CAC,Inbound volume (stars / releases / package),8000,16800,+8800,Zero-inbound repo removes the low-cost OSS acquisition path
+D-03,CAC payback,Derived from D-02,0.73,1.73,+1.0 yr,Payback crosses the 12-month operating threshold
+D-04,SOM acquisition cost,Derived from D-02,960000,2016000,+1056000,"Full SOM book costs 1,056,000 USD more to acquire"
+D-05,Support cost per account,Issue tracker / discussions availability,1200,2400,+1200,has_issues=false and has_discussions=false: no community deflection channel
+D-06,SOM annual support cost,Derived from D-05,144000,288000,+144000,Annual support line doubles
+D-07,Gross margin,Derived from D-05,78.0%,69.4%,-8.6 pts,Support cost increase compresses gross margin
+D-08,License revenue,License (MIT),0,0,0,MIT grants full self-host rights: no license monetisation surface
+D-09,Enterprise concession,Bus factor (contributor count),0%,8%,-8%,4 contributors; procurement prices concentration risk
+D-10,3-yr LTV:CAC (Y1 cohort),Derived from D-02 / D-07,4.74,2.01,-2.73x,Falls below the 3x institutional hurdle
+D-11,Published releases,Release artefacts,unknown,0,-,No GitHub releases: maturity signal absent
+D-12,As-of commit,Repository HEAD,n/a,c274404,n/a,Finance model as-of 2026-10-14T16:39:02Z
+D-13,Install path,Package distribution,pip install mem20,git+https install,-,Adds install friction at the top of the self-serve funnel
+D-14,Time-to-first-value,Derived from D-13,1 day,3-5 days,+2-4 days,Delays self-serve activation and conversion

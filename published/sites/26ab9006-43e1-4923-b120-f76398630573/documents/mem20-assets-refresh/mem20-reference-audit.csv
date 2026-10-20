@@ -1,0 +1,12 @@
+file,assertive_stale_toolcount,bare_pip_install_mem20,assertive_banned_phrase,canonical_repo_refs,verified_source_refs,adversarial_0_000_mentions,mcp_lt2_pin_mentions,pypi_mentions,verdict
+documents/mem20-assets-refresh/mem20-launch-copy.md,0,0,0,10,3,11,7,11,PASS
+documents/mem20-assets-refresh/long-form-article.md,0,0,0,2,0,4,3,1,PASS
+documents/mem20-assets-refresh/show-hn-post.md,0,0,0,3,0,5,2,2,PASS
+documents/mem20-assets-refresh/product-hunt-post.md,0,0,0,1,0,2,1,1,PASS
+documents/mem20-assets-refresh/social-threads.md,0,0,0,6,0,6,2,2,PASS
+documents/mem20-assets-refresh/readme-install-block.md,0,0,0,2,0,4,3,1,PASS
+documents/mem20-assets-refresh/campaign-plan.md,0,0,0,2,1,1,2,2,PASS
+documents/mem20-assets-refresh/mem20-day0-execution-pack.md,0,0,0,6,2,11,5,5,PASS
+documents/mem20-assets-refresh/landing-page-copy-update.md,0,0,0,3,1,1,1,0,PASS
+documents/mem20-assets-refresh/mem20-tracked-links.csv,0,0,0,0,0,0,0,0,PASS
+webpages/mem20-launch-refresh/index.html,0,0,0,9,2,9,2,1,PASS

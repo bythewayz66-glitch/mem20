@@ -1,0 +1,34 @@
+EVIDENCE — mem20 market research v3 (artifact: mem20-market-research-v3.html)
+Observed 2026-10-18 by market-research lane.
+
+INTEGRITY / L1
+  bytes=46596
+  sha256=18c1659bf40ffa9a2ba555f248462fd0f80572a57f6adffa76762b04ed1c035e
+  L1 forbidden-token scan: 0 hits across 12 patterns (PASS)
+  filename unpublishable-pattern: no match (PASS)
+
+CLAUSE ASSERTIONS (each asserted against artifact bytes)
+  [1] canonical repo: bythewayz66-glitch/mem20 count=3 ; JaysonAIOnline count=0 (PASS)
+  [2] commit marker 8e2f803=present ; release v2.1-rc2=present (PASS)
+  [3] '257' count=8 (>=4) ; '26 domains' count=6 (>=3) (PASS)
+  [4] TAM=$1.28B count=8 ; SAM=$282M count=5 ; SOM=$1.68M count=3 ; ACV=$14,000 count=14 (PASS)
+  [5] '6.49B' occurrences=4 ; all inside negation/divisor/risk/prohibition frames=True (PASS)
+  [6] residual total -$594,000 present ; SAM gap -$600,000 present (PASS)
+  [7] wedge mechanisms: _validate_partition_tags=1 require_epistemic_clearance=1 memory_audit_contamination=1 (PASS)
+  [8] named competitors found=13/13 across 4 strategic groups (PASS)
+  [9] benchmark rows 1.000 direct / 0.800 multi-hop / 0.000 adversarial / leak 0.000 / audit 0.0 all present ; 'no published LoCoMo' present (PASS)
+  [10] Art.12 anchor: Article 12 / 2 Aug 2026 / six months / 35M / 7%% revenue all present (PASS)
+  [11] investment-advice disclaimer present=1 (PASS)
+  [12] HTML structure: unclosed=0 mismatched=0 ; div open=72 close=72 ; css braces open=78 close=78 (PASS)
+  [13] integrity rows re-asserted above ; sha256 self-consistent
+  [14] superseded 9,873 disclosed alongside current 9,901 (PASS)
+
+HOUSE-NUMBER RECONCILIATION (recomputed)
+  1.28e9 / 6.49e9 = 0.197227 -> 19.72% auditable share
+  TAM 91,429 x 14,000 = 1280006000 (delta +6000, 0.0005%)
+  SAM 20,100 x 14,000 = 281400000 (delta -600000, 0.21%)
+  SOM   120 x 14,000 = 1680000 (delta +0, EXACT)
+  total residual = -594000  (disclosed; not smoothed)
+  per-domain table sum = 257 vs headline 257 -> delta 0
+
+VERDICT: all 14 clauses PASS at sha256 18c1659bf40ffa9a2ba555f248462fd0f80572a57f6adffa76762b04ed1c035e

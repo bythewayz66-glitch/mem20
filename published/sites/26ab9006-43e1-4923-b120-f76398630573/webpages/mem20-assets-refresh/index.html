@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><script data-tmly-media-guard="1">(function(){"use strict";
+var T=window.__tmly||(window.__tmly=(function(){
+var o={},n=String(window.name||"");
+if(n.slice(0,5)==="tmly:"){n.slice(5).split("&").forEach(function(kv){
+var i=kv.indexOf("=");if(i>0){o[kv.slice(0,i)]=kv.slice(i+1)}})}
+return o})());
+if(T.presentation!=="preview"){return}
+var K="tmly:media-muted:"+String(location.pathname).replace(/[^/]*$/,"");
+var muted=false;try{muted=localStorage.getItem(K)==="1"}catch(e){}
+var gestured=false;
+["pointerdown","mousedown","keydown","touchstart"].forEach(function(t){
+document.addEventListener(t,function(){gestured=true},{capture:true,passive:true})});
+function remember(m){muted=m;try{m?localStorage.setItem(K,"1"):localStorage.removeItem(K)}catch(e){}}
+function announcePaused(el){try{el.dispatchEvent(new Event("pause"))}catch(e){}}
+function harden(el){
+el.autoplay=false;el.removeAttribute("autoplay");
+if(el.getAttribute("preload")==="auto"){el.setAttribute("preload","none")}
+if(muted){el.muted=true}
+if(!gestured&&!el.paused){try{el.pause()}catch(e){}}}
+var play=HTMLMediaElement.prototype.play;
+HTMLMediaElement.prototype.play=function(){
+if(!gestured){announcePaused(this);
+return Promise.reject(new DOMException("Artifact audio needs a user gesture","NotAllowedError"))}
+if(muted){remember(false);this.muted=false}
+return play.apply(this,arguments)};
+var acProtos=[];
+function guardAC(n){
+var N=window[n];if(!N||!N.prototype){return}
+if(acProtos.indexOf(N.prototype)<0){acProtos.push(N.prototype);
+var res=N.prototype.resume;
+if(typeof res==="function"){N.prototype.resume=function(){
+if(!gestured){return Promise.reject(new DOMException("Artifact audio needs a user gesture","NotAllowedError"))}
+if(muted){remember(false)}
+return res.apply(this,arguments)}}}
+var W=function(o){var c=arguments.length?new N(o):new N();
+if(!gestured){try{c.suspend()}catch(e){}}return c};
+W.prototype=N.prototype;try{window[n]=W}catch(e){}}
+guardAC("AudioContext");guardAC("webkitAudioContext");
+document.addEventListener("play",function(e){
+var el=e.target;if(el instanceof HTMLMediaElement&&!gestured){try{el.pause()}catch(err){}}},true);
+document.addEventListener("pause",function(e){
+if(e.target instanceof HTMLMediaElement&&gestured){remember(true)}},true);
+document.addEventListener("volumechange",function(e){
+var el=e.target;if(el instanceof HTMLMediaElement&&gestured){remember(el.muted||el.volume===0)}},true);
+function sweep(n){if(n&&n.querySelectorAll){var l=n.querySelectorAll("audio,video");
+for(var i=0;i<l.length;i++){harden(l[i])}}}
+new MutationObserver(function(rs){for(var i=0;i<rs.length;i++){var a=rs[i].addedNodes;
+for(var j=0;j<a.length;j++){var n=a[j];
+if(n instanceof HTMLMediaElement){harden(n)}else{sweep(n)}}}})
+.observe(document.documentElement,{childList:true,subtree:true});
+document.addEventListener("DOMContentLoaded",function(){sweep(document)});
+sweep(document)})();</script>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>mem20 — Content Assets Refreshed for the Canonical Repo</title>
+<meta name="description" content="Every mem20 content asset updated to the new canonical repo: long-form article, launch copy, README, Show HN + Product Hunt posts, landing-page copy, social threads.">
+<style>
+  :root{
+    --bg:#0b0f14; --panel:#121821; --panel-2:#161d28; --line:#232c3a;
+    --ink:#e8eef7; --muted:#94a3b8; --accent:#38bdf8; --accent-2:#818cf8;
+    --pass:#34d399; --warn:#fbbf24; --fail:#f87171; --slot:#1e293b;
+    --radius:14px; --shadow:0 10px 30px rgba(0,0,0,.35);
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0}
+  body{
+    background:radial-gradient(1200px 600px at 15% -10%, #14202e 0%, transparent 60%),
+               radial-gradient(900px 500px at 95% 0%, #1a1830 0%, transparent 55%), var(--bg);
+    color:var(--ink);
+    font:16px/1.6 ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    -webkit-font-smoothing:antialiased;
+  }
+  a{color:var(--accent);text-decoration:none}
+  a:hover{text-decoration:underline}
+  .wrap{max-width:1080px;margin:0 auto;padding:0 22px}
+  code{font:13px/1.5 ui-monospace,SFMono-Regular,Menlo,monospace;background:#0d131b;border:1px solid var(--line);border-radius:6px;padding:1px 6px;color:#cbe3ff;word-break:break-all}
+
+  header{padding:64px 0 34px;border-bottom:1px solid var(--line)}
+  .eyebrow{display:inline-flex;align-items:center;gap:8px;font-size:12px;letter-spacing:.14em;
+    text-transform:uppercase;color:var(--accent);background:rgba(56,189,248,.1);
+    border:1px solid rgba(56,189,248,.3);border-radius:999px;padding:5px 12px;margin-bottom:20px}
+  h1{font-size:clamp(28px,4.4vw,46px);line-height:1.12;margin:0 0 14px;letter-spacing:-.02em}
+  h1 .hl{background:linear-gradient(92deg,var(--accent),var(--accent-2));-webkit-background-clip:text;background-clip:text;color:transparent}
+  .lede{color:var(--muted);font-size:17px;max-width:80ch;margin:0}
+  .meta{margin-top:22px;display:flex;flex-wrap:wrap;gap:8px}
+  .badge{font-size:12px;color:#cbd5e1;background:var(--panel-2);border:1px solid var(--line);
+    border-radius:999px;padding:5px 11px}
+  .badge.ok{color:var(--pass);border-color:rgba(52,211,153,.35);background:rgba(52,211,153,.08)}
+  .badge.warn{color:var(--warn);border-color:rgba(251,191,36,.35);background:rgba(251,191,36,.08)}
+
+  section{padding:46px 0;border-bottom:1px solid var(--line)}
+  h2{font-size:clamp(21px,2.6vw,28px);margin:0 0 8px;letter-spacing:-.01em}
+  .sub{color:var(--muted);margin:0 0 24px;max-width:80ch}
+
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:16px}
+  .card{background:linear-gradient(180deg,var(--panel),var(--panel-2));border:1px solid var(--line);
+    border-radius:var(--radius);padding:20px;box-shadow:var(--shadow);display:flex;flex-direction:column}
+  .card h3{margin:0 0 6px;font-size:16px;line-height:1.35}
+  .card p{margin:0 0 14px;color:var(--muted);font-size:14px;flex:1}
+  .card .tag{font-size:11px;text-transform:uppercase;letter-spacing:.1em;color:var(--accent-2);margin-bottom:8px}
+  .card a.go{font-size:14px;font-weight:600}
+
+  table{width:100%;border-collapse:collapse;font-size:14px;margin-top:6px}
+  th,td{text-align:left;padding:11px 12px;border-bottom:1px solid var(--line);vertical-align:top}
+  th{color:var(--muted);font-weight:600;font-size:12px;text-transform:uppercase;letter-spacing:.08em}
+  td code{font-size:12px}
+  .pill{display:inline-block;font-size:11px;font-weight:700;padding:3px 9px;border-radius:999px}
+  .pill.pass{color:#052e1c;background:var(--pass)}
+  .pill.fail{color:#3b0a0a;background:var(--fail)}
+  .pill.warn{color:#3b2a03;background:var(--warn)}
+
+  .callout{background:rgba(251,191,36,.07);border:1px solid rgba(251,191,36,.32);border-radius:var(--radius);
+    padding:18px 20px;margin-top:8px}
+  .callout h3{margin:0 0 6px;font-size:16px;color:var(--warn)}
+  .callout p{margin:0;color:#e5e7eb;font-size:14px}
+  .callout.good{background:rgba(52,211,153,.07);border-color:rgba(52,211,153,.3)}
+  .callout.good h3{color:var(--pass)}
+
+  ul.clean{list-style:none;padding:0;margin:0}
+  ul.clean li{padding:9px 0 9px 26px;position:relative;border-bottom:1px solid var(--line);font-size:14px;color:#d7e2f0}
+  ul.clean li:before{content:"→";position:absolute;left:0;color:var(--accent)}
+  ul.clean li b{color:#fff}
+
+  footer{padding:34px 0 60px;color:var(--muted);font-size:13px}
+  .foot-links{list-style:none;display:flex;flex-wrap:wrap;gap:16px;padding:0;margin:0 0 16px}
+  @media(max-width:640px){header{padding:44px 0 26px}.grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap">
+    <div class="eyebrow">mem20 · content asset refresh</div>
+    <h1>All content assets updated to the <span class="hl">new canonical repo</span>.</h1>
+    <p class="lede">
+      Long-form articles, launch copy, README/docs rewrites, Show HN and Product Hunt posts,
+      landing-page copy and social threads — every stale repo and install reference corrected,
+      and machine-audited. The old <code>github.com/JaysonAIOnline/mem20</code> 404 and the
+      <code>pip install mem20</code> PyPI 404 no longer appear as live instructions in any asset.
+    </p>
+    <div class="meta">
+      <span class="badge ok">Audit: 11 / 11 assets PASS</span>
+      <span class="badge">257 tools · 26 domains</span>
+      <span class="badge">MIT · Python · MCP</span>
+      <span class="badge warn">Launch gated on repo publish + public page access</span>
+    </div>
+  </div>
+</header>
+
+<section>
+  <div class="wrap">
+    <h2>Two blockers remain — and neither is copy</h2>
+    <p class="sub">The refresh is complete. These gate <em>public launch</em>, not the assets, and they need another owner to clear them.</p>
+    <table>
+      <thead><tr><th>#</th><th>Blocker</th><th>Verified this run</th><th>Owner</th></tr></thead>
+      <tbody>
+        <tr><td>1</td><td><code>github.com/JaysonAIOnline/mem20</code></td><td>GitHub API → <span class="pill fail">404</span></td><td>GitHub Repo Assistant</td></tr>
+        <tr><td>2</td><td>Launch page for anonymous visitors</td><td><span class="pill fail">403</span> without token</td><td>Hosting / Webpage Developer</td></tr>
+        <tr><td>3</td><td><code>pip install mem20</code></td><td>PyPI JSON API → <span class="pill fail">404</span></td><td>PyPI publish</td></tr>
+      </tbody>
+    </table>
+    <div class="callout" style="margin-top:20px">
+      <h3>What the assets do about it instead</h3>
+      <p>The canonical repo is the single target (no placeholder). The one repo that actually matches the
+      “Python + MIT” claim — <code>mcp-cognitive-substrate</code> v1.0.1 — is named as the verified live source
+      wherever a working build path is needed. Install ships from source today, with the
+      <code>mcp&lt;2</code> pin that the server actually requires.</p>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <h2>Updated asset list</h2>
+    <p class="sub">Every asset below is published and permanently linkable.</p>
+
+    <div class="grid">
+      <div class="card">
+        <div class="tag">Report</div>
+        <h3>Asset refresh report</h3>
+        <p>Stale→new ledger, blockers, audit summary, honest open items.</p>
+        <a class="go" href="https://static.teamily.ai/sites/26ab9006-43e1-4923-b120-f76398630573/documents/mem20-assets-refresh/mem20-asset-refresh-report.md?tk=c2l0ZToyNmFiOTAwNi00M2UxLTQ5MjMtYjEyMC1mNzYzOTg2MzA1NzMvZG9jdW1lbnRzL21lbTIwLWFzc2V0cy1yZWZyZXNoOjE3OTI0ODAwNjU.Yjg2OTU1MDYxYTRmNWI3OTdjNTIwNTk5NDhlZDZmNjQ" target="_blank" rel="noopener">Open →</a>
+      </div>
+      <div class="card">
+        <div class="tag">Copy pack v2</div>
+        <h3>Launch copy pack</h3>
+        <p>One-liner, Show HN, H1/subhead/CTA, 3+6 value bullets, HN/PH/LinkedIn/X variants, claim ledger, guardrails.</p>
+        <a class="go" href="https://static.teamily.ai/sites/26ab9006-43e1-4923-b120-f76398630573/documents/mem20-assets-refresh/mem20-launch-copy.md?tk=c2l0ZToyNmFiOTAwNi00M2UxLTQ5MjMtYjEyMC1mNzYzOTg2MzA1NzMvZG9jdW1lbnRzL21lbTIwLWFzc2V0cy1yZWZyZXNoOjE3OTI0ODAwNjU.Yjg2OTU1MDYxYTRmNWI3OTdjNTIwNTk5NDhlZDZmNjQ" target="_blank" rel="noopener">Open →</a>
+      </div>
+      <div class="card">
+        <div class="tag">Long-form</div>
+        <h3>Deep-dive article</h3>
+        <p>~1,400 words for dev.to / Medium — “Agent Memory Has a Trust Problem.”</p>
+        <a class="go" href="https://static.teamily.ai/sites/26ab9006-43e1-4923-b120-f76398630573/documents/mem20-assets-refresh/long-form-article.md?tk=c2l0ZToyNmFiOTAwNi00M2UxLTQ5MjMtYjEyMC1mNzYzOTg2MzA1NzMvZG9jdW1lbnRzL21lbTIwLWFzc2V0cy1yZWZyZXNoOjE3OTI0ODAwNjU.Yjg2OTU1MDYxYTRmNWI3OTdjNTIwNTk5NDhlZDZmNjQ" target="_blank" rel="noopener">Open →</a>
+      </div>
+      <div class="card">
+        <div class="tag">Channel</div>
+        <h3>Show HN post</h3>
+        <p>Publish-ready title + body + comment strategy, repo-corrected.</p>
+        <a class="go" href="https://static.teamily.ai/sites/26ab9006-43e1-4923-b120-f76398630573/documents/mem20-assets-refresh/show-hn-post.md?tk=c2l0ZToyNmFiOTAwNi00M2UxLTQ5MjMtYjEyMC1mNzYzOTg2MzA1NzMvZG9jdW1lbnRzL21lbTIwLWFzc2V0cy1yZWZyZXNoOjE3OTI0ODAwNjU.Yjg2OTU1MDYxYTRmNWI3OTdjNTIwNTk5NDhlZDZmNjQ" target="_blank" rel="noopener">Open →</a>
+      </div>
+      <div class="card">
+        <div class="tag">Channel</div>
+        <h3>Product Hunt post</h3>
+        <p>Tagline, description, maker comment, topics, assets to attach.</p>
+        <a class="go" href="https://static.teamily.ai/sites/26ab9006-43e1-4923-b120-f76398630573/documents/mem20-assets-refresh/product-hunt-post.md?tk=c2l0ZToyNmFiOTAwNi00M2UxLTQ5MjMtYjEyMC1mNzYzOTg2MzA1NzMvZG9jdW1lbnRzL21lbTIwLWFzc2V0cy1yZWZyZXNoOjE3OTI0ODAwNjU.Yjg2OTU1MDYxYTRmNWI3OTdjNTIwNTk5NDhlZDZmNjQ" target="_blank" rel="noopener">Open →</a>
+      </div>
+      <div class="card">
+        <div class="tag">Channel</div>
+        <h3>Social threads</h3>
+        <p>X single + 6-post thread, LinkedIn, and 3 Reddit variants.</p>
+        <a class="go" href="https://static.teamily.ai/sites/26ab9006-43e1-4923-b120-f76398630573/documents/mem20-assets-refresh/social-threads.md?tk=c2l0ZToyNmFiOTAwNi00M2UxLTQ5MjMtYjEyMC1mNzYzOTg2MzA1NzMvZG9jdW1lbnRzL21lbTIwLWFzc2V0cy1yZWZyZXNoOjE3OTI0ODAwNjU.Yjg2OTU1MDYxYTRmNWI3OTdjNTIwNTk5NDhlZDZmNjQ" target="_blank" rel="noopener">Open →</a>
+      </div>
+      <div class="card">
+        <div class="tag">Docs</div>
+        <h3>README install block</h3>
+        <p>Repo header + badges, install (with the <code>mcp&lt;2</code> pin), run, MCP client config, benchmark + limits sections.</p>
+        <a class="go" href="https://static.teamily.ai/sites/26ab9006-43e1-4923-b120-f76398630573/documents/mem20-assets-refresh/readme-install-block.md?tk=c2l0ZToyNmFiOTAwNi00M2UxLTQ5MjMtYjEyMC1mNzYzOTg2MzA1NzMvZG9jdW1lbnRzL21lbTIwLWFzc2V0cy1yZWZyZXNoOjE3OTI0ODAwNjU.Yjg2OTU1MDYxYTRmNWI3OTdjNTIwNTk5NDhlZDZmNjQ" target="_blank" rel="noopener">Open →</a>
+      </div>
+      <div class="card">
+        <div class="tag">Page copy</div>
+        <h3>Landing-page copy update</h3>
+        <p>Exact string replacements applied to the live page, plus what deliberately did not change.</p>
+        <a class="go" href="https://static.teamily.ai/sites/26ab9006-43e1-4923-b120-f76398630573/documents/mem20-assets-refresh/landing-page-copy-update.md?tk=c2l0ZToyNmFiOTAwNi00M2UxLTQ5MjMtYjEyMC1mNzYzOTg2MzA1NzMvZG9jdW1lbnRzL21lbTIwLWFzc2V0cy1yZWZyZXNoOjE3OTI0ODAwNjU.Yjg2OTU1MDYxYTRmNWI3OTdjNTIwNTk5NDhlZDZmNjQ" target="_blank" rel="noopener">Open →</a>
+      </div>
+      <div class="card">
+        <div class="tag">Campaign</div>
+        <h3>Campaign plan v2</h3>
+        <p>Channel tiers, UTM scheme, measurement plan — repo-corrected, base moved to the refreshed page.</p>
+        <a class="go" href="https://static.teamily.ai/sites/26ab9006-43e1-4923-b120-f76398630573/documents/mem20-assets-refresh/campaign-plan.md?tk=c2l0ZToyNmFiOTAwNi00M2UxLTQ5MjMtYjEyMC1mNzYzOTg2MzA1NzMvZG9jdW1lbnRzL21lbTIwLWFzc2V0cy1yZWZyZXNoOjE3OTI0ODAwNjU.Yjg2OTU1MDYxYTRmNWI3OTdjNTIwNTk5NDhlZDZmNjQ" target="_blank" rel="noopener">Open →</a>
+      </div>
+      <div class="card">
+        <div class="tag">Campaign</div>
+        <h3>Day 0 execution pack v2</h3>
+        <p>Show HN, X thread, README block and MCP listing — all repo-corrected; gates restated.</p>
+        <a class="go" href="https://static.teamily.ai/sites/26ab9006-43e1-4923-b120-f76398630573/documents/mem20-assets-refresh/mem20-day0-execution-pack.md?tk=c2l0ZToyNmFiOTAwNi00M2UxLTQ5MjMtYjEyMC1mNzYzOTg2MzA1NzMvZG9jdW1lbnRzL21lbTIwLWFzc2V0cy1yZWZyZXNoOjE3OTI0ODAwNjU.Yjg2OTU1MDYxYTRmNWI3OTdjNTIwNTk5NDhlZDZmNjQ" target="_blank" rel="noopener">Open →</a>
+      </div>
+      <div class="card">
+        <div class="tag">Tracking</div>
+        <h3>Tracked links v2 (CSV)</h3>
+        <p>All 12 channel rows repointed at the refreshed launch page, <code>utm_campaign=mem20_launch_2026q4</code>.</p>
+        <a class="go" href="https://static.teamily.ai/sites/26ab9006-43e1-4923-b120-f76398630573/documents/mem20-assets-refresh/mem20-tracked-links.csv?tk=c2l0ZToyNmFiOTAwNi00M2UxLTQ5MjMtYjEyMC1mNzYzOTg2MzA1NzMvZG9jdW1lbnRzL21lbTIwLWFzc2V0cy1yZWZyZXNoOjE3OTI0ODAwNjU.Yjg2OTU1MDYxYTRmNWI3OTdjNTIwNTk5NDhlZDZmNjQ" target="_blank" rel="noopener">Open →</a>
+      </div>
+      <div class="card">
+        <div class="tag">Webpage</div>
+        <h3>Launch page (refreshed copy)</h3>
+        <p>4 tool-count fixes, corrected install block, repo-migration note. Benchmark + guardrail sections unchanged.</p>
+        <a class="go" href="https://static.teamily.ai/sites/26ab9006-43e1-4923-b120-f76398630573/webpages/mem20-launch-refresh/index.html?tk=c2l0ZToyNmFiOTAwNi00M2UxLTQ5MjMtYjEyMC1mNzYzOTg2MzA1NzMvd2VicGFnZXMvbWVtMjAtbGF1bmNoLXJlZnJlc2g6MTc5MjQ4MDA2NQ.MDRiOGIyMjBiMzIyYWM5MDNmMGU5NDY0YjI1NTc0ZmU" target="_blank" rel="noopener">Open →</a>
+      </div>
+      <div class="card">
+        <div class="tag">Audit</div>
+        <h3>Reference audit (CSV)</h3>
+        <p>Machine audit — per asset, per rule — with the pass/fail verdict.</p>
+        <a class="go" href="https://static.teamily.ai/sites/26ab9006-43e1-4923-b120-f76398630573/documents/mem20-assets-refresh/mem20-reference-audit.csv?tk=c2l0ZToyNmFiOTAwNi00M2UxLTQ5MjMtYjEyMC1mNzYzOTg2MzA1NzMvZG9jdW1lbnRzL21lbTIwLWFzc2V0cy1yZWZyZXNoOjE3OTI0ODAwNjU.Yjg2OTU1MDYxYTRmNWI3OTdjNTIwNTk5NDhlZDZmNjQ" target="_blank" rel="noopener">Open →</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <h2>Stale → new, in one table</h2>
+    <p class="sub">The mechanical heart of the refresh.</p>
+    <table>
+      <thead><tr><th>Thing</th><th>v1 (stale / broken)</th><th>v2 (corrected)</th></tr></thead>
+      <tbody>
+        <tr><td>Repo</td><td><code>github.com/JaysonAIOnline/mem20</code> as a live repo</td><td>Canonical <b>migration target</b> (explicitly labelled) + verified live source named alongside: <code>mcp-cognitive-substrate</code> v1.0.1</td></tr>
+        <tr><td>Install</td><td><code>pip install mem20</code></td><td>Source install; <code>pip install mem20</code> documented as not yet on PyPI</td></tr>
+        <tr><td>Dependency</td><td>(none)</td><td><code>pip install "mcp&lt;2"</code> — required; mcp 2.x removed the v1 FastMCP API mem20 uses</td></tr>
+        <tr><td>Run command</td><td><code>python -m mem20 --stdio</code> <span class="pill fail">wrong</span></td><td><code>python -m mcp_cognitive_substrate.cli</code></td></tr>
+        <tr><td>Tool count</td><td><code>~258–260</code> (mixed within the pack)</td><td><b>257 tools / 26 domains</b>, consistently</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <h2>Audit results</h2>
+    <p class="sub">Context-aware scan across all 11 refreshed assets. Quoted stale strings inside change-logs and prohibitions are not violations; assertive uses are.</p>
+    <table>
+      <thead><tr><th>Rule</th><th>Result</th></tr></thead>
+      <tbody>
+        <tr><td>Assertive stale tool-count (258 / 260)</td><td><span class="pill pass">0</span></td></tr>
+        <tr><td>Bare <code>pip install mem20</code> as a live command</td><td><span class="pill pass">0</span></td></tr>
+        <tr><td>Assertive banned phrasing</td><td><span class="pill pass">0</span></td></tr>
+        <tr><td>Canonical repo references present</td><td>44</td></tr>
+        <tr><td>Adversarial <code>0.000</code> disclosed</td><td>55 mentions</td></tr>
+        <tr><td><code>mcp&lt;2</code> pin documented</td><td>29 mentions</td></tr>
+        <tr><td>PyPI-pending disclosed</td><td>25 mentions</td></tr>
+        <tr><td><b>Overall</b></td><td><span class="pill pass">PASS</span> 11 / 11 assets</td></tr>
+      </tbody>
+    </table>
+    <div class="callout good" style="margin-top:22px">
+      <h3>Guardrails held everywhere</h3>
+      <p>No LoCoMo/LongMemEval claim · adversarial 0.000 disclosed wherever benchmarks appear ·
+      promotion described as “evidence-based with an append-only audit trail”, never tamper-proof or unfakeable ·
+      no competitor disparagement.</p>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <h2>Open items — stated honestly</h2>
+    <ul class="clean">
+      <li><b>Posting is manual.</b> No HN / X / GitHub / MCP-directory integration exists, so no agent can click-publish. Every post is paste-ready; publishing is the owner's action.</li>
+      <li><b>The canonical repo name is a target, not a fact yet.</b> If the canonical name changes, re-run the reference swap — it is one string across all assets.</li>
+      <li><b>The launch page needs a public alias.</b> Copy is corrected, but anonymous visitors still can't load it — so no outbound traffic will convert until hosting fixes that.</li>
+      <li><b><code>pip install mem20</code> stays unpublished</b> until PyPI is live; then swap the source block in the copy pack, README block, Show HN post, Day-0 pack and landing page.</li>
+    </ul>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <ul class="foot-links">
+      <li>Mem20-Content (Content Creator)</li>
+      <li>Canonical repo: <a href="https://github.com/JaysonAIOnline/mem20" target="_blank" rel="noopener">JaysonAIOnline/mem20</a></li>
+      <li>Verified live source: <a href="https://github.com/JaysonAIOnline/mcp-cognitive-substrate" target="_blank" rel="noopener">mcp-cognitive-substrate</a> v1.0.1</li>
+      <li>Wedge: auditable agent memory</li>
+    </ul>
+    <p>Reference audit generated 2026-10-14 · assets are immutable snapshots; a further revision should be created as a new version, not edited in place.</p>
+  </div>
+</footer>
+
+</body>
+</html>

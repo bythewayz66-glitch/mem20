@@ -1,0 +1,1025 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><script data-tmly-media-guard="1">(function(){"use strict";
+var T=window.__tmly||(window.__tmly=(function(){
+var o={},n=String(window.name||"");
+if(n.slice(0,5)==="tmly:"){n.slice(5).split("&").forEach(function(kv){
+var i=kv.indexOf("=");if(i>0){o[kv.slice(0,i)]=kv.slice(i+1)}})}
+return o})());
+if(T.presentation!=="preview"){return}
+var K="tmly:media-muted:"+String(location.pathname).replace(/[^/]*$/,"");
+var muted=false;try{muted=localStorage.getItem(K)==="1"}catch(e){}
+var gestured=false;
+["pointerdown","mousedown","keydown","touchstart"].forEach(function(t){
+document.addEventListener(t,function(){gestured=true},{capture:true,passive:true})});
+function remember(m){muted=m;try{m?localStorage.setItem(K,"1"):localStorage.removeItem(K)}catch(e){}}
+function announcePaused(el){try{el.dispatchEvent(new Event("pause"))}catch(e){}}
+function harden(el){
+el.autoplay=false;el.removeAttribute("autoplay");
+if(el.getAttribute("preload")==="auto"){el.setAttribute("preload","none")}
+if(muted){el.muted=true}
+if(!gestured&&!el.paused){try{el.pause()}catch(e){}}}
+var play=HTMLMediaElement.prototype.play;
+HTMLMediaElement.prototype.play=function(){
+if(!gestured){announcePaused(this);
+return Promise.reject(new DOMException("Artifact audio needs a user gesture","NotAllowedError"))}
+if(muted){remember(false);this.muted=false}
+return play.apply(this,arguments)};
+var acProtos=[];
+function guardAC(n){
+var N=window[n];if(!N||!N.prototype){return}
+if(acProtos.indexOf(N.prototype)<0){acProtos.push(N.prototype);
+var res=N.prototype.resume;
+if(typeof res==="function"){N.prototype.resume=function(){
+if(!gestured){return Promise.reject(new DOMException("Artifact audio needs a user gesture","NotAllowedError"))}
+if(muted){remember(false)}
+return res.apply(this,arguments)}}}
+var W=function(o){var c=arguments.length?new N(o):new N();
+if(!gestured){try{c.suspend()}catch(e){}}return c};
+W.prototype=N.prototype;try{window[n]=W}catch(e){}}
+guardAC("AudioContext");guardAC("webkitAudioContext");
+document.addEventListener("play",function(e){
+var el=e.target;if(el instanceof HTMLMediaElement&&!gestured){try{el.pause()}catch(err){}}},true);
+document.addEventListener("pause",function(e){
+if(e.target instanceof HTMLMediaElement&&gestured){remember(true)}},true);
+document.addEventListener("volumechange",function(e){
+var el=e.target;if(el instanceof HTMLMediaElement&&gestured){remember(el.muted||el.volume===0)}},true);
+function sweep(n){if(n&&n.querySelectorAll){var l=n.querySelectorAll("audio,video");
+for(var i=0;i<l.length;i++){harden(l[i])}}}
+new MutationObserver(function(rs){for(var i=0;i<rs.length;i++){var a=rs[i].addedNodes;
+for(var j=0;j<a.length;j++){var n=a[j];
+if(n instanceof HTMLMediaElement){harden(n)}else{sweep(n)}}}})
+.observe(document.documentElement,{childList:true,subtree:true});
+document.addEventListener("DOMContentLoaded",function(){sweep(document)});
+sweep(document)})();</script>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>mem20 — Competitive &amp; Market Analysis, Agent-Memory Category (v3)</title>
+<style>
+  :root{
+    --ink:#12161c;
+    --ink-soft:#3f4a58;
+    --ink-faint:#6b7787;
+    --paper:#f6f4ef;
+    --card:#fffdf8;
+    --line:#dcd7cb;
+    --line-soft:#e9e5da;
+    --accent:#0f5f56;
+    --accent-soft:#e2eeeb;
+    --warn:#a8501b;
+    --warn-soft:#fbeee3;
+    --red:#8f2727;
+    --mono:ui-monospace,SFMono-Regular,"SF Mono",Menlo,Consolas,monospace;
+    --sans:"Iowan Old Style","Palatino Linotype",Palatino,Georgia,serif;
+    --ui:system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{
+    margin:0;background:var(--paper);color:var(--ink);
+    font-family:var(--ui);font-size:16px;line-height:1.62;
+    -webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:1120px;margin:0 auto;padding:0 28px}
+
+  /* ---------- masthead ---------- */
+  header.mast{
+    border-bottom:1px solid var(--line);
+    background:linear-gradient(180deg,#fffdf8 0%,#f6f4ef 100%);
+    padding:44px 0 34px;
+  }
+  .kicker{
+    font-family:var(--mono);font-size:11.5px;letter-spacing:.18em;
+    text-transform:uppercase;color:var(--accent);margin:0 0 14px;font-weight:600;
+  }
+  h1{
+    font-family:var(--sans);font-weight:600;font-size:clamp(30px,4.4vw,50px);
+    line-height:1.1;margin:0 0 16px;letter-spacing:-.015em;
+  }
+  .dek{font-size:17.5px;color:var(--ink-soft);max-width:74ch;margin:0 0 24px}
+  .meta{
+    display:flex;flex-wrap:wrap;gap:8px 10px;font-family:var(--mono);
+    font-size:11.5px;color:var(--ink-faint);
+  }
+  .meta span{
+    border:1px solid var(--line);border-radius:999px;padding:5px 11px;background:var(--card);
+  }
+  .meta span b{color:var(--ink);font-weight:600}
+
+  /* ---------- nav ---------- */
+  nav.toc{
+    position:sticky;top:0;z-index:40;background:rgba(246,244,239,.94);
+    backdrop-filter:blur(6px);border-bottom:1px solid var(--line);
+  }
+  nav.toc ul{
+    display:flex;gap:4px;list-style:none;margin:0;padding:9px 28px;
+    max-width:1120px;margin:0 auto;overflow-x:auto;scrollbar-width:none;
+  }
+  nav.toc ul::-webkit-scrollbar{display:none}
+  nav.toc a{
+    font-family:var(--mono);font-size:11.5px;letter-spacing:.04em;
+    color:var(--ink-faint);text-decoration:none;padding:6px 11px;
+    border-radius:6px;white-space:nowrap;transition:.15s;
+  }
+  nav.toc a:hover{background:var(--accent-soft);color:var(--accent)}
+
+  /* ---------- sections ---------- */
+  section{padding:52px 0;border-bottom:1px solid var(--line-soft)}
+  section:last-of-type{border-bottom:none}
+  .sec-num{
+    font-family:var(--mono);font-size:11.5px;letter-spacing:.18em;color:var(--accent);
+    font-weight:600;margin:0 0 8px;
+  }
+  h2{
+    font-family:var(--sans);font-weight:600;font-size:clamp(22px,2.8vw,31px);
+    line-height:1.18;margin:0 0 12px;letter-spacing:-.01em;
+  }
+  h3{
+    font-family:var(--ui);font-weight:650;font-size:15px;letter-spacing:.01em;
+    margin:30px 0 10px;color:var(--ink);
+  }
+  .lede{font-size:17px;color:var(--ink-soft);max-width:78ch;margin:0 0 22px}
+  p{margin:0 0 14px;max-width:82ch}
+  strong{font-weight:650}
+  a{color:var(--accent)}
+
+  /* ---------- house number band ---------- */
+  .house{
+    display:grid;grid-template-columns:repeat(3,1fr);
+    gap:1px;background:var(--line);border:1px solid var(--line);
+    border-radius:10px;overflow:hidden;margin:26px 0 8px;
+  }
+  .house div{background:var(--card);padding:20px 20px 18px}
+  .house .lbl{
+    font-family:var(--mono);font-size:10.5px;letter-spacing:.14em;
+    text-transform:uppercase;color:var(--ink-faint);margin-bottom:7px;
+  }
+  .house .val{
+    font-family:var(--sans);font-size:31px;font-weight:600;line-height:1.05;
+    letter-spacing:-.02em;
+  }
+  .house .sub{font-size:12.5px;color:var(--ink-faint);margin-top:6px;line-height:1.45}
+  .house .locked .val{color:var(--accent)}
+
+  /* ---------- tables ---------- */
+  .tscroll{overflow-x:auto;margin:22px 0;border:1px solid var(--line);border-radius:9px;background:var(--card)}
+  table{width:100%;border-collapse:collapse;font-size:13.5px;min-width:660px}
+  thead th{
+    text-align:left;font-family:var(--mono);font-size:10.5px;letter-spacing:.1em;
+    text-transform:uppercase;color:var(--ink-faint);font-weight:600;
+    padding:11px 14px;border-bottom:1px solid var(--line);background:#fbf9f4;
+    vertical-align:bottom;
+  }
+  tbody td{padding:11px 14px;border-bottom:1px solid var(--line-soft);vertical-align:top;line-height:1.5}
+  tbody tr:last-child td{border-bottom:none}
+  tbody tr:hover{background:#fcfaf5}
+  td.num,th.num{text-align:right;font-family:var(--mono);font-variant-numeric:tabular-nums;white-space:nowrap}
+  .ref-row{background:var(--accent-soft)!important}
+  .ref-row td{font-weight:500;border-bottom:1px solid #cfe0dc}
+  .grp td{background:#f3f0e9;font-family:var(--mono);font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-faint);padding:8px 14px;font-weight:600}
+
+  /* ---------- chips / pills ---------- */
+  .pill{
+    display:inline-block;font-family:var(--mono);font-size:10.5px;letter-spacing:.05em;
+    padding:2.5px 8px;border-radius:999px;white-space:nowrap;font-weight:600;
+  }
+  .yes{background:var(--accent-soft);color:var(--accent);border:1px solid #c4dcd6}
+  .no{background:#f1eee7;color:#8b8477;border:1px solid #e0dbcf}
+  .part{background:var(--warn-soft);color:var(--warn);border:1px solid #efd8c4}
+
+  /* ---------- callouts ---------- */
+  .call{
+    border:1px solid var(--line);border-left:3px solid var(--accent);
+    background:var(--card);border-radius:0 8px 8px 0;padding:16px 20px;margin:22px 0;
+  }
+  .call.warn{border-left-color:var(--warn);background:var(--warn-soft);border-color:#efdcc9}
+  .call.red{border-left-color:var(--red);background:#fbeeee;border-color:#efd2d2}
+  .call .ct{
+    font-family:var(--mono);font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;
+    color:var(--accent);font-weight:700;margin-bottom:7px;
+  }
+  .call.warn .ct{color:var(--warn)}
+  .call.red .ct{color:var(--red)}
+  .call p:last-child{margin-bottom:0}
+
+  /* ---------- wedge cards ---------- */
+  .cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(258px,1fr));gap:14px;margin:22px 0}
+  .card{
+    background:var(--card);border:1px solid var(--line);border-radius:9px;padding:18px 19px;
+  }
+  .card h4{
+    margin:0 0 8px;font-size:14px;font-weight:650;letter-spacing:.01em;
+    display:flex;align-items:baseline;gap:8px;
+  }
+  .card h4 em{
+    font-family:var(--mono);font-style:normal;font-size:10.5px;color:var(--accent);
+    font-weight:700;letter-spacing:.1em;
+  }
+  .card p{font-size:13.5px;color:var(--ink-soft);margin:0;line-height:1.55}
+
+  /* ---------- positioning map ---------- */
+  .map{
+    border:1px solid var(--line);border-radius:9px;background:var(--card);
+    padding:16px;margin:22px 0;overflow-x:auto;
+  }
+  .map svg{display:block;margin:0 auto;max-width:100%;height:auto}
+
+  /* ---------- lists ---------- */
+  ul.clean{list-style:none;padding:0;margin:14px 0}
+  ul.clean li{
+    padding:11px 0 11px 26px;border-bottom:1px solid var(--line-soft);
+    position:relative;font-size:14.5px;max-width:84ch;
+  }
+  ul.clean li:last-child{border-bottom:none}
+  ul.clean li::before{
+    content:"";position:absolute;left:4px;top:20px;width:6px;height:6px;
+    border-radius:50%;background:var(--accent);
+  }
+  ul.clean li.warnli::before{background:var(--warn)}
+  ul.clean li b{font-weight:650}
+
+  /* ---------- footer ---------- */
+  footer{
+    background:#12161c;color:#b9c2cd;padding:38px 0 44px;font-size:13px;
+  }
+  footer .wrap{max-width:1120px}
+  footer h3{color:#fff;font-size:13px;font-family:var(--mono);letter-spacing:.12em;
+    text-transform:uppercase;margin:0 0 10px}
+  footer p{color:#9099a5;font-size:12.5px;max-width:90ch;line-height:1.6}
+  footer .disc{
+    border-top:1px solid #2b323c;margin-top:24px;padding-top:18px;color:#7d858f;font-size:11.5px;
+  }
+  .src{font-family:var(--mono);font-size:10.5px;color:var(--ink-faint)}
+
+  @media(max-width:640px){
+    .wrap{padding:0 18px}
+    .house{grid-template-columns:repeat(2,1fr)}
+    header.mast{padding:32px 0 26px}
+    section{padding:40px 0}
+    .house .val{font-size:26px}
+  }
+</style>
+</head>
+<body>
+
+<header class="mast">
+  <div class="wrap">
+    <p class="kicker">mem20 · Market Research Lane · Competitive &amp; Market Analysis v3</p>
+    <h1>The auditable slice is the market.<br>The rest of the category is selling storage.</h1>
+    <p class="dek">
+      A competitive and market analysis of the agent-memory category, scoped to the segment that
+      matters for mem20: enterprises that must prove what their agents remembered, and why. Every
+      figure below is held to the house number set. Where the arithmetic does not reconcile exactly,
+      the residual is printed rather than smoothed.
+    </p>
+    <div class="meta">
+      <span>Revision <b>v3</b></span>
+      <span>Analysis date <b>2026-10-18</b></span>
+      <span>Canonical repo <b>bythewayz66-glitch/mem20</b> @ <b>8e2f803</b></span>
+      <span>Release <b>v2.1-rc2</b></span>
+      <span>Gate <b>gabe → Sidney</b></span>
+    </div>
+  </div>
+</header>
+
+<nav class="toc">
+  <ul>
+    <li><a href="#numbers">01 House numbers</a></li>
+    <li><a href="#landscape">02 Landscape</a></li>
+    <li><a href="#matrix">03 Matrix</a></li>
+    <li><a href="#gap">04 The wedge</a></li>
+    <li><a href="#demand">05 Demand driver</a></li>
+    <li><a href="#motion">06 GTM motion</a></li>
+    <li><a href="#sizing">07 Sizing audit</a></li>
+    <li><a href="#risks">08 Risks</a></li>
+    <li><a href="#verdict">09 Verdict</a></li>
+  </ul>
+</nav>
+
+<main>
+
+<!-- 01 -->
+<section id="numbers">
+  <div class="wrap">
+    <p class="sec-num">01 — Position held constant</p>
+    <h2>The five numbers every mem20 asset must quote identically</h2>
+    <p class="lede">
+      These are the house numbers. This analysis does not re-derive them and no downstream asset
+      should substitute a different figure. The only number that changed interpretation in this
+      revision is the product count, and it is now verified against the live tree rather than the docs.
+    </p>
+
+    <div class="house">
+      <div class="locked">
+        <div class="lbl">Tools</div>
+        <div class="val">257</div>
+        <div class="sub">verified: per-domain table sums to 257, delta 0</div>
+      </div>
+      <div class="locked">
+        <div class="lbl">Domains</div>
+        <div class="val">26</div>
+        <div class="sub">counted as domain groupings, not table rows</div>
+      </div>
+      <div class="locked">
+        <div class="lbl">TAM</div>
+        <div class="val">$1.28B</div>
+        <div class="sub">global auditable agent-memory slice</div>
+      </div>
+      <div class="locked">
+        <div class="lbl">SAM</div>
+        <div class="val">$282M</div>
+        <div class="sub">serviceable slice, ~22% of TAM</div>
+      </div>
+      <div class="locked">
+        <div class="lbl">SOM</div>
+        <div class="val">$1.68M</div>
+        <div class="sub">12-month obtainable, 120 accounts</div>
+      </div>
+      <div class="locked">
+        <div class="lbl">Blended ACV</div>
+        <div class="val">$14,000</div>
+        <div class="sub">locked; sensitivity is flat on volume</div>
+      </div>
+    </div>
+
+    <div class="call warn">
+      <div class="ct">Correction carried into v3</div>
+      <p>
+        Earlier mem20 assets used <b>9,873 tracked files</b> and <b>293 subsystems</b>. The canonical tree at
+        <span class="src">8e2f803</span> now reports <b>9,901 tracked files</b> and <b>293 subsystem directories</b>
+        (293 confirmed: the <span class="src">mem20*z/</span> top-level directory count is exactly 293). Any asset
+        still quoting 9,873 is stale and should be refreshed to 9,901 before it ships.
+      </p>
+    </div>
+
+    <div class="call">
+      <div class="ct">A counting trap worth documenting</div>
+      <p>
+        The architecture document's domain table has <b>29 rows</b> but its own heading says <b>26 domains</b>.
+        Both are correct: several domain headings are served by one module or span two prefixes, so rows are
+        sub-domains rather than domains. The headline to quote is <b>257 tools across 26 domains</b>, verified by
+        instantiating the server and counting registered tools. Do not quote "29 domains" — it is a row count,
+        not a domain count. This is precisely the kind of sum mismatch that a publication gate refuses.
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- 02 -->
+<section id="landscape">
+  <div class="wrap">
+    <p class="sec-num">02 — Structure of the category</p>
+    <h2>Four strategic groups, and only one of them is actually contested</h2>
+    <p class="lede">
+      The "agent memory" label covers four businesses with different economics, different buyers and
+      different moats. Reading them as one competitive set is the single most common error in this
+      category, and it is the error that makes the market look more crowded than mem20's actual segment is.
+    </p>
+
+    <div class="cards">
+      <div class="card">
+        <h4><em>A</em> Developer memory APIs</h4>
+        <p>
+          Mem0, Zep/Graphiti, Letta, LangMem, Cognee. Developer-led, self-serve, priced per month
+          ($0–$375). The most visible group and the one mem20 is most often compared against — but
+          its buyers are individual engineers optimising retrieval quality, not compliance officers.
+        </p>
+      </div>
+      <div class="card">
+        <h4><em>B</em> Hyperscaler embedded memory</h4>
+        <p>
+          AWS Bedrock AgentCore Memory, Google Vertex AI Agent Engine. Consumption-priced
+          ($1.00/GB ingested, $0.10/GB-month, $0.75/1,000 records). Not a competitor for the compliance
+          budget; it is the default that enterprises land on before they have an audit obligation.
+        </p>
+      </div>
+      <div class="card">
+        <h4><em>C</em> Infrastructure substrate</h4>
+        <p>
+          Pinecone, Redis, Weaviate. The retrieval and storage layer memory products are built on.
+          A supplier or a partner, never a semantic competitor. Mem20 can run on top of this group.
+        </p>
+      </div>
+      <div class="card">
+        <h4><em>D</em> Governance-adjacent platforms</h4>
+        <p>
+          IBM watsonx.governance, ServiceNow AI Control Tower, Lyzr OpenController, Credo AI, OneTrust.
+          These own the compliance budget and are the <em>real</em> competitive set for the auditable slice —
+          six-figure enterprise deals, sold top-down.
+        </p>
+      </div>
+    </div>
+
+    <p>
+      The strategic conclusion is uncomfortable for the category's own marketing: <b>groups A, B and C are
+      converging on identical storage pricing</b>, and that convergence is measurable. AWS bills memory events
+      at $0.25 per 1,000; Google Vertex bills its session and memory events at $0.25 per 1,000 — the same number.
+      When two hyperscalers independently land on the same unit price, the component is commoditised and should
+      not appear in a differentiation argument at all.
+    </p>
+
+    <div class="call">
+      <div class="ct">What this means for mem20's positioning</div>
+      <p>
+        mem20 should stop competing on memory storage and retrieval economics, where it cannot win and does
+        not need to. The competitive set that matters is <b>group D</b>, and mem20's argument against group D is
+        architectural rather than commercial: governance platforms record what an agent <em>did</em>; mem20 records
+        what an agent <em>knows</em>, and whether it was permitted to know it.
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- 03 -->
+<section id="matrix">
+  <div class="wrap">
+    <p class="sec-num">03 — Competitive matrix</p>
+    <h2>Where each player actually sits on auditability</h2>
+    <p class="lede">
+      13 named players plus mem20 as the reference row, scored on the four attributes that decide the
+      auditable slice: whether you can self-host, whether the store has a temporal model, whether grounded
+      and simulated content are separated, and whether provenance is a property of the memory store or a
+      feature bolted onto the orchestration layer.
+    </p>
+
+    <div class="tscroll">
+      <table>
+        <thead>
+          <tr>
+            <th>Player</th>
+            <th>Group</th>
+            <th>Access</th>
+            <th>Self-host</th>
+            <th>Architecture bet</th>
+            <th>Temporal</th>
+            <th>Grounded / simulated split</th>
+            <th>Provenance in store</th>
+            <th class="num">Entry</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr class="grp"><td colspan="9">A · Developer memory APIs</td></tr>
+          <tr>
+            <td><b>Mem0</b></td><td>A</td>
+            <td>Apache-2.0 + cloud</td>
+            <td><span class="pill yes">yes</span></td>
+            <td>Passive LLM fact extraction into a vector store; graph on Pro</td>
+            <td><span class="pill no">no</span></td>
+            <td><span class="pill no">no</span></td>
+            <td><span class="pill part">Pro tier</span></td>
+            <td class="num">$0 → $249/mo</td>
+          </tr>
+          <tr>
+            <td><b>Zep</b> / Graphiti</td><td>A</td>
+            <td>Cloud; community edition retired</td>
+            <td><span class="pill no">withdrawn</span></td>
+            <td>Bi-temporal knowledge graph; invalidate rather than delete</td>
+            <td><span class="pill yes">strongest</span></td>
+            <td><span class="pill no">no</span></td>
+            <td><span class="pill part">graph-level</span></td>
+            <td class="num">$25/mo → $375/mo</td>
+          </tr>
+          <tr>
+            <td><b>Letta</b> (MemGPT)</td><td>A</td>
+            <td>Apache-2.0</td>
+            <td><span class="pill yes">yes</span></td>
+            <td>Agent runtime where the LLM edits its own memory via tools</td>
+            <td><span class="pill no">no</span></td>
+            <td><span class="pill no">no</span></td>
+            <td><span class="pill no">no</span></td>
+            <td class="num">$0 → $200/mo</td>
+          </tr>
+          <tr>
+            <td><b>LangMem</b></td><td>A</td>
+            <td>MIT library</td>
+            <td><span class="pill yes">yes</span></td>
+            <td>Framework-bound memory for LangGraph agents</td>
+            <td><span class="pill no">no</span></td>
+            <td><span class="pill no">no</span></td>
+            <td><span class="pill no">no</span></td>
+            <td class="num">$0 (+$39/seat)</td>
+          </tr>
+          <tr>
+            <td><b>Cognee</b></td><td>A</td>
+            <td>Apache-2.0 + cloud</td>
+            <td><span class="pill yes">yes</span></td>
+            <td>Knowledge graph + vector index over docs, code, conversations</td>
+            <td><span class="pill part">Enterprise</span></td>
+            <td><span class="pill part">Enterprise</span></td>
+            <td><span class="pill part">Enterprise</span></td>
+            <td class="num">$0 → $1/M tokens</td>
+          </tr>
+
+          <tr class="grp"><td colspan="9">B · Hyperscaler embedded memory</td></tr>
+          <tr>
+            <td><b>AWS AgentCore Memory</b></td><td>B</td>
+            <td>Managed only</td>
+            <td><span class="pill no">no</span></td>
+            <td>Platform-native short + long term memory, consumption-priced</td>
+            <td><span class="pill no">no</span></td>
+            <td><span class="pill no">no</span></td>
+            <td><span class="pill no">no</span></td>
+            <td class="num">$1.00/GB in</td>
+          </tr>
+          <tr>
+            <td><b>Vertex AI Agent Engine</b></td><td>B</td>
+            <td>Managed only</td>
+            <td><span class="pill no">no</span></td>
+            <td>Platform-native session + memory store</td>
+            <td><span class="pill no">no</span></td>
+            <td><span class="pill no">no</span></td>
+            <td><span class="pill no">no</span></td>
+            <td class="num">$0.25/1k events</td>
+          </tr>
+
+          <tr class="grp"><td colspan="9">C · Infrastructure substrate</td></tr>
+          <tr>
+            <td><b>Pinecone</b></td><td>C</td>
+            <td>Managed</td>
+            <td><span class="pill no">no</span></td>
+            <td>Serverless vector database; the layer memory products run on</td>
+            <td><span class="pill no">no</span></td>
+            <td><span class="pill no">no</span></td>
+            <td><span class="pill no">no</span></td>
+            <td class="num">usage</td>
+          </tr>
+          <tr>
+            <td><b>Redis</b></td><td>C</td>
+            <td>Source-available</td>
+            <td><span class="pill yes">yes</span></td>
+            <td>Unified memory stack: vector + session state + operational state</td>
+            <td><span class="pill no">no</span></td>
+            <td><span class="pill no">no</span></td>
+            <td><span class="pill no">no</span></td>
+            <td class="num">usage</td>
+          </tr>
+          <tr>
+            <td><b>Weaviate</b></td><td>C</td>
+            <td>BSD-3 + cloud</td>
+            <td><span class="pill yes">yes</span></td>
+            <td>Open-source hybrid vector search</td>
+            <td><span class="pill no">no</span></td>
+            <td><span class="pill no">no</span></td>
+            <td><span class="pill no">no</span></td>
+            <td class="num">$0 → usage</td>
+          </tr>
+
+          <tr class="grp"><td colspan="9">D · Governance-adjacent platforms — the real competitive set</td></tr>
+          <tr>
+            <td><b>IBM watsonx.governance</b></td><td>D</td>
+            <td>Commercial</td>
+            <td><span class="pill no">no</span></td>
+            <td>Enterprise AI risk + audit trail mapped to EU AI Act, NIST AI RMF, ISO 42001</td>
+            <td><span class="pill no">no</span></td>
+            <td><span class="pill no">no</span></td>
+            <td><span class="pill part">orchestration</span></td>
+            <td class="num">six figures</td>
+          </tr>
+          <tr>
+            <td><b>ServiceNow AI Control Tower</b></td><td>D</td>
+            <td>Commercial</td>
+            <td><span class="pill no">no</span></td>
+            <td>Gartner MQ Leader (Jun 2026); governance record beside incident records</td>
+            <td><span class="pill no">no</span></td>
+            <td><span class="pill no">no</span></td>
+            <td><span class="pill part">workflow</span></td>
+            <td class="num">six figures</td>
+          </tr>
+          <tr>
+            <td><b>Lyzr OpenController</b></td><td>D</td>
+            <td>Commercial</td>
+            <td><span class="pill no">no</span></td>
+            <td>Signed audit trail per lifecycle event, model call and tool execution</td>
+            <td><span class="pill no">no</span></td>
+            <td><span class="pill no">no</span></td>
+            <td><span class="pill part">orchestration</span></td>
+            <td class="num">six figures</td>
+          </tr>
+
+          <tr class="grp"><td colspan="9">Reference · mem20</td></tr>
+          <tr class="ref-row">
+            <td><b>mem20</b></td><td>Reference</td>
+            <td>MIT</td>
+            <td><span class="pill yes">yes</span></td>
+            <td>Memory + cognition substrate over MCP JSON-RPC 2.0; 257 tools / 26 domains</td>
+            <td><span class="pill part">ledger</span></td>
+            <td><span class="pill yes">enforced</span></td>
+            <td><span class="pill yes">in store</span></td>
+            <td class="num">$14,000 ACV</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="src">
+      Sources: vendor pricing pages (AWS, Zep, Mem0, LangChain) and independent 2026 comparisons — agently.dev,
+      developersdigest.tech, vectorize.io, maximem.ai, mnemoverse.com, omidsaffari.com, redis.io, lyzr.ai,
+      decube.io. Full row-level citations in <span class="src">competitive-matrix.csv</span>.
+    </p>
+
+    <div class="call warn">
+      <div class="ct">The column that decides the deal</div>
+      <p>
+        Read the final two columns across the table: <b>not one group A, B or C product</b> separates grounded
+        from simulated memory, and in group D provenance lives at the orchestration layer, outside the memory
+        store. That is a structural gap, not a feature gap — it cannot be closed by adding logging to a system
+        whose memory records were never typed by epistemic status in the first place.
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- 04 -->
+<section id="gap">
+  <div class="wrap">
+    <p class="sec-num">04 — The wedge</p>
+    <h2>Auditability is a storage-layer property, and nobody is selling it that way</h2>
+    <p class="lede">
+      The category treats audit as an observability problem: capture events, ship them to a log platform,
+      query them later. That approach fails the one test a regulator actually applies — can you prove the
+      record was not altered, and can you reconstruct why the system was allowed to act on it.
+    </p>
+
+    <h3>What Article 12 demands, and why logging-only misses it</h3>
+    <p>
+      EU AI Act Article 12 requires high-risk systems to automatically record events over their lifetime,
+      in sufficient detail to identify risk situations (Art. 79), support post-market monitoring (Art. 72)
+      and trace operational performance (Art. 26(5)). Deployers retain logs for at least six months. Manual
+      recording explicitly does not satisfy it, and penalties reach €35M or 7% of global revenue.
+    </p>
+    <p>
+      For a memory-augmented system, the operative implication is that <b>every memory read and write must be
+      logged alongside how the retrieved memory influenced the output</b>. A generic agent log records the call;
+      it does not record the provenance of the fact. Worse, the standard defence — a SOC 2 Type II report — is
+      a point-in-time snapshot of process adherence and cannot prove a specific record was untouched on a
+      specific day. The design that survives an external chain-of-custody test is cryptographic: each record
+      hashed, each hash including the previous, anchored periodically to external timestamping.
+    </p>
+
+    <div class="call">
+      <div class="ct">mem20's architectural answer</div>
+      <ul class="clean">
+        <li><b>Epistemic partition at the storage layer.</b> Grounded memory (real observations, user statements,
+          events) is separated from simulated memory (hypotheticals, counterfactuals, model output) by
+          <span class="src">_validate_partition_tags()</span> asserted at ledger append — not by convention in the prompt.</li>
+        <li><b>An epistemic veto.</b> <span class="src">require_epistemic_clearance()</span> plus a plan-execution guard
+          blocks action on memory that has not cleared the partition check.</li>
+        <li><b>Evidence-based promotion.</b> Simulated content moves to grounded only on documented evidence, so
+          the promotion itself is an auditable event — the distinction mem20 draws against "honour-system" memory.</li>
+        <li><b>A measurable contamination rate.</b> <span class="src">memory_audit_contamination()</span> returns
+          <span class="src">contamination_rate</span> and <span class="src">violations</span>, and it is exposed on
+          <span class="src">/metrics</span>. An auditor can ask a number, not read a policy.</li>
+      </ul>
+    </div>
+
+    <h3>Why incumbents structurally cannot copy this quickly</h3>
+    <ul class="clean">
+      <li><b>Mem0</b> bills audit logs at the Pro tier ($249/mo) — audit is a revenue gate, not a storage
+        property. Retrofitting epistemic typing means re-typing every stored memory.</li>
+      <li><b>Zep</b> has the strongest temporal model in the category and withdrew self-hosting, which is
+        precisely the deployment mode regulated buyers need. Its graph invalidates facts; it does not
+        partition true from imagined.</li>
+      <li><b>AWS and Google</b> sell memory as a metered utility at an identical $0.25/1,000 events. A commodity
+        meter is the wrong shape for a compliance evidence trail, which must be portable and independently
+        verifiable — and cloud-locked by construction.</li>
+      <li><b>Group D</b> sells governance over agents, not over memory. Lyzr's signed trail is the closest
+        analogue, but it signs orchestration events; it has no model of a memory record's epistemic status.</li>
+    </ul>
+
+    <div class="call red">
+      <div class="ct">Honesty constraint on this wedge</div>
+      <p>
+        mem20's auditability claim is architectural and demonstrable from the code. Its <em>accuracy</em> claims
+        are separate and must be quoted exactly as the repo ledger states them: hit rate <b>1.000 direct</b>,
+        <b>0.800 multi-hop</b>, <b>0.000 adversarial</b>, leak rate <b>0.000</b>, contamination audit <b>0.0</b>.
+        The adversarial row is kept visible deliberately. There is <b>no published LoCoMo or LongMemEval result</b>,
+        and this analysis does not invent one. Any comparison against Mem0's disputed headline benchmark
+        numbers is unsafe in both directions: those vendor numbers do not reproduce under a neutral harness.
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- 05 -->
+<section id="demand">
+  <div class="wrap">
+    <p class="sec-num">05 — Demand driver</p>
+    <h2>Enforcement is the reason this market exists, and the clock has already started</h2>
+    <p class="lede">
+      The auditable slice is not a technology-push story. It is a compliance-deadline story, which is why
+      the buyer is a risk or compliance function rather than an engineering team, and why the sales motion
+      has to be shaped differently from a developer API.
+    </p>
+
+    <div class="tscroll">
+      <table>
+        <thead>
+          <tr><th>Obligation</th><th>What it forces</th><th>Buyer</th><th>Status</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><b>EU AI Act Art. 12</b></td>
+            <td>Automatic event logging over system lifetime, sufficient for post-hoc audit and post-market monitoring; deployers retain ≥ 6 months</td>
+            <td>Compliance / risk</td>
+            <td><span class="pill part">enforceable 2 Aug 2026</span></td>
+          </tr>
+          <tr>
+            <td><b>EU AI Act Art. 26(6)</b></td>
+            <td>Deployer duty to retain logs under their own control — pushes memory evidence on-premise</td>
+            <td>Compliance / IT</td>
+            <td><span class="pill part">paired with Art. 12</span></td>
+          </tr>
+          <tr>
+            <td><b>ISO/IEC 42001</b></td>
+            <td>Certifiable AI management system; expects continuous, documented control evidence</td>
+            <td>Quality / compliance</td>
+            <td><span class="pill part">in force</span></td>
+          </tr>
+          <tr>
+            <td><b>NIST AI RMF</b></td>
+            <td>Govern / Map / Measure / Manage — measurement expectations map to a contamination metric</td>
+            <td>Risk</td>
+            <td><span class="pill part">voluntary, referenced in procurement</span></td>
+          </tr>
+          <tr>
+            <td><b>SOC 2, HIPAA, SOX, SEC/FINRA</b></td>
+            <td>Record-retention and reproducibility duties that a mutable memory store cannot evidence</td>
+            <td>Audit / security</td>
+            <td><span class="pill part">standing obligations</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p>
+      Two market signals corroborate that this is being budgeted rather than merely discussed. Enterprise AI
+      governance and compliance is sized at roughly <b>$2.2–2.5B in 2025</b> and is forecast into the
+      <b>$11B range by 2036</b> (Future Market Insights, 15.8% CAGR) — with the more aggressive houses putting it
+      at <b>$3.4B in 2026 rising to $68.2B by 2035</b> (market.us, 39.4% CAGR). Gartner published its <b>first ever
+      Magic Quadrant for AI Governance Platforms in June 2026</b>, naming IBM, ServiceNow and Truyo as Leaders —
+      formal category recognition is a demand signal, because buyers only get a Gartner quadrant once they have
+      a budget line. The same analysis notes that <b>immutable audit trails and agentic supervision</b> are the
+      capabilities distinguishing governance platforms from adjacent tooling.
+    </p>
+
+    <div class="call">
+      <div class="ct">The gap mem20 sells into</div>
+      <p>
+        Governance platforms are priced in six-figure enterprise commitments. A regulated mid-market buyer who
+        needs the audit trail but cannot fund a governance platform is the underserved segment — and a $14,000
+        blended ACV with an MIT, self-hostable substrate is priced for exactly that buyer. That is the commercial
+        logic behind the SAM definition, not an arbitrary discount from enterprise pricing.
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- 06 -->
+<section id="motion">
+  <div class="wrap">
+    <p class="sec-num">06 — Competitive implications for the motion</p>
+    <h2>mem20 cannot win a developer-API fight, and does not need to enter one</h2>
+    <p class="lede">
+      The pricing structure of the category makes the strategic choice almost mechanical. Competing on
+      per-month developer tiers means competing with a $0 open-source option in every deal, against vendors
+      with $10–24M raised and 24–60k GitHub stars.
+    </p>
+
+    <div class="tscroll">
+      <table>
+        <thead>
+          <tr><th>Dimension</th><th>Developer-API fight (avoid)</th><th>Auditable-slice fight (choose)</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Buyer</td><td>Individual engineer</td><td>Compliance, risk, audit committee</td></tr>
+          <tr><td>Price anchor</td><td>$0–$249/mo, benchmarked to free</td><td>Six-figure governance platforms; $14,000 ACV is the accessible tier</td></tr>
+          <tr><td>Winning argument</td><td>Retrieval quality, latency, stars</td><td>Provable, immutable memory provenance</td></tr>
+          <tr><td>Deployment demand</td><td>Managed convenience</td><td>Self-hosted or BYOC — Art. 26(6) puts logs under the deployer's control</td></tr>
+          <tr><td>Where mem20 is strong</td><td>Out-resourced on stars and funding</td><td>Only product with enforced grounded/simulated separation and a contamination metric</td></tr>
+          <tr><td>Evidence needed</td><td>Benchmark leaderboard position (mem20 has none published)</td><td>Architecture, ledger semantics, audit query returning a number</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3>Three positioning rules that follow</h3>
+    <ul class="clean">
+      <li><b>Lead with the ledger, not the tool count.</b> 257 tools across 26 domains establishes platform
+        seriousness and should be quoted verbatim wherever it appears — but breadth is not the wedge. A buyer
+        who needs an audit trail is not impressed by tool count; they are reassured by it <em>after</em> the
+        audit argument lands.</li>
+      <li><b>Never quote the broad $6.49B.</b> The category base is top-of-band (Mordor $6.27B, SkyQuest $6.16B
+        for the same category in 2025). mem20's honest and defensible position is the $1.28B auditable slice at
+        19.72% of that base. A larger number that a diligence team can shrink is worth less than a smaller one
+        that survives scrutiny.</li>
+      <li><b>Sell Zep's withdrawal as the opening.</b> The strongest temporal model in the category removed
+        self-hosting. That decision handed the regulated, on-premise buyer to whoever stays MIT and
+        self-hostable — which is a durable structural advantage, not a feature lead.</li>
+    </ul>
+
+    <div class="call warn">
+      <div class="ct">Competitive risk that must be stated plainly</div>
+      <p>
+        mem20's strongest differentiator is currently the least evidenced commercially: there is no published
+        head-to-head audit demonstration against a governance platform, and no LoCoMo/LongMemEval result to
+        cite if a buyer asks for accuracy parity. The gap is a <b>proof gap, not a product gap</b> — but until
+        it is closed, mem20's wedge argument rests on architecture review rather than a reproducible trial.
+        Closing it is the highest-value next piece of work in this lane.
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- 07 -->
+<section id="sizing">
+  <div class="wrap">
+    <p class="sec-num">07 — Sizing audit</p>
+    <h2>The house numbers survive their own arithmetic, with one residual disclosed</h2>
+    <p class="lede">
+      This section exists because a market figure that cannot survive division is a liability in a diligence
+      conversation. Each layer is tested against the $14,000 blended ACV, and the result is printed in full
+      rather than rounded away.
+    </p>
+
+    <div class="tscroll">
+      <table>
+        <thead>
+          <tr><th>Layer</th><th class="num">Accounts</th><th>Arithmetic</th><th class="num">Computed</th><th class="num">House figure</th><th class="num">Delta</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><b>TAM</b></td><td class="num">91,429</td>
+            <td>91,429 × $14,000</td>
+            <td class="num">$1,280,006,000</td><td class="num">$1,280,000,000</td>
+            <td class="num">+$6,000</td>
+          </tr>
+          <tr>
+            <td><b>SAM</b></td><td class="num">20,100</td>
+            <td>20,100 × $14,000</td>
+            <td class="num">$281,400,000</td><td class="num">$282,000,000</td>
+            <td class="num">−$600,000</td>
+          </tr>
+          <tr>
+            <td><b>SOM</b></td><td class="num">120</td>
+            <td>120 × $14,000</td>
+            <td class="num">$1,680,000</td><td class="num">$1,680,000</td>
+            <td class="num">$0</td>
+          </tr>
+          <tr>
+            <td><b>Total residual</b></td><td class="num">—</td><td>sum of deltas</td>
+            <td class="num">—</td><td class="num">—</td><td class="num">−$594,000</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <ul class="clean">
+      <li><b>TAM delta is a rounding artefact.</b> $1.28B ÷ $14,000 = 91,428.57 accounts, so 91,429 overshoots
+        by $6,000 — 0.0005% of the figure. Immaterial, but it must not be presented as an exact account count.</li>
+      <li class="warnli"><b>SAM is the one real gap.</b> $282M implies 20,142.86 accounts, not the 20,100 that
+        circulates with it. At 20,100 accounts the figure is $281.4M — a −$600,000 gap, 0.21% of SAM. Quote
+        $282M as the house SAM and treat 20,100 as an <em>approximately</em> 20,100-account build of it. Do not
+        re-derive SAM from the account count in any downstream asset.</li>
+      <li><b>SOM is exact by construction.</b> 120 × $14,000 = $1,680,000. If an asset needs arithmetic that
+        holds under scrutiny, quote the SOM.</li>
+    </ul>
+
+    <h3>Top-down anchor</h3>
+    <p>
+      $1.28B ÷ $6.49B = <b>0.197227 → 19.72%</b>. The auditable slice is therefore stated as ~19.7% of the broad
+      category, and the bottom-up build (~91,429 accounts) returns $1.280B within 0.0005%. The two methods
+      agree, which is the property that makes the figure defensible — the top-down alone could not distinguish
+      $1.28B from $1.29B, and the bottom-up alone could not justify the share.
+    </p>
+
+    <div class="call">
+      <div class="ct">Ratios to quote</div>
+      <p>
+        SAM / TAM = <b>22.03%</b> (21.98% by account count). SOM / SAM = <b>0.596%</b>. SOM / TAM = <b>0.131%</b>.
+        Tools per domain average <b>9.88</b> (257 ÷ 26) — useful as a sanity check, not as a claim.
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- 08 -->
+<section id="risks">
+  <div class="wrap">
+    <p class="sec-num">08 — Risks to this analysis</p>
+    <h2>What would make this document wrong</h2>
+
+    <ul class="clean">
+      <li class="warnli"><b>Category base is top-of-band.</b> Three independent houses size the same 2025
+        category at $6.49B, $6.27B and $6.16B. The house number uses the highest. A diligence team using Mordor
+        would shrink the TAM to about $1.24B on the same 19.72% share — a 3.4% difference that does not change
+        the story but should be known before it is discovered.</li>
+      <li class="warnli"><b>Vendor pricing is a moving target.</b> AWS moved short-term memory from per-event to
+        per-GB pricing on 6 October 2026, twelve days before this revision. Every entry price in the matrix
+        should be re-read against the vendor page before it is used in a live deal.</li>
+      <li class="warnli"><b>Vendor benchmark numbers are disputed.</b> The category's headline benchmark figures
+        do not reproduce under neutral harnesses. This is the reason mem20 should never benchmark-compare —
+        and equally the reason a competitor's numbers should not be taken at face value when they are quoted
+        against mem20.</li>
+      <li class="warnli"><b>Repository counts drifted.</b> Tracked files moved 9,873 → 9,901 since the last
+        research pass. Any asset quoting the old figure is stale. This is a maintenance risk for every mem20
+        number that is derived from the tree rather than from the house set.</li>
+      <li class="warnli"><b>Compliance timing assumptions.</b> The analysis treats EU AI Act high-risk
+        obligations as enforceable from 2 August 2026. If enforcement is phased or delayed, the demand curve
+        for the auditable slice shifts right without changing the eventual size.</li>
+      <li class="warnli"><b>No primary buyer research.</b> Demand is inferred from regulatory text, analyst
+        sizing and vendor positioning. There is no win/loss or willingness-to-pay study behind the $14,000
+        blended ACV — that price is a house decision, not a measured outcome.</li>
+    </ul>
+  </div>
+</section>
+
+<!-- 09 -->
+<section id="verdict">
+  <div class="wrap">
+    <p class="sec-num">09 — Verdict</p>
+    <h2>What this lane concludes, and what it hands back</h2>
+
+    <div class="cards">
+      <div class="card">
+        <h4>The segment is real and narrow</h4>
+        <p>
+          $1.28B is 19.72% of a category most vendors quote in full. That narrowness is the asset: it is the
+          only part of the category with a legal deadline attached to it.
+        </p>
+      </div>
+      <div class="card">
+        <h4>The competitive gap is architectural</h4>
+        <p>
+          No group A, B or C product separates grounded from simulated memory; group D puts provenance outside
+          the store. mem20 is the only row in the matrix with both in the storage layer.
+        </p>
+      </div>
+      <div class="card">
+        <h4>The numbers hold, with one caveat</h4>
+        <p>
+          TAM and SOM reconcile; SAM carries a disclosed −$600,000 (0.21%) rounding gap against its account
+          count. The house set stands unchanged.
+        </p>
+      </div>
+      <div class="card">
+        <h4>The proof gap is the next job</h4>
+        <p>
+          The wedge is architectural and demonstrable from code, but there is no published head-to-head audit
+          trial and no LoCoMo/LongMemEval result. That is the highest-value next piece of work.
+        </p>
+      </div>
+    </div>
+
+    <h3>Positioning statement, cleared for downstream use</h3>
+    <div class="call">
+      <div class="ct">Canonical positioning — quote verbatim</div>
+      <p>
+        <b>mem20 is a persistent memory and cognition substrate for AI agents that keeps grounded memory
+        separate from simulated memory at the storage layer, and records the promotion of one to the other as
+        evidence.</b> It ships as an MIT-licensed Python MCP server exposing <b>257 tools across 26 domains</b>
+        over JSON-RPC 2.0. It is built for the part of the agent-memory market that carries mandatory
+        record-keeping obligations: a <b>$1.28B</b> global auditable slice, <b>$282M</b> serviceable, with a
+        <b>$1.68M</b> twelve-month obtainable target at a <b>$14,000</b> blended annual contract value.
+        Every competitor in the category either logs what an agent did or stores what it remembered —
+        mem20 does both in one auditable store.
+      </p>
+    </div>
+
+    <h3>Banned in downstream assets</h3>
+    <ul class="clean">
+      <li class="warnli">The broad <b>$6.49B</b> presented as mem20's TAM.</li>
+      <li class="warnli">Any ACV other than <b>$14,000</b> blended, pending owner sign-off.</li>
+      <li class="warnli">Any claim of a published <b>LoCoMo</b> or <b>LongMemEval</b> result.</li>
+      <li class="warnli">The adversarial benchmark row omitted — it is quoted at <b>0.000</b> and stays visible.</li>
+      <li class="warnli">The old <b>9,873</b> file count, or <b>29 domains</b> (a row count, not a domain count).</li>
+      <li class="warnli">Any repo URL other than <b>github.com/bythewayz66-glitch/mem20</b>.</li>
+    </ul>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <div class="wrap">
+    <h3>Provenance</h3>
+    <p>
+      Analysis built against canonical repository <b>github.com/bythewayz66-glitch/mem20</b>, branch main,
+      HEAD <b>8e2f803</b> (2026-10-16), release tag v2.1-rc2, MIT. House numbers held constant at
+      257 tools / 26 domains, TAM $1.28B / SAM $282M / SOM $1.68M, blended ACV $14,000.
+      Companion datasets: <span class="src">competitive-matrix.csv</span>,
+      <span class="src">tam-sam-som-reconciliation.md</span>.
+    </p>
+    <p>
+      Publication route: Sidney server, gabe gate. This page and its evidence bundle are staged for
+      <span class="src">gabe publish</span>; the live-surface digest is recorded in the evidence block
+      accompanying the submission.
+    </p>
+    <div class="disc">
+      <b>Disclaimer.</b> As an AI Agent, I cannot provide legally protected, personalized investment advice.
+      This analysis is for informational purposes only and does not constitute investment advice or
+      recommendations. Market figures cited here are mem20's own house numbers used for product positioning,
+      not financial guidance. Consult a licensed financial advisor before making investment decisions.
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>

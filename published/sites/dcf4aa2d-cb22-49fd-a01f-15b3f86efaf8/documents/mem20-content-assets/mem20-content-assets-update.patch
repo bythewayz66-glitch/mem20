@@ -1,0 +1,196 @@
+diff --git a/CANONICAL.md b/CANONICAL.md
+index 587c833..7b1ef5d 100644
+--- a/CANONICAL.md
++++ b/CANONICAL.md
+@@ -39,6 +39,21 @@ canonical:
+ 
+ Direct pushes to `JaysonAIOnline/*` are read-only for the canonical publishing account.
+ 
++## Content & editorial surfaces
++
++All user-facing content and editorial assets — the root `README.md`, everything under
++`docs/`, install snippets, badges, clone commands and example tool calls — are re-pointed
++to this canonical repository, so every published copy, install path and link resolves to
++`bythewayz66-glitch/mem20`. Canonical clone + install snippet:
++
++```bash
++git clone https://github.com/bythewayz66-glitch/mem20.git
++cd mem20 && python3 -m venv .venv && .venv/bin/pip install -r requirements.txt
++```
++
++mem20 is distributed from source; it is **not yet published to PyPI**, so every install
++snippet resolves to this repository.
++
+ ## Publication routing
+ 
+ Per the project's publication mandate, work is published to the **Sidney** server via
+diff --git a/README.md b/README.md
+index 672a234..6c09e7d 100644
+--- a/README.md
++++ b/README.md
+@@ -5,16 +5,16 @@
+   <strong>A persistent memory + cognition substrate for AI agents.</strong>
+ </p>
+ <p align="center">
+-  <a href="https://mem20.jaysonai.online"><img src="https://img.shields.io/badge/Website-mem20.jaysonai.online-FFD700?style=for-the-badge" alt="Website"></a>
+-  <a href="https://github.com/JaysonAIOnline/mem20/blob/main/LICENSE"><img src="https://img.shields.io/badge/License-MIT-green?style=for-the-badge" alt="License: MIT"></a>
+-  <a href="https://github.com/JaysonAIOnline/mem20/releases"><img src="https://img.shields.io/github/v/release/JaysonAIOnline/mem20?style=for-the-badge" alt="Release"></a>
++  <a href="https://github.com/bythewayz66-glitch/mem20"><img src="https://img.shields.io/badge/Repo-bythewayz66--glitch%2Fmem20-6366f1?style=for-the-badge&logo=github" alt="Canonical repository"></a>
++  <a href="https://github.com/bythewayz66-glitch/mem20/blob/main/LICENSE"><img src="https://img.shields.io/badge/License-MIT-green?style=for-the-badge" alt="License: MIT"></a>
++  <a href="https://github.com/bythewayz66-glitch/mem20/releases"><img src="https://img.shields.io/github/v/release/bythewayz66-glitch/mem20?style=for-the-badge" alt="Release"></a>
+ </p>
+ 
+ <p align="center">
+   <a href="README.md">English</a> | <a href="#documentation">Docs</a> | <a href="#repository-layout">Layout</a> | <a href="#quick-start">Quick Start</a>
+ </p>
+ 
+-[![mem20 Dashboard](https://via.placeholder.com/1200x400/1e1b4b/ffffff?text=mem20+Memory+%2B+Cognition+Substrate)](https://mem20.jaysonai.online)
++[![mem20 Dashboard](https://via.placeholder.com/1200x400/1e1b4b/ffffff?text=mem20+Memory+%2B+Cognition+Substrate)](https://github.com/bythewayz66-glitch/mem20)
+ 
+ ---
+ 
+@@ -182,8 +182,10 @@ store/
+ 
+ ### Install from source
+ 
++> mem20 is distributed from source — it is **not yet published to PyPI**, so always install from the canonical repository shown below.
++
+ ```bash
+-git clone https://github.com/JaysonAIOnline/mem20.git
++git clone https://github.com/bythewayz66-glitch/mem20.git
+ cd mem20
+ 
+ # Create venv and install core deps
+@@ -200,7 +202,7 @@ Penguin Linux is Debian-based — the standard systemd install works perfectly:
+ 
+ ```bash
+ # Clone and install as a system service (recommended for always-on)
+-git clone https://github.com/JaysonAIOnline/mem20.git /opt/mem20
++git clone https://github.com/bythewayz66-glitch/mem20.git /opt/mem20
+ sudo /opt/mem20/install.sh --user $USER --dir /opt/mem20
+ 
+ # Verify it's running
+@@ -433,7 +435,7 @@ Current index: **326 subsystems, 8,969 source files, 468k code lines**. Per the
+ 
+ ## Documentation
+ 
+-Full docs live at **[mem20.jaysonai.online](https://mem20.jaysonai.online)**.
++Full docs live in [`docs/`](https://github.com/bythewayz66-glitch/mem20/tree/main/docs) on the canonical repository **[github.com/bythewayz66-glitch/mem20](https://github.com/bythewayz66-glitch/mem20)**.
+ 
+ | Resource | What's covered |
+ |----------|----------------|
+@@ -469,4 +471,4 @@ Contributions are welcome! Before submitting a PR:
+ 
+ MIT — see [LICENSE](LICENSE).
+ 
+-Built by [JaysonAIOnline](https://github.com/JaysonAIOnline).
++Canonical source: [github.com/bythewayz66-glitch/mem20](https://github.com/bythewayz66-glitch/mem20).
+diff --git a/docs/01-architecture.md b/docs/01-architecture.md
+index da7fd2a..f5f48de 100644
+--- a/docs/01-architecture.md
++++ b/docs/01-architecture.md
+@@ -2,7 +2,7 @@
+ 
+ > **Version:** 2.1-rc2
+ > **License:** MIT
+-> **Author:** JaysonAIOnline
++> **Author:** mem20 maintainers
+ 
+ ## What is mem20?
+ 
+diff --git a/docs/03-installation.md b/docs/03-installation.md
+index 4a4232c..95ca810 100644
+--- a/docs/03-installation.md
++++ b/docs/03-installation.md
+@@ -35,7 +35,7 @@ The simplest method — installs mem20 as a Python package with the `mem20-mcp`
+ 
+ ```bash
+ # Clone the repository
+-git clone https://github.com/JaysonAIOnline/mem20.git
++git clone https://github.com/bythewayz66-glitch/mem20.git
+ cd mem20
+ 
+ # Create virtual environment
+@@ -62,7 +62,7 @@ Penguin Linux is Debian-based with systemd — the standard systemd install work
+ 
+ ```bash
+ # Clone and install as a system service (recommended for always-on)
+-git clone https://github.com/JaysonAIOnline/mem20.git /opt/mem20
++git clone https://github.com/bythewayz66-glitch/mem20.git /opt/mem20
+ sudo /opt/mem20/install.sh --user $USER --dir /opt/mem20
+ 
+ # Verify it's running
+diff --git a/docs/05-complete-tools-reference.md b/docs/05-complete-tools-reference.md
+index c9eeb23..3cee4b9 100644
+--- a/docs/05-complete-tools-reference.md
++++ b/docs/05-complete-tools-reference.md
+@@ -1,6 +1,6 @@
+ # mem20 MCP — Complete Tools Reference
+ 
+-> Every tool, every feature, every command. 174 tools across 20 domains. Written for someone who has never seen mem20 before.
++> Every tool, every feature, every command. 257 tools across 26 domains. Written for someone who has never seen mem20 before.
+ 
+ ---
+ 
+@@ -3722,7 +3722,7 @@ These are advanced memory operations beyond the core tools.
+   "name": "vcs_github_issue",
+   "arguments": {
+     "action": "create",
+-    "repo": "JaysonAIOnline/mem20",
++    "repo": "bythewayz66-glitch/mem20",
+     "title": "Add tool documentation",
+     "body": "Need comprehensive docs for all 174 tools"
+   }
+@@ -3747,7 +3747,7 @@ These are advanced memory operations beyond the core tools.
+   "name": "vcs_github_pr",
+   "arguments": {
+     "action": "create",
+-    "repo": "JaysonAIOnline/mem20",
++    "repo": "bythewayz66-glitch/mem20",
+     "title": "Add comprehensive tools reference docs",
+     "body": "Feature-by-feature documentation for all mem20 tools"
+   }
+@@ -4373,7 +4373,7 @@ These are advanced memory operations beyond the core tools.
+   "name": "fin_invoice",
+   "arguments</arg_key>{
+     "action": "create",
+-    "client": "JaysonAIOnline",
++    "client": "bythewayz66-glitch",
+     "amount": 500
+   }
+ }
+diff --git a/docs/README.md b/docs/README.md
+index 6837754..a31b48a 100644
+--- a/docs/README.md
++++ b/docs/README.md
+@@ -2,8 +2,8 @@
+ 
+ > **Version:** 2.1-rc2
+ > **License:** MIT
+-> **Author:** JaysonAIOnline
+-> **Repository:** https://github.com/JaysonAIOnline/mem20
++> **Author:** mem20 maintainers (see [../CANONICAL.md](../CANONICAL.md))
++> **Repository:** https://github.com/bythewayz66-glitch/mem20
+ 
+ ## Quick Links
+ 
+@@ -61,7 +61,7 @@ MCP client --stdio--> Mem20MCPServer (mcp/mcp_server.py)
+ 
+ ```bash
+ # Install
+-git clone https://github.com/JaysonAIOnline/mem20.git
++git clone https://github.com/bythewayz66-glitch/mem20.git
+ cd mem20
+ python3 -m venv .venv
+ .venv/bin/pip install -r requirements.txt
+@@ -114,6 +114,6 @@ Both degrade gracefully when the respective application is not installed.
+ 
+ ## License
+ 
+-MIT — see [LICENSE](https://github.com/JaysonAIOnline/mem20/blob/main/LICENSE).
++MIT — see [LICENSE](https://github.com/bythewayz66-glitch/mem20/blob/main/LICENSE).
+ 
+-Built by [JaysonAIOnline](https://github.com/JaysonAIOnline).
+\ No newline at end of file
++Canonical source: [github.com/bythewayz66-glitch/mem20](https://github.com/bythewayz66-glitch/mem20).
+\ No newline at end of file

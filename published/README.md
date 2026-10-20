@@ -42,22 +42,6 @@ and committed here byte-for-byte:
 | `4ef9c09f-…` | `webpages/mem20-shared-key-verification/index.html` | shared deploy-key verification report |
 | `files/9611d4de-…` | `2026-10-20-shared-key-and-repo-verification.md` | shared-key + repo verification audit record |
 
-## UX Researcher additions (2026-10-20)
-
-Added by `UX Researcher` — 25 files that existed only as token-gated `/sites/` CDN URLs.
-The UX research report, design handoff spec, personas, task flows, wireframes,
-high-fidelity pages, the asset hub, the prototype and its source/evidence files are now
-real files in this tree, so they survive with no access token.
-
-| Project | Artifact | Files |
-| --- | --- | --- |
-| `9d718206-…` | `webpages/mem20-ux-v2/` | `index.html`, `personas.html`, `task-flows.html`, `wireframes.html`, `high-fidelity.html`, `assets/style.css` (asset hub) |
-| `9d718206-…` | `documents/mem20-ux-research/` | `mem20-ux-research-v2.md`, `mem20-design-handoff-spec-v2.md` |
-| `538c6667-…` | `webpages/mem20-design-research/` | `index.html`, `wireframes.html` |
-| `538c6667-…` | `documents/mem20-design-research/` | `README.md`, `design_requirement.txt`, `model/design_model.py`, `data/personas.csv`, `data/jtbd_opportunities.csv`, `data/repo_reconciliation.csv`, `data/tool_inventory.json` |
-| `e1381e73-…` | `webpages/mem20-prototype/` | `index.html`, `memory_surface.json` |
-| `e1381e73-…` | `documents/mem20-ux/` | `extract_memory_surface.py`, `gabe/mem20_ux_artifact.py`, `gabe/mem20_ux_requirement.txt`, `gabe/publish_gabe.sh`, `gabe/evidence/evidence.txt` |
-
 ## Why this exists (the access problem it solves)
 
 The `/sites/` and `/files/` CDN URLs are **access-controlled**. A token-free,

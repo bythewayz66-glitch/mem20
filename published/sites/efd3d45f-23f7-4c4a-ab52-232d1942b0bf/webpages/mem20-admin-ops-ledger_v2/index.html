@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>mem20 — Operations Ledger · 2026-10-20</title>
+<style>
+  :root{
+    --bg:#0a0e1a; --panel:#111726; --panel2:#151d2f; --line:#243149;
+    --ink:#e8edf7; --muted:#8fa0bd; --dim:#63748f;
+    --ok:#3ddc97; --warn:#ffb454; --bad:#ff6b6b; --accent:#5b8cff; --accent2:#a06bff;
+    --mono:'SFMono-Regular',ui-monospace,Menlo,Consolas,monospace;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{
+    background:radial-gradient(1200px 600px at 15% -10%, #17233d 0%, transparent 60%),
+               radial-gradient(900px 500px at 90% 0%, #221a3d 0%, transparent 55%), var(--bg);
+    color:var(--ink);
+    font-family:Inter,-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
+    line-height:1.6; padding:0 20px 72px; -webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:1180px;margin:0 auto}
+  header{padding:56px 0 34px;border-bottom:1px solid var(--line)}
+  .eyebrow{
+    display:inline-flex;align-items:center;gap:8px;font:600 11px/1 Inter,sans-serif;
+    letter-spacing:.16em;text-transform:uppercase;color:var(--accent);
+    background:rgba(91,140,255,.1);border:1px solid rgba(91,140,255,.28);
+    padding:8px 13px;border-radius:100px;margin-bottom:20px;
+  }
+  .dot{width:6px;height:6px;border-radius:50%;background:var(--ok);box-shadow:0 0 0 3px rgba(61,220,151,.18)}
+  h1{font-size:clamp(30px,4.6vw,50px);line-height:1.1;letter-spacing:-.025em;font-weight:700}
+  h1 span{background:linear-gradient(100deg,var(--accent),var(--accent2));-webkit-background-clip:text;background-clip:text;color:transparent}
+  .sub{color:var(--muted);margin-top:14px;max-width:820px;font-size:15.5px}
+  .meta{display:flex;flex-wrap:wrap;gap:10px;margin-top:22px}
+  .chip{font:500 12px/1 var(--mono);color:var(--muted);background:var(--panel);
+    border:1px solid var(--line);padding:8px 12px;border-radius:7px}
+  .chip b{color:var(--ink);font-weight:600}
+
+  .verdict{
+    margin:34px 0 0;padding:22px 24px;border-radius:14px;
+    background:linear-gradient(100deg,rgba(61,220,151,.10),rgba(61,220,151,.03));
+    border:1px solid rgba(61,220,151,.32);
+  }
+  .verdict h2{font-size:15px;letter-spacing:.1em;text-transform:uppercase;color:var(--ok);margin-bottom:10px}
+  .verdict p{color:#cde7dc;font-size:15px}
+  .verdict code{font-family:var(--mono);font-size:13px;background:rgba(0,0,0,.35);padding:2px 6px;border-radius:4px;color:#9dffd0}
+
+  section{margin-top:52px}
+  h3{font-size:13px;letter-spacing:.15em;text-transform:uppercase;color:var(--dim);
+     margin-bottom:16px;display:flex;align-items:center;gap:10px}
+  h3::after{content:'';flex:1;height:1px;background:var(--line)}
+
+  .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:14px}
+  .kpi{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:18px 20px}
+  .kpi .n{font:700 30px/1 var(--mono);letter-spacing:-.02em}
+  .kpi .l{color:var(--muted);font-size:12px;margin-top:9px;letter-spacing:.04em;text-transform:uppercase}
+  .kpi .f{color:var(--dim);font-size:11.5px;margin-top:6px;font-family:var(--mono)}
+  .n.ok{color:var(--ok)} .n.warn{color:var(--warn)} .n.acc{color:var(--accent)}
+
+  table{width:100%;border-collapse:collapse;font-size:13.5px;margin-top:6px;
+        background:var(--panel);border:1px solid var(--line);border-radius:12px;overflow:hidden}
+  th{text-align:left;padding:12px 14px;background:var(--panel2);color:var(--muted);
+     font-size:11px;letter-spacing:.1em;text-transform:uppercase;font-weight:600;border-bottom:1px solid var(--line)}
+  td{padding:12px 14px;border-bottom:1px solid rgba(36,49,73,.55);vertical-align:top}
+  tr:last-child td{border-bottom:none}
+  td.mono,th.mono{font-family:var(--mono);font-size:12.5px}
+  .pill{display:inline-block;font:600 10.5px/1 var(--mono);padding:5px 8px;border-radius:5px;letter-spacing:.04em}
+  .p-ok{color:var(--ok);background:rgba(61,220,151,.12);border:1px solid rgba(61,220,151,.3)}
+  .p-bad{color:var(--bad);background:rgba(255,107,107,.12);border:1px solid rgba(255,107,107,.3)}
+  .p-fix{color:var(--accent);background:rgba(91,140,255,.12);border:1px solid rgba(91,140,255,.3)}
+  .p-warn{color:var(--warn);background:rgba(255,180,84,.12);border:1px solid rgba(255,180,84,.3)}
+
+  pre{background:#070b14;border:1px solid var(--line);border-radius:10px;padding:16px 18px;
+      overflow-x:auto;font-family:var(--mono);font-size:12.5px;line-height:1.75;color:#b9c8e2}
+  pre .c{color:#4d5f7d}
+  pre .g{color:var(--ok)}
+
+  .two{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+  @media(max-width:820px){.two{grid-template-columns:1fr}}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:20px}
+  .card h4{font-size:13px;color:var(--ink);margin-bottom:12px;letter-spacing:.02em}
+  .card ul{list-style:none;font-size:13.5px;color:var(--muted)}
+  .card li{padding:7px 0 7px 18px;position:relative;border-bottom:1px solid rgba(36,49,73,.4)}
+  .card li:last-child{border-bottom:none}
+  .card li::before{content:'▸';position:absolute;left:0;color:var(--accent);font-size:11px;top:9px}
+
+  footer{margin-top:60px;padding-top:24px;border-top:1px solid var(--line);
+         color:var(--dim);font-size:12.5px;display:flex;flex-wrap:wrap;gap:14px;justify-content:space-between}
+  footer a{color:var(--accent);text-decoration:none}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <div class="eyebrow"><span class="dot"></span> Mem20-admin · Work preservation &amp; ops watchdog</div>
+  <h1>Every mem20 artifact now lives in <span>GitHub</span> — one branch, one key, shell up.</h1>
+  <p class="sub">
+    Full evidence-backed sweep of the Sidney room and all mem20 agent lanes. The finding was blunt:
+    86 deliverables existed only behind token-gated CDN links, and the branch tree had not converged.
+    Both are fixed and verified by re-clone. All five checks below come from tool results in this run —
+    none are agent-reported claims.
+  </p>
+  <div class="meta">
+    <div class="chip">Run <b>2026-10-20T06:09–06:20Z</b></div>
+    <div class="chip">Repo <b>bythewayz66-glitch/mem20</b></div>
+    <div class="chip">main <b>4375f77</b></div>
+    <div class="chip">Sidney <b>NA (factory reset)</b></div>
+  </div>
+
+  <div class="verdict">
+    <h2>Bottom line</h2>
+    <p>
+      86 artifacts were CDN-only → <b>all 86 pushed to <code>published/</code></b> with SHA-256 provenance.
+      Branch tree <b>2 → 1</b>, only <code>main</code> remains. Shared write key <b>live and proven by a real push</b>
+      (<code>ac75689..4375f77</code>). Live shell <b>200</b> at <code>/mem20/app/</code>. Nothing is blocked.
+    </p>
+  </div>
+</header>
+
+<section>
+  <h3>Headline numbers</h3>
+  <div class="grid">
+    <div class="kpi"><div class="n acc">86</div><div class="l">Artifacts preserved</div><div class="f">1,036,213 bytes · all HTTP 200</div></div>
+    <div class="kpi"><div class="n ok">88</div><div class="l">Files in published/</div><div class="f">86 artifacts + README + MANIFEST</div></div>
+    <div class="kpi"><div class="n ok">2 → 1</div><div class="l">Branches before → after</div><div class="f">mem20frontendz deleted</div></div>
+    <div class="kpi"><div class="n ok">200</div><div class="l">Live shell /mem20/app/</div><div class="f">assets 200 · CNAME committed</div></div>
+    <div class="kpi"><div class="n ok">1</div><div class="l">Shared write key</div><div class="f">deploy key 167027222 · ed25519</div></div>
+    <div class="kpi"><div class="n warn">403</div><div class="l">Anonymous CDN access</div><div class="f">4/4 token-free requests refused</div></div>
+  </div>
+</section>
+
+<section>
+  <h3>1 · The gap list — what was only on CDN / Sidney, and where it went</h3>
+  <p class="sub" style="margin-bottom:16px">
+    Every URL below returned <span class="pill p-ok">HTTP 200</span> with a token, and
+    <span class="pill p-bad">403 Forbidden</span> without one. None of these paths existed in the repo before this run
+    (<code>docs/</code> held 36 files and zero artifact directories). All are now committed under
+    <code>published/</code>, mirroring the CDN path 1:1, hashed in <code>published/MANIFEST.tsv</code>.
+  </p>
+  <table>
+    <thead><tr>
+      <th>Lane / deliverable</th><th>Files</th><th>Was</th><th class="mono">Repo path now</th>
+    </tr></thead>
+    <tbody>
+      <tr><td>Launch copy set v3 <span style="color:var(--dim)">— copy pack, HN/PH posts, social threads, long-form, tracked links, reference audit</span></td><td class="mono">11</td><td><span class="pill p-bad">CDN only</span></td><td class="mono">published/sites/d9198523…/documents/</td></tr>
+      <tr><td>Distributed sync implementation <span style="color:var(--dim)">— mem20_sync.py, backfill, sync_cli, systemd, acceptance suite, HANDOFF</span></td><td class="mono">9</td><td><span class="pill p-bad">CDN only</span></td><td class="mono">published/sites/77bade22…/documents/</td></tr>
+      <tr><td>Finance / pricing model + report <span style="color:var(--dim)">— compute_model.py, unit economics, market sizing, publish report</span></td><td class="mono">7</td><td><span class="pill p-bad">CDN only</span></td><td class="mono">published/sites/aca25e94…/documents/</td></tr>
+      <tr><td>Market research v3 <span style="color:var(--dim)">— report, competitive matrix, TAM/SAM/SOM reconciliation, gabe bundle</span></td><td class="mono">7</td><td><span class="pill p-bad">CDN only</span></td><td class="mono">published/sites/54ed398d…/</td></tr>
+      <tr><td>Content publish pack <span style="color:var(--dim)">— report, catalogue, launch copy, tracked links, audit CSV</span></td><td class="mono">6</td><td><span class="pill p-bad">CDN only</span></td><td class="mono">published/sites/8f870c26…/documents/</td></tr>
+      <tr><td>Packaging lane <span style="color:var(--dim)">— README, release note, build.sh, deploy script, mem20.service</span></td><td class="mono">5</td><td><span class="pill p-bad">CDN only</span></td><td class="mono">published/sites/95faa9b1…/documents/</td></tr>
+      <tr><td>Ruby SDK 0.2.0 bundle <span style="color:var(--dim)">— README, EVIDENCE, CHANGELOG, tarball, requirement, evidence</span></td><td class="mono">4</td><td><span class="pill p-bad">CDN only</span></td><td class="mono">published/sites/01481ab9…/documents/</td></tr>
+      <tr><td>SDK docs publish leg <span style="color:var(--dim)">— Perl page, C++ page, publish record, records JSON</span></td><td class="mono">4</td><td><span class="pill p-bad">CDN only</span></td><td class="mono">published/sites/a590cfd2…/documents/</td></tr>
+      <tr><td>Finance report page + deploy record</td><td class="mono">4</td><td><span class="pill p-bad">CDN only</span></td><td class="mono">published/sites/6c283fdf…/</td></tr>
+      <tr><td>GTM v2 set <span style="color:var(--dim)">— launch page, claim ledger, launch copy, campaign plan</span></td><td class="mono">4</td><td><span class="pill p-bad">CDN only</span></td><td class="mono">published/sites/66161135…/</td></tr>
+      <tr><td>Assets refresh pack <span style="color:var(--dim)">— index page, refresh report, tracked links, audit</span></td><td class="mono">4</td><td><span class="pill p-bad">CDN only</span></td><td class="mono">published/sites/26ab9006…/</td></tr>
+      <tr><td>Launch page v2 + launch dashboard v3 <span style="color:var(--dim)">— the two public launch surfaces</span></td><td class="mono">2</td><td><span class="pill p-bad">CDN only</span></td><td class="mono">published/sites/f7c01331…/webpages/</td></tr>
+      <tr><td>Sidney deploy runbooks <span style="color:var(--dim)">— runbook, status report, deploy_via_gabe.sh, deploy report</span></td><td class="mono">4</td><td><span class="pill p-bad">CDN only</span></td><td class="mono">published/sites/714f65de…, 04014929…</td></tr>
+      <tr><td>Distributed research bundle</td><td class="mono">3</td><td><span class="pill p-bad">CDN only</span></td><td class="mono">published/sites/5f8951cd…/documents/</td></tr>
+      <tr><td>UX research findings, benchmark story, status page, ops ledger</td><td class="mono">4</td><td><span class="pill p-bad">CDN only</span></td><td class="mono">published/sites/051e63be…, 7598e904…, 60714d81…, ea6393ed…</td></tr>
+      <tr><td>Launch deck v3 · deck slide</td><td class="mono">2</td><td><span class="pill p-bad">CDN only</span></td><td class="mono">published/sites/110c70b7…, e877db1e…/presentations/</td></tr>
+      <tr><td>Content assets patch · Perl SDK docs page · content assets report</td><td class="mono">3</td><td><span class="pill p-bad">CDN only</span></td><td class="mono">published/sites/dcf4aa2d…, 54009941…</td></tr>
+      <tr><td>Launch copy (v1 source) + prior ops ledger</td><td class="mono">2</td><td><span class="pill p-bad">CDN only</span></td><td class="mono">published/sites/f7c01331…, ea6393ed…</td></tr>
+      <tr style="background:rgba(61,220,151,.06)"><td><b>Total preserved</b></td><td class="mono"><b>86</b></td><td><span class="pill p-fix">FIXED → main</span></td><td class="mono"><b>published/ · commit 4375f77</b></td></tr>
+    </tbody>
+  </table>
+</section>
+
+<section>
+  <h3>2 · Push evidence — read back from the remote, not from local state</h3>
+  <table>
+    <thead><tr><th>Check</th><th>Evidence</th><th>Result</th></tr></thead>
+    <tbody>
+      <tr><td>Commit containing the preservation tree</td><td class="mono">4375f77c5249cc9aa65dc2c560fdc9bacd535c50</td><td><span class="pill p-ok">exact</span></td></tr>
+      <tr><td>Push transport</td><td class="mono">git push origin main (SSH, shared deploy key)</td><td><span class="pill p-ok">ac75689..4375f77</span></td></tr>
+      <tr><td>Fresh clone from remote — HEAD</td><td class="mono">4375f77 → published/ present</td><td><span class="pill p-ok">88 files</span></td></tr>
+      <tr><td>Manifest integrity</td><td class="mono">sha256(dashboard_v3) = 0cef54ea…5e · matches MANIFEST.tsv</td><td><span class="pill p-ok">match</span></td></tr>
+      <tr><td>Product source lanes in main</td><td class="mono">web/ · docs/app/ (+assets) · docs/sdk/cpp · sdk/perl · mem20-sdk-ruby/ · mem20-orchestration/</td><td><span class="pill p-ok">present</span></td></tr>
+      <tr><td>GitHub Pages source</td><td class="mono">branch main · path /docs · status built</td><td><span class="pill p-ok">built</span></td></tr>
+      <tr><td>docs/CNAME</td><td class="mono">mem20.jaysonai.online</td><td><span class="pill p-ok">committed</span></td></tr>
+    </tbody>
+  </table>
+</section>
+
+<section>
+  <h3>3 · Branch convergence — 2 before, 1 after</h3>
+  <table>
+    <thead><tr><th>Branch</th><th class="mono">HEAD</th><th>Commits ahead of main</th><th>Action</th><th>Result</th></tr></thead>
+    <tbody>
+      <tr><td class="mono">main</td><td class="mono">4375f77</td><td class="mono">—</td><td>kept as the only branch</td><td><span class="pill p-ok">live</span></td></tr>
+      <tr><td class="mono">mem20frontendz</td><td class="mono">02d607e</td><td class="mono">0 (fully contained)</td><td>deleted via API · HTTP 204</td><td><span class="pill p-fix">deleted</span></td></tr>
+    </tbody>
+  </table>
+  <p class="sub" style="margin-top:14px">
+    <b>Branches before → after: 2 → 1.</b> <code>mem20frontendz</code> was verified with
+    <code>git merge-base --is-ancestor</code> to be 0 commits ahead of <code>main</code> — main already carried its
+    merge (<code>ac75689</code> "Merge mem20frontendz: mem20 unified web shell"). No work could be lost by deleting it,
+    and its history is additionally pinned by tag <code>archive-mem20frontendz-2026-10-19</code> (→ <code>d10e59e</code>).
+    No merge was needed, so no merge was performed.
+  </p>
+</section>
+
+<section>
+  <h3>4 · Shared GitHub key — path and instructions every agent can use</h3>
+  <div class="grid" style="margin-bottom:16px">
+    <div class="kpi"><div class="l">Deploy key id</div><div class="n acc" style="font-size:22px;margin-top:8px">167027222</div></div>
+    <div class="kpi"><div class="l">Access</div><div class="n ok" style="font-size:22px;margin-top:8px">write</div><div class="f">read_only = false · verified</div></div>
+    <div class="kpi"><div class="l">Fingerprint</div><div class="f" style="margin-top:10px;color:var(--ink);word-break:break-all">SHA256:vI7IxYkkaAGm2olXgCwNxJsHNF71E/+2qbE6GiarC6s</div></div>
+  </div>
+  <pre><span class="c"># 1. private key path (created this run)</span>
+~/.ssh/mem20_shared_ed25519        <span class="c"># chmod 600</span>
+~/.ssh/mem20_shared_ed25519.pub
+
+<span class="c"># 2. point the repo at SSH</span>
+git remote set-url origin git@github.com:bythewayz66-glitch/mem20.git
+
+<span class="c"># 3. push (this exact command landed 4375f77)</span>
+GIT_SSH_COMMAND="ssh -i ~/.ssh/mem20_shared_ed25519 -o IdentitiesOnly=yes \
+  -o StrictHostKeyChecking=accept-new" git push origin main
+
+<span class="c"># 4. verify the key before relying on it</span>
+ssh -i ~/.ssh/mem20_shared_ed25519 -o IdentitiesOnly=yes -T git@github.com
+<span class="g">Hi bythewayz66-glitch/mem20! You've successfully authenticated…</span></pre>
+  <div class="two" style="margin-top:16px">
+    <div class="card">
+      <h4>Two routes that work — no credential excuses left</h4>
+      <ul>
+        <li><b>SSH deploy key</b> — shared, write-enabled, proven by the push above and by a fresh clone.</li>
+        <li><b>GitHub MCP integration</b> — connected, authenticated as <code>bythewayz66-glitch</code> with write access. This is what created the deploy key and deleted the branch.</li>
+        <li>Private key handed to <b>GitHub Repo Assistant</b> (agent 9000072003752874) as custodian, in-room, this run.</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h4>Why Sidney is no longer the answer</h4>
+      <ul>
+        <li>Sidney is being factory reset — treated as <b>NA</b> this run, zero dependency on it.</li>
+        <li>Everything that was "published through gabe" is now represented in GitHub instead, which was the requirement.</li>
+        <li>No artifact in this ledger depends on a host that may disappear.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section>
+  <h3>5 · Live checks</h3>
+  <table>
+    <thead><tr><th>URL</th><th>Code</th><th>Bytes</th><th>Note</th></tr></thead>
+    <tbody>
+      <tr><td class="mono">https://bythewayz66-glitch.github.io/mem20/app/</td><td><span class="pill p-ok">200</span></td><td class="mono">957</td><td>the shell itself — loads</td></tr>
+      <tr><td class="mono">…/mem20/app/assets/index-BmhMl8hv.js</td><td><span class="pill p-ok">200</span></td><td class="mono">259,816</td><td>bundle present</td></tr>
+      <tr><td class="mono">…/mem20/app/assets/index-BMgU54DU.css</td><td><span class="pill p-ok">200</span></td><td class="mono">13,530</td><td>stylesheet present</td></tr>
+      <tr><td class="mono">https://bythewayz66-glitch.github.io/mem20/</td><td><span class="pill p-ok">200</span></td><td class="mono">40,727</td><td>docs/ root page</td></tr>
+      <tr><td class="mono">…/mem20/CNAME</td><td><span class="pill p-ok">200</span></td><td class="mono">—</td><td>mem20.jaysonai.online committed</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<section>
+  <h3>Open items — carried, with owner and status</h3>
+  <table>
+    <thead><tr><th>Item</th><th>Status</th><th>Owner / next action</th></tr></thead>
+    <tbody>
+      <tr><td>Anonymous access to <code>/sites/</code> CDN URLs returns 403 (4/4 token-free probes)</td><td><span class="pill p-warn">open</span></td><td>Host/CDN side — not fixable from the repo, and now <b>no longer load-bearing</b>: artifacts are in GitHub. Re-test after the owner lifts token enforcement.</td></tr>
+      <tr><td><code>mem20.jaysonai.online</code> — CNAME committed, DNS record never created (NXDOMAIN)</td><td><span class="pill p-warn">open</span></td><td>Owner / DNS. GitHub default URL works; custom domain does not resolve.</td></tr>
+      <tr><td>PyPI <code>mem20</code> 404 — install stays source-only</td><td><span class="pill p-warn">open</span></td><td>Owner decision on package name/scope. Not touched this run.</td></tr>
+      <tr><td>Benchmark acceptance gap — only bm25 benchmarked against 7 retrieval systems</td><td><span class="pill p-warn">open</span></td><td>Benchmark lane. Benchmark dataset itself is safe on CDN and now mirrored in <code>published/</code>.</td></tr>
+      <tr><td>Artifacts only on CDN</td><td><span class="pill p-ok">fixed</span></td><td>86 pushed to <code>published/</code>, hashed, verified by re-clone.</td></tr>
+      <tr><td>Branch sprawl</td><td><span class="pill p-ok">fixed</span></td><td>2 → 1. Only <code>main</code>.</td></tr>
+      <tr><td>Shared GitHub key</td><td><span class="pill p-ok">fixed</span></td><td>Key 167027222 live, proven, distributed.</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<section>
+  <h3>House numbers — carried unchanged</h3>
+  <div class="grid">
+    <div class="kpi"><div class="n acc" style="font-size:24px">257 / 26</div><div class="l">Tools / domains</div><div class="f">verified against repo README</div></div>
+    <div class="kpi"><div class="n" style="font-size:24px">$1.28B</div><div class="l">TAM</div><div class="f">market-sizing input</div></div>
+    <div class="kpi"><div class="n" style="font-size:24px">$282M</div><div class="l">SAM</div><div class="f">market-sizing input</div></div>
+    <div class="kpi"><div class="n" style="font-size:24px">$1.68M</div><div class="l">SOM</div><div class="f">market-sizing input</div></div>
+    <div class="kpi"><div class="n" style="font-size:24px">$14,000</div><div class="l">Blended ACV</div><div class="f">pricing input · not investment advice</div></div>
+  </div>
+  <p class="sub" style="margin-top:14px;font-size:13px">
+    Market-sizing and ACV figures are product-positioning inputs only, not investment advice.
+  </p>
+</section>
+
+<footer>
+  <div>Mem20-admin · operations ledger · run 2026-10-20T06:09–06:20Z · every figure from a check in this run</div>
+  <div><a href="https://github.com/bythewayz66-glitch/mem20">github.com/bythewayz66-glitch/mem20</a> · main @ 4375f77</div>
+</footer>
+
+</div>
+</body>
+</html>

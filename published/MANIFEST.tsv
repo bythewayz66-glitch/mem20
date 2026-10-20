@@ -1,4 +1,5 @@
 repo_path	bytes	sha256
+published/README.md	3114	faac4eb8678be2c6ae8f8c45d82df4aa4593acb35fea4ef0dd9c0bc451a00e06
 published/sites/01481ab9-9ff8-43bc-8d9f-87f154d3bb61/documents/mem20-ruby-sdk/CHANGELOG.md	2778	457dcf875ef77d21c0938414391f1c836b019963a1ed40a637f1382cdd01d8c5
 published/sites/01481ab9-9ff8-43bc-8d9f-87f154d3bb61/documents/mem20-ruby-sdk/EVIDENCE.md	2568	a1d5f99f15edc8a3a3f7cf11801ef457a0ea0b277b005321fa7be1856ea83a0d
 published/sites/01481ab9-9ff8-43bc-8d9f-87f154d3bb61/documents/mem20-ruby-sdk/README.md	6288	6993ce67631743512d441328ba71057735447faf898b696af6732588ec8a62c9
@@ -82,6 +83,7 @@ published/sites/dcf4aa2d-cb22-49fd-a01f-15b3f86efaf8/webpages/mem20-content-asse
 published/sites/dfe17c05-2d45-4c01-b944-e1a64a8cb52f/webpages/mem20-launch_v4/index.html	49301	cbf8c666a5de9f7bcb733270136cd2eb96e0ecf6b65700bb056274991ca7cc34
 published/sites/e877db1e-5554-4e11-ae3e-a8b37c4756f3/presentations/mem20-launch-deck/slide_01.html	6796	989f1fba78f79cd0d57b0f9003c348cd7ba645c9ac58897c3a55b1aa07efe2d1
 published/sites/ea6393ed-90a6-4a42-b2f2-536e27a0a061/webpages/mem20-admin-ops-ledger/index.html	45186	40836eba41b715cb8da8af01057aed76a79f88a3b5ae292470445282b7a0f832
+published/sites/efd3d45f-23f7-4c4a-ab52-232d1942b0bf/webpages/mem20-admin-ops-ledger_v2/index.html	22218	99001c3606a3446100a60aa18c5e261c4428d6496e88b5ca74212a06795694ca
 published/sites/f7c01331-5fb5-4160-a465-5fc1f40ebb70/documents/mem20-launch-copy/mem20-launch-copy.md	12845	112e5781e9e7f2692cea28c388f00cb2ac272b480fa77716cb8e1354776e4146
 published/sites/f7c01331-5fb5-4160-a465-5fc1f40ebb70/webpages/mem20-launch-dashboard_v3/index.html	59783	0cef54ea718a6845e20517d75ad6bcfa2b31d94ef87692aab3f7033fc1b2575e
 published/sites/f7c01331-5fb5-4160-a465-5fc1f40ebb70/webpages/mem20-launch_v2/index.html	40727	7a5cc83cdde768dcb5adf27cf6ed97b4095488bde8950bcd2a27c05ed0bf8aeb

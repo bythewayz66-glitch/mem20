@@ -1,15 +1,14 @@
 #include "mem20/errors.hpp"
 
 #include <cerrno>
-#include <cstdio>
 #include <cstring>
 #include <string>
+#include <utility>
 #include <vector>
 
 #if defined(_WIN32)
 #error "mem20 C++ SDK stdio transport targets POSIX in 0.1.0"
 #else
-#include <fcntl.h>
 #include <signal.h>
 #include <sys/types.h>
 #include <sys/wait.h>
@@ -22,8 +21,25 @@ namespace detail {
 class ChildProcess {
  public:
   int pid{-1};
-  int to_child{-1};    // parent writes
-  int from_child{-1};  // parent reads
+  int to_child{-1};
+  int from_child{-1};
+
+  ChildProcess() = default;
+  ChildProcess(ChildProcess&& o) noexcept { *this = std::move(o); }
+  ChildProcess& operator=(ChildProcess&& o) noexcept {
+    if (this != &o) {
+      close_all();
+      pid = o.pid;
+      to_child = o.to_child;
+      from_child = o.from_child;
+      o.pid = -1;
+      o.to_child = -1;
+      o.from_child = -1;
+    }
+    return *this;
+  }
+  ChildProcess(const ChildProcess&) = delete;
+  ChildProcess& operator=(const ChildProcess&) = delete;
 
   ~ChildProcess() { close_all(); }
 
@@ -57,7 +73,6 @@ class ChildProcess {
       throw TransportError(std::string("fork failed: ") + std::strerror(errno));
     }
     if (child == 0) {
-      // child
       dup2(in_pipe[0], STDIN_FILENO);
       dup2(out_pipe[1], STDOUT_FILENO);
       close(in_pipe[0]);
@@ -76,11 +91,10 @@ class ChildProcess {
       execvp(argv[0], argv.data());
       _exit(127);
     }
-    // parent
     close(in_pipe[0]);
     close(out_pipe[1]);
     ChildProcess cp;
-    cp.pid = child;
+    cp.pid = static_cast<int>(child);
     cp.to_child = in_pipe[1];
     cp.from_child = out_pipe[0];
     return cp;

@@ -47,6 +47,11 @@ vector_index.faiss
 vector_meta.jsonl
 tot_state.db
 
+# Generated vector DB indexes (regenerable)
+chroma/
+**/chroma.sqlite3
+*.sqlite3
+
 # Entries (session logs)
 entries/*.md
 
@@ -67,6 +72,8 @@ npm-debug.log*
 .coverage
 .pytest_cache/
 htmlcov/
+# Ad-hoc root scratch (real suites live under each package's tests/)
+/test/
 
 # Model / embedding caches
 # These are downloaded on demand and can contain symlink loops (HF snapshots

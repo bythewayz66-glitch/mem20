@@ -1,20 +1,20 @@
 # Spec authority paths (issues #14 / #15)
 
 ## Rule
-No personal absolute path (`/home/jayson/...`) as a required default.
+Do not use `/home/jayson/...` (or any personal absolute path) as a **required**
+default. Defaults must be:
+- relative to the repo / package, or
+- `Path.home()`-based with an env override, or
+- fail fast with a clear message when unset.
 
-Use:
-- paths under `specs/` in-repo, or
-- `Path.home()` / env overrides, or
-- fail with a clear message.
+## Spec inputs
+Commit canonical copies under `specs/` when a pipeline needs fixed inputs.
+Override with `MEM20_SPEC_SOURCE` for local layouts.
 
-## Env
+## Env overrides
 | Variable | Purpose |
 |----------|--------|
-| `MEM20_ENGINE_PATH` | Repo / engine root |
-| `MEM20_SPEC_SOURCE` | Spec authority directory (default `specs`) |
+| `MEM20_ENGINE_PATH` | Cognitive engine / repo root override |
+| `MEM20_SPEC_SOURCE` | Spec authority directory |
 | `UNITY_EDITOR` | Unity editor binary |
-| `MEM20_STORE_PATH` | Memory store |
-| `MEM20_PACKAGE` | owebz package path |
-| `MEM20_OWEBZ_ROOT` / `MEM20_OWEBZ_ART` | Project roots |
-| `MEM20_AUDIT_OUT` | Audit output path |
+| `MEM20_STORE_PATH` | Memory store path |

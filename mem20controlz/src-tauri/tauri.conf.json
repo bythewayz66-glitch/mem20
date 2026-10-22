@@ -1,0 +1,26 @@
+{
+  "$schema": "https://schema.tauri.app/config/2",
+  "productName": "mem20controlz",
+  "version": "0.1.0",
+  "identifier": "com.mem20.controlz",
+  "build": {
+    "frontendDist": "../mem20controlz/static",
+    "devUrl": "http://127.0.0.1:8741"
+  },
+  "app": {
+    "windows": [
+      {
+        "title": "mem20 control plane",
+        "width": 1280,
+        "height": 800,
+        "resizable": true
+      }
+    ],
+    "security": { "csp": null }
+  },
+  "bundle": {
+    "active": true,
+    "targets": "all",
+    "icon": []
+  }
+}

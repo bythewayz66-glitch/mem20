@@ -1,10 +1,6 @@
 """mem20agentz `oreo build` vertical slice (phase 03 sub-phase 3.3).
 
-The FIRST LIVE PROOF of the phase: take natural language, produce a
-real GraphLang app (through OREO's own architecture engine + emitter),
-persist the produced graph in the shared mem20 graph store, then run the
-emitted server and hit a real route over HTTP. Live evals are wrapped
-with `timeout` so the app process never outlives the call.
+Requires mem20oreo (gitlink / package). See docs/hygiene/oreo-gitlink.md (#30).
 """
 
 from __future__ import annotations
@@ -17,6 +13,17 @@ from typing import Optional
 TOPIC_PREFIX = "oreo:build:"
 
 
+def _require_oreo():
+    try:
+        import mem20oreo  # noqa: F401
+    except ImportError as e:
+        raise ImportError(
+            "mem20oreo is not available (dangling gitlink / not checked out). "
+            "See docs/hygiene/oreo-gitlink.md and docs/audit/2026-10-gitlink-audit.md "
+            "(issues #30 / #31)."
+        ) from e
+
+
 def build(
     nl: str,
     root: Optional[Path] = None,
@@ -25,6 +32,7 @@ def build(
     host: str = "127.0.0.1",
 ) -> dict:
     from mem20agentz._substrate import _load
+    _require_oreo()
     from mem20oreo.parser.architecture.runtime import GraphRuntime
     from mem20oreo.parser.architecture.emit import emit_app
 
@@ -39,8 +47,7 @@ def build(
     stamp = time.strftime("%Y%m%d-%H%M%S")
     dest = base / f"app_{stamp}.py"
 
-    # 3) store the graph in the shared substrate store; this is the phase's
-    #    "a built app = GIR graph served from mem20" claim.
+    # 3) store the graph in the shared substrate store
     from mem20agentz.graphstore import GraphStore
     store_name = f"build-{stamp}"
     store = GraphStore(backend=backend)

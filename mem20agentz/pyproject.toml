@@ -6,14 +6,14 @@ requires-python = ">=3.11"
 dependencies = [
   "PyYAML>=6.0",
   "aiohttp>=3.9",
-  # Imported at module scope by llm.py, mcp.py, security.py and
-  # bridges/telegram.py. It was undeclared, so a clean install of mem20agentz
-  # imported the package fine but failed on `import mem20agentz.llm`. See #29.
   "httpx>=0.27",
 ]
 
 [project.optional-dependencies]
 dev = ["pytest>=8.0", "ruff>=0.4"]
+# OREO is a gitlink / separate package — install when available:
+#   pip install -e ./mem20oreo   # or submodule
+oreo = []
 
 [project.scripts]
 mem20agentz = "mem20agentz.cli:main"

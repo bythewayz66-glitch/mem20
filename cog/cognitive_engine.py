@@ -22,7 +22,7 @@ import sqlite3
 from pathlib import Path
 from typing import Dict, List, Any, Optional, Tuple
 
-sys.path.insert(0, os.environ.get("MEM20_ENGINE_PATH", "/home/jayson/mem20"))
+sys.path.insert(0, os.environ.get("MEM20_ENGINE_PATH", str(__import__("pathlib").Path(__file__).resolve().parents[1])))
 from llm import chat, achat, LLMError  # noqa: E402
 
 sys.path.insert(0, os.environ.get("MEM20_STORE_PATH", "/root/.hermes/memories/store"))

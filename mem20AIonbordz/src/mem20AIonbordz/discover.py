@@ -57,8 +57,8 @@ CANDIDATE_PATHS = [
     ("/root/AGENTS.md", "standing rules loaded into every agent session"),
     ("/opt/mem20/toolchest", "runtime-checked tool registry"),
     ("/opt/mem20/secrets/.env", "consolidated credentials (never print)"),
-    ("/home/jayson/Desktop", "Jayson's desktop"),
-    ("/home/jayson/Apps", "locally installed applications"),
+    (str(__import__("pathlib").Path.home() / "Desktop"), "user Desktop"),
+    (str(__import__("pathlib").Path.home() / "Apps"), "locally installed applications"),
     ("/etc/systemd/system", "systemd unit directory"),
 ]
 

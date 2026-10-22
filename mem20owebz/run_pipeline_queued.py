@@ -328,7 +328,7 @@ def main():
     subparsers.add_parser('list-runs')
     
     parser.add_argument('--project', default='unreliable_prophecy')
-    parser.add_argument('--package', default='/home/jayson/Desktop/prod.md')
+    parser.add_argument('--package', default=os.environ.get('MEM20_PACKAGE', 'specs/prod.md'))
     parser.add_argument('--genre', default='Adventure')
     parser.add_argument('--platforms', default='Windows')
     parser.add_argument('--stage', type=int, default=None)

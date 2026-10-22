@@ -64,7 +64,7 @@ if _V21 is not None:
 
 BLENDER = os.environ.get("HARNESS_BLENDER", "/usr/local/bin/blender")
 UNITY   = os.environ.get("HARNESS_UNITY",
-                          "/home/jayson/Unity/Hub/Editor/6000.5.9f1/Editor/Unity")
+                          os.environ.get("UNITY_EDITOR", "Unity"))
 FREECAD = os.environ.get("HARNESS_FREECAD", "/usr/local/bin/freecadcmd")
 SURGE   = os.environ.get("HARNESS_SURGE",    "/usr/bin/surge-xt-cli")
 GODOT   = (os.environ.get("HARNESS_GODOT")

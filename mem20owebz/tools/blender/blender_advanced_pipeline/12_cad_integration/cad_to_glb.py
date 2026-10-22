@@ -12,7 +12,7 @@ from pathlib import Path
 from typing import Optional, Dict, Any
 
 # Output directory
-OUTPUT_DIR = Path("/home/jayson/Desktop/jayson-openwebui/projects/unreliable_prophecy/art")
+OUTPUT_DIR = Path(os.environ.get("MEM20_OWEBZ_ART", str(__import__("pathlib").Path(__file__).resolve().parents[3] / "projects" / "unreliable_prophecy" / "art")))
 OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
 
 

@@ -13,8 +13,7 @@ from pathlib import Path
 def find_unity_editor():
     """Find Unity Editor binary on this system."""
     common_paths = [
-        '/home/jayson/Unity/Hub/Editor/6000.5.9f1/Editor/Unity',
-        '/home/jayson/Unity/Hub/Editor/6000.3.22f1/Editor/Unity',
+        os.environ.get('UNITY_EDITOR', 'Unity'),
         '/opt/Unity/Editor/Unity',
         '/usr/local/unity/Editor/Unity',
     ]
@@ -89,8 +88,8 @@ def build_project(project_path, output_path, unity_path=None):
 def main():
     print("=== Local Unity Build ===\n")
     
-    project_path = '/home/jayson/Desktop/jayson-openwebui/projects/unreliable_prophecy/engine_project'
-    output_path = '/home/jayson/Desktop/jayson-openwebui/projects/unreliable_prophecy/release/build/unreliable_prophecy.exe'
+    project_path = os.environ.get('MEM20_UNITY_PROJECT', str(__import__('pathlib').Path(__file__).resolve().parents[2] / 'projects' / 'unreliable_prophecy' / 'engine_project'))
+    output_path = os.environ.get('MEM20_UNITY_OUT', str(__import__('pathlib').Path(__file__).resolve().parents[2] / 'projects' / 'unreliable_prophecy' / 'release' / 'build' / 'unreliable_prophecy.exe'))
     
     if not os.path.exists(project_path):
         print(f"✗ Project not found: {project_path}")

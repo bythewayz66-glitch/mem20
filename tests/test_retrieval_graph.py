@@ -45,9 +45,9 @@ def store(tmp_path, monkeypatch):
 
 
 FACTS = [
-    ("unity", "Unity 6 licence lives under /home/jayson/.config/unity3d/Unity/licenses",
+    ("unity", "Unity 6 licence lives under ~/.config/unity3d/Unity/licenses",
      ["unity", "licence"]),
-    ("unity", "The Unity editor binary is /home/jayson/Unity/Hub/Editor/6000.5.9f1/Editor/Unity",
+    ("unity", "The Unity editor binary is set via UNITY_EDITOR env or Unity on PATH",
      ["unity", "editor"]),
     ("cloudflare", "Cloudflare DNS updates use a scoped zone-read-only API token",
      ["cloudflare", "dns"]),

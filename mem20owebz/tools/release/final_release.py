@@ -12,7 +12,7 @@ from pathlib import Path
 from datetime import datetime
 
 PROJECT = "unreliable_prophecy"
-BASE = f"/home/jayson/Desktop/jayson-openwebui/projects/{PROJECT}"
+BASE = os.environ.get("MEM20_OWEBZ_ROOT", str(__import__("pathlib").Path(__file__).resolve().parents[2] / "projects" / PROJECT))
 ENGINE = f"{BASE}/engine_project"
 RELEASE = f"{BASE}/release"
 

@@ -1,0 +1,22 @@
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "mem20adapz"
+version = "0.1.0"
+description = "mem20 adaptive systems runtime — consolidated adaptive organs."
+readme = "README.md"
+requires-python = ">=3.11"
+license = { text = "MIT" }
+keywords = ["mem20", "adaptive", "runtime"]
+dependencies = []
+
+[project.scripts]
+mem20adapz = "mem20adapz.cli:main"
+
+[tool.setuptools]
+packages = ["mem20adapz"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

@@ -30,7 +30,7 @@ serde = { version = "1", features = ["derive"] }
 # with its content and signature intact. Correctly-rounded parsing makes the
 # canonical form stable and recovers those records.
 serde_json = { version = "1", features = ["float_roundtrip"] }
-toml = "0.8"
+toml = "1.1"
 sha2 = "0.11"
 hmac = "0.12"
 bs58 = "0.5"

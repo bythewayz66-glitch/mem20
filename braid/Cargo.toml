@@ -18,7 +18,7 @@ license = "MIT"
 
 [workspace.dependencies]
 blake3 = "1"
-ed25519-dalek = { version = "2", features = ["rand_core"] }
+ed25519-dalek = { version = "3", features = ["rand_core"] }
 rand = "0.8"
 serde = { version = "1", features = ["derive"] }
 # float_roundtrip is REQUIRED for content addressing, not an optimisation.
@@ -31,7 +31,7 @@ serde = { version = "1", features = ["derive"] }
 # canonical form stable and recovers those records.
 serde_json = { version = "1", features = ["float_roundtrip"] }
 toml = "0.8"
-sha2 = "0.10"
+sha2 = "0.11"
 hmac = "0.12"
 bs58 = "0.5"
 

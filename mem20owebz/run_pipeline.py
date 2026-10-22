@@ -2,7 +2,7 @@
 """
 Production Pipeline Executor - Direct CLI for Jayson
 Usage:
-    python3 run_pipeline.py --package /home/jayson/Desktop/prod.md --project unreliable_prophecy --genre Adventure
+    python3 run_pipeline.py --package specs/prod.md --project unreliable_prophecy --genre Adventure
 """
 
 import sys

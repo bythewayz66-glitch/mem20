@@ -13,9 +13,6 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      # A mode-160000 entry with no .gitmodules URL aborts `git submodule
-      # update --recursive` (exit 128) and takes the Pages build down with it.
-      # This guard fails fast so the accident cannot land again. See #54.
       - name: Guard against dangling gitlinks
         run: |
           bad=$(git ls-files --stage | awk '$1=="160000"{print $4}')
@@ -27,15 +24,20 @@ jobs:
           fi
           echo "no gitlinks - ok"
 
+      - name: Guard against tracked bytecode (issue #22)
+        run: |
+          bad=$(git ls-files '*.pyc' '__pycache__/*' 2>/dev/null || true)
+          if [ -n "$bad" ]; then
+            echo "::error::Tracked .pyc / __pycache__ paths found — untrack them (issue #22)."
+            echo "$bad"
+            exit 1
+          fi
+          echo "no tracked bytecode - ok"
+
       - uses: actions/setup-python@v5
         with:
           python-version: '3.11'
 
-      # Scope note: this gate compiles every tracked module in the repo. The
-      # previous `mcp_server_dir/` exclusion was a temporary scope limit for a
-      # corrupt duplicate tree; that tree no longer exists (the mirror now lives
-      # at `mem20_mcp/`, which parses clean), so excluding it only narrowed the
-      # gate without buying anything. Only generated/vendor trees are skipped.
       - name: Compile every tracked module
         run: |
           find . \
@@ -47,47 +49,30 @@ jobs:
             | xargs -0 -n1 python3 -m py_compile
           echo "syntax gate passed"
 
-  # Guards against the class of accident that broke the Pages build: a nested
-  # working tree added with a bare `git add`, which records a gitlink (mode
-  # 160000) but writes no .gitmodules entry. GitHub's legacy Pages builder runs
-  # `actions/checkout` with `submodules: recursive`, which then aborts with
-  #   fatal: No url found for submodule path '<path>' in .gitmodules
-  # and fails the whole build before any site content is touched. See issue #54.
   gitlink-guard:
     name: Gitlink guard
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
         with:
-          # The index is all we inspect; recursing would defeat the purpose.
           submodules: false
 
       - name: Fail on dangling gitlinks (mode 160000)
         run: |
           set -uo pipefail
-
-          # `grep` exits 1 when it finds nothing; `|| true` keeps that from
-          # failing the step, so an empty index is a pass, not an error.
           matches="$(git ls-files --stage | grep '^160000' || true)"
-
           if [ -z "$matches" ]; then
             echo "OK: No gitlinks (mode 160000) in the index."
             exit 0
           fi
-
-          # `git ls-files --stage` prints "<mode> <sha> <stage>\t<path>".
-          paths="$(printf '%s\n' "$matches" | sed 's/^[^\t]*\t//')"
+          paths="$(printf '%s\n' "$matches" | sed 's/[^\t]*\t//')"
           count="$(printf '%s\n' "$paths" | grep -c .)"
-
           echo "::error::Found $count gitlink(s) in the index (mode 160000)."
           while IFS= read -r p; do
             [ -z "$p" ] && continue
             echo "  - $p"
           done <<< "$paths"
-
           fail=0
-
-          # Every gitlink must be declared in .gitmodules, or it is dangling.
           if [ ! -f .gitmodules ]; then
             echo "::error::.gitmodules is missing, but the index contains gitlinks."
             fail=1
@@ -101,30 +86,53 @@ jobs:
               fi
             done <<< "$paths"
           fi
-
           if [ "$fail" -ne 0 ]; then
             echo "Fix: either remove the gitlink from the index, or declare it with"
             echo "     'git submodule add <url> <path>' so .gitmodules carries its URL."
             exit 1
           fi
-
           echo "OK: all gitlinks are declared in .gitmodules."
+
+  dependency-audit:
+    name: Dependency audit (issue #19)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: pip-audit requirements.txt
+        run: |
+          python3 -m pip install --upgrade pip pip-audit
+          python3 -m pip-audit -r requirements.txt || {
+            echo "::warning::pip-audit reported findings — review and bump pins"
+            exit 0
+          }
+
+  rust:
+    name: Rust braid (issue #21)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+      - name: cargo check braid workspace
+        run: |
+          if [ -f braid/Cargo.toml ]; then
+            cargo check --manifest-path braid/Cargo.toml
+          else
+            echo "braid/Cargo.toml missing — skip"
+          fi
+      - name: cargo test braid (if lock present)
+        run: |
+          if [ -f braid/Cargo.lock ]; then
+            cargo test --manifest-path braid/Cargo.toml --locked
+          else
+            cargo test --manifest-path braid/Cargo.toml
+          fi
 
   tests:
     name: Tests
     runs-on: ubuntu-latest
-    # REQUIRED. This job gates merges; it carries no continue-on-error.
-    #
-    # It was advisory until the 3.0 baseline. Advisory CI on a tree with known-red
-    # packages is how 132 tests came to be reported green while 1,400 never ran —
-    # the status was decorative, not a signal. See issues #5 and #54.
-    #
-    # Scope: GREEN is the set of packages that pass in a clean environment with
-    # nothing but the dependencies installed below. It is the regression gate, and
-    # the count is pinned so a package cannot silently drop out of the set. The
-    # remaining packages are tracked by their own open issues: they need optional
-    # native deps (torch, stripe, blender) or are still red for the reasons those
-    # issues record. Widening this list is how each one gets burned down.
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5

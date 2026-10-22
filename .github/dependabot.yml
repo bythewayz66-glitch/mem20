@@ -1,0 +1,27 @@
+version: 2
+updates:
+  - package-ecosystem: pip
+    directory: "/"
+    schedule:
+      interval: weekly
+    open-pull-requests-limit: 10
+    labels:
+      - tooling
+      - security
+
+  - package-ecosystem: cargo
+    directory: "/braid"
+    schedule:
+      interval: weekly
+    open-pull-requests-limit: 5
+    labels:
+      - tooling
+      - security
+
+  - package-ecosystem: npm
+    directory: "/dashboard"
+    schedule:
+      interval: weekly
+    open-pull-requests-limit: 5
+    labels:
+      - tooling

@@ -9,7 +9,7 @@ Loads the full server implementation automatically:
 3. Else clear error
 
 A normal `git clone` (or shallow clone that includes commit 6a2bdaa) works
-with zero manual recovery steps. Lhe tools are registered automatically.
+with zero manual recovery steps. Lie tools are registered automatically.
 """
 from __future__ import annotations
 
@@ -93,7 +93,7 @@ def _apply_lie_patch(src: str) -> str:
 
     marker = (
         '        """Execute a tool and return result as string."""\n'
-        "        \n-o"
+        "        \n"
         "        # IRC room tools"
     )
     dispatch = '''        """Execute a tool and return result as string."""
@@ -131,11 +131,11 @@ def _bootstrap():
     """Load the restored server implementation, or raise ImportError.
 
     Every failure path here MUST surface as ImportError, never SystemExit.
-    module-level SystemExit is not treated as an import failure by Python or
-    pytest: it aborts the interpreter (and, under pytest, escalates to
-    INTERNALERROR and kills collection for the whole session). Because this
-    module is imported by several test files, an ImportError is contained to
-    the importing module; SystemExit is not.
+    A module-level SystemExit is not treated as an import failure by Python or
+    pytest: it aborts the interpreter, and under pytest it escalates to
+    INTERNALERROR and kills collection for the whole session. Because this
+    module is imported by several test files, an ImportError stays contained
+    to the importing module; SystemExit does not.
     """
     src = _read_vendored() or _read_from_git()
     if not src:
@@ -171,7 +171,7 @@ Mem20MCPServer = _mod.Mem20MCPServer
 main = _mod.main
 for _k, _v in _mod.__dict__.items():
     if not _k.startswith("_"):
-        globals()[_] = _v
+        globals()[_k] = _v
 
 if __name__ == "__main__":
     main()

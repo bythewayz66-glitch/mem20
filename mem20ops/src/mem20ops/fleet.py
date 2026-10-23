@@ -22,7 +22,7 @@ import subprocess
 import sys
 from typing import Any
 
-VENV_BIN = "/root/.venv/bin"
+VENV_BIN = "/usr/local/bin"
 FS_NAME_RE = re.compile(r"^fs-(?P<sub>.+)$")
 MEM20_NAME_RE = re.compile(r"^mem20(?P<sub>[a-z0-9][a-z0-9_-]*)$")
 MAX_LIST = 200

@@ -36,7 +36,7 @@ Only 100% true, verified facts. Format: Action / feature — access — (WORKED|
 - Device Enrollment Autopilot (RM-151) REAL — access: `fs-sense enroll` over HTTP/CLI, Ed25519 state machine declare→attest→enroll→provision→validate (new→challenge→attested→enrolled→provisioned→validated), resumable worker `advance()`, persisted in ~/.mem20/store/device_enrollment.* — live device lifecycle door-to-done, simulator 6/6 scenarios true — (WORKED)
 - cap.sense-accel.v1 + cap.sense-enroll.v1 registered, braid-journaled, proven — access: POST /capabilities then `prove(brf74aedde..., bra6c243f462...)` = True each (depth 447, events 32/33) — (WORKED)
 - trust-bridge caps A2A-discoverable — access: `A2AClient().call('ucg','who provides device enrollment autopilot')` → cap.sense-enroll.v1; 'who provides human capability accelerator' → cap.sense-accel.v1 — (WORKED)
-- mem20sensez test suite now 22/22 — access: `cd /opt/mem20/mem20sensez && /root/.venv/bin/python -m pytest tests/ -q` — (WORKED) — ledger + braid: registration events carry _braid_cid in payload
+- mem20sensez test suite now 22/22 — access: `cd /opt/mem20/mem20sensez && python3 -m pytest tests/ -q` — (WORKED) — ledger + braid: registration events carry _braid_cid in payload
 
 - 2026-09-23: mem20mktz market offers journal real braid cids — access: `braid_python-0.1.0-cp311-abi3-manylinux_2_34_x86_64.whl` pip-installed into /opt/mem20/mem20mktz/.venv (mirrors estate organs' runtime); then `journal('offer.published', 'test-offer-journal-verify', {...})` → cid `br25166abf9a68c78abb8545dacb65dbcedbcb1f69ec0b02be4c1e4a4f48fec32c`, prove True (estate bridge + in-venv), depth 449, precommit_verified True — (WORKED)
 
@@ -53,7 +53,7 @@ Only 100% true, verified facts. Format: Action / feature — access — (WORKED|
 ### 2026-09-29 — /sb scoreboard — (WORKED)
 - `/sb` holds the whole tool: `backend/mem20scoreboardz/` (store, cli, web),
   `frontend/index.html`, `data/scoreboard.db`, `tests/`, `README.md`.
-  Access: `/root/.venv/bin/scoreboard` (editable install of `/sb/backend`).
+  Access: `scoreboard` (editable install of `/sb/backend`).
   `python -m mem20scoreboardz` also works (WORKED).
 - Marks are append-only event rows in SQLite; roster, status and score are
   derived by `store.fold()` replaying the ledger, so the board can be rebuilt
@@ -79,7 +79,7 @@ Only 100% true, verified facts. Format: Action / feature — access — (WORKED|
   1,2,2,4,4 present in the DOM, zero JS page errors (WORKED).
 - Concurrency: 20 rapid CLI writes against a running reader produced 20 ledger
   rows, no lost writes, and CLI and HTTP views agreed (WAL + busy_timeout).
-- Tests: 61 passing (`cd /sb/backend && /root/.venv/bin/python -m pytest /sb/tests -q`).
+- Tests: 61 passing (`cd /sb/backend && python3 -m pytest /sb/tests -q`).
 - Registered: `toolchest refresh` -> inventory 581 -> 582 entries;
   `toolchest show scoreboard` -> runtime_status "ok" (WORKED).
 - Not in /opt/mem20 and not a mem20*z organ: it lives at /sb by Jayson's
@@ -104,8 +104,8 @@ Only 100% true, verified facts. Format: Action / feature — access — (WORKED|
 - CORRECTION to an earlier claim in this session: I first reported that `sitemap`,
   `chroma`, `fs-ops` and `mem20agentz` were "not on PATH" at all. That was
   measured with the *ambient* PATH of the opencode process, which does not
-  include /root/.venv/bin. Measured properly, `/etc/profile.d/thestack-env.sh`
-  already puts /root/.venv/bin on the PATH of every interactive login shell
+  include .venv/bin. Measured properly, `/etc/profile.d/thestack-env.sh`
+  already puts .venv/bin on the PATH of every interactive login shell
   (bash and zsh both resolve `sitemap` with no changes) — (CORRECTED)
 - The real gap is narrower and specific: a context with only the *default*
   system PATH cannot resolve any mem20 CLI. Verified with

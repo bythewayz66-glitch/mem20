@@ -14,7 +14,7 @@ import subprocess
 from dataclasses import dataclass, field
 
 DEFAULT_ROOT = "/opt/mem20"
-DEFAULT_PYTHON = "/root/.venv/bin/python"
+DEFAULT_PYTHON = "/usr/local/bin/python"
 
 _COUNT_RE = re.compile(r"(\d+)\s+(passed|failed|error|errors|skipped|xfailed|xpassed)")
 _FAILED_RE = re.compile(r"^FAILED\s+(\S+)", re.MULTILINE)

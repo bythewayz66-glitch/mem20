@@ -16,7 +16,7 @@ reported, and no matching when the book is uncrossed.
 
 ```bash
 cd /opt/mem20/mem20adaptiveinferencemarketplacez
-/root/.venv/bin/python -m pytest mem20adaptiveinferencemarketplacez/tests -q
+python3 -m pytest mem20adaptiveinferencemarketplacez/tests -q
 ```
 
 Evidence that this is real behaviour rather than a renamed template:

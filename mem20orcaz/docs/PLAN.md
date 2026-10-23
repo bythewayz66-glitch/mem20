@@ -95,7 +95,7 @@ gateway (fake deterministic gateway provided for offline/CI runs).
 
 - `pyproject.toml`: `setuptools>=68`, `requires-python>=3.10`, versions are
   PEP-440 (`0.9.17+mem20`), console script `mem20orcaz = mem20orcaz.cli:main`.
-- Installed editable into the shared `/root/.venv`.
+- Installed editable into the shared `.venv`.
 
 ## 7. Handoff
 

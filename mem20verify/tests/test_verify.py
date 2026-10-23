@@ -186,7 +186,7 @@ class TestRunPackage:
             encoding="utf-8",
         )
         result = testrun.run_package(
-            "slowpkg", root=str(tmp_path), python="/root/.venv/bin/python",
+            "slowpkg", root=str(tmp_path), python="/usr/local/bin/python",
             timeout=3)
         assert result.timed_out
         assert result.returncode == 124
@@ -198,7 +198,7 @@ class TestRunPackage:
         (pkg / "test_ok.py").write_text(
             "def test_a():\n    assert 1 + 1 == 2\n", encoding="utf-8")
         result = testrun.run_package(
-            "goodpkg", root=str(tmp_path), python="/root/.venv/bin/python")
+            "goodpkg", root=str(tmp_path), python="/usr/local/bin/python")
         assert result.ok
         assert result.passed == 1
 
@@ -208,7 +208,7 @@ class TestRunPackage:
         (pkg / "test_bad.py").write_text(
             "def test_broken():\n    assert 0\n", encoding="utf-8")
         result = testrun.run_package(
-            "badpkg", root=str(tmp_path), python="/root/.venv/bin/python")
+            "badpkg", root=str(tmp_path), python="/usr/local/bin/python")
         assert not result.ok
         assert result.failed == 1
         assert any("test_broken" in x for x in result.failed_ids)

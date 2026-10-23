@@ -290,7 +290,7 @@ def render_piper_vo(lines, voice, output_dir):
     for i, line in enumerate(lines):
         output_path = output_dir / f"vo_{i:03d}.wav"
         cmd = [
-            "/root/.venv/bin/python3", "-c",
+            "/usr/local/bin/python3", "-c",
             f"import piper; v = piper.PiperVoice.load('en_US-lessac-medium'); v.synthesize('{line}', '{output_path}')"
         ]
         result = run_cmd(cmd, timeout=30)

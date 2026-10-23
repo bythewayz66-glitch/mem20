@@ -3,7 +3,7 @@
 Real discovery over real on-box sources:
 
 - the mem20 MCP server's canonical tool table (``Mem20MCPServer.tools``),
-- executable CLI binaries on the box (``/usr/local/bin``, ``/root/.venv/bin``),
+- executable CLI binaries on the box (``/usr/local/bin``, ``/usr/local/bin``),
 - native mem20*z subsystems (``pyproject.toml`` + runtime install checks).
 
 The generated machine-readable inventory is ``inventory.json``; query it with

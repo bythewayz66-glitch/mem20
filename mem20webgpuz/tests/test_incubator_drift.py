@@ -145,7 +145,7 @@ class TestHonesty:
                    '{"name":"b","imports":["x","missing"]}],"cache":false}'
                    if package == "mem20wasmz" else
                    '{"webgpu_available":true,"cache":false}')
-        proc = subprocess.run([f"/root/.venv/bin/{script}", "run", payload],
+        proc = subprocess.run([f"/usr/local/bin/{script}", "run", payload],
                               capture_output=True, text=True, timeout=90)
         assert proc.returncode == 0, proc.stderr[-500:]
         data = json.loads(proc.stdout)

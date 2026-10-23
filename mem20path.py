@@ -3,7 +3,7 @@
 Why this exists
 ---------------
 Every mem20 subsystem installs its console script into the shared virtualenv
-at ``/root/.venv/bin``. That directory is on the PATH of an interactive login
+at ``/usr/local/bin``. That directory is on the PATH of an interactive login
 shell, because ``/etc/profile.d/thestack-env.sh`` adds it - so ``sitemap`` and
 friends work when you type them at a prompt.
 
@@ -50,10 +50,10 @@ import sys
 from dataclasses import dataclass
 from pathlib import Path
 
-VENV_BIN = Path(os.environ.get("MEM20_VENV_BIN", "/root/.venv/bin"))
+VENV_BIN = Path(os.environ.get("MEM20_VENV_BIN", "/usr/local/bin"))
 SITE_PACKAGES = Path(
     os.environ.get(
-        "MEM20_SITE_PACKAGES", "/root/.venv/lib/python3.14/site-packages"
+        "MEM20_SITE_PACKAGES", "/usr/local/lib/python3.14/site-packages"
     )
 )
 DEFAULT_TARGET = Path(os.environ.get("MEM20_PATH_DIR", "/usr/local/bin"))

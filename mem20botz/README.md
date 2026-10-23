@@ -144,7 +144,7 @@ the channel down.
 ## Tests
 
 ```sh
-cd /opt/mem20/mem20botz && /root/.venv/bin/python -m pytest tests -q
+cd /opt/mem20/mem20botz && python3 -m pytest tests -q
 ```
 
 99 tests. The protocol parser is fed literal IRC lines, and the kanban bot runs

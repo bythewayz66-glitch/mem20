@@ -151,7 +151,7 @@ def acl_probe(
 def lint_delta(
     path: str,
     revision: str = "HEAD",
-    python: str = "/root/.venv/bin/python",
+    python: str = "/usr/local/bin/python",
     repo: str = REPO,
 ) -> dict[str, Any]:
     """Compare ruff findings for a file against a git revision, per rule code.

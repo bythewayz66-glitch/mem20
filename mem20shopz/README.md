@@ -88,8 +88,8 @@ subscription. Prices ship **unset**: a SKU is sellable only once both
 ## Tests
 
 ```sh
-/root/.venv/bin/python -m pytest tests -q
-/root/.venv/bin/ruff check mem20shopz tests
+python3 -m pytest tests -q
+ruff check mem20shopz tests
 ```
 
 42 tests. Webhook signatures are produced by the Stripe SDK's own

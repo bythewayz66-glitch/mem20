@@ -9,7 +9,7 @@ import time
 from datetime import UTC, datetime
 from typing import Any
 
-DEFAULT_PYTHON = "/root/.venv/bin/python"
+DEFAULT_PYTHON = "/usr/local/bin/python"
 
 
 def _iso(timestamp: float) -> str:

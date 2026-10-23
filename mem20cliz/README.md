@@ -44,7 +44,7 @@ emits a stable envelope on stdout:
 
 ```
 cd /opt/mem20/mem20cliz
-/root/.venv/bin/pip install -e .
+python3 -m pip install -e .
 ```
 
 Verify the contract from the command line:
@@ -67,7 +67,7 @@ the CLIs that have no machine output yet.
 ## Tests
 
 ```
-/root/.venv/bin/python -m pytest /opt/mem20/mem20cliz -q
+python3 -m pytest /opt/mem20/mem20cliz -q
 ```
 
 The suite asserts the property that matters most: the human path is unchanged,

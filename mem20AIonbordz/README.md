@@ -17,7 +17,7 @@ time it was verified.
 ## Install
 
 ```bash
-/root/.venv/bin/pip install -e . --no-deps
+python3 -m pip install -e . --no-deps
 ```
 
 ## Use
@@ -85,7 +85,7 @@ to do.
 ## Tests
 
 ```bash
-cd /opt/mem20/mem20AIonbordz && /root/.venv/bin/python -m pytest tests -q
+cd /opt/mem20/mem20AIonbordz && python3 -m pytest tests -q
 ```
 
 40 tests, all passing as of the last run. Bounded by design: no network, no

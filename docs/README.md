@@ -10,7 +10,7 @@
 | Document | Description |
 |----------|-------------|
 | [Architecture Overview](01-architecture.md) | System design, memory model, tool domains, deployment |
-| [Tools Reference](02-tools-reference.md) | Complete reference for the MCP tool surface (257 tools / 26 domains live) |
+| [Tools Reference](02-tools-reference.md) | Complete reference for the MCP tool surface (268 tools / 26 domains live) |
 | [Installation Guide](03-installation.md) | Install, configure, and connect MCP hosts |
 | [Usage Examples](04-usage-examples.md) | Practical examples for every tool domain |
 
@@ -37,7 +37,7 @@ MCP client --stdio--> Mem20MCPServer (mcp/mcp_server.py)
    (LLM-backed)    (store engine)   (JSON files)
 ```
 
-## 257 Tools Across 26 Domains
+## 268 Tools Across 26 Domains
 
 Counts obtained by instantiating `Mem20MCPServer` and counting `server.tools`.
 

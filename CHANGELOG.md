@@ -36,7 +36,7 @@ achieve this — conflicts were resolved as unions, and repairs were made in pla
   was dropped. The duplicate `## Development` headings were merged into one.
 - **Version is 3.0.0** across `pyproject.toml`, `VERSION`, the README badge and
   `docs/README.md`; the release badge moved off the 2.1-rc2 static badge.
-- **Tool counts reconciled to the single house number: 257 tools across 26 domains.**
+- **Tool counts reconciled to the single house number: 268 tools across 26 domains.**
   Prose that had drifted to 258 or 260 is corrected; the 26 domain modules are
   unchanged. The domain table labels its rows as tool *prefixes*, since several
   prefixes share one domain.
@@ -68,7 +68,7 @@ commits behind `main`, so there was no work to preserve.
 
 ### Note on house numbers
 The commercial figures are **unchanged by this release** and are deliberately not
-restated as new measurements: 257 tools / 26 domains, TAM $1.28B / SAM $282M / SOM
+restated as new measurements: 268 tools / 26 domains, TAM $1.28B / SAM $282M / SOM
 $1.68M, blended ACV $14,000.
 
 ## [2.2.0-dev] — 2026-09-04 (cognitive substrate + A2A tools)

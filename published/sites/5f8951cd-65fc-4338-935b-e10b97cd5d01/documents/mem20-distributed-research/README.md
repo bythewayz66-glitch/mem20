@@ -45,7 +45,7 @@ rather than from a remembered answer:
 | Branch / license | `main` / MIT | fetched `CANONICAL.md` |
 | Tracked files | 9,882 | fetched `CANONICAL.md` |
 | `mem20*z` subsystems | 293 | fetched `CANONICAL.md` |
-| Live tool count | 257 | real `tools/list` on each node |
+| Live tool count | 268 | real `tools/list` on each node |
 | Protocol | `2025-06-18` | real `initialize` handshake |
 
 ## How the federation works
@@ -67,7 +67,7 @@ rather than from a remembered answer:
 
 ```
 nodes joined: 4
-live tool count per node: {'node-a': 257, 'node-b': 257, 'node-c': 257, 'node-d': 257}
+live tool count per node: {'node-a': 268, 'node-b': 268, 'node-c': 268, 'node-d': 268}
 negotiated protocol: ['2025-06-18']
 corpus findings: 6
 union coverage: 6/6 = 1.0

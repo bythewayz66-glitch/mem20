@@ -1,7 +1,7 @@
 # mem20 MCP Tools Reference
 
 > Reference for the MCP tool surface, organised by domain. The live server exposes
-> **257 tools across 26 domains** (verified by instantiating `Mem20MCPServer` and
+> **268 tools across 26 domains** (verified by instantiating `Mem20MCPServer` and
 > counting `server.tools`); the sections below document the core subset in detail,
 > so a section heading counts the tools listed under it, not the whole domain.
 

@@ -46,9 +46,9 @@ Two blockers are **outside copy** and still open — they gate public launch, no
 
 | v1 | v2 |
 |---|---|
-| `~258–260 tools` (and bare `~258`) mixed within the same pack | **257 tools / 26 domains**, everywhere |
+| `~258–260 tools` (and bare `~258`) mixed within the same pack | **268 tools / 26 domains**, everywhere |
 
-The v1 range varied by section; v2 uses the program-brief house number (257) consistently across every asset.
+The v1 range varied by section; v2 uses the program-brief house number (268) consistently across every asset.
 
 ---
 

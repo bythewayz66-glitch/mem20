@@ -33,7 +33,7 @@ serviceable — the package is not on a package index. Every reference is now an
 | Default branch | `main` | GitHub REST API |
 | As-of commit | `c27d555` (2026-10-14T17:02:28Z) | GitHub REST API |
 | License | MIT | GitHub REST API |
-| Tools (live) | **257** | `tools/list` against the real stdio server on sidney |
+| Tools (live) | **268** | `tools/list` against the real stdio server on sidney |
 | `memory_*` tools | 49 | live inventory |
 | Protocol | `2025-06-18` | `initialize` response, `serverInfo.name = mem20-mcp` |
 | Subsystems | 293 | canonical `CANONICAL.md` |
@@ -41,7 +41,7 @@ serviceable — the package is not on a package index. Every reference is now an
 | Issue tracker / discussions | disabled / disabled | GitHub REST API |
 | Primary language | Python (16,490,922 bytes) | GitHub REST API |
 
-The live `tools/list` returned exactly **257** tools, matching the house figure — the
+The live `tools/list` returned exactly **268** tools, matching the house figure — the
 inventory is captured in `data/tool_inventory.json` and embedded in the model.
 
 ## Research headline
@@ -53,7 +53,7 @@ at a mean opportunity of **14.4**, against a P0 go-condition of **≥ 12.0**.
 | --- | --- | --- | --- | --- |
 | O1 | Persistence & recall fidelity across sessions | 9 | 2 | **16.0** |
 | O2 | Trust boundary: grounded vs simulated is explicit | 8 | 1 | **15.0** |
-| O4 | Tool discoverability across a 257-tool surface | 8 | 2 | **14.0** |
+| O4 | Tool discoverability across a 268-tool surface | 8 | 2 | **14.0** |
 | O7 | Cost & latency governance for long-running agents | 9 | 3 | **15.0** |
 | O8 | Access control & namespace isolation | 8 | 4 | **12.0** |
 | O3 | Zero-friction setup | 4 | 7 | 4.0 |
@@ -87,7 +87,7 @@ research weights and sum to 100 exactly.
 | `data/personas.csv` | Personas: share + opportunity |
 | `data/jtbd_opportunities.csv` | All eight outcomes with computed opportunity scores |
 | `data/repo_reconciliation.csv` | Legacy → canonical repository reconciliation |
-| `data/tool_inventory.json` | The 257 tool names captured live from `tools/list` |
+| `data/tool_inventory.json` | The 268 tool names captured live from `tools/list` |
 | `model/design_model.py` | Deterministic model that generates every figure above |
 | `publish_design_to_sidney.sh` | Publish script (Sidney via ssh, routed through gabe) |
 
@@ -104,7 +104,7 @@ than emit a drifted figure.
 Invariants the model enforces (all must hold or the run aborts):
 
 - outcome count = 8 and underserved count = 5;
-- the embedded tool inventory has exactly 257 entries and contains the expected tools;
+- the embedded tool inventory has exactly 268 entries and contains the expected tools;
 - archetype person shares sum to 100;
 - mean underserved opportunity = 14.4 and weighted opportunity index = 14.41;
 - both arms of the P0 condition are load-bearing (the condition is not vacuously true).

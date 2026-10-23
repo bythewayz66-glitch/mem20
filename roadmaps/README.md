@@ -35,7 +35,7 @@ All roadmaps for mem20-managed projects. Each roadmap tracks phases from concept
 
 | Phase | Status | Notes |
 |-------|--------|-------|
-| mcp | completed | MCP server at `mcp/server.py` with 257 tools |
+| mcp | completed | MCP server at `mcp/server.py` with 268 tools |
 | memory | completed | Memory engine at `/opt/mem20/mem20/memory.py` |
 | cognitive | completed | Cognitive engine at `/opt/mem20/mem20/cog/cognitive_engine.py` |
 | roadmap | completed | Roadmap system at `/opt/mem20/mem20/mcp/roadmap_tools.py` |

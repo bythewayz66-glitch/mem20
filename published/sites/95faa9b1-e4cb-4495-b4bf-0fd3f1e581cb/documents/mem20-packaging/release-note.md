@@ -54,10 +54,10 @@ authoring host into a `py3-none-any` wheel.
 ## Reproduced from this exact wheel
 
 - The installed console script is `mem20-mcp`, installed from the wheel above
-  into a clean virtual environment, and it serves 257 tools over stdio.
+  into a clean virtual environment, and it serves 268 tools over stdio.
 - `initialize` returned `serverInfo.name = "mem20-mcp"` with
   `protocolVersion = "2025-06-18"`.
-- `tools/list` returned 257 tools, beginning with `memory_store`,
+- `tools/list` returned 268 tools, beginning with `memory_store`,
   `memory_recall`, `memory_probe`, `memory_reason`, `memory_status`.
 - The server starts from the installed wheel, not from the git checkout: the
   verification ran in a fresh virtual environment whose site-packages contained
@@ -66,7 +66,7 @@ authoring host into a `py3-none-any` wheel.
 
 ## House numbers
 
-Unchanged and not affected by this packaging work: 257 tools across 26 domains;
+Unchanged and not affected by this packaging work: 268 tools across 26 domains;
 TAM 1.28B USD, SAM 282M USD, SOM 1.68M USD; blended ACV 14,000 USD.
 
 ## Status of the Sidney publish

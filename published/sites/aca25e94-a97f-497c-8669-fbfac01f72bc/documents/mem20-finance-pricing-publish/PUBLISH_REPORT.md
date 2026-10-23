@@ -2,7 +2,7 @@
 
 **As of:** 2026-10-14 · **Host:** sidney (`root@216.198.115.91:2222`, Kali Linux)
 **Route:** gabe — sole publish authority (`/opt/mem20/gabe`, live root `/opt/mem20/live`)
-**Canonical repo:** `github.com/bythewayz66-glitch/mem20` @ `c274404` (main, MIT, v2.1.0rc2, 257 tools, protocol 2025-06-18)
+**Canonical repo:** `github.com/bythewayz66-glitch/mem20` @ `c274404` (main, MIT, v2.1.0rc2, 268 tools, protocol 2025-06-18)
 
 ---
 

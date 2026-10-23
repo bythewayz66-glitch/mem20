@@ -190,7 +190,7 @@ in this branch**. Everything else is recorded as a tracked issue.
 
 **E2 — README tool-count claims do not match the tree · severity: medium**
 - **Area:** `README.md` (~L24, L52), `docs/01-architecture.md` (~L24, L110)
-- **Description:** The docs assert **"257 tools · 26 domains"**. The actual
+- **Description:** The docs assert **"268 tools · 26 domains"**. The actual
   `mcp/tools/` directory holds **24** modules; even `mcp_server_dir/tools/` holds
   only 22. The number is presented as a headline fact and is not derivable from
   the code.

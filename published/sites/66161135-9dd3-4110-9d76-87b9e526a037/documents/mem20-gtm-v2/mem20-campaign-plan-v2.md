@@ -175,6 +175,6 @@ The category answer is **"they optimize retrieval; nobody leads with auditabilit
 **Two things must ship together, or the launch is incoherent:**
 
 1. **The corrected asset set** — this plan, the copy pack v2, the claim ledger, and the v2 launch page. Manifest and exact commands: `documents/mem20-sidney-publish-packet.md`.
-2. **A repo README fix owned by the repo owner.** `README.md` line 186 still instructs `git clone https://github.com/JaysonAIOnline/mem20.git`, and its badges (lines 9–10) point at the same dead org — **6 references in `README.md`, 17 across the shipped top-level docs**, plus `docs/01-architecture.md` and `docs/02-tools-reference.md` still advertising "111 tools / 15 domains" against the README's own 257 / 26. GTM cannot fix this; it is a one-commit change for whoever holds the push.
+2. **A repo README fix owned by the repo owner.** `README.md` line 186 still instructs `git clone https://github.com/JaysonAIOnline/mem20.git`, and its badges (lines 9–10) point at the same dead org — **6 references in `README.md`, 17 across the shipped top-level docs**, plus `docs/01-architecture.md` and `docs/02-tools-reference.md` still advertising "111 tools / 15 domains" against the README's own 268 / 26. GTM cannot fix this; it is a one-commit change for whoever holds the push.
 
 **The Sidney leg is not runnable from this sandbox** — no SSH keys or config exist under `~/.ssh`, and `sidney` / `gabe` do not resolve via DNS. That leg is relayed to **Server Builder**, the infra owner in this group.

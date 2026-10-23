@@ -59,7 +59,7 @@ NRestarts: 0
 LISTEN 0.0.0.0:8082  users:(("mem20-mcp",pid=50904,fd=7))
 LISTEN 0.0.0.0:8080  users:(("mem20-mcp",pid=50904,fd=3))
 /health -> {"status": "ok", "service": "mem20-mcp", "uptime_seconds": 207.214}
-/ready  -> {"ready": true, "tools": 257}
+/ready  -> {"ready": true, "tools": 268}
 ```
 
 The unit runs the long-lived HTTP transport (`MEM20_TRANSPORT=http`, MCP on :8082) with
@@ -129,5 +129,5 @@ earlier manifest entries (seq 360–365, 372).
 
 ## 7. House numbers (unchanged)
 
-257 tools across 26 domains; TAM 1.28B USD, SAM 282M USD, SOM 1.68M USD; blended ACV
+268 tools across 26 domains; TAM 1.28B USD, SAM 282M USD, SOM 1.68M USD; blended ACV
 14,000 USD.

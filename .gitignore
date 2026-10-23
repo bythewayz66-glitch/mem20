@@ -104,3 +104,10 @@ mem20owebz/data/vector_db/
 mem20owebz/data/uploads/
 backups/kanban-merge-*/
 .mypy_cache/
+
+# Generated SQLite state (issue #83)
+*.db
+*.db-wal
+*.db-shm
+*.sqlite3-wal
+*.sqlite3-shm

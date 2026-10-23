@@ -9,7 +9,7 @@ Loads the full server implementation automatically:
 3. Else clear error
 
 A normal `git clone` (or shallow clone that includes commit 6a2bdaa) works
-with zero manual recovery steps. Lie tools are registered automatically.
+with zero manual recovery steps. Behavioural-signal tools register automatically.
 """
 from __future__ import annotations
 
@@ -93,8 +93,9 @@ def _apply_lie_patch(src: str) -> str:
 
     marker = (
         '        """Execute a tool and return result as string."""\n'
-        "        \n"
-        "        # IRC room tools"
+        + (" " * 8)
+        + "\n"
+        + "        # IRC room tools"
     )
     dispatch = '''        """Execute a tool and return result as string."""
 
@@ -128,9 +129,18 @@ def _apply_lie_patch(src: str) -> str:
 
 
 def _bootstrap():
+    """Load the restored server implementation, or raise ImportError.
+
+    Every failure path here MUST surface as ImportError, never SystemExit.
+    module-level SystemExit is not treated as an import failure by Python or
+    pytest: it aborts the interpreter (and, under pytest, escalates to
+    INTERNALERROR and kills collection for the whole session). Because this
+    module is imported by several test files, an ImportError is contained to
+    the importing module; SystemExit is not.
+    """
     src = _read_vendored() or _read_from_git()
     if not src:
-        raise SystemExit(
+        raise ImportError(
             "mem20 MCP server implementation not found.\n"
             "Ensure this is a git checkout that contains commit "
             f"{_GOOD_COMMIT} (a normal clone does).\n"
@@ -141,7 +151,17 @@ def _bootstrap():
     mod = types.ModuleType("mem20_server_impl")
     mod.__file__ = os.path.join(_HERE, "<restored_server>")
     # Ensure mcp package dir imports resolve the same as a normal server.py
-    exec(compile(src, mod.__file__, "exec"), mod.__dict__)
+    try:
+        exec(compile(src, mod.__file__, "exec"), mod.__dict__)
+    except SystemExit as exc:
+        # The restored implementation calls sys.exit(1) on a missing optional
+        # dependency. Translate that into a normal import failure so callers
+        # (and pytest collection) see a diagnostic instead of a killed process.
+        raise ImportError(
+            "mem20 mcp bootstrap: restored server.py exited during exec "
+            f"(code={exc.code!r}). The implementation could not be imported - "
+            "usually a missing dependency; see requirements.txt."
+        ) from exc
     return mod
 
 
@@ -152,7 +172,7 @@ Mem20MCPServer = _mod.Mem20MCPServer
 main = _mod.main
 for _k, _v in _mod.__dict__.items():
     if not _k.startswith("_"):
-        globals()[_k] = _v
+        setattr(sys.modules[__name__], _k, _v)
 
 if __name__ == "__main__":
     main()

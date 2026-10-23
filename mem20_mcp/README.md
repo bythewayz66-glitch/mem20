@@ -5,7 +5,7 @@ Thin loader for the **canonical** mem20 MCP server.
 The canonical, running server lives at `/opt/mem20/mcp`. That is proven
 independently by:
 
-- the live process table (`/root/.venv/bin/python /opt/mem20/mcp/mcp_server.py`)
+- the live process table (`python3 /opt/mem20/mcp/mcp_server.py`)
 - `mcp-server.service` (`WorkingDirectory=` and `ExecStart=`)
 - `/root/.config/opencode/opencode.jsonc`
 
@@ -35,7 +35,7 @@ the canonical server became the single source of truth.
 ## Verify
 
 ```bash
-/root/.venv/bin/python -c "import mem20_mcp; print(mem20_mcp.__canonical_root__)"
+python3 -c "import mem20_mcp; print(mem20_mcp.__canonical_root__)"
 ```
 
 That prints `/opt/mem20/mcp`.

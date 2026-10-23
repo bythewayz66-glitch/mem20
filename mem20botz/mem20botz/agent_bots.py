@@ -29,7 +29,7 @@ CMD_TIMEOUT = 25
 #: A channel line is a sentence, not a log file.
 MAX_REPLY_LINES = 20
 MAX_LINE_CHARS = 300
-PYTHON = "/root/.venv/bin/python"
+PYTHON = "/usr/local/bin/python"
 
 
 def run_cli(argv: list[str], timeout: int = CMD_TIMEOUT) -> tuple[int, str]:

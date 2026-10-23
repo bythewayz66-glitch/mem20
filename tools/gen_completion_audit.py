@@ -23,7 +23,7 @@ from pathlib import Path
 
 ESTATE = "/opt/mem20"
 OUT = "/home/jayson/Desktop/mem20-COMPLETION-AUDIT.md"
-PY = "/root/.venv/bin/python"
+PY = "/usr/local/bin/python"
 
 
 def sh(cmd: str, timeout: int = 600) -> str:

@@ -17,7 +17,7 @@ review queue.
 
 ```bash
 cd /opt/mem20/mem20adaptiveforgettingenginez
-/root/.venv/bin/python -m pytest mem20adaptiveforgettingenginez/tests -q
+python3 -m pytest mem20adaptiveforgettingenginez/tests -q
 ```
 
 Evidence that this is real behaviour rather than a renamed template:

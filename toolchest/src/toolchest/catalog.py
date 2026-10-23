@@ -6,7 +6,7 @@ Three on-box sources are wired:
    at runtime (subprocess importing the real server) and every tool gets its
    real name, description, and input-schema keys. Domains are attributed by
    AST-parsing the registering modules (``self.tools["name"] = ...``).
-2. **CLI binaries** — ``/usr/local/bin`` and ``/root/.venv/bin`` are scanned;
+2. **CLI binaries** — ``/usr/local/bin`` and ``/usr/local/bin`` are scanned;
    each entry is a real file/symlink checked for executability, typed
    (ELF / shebang script / symlink), and classified. ``--help`` is sampled
    only for a bounded, safe subset.
@@ -37,7 +37,7 @@ from typing import Any, Dict, List, Optional
 
 MEM20_ROOT = Path("/opt/mem20")
 MCP_DIR = MEM20_ROOT / "mcp"
-ROOT_VENV = Path("/root/.venv")
+ROOT_VENV = Path("/usr/local")
 CLI_DIRS = [ROOT_VENV / "bin", Path("/usr/local/bin")]
 # Import probes must not run from a directory that is the parent of a
 # subsystem's source tree. From /opt/mem20, `mem20controlz` resolves to the
@@ -664,7 +664,7 @@ def discover_subsystems() -> Dict[str, Any]:
             install_detail = f"installed {install_env['version']} via {install_env['env']}"
         else:
             install_status = "missing"
-            install_detail = "not pip-installed in /root/.venv (no matching local .venv dist)"
+            install_detail = "not pip-installed in /usr/local (no matching local .venv dist)"
         checks.append({"check": "installed", "ok": install_status == "ok",
                        "detail": install_detail})
 

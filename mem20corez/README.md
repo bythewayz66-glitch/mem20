@@ -29,7 +29,7 @@ result of actual arithmetic or actual measured inference.
 ## Quick start
 
 ```bash
-pip install -e .            # into /root/.venv or your venv (numpy-only, no torch)
+pip install -e .            # into .venv or your venv (numpy-only, no torch)
 
 mem20corez serve --port 8006
 

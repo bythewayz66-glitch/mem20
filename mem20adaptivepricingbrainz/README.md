@@ -17,7 +17,7 @@ revenue or margin subject to a floor and ceiling. Rejects degenerate input
 
 ```bash
 cd /opt/mem20/mem20adaptivepricingbrainz
-/root/.venv/bin/python -m pytest mem20adaptivepricingbrainz/tests -q
+python3 -m pytest mem20adaptivepricingbrainz/tests -q
 ```
 
 Evidence that this is real behaviour rather than a renamed template:

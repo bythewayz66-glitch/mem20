@@ -4,8 +4,8 @@ set -euo pipefail
 cd "$(dirname "$0")/.."
 
 FS_CV="${FS_CV:-fs-cv}"
-if ! command -v "$FS_CV" >/dev/null 2>&1 && [ -x /root/.venv/bin/fs-cv ]; then
-    FS_CV=/root/.venv/bin/fs-cv
+if ! command -v "$FS_CV" >/dev/null 2>&1 && [ -x fs-cv ]; then
+    FS_CV=fs-cv
 fi
 
 python - <<'PY'

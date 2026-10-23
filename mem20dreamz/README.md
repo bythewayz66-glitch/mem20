@@ -282,8 +282,8 @@ non-zero on any damage.
 ## Tests
 
 ```sh
-/root/.venv/bin/python -m pytest tests -q    # 120 tests
-/root/.venv/bin/ruff check .
+python3 -m pytest tests -q    # 120 tests
+ruff check .
 ```
 
 Covers the never-condenses guard, duplicate-model rule, omission veto, that

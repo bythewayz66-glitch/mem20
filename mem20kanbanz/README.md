@@ -117,7 +117,7 @@ a patch into the JSON metadata blob:
 ## Tests
 
 ```sh
-cd /opt/mem20/mem20kanbanz && /root/.venv/bin/python -m pytest tests -q
+cd /opt/mem20/mem20kanbanz && python3 -m pytest tests -q
 ```
 
 47 tests. The door is exercised against a **real HTTP server** on an ephemeral

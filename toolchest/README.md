@@ -16,7 +16,7 @@ record declared vs. actually-installed state per pyproject, with real
 
 ```
 cd /opt/mem20/toolchest
-/root/.venv/bin/pip install -e .
+python3 -m pip install -e .
 ```
 
 ## Usage
@@ -79,7 +79,7 @@ MCP entries additionally record the schema-prop count from `input_schema` in
 ## Tests
 
 ```
-/root/.venv/bin/python -m pytest /opt/mem20/toolchest -v
+python3 -m pytest /opt/mem20/toolchest -v
 ```
 
 Tests perform **real** runtime discovery (must run on the mem20 box) and

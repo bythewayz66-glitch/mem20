@@ -181,8 +181,8 @@ curl -s http://127.0.0.1:8892/api/board
 
 ### Verify it
 ```sh
-cd /sb/backend && /root/.venv/bin/python -m pytest /sb/tests -q      # 61 passed
-cd /opt/mem20/mem20sitemapz && /root/.venv/bin/python -m pytest tests -q  # 43 passed
+cd /sb/backend && python3 -m pytest /sb/tests -q      # 61 passed
+cd /opt/mem20/mem20sitemapz && python3 -m pytest tests -q  # 43 passed
 sitemap search "scoreboard"      # -> mem20scoreboardz at /sb
 sitemap show mem20scoreboardz    # -> location OUTSIDE the monorepo
 ```
@@ -197,7 +197,7 @@ sitemap show mem20scoreboardz    # -> location OUTSIDE the monorepo
 ## 2026-09-29 — mem20 CLIs on the default PATH (estate gap)
 
 ### The gap
-  - mem20 subsystems install their console scripts into /root/.venv/bin.
+  - mem20 subsystems install their console scripts into .venv/bin.
   - /etc/profile.d/thestack-env.sh puts that dir on the PATH of interactive
     login shells, so `sitemap` works when typed at a prompt.
   - It does NOT reach a default-PATH context: systemd units, cron, scripts
@@ -208,16 +208,16 @@ sitemap show mem20scoreboardz    # -> location OUTSIDE the monorepo
 
 ### Fix / re-apply after a venv rebuild
 ```sh
-/root/.venv/bin/python /opt/mem20/tools/mem20path.py            # dry run
-/root/.venv/bin/python /opt/mem20/tools/mem20path.py --apply    # link them
-/root/.venv/bin/python /opt/mem20/tools/mem20path.py --verify   # exits non-zero if any is missing
+python3 /opt/mem20/tools/mem20path.py            # dry run
+python3 /opt/mem20/tools/mem20path.py --apply    # link them
+python3 /opt/mem20/tools/mem20path.py --verify   # exits non-zero if any is missing
 systemctl status mem20-path-links.service    # runs --apply + --verify at boot
 ```
 
 ### Verify
 ```sh
 env -i PATH=/root/.local/bin:/usr/local/bin:/usr/bin:/bin sh -c 'command -v sitemap'
-cd /opt/mem20 && /root/.venv/bin/python -m pytest tests/test_mem20path.py -q   # 17
+cd /opt/mem20 && python3 -m pytest tests/test_mem20path.py -q   # 17
 ```
 
 ### Notes

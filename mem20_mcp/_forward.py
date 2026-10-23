@@ -1,7 +1,7 @@
 """Shared read-only forwarder used by every mem20_mcp shim module.
 
 The canonical, *running* mem20 MCP server lives at /opt/mem20/mcp. That fact is
-independently proven by the live process table (``/root/.venv/bin/python
+independently proven by the live process table (``/usr/local/bin/python
 /opt/mem20/mcp/mcp_server.py``), by ``mcp-server.service`` (WorkingDirectory and
 ExecStart) and by ``/root/.config/opencode/opencode.jsonc``. The mem20_mcp
 package is a thin loader that forwards to that single source of truth, so this

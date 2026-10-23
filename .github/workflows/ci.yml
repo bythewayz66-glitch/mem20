@@ -34,6 +34,16 @@ jobs:
           fi
           echo "no tracked bytecode - ok"
 
+      - name: Guard against banned absolute paths (issue #80 / #79)
+        run: |
+          bad=$(git grep -n -E '/root/\.venv' -- '*.md' '*.py' '*.sh' ':(exclude).github/workflows/ci.yml' 2>/dev/null || true)
+          if [ -n "$bad" ]; then
+            echo "::error::Banned absolute venv path found (/root/.venv) in tracked *.md/*.py/*.sh (issue #80)."
+            echo "$bad"
+            exit 1
+          fi
+          echo "no banned absolute paths - ok"
+
       - uses: actions/setup-python@v5
         with:
           python-version: '3.11'

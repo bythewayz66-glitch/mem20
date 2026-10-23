@@ -35,10 +35,10 @@ Run `mem20ocaskz verify` to re-prove both properties yourself.
 ## Install
 
 ```
-/root/.venv/bin/pip install -e /opt/mem20/mem20ocaskz
+python3 -m pip install -e /opt/mem20/mem20ocaskz
 ```
 
-Console script lands at `/root/.venv/bin/mem20ocaskz`. Also runnable as
+Console script lands at `mem20ocaskz`. Also runnable as
 `python -m mem20ocaskz`.
 
 ## Commands
@@ -87,7 +87,7 @@ checking the quote. `mem20ocaskz themes` prints them all for review.
 ## Tests
 
 ```
-cd /opt/mem20/mem20ocaskz && /root/.venv/bin/python -m pytest tests -q
+cd /opt/mem20/mem20ocaskz && python3 -m pytest tests -q
 ```
 
 26 tests. Each builds its own tiny SQLite database, so the suite is fast, deterministic

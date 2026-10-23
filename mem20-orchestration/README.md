@@ -18,7 +18,7 @@ than silently validating bad plans.
 ## Install
 
 ```bash
-/root/.venv/bin/pip install -e /opt/mem20/mem20-orchestration
+python3 -m pip install -e /opt/mem20/mem20-orchestration
 ```
 
 ## Use

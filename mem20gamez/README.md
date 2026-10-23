@@ -70,14 +70,14 @@ The runtime requires Python 3.11+, NumPy, torch, PyYAML, and aiohttp.
 
 ```bash
 cd /opt/mem20/mem20gamez
-/root/.venv/bin/python -m pip install -e .
-/root/.venv/bin/python -m pip install -e ".[dev]"
+python3 -m pip install -e .
+python3 -m pip install -e ".[dev]"
 ```
 
 Install Gymnasium only when external Gym environments are needed:
 
 ```bash
-/root/.venv/bin/python -m pip install -e ".[gym]"
+python3 -m pip install -e ".[gym]"
 ```
 
 `TinyGridWorld-v0` needs no external environment package.
@@ -111,8 +111,8 @@ with systemd, so it survives reboot rather than running as a floating process.
 
 ```bash
 cd /opt/mem20/mem20gamez
-/root/.venv/bin/python -m pytest -q
-/root/.venv/bin/python -m ruff check .
+python3 -m pytest -q
+python3 -m ruff check .
 ```
 
 Current result: `29 passed`, and Ruff reports `All checks passed!`.

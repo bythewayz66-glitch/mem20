@@ -1,15 +1,24 @@
 #!/usr/bin/env python3
 """MCP Server for mem20.
 
-Loads the full server implementation automatically:
+Loads the full server implementation automatically, in this order:
 
-1. Prefer mem20liez/_server_impl.py if present (optional vendored copy)
-2. Else extract the last known-good server.py from git history and apply
-   the LieToolsMixin patch in memory
-3. Else clear error
+1. Prefer the vendored copy at ``mem20liez/_server_impl.py`` (committed to the
+   repo, so a ``git clone --depth 1`` checkout works with no history at all).
+2. Else recover the last known-good ``mcp/server.py`` from the git object
+   database (needs the object to be present locally).
+3. Else, if this is a shallow clone, fetch just the needed commit
+   (``git fetch --depth=1 origin <sha>``) and retry step 2. Disable with
+   ``MEM20_MCP_AUTO_FETCH=0``.
+4. Else scan history for the newest ``mcp/server.py`` blob that looks like the
+   full implementation, and use it.
+5. Else fail with a diagnostic that names the detected condition and the exact
+   remediation.
 
-A normal `git clone` (or shallow clone that includes commit 6a2bdaa) works
-with zero manual recovery steps. Lie tools are registered automatically.
+The LieToolsMixin patch is applied in memory when the recovered source is
+unpatched; a vendored copy is already patched and is used verbatim.
+
+History is therefore an optimisation, never a hard requirement.
 """
 from __future__ import annotations
 
@@ -17,49 +26,104 @@ import os
 import sys
 import types
 import subprocess
-import tempfile
 
 _HERE = os.path.dirname(os.path.abspath(__file__))
 _ROOT = os.path.dirname(_HERE)
-_GOOD_COMMIT = "6a2bdaab2434611a2edee5d26b93bcc500edb87b"
+_GOOD_COMMIT = os.environ.get(
+    "MEM20_GOOD_COMMIT", "6a2bdaab2434611a2edee5d26b93bcc500edb87b"
+)
 _IMPL_PATH = os.path.join(_ROOT, "mem20liez", "_server_impl.py")
+_MIN_IMPL_BYTES = 10000
+_IMPL_MARKER = "Mem20MCPServer"
 
 for p in (_ROOT, _HERE):
     if p not in sys.path:
         sys.path.insert(0, p)
 
 
+def _git(*args: str, timeout: int = 120) -> str | None:
+    """Run a git command at the repo root; return stdout, or None on failure."""
+    try:
+        raw = subprocess.check_output(
+            ["git", *args],
+            cwd=_ROOT,
+            stderr=subprocess.DEVNULL,
+            timeout=timeout,
+        )
+    except (
+        subprocess.CalledProcessError,
+        subprocess.TimeoutExpired,
+        FileNotFoundError,
+        OSError,
+    ):
+        return None
+    return raw.decode("utf-8", "replace")
+
+
+def _looks_like_impl(text: str | None) -> bool:
+    return bool(text) and _IMPL_MARKER in text and len(text) > _MIN_IMPL_BYTES
+
+
 def _read_vendored() -> str | None:
-    if os.path.isfile(_IMPL_PATH) and os.path.getsize(_IMPL_PATH) > 10000:
-        with open(_IMPL_PATH, "r", encoding="utf-8") as f:
-            return f.read()
+    if os.path.isfile(_IMPL_PATH) and os.path.getsize(_IMPL_PATH) > _MIN_IMPL_BYTES:
+        try:
+            with open(_IMPL_PATH, "r", encoding="utf-8") as f:
+                text = f.read()
+        except OSError:
+            return None
+        if _looks_like_impl(text):
+            return text
     return None
 
 
-def _read_from_git() -> str | None:
-    """Extract known-good server.py from git object database."""
-    try:
-        raw = subprocess.check_output(
-            ["git", "show", f"{_GOOD_COMMIT}:mcp/server.py"],
-            cwd=_ROOT,
-            stderr=subprocess.DEVNULL,
-        )
-        text = raw.decode("utf-8")
-        if "Mem20MCPServer" in text and len(text) > 10000:
+def _is_shallow() -> bool:
+    out = _git("rev-parse", "--is-shallow-repository")
+    if out is not None:
+        return out.strip() == "true"
+    # Older git (<2.15) has no --is-shallow-repository.
+    return bool(_git("rev-parse", "--git-dir")) and os.path.isfile(
+        os.path.join(_ROOT, ".git", "shallow")
+    )
+
+
+def _read_from_git(sha: str = _GOOD_COMMIT) -> str | None:
+    """Extract known-good server.py from the local git object database."""
+    text = _git("show", f"{sha}:mcp/server.py")
+    if _looks_like_impl(text):
+        return text
+    return None
+
+
+def _fetch_commit(sha: str = _GOOD_COMMIT) -> bool:
+    """Fetch a single commit into a shallow clone. True if it became readable.
+
+    Only fetches history depth for that one commit, so the clone stays small.
+    Does not rewrite working-tree files.
+    """
+    if os.environ.get("MEM20_MCP_AUTO_FETCH", "1").lower() in {"0", "false", "no"}:
+        return False
+    if not os.path.isdir(os.path.join(_ROOT, ".git")):
+        return False
+    for args in (
+        ("fetch", "--depth=1", "origin", sha),
+        ("fetch", "origin", sha),
+    ):
+        if _git(*args) is None:
+            continue
+        if _looks_like_impl(_git("show", f"{sha}:mcp/server.py")):
+            return True
+    return False
+
+
+def _scan_history() -> str | None:
+    """Newest committed mcp/server.py blob that looks like the full server."""
+    log = _git("log", "--all", "--format=%H", "--", "mcp/server.py")
+    if not log:
+        return None
+    for sha in log.split():
+        text = _read_from_git(sha)
+        if text:
             return text
-    except (subprocess.CalledProcessError, FileNotFoundError, OSError):
-        pass
-    # try from this file's repo root walking up
-    try:
-        raw = subprocess.check_output(
-            ["git", "-C", _ROOT, "show", f"{_GOOD_COMMIT}:mcp/server.py"],
-            stderr=subprocess.DEVNULL,
-        )
-        text = raw.decode("utf-8")
-        if "Mem20MCPServer" in text and len(text) > 10000:
-            return text
-    except (subprocess.CalledProcessError, FileNotFoundError, OSError):
-        pass
     return None
 
 
@@ -127,16 +191,75 @@ def _apply_lie_patch(src: str) -> str:
     return src
 
 
+def _diagnose() -> str:
+    """Build an actionable failure message for the conditions we can detect."""
+    lines = ["mem20 MCP server implementation not found.", ""]
+    has_git = os.path.isdir(os.path.join(_ROOT, ".git"))
+
+    if not has_git:
+        lines += [
+            "Cause: this is not a git checkout (no .git directory found at",
+            f"  {_ROOT}).",
+            "  History recovery is unavailable, and the vendored copy is",
+            f"  missing from {_IMPL_PATH}.",
+        ]
+    elif _is_shallow():
+        lines += [
+            "Cause: this is a SHALLOW clone and the vendored copy is missing,",
+            f"  so commit {_GOOD_COMMIT} is not present locally.",
+            "  A shallow clone normally works because the implementation is",
+            "  vendored in the repo; if that file was deleted, run:",
+            "",
+            f"    git fetch --depth=1 origin {_GOOD_COMMIT}",
+            "",
+            "  or deepen the clone:  git fetch --unshallow",
+        ]
+    else:
+        lines += [
+            "Cause: full history is present but the implementation blob could",
+            f"  not be read from commit {_GOOD_COMMIT}, and the vendored copy",
+            f"  is missing from {_IMPL_PATH}.",
+            "",
+            "  The commit may have been rewritten or garbage collected. Fetch it:",
+            "",
+            f"    git fetch origin {_GOOD_COMMIT}",
+        ]
+
+    lines += [
+        "",
+        "Fixes, cheapest first:",
+        f"  1. Restore the vendored implementation at {_IMPL_PATH}",
+        "     (regenerate with: python mem20liez/regen_server_impl.py)",
+        "  2. Make git history available (see the commands above)",
+        "  3. Point at a specific commit: export MEM20_GOOD_COMMIT=<sha>",
+    ]
+    return "\n".join(lines)
+
+
+def _load_impl_source() -> str:
+    src = _read_vendored()
+    if src:
+        return src
+
+    src = _read_from_git()
+    if src:
+        return src
+
+    # Shallow clone (or a rewritten commit): try to pull just that object.
+    if _fetch_commit():
+        src = _read_from_git()
+        if src:
+            return src
+
+    src = _scan_history()
+    if src:
+        return src
+
+    raise SystemExit(_diagnose())
+
+
 def _bootstrap():
-    src = _read_vendored() or _read_from_git()
-    if not src:
-        raise SystemExit(
-            "mem20 MCP server implementation not found.\n"
-            "Ensure this is a git checkout that contains commit "
-            f"{_GOOD_COMMIT} (a normal clone does).\n"
-            "Or place the full server at mem20liez/_server_impl.py."
-        )
-    src = _apply_lie_patch(src)
+    src = _apply_lie_patch(_load_impl_source())
 
     mod = types.ModuleType("mem20_server_impl")
     mod.__file__ = os.path.join(_HERE, "<restored_server>")

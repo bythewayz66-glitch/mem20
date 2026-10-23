@@ -37,7 +37,12 @@ _GOOD_COMMIT = os.environ.get(
 _IMPL_PATH = os.path.join(_ROOT, "mem20liez", "_server_impl.py")
 _IMPL_GZ_PATH = os.path.join(_ROOT, "mem20liez", "_server_impl.py.gz.b64")
 _MIN_IMPL_BYTES = 10000
-_IMPL_MARKER = "Mem20MCPServer"
+# The implementation DEFINES the class. The loader only re-exports it
+# (`Mem20MCPServer = _mod.Mem20MCPServer`) and carries these helpers, so require
+# the class statement and reject the loader's own helpers — otherwise
+# _scan_history() finds this file in history, execs it, and recurses forever.
+_IMPL_MARKER = "class Mem20MCPServer"
+_LOADER_MARKERS = ("_load_impl_source(", "types.ModuleType(")
 
 for p in (_ROOT, _HERE):
     if p not in sys.path:
@@ -64,7 +69,12 @@ def _git(*args: str, timeout: int = 120) -> str | None:
 
 
 def _looks_like_impl(text: str | None) -> bool:
-    return bool(text) and _IMPL_MARKER in text and len(text) > _MIN_IMPL_BYTES
+    if not text or len(text) <= _MIN_IMPL_BYTES:
+        return False
+    if _IMPL_MARKER not in text:
+        return False
+    # Never accept this loader as its own implementation.
+    return not any(marker in text for marker in _LOADER_MARKERS)
 
 
 def _read_vendored() -> str | None:

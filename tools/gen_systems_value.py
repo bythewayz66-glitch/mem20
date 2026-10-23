@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 """Generate the mem20 systems-and-value document from measured estate data.
 
-Writes /home/jayson/Desktop/mem20-SYSTEMS-AND-VALUE.md.
+Writes mem20-SYSTEMS-AND-VALUE.md.
 
 Every figure is measured at run time: package inventory from pyproject.toml,
 line counts from the source trees, running services from systemd, and the ledger
@@ -21,7 +21,7 @@ import time
 from typing import Any
 
 ESTATE = "/opt/mem20"
-OUT = "/home/jayson/Desktop/mem20-SYSTEMS-AND-VALUE.md"
+OUT = os.environ.get("MEM20_SYSTEMS_VALUE_OUT", "mem20-SYSTEMS-AND-VALUE.md")
 
 # --- assumptions, all three arguable and all three stated in the document ------
 PROD_LOC_PER_HR = 30  # integration-heavy backend; deliberately conservative

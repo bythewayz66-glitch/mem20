@@ -489,7 +489,7 @@ USER_CAP = 1375
 SUPERSEDED = "[SUPERSEEDED]"
 MIRROR_CANDIDATES = [
     Path.home() / "TheStack/mirror/opt/thestack/memory",
-    Path("/home/jayson/TheStack/mirror/opt/thestack/memory"),
+    Path("/opt/mem20/TheStack/mirror/opt/thestack/memory"),
     Path("/root/TheStack/mirror/opt/thestack/memory"),
 ]
 

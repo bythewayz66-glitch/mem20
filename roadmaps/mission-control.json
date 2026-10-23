@@ -1,6 +1,6 @@
 {
   "name": "mission-control",
-  "description": "Mission Control \u2014 the operating system for agents you can sell, govern, and get paid for. System of record for agent runs; the signed mission receipt is the artifact. Source docs (the contracts): /home/jayson/Desktop/5/mission-control.md (pitch + 90-day MVP spec), mission-control-sales-pack.md (GA marketing discipline), mission-control-10-year.md (gates/kill-criteria/cadence/GA ordering \u2014 calendar dates ignored). Combined roadmap = /home/jayson/Desktop/5/mission-control-roadmap.md. Realistic timeline, not the 10-year calendar.",
+  "description": "Mission Control \u2014 the operating system for agents you can sell, govern, and get paid for. System of record for agent runs; the signed mission receipt is the artifact. Source docs (the contracts): /opt/mem20/Desktop/5/mission-control.md (pitch + 90-day MVP spec), mission-control-sales-pack.md (GA marketing discipline), mission-control-10-year.md (gates/kill-criteria/cadence/GA ordering \u2014 calendar dates ignored). Combined roadmap = /opt/mem20/Desktop/5/mission-control-roadmap.md. Realistic timeline, not the 10-year calendar.",
   "phases": [
     {
       "name": "A Intercept",

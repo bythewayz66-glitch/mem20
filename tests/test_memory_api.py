@@ -21,7 +21,7 @@ FACTS = [
     ("deploys", "Prod runs build 4127 from the linux runner", ["prod", "build"]),
     ("deploys", "Staging runs build 4130", ["staging", "build"]),
     ("braid", "Braid commits a node with an Ed25519 signature", ["braid", "ledger"]),
-    ("unity", "Unity 6 licence lives under /home/jayson/.config/unity3d", ["unity"]),
+    ("unity", "Unity 6 licence lives under /opt/mem20/.config/unity3d", ["unity"]),
 ]
 
 

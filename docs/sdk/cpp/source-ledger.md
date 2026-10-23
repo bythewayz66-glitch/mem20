@@ -125,6 +125,6 @@ Remaining `JaysonAIOnline/*` mentions are **intentional**: `CANONICAL.md` delibe
 lists those repos as *non-canonical / satellite* so readers know not to use them.
 
 > `roadmaps/README.md` also contains a historical log line referencing the old
-> `111 tools` figure and a `/home/jayson/mem20/...` path. It is a **historical roadmap
+> `111 tools` figure and a `/opt/mem20/mem20/...` path. It is a **historical roadmap
 > note**, not a current claim, so it was left as-is rather than rewritten (rewriting
 > history would falsify the record).

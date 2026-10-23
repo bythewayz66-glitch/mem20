@@ -23,7 +23,7 @@ This skill automates the entire pipeline from concept to distributable Windows e
 # - Python 3.11+ with standard library
 
 # Python tools location:
-# /home/jayson/Desktop/jayson-openwebui/tools/
+# /opt/mem20/Desktop/jayson-openwebui/tools/
 ```
 
 ## Pipeline Stages
@@ -145,7 +145,7 @@ unity build . \
 
 ```bash
 # Navigate to project:
-cd /home/jayson/Desktop/jayson-openwebui/projects/unreliable_prophecy
+cd /opt/mem20/Desktop/jayson-openwebui/projects/unreliable_prophecy
 
 # 1. Generate all assets:
 python3 ../../tools/blender/generate_assets.py

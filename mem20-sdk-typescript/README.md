@@ -5,7 +5,7 @@
 - Protocol: JSON-RPC 2.0 over stdio, MCP `2025-06-18`
 - Server baseline: mem20 **3.0.0**
 - Runtime deps: **none** (Node 18+ `fetch` + `child_process` only)
-- Access to the full ~257-tool surface via `tool()` plus `memoryStore` / `memoryRecall` helpers
+- Access to the full ~268-tool surface via `tool()` plus `memoryStore` / `memoryRecall` helpers
 
 ## Install
 

@@ -16,7 +16,7 @@ else; the install block is the one that actually works against that repo.
 | **Branch / license / language** | `main` · MIT · Python | ✅ |
 | **Install** | from source (§3). `pip install mem20` is **not** on PyPI | ⚠️ PyPI 404 — do not publish the pip command |
 | **Transport / protocol** | MCP · JSON-RPC 2.0 over stdio · protocol `2025-06-18` | ✅ |
-| **Version / tool surface** | `v2.1.0rc2` · **257 tools across 26 domains** | ✅ repo-verified |
+| **Version / tool surface** | `v2.1.0rc2` · **268 tools across 26 domains** | ✅ repo-verified |
 | **Run** | `mem20-mcp` (console entry point) | ✅ from `pyproject.toml` |
 
 > **Rule:** if a repo, install or tool-count reference is not in this table, it does not go into an asset.
@@ -57,7 +57,7 @@ Auditable agent memory — the memory layer you can prove.
 ```
 mem20 is an MIT-licensed MCP server that gives AI agents persistent memory with
 a hard partition between grounded and simulated content, contamination auditing,
-evidence-based promotion with an append-only audit trail, and an append-only, origin-tagged ledger. 257 tools
+evidence-based promotion with an append-only audit trail, and an append-only, origin-tagged ledger. 268 tools
 across 26 domains. Self-hosted. Zero lock-in.
 ```
 
@@ -107,7 +107,7 @@ mem20-mcp            # start the stdio server
 2. **Contamination auditing.** Detect when simulated content has entered grounded memory, before it becomes a decision.
 3. **Evidence-based promotion with an append-only audit trail.** Nothing graduates from simulated to grounded without evidence attached to the promotion.
 4. **Append-only, origin-tagged ledger.** Every memory carries its source; history cannot be quietly rewritten.
-5. **MCP-native and broad.** JSON-RPC 2.0 over stdio, 257 tools across 26 domains — drops into LangGraph, CrewAI, Pydantic AI and the rest of the MCP ecosystem.
+5. **MCP-native and broad.** JSON-RPC 2.0 over stdio, 268 tools across 26 domains — drops into LangGraph, CrewAI, Pydantic AI and the rest of the MCP ecosystem.
 6. **MIT, self-hosted, Python.** Audit the code you depend on. Run it in your own VPC.
 
 ---
@@ -124,7 +124,7 @@ mem20-mcp            # start the stdio server
 
 | Claim in copy | Number | Source |
 |---|---|---|
-| Tools / domains | **257 tools, 26 domains** | Canonical repo README (§Architecture: *"257 tools across 26 domains"*, counted from `server.tools`) |
+| Tools / domains | **268 tools, 26 domains** | Canonical repo README (§Architecture: *"268 tools across 26 domains"*, counted from `server.tools`) |
 | Transport / license / language | JSON-RPC 2.0 over stdio · MIT · Python | Canonical repo `pyproject.toml` + README |
 | Version | `v2.1.0rc2` | Canonical repo `pyproject.toml` (`version`) |
 | Protocol | `2025-06-18` | Program brief / server `serverInfo` |

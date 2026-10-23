@@ -85,7 +85,7 @@ sshpass -e ssh -n -p 2222 root@216.198.115.91 \
 - **`REFUSED [G7] L2 judge returned an unparseable verdict`** → transient external-LLM
   failure, fail-closed, not a content fault. Retry with a new session id (bounded, ~5 tries).
 - **Numeric lists are summed.** The requirement deliberately does not assert a per-domain
-  breakdown, only the 257 headline and the 26-domain phrase, because the repo's domain table
+  breakdown, only the 268 headline and the 26-domain phrase, because the repo's domain table
   has 29 rows against a 26-domain heading. Do not add a per-bucket split to the requirement.
 - **`halted: true`** → stop and report. Only an owner-authorized
   `gabe recover --authorized-by <who>` clears it; it does not clear itself.

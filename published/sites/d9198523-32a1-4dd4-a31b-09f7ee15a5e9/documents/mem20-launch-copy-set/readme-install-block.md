@@ -36,7 +36,7 @@ memory (real observations, user statements, events) strictly separate from
 contamination between the two, promotes content only on attached evidence, and
 records every operation in an append-only, origin-tagged ledger.
 
-**257 tools across 26 domains.** MIT licensed. Python. Self-hosted. Zero lock-in.
+**268 tools across 26 domains.** MIT licensed. Python. Self-hosted. Zero lock-in.
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 ![Python](https://img.shields.io/badge/python-3.10%2B-blue)

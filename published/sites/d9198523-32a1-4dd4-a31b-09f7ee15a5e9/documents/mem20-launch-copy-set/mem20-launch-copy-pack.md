@@ -26,7 +26,7 @@ This is one document. Numbered sections are parts of a single copy pack, not sep
 | Run (console script) | `pip install .` then `mem20-mcp` | `pyproject.toml` `[project.scripts]` → `mem20-mcp = "launcher:main"` |
 | SDK dependency | `mcp>=2.1.1` | `requirements.txt`, `pyproject.toml` `dependencies` |
 | Transport | MCP / JSON-RPC 2.0 over stdio; HTTP health on `:8080` (`/health`, `/ready`, `/metrics`) | README "Transport / protocol" |
-| Tool surface (house number) | **257 tools across 26 domains** | README "Tool domains (26)" — stated as counted by instantiating the server |
+| Tool surface (house number) | **268 tools across 26 domains** | README "Tool domains (26)" — stated as counted by instantiating the server |
 | Market sizing (house numbers) | TAM **$1.28B** · SAM **$282M** · SOM **$1.68M** · blended ACV **$14,000** | Program brief |
 | Distribution status | Not on PyPI | `pypi.org/pypi/mem20/json` → **HTTP 404** |
 
@@ -40,7 +40,7 @@ This is one document. Numbered sections are parts of a single copy pack, not sep
 | Install command | `pip install "mcp<2"` + `pip install -e .` | `.venv/bin/pip install -r requirements.txt` | Tree declares `mcp>=2.1.1`; the old pin installs an SDK the tree does not use |
 | Run command | `python -m mcp_cognitive_substrate.cli` | `.venv/bin/python mcp/mcp_server.py` | Former module belongs to the older, non-canonical substrate repo; does not exist on this tree |
 | Package install | bare `pip install mem20` as a supported command | source install only | PyPI returns 404 |
-| Tool count | `~258–260` range | **257** | House number standardised |
+| Tool count | `~258–260` range | **268** | House number standardised |
 | Benchmark framing | unqualified numbers | numbers labelled self-reported on internal harness | Not independently audited; no reproduction script in repo |
 | Landing CTA | old-org repo href | canonical repo href | Dead destination |
 
@@ -64,7 +64,7 @@ The exact retired strings are counted per file in `mem20-reference-audit.csv`; t
 
 **Subhead**
 
-> mem20 is an MIT-licensed MCP server that gives AI agents persistent memory with a hard partition between grounded and simulated content, contamination auditing, evidence-based promotion, and an append-only, origin-tagged ledger. 257 tools across 26 domains. Self-hosted. Zero lock-in.
+> mem20 is an MIT-licensed MCP server that gives AI agents persistent memory with a hard partition between grounded and simulated content, contamination auditing, evidence-based promotion, and an append-only, origin-tagged ledger. 268 tools across 26 domains. Self-hosted. Zero lock-in.
 
 **Subhead, short**
 
@@ -180,7 +180,7 @@ that's the whole ballgame — you don't need "probably relevant", you need
 What mem20 is:
 
 - An MCP server (JSON-RPC 2.0 over stdio), Python, MIT licensed.
-- 257 tools across 26 domains.
+- 268 tools across 26 domains.
 - A HARD partition between grounded memory (came from a real source) and
   simulated memory (the agent generated it). These are not the same store with
   a flag — they are separate classes, enforced at the storage layer: the vector
@@ -248,7 +248,7 @@ Auditable memory for AI agents — grounded vs simulated
 mem20 gives AI agents persistent memory you can actually prove. A hard partition
 separates grounded memory from simulated content, contamination auditing catches
 bleed between them, and an append-only origin-tagged ledger records where every
-memory came from. MIT-licensed MCP server, Python, self-hosted — 257 tools
+memory came from. MIT-licensed MCP server, Python, self-hosted — 268 tools
 across 26 domains. Built for teams who need "here's the evidence," not
 "probably relevant."
 ```
@@ -302,7 +302,7 @@ mem20 competes on proof.
 Hard grounded/simulated partition. Contamination auditing. Evidence-based
 promotion. Append-only origin ledger.
 
-MIT. Self-hosted. 257 tools over MCP.
+MIT. Self-hosted. 268 tools over MCP.
 https://github.com/bythewayz66-glitch/mem20
 ```
 
@@ -343,7 +343,7 @@ Every memory carries its origin. History can't be quietly rewritten.
 Why MIT + self-hosted: you can't audit a black box. If your memory layer is the
 thing under audit, run it yourself.
 
-Python, MCP-native (JSON-RPC 2.0 over stdio), 257 tools across 26 domains.
+Python, MCP-native (JSON-RPC 2.0 over stdio), 268 tools across 26 domains.
 Installs with a clone, a venv and requirements.txt.
 ```
 
@@ -383,7 +383,7 @@ mem20 is persistent memory for AI agents built around that second question:
 — An append-only, origin-tagged ledger for every memory
 — MIT licensed, Python, self-hosted — no lock-in, no black box
 
-257 tools across 26 domains, delivered over MCP (JSON-RPC 2.0 over stdio).
+268 tools across 26 domains, delivered over MCP (JSON-RPC 2.0 over stdio).
 
 It's not a retrieval-quality race. It's a trust and provenance race.
 
@@ -403,7 +403,7 @@ github.com/bythewayz66-glitch/mem20
 ```
 I've been frustrated that most agent-memory tooling is a black box you can't
 self-host end to end. mem20 is an MIT-licensed Python MCP server you run in your
-own VPC: JSON-RPC 2.0 over stdio, 257 tools across 26 domains.
+own VPC: JSON-RPC 2.0 over stdio, 268 tools across 26 domains.
 
 The interesting architectural bit is a HARD partition between grounded memory
 (real source) and simulated memory (agent-generated) — two classes, not a flag.
@@ -457,13 +457,13 @@ Repo: https://github.com/bythewayz66-glitch/mem20
 
 ### 6.6 Reddit — r/LangChain
 
-**Title:** `mem20 — MCP-native agent memory (257 tools, grounded/simulated partition)`
+**Title:** `mem20 — MCP-native agent memory (268 tools, grounded/simulated partition)`
 
 ```
 For anyone wiring memory into LangGraph / CrewAI / Pydantic AI: mem20 is an MCP
 server (JSON-RPC 2.0 over stdio) that adds persistent memory with an audit trail
 — a hard grounded/simulated partition, contamination auditing, evidence-based
-promotion, and an append-only origin-tagged ledger. 257 tools across 26 domains,
+promotion, and an append-only origin-tagged ledger. 268 tools across 26 domains,
 MIT, Python.
 
 Because it speaks MCP, it registers like any other stdio server:
@@ -495,7 +495,7 @@ Repo: https://github.com/bythewayz66-glitch/mem20
 2. **Contamination auditing.** `memory_audit_contamination()` inspects the grounded store and the BM25 corpus and returns `contamination_rate`, `violations`, and `violations_simulated_in_bm25_corpus`.
 3. **Evidence-based promotion.** `promote_simulated_to_grounded()` requires `prediction_error_evidence` — a resolved prior prediction or a registered external verifier.
 4. **Append-only, origin-tagged ledger.** Every entry carries `origin` and `store`, validated at the lowest append path. History is appended, not rewritten.
-5. **MCP-native and broad.** JSON-RPC 2.0 over stdio, 257 tools across 26 domains — registers with any MCP host, including Claude Code, Cursor and Hermes.
+5. **MCP-native and broad.** JSON-RPC 2.0 over stdio, 268 tools across 26 domains — registers with any MCP host, including Claude Code, Cursor and Hermes.
 6. **MIT, self-hosted, Python.** Audit the code you depend on. Run it in your own VPC.
 
 ---
@@ -504,7 +504,7 @@ Repo: https://github.com/bythewayz66-glitch/mem20
 
 | Claim in copy | Value | Source / status |
 |---|---|---|
-| Tools / domains | **257 tools, 26 domains** | House number; corroborated by README "Tool domains (26)" counted from the live server |
+| Tools / domains | **268 tools, 26 domains** | House number; corroborated by README "Tool domains (26)" counted from the live server |
 | License / language | MIT · Python | GitHub API, verified this run |
 | Product version | `2.1.0rc2` | `pyproject.toml` on `main` |
 | Install path | clone + `pip install -r requirements.txt` | `requirements.txt`, `install.sh`, README, `docs/03-installation.md` |

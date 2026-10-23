@@ -83,6 +83,6 @@ source code already lives in this repository in its native lanes (`mcp/`,
 `sdk/`, `docs/sdk/`, `mem20-sdk-ruby/`, `web/`, `docs/app/`,
 `mem20-orchestration/`), so it is not duplicated here.
 
-House numbers used across these artifacts and this repository: **257 tools
+House numbers used across these artifacts and this repository: **268 tools
 across 26 domains**; TAM **$1.28B** / SAM **$282M** / SOM **$1.68M**; blended
 ACV **$14,000**.

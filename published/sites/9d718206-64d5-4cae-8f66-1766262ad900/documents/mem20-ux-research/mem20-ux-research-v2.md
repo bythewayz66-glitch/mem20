@@ -43,7 +43,7 @@ A repo address and an install path are load-bearing parts of a desktop-app desig
 | Install path | `GET pypi.org/pypi/mem20/json` (+ 2 fallback names) | **404** — no published package; install from a clone |
 | Runtime + license | Reachable Python repo README | Python **≥ 3.11**, **MIT**, stdio MCP server, A2A tools |
 | Product narrative | mem20 landing-site content | 4 capabilities: persistent memory, theory of mind, cognitive evolution, world modeling; SQLite + FTS5; 28 paradigms; epistemic boundaries |
-| Program context | Program memory | 257 tools / 26 domains · TAM $1.28B / SAM $282M / SOM $1.68M · blended ACV $14,000 · publish via Sidney through gabe |
+| Program context | Program memory | 268 tools / 26 domains · TAM $1.28B / SAM $282M / SOM $1.68M · blended ACV $14,000 · publish via Sidney through gabe |
 
 ---
 
@@ -57,7 +57,7 @@ positioning: "Auditable agent memory — the memory layer you can prove"
 license: MIT
 language: Python            # requires >= 3.11
 interface: MCP server       # JSON-RPC 2.0 over stdio
-tool_breadth: "257 tools across 26 domains"   # v2.0 baseline was 97 tools / 13 domains
+tool_breadth: "268 tools across 26 domains"   # v2.0 baseline was 97 tools / 13 domains
 repo_canonical: "github.com/JaysonAIOnline/mem20"
 repo_state: "404 at 2026-10-14T16:41Z — recreation in flight (GitHub Repo Assistant)"
 install_path: "git clone + pip install -e .   # NO PyPI PACKAGE"
@@ -83,7 +83,7 @@ guardrails:
 | First-run flow | 3 steps | 4 steps, ends on ledger empty state | Install grew; verification moment added |
 | Home surface | features / chat | **audit ledger** | Wedge is provability → needs a surface, not prose |
 | Partition (grounded vs simulated) | settings mention | **first-class persistent view** | Hard partition is the core structural claim |
-| Tool count | 258 | **257** (house number) | Docs drift across surfaces (97 / 111 / 258 / 260 observed) — see §5 |
+| Tool count | 258 | **268** (house number) | Docs drift across surfaces (97 / 111 / 258 / 260 observed) — see §5 |
 
 ---
 
@@ -157,7 +157,7 @@ The design intent of that last step is deliberate: the flow should end where the
 ### Medium priority (next)
 
 4. **Make the audit ledger the desktop app's home surface**, with the partition view one click away and the promotion gate as the only bridge between panes.
-5. **Reconcile the tool/domain counts across all surfaces** to the house number and state the baseline (97 → 257 tools, 13 → 26 domains) so the drift reads as a growth story rather than an inconsistency.
+5. **Reconcile the tool/domain counts across all surfaces** to the house number and state the baseline (97 → 268 tools, 13 → 26 domains) so the drift reads as a growth story rather than an inconsistency.
 6. **Render the origin tag as human-readable provenance** (source, capture time, actor, kind) — a machine identifier is not audit evidence.
 
 ### Long-term
@@ -184,7 +184,7 @@ The design intent of that last step is deliberate: the flow should end where the
 |---|---|
 | Canonical repo resolves | **Unverified — returns 404** |
 | PyPI package exists | **Unverified — returns 404** |
-| 257 tools / 26 domains | House number; live docs quote 111 / 258 / 260 — reconcile required |
+| 268 tools / 26 domains | House number; live docs quote 111 / 258 / 260 — reconcile required |
 | Promoted-record persistence in this environment | Partially verified elsewhere; a `memory_promote` edge case ("I think it came true" accepted as a confirmation) was flagged in a prior audit |
 | Persona behaviours | Segmented synthesis — **not** interview-validated |
 | Sidney/rsync publication of these assets | **Not performed** — no SSH host or credential present in this run |

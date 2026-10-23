@@ -192,6 +192,18 @@ jobs:
           fi
           python3 -m pytest -q $ROOTS
 
+      - name: Run unit-marked tests (no optional deps)
+        run: |
+          set -euo pipefail
+          GREEN="mem20adaptiveinterfacecomposerz mem20assistz mem20autoz mem20biz
+                 mem20boxz mem20enginez mem20executablegameconceptandscopepipelinez
+                 mem20fabricz mem20facez mem20graphz mem20greenz mem20labz
+                 mem20orcaz mem20pipelinez mem20selfz mem20sensorz mem20simz
+                 mem20sitemapz mem20studioz mem20teamz mem20twinz mem20zimr"
+          ROOTS=""
+          for pkg in $GREEN; do ROOTS="$ROOTS $pkg/tests"; done
+          python3 -m pytest -m unit -q $ROOTS
+
       - name: Verify the Perl SDK
         run: |
           set -euo pipefail

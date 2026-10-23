@@ -1,0 +1,19 @@
+{
+  // Registers the mem20 MCP server for GitHub Copilot agent mode in VS Code.
+  //
+  // mem20 IS an MCP server, so this is the extension point that lets Copilot
+  // agent mode call its memory, retrieval and cognitive tools directly.
+  //
+  // The launcher resolves mcp/ relative to the workspace and runs mcp_server.py
+  // exactly as `python mcp/mcp_server.py` would. Transport is stdio.
+  "servers": {
+    "mem20": {
+      "type": "stdio",
+      "command": "python3",
+      "args": ["${workspaceFolder}/launcher.py"],
+      "env": {
+        "PYTHONUNBUFFERED": "1"
+      }
+    }
+  }
+}

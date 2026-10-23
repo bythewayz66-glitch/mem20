@@ -37,7 +37,7 @@ puts Mem20::Client.text(recall)
 `tags:` accepts an `Array` (the SDK joins it into the comma-separated form the server
 expects) or a pre-formatted `String`.
 
-## Call any of the 257 tools
+## Call any of the 270 tools
 
 ```ruby
 # By name — works for every registered tool, even ones with no binding yet.
@@ -52,7 +52,7 @@ client.memory_probe
 `client.tool_names` returns the cached list:
 
 ```ruby
-puts client.tool_names.size   # 257
+puts client.tool_names.size   # 270
 ```
 
 ## Inspect the schemas

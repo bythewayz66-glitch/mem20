@@ -3,8 +3,10 @@
 
 Loads the full server implementation automatically, in this order:
 
-1. Prefer the vendored copy at ``mem20liez/_server_impl.py`` (committed to the
-   repo, so a ``git clone --depth 1`` checkout works with no history at all).
+1. Prefer the vendored copy: ``mem20liez/_server_impl.py``, or the committed
+   gzip+base64 form ``mem20liez/_server_impl.py.gz.b64`` (the one that ships in
+   the repo). Either way a ``git clone --depth 1`` checkout works with no
+   history and no network.
 2. Else recover the last known-good ``mcp/server.py`` from the git object
    database (needs the object to be present locally).
 3. Else, if this is a shallow clone, fetch just the needed commit
@@ -33,6 +35,7 @@ _GOOD_COMMIT = os.environ.get(
     "MEM20_GOOD_COMMIT", "6a2bdaab2434611a2edee5d26b93bcc500edb87b"
 )
 _IMPL_PATH = os.path.join(_ROOT, "mem20liez", "_server_impl.py")
+_IMPL_GZ_PATH = os.path.join(_ROOT, "mem20liez", "_server_impl.py.gz.b64")
 _MIN_IMPL_BYTES = 10000
 _IMPL_MARKER = "Mem20MCPServer"
 
@@ -65,15 +68,41 @@ def _looks_like_impl(text: str | None) -> bool:
 
 
 def _read_vendored() -> str | None:
+    """Vendored implementation: raw ``_server_impl.py`` first, then the
+    committed gzip+base64 copy (``_server_impl.py.gz.b64``).
+
+    The compressed form is what ships in the repo — it is ~3x smaller than the
+    raw source, so it survives tooling that mangles very large single-file
+    commits. ``regen_server_impl.py`` writes the raw file when git history is
+    available; both are accepted here.
+    """
     if os.path.isfile(_IMPL_PATH) and os.path.getsize(_IMPL_PATH) > _MIN_IMPL_BYTES:
         try:
             with open(_IMPL_PATH, "r", encoding="utf-8") as f:
                 text = f.read()
         except OSError:
-            return None
+            text = None
         if _looks_like_impl(text):
             return text
+
+    payload = _read_vendored_compressed()
+    if _looks_like_impl(payload):
+        return payload
     return None
+
+
+def _read_vendored_compressed() -> str | None:
+    if not os.path.isfile(_IMPL_GZ_PATH):
+        return None
+    try:
+        import base64
+        import gzip
+
+        with open(_IMPL_GZ_PATH, "rb") as f:
+            raw = base64.b64decode(f.read())
+        return gzip.decompress(raw).decode("utf-8")
+    except (OSError, ValueError, EOFError, ImportError):
+        return None
 
 
 def _is_shallow() -> bool:
@@ -201,7 +230,8 @@ def _diagnose() -> str:
             "Cause: this is not a git checkout (no .git directory found at",
             f"  {_ROOT}).",
             "  History recovery is unavailable, and the vendored copy is",
-            f"  missing from {_IMPL_PATH}.",
+            f"  missing from {_IMPL_PATH}",
+            f"  and {_IMPL_GZ_PATH}.",
         ]
     elif _is_shallow():
         lines += [
@@ -218,7 +248,8 @@ def _diagnose() -> str:
         lines += [
             "Cause: full history is present but the implementation blob could",
             f"  not be read from commit {_GOOD_COMMIT}, and the vendored copy",
-            f"  is missing from {_IMPL_PATH}.",
+            f"  is missing from {_IMPL_PATH}",
+            f"  and {_IMPL_GZ_PATH}.",
             "",
             "  The commit may have been rewritten or garbage collected. Fetch it:",
             "",
@@ -229,6 +260,7 @@ def _diagnose() -> str:
         "",
         "Fixes, cheapest first:",
         f"  1. Restore the vendored implementation at {_IMPL_PATH}",
+        f"     or {_IMPL_GZ_PATH}",
         "     (regenerate with: python mem20liez/regen_server_impl.py)",
         "  2. Make git history available (see the commands above)",
         "  3. Point at a specific commit: export MEM20_GOOD_COMMIT=<sha>",

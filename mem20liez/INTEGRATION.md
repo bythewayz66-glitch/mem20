@@ -19,6 +19,17 @@ git show 6a2bdaab2434611a2edee5d26b93bcc500edb87b:mcp/server.py > mem20liez/_ser
 
 Only needed for tarball installs without git history.
 
+## Failure behaviour
+
+`_bootstrap()` reports every failure as **`ImportError`**, never `SystemExit`:
+a missing implementation, an unreachable git object, and the restored
+implementation calling `sys.exit(1)` on a missing dependency all raise
+`ImportError`. This matters for test runners — a module-level `SystemExit`
+propagates out of `exec()` and aborts the process, which pytest escalates to
+`INTERNALERROR` and aborts *collection for the whole session*. An `ImportError`
+is confined to the importing module, so one unavailable dependency produces one
+failing test file instead of a dead test run.
+
 ## Tools
 
 `mcp/tools/lie_tools.py` — `LieToolsMixin` registered automatically by the restored server.

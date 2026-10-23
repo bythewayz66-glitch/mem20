@@ -10,3 +10,6 @@ _auto-generated 2026-09-19T19:38:57.662070+00:00 — 1 topics, 452 events_
 - `python3 memory.py recall --topic <name>` to read full detail
 - `python3 memory.py remember --topic <name> --content "..."` to add
 - Deep detail per topic lives in `entries/<topic>.md`
+
+## Handoff
+- Collaboration protocol: `docs/handoff/AGENT-OPERATING-PROTOCOL.md`

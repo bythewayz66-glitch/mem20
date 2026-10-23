@@ -44,6 +44,21 @@ jobs:
           fi
           echo "no banned absolute paths - ok"
 
+      - name: Guard against duplicated core.py implementations (issue #17)
+        run: |
+          bad=""
+          for f in $(git ls-files '**/core.py' | grep -v '^mem20core/'); do
+            lines=$(wc -l < "$f")
+            if [ "$lines" -gt 10 ]; then
+              bad="$bad $f"
+            fi
+          done
+          if [ -n "$bad" ]; then
+            echo "::error::core.py must be a thin shim (<=10 lines); full implementations belong in mem20core. Offenders:$bad"
+            exit 1
+          fi
+          echo "core.py shim check - ok"
+
       - name: Guard against banned /home paths (issue #79)
         run: |
           bad=$(git grep -n -E '/home/[a-zA-Z0-9_-]+/' -- '*.py' '*.sh' ':(exclude).github/workflows/ci.yml' 2>/dev/null || true)

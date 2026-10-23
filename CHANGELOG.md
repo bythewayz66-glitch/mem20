@@ -3,6 +3,30 @@
 All notable changes to mem20 are documented here. The format is based on
 [Keep a Changelog](https://keepachangelog.com/).
 
+## [Unreleased]
+
+### Fixed
+- **`mcp/server.py` is now the authoritative implementation.** It was a bootstrap loader
+  that reconstructed the server from `git show 6a2bdaab…:mcp/server.py`, which failed on
+  `git clone --depth 1` checkouts with *"mem20 MCP server implementation not found."* The
+  implementation now lives directly in the file, so a shallow clone with zero git history
+  and no network access starts correctly. Removed: `mem20liez/_server_impl.py.gz.b64`,
+  `mem20liez/regen_server_impl.py`, and the `MEM20_MCP_AUTO_FETCH` / `MEM20_GOOD_COMMIT`
+  environment knobs.
+- **Tool counts reconciled to the live surface: 270 tools across 27 domains.** The docs
+  carried **257 / 26**, which was wrong in two ways: the `memory_*` row listed 49 tools
+  against 52 registered, and the 10 `lie_*` tools were absent from every table. Corrected
+  across `README.md`, `docs/`, the SDK READMEs, `toolchest/`, `roadmaps/` and
+  `published/`. The handshake count is the authority.
+
+### Added
+- **`.github/workflows/mcp-verify.yml`** — CI job that checks out with `fetch-depth: 1`
+  (deliberately shallow, to keep the shallow-clone fix honest), installs the core deps,
+  runs the `verify_mcp.py` handshake and fails unless the tool count is exactly 270.
+- **`verify_mcp.py`** — the handshake verifier used by that job and by the troubleshooting
+  guide.
+- **`docs/troubleshooting-mcp-server-startup.md`** — reproduction-based startup guide.
+
 ## [3.0.0] — 2026-10-18 (consolidation baseline)
 
 3.0.0 is the **consolidation release**: every outstanding agent branch is merged into

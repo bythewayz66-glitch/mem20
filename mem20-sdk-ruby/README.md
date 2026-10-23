@@ -87,7 +87,7 @@ client.memory_store(content: "The release sign-off lives in Sidney.",
 result = client.memory_recall(query: "where does the release sign-off live", limit: 5)
 puts Mem20::Client.text(result)
 
-# Any one of the 257 registered tools, by name…
+# Any one of the 270 registered tools, by name…
 client.tool("memory_status", {})
 # …or as a dynamic binding.
 client.memory_status
@@ -116,7 +116,7 @@ ruby -Ilib examples/quickstart.rb
 - Transport: **stdio**, one JSON-RPC 2.0 message per line.
 - Handshake: `initialize` → `notifications/initialized`, then `tools/list` / `tools/call`.
 - Protocol revision: **`2025-06-18`**, as negotiated in `initialize`.
-- The server registers **257 tools** across 26 domains; the SDK reaches every one
+- The server registers **270 tools** across 27 domains; the SDK reaches every one
   through `#tool` or a dynamic binding, and ships convenience accessors for the
   memory primitives.
 - The server also exposes `/health`, `/ready` and `/metrics` on `MEM20_HEALTH_PORT`
@@ -166,7 +166,7 @@ are this SDK's actual measured results; the raw command output is reproduced in
 | `rubocop` | 19 files inspected, **no offenses detected** |
 | `gem build mem20-sdk.gemspec` | mem20-sdk **0.2.0** built |
 | `require "mem20"` (installed gem) | loads mem20-sdk 0.2.0 |
-| live stdio round-trip | **257 tools**, protocol **2025-06-18**, stored token recalled |
+| live stdio round-trip | **270 tools**, protocol **2025-06-18**, stored token recalled |
 
 The round-trip stores a distinctive token with `memory_store` and reads it back with
 `memory_recall` against the real server; the recorded run recovered the token in

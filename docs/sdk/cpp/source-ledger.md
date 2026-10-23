@@ -50,8 +50,8 @@ previous repo location.
 
 | # | Claim | Source path | Verified by |
 |---|---|---|---|
-| T1 | The surface is **257 tools across 26 domains** | `README.md` § Transport/protocol ("exposes **257 tools across 26 domains** (verified by instantiating the server and counting `server.tools`)") | file read |
-| T2 | Domain counts: `memory_*` 52, `cog_*`/`tot_*`/… 18, `world_model_*` 15, `vcs_*` 11, `cloud_*` 10, `db_*` 10, `prod_*` 10, `fs_*` 10, `braid_*` 9, … `blender_*` 7 (optional), `unity_*` 5 (optional) | `README.md` § Tool domains (26) table | file read |
+| T1 | The surface is **270 tools across 27 domains** | `README.md` § Transport/protocol ("exposes **270 tools across 27 domains** (verified by instantiating the server and counting `server.tools`)") | file read |
+| T2 | Domain counts: `memory_*` 52, `cog_*`/`tot_*`/… 15, `world_model_*` 9, `vcs_*` 11, `cloud_*` 10, `db_*` 10, `prod_*` 10, `fs_*` 13, `braid_*` 9, `lie_*` 10, … `blender_*` 7 (optional), `unity_*` 5 (optional) | `README.md` § Tool domains (27) table | file read |
 | T3 | Server tool modules: `mcp/memory_tools.py`, `enhanced_memory_tools.py`, `cognitive_tools.py`, `thought_process.py`, `roadmap_tools.py`, `tools/world_tools.py`, `tools/braid_tools.py`, `tools/blender_tools.py`, `tools/unity_tools.py`, `tools/integration_tools.py` | `README.md` § Transport/protocol | file read |
 
 ## 4. Tools the SDK binds to (name + schema verified in source)

@@ -193,7 +193,7 @@ npm run build     # -> ../static
 ## Tests
 
 ```sh
-python3 -m pytest tests -q     # 165 tests
+python3 -m pytest tests -q     # 182 tests
 ruff check mem20controlz tests
 ```
 

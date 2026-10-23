@@ -1,7 +1,7 @@
 # Spec authority paths (issues #14 / #15)
 
 ## Rule
-Do not use `/home/jayson/...` (or any personal absolute path) as a **required**
+Do not use `/opt/mem20/...` (or any personal absolute path) as a **required**
 default. Defaults must be:
 - relative to the repo / package, or
 - `Path.home()`-based with an env override, or

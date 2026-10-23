@@ -15,7 +15,7 @@ import os
 import re
 import sys
 
-MCP_DIR = os.environ.get("MEM20_MCP_DIR", "/home/jayson/mem20/mcp")
+MCP_DIR = os.environ.get("MEM20_MCP_DIR", "mcp")
 REPO = os.path.dirname(MCP_DIR)
 MEMORY = os.environ.get("MEM20_ENGINE", os.path.join(REPO, "memory_engine", "memory.py"))
 EXPECTED_TOOLS = 97

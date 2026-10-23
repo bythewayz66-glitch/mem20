@@ -1,6 +1,6 @@
 # mem20 2.0 Roadmap — Deliverables
 
-Source: `/home/jayson/Desktop/2.0_Roadmap_Steps_08-20.zip` (steps 08–20).
+Source: `/opt/mem20/Desktop/2.0_Roadmap_Steps_08-20.zip` (steps 08–20).
 
 This directory contains the deliverables for the 2.0 product roadmap. Each step
 file (`step_XX.md`) holds the concrete artifacts for that step, grounded in the

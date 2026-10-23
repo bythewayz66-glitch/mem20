@@ -361,7 +361,7 @@ today; interpreter/bytecode still partial). Editor React frontend talks to
 mem20 for agent-assisted edits + shared graph store."
 
 **Authoritative source of truth (verified on disk 2026-09-09):**
-- OREO lives at **`/opt/oreo/`** (NOT the roadmap's stale `/home/jayson/OREO` —
+- OREO lives at **`/opt/oreo/`** (NOT the roadmap's stale `/opt/mem20/OREO` —
   that path no longer exists; hypomap cleanup target must be corrected to
   `/opt/oreo`).
 - `IDE/` is the workspace: Python `parser/` (NL→GIR, architecture NL→Cypher),
@@ -594,7 +594,7 @@ Hermetic proof (no network, no key, no real store writes — sealed seams inject
 
 ### 8.4 Docker eviction + disk cleanup
 - `jayson.service` disabled; containers stopped/removed (`jayson`, `jayson-bridge`, `jayson-db`, `jayson-tts`); volumes removed; images pruned; stray native open_webui on :8080 (pid 20797) killed.
-- Source folders deleted: `/home/jayson/Desktop/jayson-openwebui`, `/home/jayson/Desktop/mem20deploy` (native mcp cognitive equivalent `/opt/mem20/mcp/cognitive_tools.py` confirmed), `/home/jayson/Desktop/braid-visual-reference`.
+- Source folders deleted: `/opt/mem20/Desktop/jayson-openwebui`, `/opt/mem20/Desktop/mem20deploy` (native mcp cognitive equivalent `/opt/mem20/mcp/cognitive_tools.py` confirmed), `/opt/mem20/Desktop/braid-visual-reference`.
 - Harvested docker-compose artifacts removed from mem20owebz (`docker-compose.yml`, `.full.yml`, `.bridge.yml`).
 
 ### 8.5 End-state

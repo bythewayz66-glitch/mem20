@@ -17672,7 +17672,7 @@
       "name": "freecad",
       "category": "cli",
       "subcategory": "graphics-3d",
-      "description": "freecad \u00b7 -> /home/jayson/Apps/FreeCAD/AppRun",
+      "description": "freecad \u00b7 -> /opt/mem20/Apps/FreeCAD/AppRun",
       "source": "/usr/local/bin/freecad",
       "runtime_status": "ok",
       "runtime_detail": "symlink in /usr/local/bin",
@@ -17695,7 +17695,7 @@
         "executable": true,
         "size": 1069,
         "symlink": true,
-        "resolved_target": "/home/jayson/Apps/FreeCAD/AppRun"
+        "resolved_target": "/opt/mem20/Apps/FreeCAD/AppRun"
       }
     },
     {
@@ -17727,7 +17727,7 @@
         "executable": true,
         "size": 138976,
         "symlink": true,
-        "resolved_target": "/home/jayson/Apps/FreeCAD/usr/bin/freecadcmd",
+        "resolved_target": "/opt/mem20/Apps/FreeCAD/usr/bin/freecadcmd",
         "help": {
           "sampled": true,
           "ok": true,
@@ -19533,7 +19533,7 @@
       "name": "unity",
       "category": "cli",
       "subcategory": "graphics-3d",
-      "description": "unity \u00b7 -> /home/jayson/Unity/Hub/Editor/6000.5.9f1/Editor/Unity",
+      "description": "unity \u00b7 -> /opt/mem20/Unity/Hub/Editor/6000.5.9f1/Editor/Unity",
       "source": "/usr/local/bin/unity",
       "runtime_status": "ok",
       "runtime_detail": "symlink in /usr/local/bin",
@@ -19556,7 +19556,7 @@
         "executable": true,
         "size": 110081080,
         "symlink": true,
-        "resolved_target": "/home/jayson/Unity/Hub/Editor/6000.5.9f1/Editor/Unity"
+        "resolved_target": "/opt/mem20/Unity/Hub/Editor/6000.5.9f1/Editor/Unity"
       }
     },
     {

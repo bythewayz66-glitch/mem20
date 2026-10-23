@@ -114,7 +114,7 @@ frozen here until the GitHub release is cut.
 - 2.0 roadmap deliverables (`2.0_roadmap/`) and a human execution package.
 
 ### Changed
-- Hard-coded `/home/jayson/...` and `/root/.hermes/...` defaults replaced with
+- Hard-coded `/opt/mem20/...` and `/root/.hermes/...` defaults replaced with
   env-driven / `~`-relative defaults (`MEM20_STORE_PATH`, `MEM20_COG_PATH`,
   `MEM20_ROADMAPS_DIR`, `MEM20_BLENDER_WORKDIR`, `MEM20_ENGINE_SRC`).
 - Engine brought into the repo as `memory_engine/` (code only; no user data).

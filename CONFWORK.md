@@ -7,9 +7,9 @@ Only 100% true, verified facts. Format: Action / feature — access — (WORKED|
 - LLM chat reachable on default NVIDIA endpoint — access: `llm.chat()` in fresh process — (WORKED) — key len 70, model nvidia/nemotron-3-ultra-550b-a55b- LLM default moved off NVIDIA (slow) to Groq — access: `llm.py` `DEFAULT_BASE_URL=https://api.groq.com/openai/v1`, `DEFAULT_MODEL=openai/gpt-oss-120b` — (WORKED) — fresh process verified, live `llm.chat()` returned GROQ_OK in 0.5s
 - Dream defaults raised to 5 iterations / 2000 max_tokens — access: `cognitive_engine.py` `imagination_dream` + `aimagination_dream` — (WORKED) — verified in source lines ~979, ~1000
 - 50-iteration dream over full 245-package corpus — access: `mem20_imagination_dream` job 6a93a2041833 — (WORKED) — 50 iterations, ~360KB raw, converged on Living-Group concept, saved to `/tmp/opencode/mem30/dream50_raw.txt`
-- mem30 reports produced — access: `/home/jayson/Desktop/6/MEM30_MASTER_DREAM_REPORT.md`, `/home/jayson/Desktop/6/MEM30_AI_EXECUTABLE_ROADMAP.md`, `/home/jayson/Desktop/6/MEM30_DREAM_LOG.md` — (WORKED)
+- mem30 reports produced — access: `/opt/mem20/Desktop/6/MEM30_MASTER_DREAM_REPORT.md`, `/opt/mem20/Desktop/6/MEM30_AI_EXECUTABLE_ROADMAP.md`, `/opt/mem20/Desktop/6/MEM30_DREAM_LOG.md` — (WORKED)
 - mem30 live roadmap — access: `mem20_roadmap_get` name `mem30-absorption` (5 phases foundation/sense-organs/marketplace/dream-loop/moonshots, foundation in_progress) — (WORKED)
-- mem30.pdf — access: `/home/jayson/Desktop/mem30.pdf` (valid %PDF-1.4, 5958 bytes, reportlab 5.0.1) — (WORKED)
+- mem30.pdf — access: `/opt/mem20/Desktop/mem30.pdf` (valid %PDF-1.4, 5958 bytes, reportlab 5.0.1) — (WORKED)
 - mem20ucgz (RM-001 UCG) absorbed — access: pip-installed as `mem20ucgz`, server `python -m mem20ucgz.api --db <path>` (default port 8781), tests 11/11 — (WORKED)
 - mem20zimr (RM-002 microapp runtime) absorbed — access: pip-installed as `mem20zimr`, `./scripts/demo.sh` (build+sign+launch bundle), server `python -m mem20zimr.cli serve`, tests 15/15, demo bundle hello_py built+signed+launched stdout captured — (WORKED)
 - braid provenance wired into UCG event plane — access: every `capability.upserted/deleted/edge.upserted` calls `braid_hook.journal_event` → signed cid + depth stored in event payload `_braid_cid`; verified prove(cid)=True in-process and over HTTP — (WORKED)

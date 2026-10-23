@@ -324,7 +324,7 @@ findings**, filed as issues **#13–#25**. All are additive; the standing rule
 | PLACEHOLDER (all benign — template tokens) | 8 |
 | Bare `except:` clauses | **316** |
 | `eval(` / `exec(` in non-test source | 17 |
-| `/home/jayson` occurrences (all text types) | **169** |
+| `/opt/mem20` occurrences (all text types) | **169** |
 | Rust `.rs` files (`braid/` + `braid_python/`) | 63 |
 | C++ `.cpp` files | 2 |
 | JS files (1,400 of them inside `node_modules/`) | 1,428 |
@@ -341,8 +341,8 @@ findings**, filed as issues **#13–#25**. All are additive; the standing rule
 | # | Finding | Area | Sev |
 |---|---|---|---|
 | #13 | 316 bare `except:` clauses swallow errors across the Python estate | robustness | high |
-| #14 | Untrack non-existent `/home/jayson` "spec authority" directories — commit a canonical copy | portability | high |
-| #15 | 169 hardcoded `/home/jayson` paths make the repo non-portable | portability | medium |
+| #14 | Untrack non-existent `/opt/mem20` "spec authority" directories — commit a canonical copy | portability | high |
+| #15 | 169 hardcoded `/opt/mem20` paths make the repo non-portable | portability | medium |
 | #16 | Generated state tracked in git — 4.3 MB harness entries, `chroma.sqlite3`, `ledger.jsonl` | hygiene | high |
 | #17 | Estate-wide duplication — 100 byte-identical package `core.py` files (and `mcp/` vs `mcp_server_dir/`) | duplication | high |
 | #18 | `test/` scratch directory breaks a plain `pytest` collection (conftest copy + basename collisions) | tests | medium |

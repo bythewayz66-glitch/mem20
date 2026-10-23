@@ -44,6 +44,16 @@ jobs:
           fi
           echo "no banned absolute paths - ok"
 
+      - name: Guard against banned /home paths (issue #79)
+        run: |
+          bad=$(git grep -n -E '/home/[a-zA-Z0-9_-]+/' -- '*.py' '*.sh' ':(exclude).github/workflows/ci.yml' 2>/dev/null || true)
+          if [ -n "$bad" ]; then
+            echo "::error::Banned absolute /home/<user>/ path found in tracked *.py/*.sh (issue #79)."
+            echo "$bad"
+            exit 1
+          fi
+          echo "no banned /home paths - ok"
+
       - uses: actions/setup-python@v5
         with:
           python-version: '3.11'

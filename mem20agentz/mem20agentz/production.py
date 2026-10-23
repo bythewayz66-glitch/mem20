@@ -1,7 +1,8 @@
 """Production pipeline substrate — compose the mem20 *z fleet into real builds.
 
-This is the mem20 orchestrator for the spec'd swarms (/home/jayson/Desktop/1
-VR Office, /home/jayson/Desktop/2 MMORPG). It runs REAL phase workers as
+This is the mem20 orchestrator for the spec'd swarms. Spec sources are
+provided via MEM20_SPEC_SOURCES (comma-separated paths) or the --source flag.
+It runs REAL phase workers as
 subprocesses, streams their output, enforces phase gates (incl. an adversary
 on the stress phase), writes handoff reports, and syncs phase state to the
 unified kanban door and the mem20 ledger. Everything is visible while running:
@@ -150,8 +151,9 @@ def ensure_specs() -> list[dict]:
     """Scan + materialize the two deliverable specs on disk."""
     made = []
     SPECS_DIR.mkdir(parents=True, exist_ok=True)
-    for src in (pathlib.Path("/home/jayson/Desktop/1"),
-                pathlib.Path("/home/jayson/Desktop/2")):
+    env_sources = os.environ.get("MEM20_SPEC_SOURCES", "")
+    src_list = [pathlib.Path(x.strip()) for x in env_sources.split(",") if x.strip()]
+    for src in src_list:
         if not src.exists():
             continue
         sk = scan_spec(src)
@@ -676,7 +678,7 @@ def main(argv: list[str] | None = None) -> int:
     pk.add_argument("--phase")
     pk.add_argument("--tail", type=int, default=40)
     ps = sub.add_parser("scan")
-    ps.add_argument("source", default="/home/jayson/Desktop/1")
+    ps.add_argument("source", default=os.environ.get("MEM20_SPEC_SOURCE", ""))
     pr = sub.add_parser("run")
     pr.add_argument("name")
     args = p.parse_args(argv)

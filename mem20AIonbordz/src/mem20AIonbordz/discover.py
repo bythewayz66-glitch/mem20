@@ -57,8 +57,6 @@ CANDIDATE_PATHS = [
     ("/root/AGENTS.md", "standing rules loaded into every agent session"),
     ("/opt/mem20/toolchest", "runtime-checked tool registry"),
     ("/opt/mem20/secrets/.env", "consolidated credentials (never print)"),
-    ("/home/jayson/Desktop", "Jayson's desktop"),
-    ("/home/jayson/Apps", "locally installed applications"),
     ("/etc/systemd/system", "systemd unit directory"),
 ]
 

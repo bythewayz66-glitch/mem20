@@ -156,3 +156,6 @@ their own top-level directories and are smoke-verified there:
 - `mem20missionroutingcockpitz`
 - `mem20realitytosoftwarecompilerz`
 - `mem20roamingworkloadschedulerz`
+
+## Docs
+- A2A peer contract: `docs/a2a.md`

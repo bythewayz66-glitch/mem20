@@ -116,10 +116,20 @@ abstraction is backed by a mem20 native.
   against the real protocol, with a loopback A2A server for hermetic tests.
 - Status claims below are backed by a test run + live demo on disk (see VERIFY).
 
+## Quickstart (offline)
+
+```bash
+pip install -e "./mem20crewz[dev]"
+python -m mem20crewz demo
+```
+
+Runs the bundled crew end-to-end with a deterministic FakeBrain (no network, no key)
+and prints `start -> researched -> written`.
+
 ## VERIFY (update after run)
 
 - [x] tests pass from a clean install (`pip install -e "./mem20crewz[dev]"` → `pytest`)
-- [ ] demo_crew.py runs against real cog + real A2A peers
+- [x] demo_crew.py runs offline (`python -m mem20crewz demo`) and prints the flow `start -> researched -> written`
 - [ ] phase 01 status bumped in hypo-map-1.json
 
 ## Managed members (package-review integration)

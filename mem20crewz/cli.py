@@ -22,12 +22,13 @@ try:
     from mem20cliz import json_main
 except ImportError as _exc:  # never fail silently: a hidden fallback looks like success
     import sys as _sys
+    _exc_msg = str(_exc)
 
     def json_main(func):
         @functools.wraps(func)
         def _warn(*a, **k):
             _sys.stderr.write(
-                "warning: mem20cliz unavailable, --json disabled for this CLI (%s)\n" % _exc
+                "warning: mem20cliz unavailable, --json disabled for this CLI (%s)\n" % _exc_msg
             )
             return func(*a, **k)
 

@@ -21,7 +21,7 @@ The OBJ representation is a static first-frame skeleton. Animated output is writ
 The package requires Python 3.11 or newer, NumPy, and PyYAML. In the root mem20 virtual environment:
 
 ```text
-/root/.venv/bin/python -m pip install -e /opt/mem20/mem20yetiz --no-deps
+python3 -m pip install -e /opt/mem20/mem20yetiz --no-deps
 ```
 
 For a clean environment, install the package normally and add the test tools with the `dev` extra. `trimesh` is an optional `verify` extra used only as an additional external importer check; the package's strict readers do not depend on it.
@@ -30,8 +30,8 @@ For a clean environment, install the package normally and add the test tools wit
 
 ```text
 cd /opt/mem20/mem20yetiz
-/root/.venv/bin/python -m pytest -q
-/root/.venv/bin/ruff check mem20yetiz
+python3 -m pytest -q
+ruff check mem20yetiz
 ```
 
 The tests use a hand-authored BVH fixture at `mem20yetiz/tests/fixtures/biped_test.bvh` and temporary directories only. They assert hierarchy depth, frame timing, channel data, known FK positions, cleanup behavior, marker identity, glTF binary roundtrips, and OBJ hierarchy roundtrips.

@@ -285,6 +285,14 @@ class ToolLoopTest(unittest.TestCase):
         try:
             class Boom(Brain):
                 name = "boom"
+                def plan(self, goal, constraints=None, resources=None):
+                    return ""
+                def reason(self, problem, reasoning_type="deductive", depth=5):
+                    return ""
+                def reflect(self, thought_process, outcome=""):
+                    return ""
+                def tot(self, problem, branches=3, depth=3):
+                    return ""
                 def propose(self, goal, tools_blob, observations,
                             require_tool_before_final=False):
                     raise RuntimeError("kaboom")

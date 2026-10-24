@@ -9,7 +9,7 @@ Environment (probed 2026-09-25/26):
   nvidia kernel module not loaded. torch 2.14.0+**cpu**. (WORKED)
 - Blender 5.2.0 LTS at `/usr/local/bin/blender`; FreeCAD 1.1.3 at
   `/usr/local/bin/freecad` and `/usr/local/bin/freecadcmd`. (WORKED)
-- venv `/root/.venv`; has trimesh 5.1.0, numpy-stl 4.0.0, numpy 2.5.3,
+- venv `.venv`; has trimesh 5.1.0, numpy-stl 4.0.0, numpy 2.5.3,
   transformers 5.15.1, torch 2.14.0+cpu. (WORKED)
 - Estate convention for a subsystem: `/opt/mem20/mem20<name>z/` with
   `pyproject.toml`, package dir, `python -m <pkg>`, console script, README,

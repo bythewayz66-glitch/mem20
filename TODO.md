@@ -1,4 +1,4 @@
-# TODO.md — mem30 project (workspace /home/jayson/Desktop/6)
+# TODO.md — mem30 project (workspace /opt/mem20/Desktop/6)
 
 ## Phase 0 — Foundation (DONE, verified 2026-09-20)
 - [x] UCG server (mem20ucgz) on 8781 — tests 11/11, 20 descriptors braid-journaled

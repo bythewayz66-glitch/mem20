@@ -31,7 +31,7 @@ import subprocess
 from dataclasses import dataclass, field
 
 DEFAULT_ROOT = "/opt/mem20"
-DEFAULT_PYTHON = "/root/.venv/bin/python"
+DEFAULT_PYTHON = "/usr/local/bin/python"
 # A neutral cwd that cannot contain a package directory of the same name.
 CONTROL_ROOT = "/"
 

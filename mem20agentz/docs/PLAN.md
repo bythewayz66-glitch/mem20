@@ -327,7 +327,7 @@ as phase 01.
 6. Phase 07 sweep removes the old installs once verified.
 
 ### 3.1 Acceptance record (2026-09-09)
-- ✅ (1) Package installed editable into `/root/.venv` (`pip install -e .` with
+- ✅ (1) Package installed editable into `.venv` (`pip install -e .` with
   `[tool.setuptools.packages.find] include = ["mem20agentz", "mem20agentz.*"]`);
   `import mem20agentz` from `/tmp` ok; `python -m mem20agentz --version` →
   `mem20agentz 0.1.0` (via `mem20agentz/__main__.py`); `TestAcceptance`
@@ -361,7 +361,7 @@ today; interpreter/bytecode still partial). Editor React frontend talks to
 mem20 for agent-assisted edits + shared graph store."
 
 **Authoritative source of truth (verified on disk 2026-09-09):**
-- OREO lives at **`/opt/oreo/`** (NOT the roadmap's stale `/home/jayson/OREO` —
+- OREO lives at **`/opt/oreo/`** (NOT the roadmap's stale `/opt/mem20/OREO` —
   that path no longer exists; hypomap cleanup target must be corrected to
   `/opt/oreo`).
 - `IDE/` is the workspace: Python `parser/` (NL→GIR, architecture NL→Cypher),
@@ -594,7 +594,7 @@ Hermetic proof (no network, no key, no real store writes — sealed seams inject
 
 ### 8.4 Docker eviction + disk cleanup
 - `jayson.service` disabled; containers stopped/removed (`jayson`, `jayson-bridge`, `jayson-db`, `jayson-tts`); volumes removed; images pruned; stray native open_webui on :8080 (pid 20797) killed.
-- Source folders deleted: `/home/jayson/Desktop/jayson-openwebui`, `/home/jayson/Desktop/mem20deploy` (native mcp cognitive equivalent `/opt/mem20/mcp/cognitive_tools.py` confirmed), `/home/jayson/Desktop/braid-visual-reference`.
+- Source folders deleted: `/opt/mem20/Desktop/jayson-openwebui`, `/opt/mem20/Desktop/mem20deploy` (native mcp cognitive equivalent `/opt/mem20/mcp/cognitive_tools.py` confirmed), `/opt/mem20/Desktop/braid-visual-reference`.
 - Harvested docker-compose artifacts removed from mem20owebz (`docker-compose.yml`, `.full.yml`, `.bridge.yml`).
 
 ### 8.5 End-state
@@ -670,7 +670,7 @@ Roadmap `hypo-map-1.json` phase 05 → `completed`. Phases 07-19 pending; 20 (se
 **Completed 2026-09-10.** The OpenAI Agents SDK (v0.22.2) fully absorbed into native mem20 at `/opt/mem20/mem20agentz_sdk`.
 
 ### 10.1 Absorption summary
-- Installed OpenAI Agents SDK into `/root/.venv` (dependencies: openai>=3.11, pydantic, etc.).
+- Installed OpenAI Agents SDK into `.venv` (dependencies: openai>=3.11, pydantic, etc.).
 - Full feature hunt: enumerated all primitives — Agent, Runner, Tool, Handoff, Guardrail (Input/Output), Trace/Span, Session, Computer, WebSearch, FileSearch, FunctionTool, MCP tools, Shell tools, Code Interpreter, Image Generation.
 - Extracted core primitives for native reimplementation.
 
@@ -705,7 +705,7 @@ Roadmap `hypo-map-1.json` phase 08 → `completed`.
 **Completed 2026-09-10.** The Google ADK (v2.8.0) fully absorbed into native mem20 at `/opt/mem20/mem20googlez`.
 
 ### 11.1 Absorption summary
-- Installed Google ADK into `/root/.venv` (dependencies: google-genai, google-auth, opentelemetry, aiosqlite, authlib, etc.).
+- Installed Google ADK into `.venv` (dependencies: google-genai, google-auth, opentelemetry, aiosqlite, authlib, etc.).
 - Full feature hunt: enumerated all primitives across 24 modules — agents (BaseAgent, LlmAgent, LoopAgent, ParallelAgent, SequentialAgent, etc.), tools (20+ tool types: FunctionTool, GoogleSearchTool, CodeExecutorTool, BashTool, MCP tools, API Hub, BigQuery, etc.), runners (Runner, InMemoryRunner, RunConfig), sessions (Session, BaseSessionService, InMemory/Database/VertexAI session services), memory (MemoryEntry, BaseMemoryService, InMemory/VertexAI memory services), events (Event, EventActions, Content, Part), flows (LlmFlows).
 - Extracted core primitives for native reimplementation.
 
@@ -740,7 +740,7 @@ Roadmap `hypo-map-1.json` phase 09 → `completed`.
 **Completed 2026-09-10.** The CoreAI infrastructure (model serving, inference optimization) fully absorbed into native mem20 at `/opt/mem20/mem20corez`.
 
 ### 12.1 Absorption summary
-- Installed CoreAI dependencies into `/root/.venv` (torch, numpy, pydantic, httpx, aiohttp, PyYAML).
+- Installed CoreAI dependencies into `.venv` (torch, numpy, pydantic, httpx, aiohttp, PyYAML).
 - Full feature hunt: enumerated all primitives — ModelServer, Batcher, Quantizer, Distiller, Evaluator.
 - Extracted core primitives for native reimplementation.
 

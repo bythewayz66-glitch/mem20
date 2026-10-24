@@ -51,7 +51,7 @@ Key folders:
 ## 2. First launch
 
 ```bash
-cd /home/jayson/Desktop/jayson-openwebui
+cd /opt/mem20/Desktop/jayson-openwebui
 docker compose -f docker-compose.full.yml up -d
 ```
 

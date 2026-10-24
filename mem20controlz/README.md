@@ -21,7 +21,7 @@ curl -s http://127.0.0.1:8890/api/health
 To run it in the foreground instead:
 
 ```sh
-/root/.venv/bin/python -m mem20controlz --host 127.0.0.1 --port 8890
+python3 -m mem20controlz --host 127.0.0.1 --port 8890
 ```
 
 `python -m mem20controlz --describe` prints the Websites manager manifest.
@@ -193,8 +193,8 @@ npm run build     # -> ../static
 ## Tests
 
 ```sh
-/root/.venv/bin/python -m pytest tests -q     # 165 tests
-/root/.venv/bin/ruff check mem20controlz tests
+python3 -m pytest tests -q     # 182 tests
+ruff check mem20controlz tests
 ```
 
 The suite covers the honest-status rules, the bounded log slice, Cloudflare

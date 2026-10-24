@@ -7,7 +7,7 @@ PATH, and the mem20 native subsystems under `/opt/mem20` — and produces one
 machine-readable manifest: `inventory.json`.
 
 It is a **registry, not a guess**: MCP entries come from actually instantiating
-`Mem20MCPServer` (257 real tools), CLI entries are binned binaries that are
+`Mem20MCPServer` (268 real tools), CLI entries are binned binaries that are
 classified (`elf | script | symlink | broken-symlink`), and subsystem entries
 record declared vs. actually-installed state per pyproject, with real
 `importlib` import checks and on-disk PATH verification.
@@ -16,7 +16,7 @@ record declared vs. actually-installed state per pyproject, with real
 
 ```
 cd /opt/mem20/toolchest
-/root/.venv/bin/pip install -e .
+python3 -m pip install -e .
 ```
 
 ## Usage
@@ -79,7 +79,7 @@ MCP entries additionally record the schema-prop count from `input_schema` in
 ## Tests
 
 ```
-/root/.venv/bin/python -m pytest /opt/mem20/toolchest -v
+python3 -m pytest /opt/mem20/toolchest -v
 ```
 
 Tests perform **real** runtime discovery (must run on the mem20 box) and

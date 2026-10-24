@@ -11,9 +11,9 @@ from pathlib import Path
 
 # Paths
 PROJECT_NAME = "unreliable_prophecy"
-UNITY_PROJECT = f"/home/jayson/Desktop/jayson-openwebui/projects/{PROJECT_NAME}/engine_project"
-ASSETS_IN = f"/home/jayson/Desktop/jayson-openwebui/projects/{PROJECT_NAME}_assets"
-GLB_PATH = f"/home/jayson/Desktop/jayson-openwebui/projects/{PROJECT_NAME}/_incoming"
+UNITY_PROJECT = os.environ.get("MEM20_PROJECTS_DIR","projects") + f"/{PROJECT_NAME}/engine_project"
+ASSETS_IN = os.environ.get("MEM20_PROJECTS_DIR","projects") + f"/{PROJECT_NAME}_assets"
+GLB_PATH = os.environ.get("MEM20_PROJECTS_DIR","projects") + f"/{PROJECT_NAME}/_incoming"
 
 def create_unity_project():
     """Create Unity project folder structure."""

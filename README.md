@@ -158,7 +158,7 @@ Find code with the sitemap instead of grepping:
 | `memory_engine/` | The store: append-only ledger, vector + BM25 + graph indexes, contamination firewall |
 | `mem20api/` | Stable Python API over the engine — bind a store, get honest diagnostics |
 | `mem20benchmarkz/` | The benchmark suite in this README |
-| `mcp/` | MCP server: **257 tools across 26 domains** |
+| `mcp/` | MCP server: **268 tools across 26 domains** |
 | `cog/` | Cognitive engine (reasoning, planning, reflection) |
 | `braid/` | **Append-only cryptographic ledger in Rust** — see below |
 | `mem20dreamz/` | The dream engine |
@@ -168,7 +168,7 @@ Find code with the sitemap instead of grepping:
 | `mem20owebz/` | Chat front-end + LiteLLM model gateway |
 | `mem20ircz/`, `mem20botz/` | The IRC channel where agents talk and take jobs |
 | `mem20controlz/` | Unified control plane with per-subsystem panels |
-| `toolchest/` | Registry of 879 capabilities (257 MCP tools, 318 CLIs, 303 subsystems) with runtime status |
+| `toolchest/` | Registry of 889 capabilities (268 MCP tools, 318 CLIs, 303 subsystems) with runtime status |
 
 ### Braid: the ledger everything else could be built on
 
@@ -181,7 +181,7 @@ Find code with the sitemap instead of grepping:
 
 ### The MCP surface
 
-257 tools in 26 domains. The largest:
+268 tools in 26 domains. The largest:
 
 | Prefix | Tools | Domain |
 |---|---:|---|
@@ -224,7 +224,7 @@ Plus `blender_*` and `unity_*` as **optional** integrations that require the ext
 ```
                         ┌────────────────────────────────────────────┐
    MCP client  --stdio▶│  mcp/mcp_server.py  (Mem20MCPServer)       │
-   (Hermes, Claude,    │  JSON-RPC 2.0 · 257 tools · 26 domains     │
+   (Hermes, Claude,    │  JSON-RPC 2.0 · 268 tools · 26 domains     │
     any MCP host)      └───────────────────────┬────────────────────┘
                                            │ calls
                  ┌─────────────────────────┼─────────────────────────┐
@@ -239,7 +239,7 @@ Plus `blender_*` and `unity_*` as **optional** integrations that require the ext
 ### Transport / protocol
 
 - **MCP server** speaking JSON-RPC 2.0 over stdio. `mcp/` is a script directory, not an importable package — it has no `__init__.py`, so importing it as `mcp.*` would shadow the upstream `mcp` SDK. That is why `mcp_server.py` does `from server import main` (script-dir relative) and why the installed console script `mem20-mcp` goes through `launcher.py` instead.
-- `Mem20MCPServer` (in `server.py`) aggregates per-domain mixin classes and dispatches in `_execute_tool()`. It exposes **257 tools across 26 domains** (verified by instantiating the server and counting `server.tools`).
+- `Mem20MCPServer` (in `server.py`) aggregates per-domain mixin classes and dispatches in `_execute_tool()`. It exposes **268 tools across 26 domains** (verified by instantiating the server and counting `server.tools`).
 - Tool schemas + handlers live in per-domain modules under `mcp/` and `mcp/tools/`: `memory_tools.py`, `enhanced_memory_tools.py`, `cognitive_tools.py`, `thought_process.py`, `roadmap_tools.py`, `tools/world_tools.py`, `tools/braid_tools.py`, `tools/blender_tools.py` (OPTIONAL Blender), `tools/unity_tools.py` (OPTIONAL Unity), and `tools/integration_tools.py` (filesystem + blank template for new optional integrations).
 - `mcp_server.py` is a thin entry-point shim preserving the systemd unit path.
 
@@ -279,7 +279,7 @@ The core substrate is a fraction of the tree. Three nested projects carry their 
 
 ## Tool domains (26)
 
-Counts below are the live surface, obtained by instantiating `Mem20MCPServer` and counting its registered tools. 257 total across 26 domains; the 29 rows below are tool *prefixes*, and several prefixes share one domain.
+Counts below are the live surface, obtained by instantiating `Mem20MCPServer` and counting its registered tools. 268 total across 26 domains; the 29 rows below are tool *prefixes*, and several prefixes share one domain.
 
 | Prefix | Tools | Domain | What it does |
 |--------|------:|--------|-------------|

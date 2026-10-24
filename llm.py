@@ -35,6 +35,7 @@ key never blocks the chain — it is simply skipped.
 
 import base64
 import os
+from pathlib import Path
 import re
 
 try:
@@ -95,8 +96,7 @@ DEFAULT_VISION_MODEL = "meta/llama-3.2-11b-vision-instruct"
 _ENV_CANDIDATES = [
     "/opt/mem20/secrets/.env",
     os.environ.get("MEM20_ENV_FILE"),
-    "/home/jayson/Desktop/jayson-openwebui/.env",
-    "/home/jayson/mem20/.env",
+    str(Path(__file__).resolve().parent / ".env"),
     "/root/.env",
 ]
 

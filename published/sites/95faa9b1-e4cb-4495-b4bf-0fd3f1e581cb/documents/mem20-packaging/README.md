@@ -8,7 +8,7 @@
 
 The packaging is fixed and verified: a clean build now produces a wheel that
 carries the real server tree, installs with its declared dependencies, and
-starts serving 257 tools over stdio.
+starts serving 268 tools over stdio.
 
 The Sidney publish is **blocked on one external thing**: there is no working
 SSH credential for the host. Nothing was deployed and nothing was published, so
@@ -42,7 +42,7 @@ wheels may not exist. `mcp` is pinned `<2.2` because the server uses
   `.pyc`/`__pycache__` entries (the old bundle carried cpython-314 bytecode).
 - Fresh venv, wheel + declared deps only, `PYTHONPATH` cleared, cwd outside the
   repo: `initialize` → `serverInfo.name = mem20-mcp`,
-  `protocolVersion = 2025-06-18`; `tools/list` → **257 tools**.
+  `protocolVersion = 2025-06-18`; `tools/list` → **268 tools**.
 - `build.sh` re-run end-to-end on a pristine copy: same result.
 
 Reproduce: `bash build.sh /path/to/bythewayz66-glitch-mem20`.
@@ -97,7 +97,7 @@ and the install is additive into `/opt/mem20/venv`.
 
 ## House numbers
 
-Unchanged: **257 tools across 26 domains**; **TAM $1.28B / SAM $282M /
+Unchanged: **268 tools across 26 domains**; **TAM $1.28B / SAM $282M /
 SOM $1.68M**; **blended ACV $14,000**.
 
 ## Files

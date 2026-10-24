@@ -67,7 +67,7 @@ def _cli_probe(binary: str, timeout: float) -> dict[str, Any]:
     import re
     import subprocess
 
-    path = f"/root/.venv/bin/{binary}"
+    path = f"/usr/local/bin/{binary}"
 
     def _verbs() -> list[str]:
         try:

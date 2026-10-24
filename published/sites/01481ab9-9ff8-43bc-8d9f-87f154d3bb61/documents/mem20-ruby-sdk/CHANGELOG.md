@@ -15,7 +15,7 @@ All notable changes to the mem20 Ruby SDK are documented here. The format follow
   pre-formatted String) and `#memory_recall`, plus `Model::Client.text` for pulling the
   plain-text payload out of a result envelope.
 - Dynamic tool bindings via `#method_missing` / `#respond_to_missing?`, so any of the
-  257 registered tools can be called as a method with keyword arguments.
+  268 registered tools can be called as a method with keyword arguments.
 - `#tool_names` (cached), `#health`, `#ready` alongside the existing `#healthy?` and
   `#metrics`.
 - `Config#protocol_version`, and validation for empty `server_command`, non-positive

@@ -126,8 +126,8 @@ Mem20.configure { |c| c.cwd = "/opt/mem20/mem20" }
 client = Mem20.client
 
 puts client.transport.initialize_session.protocol_version  # "2025-06-18"
-puts client.tool_names.size                                 # 257
-puts client.tools.dig("tools").size                        # 257
+puts client.tool_names.size                                 # 268
+puts client.tools.dig("tools").size                        # 268
 puts client.healthy?                                       # true when :8080/health answers 200
 
 client.close

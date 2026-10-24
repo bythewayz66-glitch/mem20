@@ -32,14 +32,14 @@ def test_installed_binaries_detects_fs_ops():
 
 
 def test_probe_help_on_known_good_binary():
-    result = clicheck.probe_help("fs-ops", "/root/.venv/bin/fs-ops", timeout=30)
+    result = clicheck.probe_help("fs-ops", "/usr/local/bin/fs-ops", timeout=30)
     assert result["help_ok"] is True
     assert result["has_json"] is True
     assert "dns-audit" in result["verbs"]
 
 
 def test_probe_help_respects_timeout():
-    result = clicheck.probe_help("mem20-metrics", "/root/.venv/bin/mem20-metrics", timeout=1)
+    result = clicheck.probe_help("mem20-metrics", "/usr/local/bin/mem20-metrics", timeout=1)
     assert result["timed_out"] is True
     assert result["help_ok"] is False
 

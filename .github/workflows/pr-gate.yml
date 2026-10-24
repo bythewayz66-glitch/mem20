@@ -1,0 +1,169 @@
+name: PR Gate
+
+# Two-tier merge gate for bythewayz66-glitch/mem20.
+#
+# Tier A (job: hygiene) is required from day one and is DIFF-SCOPED, so the
+#   legacy debt already on main (2,128 `/root/.venv`, 181 `/home/jayson`,
+#   14 tracked SQLite files) cannot fail every PR while no NEW instance can land.
+# Tier B (job: suite) publishes the collected/passed/failed numbers as evidence
+#   from day one and becomes BLOCKING when repository variable
+#   MEM20_REQUIRE_GREEN_SUITE is set to "1" — i.e. at the moment WS-2 item 1
+#   (mcp/server.py:144 exec() bootstrap) has landed and pytest can collect.
+#   Until then a hard gate would block the very PR that fixes it.
+#
+# Policy and the flip procedure: docs/git/README.md
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+
+concurrency:
+  group: pr-gate-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+env:
+  REQUIRE_GREEN_SUITE: ${{ vars.MEM20_REQUIRE_GREEN_SUITE || '0' }}
+
+jobs:
+  hygiene:
+    name: hygiene
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          submodules: false
+
+      - name: Compute diff against the base
+        run: |
+          set -euo pipefail
+          if [ "${{ github.event_name }}" = "pull_request" ]; then
+            git fetch --no-tags origin "${{ github.base_ref }}" || true
+            RANGE="origin/${{ github.base_ref }}...HEAD"
+          else
+            BEFORE="${{ github.event.before }}"
+            if [ -z "$BEFORE" ] || [ "$BEFORE" = "0000000000000000000000000000000000000000" ]; then
+              RANGE="HEAD~1...HEAD"
+            else
+              RANGE="${BEFORE}...HEAD"
+            fi
+          fi
+          echo "RANGE=$RANGE"
+          git diff --name-only --diff-filter=ACMR "$RANGE" > changed.txt || true
+          git diff --unified=0 --diff-filter=ACMR "$RANGE" > added.diff || true
+          echo "changed: $(wc -l < changed.txt) file(s)"
+          sed -n '1,80p' changed.txt
+
+      - name: Tier A — state, bytecode, gitlinks, host paths, secrets
+        run: |
+          set -euo pipefail
+          fail=0
+
+          hits=$(grep -E '(^|/)__pycache__/|\.pyc$' changed.txt || true)
+          if [ -n "$hits" ]; then
+            echo "::error::Tracked bytecode / __pycache__ added in this PR — untrack it (issue #22)."
+            printf '%s\n' "$hits"
+            fail=1
+          fi
+
+          hits=$(grep -E '\.(db|sqlite3)(-wal|-shm)?$' changed.txt || true)
+          if [ -n "$hits" ]; then
+            echo "::error::Generated database state added — commit schema.sql / a seed fixture instead (issue #83)."
+            printf '%s\n' "$hits"
+            fail=1
+          fi
+
+          if git ls-files --stage | grep -qE '^160000 '; then
+            echo "::error::Dangling gitlink (mode 160000) in the index — breaks recursive checkout."
+            fail=1
+          fi
+
+          hits=$(grep -E '^\+[^+]' added.diff | grep -E '/(home|Users)/[A-Za-z0-9._-]+/|/root/\.venv' || true)
+          if [ -n "$hits" ]; then
+            echo "::error::An ADDED line hard-codes an absolute host path (issues #79 / #80). Use a repo-relative default plus an env override."
+            printf '%s\n' "$hits"
+            fail=1
+          fi
+
+          n=$(grep -E '^\+[^+]' added.diff | grep -cE 'ghp_[A-Za-z0-9]{20,}|github_pat_|sk-[A-Za-z0-9]{20,}|AKIA[0-9A-Z]{16}|BEGIN (RSA|OPENSSH|EC) PRIVATE KEY' || true)
+          if [ "${n:-0}" -gt 0 ]; then
+            echo "::error::$n secret-shaped line(s) added. Rotate the credential and remove it; the value is not printed here on purpose."
+            fail=1
+          fi
+
+          if [ "$fail" -ne 0 ]; then
+            exit 1
+          fi
+          echo "hygiene gate passed"
+
+  suite:
+    name: suite
+    runs-on: ubuntu-latest
+    continue-on-error: ${{ vars.MEM20_REQUIRE_GREEN_SUITE != '1' }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install test dependencies
+        run: |
+          python3 -m pip install --upgrade pip
+          python3 -m pip install pytest "mcp>=1.0" cryptography httpx aiohttp PyYAML "pydantic>=2" numpy
+
+      - name: Assert the suite collects (WS-2 item 1)
+        run: |
+          set +e
+          python3 -m pytest --collect-only -q > collect.log 2>&1
+          rc=$?
+          set -e
+          tail -30 collect.log || true
+
+          collected=$(sed -n 's/.*collected \([0-9][0-9]*\) item.*/\1/p' collect.log | tail -1)
+          collected=${collected:-0}
+          baseline=$(tr -dc '0-9' < docs/git/SUITE_BASELINE 2>/dev/null || true)
+          baseline=${baseline:-0}
+          echo "collected=$collected baseline=$baseline exit=$rc"
+
+          {
+            echo "### Suite collection"
+            echo ""
+            echo '```'
+            echo "collected=$collected  baseline=$baseline  exit=$rc"
+            echo '```'
+          } >> "$GITHUB_STEP_SUMMARY"
+
+          fail=0
+          if [ "$rc" -ne 0 ] || [ "$collected" -eq 0 ]; then
+            echo "::warning::Collection is not clean — WS-2 item 1 (mcp/server.py:144 exec() bootstrap) has not landed. See docs/git/README.md § Hard constraint."
+            fail=1
+          elif [ "$collected" -lt "$baseline" ]; then
+            echo "::error::Collected $collected < baseline $baseline — a package dropped out of collection."
+            fail=1
+          fi
+
+          if [ "$fail" -ne 0 ] && [ "$REQUIRE_GREEN_SUITE" = "1" ]; then
+            exit 1
+          fi
+          echo "advisory only (MEM20_REQUIRE_GREEN_SUITE=$REQUIRE_GREEN_SUITE until WS-2 item 1 lands)"
+
+      - name: Unit suite (armed once WS-2 item 1 lands)
+        if: ${{ vars.MEM20_REQUIRE_GREEN_SUITE == '1' }}
+        run: |
+          set -euo pipefail
+          python3 -m pytest -m unit -q | tee unit.log
+          sed -n 's/.*\([0-9][0-9]*\) passed.*/passed=\1/p' unit.log | tail -1
+
+      - name: Upload collection log
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: collection-log
+          path: collect.log
+          if-no-files-found: ignore

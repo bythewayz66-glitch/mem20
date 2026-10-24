@@ -1,7 +1,7 @@
 # mem20owebz — Absorption Plan (phase 04, hypo-map-1)
 
 **Status:** IN PROGRESS (green-lit by Jayson 2026-09-10 — "start #04 on the map, remember to transfer all features not found to mem20")
-**Source:** `/home/jayson/Desktop/jayson-openwebui` (to be REMOVED from disk once verified — hard requirement, Jayson 2026-09-07)
+**Source:** `/opt/mem20/Desktop/jayson-openwebui` (to be REMOVED from disk once verified — hard requirement, Jayson 2026-09-07)
 **End-state rule:** ONLY `/opt/mem20` remains; every absorbed capability lives inside `/opt/mem20`. Keys read ONLY from `/opt/mem20/secrets/.env`.
 
 ## 1. Live stack snapshot (2026-09-10, before re-home)
@@ -38,7 +38,7 @@ Per Jason's instruction, EVERY feature below gets a home inside mem20 before the
 - `projects/unreliable_prophecy`: Unity game project (861M incl. Library/ — re-home SOURCE ONLY, exclude regenerable Library/).
 
 ### 2.4 Secret sprawl (cross-cutting, phase 06 — done EARLY per map)
-Sources: `/root/.env` (46 keys), `/home/jayson/Desktop/jayson-openwebui/.env` (35 keys), mem20 `llm.py` `_ENV_CANDIDATES`, hardcoded in `docker-compose.full.yml` (WEBUI_SECRET_KEY, bridge master_key, Postgres pw). → all consolidated into `/opt/mem20/secrets/.env`; every piece reads from there. CHECKPOINT.md warns most jayson-.env values are PLACEHOLDERS — `/root/.env` is authoritative on conflict.
+Sources: `/root/.env` (46 keys), `/opt/mem20/Desktop/jayson-openwebui/.env` (35 keys), mem20 `llm.py` `_ENV_CANDIDATES`, hardcoded in `docker-compose.full.yml` (WEBUI_SECRET_KEY, bridge master_key, Postgres pw). → all consolidated into `/opt/mem20/secrets/.env`; every piece reads from there. CHECKPOINT.md warns most jayson-.env values are PLACEHOLDERS — `/root/.env` is authoritative on conflict.
 
 ## 3. Execution steps (each verified before the next)
 
@@ -48,7 +48,7 @@ Sources: `/root/.env` (46 keys), `/home/jayson/Desktop/jayson-openwebui/.env` (3
 4. Rewrite mem20-hosted `docker-compose.yml` (canonical = old `full.yml`): reuse existing named volumes (`jayson-data`, `bridge-usage`, `bridge-db`, `tts-cache`) and container names so it is a DROP-IN swap; `env_file` from secrets; `WEBUI_NAME=mem20`.
 5. Swap services: stop+disable `jayson.service`; `docker compose down` old (no volume removal); create `mem20owebz.service` (oneshot, RemainAfterExit) pointing at `/opt/mem20/mem20owebz`; `up -d`; healthcheck.
 6. Verify end-to-end: webui :3000 serves mem20-branded UI; bridge :4000 serves ~42 models with a real `POST /v1/chat/completions` through it; TTS :8880 up; ollama untouched. THEN cleanup.
-7. Cleanup: kill stray native :8080 open_webui; `rm -rf /home/jayson/Desktop/jayson-openwebui`; no lingering process/py/systemd refs. Update map phase 04 → completed; record in mem20agentz/docs/PLAN.md; save to mem20.
+7. Cleanup: kill stray native :8080 open_webui; `rm -rf /opt/mem20/Desktop/jayson-openwebui`; no lingering process/py/systemd refs. Update map phase 04 → completed; record in mem20agentz/docs/PLAN.md; save to mem20.
 
 ## 4. Proof of "all features transferred"
 Copy is byte-identical where possible; post-copy `diff` against source for text dirs before deletion is the verification gate (documented in PLAN.md §8).

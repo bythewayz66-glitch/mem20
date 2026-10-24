@@ -117,7 +117,7 @@ sensitive, run `mem20secretz` against the extracted tree.
 ## Tests
 
 ```
-/root/.venv/bin/python -m pytest tests -q
+python3 -m pytest tests -q
 ```
 
 22 tests, all bounded: fake process tables, a fake clock, and a synthetic sqlite

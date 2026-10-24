@@ -35,7 +35,7 @@ that's the whole ballgame — you don't need "probably relevant", you need
 What mem20 is:
 
 - An MCP server (JSON-RPC 2.0 over stdio), Python, MIT licensed.
-- 257 tools across 26 domains.
+- 268 tools across 26 domains.
 - A HARD partition between grounded memory (came from a real source) and
   simulated memory (the agent generated it). These are not the same store with
   a flag — they are separate classes, enforced at the storage layer: the vector

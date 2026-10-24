@@ -20,7 +20,7 @@ block matches it exactly. No other content changed.
 - 7 canonical `bythewayz66-glitch/mem20` references; **0** stale `JaysonAIOnline` references.
 - `git clone .../mem20.git` ×1, `python3 -m venv .venv` ×1, `mcp/mcp_server.py` ×1.
 - Old `pip install -e .` = 0; old `python -m mem20 --stdio` = 0.
-- House numbers intact: `257 tools across 26 domains` ×3, `v2.1.0rc2` ×6.
+- House numbers intact: `268 tools across 26 domains` ×3, `v2.1.0rc2` ×6.
 - CDN reachability: HTTP 200, 40,821 B.
 
 ## Publish to Sidney via gabe (BLOCKED on credentials)

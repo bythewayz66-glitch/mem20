@@ -10,14 +10,14 @@
 
 | # | Location | v2 (stale) | v3 (corrected) |
 |---|---|---|---|
-| 1 | Hero lede | `257 tools across 26 domains.` | `257 tools across 26 domains.` *(unchanged — already correct)* |
+| 1 | Hero lede | `268 tools across 26 domains.` | `268 tools across 26 domains.` *(unchanged — already correct)* |
 | 2 | Hero secondary CTA | `→ https://github.com/JaysonAIOnline/mem20` | `→ https://github.com/bythewayz66-glitch/mem20` |
 | 3 | Install code block | `git clone https://github.com/JaysonAIOnline/mem20.git` | `git clone https://github.com/bythewayz66-glitch/mem20.git` |
 | 4 | Install code block | `pip install "mcp<2"` + `pip install -e .` | `.venv/bin/pip install -r requirements.txt` |
 | 5 | Install code block | `python -m mcp_cognitive_substrate.cli` | `MEM20_STORE_PATH=~/.mem20/store .venv/bin/python mcp/mcp_server.py` |
 | 6 | Install section note | "Repo-migration note + link to the verified live source `mcp-cognitive-substrate` v1.0.1" | Removed. Replace with: "mem20 is not yet on PyPI — install from source. Requires an OpenAI-compatible LLM endpoint key for the cognitive tools only." |
 | 7 | Footer repo link | `github.com/JaysonAIOnline/mem20` | `github.com/bythewayz66-glitch/mem20` |
-| 8 | Footer repo link (text) | `~258–260 tools · 26 domains` | `257 tools · 26 domains` |
+| 8 | Footer repo link (text) | `~258–260 tools · 26 domains` | `268 tools · 26 domains` |
 | 9 | Comparison table footer | any `JaysonAIOnline` href | `bythewayz66-glitch/mem20` |
 | 10 | Benchmark table caption | (none) | `Self-reported on our own internal harness; not independently audited.` |
 
@@ -25,7 +25,7 @@
 
 - **Version badge stays `v2.1.0rc2`** — matches `pyproject.toml` on `main`.
 - **Benchmark table, no-LoCoMo caveat, adversarial 0.000 amber row, comparison table, guardrail language** — unchanged. Do not alter these.
-- **House numbers** — 257 tools / 26 domains unchanged; TAM $1.28B / SAM $282M / SOM $1.68M and $14,000 blended ACV unchanged.
+- **House numbers** — 268 tools / 26 domains unchanged; TAM $1.28B / SAM $282M / SOM $1.68M and $14,000 blended ACV unchanged.
 
 ## Two corrections that are substantive, not cosmetic
 

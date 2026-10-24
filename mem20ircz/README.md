@@ -136,7 +136,7 @@ otherwise surfaces much later as a confusing write error.
 ## Tests
 
 ```sh
-cd /opt/mem20/mem20ircz && /root/.venv/bin/python -m pytest tests -q
+cd /opt/mem20/mem20ircz && python3 -m pytest tests -q
 ```
 
 74 tests, bounded throughout — no test can hang the suite. The filter is fed

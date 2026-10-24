@@ -36,8 +36,6 @@ REAL_BUILD_OUTPUTS = [
 ]
 
 UNITY_PATHS = [
-    '/home/jayson/Unity/Hub/Editor/6000.5.9f1/Editor/Unity',
-    '/home/jayson/Unity/Hub/Editor/6000.3.22f1/Editor/Unity',
     '/opt/Unity/Editor/Unity',
     '/usr/local/unity/Editor/Unity',
     '/Applications/Unity/Unity.app/Contents/MacOS/Unity',

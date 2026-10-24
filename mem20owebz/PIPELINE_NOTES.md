@@ -15,10 +15,10 @@
 ## Progress Log
 
 ### Step 0: File Discovery
-- [x] Found START_HERE.md at `/home/jayson/Desktop/jayson-openwebui/START_HERE.md`
+- [x] Found START_HERE.md at `/opt/mem20/Desktop/jayson-openwebui/START_HERE.md`
 - [x] Found DEPENDENCIES.md, CREDITS.md, FIRST_GAME_WALKTHROUGH.md
 - [x] Found prod.md at Desktop root
-- [x] Unity Editor installed at `/home/jayson/Unity/Hub/Editor/6000.5.9f1/Editor/Unity`
+- [x] Unity Editor installed at `/opt/mem20/Unity/Hub/Editor/6000.5.9f1/Editor/Unity`
 
 ### Step 1: DEPENDENCIES.md Review
 Need to check what dependencies are actually installed vs expected.

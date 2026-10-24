@@ -1,103 +1,314 @@
 #!/usr/bin/env python3
-"""MCP Server for mem20.
+"""MCP Server for mem20 — the authoritative implementation.
 
-Loads the full server implementation automatically:
+This file IS the server. It is not a loader: it does not read git history, it
+does not fetch objects, and it has no vendored fallback. Everything it needs is
+in the working tree, so a ``git clone --depth 1`` checkout starts correctly
+with zero git history and no network access.
 
-1. Prefer mem20liez/_server_impl.py if present (optional vendored copy)
-2. Else extract the last known-good server.py from git history and apply
-   the LieToolsMixin patch in memory
-3. Else clear error
+It implements the Model Context Protocol (MCP) to provide context, tools and
+prompts to AI clients, exposing:
 
-A normal `git clone` (or shallow clone that includes commit 6a2bdaa) works
-with zero manual recovery steps. Behavioural-signal tools register automatically.
+- Memory management tools (store, recall, search)
+- Cognitive thought processing tools
+- Roadmap management tools
+- File system access
+- mem20liez behavioural-signal tools (``lie_*``)
+
+The server runs as a JSON-RPC 2.0 service over stdio transport, with an
+optional health endpoint on :8080 (``/health`` ``/ready`` ``/metrics``).
+
+Entry points, all equivalent:
+
+    python mcp/server.py         # direct
+    python mcp/mcp_server.py     # shim; preserves the systemd ExecStart path
+    python launcher.py           # console script ``mem20-mcp``
+
+See ``docs/troubleshooting-mcp-server-startup.md`` for startup diagnostics and
+``mem20liez/INTEGRATION.md`` for how the ``lie_*`` tools are wired in.
 """
-from __future__ import annotations
 
+
+import json
 import os
 import sys
-import types
 import subprocess
 import tempfile
+import time
+import logging
+import asyncio
+import uuid
+from pathlib import Path
+from typing import Any, Dict, List, Optional
 
-_HERE = os.path.dirname(os.path.abspath(__file__))
-_ROOT = os.path.dirname(_HERE)
-_GOOD_COMMIT = "6a2bdaab2434611a2edee5d26b93bcc500edb87b"
-_IMPL_PATH = os.path.join(_ROOT, "mem20liez", "_server_impl.py")
+# Import MCP framework
+try:
+    from mcp.server import Server
+    from mcp.server.lowlevel.server import ServerRequestContext
+    import mcp_types as mt
+except ImportError:
+    print("Error: mcp package not installed. Please install with:")
+    print("pip install mcp")
+    sys.exit(1)
 
-for p in (_ROOT, _HERE):
-    if p not in sys.path:
-        sys.path.insert(0, p)
+# Make the unified engine importable. `import memory` must resolve to the store
+# engine (MEM20_STORE_PATH, default ~/.mem20/store), the engine every handler's API
+# contract is written against. The repo-root shim (memory_engine/memory.py) shares
+# this module; code and data are fully separated. The store path MUST be nearer the
+# front of sys.path than _REPO_ROOT so `import memory` finds ~/.mem20/store/memory.py
+# and not the legacy standalone engine at /opt/mem20/memory.py (which would be
+# cached in sys.modules and poison recall, pinned-block, and ledger tools alike).
+_REPO_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+if _REPO_ROOT not in sys.path:
+    sys.path.insert(0, _REPO_ROOT)
+_MEMORY_ENGINE_DIR = os.path.expanduser(os.environ.get("MEM20_STORE_PATH", os.path.join(os.path.expanduser("~"), ".mem20", "store")))
+if _MEMORY_ENGINE_DIR in sys.path:
+    sys.path.remove(_MEMORY_ENGINE_DIR)
+sys.path.insert(0, _MEMORY_ENGINE_DIR)
+try:
+    from memory import remember, recall, status as mem_status, rebuild_index, ledger_view
+    MEMORY_SYSTEM_AVAILABLE = True
+except ImportError:
+    MEMORY_SYSTEM_AVAILABLE = False
+try:
+    from memory import audit_contamination as _ENGINE_AUDIT
+except ImportError:
+    _ENGINE_AUDIT = None
 
 
-def _read_vendored() -> str | None:
-    if os.path.isfile(_IMPL_PATH) and os.path.getsize(_IMPL_PATH) > 10000:
-        with open(_IMPL_PATH, "r", encoding="utf-8") as f:
-            return f.read()
-    return None
+from memory_tools import MemoryToolsMixin
+from cognitive_tools import CognitiveToolsMixin
+from roadmap_tools import RoadmapToolsMixin
+from tools.world_tools import WorldToolsMixin
+from tools.procedural_tools import ProceduralToolsMixin
+from tools.blender_tools import BlenderToolsMixin
+from tools.unity_tools import UnityToolsMixin
+from tools.integration_tools import IntegrationToolsMixin
+from tools.a2a_tools import A2AToolsMixin
+from tools.thought_process import ThoughtProcessMixin
+from tools.cloudservice_tools import CloudServiceToolsMixin
+from tools.cloudstorage_tools import CloudStorageToolsMixin
+from tools.communication_tools import CommunicationToolsMixin
+from tools.database_tools import DatabaseToolsMixin
+from tools.design_tools import DesignToolsMixin
+from tools.dev_tools import DevToolsMixin
+from tools.enhanced_memory_tools import EnhancedMemoryToolsMixin
+from tools.filesystem_tools import FilesystemToolsMixin
+from tools.finance_tools import FinanceToolsMixin
+from tools.marketing_tools import MarketingToolsMixin
+from tools.productivity_tools import ProductivityToolsMixin
+from tools.search_tools import SearchToolsMixin
+from tools.versioncontrol_tools import VersionControlToolsMixin
+from tools.webscraping_tools import WebScrapingToolsMixin
+from tools.braid_tools import BraidToolsMixin
+from tools.irc_tools import IRCToolsMixin
+from tools.lie_tools import LieToolsMixin
+from health import start_health_server
 
-
-def _read_from_git() -> str | None:
-    """Extract known-good server.py from git object database."""
-    try:
-        raw = subprocess.check_output(
-            ["git", "show", f"{_GOOD_COMMIT}:mcp/server.py"],
-            cwd=_ROOT,
-            stderr=subprocess.DEVNULL,
+class Mem20MCPServer(MemoryToolsMixin, CognitiveToolsMixin, RoadmapToolsMixin,
+                     WorldToolsMixin, ProceduralToolsMixin, BlenderToolsMixin, UnityToolsMixin,
+                     IntegrationToolsMixin, A2AToolsMixin, ThoughtProcessMixin,
+                     CloudServiceToolsMixin, CloudStorageToolsMixin,
+                     CommunicationToolsMixin, DatabaseToolsMixin,
+                     DesignToolsMixin, DevToolsMixin,
+                     EnhancedMemoryToolsMixin, FilesystemToolsMixin,
+                     FinanceToolsMixin, MarketingToolsMixin,
+                     ProductivityToolsMixin, SearchToolsMixin,
+                     VersionControlToolsMixin, WebScrapingToolsMixin,
+                     BraidToolsMixin, IRCToolsMixin, LieToolsMixin):
+    def __init__(self):
+        self.tools = {}
+        self._start_time = time.time()
+        self._jobs = {}
+        self._job_timeout = float(os.environ.get("MEM20_JOB_TIMEOUT", "1800"))
+        self._request_count = 0
+        self._request_errors = 0
+        self._tool_calls = {}
+        self._tool_errors = {}
+        self._event_taxonomy = ["tool.call", "tool.success", "tool.error"]
+        self._audit_cache = None
+        self._audit_cache_ts = 0.0
+        self._setup_tools()
+        # Use the modern API with on_list_tools and on_call_tool
+        self.server = Server(
+            "mem20-mcp",
+            on_list_tools=self._handle_list_tools,
+            on_call_tool=self._handle_call_tool,
         )
-        text = raw.decode("utf-8")
-        if "Mem20MCPServer" in text and len(text) > 10000:
-            return text
-    except (subprocess.CalledProcessError, FileNotFoundError, OSError):
-        pass
-    # try from this file's repo root walking up
-    try:
-        raw = subprocess.check_output(
-            ["git", "-C", _ROOT, "show", f"{_GOOD_COMMIT}:mcp/server.py"],
-            stderr=subprocess.DEVNULL,
+    def _setup_tools(self):
+        """Define all available tools for mem20."""
+        self.register_memory_tools()
+        self.register_cognitive_tools()
+        self.register_roadmap_tools()
+        self.register_world_tools()
+        self.register_procedural_tools()
+        self.register_blender_tools()
+        self.register_unity_tools()
+        self.register_integration_tools()
+        self.register_a2a_tools()
+        self.register_thought_process_tools()
+        self.register_cloudservice_tools()
+        self.register_cloudstorage_tools()
+        self.register_communication_tools()
+        self.register_database_tools()
+        self.register_design_tools()
+        self.register_dev_tools()
+        self.register_enhanced_memory_tools()
+        self.register_filesystem_tools()
+        self.register_finance_tools()
+        self.register_marketing_tools()
+        self.register_productivity_tools()
+        self.register_search_tools()
+        self.register_versioncontrol_tools()
+        self.register_webscraping_tools()
+        self.register_braid_tools()
+        self.register_irc_tools()
+        self.register_lie_tools()
+        self.register_job_tools()
+    async def _handle_list_tools(self, context: ServerRequestContext, params: Optional[mt.PaginatedRequestParams]) -> mt.ListToolsResult:
+        """Handle tools/list request."""
+        return mt.ListToolsResult(
+            tools=list(self.tools.values()),
+            resultType="complete"
         )
-        text = raw.decode("utf-8")
-        if "Mem20MCPServer" in text and len(text) > 10000:
-            return text
-    except (subprocess.CalledProcessError, FileNotFoundError, OSError):
-        pass
-    return None
+    # ------------------------------------------------------------------
+    # Background job registry — long-running tools (LLM-heavy imagination
+    # and cognitive calls) execute as asyncio tasks so a single MCP client
+    # request never blocks past the client timeout. The tool returns a
+    # job token immediately; clients poll with mem20_job_status /
+    # mem20_job_wait (job_* tools) until complete.
+    # ------------------------------------------------------------------
+    LONG_RUNNING_TOOLS = {
+        "imagination_concept", "imagination_dream", "imagination_critique",
+        "imagination_simulate", "imagination_counterfactual", "imagination_recombine",
+        "imagination_model", "imagination_visualize",
+        "cog_process", "cog_chain", "cog_reason", "cog_plan", "cog_reflect",
+        "tot_reason", "tot_diagnose", "tot_modeling",
+        "beam_search", "least_to_most", "react_reason",
+        "theory_of_mind_simulate", "theory_of_mind_perspective",
+        "self_model_reflect", "memory_auto_consolidate",
+        "cognitive_substrate",
+    }
 
-
-def _apply_lie_patch(src: str) -> str:
-    """Idempotently wire LieToolsMixin into the restored source."""
-    if "LieToolsMixin" in src and "register_lie_tools" in src:
-        return src  # already patched (e.g. vendored copy)
-
-    old_import = "from tools.irc_tools import IRCToolsMixin\nfrom health import start_health_server"
-    new_import = (
-        "from tools.irc_tools import IRCToolsMixin\n"
-        "from tools.lie_tools import LieToolsMixin\n"
-        "from health import start_health_server"
-    )
-    if old_import in src:
-        src = src.replace(old_import, new_import)
-
-    old_bases = "BraidToolsMixin, IRCToolsMixin):"
-    new_bases = "BraidToolsMixin, IRCToolsMixin, LieToolsMixin):"
-    if old_bases in src:
-        src = src.replace(old_bases, new_bases)
-
-    old_reg = "        self.register_irc_tools()\n        self.register_job_tools()"
-    new_reg = (
-        "        self.register_irc_tools()\n"
-        "        self.register_lie_tools()\n"
-        "        self.register_job_tools()"
-    )
-    if old_reg in src:
-        src = src.replace(old_reg, new_reg)
-
-    marker = (
-        '        """Execute a tool and return result as string."""\n'
-        + (" " * 8)
-        + "\n"
-        + "        # IRC room tools"
-    )
-    dispatch = '''        """Execute a tool and return result as string."""
+    async def _handle_call_tool(self, context: ServerRequestContext, params: mt.CallToolRequestParams) -> mt.CallToolResult:
+        """Handle tools/call request."""
+        self._request_count += 1
+        tool_name = params.name
+        arguments = params.arguments or {}
+        self._tool_calls[tool_name] = self._tool_calls.get(tool_name, 0) + 1
+        
+        if tool_name not in self.tools:
+            self._request_errors += 1
+            self._tool_errors[tool_name] = self._tool_errors.get(tool_name, 0) + 1
+            return mt.CallToolResult(
+                content=[mt.TextContent(type="text", text=f"Error: Unknown tool '{tool_name}'")],
+                isError=True,
+                resultType="complete"
+            )
+        
+        try:
+            if tool_name in self.LONG_RUNNING_TOOLS:
+                job_id = await self._spawn_job(tool_name, arguments)
+                return mt.CallToolResult(
+                    content=[mt.TextContent(type="text", text=json.dumps({
+                        "job_id": job_id,
+                        "status": "running",
+                        "tool": tool_name,
+                        "poll": "job_status",
+                        "wait": "job_wait",
+                    }, indent=2))],
+                    isError=False,
+                    resultType="complete"
+                )
+            result = await self._execute_tool(tool_name, arguments)
+            return mt.CallToolResult(
+                content=[mt.TextContent(type="text", text=result)],
+                isError=False,
+                resultType="complete"
+            )
+        except Exception as e:
+            self._request_errors += 1
+            self._tool_errors[tool_name] = self._tool_errors.get(tool_name, 0) + 1
+            return mt.CallToolResult(
+                content=[mt.TextContent(type="text", text=f"Error executing tool: {str(e)}")],
+                isError=True,
+                resultType="complete"
+            )
+    def register_job_tools(self):
+        self.tools["job_status"] = mt.Tool(
+            name="job_status",
+            title="Job Status",
+            description="Check the status of a background mem20 job started by a long-running tool. Returns running/ok/error with the result when done.",
+            inputSchema={
+                "type": "object",
+                "properties": {
+                    "job_id": {"type": "string"},
+                },
+                "required": ["job_id"],
+            },
+        )
+        self.tools["job_wait"] = mt.Tool(
+            name="job_wait",
+            title="Job Wait",
+            description="Block until a background mem20 job completes (or timeout_ms elapses) and return its status/result. Use on job_id returned by a long-running tool.",
+            inputSchema={
+                "type": "object",
+                "properties": {
+                    "job_id": {"type": "string"},
+                    "timeout_ms": {"type": "integer", "default": 30000},
+                },
+                "required": ["job_id"],
+            },
+        )
+    async def _spawn_job(self, tool_name: str, arguments: Dict[str, Any]) -> str:
+        job_id = uuid.uuid4().hex[:12]
+        self._jobs[job_id] = {"status": "running", "tool": tool_name, "result": None, "error": None}
+        task = asyncio.create_task(self._run_job(job_id, tool_name, arguments))
+        self._jobs[job_id]["task"] = task
+        return job_id
+    async def _run_job(self, job_id: str, tool_name: str, arguments: Dict[str, Any]) -> None:
+        try:
+            result = await asyncio.wait_for(
+                self._execute_tool(tool_name, arguments),
+                timeout=self._job_timeout,
+            )
+            self._jobs[job_id]["result"] = result
+            self._jobs[job_id]["status"] = "ok"
+        except asyncio.TimeoutError:
+            self._jobs[job_id]["error"] = (
+                f"job timed out after {self._job_timeout}s in tool {tool_name}"
+            )
+            self._jobs[job_id]["status"] = "error"
+        except Exception as e:
+            self._jobs[job_id]["error"] = str(e)
+            self._jobs[job_id]["status"] = "error"
+    async def _job_status(self, arguments: Dict[str, Any]) -> str:
+        job_id = arguments.get("job_id", "")
+        entry = self._jobs.get(job_id)
+        if not entry:
+            return json.dumps({"job_id": job_id, "status": "not_found"})
+        return json.dumps({
+            "job_id": job_id,
+            "status": entry["status"],
+            "tool": entry["tool"],
+            "result": entry.get("result"),
+            "error": entry.get("error"),
+        }, indent=2)
+    async def _job_wait(self, arguments: Dict[str, Any]) -> str:
+        job_id = arguments.get("job_id", "")
+        timeout_ms = int(arguments.get("timeout_ms", 30000))
+        entry = self._jobs.get(job_id)
+        if not entry:
+            return json.dumps({"job_id": job_id, "status": "not_found"})
+        task = entry.get("task")
+        if task and not task.done():
+            try:
+                await asyncio.wait_for(task, timeout=max(1, timeout_ms) / 1000.0)
+            except asyncio.TimeoutError:
+                pass
+        return await self._job_status(arguments)
+    async def _execute_tool(self, tool_name: str, arguments: Dict[str, Any]) -> str:
+        """Execute a tool and return result as string."""
 
         # mem20liez behavioural-signal tools
         if tool_name == "lie_status":
@@ -121,58 +332,816 @@ def _apply_lie_patch(src: str) -> str:
         elif tool_name == "lie_list_sessions":
             return await self._lie_list_sessions(arguments)
 
-        # IRC room tools'''
-    if marker in src and "lie_start_session" not in src.split("_execute_tool")[1][:2500]:
-        src = src.replace(marker, dispatch)
+        # IRC room tools (persistent connection owned by mem20ircz)
+        if tool_name == "irc_status":
+            return await self._irc_status(arguments)
+        elif tool_name == "irc_join":
+            return await self._irc_join(arguments)
+        elif tool_name == "irc_read":
+            return await self._irc_read(arguments)
+        elif tool_name == "irc_say":
+            return await self._irc_say(arguments)
+        elif tool_name == "irc_who":
+            return await self._irc_who(arguments)
+        # Job registry tools
+        if tool_name == "job_status":
+            return await self._job_status(arguments)
+        elif tool_name == "job_wait":
+            return await self._job_wait(arguments)
+        # Memory tools
+        if tool_name == "memory_store":
+            return await self._memory_store(arguments)
+        elif tool_name == "memory_recall":
+            return await self._memory_recall(arguments)
+        elif tool_name == "memory_probe":
+            return await self._memory_probe(arguments)
+        elif tool_name == "memory_reason":
+            return await self._memory_reason(arguments)
+        elif tool_name == "memory_status":
+            return await self._memory_status()
+        # Enhanced retrieval tools
+        elif tool_name == "memory_recall_semantic":
+            return await self._memory_recall_semantic(arguments)
+        elif tool_name == "memory_recall_hybrid":
+            return await self._memory_recall_hybrid(arguments)
+        elif tool_name == "memory_recall_graph":
+            return await self._memory_recall_graph(arguments)
+        elif tool_name == "memory_index_health":
+            return await self._memory_index_health(arguments)
+        elif tool_name == "memory_entity_extract":
+            return await self._memory_entity_extract(arguments)
+        elif tool_name == "memory_auto_consolidate":
+            return await self._memory_auto_consolidate(arguments)
+        # Procedural Memory tools
+        elif tool_name == "world_model_status":
+            return await self._world_model_status(arguments)
+        elif tool_name == "procedural_add_skill":
+            return await self._procedural_add_skill(arguments)
+        elif tool_name == "procedural_get_skill":
+            return await self._procedural_get_skill(arguments)
+        elif tool_name == "procedural_find_skills":
+            return await self._procedural_find_skills(arguments)
+        elif tool_name == "procedural_execute_skill":
+            return await self._procedural_execute_skill(arguments)
+        elif tool_name == "procedural_learn":
+            return await self._procedural_learn(arguments)
+        elif tool_name == "procedural_list_skills":
+            return await self._procedural_list_skills(arguments)
+        # World Model tools
+        elif tool_name == "world_model_add_variable":
+            return await self._world_model_add_variable(arguments)
+        elif tool_name == "world_model_add_rule":
+            return await self._world_model_add_rule(arguments)
+        elif tool_name == "world_model_simulate":
+            return await self._world_model_simulate(arguments)
+        elif tool_name == "world_model_predict":
+            return await self._world_model_predict(arguments)
+        elif tool_name == "world_model_get_state":
+            return await self._world_model_get_state(arguments)
+        elif tool_name == "world_model_reset":
+            return await self._world_model_reset(arguments)
+        elif tool_name == "world_model_record_prediction":
+            return await self._world_model_record_prediction(arguments)
+        elif tool_name == "world_model_resolve_prediction":
+            return await self._world_model_resolve_prediction(arguments)
+        # Affective/Value tools
+        elif tool_name == "affective_set_value":
+            return await self._affective_set_value(arguments)
+        elif tool_name == "affective_set_emotion":
+            return await self._affective_set_emotion(arguments)
+        elif tool_name == "affective_add_goal":
+            return await self._affective_add_goal(arguments)
+        elif tool_name == "affective_update_preference":
+            return await self._affective_update_preference(arguments)
+        elif tool_name == "affective_evaluate":
+            return await self._affective_evaluate(arguments)
+        elif tool_name == "affective_get_state":
+            return await self._affective_get_state(arguments)
+        # Metacognitive/Epistemic tools
+        elif tool_name == "memory_assess_confidence":
+            return await self._memory_assess_confidence(arguments)
+        elif tool_name == "memory_set_epistemic_status":
+            return await self._memory_set_epistemic_status(arguments)
+        elif tool_name == "memory_detect_gaps":
+            return await self._memory_detect_gaps(arguments)
+        elif tool_name == "memory_self_audit":
+            return await self._memory_self_audit(arguments)
+        # Step 7.4 — Memory / Simulation Contamination Controls
+        elif tool_name == "memory_simulate_store":
+            return await self._memory_simulate_store(arguments)
+        elif tool_name == "memory_promote":
+            return await self._memory_promote(arguments)
+        elif tool_name == "memory_list_simulated":
+            return await self._memory_list_simulated(arguments)
+        elif tool_name == "memory_quarantine_simulated":
+            return await self._memory_quarantine_simulated(arguments)
+        elif tool_name == "memory_audit_contamination":
+            return await self._memory_audit_contamination(arguments)
+        elif tool_name == "memory_label_coverage":
+            return await self._memory_label_coverage(arguments)
+        elif tool_name == "memory_backfill_labels":
+            return await self._memory_backfill_labels(arguments)
+        elif tool_name == "memory_epistemic_veto":
+            return await self._memory_epistemic_veto(arguments)
+        # Pinned Blocks tools
+        elif tool_name == "memory_pin_block":
+            return await self._memory_pin_block(arguments)
+        elif tool_name == "memory_unpin_block":
+            return await self._memory_unpin_block(arguments)
+        elif tool_name == "memory_list_pinned_blocks":
+            return await self._memory_list_pinned_blocks(arguments)
+        elif tool_name == "memory_get_pinned_block":
+            return await self._memory_get_pinned_block(arguments)
+        # Multi-modal Ingestion tools
+        elif tool_name == "memory_ingest_pdf":
+            return await self._memory_ingest_pdf(arguments)
+        elif tool_name == "memory_ingest_image":
+            return await self._memory_ingest_image(arguments)
+        elif tool_name == "memory_ingest_audio":
+            return await self._memory_ingest_audio(arguments)
+        elif tool_name == "memory_ingest_code":
+            return await self._memory_ingest_code(arguments)
+        # Multi-agent Shared Memory tools
+        elif tool_name == "memory_namespace_create":
+            return await self._memory_namespace_create(arguments)
+        elif tool_name == "memory_namespace_list":
+            return await self._memory_namespace_list(arguments)
+        elif tool_name == "memory_shared_store":
+            return await self._memory_shared_store(arguments)
+        elif tool_name == "memory_shared_recall":
+            return await self._memory_shared_recall(arguments)
+        # PII/Secret Detection tools
+        elif tool_name == "memory_scan_pii":
+            return await self._memory_scan_pii(arguments)
+        # Self-Model/Identity tools
+        elif tool_name == "self_model_create":
+            return await self._self_model_create(arguments)
+        elif tool_name == "self_model_get":
+            return await self._self_model_get(arguments)
+        elif tool_name == "self_model_reflect":
+            return await self._self_model_reflect(arguments)
+        # Theory of Mind tools
+        elif tool_name == "theory_of_mind_simulate":
+            return await self._theory_of_mind_simulate(arguments)
+        elif tool_name == "theory_of_mind_perspective":
+            return await self._theory_of_mind_perspective(arguments)
+        # Corrigibility/Shutdown tools
+        elif tool_name == "corrigibility_shutdown":
+            return await self._corrigibility_shutdown(arguments)
+        elif tool_name == "corrigibility_capability_tier":
+            return await self._corrigibility_capability_tier(arguments)
+        
+        # Cognitive tools
+        elif tool_name == "cog_process":
+            return await self._cog_process(arguments)
+        elif tool_name == "cog_chain":
+            return await self._cog_chain(arguments)
+        elif tool_name == "cog_reason":
+            return await self._cog_reason(arguments)
+        elif tool_name == "cog_plan":
+            return await self._cog_plan(arguments)
+        elif tool_name == "cog_reflect":
+            return await self._cog_reflect(arguments)
+        elif tool_name == "cog_working_memory":
+            return await self._cog_working_memory(arguments)
+        
+        # Roadmap tools
+        elif tool_name == "roadmap_create":
+            return await self._roadmap_create(arguments)
+        elif tool_name == "roadmap_list":
+            return await self._roadmap_list()
+        elif tool_name == "roadmap_get":
+            return await self._roadmap_get(arguments)
+        elif tool_name == "roadmap_update_phase":
+            return await self._roadmap_update_phase(arguments)
+        
+        # File system tools
+        elif tool_name == "fs_read":
+            return await self._fs_read(arguments)
+        elif tool_name == "fs_write":
+            return await self._fs_write(arguments)
+        elif tool_name == "fs_list":
+            return await self._fs_list(arguments)
+        
+        # Holographic memory tools (deep memory queries)
+        elif tool_name == "memory_contradict":
+            return await self._memory_contradict(arguments)
+        elif tool_name == "memory_related":
+            return await self._memory_related(arguments)
+        elif tool_name == "memory_feedback":
+            return await self._memory_feedback(arguments)
+        
+        # Blender tools
+        elif tool_name == "blender_create_object":
+            return await self._blender_create_object(arguments)
+        elif tool_name == "blender_add_material":
+            return await self._blender_add_material(arguments)
+        elif tool_name == "blender_set_camera":
+            return await self._blender_set_camera(arguments)
+        elif tool_name == "blender_render":
+            return await self._blender_render(arguments)
+        elif tool_name == "blender_export_glb":
+            return await self._blender_export_glb(arguments)
+        elif tool_name == "blender_run_bpy":
+            return await self._blender_run_bpy(arguments)
+        elif tool_name == "blender_clear_scene":
+            return await self._blender_clear_scene(arguments)
+        
+        # Imagination tools
+        elif tool_name == "imagination_concept":
+            return await self._imagination_concept(arguments)
+        elif tool_name == "imagination_visualize":
+            return await self._imagination_visualize(arguments)
+        elif tool_name == "imagination_prototype":
+            return await self._imagination_prototype(arguments)
+        elif tool_name == "imagination_critique":
+            return await self._imagination_critique(arguments)
+        elif tool_name == "imagination_simulate":
+            return await self._imagination_simulate(arguments)
+        elif tool_name == "imagination_counterfactual":
+            return await self._imagination_counterfactual(arguments)
+        elif tool_name == "imagination_recombine":
+            return await self._imagination_recombine(arguments)
+        elif tool_name == "imagination_model":
+            return await self._imagination_model(arguments)
+        
+        # Unity tools
+        elif tool_name == "unity_create_script":
+            return await self._unity_create_script(arguments)
+        elif tool_name == "unity_build_project":
+            return await self._unity_build_project(arguments)
+        elif tool_name == "unity_run_test":
+            return await self._unity_run_test(arguments)
+        elif tool_name == "unity_generate_asmdef":
+            return await self._unity_generate_asmdef(arguments)
+        elif tool_name == "unity_validate_project":
+            return await self._unity_validate_project(arguments)
+        
+        # A2A tools
+        elif tool_name == "a2a_list":
+            return await self._a2a_list(arguments)
+        elif tool_name == "a2a_call":
+            return await self._a2a_call(arguments)
+        elif tool_name == "a2a_discover":
+            return await self._a2a_discover(arguments)
+        elif tool_name == "a2a_history":
+            return await self._a2a_history(arguments)
+        elif tool_name == "a2a_orchestrate":
+            return await self._a2a_orchestrate(arguments)
+        # Thought process tools (ToT only - CoT/PoT are native LLM behaviors)
+        elif tool_name == "tot_reason":
+            return await self._tot_reason(arguments)
+        elif tool_name == "tot_modeling":
+            return await self._tot_modeling(arguments)
+        elif tool_name == "tot_diagnose":
+            return await self._tot_diagnose(arguments)
+        elif tool_name == "reflexion":
+            return await self._reflexion(arguments)
+        elif tool_name == "least_to_most":
+            return await self._least_to_most(arguments)
+        elif tool_name == "react_reason":
+            return await self._react_reason(arguments)
+        elif tool_name == "beam_search":
+            return await self._beam_search(arguments)
+        
+        # ToT state query
+        elif tool_name == "get_cognitive_tree_state":
+            return await self._get_cognitive_tree_state(arguments)
+        
+        # Web scraping tools (registered by WebScrapingToolsMixin)
+        elif tool_name == "scrape_page":
+            return await self._scrape_page(arguments)
+        elif tool_name == "scrape_dynamic":
+            return await self._scrape_dynamic(arguments)
+        elif tool_name == "scrape_api":
+            return await self._scrape_api(arguments)
+        elif tool_name == "scrape_rss":
+            return await self._scrape_rss(arguments)
+        elif tool_name == "scrape_sitemap":
+            return await self._scrape_sitemap(arguments)
+        elif tool_name == "scrape_structured":
+            return await self._scrape_structured(arguments)
+        elif tool_name == "scrape_forms":
+            return await self._scrape_forms(arguments)
+        elif tool_name == "scrape_submit_form":
+            return await self._scrape_submit_form(arguments)
+        
+        # Dynamic fallback: any tool registered in self.tools whose handler follows
+        # the "_<tool_name>" convention gets dispatched here. This prevents the
+        # "registered but never dispatched" failure mode from recurring.
+        if tool_name in self.tools:
+            handler = getattr(self, f"_{tool_name}", None)
+            if callable(handler):
+                return await handler(arguments)
+            return f"Error: tool '{tool_name}' registered but has no _'{tool_name}' handler"
+        
+        return f"Unknown tool: {tool_name}"
+    def _persist_simulated(self, args: Dict, out, sim_type: str):
+        """Route any persisted simulation output into the SEPARATE simulated partition.
 
-    return src
+        Grounded memory is never touched here (Step 7.4 hard separation).
 
+        The full output is stored. Truncating here used to clip records at 1500
+        chars, which silently cut the tail off exactly those tools that ask the
+        model for more than 1500 tokens (simulate=1800, concept=1200+retrieved
+        memory), leaving a partial record that still looked like a stored fact.
 
-def _bootstrap():
-    """Load the restored server implementation, or raise ImportError.
-
-    Every failure path here MUST surface as ImportError, never SystemExit.
-    module-level SystemExit is not treated as an import failure by Python or
-    pytest: it aborts the interpreter (and, under pytest, escalates to
-    INTERNALERROR and kills collection for the whole session). Because this
-    module is imported by several test files, an ImportError is contained to
-    the importing module; SystemExit is not.
-    """
-    src = _read_vendored() or _read_from_git()
-    if not src:
-        raise ImportError(
-            "mem20 MCP server implementation not found.\n"
-            "Ensure this is a git checkout that contains commit "
-            f"{_GOOD_COMMIT} (a normal clone does).\n"
-            "Or place the full server at mem20liez/_server_impl.py."
+        Persistence failure raises. Swallowing it returned a clean success to
+        the caller while the imaginative output was lost with no error and no
+        log, so a caller could believe something was remembered that was not.
+        """
+        if not MEMORY_SYSTEM_AVAILABLE or not out:
+            return
+        from memory import remember_simulated
+        remember_simulated(
+            topic=args.get("topic", "simulation"),
+            content=str(out),
+            tags=["simulation", sim_type],
+            sim_type=sim_type,
+            scenario=str(args)[:300],
         )
-    src = _apply_lie_patch(src)
+    async def _run_blender_script(self, script: str, timeout: int = 180) -> str:
+        import tempfile
+        import subprocess
+        import os
+        import shutil
 
-    mod = types.ModuleType("mem20_server_impl")
-    mod.__file__ = os.path.join(_HERE, "<restored_server>")
-    # Ensure mcp package dir imports resolve the same as a normal server.py
-    try:
-        exec(compile(src, mod.__file__, "exec"), mod.__dict__)
-    except SystemExit as exc:
-        # The restored implementation calls sys.exit(1) on a missing optional
-        # dependency. Translate that into a normal import failure so callers
-        # (and pytest collection) see a diagnostic instead of a killed process.
-        raise ImportError(
-            "mem20 mcp bootstrap: restored server.py exited during exec "
-            f"(code={exc.code!r}). The implementation could not be imported - "
-            "usually a missing dependency; see requirements.txt."
-        ) from exc
-    return mod
+        exe = os.environ.get("MEM20_BLENDER_EXECUTABLE")
+        if not exe:
+            exe = shutil.which("blender") or "blender"
+        if exe == "blender" and shutil.which("blender") is None:
+            return ("Blender is an OPTIONAL integration and is not installed. Install Blender and ensure "
+                    "'blender' is on PATH, or set MEM20_BLENDER_EXECUTABLE to its path, to use Blender tools.")
+
+        with tempfile.NamedTemporaryFile(mode="w", suffix=".py", delete=False) as f:
+            f.write(script)
+            path = f.name
+
+        try:
+            result = subprocess.run(
+                [exe, "--background", "--python", path],
+                capture_output=True, text=True, timeout=timeout
+            )
+            if result.returncode == 0:
+                return f"Success:\n{result.stdout[-3000:]}"
+            else:
+                return f"Error (code {result.returncode}):\n{result.stderr[-2000:]}"
+        except subprocess.TimeoutExpired:
+            return f"Error: Blender timed out after {timeout}s"
+        except Exception as e:
+            return f"Error: {str(e)}"
+        finally:
+            try:
+                os.unlink(path)
+            except:
+                pass
+    def _generate_physics_script(self, concept: str) -> str:
+        """Generate a physics-based Unity script using template approach."""
+        template = """using UnityEngine;
+
+namespace {concept}.Physics
+{{
+    public class {concept}Physics : MonoBehaviour
+    {{
+        [Header("{concept} Physics")]
+        [SerializeField, Range(0.1f, 10f)] float forceMultiplier = 1f;
+        [SerializeField, Range(0f, 5f)] float drag = 0.5f;
+        [SerializeField] bool applyGravity = true;
+
+        Rigidbody rb;
+
+        void Awake() => rb = GetComponent<Rigidbody>();
+
+        void FixedUpdate()
+        {{
+            if (!applyGravity) rb.useGravity = false;
+            rb.drag = drag;
+            
+            // Core {concept} physics behavior
+            Vector3 force = Calculate{concept}Force() * forceMultiplier;
+            rb.AddForce(force, ForceMode.Acceleration);
+        }}
+
+        Vector3 Calculate{concept}Force()
+        {{
+            // Implement core {concept} physics
+            return Vector3.up * 9.81f * forceMultiplier; // default buoyant force (tune via Inspector)
+        }}
+
+        void OnDrawGizmosSelected()
+        {{
+            Gizmos.color = Color.cyan;
+            Gizmos.DrawWireSphere(transform.position, 2f);
+        }}
+    }}
+}}"""
+        return template.format(concept=concept.replace(' ', ''))
+    def _generate_puzzle_script(self, concept: str) -> str:
+        """Generate a puzzle-based Unity script using template approach."""
+        template = """using UnityEngine;
+using System.Collections.Generic;
+
+namespace {concept}.Puzzle
+{{
+    public class {concept}Puzzle : MonoBehaviour
+    {{
+        [Header("{concept} Puzzle")]
+        [SerializeField] List<PuzzlePiece> pieces = new();
+        [SerializeField] PuzzleState targetState;
+
+        enum PuzzleState {{ Locked, Solving, Solved }}
+        PuzzleState currentState = PuzzleState.Locked;
+
+        void Start() => InitializePuzzle();
+
+        void InitializePuzzle()
+        {{
+            // Setup {concept} puzzle
+            foreach (var piece in pieces)
+                piece.Initialize(this);
+        }}
+
+        public void OnPieceActivated(PuzzlePiece piece)
+        {{
+            if (currentState == PuzzleState.Solving)
+                CheckSolution();
+        }}
+
+        void CheckSolution()
+        {{
+            // Check if {concept} puzzle is solved
+            if (IsSolved())
+            {{
+                currentState = PuzzleState.Solved;
+                OnSolved();
+            }}
+        }}
+
+        bool IsSolved() => true; // Implement {concept} logic
+
+        void OnSolved()
+        {{
+            Debug.Log("{concept} puzzle solved!");
+        }}
+    }}
+
+    [System.Serializable]
+    public class PuzzlePiece
+    {{
+        public int id;
+        public bool isActive;
+        public void Initialize({concept}Puzzle puzzle) {{ }}
+    }}
+}}"""
+        return template.format(concept=concept.replace(' ', ''))
+    def _generate_simulation_script(self, concept: str) -> str:
+        """Generate a simulation-based Unity script using template approach."""
+        template = """using UnityEngine;
+using System.Collections.Generic;
+
+namespace {concept}.Simulation
+{{
+    public class {concept}Simulation : MonoBehaviour
+    {{
+        [Header("{concept} Simulation")]
+        [SerializeField, Range(1, 1000)] int agentCount = 50;
+        [SerializeField, Range(0.1f, 10f)] float tickRate = 1f;
+        [SerializeField] bool enableVisualization = true;
+
+        List<Agent> agents = new();
+        float tickTimer;
+
+        void Start()
+        {{
+            InitializeSimulation();
+        }}
+
+        void InitializeSimulation()
+        {{
+            for (int i = 0; i < agentCount; i++)
+            {{
+                var agent = new Agent();
+                agent.id = i;
+                agent.position = Random.insideUnitSphere * 10f;
+                agent.velocity = Vector3.zero;
+                agents.Add(agent);
+            }}
+        }}
+
+        void Update()
+        {{
+            tickTimer += Time.deltaTime;
+            if (tickTimer >= 1f / tickRate)
+            {{
+                tickTimer = 0f;
+                RunSimulationTick();
+            }}
+        }}
+
+        void RunSimulationTick()
+        {{
+            foreach (var agent in agents)
+            {{
+                // Apply {concept} simulation rules
+                agent.velocity += CalculateForce(agent) * Time.deltaTime;
+                agent.position += agent.velocity * Time.deltaTime;
+            }}
+
+            if (enableVisualization)
+                UpdateVisualization();
+        }}
+
+        Vector3 CalculateForce(Agent agent)
+        {{
+            // Implement {concept} simulation physics
+            return Vector3.up * 9.81f; // default upward force (replace with {concept}-specific dynamics)
+        }}
+
+        void UpdateVisualization()
+        {{
+            // Render hook: surface a frame tick so the simulation is observable
+            Debug.Log("Visualization frame updated");
+        }}
+
+        void OnDrawGizmos()
+        {{
+            Gizmos.color = Color.green;
+            foreach (var a in agents)
+                Gizmos.DrawSphere(a.position, 0.1f);
+        }}
+    }}
+
+    [System.Serializable]
+    public class Agent {{ public int id; public Vector3 position; public Vector3 velocity; }}
+
+    [System.Serializable]
+    public class SimulationRules
+    {{
+        public float separationRadius = 2f;
+        public float alignmentWeight = 1f;
+        public float cohesionWeight = 1f;
+        public void Apply(Agent agent, List<Agent> all) {{ }}
+    }}
+}}"""
+        return template.format(concept=concept.replace(' ', ''))
+    def _generate_narrative_script(self, concept: str) -> str:
+        """Generate a narrative-based Unity script using template approach."""
+        template = """using UnityEngine;
+using System.Collections.Generic;
+
+namespace {concept}.Narrative
+{{
+    public class {concept}Narrative : MonoBehaviour
+    {{
+        [Header("{concept} Narrative")]
+        [SerializeField] StoryBeat[] beats;
+        [SerializeField] int currentBeat = 0;
+
+        [System.Serializable]
+        public class StoryBeat
+        {{
+            public string id;
+            public string text;
+            public Choice[] choices;
+            public string nextBeatId;
+        }}
+
+        [System.Serializable]
+        public class Choice
+        {{
+            public string text;
+            public string resultBeatId;
+            public Condition[] conditions;
+        }}
+
+        [System.Serializable]
+        public class Condition
+        {{
+            public string flag;
+            public bool required;
+        }}
+
+        void Start() => PlayBeat(beats[0].id);
+
+        public void PlayBeat(string beatId)
+        {{
+            StoryBeat beat = System.Array.Find(beats, b => b.id == beatId);
+            if (beat == null) return;
+
+            currentBeat = System.Array.IndexOf(beats, beat);
+            Debug.Log($"<b>{{beat.id}}</b>: {{beat.text}}");
+
+            // Display choices for {concept}
+            foreach (var choice in beat.choices)
+                Debug.Log($"  > {{choice.text}}");
+        }}
+
+        public void MakeChoice(int choiceIndex)
+        {{
+            StoryBeat beat = beats[currentBeat];
+            if (choiceIndex >= beat.choices.Length) return;
+
+            var choice = beat.choices[choiceIndex];
+            if (CheckConditions(choice.conditions))
+                PlayBeat(choice.resultBeatId);
+        }}
+
+        bool CheckConditions(Condition[] conditions)
+        {{
+            // Check {concept} narrative conditions
+            return true;
+        }}
+    }}
+}}"""
+        return template.format(concept=concept.replace(' ', ''))
+    def _generate_ai_agent_script(self, concept: str) -> str:
+        """Generate an AI agent Unity script using template approach."""
+        template = """using UnityEngine;
+using System.Collections.Generic;
+
+namespace {concept}.AI
+{{
+    public class {concept}AIAgent : MonoBehaviour
+    {{
+        [Header("{concept} AI Agent")]
+        [SerializeField] BehaviorTree behaviorTree;
+        [SerializeField] Blackboard blackboard;
+        [SerializeField] Sensor[] sensors;
+        [SerializeField] Actuator[] actuators;
+
+        void Awake()
+        {{
+            blackboard = new Blackboard();
+            foreach (var s in sensors) s.Initialize(this);
+            foreach (var a in actuators) a.Initialize(this);
+        }}
+
+        void Update()
+        {{
+            // Perceive
+            foreach (var s in sensors) s.Sense(blackboard);
+
+            // Decide
+            if (behaviorTree != null)
+                behaviorTree.Tick(blackboard);
+
+            // Act
+            foreach (var a in actuators) a.Act(blackboard);
+        }}
+    }}
+
+    [System.Serializable]
+    public class Blackboard
+    {{
+        Dictionary<string, object> data = new();
+        public void Set(string key, object value) => data[key] = value;
+        public T Get<T>(string key) => data.TryGetValue(key, out var v) ? (T)v : default;
+    }}
+
+    [System.Serializable]
+    public abstract class Sensor
+    {{
+        public abstract void Initialize({concept}AIAgent agent);
+        public abstract void Sense(Blackboard blackboard);
+    }}
+
+    [System.Serializable]
+    public abstract class Actuator
+    {{
+        public abstract void Initialize({concept}AIAgent agent);
+        public abstract void Act(Blackboard blackboard);
+    }}
+
+    [System.Serializable]
+    public class BehaviorTree
+    {{
+        public Node root;
+        public void Tick(Blackboard blackboard) => root?.Execute(blackboard);
+    }}
+
+    [System.Serializable]
+    public abstract class Node
+    {{
+        public abstract NodeStatus Execute(Blackboard blackboard);
+    }}
+
+    public enum NodeStatus {{ Running, Success, Failure }}
+}}"""
+        return template.format(concept=concept.replace(' ', ''))
+    def _refresh_audit(self) -> None:
+        """Cache engine contamination/grounding audit for 30s (Step 16 §1)."""
+        now = time.time()
+        if self._audit_cache is not None and now - self._audit_cache_ts < 30:
+            return
+        if _ENGINE_AUDIT is None:
+            self._audit_cache = {"available": False}
+        else:
+            try:
+                a = dict(_ENGINE_AUDIT())
+                g = a.get("grounded_facts", 0) or 0
+                s = a.get("simulated_facts", 0) or 0
+                a["grounding_coverage"] = (g / (g + s)) if (g + s) else None
+                self._audit_cache = a
+            except Exception:
+                self._audit_cache = {"available": False, "error": True}
+        self._audit_cache_ts = now
+
+    def metrics(self) -> Dict[str, Any]:
+        """Operational metrics for the /metrics endpoint (event taxonomy + counters)."""
+        m = {
+            "service": "mem20-mcp",
+            "uptime_seconds": round(time.time() - self._start_time, 3),
+            "tools_registered": len(self.tools),
+            "request_count": self._request_count,
+            "request_errors": self._request_errors,
+            "memory_system_available": MEMORY_SYSTEM_AVAILABLE,
+            "event_taxonomy": self._event_taxonomy,
+            "tool_calls": self._tool_calls,
+            "tool_errors": self._tool_errors,
+            "tool_calls_total": sum(self._tool_calls.values()),
+            "tool_errors_total": sum(self._tool_errors.values()),
+            "contamination_rate": None,
+            "grounding_coverage": None,
+            "grounded_facts": None,
+            "simulated_facts": None,
+            "engine_audit_available": None,
+        }
+        if MEMORY_SYSTEM_AVAILABLE and _ENGINE_AUDIT is not None:
+            self._refresh_audit()
+            audit = self._audit_cache or {}
+            m["contamination_rate"] = audit.get("contamination_rate")
+            m["grounding_coverage"] = audit.get("grounding_coverage")
+            m["grounded_facts"] = audit.get("grounded_facts")
+            m["simulated_facts"] = audit.get("simulated_facts")
+            m["engine_audit_available"] = audit.get("available", True)
+        return m
+
+    def run(self):
+        """Start the MCP server."""
+        import anyio
+        from mcp.server.stdio import stdio_server
+
+        logging.basicConfig(
+            level=os.environ.get("MEM20_LOG_LEVEL", "INFO").upper(),
+            format='%(asctime)s %(levelname)s %(name)s %(message)s',
+        )
+
+        # Operational HTTP endpoint (non-blocking; failures are non-fatal).
+        port = int(os.environ.get("MEM20_HEALTH_PORT", "8080"))
+        if os.environ.get("MEM20_HEALTH_DISABLE") not in ("1", "true", "yes"):
+            start_health_server(self, port)
+
+        # MCP transport: stdio (default) or http (for opencode to connect to systemd instance)
+        transport = os.environ.get("MEM20_TRANSPORT", "stdio").lower()
+
+        if transport == "http":
+            mcp_port = int(os.environ.get("MEM20_MCP_PORT", "8082"))
+            # mcp 2.2 rewrite: the old `streamable_http_server()` helper was
+            # removed from mcp.server.streamable_http. The supported pattern is
+            # StreamableHTTPSessionManager (ASGI) fronted by Starlette + uvicorn.
+            import contextlib
+
+            from mcp.server.streamable_http_manager import StreamableHTTPSessionManager
+            from starlette.applications import Starlette
+
+            # One manager per process lifetime: mcp 2.2 forbids re-entering a
+            # manager after its run() context exits, so create it fresh here.
+            manager = StreamableHTTPSessionManager(app=self.server)
+
+            @contextlib.asynccontextmanager
+            async def lifespan(app: Starlette):
+                async with manager.run():
+                    yield
+
+            http_app = Starlette(lifespan=lifespan)
+            # Streamable HTTP: POST initialize / GET SSE both live under "/".
+            http_app.mount("/", manager.handle_request)
+
+            import uvicorn
+
+            async def main():
+                uvicorn_config = uvicorn.Config(
+                    http_app, host="0.0.0.0", port=mcp_port, log_level="warning",
+                )
+                uvicorn_server = uvicorn.Server(uvicorn_config)
+                await uvicorn_server.serve()
+            anyio.run(main)
+        else:
+            async def main():
+                async with stdio_server() as (read_stream, write_stream):
+                    await self.server.run(
+                        read_stream,
+                        write_stream,
+                        self.server.create_initialization_options()
+                    )
+            
+            anyio.run(main)
 
 
-_mod = _bootstrap()
+def main():
+    server = Mem20MCPServer()
+    server.run()
 
-# Re-export everything the rest of the tree expects
-Mem20MCPServer = _mod.Mem20MCPServer
-main = _mod.main
-for _k, _v in _mod.__dict__.items():
-    if not _k.startswith("_"):
-        setattr(sys.modules[__name__], _k, _v)
 
 if __name__ == "__main__":
     main()

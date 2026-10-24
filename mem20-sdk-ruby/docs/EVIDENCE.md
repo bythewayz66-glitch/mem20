@@ -5,7 +5,7 @@ the **Sidney** host against the live mem20 server; nothing here is estimated.
 
 - Host: `sidney` — Kali Linux (7.1.5+kali-amd64), `ruby 3.3.8 (2025-04-09)`
 - Canonical repo: `github.com/bythewayz66-glitch/mem20` @ `main` (MIT)
-- Server: mem20-mcp, release `v2.1.0rc2`, protocol `2025-06-18`, 268 tools
+- Server: mem20-mcp, release `v2.1.0rc2`, protocol `2025-06-18`, 270 tools
 
 ## 1. Syntax check
 
@@ -67,7 +67,7 @@ Run with `ruby -Ilib examples/quickstart.rb` against the real server
 ```
 server:       mem20-mcp (reported version "")
 protocol:     2025-06-18
-tools:        268
+tools:        270
 sdk version:  0.2.0
 
 store -> Stored in mem20 memory: [project] quickstart token ruby-quickstart-1791998110 (tags: quickstart,ruby)

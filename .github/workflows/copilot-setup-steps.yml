@@ -1,0 +1,88 @@
+# Environment preparation for the GitHub Copilot coding agent.
+#
+# This workflow is special: the job MUST be named `copilot-setup-steps`, and the
+# file MUST live at .github/workflows/copilot-setup-steps.yml. GitHub runs it
+# before the coding agent starts work so the agent gets a warm, dependency-ready
+# environment instead of a bare checkout.
+#
+# It does not run on push or pull_request - only on workflow_dispatch and the
+# agent's internal trigger - so it adds no cost to normal PRs.
+
+name: Copilot Setup Steps
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  copilot-setup-steps:
+    name: copilot-setup-steps
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+
+      # Only the lightweight dependencies. torch / sentence-transformers /
+      # faiss are large and only needed for integration work; installing them
+      # here would blow the setup budget for every agent run.
+      - name: Install core + test dependencies
+        run: |
+          set -euo pipefail
+          python3 -m pip install --upgrade pip
+          python3 -m pip install -r requirements.txt
+          python3 -m pip install pytest cryptography httpx aiohttp PyYAML pip-audit
+
+      - name: Install the package in editable mode
+        run: |
+          set -euo pipefail
+          # Editable install provides the `mem20-mcp` console script and the
+          # `mem20_runtime` package data the launcher resolves at runtime.
+          python3 -m pip install -e . || python3 -m pip install -e '.[dev]'
+
+      - name: Set up Node 20 for web and dashboard
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: npm
+          cache-dependency-path: |
+            web/package-lock.json
+            dashboard/package-lock.json
+
+      - name: Warm the web toolchain
+        working-directory: web
+        run: |
+          set -euo pipefail
+          if [ -f package-lock.json ]; then npm ci --no-audit --no-fund; else npm install --no-audit --no-fund; fi
+
+      - name: Set up Rust for the braid workspace
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: Warm the braid build cache
+        run: |
+          set -euo pipefail
+          if [ -f braid/Cargo.toml ]; then
+            cargo fetch --manifest-path braid/Cargo.toml
+          else
+            echo "braid/Cargo.toml missing - skipping cargo fetch"
+          fi
+
+      - name: Sanity check the environment
+        run: |
+          set -euo pipefail
+          python3 --version
+          node --version
+          cargo --version
+          python3 -c "import sys; print('sys.path[0] =', sys.path[0])"
+          # The repo root must not shadow nested packages; conftest.py handles
+          # this for pytest. Confirm a known-good package imports.
+          python3 -c "import mcp; print('mcp SDK file =', getattr(mcp, '__file__', None))" || \
+            echo "::warning::mcp SDK not importable at repo root - expected if shadowed by ./mcp"

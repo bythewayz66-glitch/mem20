@@ -155,7 +155,7 @@ returning a `ListToolsResult`.
 `ToolDescriptor` in the SDK captures `name`, `title`, `description`, and the raw
 `inputSchema` (kept as JSON so unknown/future fields survive round-trips).
 
-The documented baseline surface is **268 tools across 26 domains**; see `README.md`
+The documented baseline surface is **270 tools across 27 domains**; see `README.md`
 for the domain table. Tool *names* are the authority — the SDK resolves a tool by exact
 name and never invents one.
 

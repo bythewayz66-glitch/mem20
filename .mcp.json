@@ -1,0 +1,12 @@
+{
+  "mcpServers": {
+    "mem20": {
+      "type": "stdio",
+      "command": "python3",
+      "args": ["./launcher.py"],
+      "env": {
+        "PYTHONUNBUFFERED": "1"
+      }
+    }
+  }
+}

@@ -103,7 +103,7 @@ fails immediately and leaves the previous good value in place.
 
 ## Calling tools
 
-Three routes to the same 268-tool surface:
+Three routes to the same 270-tool surface:
 
 ```perl
 # 1. the named memory primitives

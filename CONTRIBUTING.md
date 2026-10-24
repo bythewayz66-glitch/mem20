@@ -1,65 +1,37 @@
 # Contributing to mem20
 
-mem20 is a large multi-package Python monorepo (1,700+ modules across many
-`mem20*z` packages). Small, verifiable changes beat large clever ones.
+mem20 is a large multi-package Python monorepo. Small, verifiable changes beat large clever ones.
 
 ## Before you start
 
 - **Python >= 3.10** (see `pyproject.toml`). CI runs 3.11.
-- **Check out with symlinks enabled.** `git config --get core.symlinks` must
-  return `true`. A checkout without symlink support wedges `git status` on the
-  model-cache paths and is the most common cause of a "broken tree".
-- **Never commit generated output:** `build/`, `__pycache__/`, `node_modules/`,
-  `*.faiss`, `ledger.jsonl`, `entries/*.json`, HuggingFace caches. They are in
-  `.gitignore` for a reason; run `git status` before every commit.
-- **Optional but recommended:** `pip install pre-commit && pre-commit install`
-  (see `.pre-commit-config.yaml` — issue #23).
+- **pip install -e '.[dev]'** for pytest.
+- **pre-commit** (optional): `pip install pre-commit && pre-commit install`
+- Agents: read `docs/handoff/AGENT-OPERATING-PROTOCOL.md` and `docs/INDEX.md` first.
 
-## Working on a change
+## Tests (issue #5)
 
-1. Branch from `main`: `fix/<topic>`, `feat/<topic>`, or `docs/<topic>`.
-2. Keep the change small and scoped to one package where possible.
-3. Verify:
+```bash
+pip install -e '.[dev]'
+pytest -m unit -q          # CI-safe; no optional native deps
+pytest -m integration -q   # needs torch/blender/network as applicable
+pytest <package> -q        # one package
+```
 
-   ```bash
-   python3 -m compileall -q <paths you touched>
-   pip install -e '.[dev]'   # provides pytest
-   python3 -m pytest <package> -q
-   # markers (issue #5 / #18):
-   #   pytest -m unit          # CI-safe, no optional native deps
-   #   pytest -m integration   # needs torch/blender/network as applicable
-   ```
+Markers are registered in `pytest.ini`. CI runs the green package set with `-m "not integration"`.
 
-   A bare `pytest` runs the whole estate; the top-level `test/` scratch dir is
-   excluded via `norecursedirs` so it cannot break collection (issue #18).
-4. Open a PR and fill in `.github/PULL_REQUEST_TEMPLATE.md`.
+## Paths (issues #14 / #15)
 
-## Rust (`braid/`)
-
-- Commit `Cargo.lock` for the braid workspace (issue #20). CI runs
-  `cargo check` / `cargo test` on `braid/` (issue #21).
+Never hardcode `/home/jayson/...`. Use `specs/`, `Path.home()`, or env vars
+(`MEM20_ENGINE_PATH`, `MEM20_SPEC_SOURCE`, `UNITY_EDITOR`, …). See `docs/hygiene/spec-authority-paths.md`.
 
 ## What gets a PR rejected
 
-- A file that fails `python3 -m compileall`.
-- Committed build artefacts, runtime state, or `.pyc` / `__pycache__`.
-- A moved entry point (e.g. `mcp/mcp_server.py`, a systemd `ExecStart` target)
-  without updating the unit file and the docs that reference it.
-- Docs that contradict the code. If you change tool counts, ports, or versions,
-  grep the affected `README.md` / `docs/` files **in the same PR**.
-
-## Reporting bugs and proposing features
-
-Use the issue forms in `.github/ISSUE_TEMPLATE/`. Every issue should carry a
-`severity:*` label and, where known, a component label (`mcp`, `ci`, `tooling`,
-`tech-debt`, `security`).
+- Fails `python3 -m compileall`
+- Committed generated state (`.sqlite3`, harness JSON, `ledger.jsonl`)
+- Docs that contradict the code
 
 ## Security
 
 Do **not** open a public issue for a vulnerability. See `SECURITY.md`.
-
-## Working as an agent
-
-If you are an AI agent (Teamily, Hermes, OpenCode), read
-`docs/handoff/AGENT-OPERATING-PROTOCOL.md` **before** touching a file, and claim
-your work in `docs/handoff/claims/`. One writer per file at a time.
+Secret scanning is a repository setting (issue #11).

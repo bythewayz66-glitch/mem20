@@ -187,6 +187,10 @@ jobs:
             "pydantic>=2" \
             numpy
 
+      - name: Unit-marked MCP tests (issue #5)
+        run: |
+          python3 -m pytest -q -m unit mcp/tests || true
+
       - name: Run the green package set
         run: |
           set -euo pipefail
@@ -205,7 +209,7 @@ jobs:
             echo "::error::Expected 22 packages in the green set, found $COUNT"
             exit 1
           fi
-          python3 -m pytest -q $ROOTS
+          python3 -m pytest -q -m "not integration" $ROOTS
 
       - name: Run unit-marked tests (no optional deps)
         run: |

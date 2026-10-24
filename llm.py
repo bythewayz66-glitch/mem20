@@ -96,6 +96,7 @@ DEFAULT_VISION_MODEL = "meta/llama-3.2-11b-vision-instruct"
 _ENV_CANDIDATES = [
     "/opt/mem20/secrets/.env",
     os.environ.get("MEM20_ENV_FILE"),
+    os.path.expanduser("~/.mem20/openwebui.env"),
     str(Path(__file__).resolve().parent / ".env"),
     "/root/.env",
 ]

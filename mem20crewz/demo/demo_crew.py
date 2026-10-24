@@ -18,10 +18,10 @@ import datetime
 import os
 from typing import Optional, Tuple
 
-from ..agents import Agent
-from ..crew import Crew, CrewResult
-from ..flow import Flow, FlowResult, listen, start
-from ..neural import FakeBrain
+from mem20crewz.agents import Agent
+from mem20crewz.crew import Crew, CrewResult
+from mem20crewz.flow import Flow, FlowResult, listen, start
+from mem20crewz.neural import FakeBrain
 
 
 def stamp(arg: str = "") -> str:

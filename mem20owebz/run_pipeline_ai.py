@@ -5,7 +5,7 @@ Can run stages autonomously using the Jayson Bridge (LiteLLM).
 
 USAGE:
     # Start fresh pipeline
-    python3 run_pipeline_ai.py start --package /home/jayson/Desktop/prod.md --project unreliable_prophecy --genre Adventure
+    python3 run_pipeline_ai.py start --package prod.md --project unreliable_prophecy --genre Adventure
     
     # Run until completion (or stop manually)
     python3 run_pipeline_ai.py run --project unreliable_prophecy

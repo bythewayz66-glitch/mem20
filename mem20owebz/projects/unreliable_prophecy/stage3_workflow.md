@@ -54,5 +54,5 @@ projects/unreliable_prophecy/
 ## CLI Command to Check Progress
 
 ```bash
-python3 /home/jayson/Desktop/jayson-openwebui/run_pipeline_queued.py status
+python3 /opt/mem20/Desktop/jayson-openwebui/run_pipeline_queued.py status
 ```

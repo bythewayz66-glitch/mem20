@@ -4,8 +4,8 @@
 
 set -e
 
-PROJECT_PATH="/home/jayson/Desktop/jayson-openwebui/projects/unreliable_prophecy/engine_project"
-UNITY_PATH="/home/jayson/Unity/Hub/Editor/6000.5.9f1/Editor/Unity"
+PROJECT_PATH="${MEM20_PROJECT_PATH:-$(cd "$(dirname "$0")/.." && pwd)/engine_project}"
+UNITY_PATH="${MEM20_UNITY_PATH:-/usr/local/bin/Unity}"
 
 # Colors
 GREEN='\033[0;32m'

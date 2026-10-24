@@ -1,6 +1,6 @@
 # mem20 MCP — Complete Tools Reference
 
-> Every tool, every feature, every command. 257 tools across 26 domains. Written for someone who has never seen mem20 before.
+> Every tool, every feature, every command. 268 tools across 26 domains. Written for someone who has never seen mem20 before.
 
 ---
 
@@ -1347,7 +1347,7 @@ These track values, emotions, and goals — mem20's emotional intelligence layer
   "arguments": {
     "name": "complete_mem20_docs",
     "priority": 1,
-    "target_state": "All 257 tools fully documented"
+    "target_state": "All 268 tools fully documented"
   }
 }
 ```
@@ -1881,7 +1881,7 @@ Unity must be installed. Tools degrade gracefully when Unity is absent.
   "arguments": {
     "script_name": "PlayerController",
     "template_type": "movement",
-    "project_path": "/home/jayson/VRTestProject"
+    "project_path": "/opt/mem20/VRTestProject"
   }
 }
 ```
@@ -1903,7 +1903,7 @@ Unity must be installed. Tools degrade gracefully when Unity is absent.
 {
   "name": "unity_build_project",
   "arguments": {
-    "project_path": "/home/jayson/VRTestProject",
+    "project_path": "/opt/mem20/VRTestProject",
     "build_target": "PC"
   }
 }
@@ -1926,7 +1926,7 @@ Unity must be installed. Tools degrade gracefully when Unity is absent.
 {
   "name": "unity_run_test",
   "arguments": {
-    "project_path": "/home/jayson/VRTestProject",
+    "project_path": "/opt/mem20/VRTestProject",
     "test_filter": "All"
   }
 }
@@ -1950,7 +1950,7 @@ Unity must be installed. Tools degrade gracefully when Unity is absent.
   "name": "unity_generate_asmdef",
   "arguments": {
     "name": "Core",
-    "project_path": "/home/jayson/VRTestProject"
+    "project_path": "/opt/mem20/VRTestProject"
   }
 }
 ```
@@ -1972,7 +1972,7 @@ Unity must be installed. Tools degrade gracefully when Unity is absent.
 ```json
 {
   "name": "unity_validate_project",
-  "arguments": { "project_path": "/home/jayson/VRTestProject" }
+  "arguments": { "project_path": "/opt/mem20/VRTestProject" }
 }
 ```
 
@@ -2108,7 +2108,7 @@ Unity must be installed. Tools degrade gracefully when Unity is absent.
 {
   "name": "fs_read",
   "arguments": {
-    "path": "/home/jayson/mem20/memory.py",
+    "path": "/opt/mem20/mem20/memory.py",
     "offset": 1,
     "limit": 50
   }
@@ -2772,7 +2772,7 @@ These are advanced memory operations beyond the core tools.
 ```json
 {
   "name": "dev_lint_python",
-  "arguments": { "file_path": "/home/jayson/mem20/memory.py" }
+  "arguments": { "file_path": "/opt/mem20/mem20/memory.py" }
 }
 ```
 
@@ -2790,7 +2790,7 @@ These are advanced memory operations beyond the core tools.
 ```json
 {
   "name": "dev_format_python",
-  "arguments": { "file_path": "/home/jayson/mem20/memory.py" }
+  "arguments": { "file_path": "/opt/mem20/mem20/memory.py" }
 }
 ```
 
@@ -2811,7 +2811,7 @@ These are advanced memory operations beyond the core tools.
   "name": "dev_search_code",
   "arguments": {
     "pattern": "def memory_store",
-    "path": "/home/jayson/mem20"
+    "path": "/opt/mem20/mem20"
   }
 }
 ```
@@ -2829,7 +2829,7 @@ These are advanced memory operations beyond the core tools.
 ```json
 {
   "name": "dev_dependency_analyze",
-  "arguments": { "project_path": "/home/jayson/mem20" }
+  "arguments": { "project_path": "/opt/mem20/mem20" }
 }
 ```
 
@@ -2849,7 +2849,7 @@ These are advanced memory operations beyond the core tools.
 {
   "name": "dev_run_tests",
   "arguments": {
-    "project_path": "/home/jayson/mem20",
+    "project_path": "/opt/mem20/mem20",
     "test_command": "python -m pytest test/"
   }
 }
@@ -2918,7 +2918,7 @@ These are advanced memory operations beyond the core tools.
   "name": "search_local",
   "arguments</arg_key>{
     "query": "memory_store",
-    "path": "/home/jayson/mem20"
+    "path": "/opt/mem20/mem20"
   }
 }
 ```
@@ -3178,7 +3178,7 @@ These are advanced memory operations beyond the core tools.
   "name": "prod_task_create",
   "arguments": {
     "title": "Complete mem20 docs",
-    "description": "Write feature-by-feature documentation for all 257 tools",
+    "description": "Write feature-by-feature documentation for all 268 tools",
     "priority": "high",
     "due_date": "2026-09-07"
   }
@@ -3543,7 +3543,7 @@ These are advanced memory operations beyond the core tools.
 ```json
 {
   "name": "vcs_git_status",
-  "arguments": { "repo_path": "/home/jayson/mem20" }
+  "arguments": { "repo_path": "/opt/mem20/mem20" }
 }
 ```
 
@@ -3562,7 +3562,7 @@ These are advanced memory operations beyond the core tools.
 ```json
 {
   "name": "vcs_git_log",
-  "arguments": { "repo_path": "/home/jayson/mem20", "limit": 20 }
+  "arguments": { "repo_path": "/opt/mem20/mem20", "limit": 20 }
 }
 ```
 
@@ -3581,7 +3581,7 @@ These are advanced memory operations beyond the core tools.
 ```json
 {
   "name": "vcs_git_diff",
-  "arguments": { "repo_path": "/home/jayson/mem20", "commit1": "HEAD~5", "commit2": "HEAD" }
+  "arguments": { "repo_path": "/opt/mem20/mem20", "commit1": "HEAD~5", "commit2": "HEAD" }
 }
 ```
 
@@ -3601,7 +3601,7 @@ These are advanced memory operations beyond the core tools.
 {
   "name": "vcs_git_commit",
   "arguments": {
-    "repo_path": "/home/jayson/mem20",
+    "repo_path": "/opt/mem20/mem20",
     "message": "Add complete tools documentation"
   }
 }
@@ -3622,7 +3622,7 @@ These are advanced memory operations beyond the core tools.
 ```json
 {
   "name": "vcs_git_branch",
-  "arguments": { "repo_path": "/home/jayson/mem20", "action": "list" }
+  "arguments": { "repo_path": "/opt/mem20/mem20", "action": "list" }
 }
 ```
 
@@ -3641,7 +3641,7 @@ These are advanced memory operations beyond the core tools.
 ```json
 {
   "name": "vcs_git_remote",
-  "arguments": { "repo_path": "/home/jayson/mem20", "action": "push" }
+  "arguments": { "repo_path": "/opt/mem20/mem20", "action": "push" }
 }
 ```
 
@@ -3659,7 +3659,7 @@ These are advanced memory operations beyond the core tools.
 ```json
 {
   "name": "vcs_git_stash",
-  "arguments": { "repo_path": "/home/jayson/mem20", "action": "stash" }
+  "arguments": { "repo_path": "/opt/mem20/mem20", "action": "stash" }
 }
 ```
 
@@ -3679,7 +3679,7 @@ These are advanced memory operations beyond the core tools.
 {
   "name": "vcs_git_tag",
   "arguments</arg_key>{
-    "repo_path": "/home/jayson/mem20",
+    "repo_path": "/opt/mem20/mem20",
     "action": "create",
     "tag_name": "v2.0"
   }
@@ -3700,7 +3700,7 @@ These are advanced memory operations beyond the core tools.
 ```json
 {
   "name": "vcs_git_blame",
-  "arguments": { "repo_path": "/home/jayson/mem20", "file_path": "memory.py" }
+  "arguments": { "repo_path": "/opt/mem20/mem20", "file_path": "memory.py" }
 }
 ```
 
@@ -3724,7 +3724,7 @@ These are advanced memory operations beyond the core tools.
     "action": "create",
     "repo": "bythewayz66-glitch/mem20",
     "title": "Add tool documentation",
-    "body": "Need comprehensive docs for all 257 tools"
+    "body": "Need comprehensive docs for all 268 tools"
   }
 }
 ```
@@ -4588,7 +4588,7 @@ These are advanced memory operations beyond the core tools.
 
 **pip (Python):**
 ```bash
-cd /home/jayson/mem20
+cd /opt/mem20/mem20
 python3 -m venv .venv
 source .venv/bin/activate
 pip install -r requirements.txt
@@ -4676,4 +4676,4 @@ claude mcp add mem20 -- python3 /path/to/mem20/mcp/mcp_server.py
 | Cloud Storage | 7 | cloudstorage_upload, cloudstorage_download, cloudstorage_list, cloudstorage_delete, cloudstorage_copy, cloudstorage_sync, cloudstorage_metadata, cloudstorage_presigned_url |
 | Marketing | 7 | mkt_seo_analyze, mkt_social_post, mkt_social_analytics, mkt_email_campaign, mkt_content_generate, mkt_ab_test, mkt_analytics, mkt_competitor_analysis, mkt_hashtag_research |
 | Finance | 7 | fin_stock_quote, fin_crypto_price, fin_portfolio, fin_budget, fin_invoice, fin_tax_calc, fin_expense_track, fin_financial_news |
-| **TOTAL** | **257** | 26 domains |
+| **TOTAL** | **268** | 26 domains |

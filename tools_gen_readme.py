@@ -83,7 +83,7 @@ def render(d: Path, i: dict) -> str:
     L += ["## Verification", "",
           "```bash",
           f"cd /opt/mem20/{d.name}",
-          f"/root/.venv/bin/python -c \"import pathlib;print('modules:',len([p for p in pathlib.Path('.').rglob('*.py')]))\"",
+          f"/usr/local/bin/python -c \"import pathlib;print('modules:',len([p for p in pathlib.Path('.').rglob('*.py')]))\"",
           "```", ""]
     return "\n".join(L)
 

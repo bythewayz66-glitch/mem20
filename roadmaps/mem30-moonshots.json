@@ -8,9 +8,9 @@
     "rule": "no MOON may report a number it did not measure. RM-102's fabricated estimated_speedup was the reason this register exists."
   },
   "sources": {
-    "roadmap_doc": "/home/jayson/Desktop/6/MEM30_AI_EXECUTABLE_ROADMAP.md (Phase 4)",
-    "dream_log": "/home/jayson/Desktop/6/MEM30_DREAM_LOG.md (iteration 5 artifacts)",
-    "master_report": "/home/jayson/Desktop/6/MEM30_MASTER_DREAM_REPORT.md"
+    "roadmap_doc": "/opt/mem20/Desktop/6/MEM30_AI_EXECUTABLE_ROADMAP.md (Phase 4)",
+    "dream_log": "/opt/mem20/Desktop/6/MEM30_DREAM_LOG.md (iteration 5 artifacts)",
+    "master_report": "/opt/mem20/Desktop/6/MEM30_MASTER_DREAM_REPORT.md"
   },
   "incubators": {
     "mem20wasmz": {

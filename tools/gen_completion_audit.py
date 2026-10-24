@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 """Generate the system-wide completion audit for the mem20 estate.
 
-Writes /home/jayson/Desktop/mem20-COMPLETION-AUDIT.md
+Writes mem20-COMPLETION-AUDIT.md
 
 Everything in the report is measured at run time: the test sweep is executed, the
 ledger is re-proved, units are queried from systemd, and coverage is collected
@@ -22,8 +22,8 @@ import time
 from pathlib import Path
 
 ESTATE = "/opt/mem20"
-OUT = "/home/jayson/Desktop/mem20-COMPLETION-AUDIT.md"
-PY = "/root/.venv/bin/python"
+OUT = os.environ.get("MEM20_AUDIT_OUT", "mem20-COMPLETION-AUDIT.md")
+PY = "/usr/local/bin/python"
 
 
 def sh(cmd: str, timeout: int = 600) -> str:

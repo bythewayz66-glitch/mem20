@@ -15,7 +15,7 @@ All commands support `--json` and return stable exit codes.
 
 ```
 cd /opt/mem20/mem20ops
-/root/.venv/bin/pip install -e .
+python3 -m pip install -e .
 ```
 
 Installing puts two commands on PATH:
@@ -126,7 +126,7 @@ so compare against the index with `--revision :` where appropriate.
 ## Tests
 
 ```
-/root/.venv/bin/python -m pytest /opt/mem20/mem20ops -q
+python3 -m pytest /opt/mem20/mem20ops -q
 ```
 
 Network paths are tested through a fake client implementing the `CloudflareAPI`

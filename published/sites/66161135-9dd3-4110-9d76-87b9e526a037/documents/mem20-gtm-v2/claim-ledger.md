@@ -18,7 +18,7 @@
 | V4 | Version | **2.1.0rc2** | `pyproject.toml` |
 | V5 | License | **MIT** | `LICENSE` + GitHub API SPDX `MIT` |
 | V6 | Python floor | **>=3.10** | `pyproject.toml` `requires-python` |
-| V7 | MCP tool surface | **257 tools** | three independent counts agree: README §"Tool domains" ("verified by instantiating the server and counting `server.tools`"); `grep -rhoE 'self\.tools\[' mcp/ | wc -l` = 257; `toolchest/inventory.json` `counts.mcp` = 257 |
+| V7 | MCP tool surface | **268 tools** | three independent counts agree: README §"Tool domains" ("verified by instantiating the server and counting `server.tools`"); `grep -rhoE 'self\.tools\[' mcp/ | wc -l` = 268; `toolchest/inventory.json` `counts.mcp` = 268 |
 | V8 | Tool domains | **26** | 26 distinct `register_*_tools` mixins under `mcp/`; README domain table has 26 rows |
 | V9 | Native subsystem packages | **293** `mem20*z` packages | `ls -d mem20*z | wc -l` = 293 |
 | V10 | Sitemap estate index | **326 subsystems · 8,969 files · 468,134 code lines** | `.sitemap/sitemap.json` `totals` (generated 2026-10-03) |
@@ -56,7 +56,7 @@ Harness: `gtm_assets/verify/partition_demo.py` → `partition_demo_output.json`.
 | # | v1 claim | Status | Correction | Evidence |
 |---|----------|--------|-----------|----------|
 | C1 | Repo `JaysonAIOnline/mem20` | **REPLACED** | `bythewayz66-glitch/mem20` | `JaysonAIOnline/mem20` = 404; canonical is `bythewayz66-glitch/mem20` |
-| C2 | "~258–260 tools across 26 domains" | **REWORDED** | "257 tools across 26 domains" | V7, V8 |
+| C2 | "~258–260 tools across 26 domains" | **REWORDED** | "268 tools across 26 domains" | V7, V8 |
 | C3 | "26 domains" | **VERIFIED, unchanged** | keep | V8 |
 | C4 | Domain list includes "revocation" | **REMOVED** | not one of the 26 domains in the README table | README §"Tool domains (26)" |
 | C5 | "hit rate 1.000 direct / 0.800 multi-hop / 0.000 adversarial" | **WITHDRAWN** | no such numbers anywhere in the repo at this HEAD; `benchmarks/results/` does not exist | repo-wide grep for `hit_rate`/`adversarial`+`rate`; no `benchmarks/` dir |
@@ -69,7 +69,7 @@ Harness: `gtm_assets/verify/partition_demo.py` → `partition_demo_output.json`.
 
 ### Honesty note on V7 (it cuts both ways)
 
-The 257-tool figure is the README's own headline. The in-tree audit at `proof/audit_response.md` describes the **pre-split** server as "~4,848 lines, **97 tools, 13 domains**" and records 97 registrations after decomposition. The repo therefore contains **97→257** as its own growth story. Cite 257 (the shipped surface, corroborated twice) and, if a reader challenges it, the honest answer is the same README text the ledger cites — not a different number invented to win the point.
+The 268-tool figure is the README's own headline. The in-tree audit at `proof/audit_response.md` describes the **pre-split** server as "~4,848 lines, **97 tools, 13 domains**" and records 97 registrations after decomposition. The repo therefore contains **97→268** as its own growth story. Cite 268 (the shipped surface, corroborated twice) and, if a reader challenges it, the honest answer is the same README text the ledger cites — not a different number invented to win the point.
 
 ---
 
@@ -84,7 +84,7 @@ These are internal-repo consistency problems. They are **not** GTM claims, but a
 | `docs/README.md` lines 5, 6, 64, 117, 119 | old repo | **5 refs** |
 | `docs/03-installation.md` lines 38, 65 | old clone URL | **2 refs** |
 | `docs/05-complete-tools-reference.md` lines 3725, 3750, 4376 | old repo in examples | 3 refs |
-| `docs/01-architecture.md` line 24, 107 + `docs/02-tools-reference.md` line 3 | still say **"111 tools / 15 domains"** vs README's 257 / 26 | **3 docs** |
+| `docs/01-architecture.md` line 24, 107 + `docs/02-tools-reference.md` line 3 | still say **"111 tools / 15 domains"** vs README's 268 / 26 | **3 docs** |
 
 **Total stale `JaysonAIOnline` references in shipped top-level docs: 17.** A `README.md` badge and Quick Start that 404 on `git clone` is the single highest-impact fix — it is the first command a launch reader runs.
 

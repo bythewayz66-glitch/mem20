@@ -66,7 +66,7 @@ write path.
 What's in it:
 
 - MCP server, JSON-RPC 2.0 over stdio. Python 3.10+. MIT licensed.
-- 257 tools across 26 domains.
+- 268 tools across 26 domains.
 - Separate grounded and simulated stores. recall() returns grounded only by
 default; you have to ask for simulated.
 - contamination auditing — it reports a contamination_rate for your store and
@@ -122,7 +122,7 @@ Auditable agent memory — the memory layer you can prove.
 mem20 is an MIT-licensed MCP server that gives AI agents persistent memory with a
 hard partition between grounded and simulated content, contamination auditing, an
 evidence-gated promotion path, and an append-only origin-tagged ledger.
-257 tools across 26 domains. Python 3.10+. Self-hosted. Zero lock-in.
+268 tools across 26 domains. Python 3.10+. Self-hosted. Zero lock-in.
 ```
 
 **Alt subhead (shorter, for hero sections with an image)**
@@ -156,7 +156,7 @@ Tertiary:  git clone && pip install .   (no PyPI package yet — do not print pi
 2. **Contamination auditing.** `audit_contamination()` returns `contamination_rate` and `status`, plus the violation classes it checks — three at this HEAD: origin-not-grounded, simulated-in-grounded-index, simulated-in-BM25-corpus. A clean store reports `0.0` / `CLEAN`.
 3. **Evidence-gated promotion, with the caveat stated.** Bare promotion calls are refused; the prediction-error path requires structured evidence linked to a recorded prior prediction or a registered external verifier. A free-text `confirmation` argument remains a residual path — we publish that rather than paper over it.
 4. **Append-only, origin-tagged ledger.** Every entry carries `origin` and `store`; partition tags are validated at the lowest append point.
-5. **MCP-native and broad.** JSON-RPC 2.0 over stdio, **257 tools across 26 domains** — memory, cognition, world-model forecasting, planning, plus tooling domains (vcs, cloud, db, fs, comms). Drops into any MCP host.
+5. **MCP-native and broad.** JSON-RPC 2.0 over stdio, **268 tools across 26 domains** — memory, cognition, world-model forecasting, planning, plus tooling domains (vcs, cloud, db, fs, comms). Drops into any MCP host.
 6. **MIT, self-hosted, Python 3.10+.** Audit the code you depend on; run it in your own VPC. Clone it and the whole thing is readable.
 
 ---
@@ -168,7 +168,7 @@ Use Section 2 as-is. Comment strategy:
 - Lead with the **no-benchmark** disclosure if it isn't already top comment. Owning it beats being caught by it.
 - When asked "vs Mem0/Zep?" point at the *category* distinction: they optimise retrieval; nobody leads with auditability. **Do not dispute or repeat their numbers** — they are vendor self-reported.
 - If someone says "the promotion gate is still weak" — agree, and paste the four-path result from the claim ledger. It's already public.
-- If someone challenges "257 tools": it is the README's own headline, corroborated by an independent grep and by `toolchest/inventory.json`. Be candid that the repo has grown fast and older docs still say 97/111.
+- If someone challenges "268 tools": it is the README's own headline, corroborated by an independent grep and by `toolchest/inventory.json`. Be candid that the repo has grown fast and older docs still say 97/111.
 
 ### 5b. Product Hunt
 
@@ -185,7 +185,7 @@ mem20 gives AI agents persistent memory you can actually prove. Grounded memory
 and simulated content live in separate stores, the audit reports contamination
 rather than hiding it, and promotion between them is gated on evidence — all
 recorded in an append-only ledger that carries the origin of every entry.
-MIT-licensed MCP server, Python 3.10+, 257 tools across 26 domains, self-hosted.
+MIT-licensed MCP server, Python 3.10+, 268 tools across 26 domains, self-hosted.
 
 Built for teams that need to show an auditor where the agent learned something.
 ```
@@ -223,7 +223,7 @@ mem20 is persistent memory for AI agents built around that second question:
 — Every memory carries its origin in an append-only ledger
 — MIT licensed, Python 3.10+, self-hosted — no lock-in, no black box
 
-257 tools across 26 domains, delivered over MCP (JSON-RPC 2.0 over stdio).
+268 tools across 26 domains, delivered over MCP (JSON-RPC 2.0 over stdio).
 
 It's not a retrieval-quality race. It's a trust and provenance race.
 
@@ -244,7 +244,7 @@ real memory and the server raises:
 
 "remember() is grounded-only."
 
-257 tools · 26 domains · MIT · self-hosted
+268 tools · 26 domains · MIT · self-hosted
 ```
 
 **Thread follow-ups**
@@ -267,7 +267,7 @@ real memory and the server raises:
 5/ And no published LoCoMo/LongMemEval run. Not hiding it — there isn't one. If
    you want numbers comparable to Mem0 or Zep, we don't have them yet.
 
-6/ MIT, Python 3.10+, self-hosted. 257 tools across 26 domains.
+6/ MIT, Python 3.10+, self-hosted. 268 tools across 26 domains.
 
    github.com/bythewayz66-glitch/mem20
 ```
@@ -281,7 +281,7 @@ real memory and the server raises:
 | Repo `bythewayz66-glitch/mem20` | GitHub API (public, `main`, MIT, pushed 2026-10-14T16:39:03Z) |
 | HEAD `c274404` | `git log -1` |
 | 2.1.0rc2 / MIT / Python 3.10+ | `pyproject.toml`, `LICENSE` |
-| **257 tools** | README §Tool domains ("counting `server.tools`"); `grep 'self\.tools\[' mcp/` = 257; `toolchest/inventory.json` `counts.mcp` = 257 |
+| **268 tools** | README §Tool domains ("counting `server.tools`"); `grep 'self\.tools\[' mcp/` = 268; `toolchest/inventory.json` `counts.mcp` = 268 |
 | **26 domains** | 26 `register_*_tools` mixins; README domain table |
 | Stdio / JSON-RPC 2.0 | `mcp/server.py:1048`; README |
 | `PermissionError: remember() is grounded-only…` | captured run, HEAD `c274404` |

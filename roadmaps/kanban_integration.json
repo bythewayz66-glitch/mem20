@@ -4,7 +4,7 @@
   "phases": [
     {
       "name": {
-        "name": "Phase 1: Audit existing kanban-mcp code at /home/jayson/mem20/kanban-mcp/",
+        "name": "Phase 1: Audit existing kanban-mcp code at /opt/mem20/mem20/kanban-mcp/",
         "status": "completed"
       },
       "status": "planned",

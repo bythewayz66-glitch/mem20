@@ -35,10 +35,10 @@ All roadmaps for mem20-managed projects. Each roadmap tracks phases from concept
 
 | Phase | Status | Notes |
 |-------|--------|-------|
-| mcp | completed | MCP server at `mcp/server.py` with 257 tools |
-| memory | completed | Memory engine at `/home/jayson/mem20/memory.py` |
-| cognitive | completed | Cognitive engine at `/home/jayson/mem20/cog/cognitive_engine.py` |
-| roadmap | completed | Roadmap system at `/home/jayson/mem20/mcp/roadmap_tools.py` |
+| mcp | completed | MCP server at `mcp/server.py` with 268 tools |
+| memory | completed | Memory engine at `/opt/mem20/mem20/memory.py` |
+| cognitive | completed | Cognitive engine at `/opt/mem20/mem20/cog/cognitive_engine.py` |
+| roadmap | completed | Roadmap system at `/opt/mem20/mem20/mcp/roadmap_tools.py` |
 | hermes_integration | completed | Integrated into Hermes Agent via MCP |
 | production | completed | Running since August 2026, 57/81 tests passing |
 
@@ -76,7 +76,7 @@ Interactive 3D Nissan Altima service bay web app (React + TanStack Router + thre
 | Phase | Status | Notes |
 |-------|--------|-------|
 | 1: Research | completed | Neo4j, Graph-Native Programming sources |
-| 2: Spec | completed | `/home/jayson/OREO/IDE/spec/OREO_LANGUAGE_SPEC.md` |
+| 2: Spec | completed | `/opt/mem20/OREO/IDE/spec/OREO_LANGUAGE_SPEC.md` |
 | 3: Parser | completed | 20+ modules, GraphLang-based |
 | 4: Runtime | in_progress | Compiler, interpreter, memory |
 | 5: Visual editor | in_progress | Talk+draw web editor |
@@ -91,10 +91,10 @@ Interactive 3D Nissan Altima service bay web app (React + TanStack Router + thre
 
 | Submap | Location | Status |
 |--------|----------|--------|
-| VRTestProject | `/home/jayson/VRTestProject` | Phase 1 done |
-| VRTestProject2 | `/home/jayson/VRTestProject2` | Phase 1 done |
-| TheUnreliableProphecy | `/home/jayson/Desktop/.../engine_project` | v0.5.0 vertical slice done |
-| Blender Pipeline | `/home/jayson/glb/` | Phases 1-2 done |
+| VRTestProject | `/opt/mem20/VRTestProject` | Phase 1 done |
+| VRTestProject2 | `/opt/mem20/VRTestProject2` | Phase 1 done |
+| TheUnreliableProphecy | `/opt/mem20/Desktop/.../engine_project` | v0.5.0 vertical slice done |
+| Blender Pipeline | `/opt/mem20/glb/` | Phases 1-2 done |
 
 ---
 
@@ -123,7 +123,7 @@ Rules defined in SOUL.md: decision persistence, fail log review, advice implemen
 
 | Phase | Status | Notes |
 |-------|--------|-------|
-| 1: Audit kanban-mcp code | completed | `/home/jayson/mem20/kanban-mcp/` audited |
+| 1: Audit kanban-mcp code | completed | `/opt/mem20/mem20/kanban-mcp/` audited |
 | 2: Integrate with mem20 roadmaps | in_progress | Auto-sync phases to cards |
 | 3-5: CLI, dashboard, monitoring | planned | Future features |
 

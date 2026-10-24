@@ -12,7 +12,7 @@ from pathlib import Path
 from datetime import datetime
 
 PROJECT = "unreliable_prophecy"
-BASE = f"/home/jayson/Desktop/jayson-openwebui/projects/{PROJECT}"
+BASE = os.environ.get("MEM20_PROJECTS_DIR", "projects") + f"/{PROJECT}"
 ENGINE = f"{BASE}/engine_project"
 RELEASE = f"{BASE}/release"
 

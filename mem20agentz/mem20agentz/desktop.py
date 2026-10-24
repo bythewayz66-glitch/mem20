@@ -328,7 +328,8 @@ class Frontend:
                 boards.append({"name": b, "cards": cards})
             return {"ok": True, "boards": boards}
         except KanbanDoorError as exc:
-            return {"ok": False, "error": f"door unavailable: {exc}"}
+            return {"ok": False, "error": f"door unavailable: {exc}",
+                    "boards": []}
 
     def kanban_move(self, payload: dict) -> dict:
         from .kanban import Kanban, KanbanDoorError
@@ -361,6 +362,8 @@ class Frontend:
         except ValueError:
             tail = 60
         view = production.peek(build, phase, tail)
+        if not isinstance(view, dict):
+            view = {}
         build_ids = []
         if production.RUNS_DIR.exists():
             build_ids = sorted(
@@ -368,6 +371,8 @@ class Frontend:
                  if d.is_dir() and (d / "state.json").exists()),
                 key=lambda n: (production.RUNS_DIR / n).stat().st_mtime,
                 reverse=True)[:20]
+        view.setdefault("status", view.get("error") and "idle" or "idle")
+        view.setdefault("phases", [])
         view["builds"] = build_ids
         return view
 

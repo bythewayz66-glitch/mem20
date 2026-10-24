@@ -7,7 +7,7 @@ Each test maps to a clause in the pipeline 1 spec:
     that do not support the core experience.
 
 Run:
-    /root/.venv/bin/python -m pytest /opt/mem20/mem20executablegameconceptandscopepipelinez/tests -q
+    /usr/local/bin/python -m pytest /opt/mem20/mem20executablegameconceptandscopepipelinez/tests -q
 """
 
 from __future__ import annotations

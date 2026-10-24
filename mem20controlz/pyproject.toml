@@ -35,4 +35,4 @@ packages = ["mem20controlz"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
-pythonpath = ["."]
+pythonpath = ["..", "."]

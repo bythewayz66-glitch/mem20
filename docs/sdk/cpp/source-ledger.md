@@ -50,7 +50,7 @@ previous repo location.
 
 | # | Claim | Source path | Verified by |
 |---|---|---|---|
-| T1 | The surface is **257 tools across 26 domains** | `README.md` § Transport/protocol ("exposes **257 tools across 26 domains** (verified by instantiating the server and counting `server.tools`)") | file read |
+| T1 | The surface is **268 tools across 26 domains** | `README.md` § Transport/protocol ("exposes **268 tools across 26 domains** (verified by instantiating the server and counting `server.tools`)") | file read |
 | T2 | Domain counts: `memory_*` 52, `cog_*`/`tot_*`/… 18, `world_model_*` 15, `vcs_*` 11, `cloud_*` 10, `db_*` 10, `prod_*` 10, `fs_*` 10, `braid_*` 9, … `blender_*` 7 (optional), `unity_*` 5 (optional) | `README.md` § Tool domains (26) table | file read |
 | T3 | Server tool modules: `mcp/memory_tools.py`, `enhanced_memory_tools.py`, `cognitive_tools.py`, `thought_process.py`, `roadmap_tools.py`, `tools/world_tools.py`, `tools/braid_tools.py`, `tools/blender_tools.py`, `tools/unity_tools.py`, `tools/integration_tools.py` | `README.md` § Transport/protocol | file read |
 
@@ -117,14 +117,14 @@ repo documentation itself:
 | `docs/README.md` (header, quick start, license link) | `JaysonAIOnline/mem20` | `bythewayz66-glitch/mem20` |
 | `docs/03-installation.md` (clone URL ×2) | `JaysonAIOnline/mem20` | `bythewayz66-glitch/mem20` |
 | `docs/05-complete-tools-reference.md` (`repo` ×2) | `JaysonAIOnline/mem20` | `bythewayz66-glitch/mem20` |
-| `docs/01-architecture.md` (diagram + heading) | `111 tools · 15 domains` | `257 tools · 26 domains` |
-| `docs/02-tools-reference.md` (intro) | "all 111 tools" | "all 257 tools" |
-| `docs/README.md` (tools table + version) | "111 MCP tools"; version `2.1-rc2` | "257 MCP tools"; version `2.1.0rc2` |
+| `docs/01-architecture.md` (diagram + heading) | `111 tools · 15 domains` | `268 tools · 26 domains` |
+| `docs/02-tools-reference.md` (intro) | "all 111 tools" | "all 268 tools" |
+| `docs/README.md` (tools table + version) | "111 MCP tools"; version `2.1-rc2` | "268 MCP tools"; version `2.1.0rc2` |
 
 Remaining `JaysonAIOnline/*` mentions are **intentional**: `CANONICAL.md` deliberately
 lists those repos as *non-canonical / satellite* so readers know not to use them.
 
 > `roadmaps/README.md` also contains a historical log line referencing the old
-> `111 tools` figure and a `/home/jayson/mem20/...` path. It is a **historical roadmap
+> `111 tools` figure and a `/opt/mem20/mem20/...` path. It is a **historical roadmap
 > note**, not a current claim, so it was left as-is rather than rewritten (rewriting
 > history would falsify the record).

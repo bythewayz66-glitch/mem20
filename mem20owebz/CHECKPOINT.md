@@ -1,7 +1,7 @@
 # CHECKPOINT — Jayson Setup (saved before battery death)
 
 **Date:** 2026-08-22 (MDT)
-**Working dir:** `/home/jayson/Desktop/jayson-openwebui/`
+**Working dir:** `/opt/mem20/Desktop/jayson-openwebui/`
 **Context:** User (Jayson) asked to make the whole jayson-openwebui package 100% production-ready, including agents + advanced. Model was switched to tencent/hy3 (Hunyuan) mid-session.
 
 ## DONE / VERIFIED

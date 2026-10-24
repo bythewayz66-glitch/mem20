@@ -30,9 +30,9 @@ as many as there are readers.
 
 ```bash
 cd /opt/mem20/mem20famz
-/root/.venv/bin/python -m mem20famz stats
-/root/.venv/bin/python -m mem20famz which mem20adaptivepricingbrainz
-/root/.venv/bin/python -m mem20famz spec  mem20adaptivepricingbrainz
+python3 -m mem20famz stats
+python3 -m mem20famz which mem20adaptivepricingbrainz
+python3 -m mem20famz spec  mem20adaptivepricingbrainz
 ```
 
 ## Current state

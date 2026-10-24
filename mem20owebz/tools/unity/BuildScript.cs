@@ -14,7 +14,7 @@ public class BuildScript
         
         BuildPlayerBuild build = new BuildPlayerBuild();
         build.scenes = scenes;
-        build.locationPathName = "/home/jayson/Desktop/jayson-openwebui/projects/unreliable_prophecy/release/build/unreliable_prophecy.exe";
+        build.locationPathName = "/opt/mem20/Desktop/jayson-openwebui/projects/unreliable_prophecy/release/build/unreliable_prophecy.exe";
         build.defaultTarget = BuildTarget.StandaloneWindows64;
         build.options = BuildOptions.None;
         

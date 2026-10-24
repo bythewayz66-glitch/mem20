@@ -4,7 +4,7 @@
 (the sole publish authority).
 **Producer:** `webpage-developer` · **Agent session:** see `publish-records.json` (`judged_sig`)
 **Date:** 2026-10-14 · **Host:** `root@216.198.115.91:2222` (sidney, Kali) · live root `/opt/mem20/live`
-**Canonical repo:** `github.com/bythewayz66-glitch/mem20` · branch `main` · MIT · `v2.1.0rc2` · 257 tools · protocol `2025-06-18`
+**Canonical repo:** `github.com/bythewayz66-glitch/mem20` · branch `main` · MIT · `v2.1.0rc2` · 268 tools · protocol `2025-06-18`
 
 ## Outcome — BOTH PAGES PUBLISHED (verdict `pass`)
 

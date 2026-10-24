@@ -12,10 +12,10 @@ checks Ollama first and uses the OpenAI-compatible mem20/LiteLLM gateway on port
 
 ```bash
 cd /opt/mem20/mem20googlez
-/root/.venv/bin/python -m pip install -e ".[dev]"
+python3 -m pip install -e ".[dev]"
 ```
 
-The package console command is `/root/.venv/bin/mem20googlez`.
+The package console command is `mem20googlez`.
 
 ## Local model
 
@@ -23,8 +23,8 @@ The default local model is `qwen2.5-coder:0.5b` at `http://127.0.0.1:11434`.
 Check the endpoint and the installed model with:
 
 ```bash
-/root/.venv/bin/mem20googlez health
-/root/.venv/bin/mem20googlez run --provider ollama --agent chat --input "Reply with the word ready."
+mem20googlez health
+mem20googlez run --provider ollama --agent chat --input "Reply with the word ready."
 ```
 
 Configuration can be supplied with `--config`, `MEM20GOOGLEZ_CONFIG`, or
@@ -85,7 +85,7 @@ runner or session and memory services to `Flow` persists every step.
 ## HTTP service
 
 ```bash
-/root/.venv/bin/mem20googlez serve --host 127.0.0.1 --port 8002
+mem20googlez serve --host 127.0.0.1 --port 8002
 ```
 
 Endpoints:
@@ -110,7 +110,7 @@ curl -sS http://127.0.0.1:8002/agents/chat/run \
 ```
 
 The service unit is `mem20googlez-serve.service`. It runs the installed
-`/root/.venv/bin/mem20googlez serve` command under systemd; after installation:
+`mem20googlez serve` command under systemd; after installation:
 
 ```bash
 systemctl status mem20googlez-serve.service
@@ -126,7 +126,7 @@ an HTTP provider unless a caller explicitly injects a provider object.
 
 ```bash
 cd /opt/mem20/mem20googlez
-/root/.venv/bin/python -m pytest -q
+python3 -m pytest -q
 ```
 
 The suite covers executable tools, the assistant/tool/final-answer loop,
@@ -134,5 +134,5 @@ cross-runner SQLite session persistence, file memory persistence, A-to-B flows,
 and the HTTP endpoints. A real local-endpoint smoke test can be run explicitly:
 
 ```bash
-MEM20GOOGLEZ_REAL_TESTS=1 /root/.venv/bin/python -m pytest -q -m real
+MEM20GOOGLEZ_REAL_TESTS=1 python3 -m pytest -q -m real
 ```

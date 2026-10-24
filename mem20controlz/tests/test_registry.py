@@ -47,7 +47,7 @@ def run_registry(
     monkeypatch.setattr(
         registry_mod.clicheck,
         "installed_binaries",
-        lambda: {name: {"path": f"/root/.venv/bin/{name}"} for name in binaries},
+        lambda: {name: {"path": f"/usr/local/bin/{name}"} for name in binaries},
     )
     monkeypatch.setattr(registry_mod, "fleet_inventory", lambda: list(fleet_rows))
     monkeypatch.setattr(registry_mod, "_http_probe", fake_http)

@@ -35,6 +35,7 @@ key never blocks the chain — it is simply skipped.
 
 import base64
 import os
+from pathlib import Path
 import re
 
 try:
@@ -96,7 +97,7 @@ _ENV_CANDIDATES = [
     "/opt/mem20/secrets/.env",
     os.environ.get("MEM20_ENV_FILE"),
     os.path.expanduser("~/.mem20/openwebui.env"),
-    os.path.join(os.path.dirname(__file__), ".env"),
+    str(Path(__file__).resolve().parent / ".env"),
     "/root/.env",
 ]
 

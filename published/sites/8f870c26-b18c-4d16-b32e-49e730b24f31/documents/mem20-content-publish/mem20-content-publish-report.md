@@ -12,7 +12,7 @@
 The canonical repository moved. Every content asset now points at the **single canonical
 repo** and nothing else:
 
-> **`https://github.com/bythewayz66-glitch/mem20`** — branch `main`, MIT, v2.1.0rc2, 257 tools, protocol 2025-06-18.
+> **`https://github.com/bythewayz66-glitch/mem20`** — branch `main`, MIT, v2.1.0rc2, 268 tools, protocol 2025-06-18.
 
 This supersedes the earlier v2 pack, which (a) still contained the retired repository
 string in live clone URLs and (b) hedged the canonical target as "pending". The canonical
@@ -33,7 +33,7 @@ Each status below was observed by curl in this run — not asserted from memory.
 | the historical source repository | GitHub REST API | **200** | ✅ exists (retired v1.0.1 source) |
 
 **Canonical repo head:** `main` @ `c274404a116f203b0f...` (marker commit published by GitHub Repo Assistant).
-**Tool surface:** **257 tools across 26 domains**, per the canonical repo README (§"Architecture": *"257 tools across 26 domains (verified by instantiating the server and counting `server.tools`)"*).
+**Tool surface:** **268 tools across 26 domains**, per the canonical repo README (§"Architecture": *"268 tools across 26 domains (verified by instantiating the server and counting `server.tools`)"*).
 
 ---
 
@@ -45,7 +45,7 @@ Each status below was observed by curl in this run — not asserted from memory.
 | 2 | Canonical target described as *"being published / pending"* | Canonical repo stated as **live** | It is published now. |
 | 3 | A second, historical repository named as "the verified live source" in **live** copy | **No second repository named anywhere a reader could act on it.** Only the canonical repo appears in actionable copy. | A published asset must not point a reader at a retired URL, and must not compete with the canonical repo. |
 | 4 | Install block: `git clone …/mem20` + `python -m venv .venv && source …` + `pip install "mcp<2"` + `pip install -e .` + `python -m mcp_cognitive_substrate.cli` | Real repo install: `git clone …/mem20.git` → `cd mem20` → `pip install -e .` (deps resolve into the current interpreter). Runtime entry point `mem20-mcp`. | **Verified against the canonical repo's own files:** `pyproject.toml` declares `dependencies = ["mcp>=2.1.1", "pydantic>=2.13.4", …]` and `[project.scripts] mem20-mcp = "launcher:main"`. There is **no `mcp_cognitive_substrate` module** and **no `mcp<2` pin** in the canonical repo — the v2 block would not work against it. |
-| 5 | `~258` / `~258–260` tool counts (v1) | **257 tools / 26 domains** | Repo-verified count. |
+| 5 | `~258` / `~258–260` tool counts (v1) | **268 tools / 26 domains** | Repo-verified count. |
 | 6 | `pip install mem20` shown as an install command | **Removed.** All assets say: *"`pip install mem20` is not yet published to PyPI"* + source install. | PyPI **404**. |
 
 ---

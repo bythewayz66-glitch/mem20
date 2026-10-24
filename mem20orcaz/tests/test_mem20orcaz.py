@@ -1,7 +1,7 @@
 """Hermetic test suite for mem20orcaz (pure stdlib; unittest).
 
 Run from the package root:
-    /root/.venv/bin/python -m unittest discover -s tests -v
+    /usr/local/bin/python -m unittest discover -s tests -v
 """
 
 from __future__ import annotations

@@ -205,10 +205,10 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.11'
-      - name: pip-audit requirements.txt
+      - name: pip audit
         run: |
           python3 -m pip install --upgrade pip pip-audit
-          python3 -m pip-audit -r requirements.txt || {
+          python3 -m pip_audit -r requirements.txt || {
             echo "::warning::pip-audit reported findings — review and bump pins"
             exit 0
           }

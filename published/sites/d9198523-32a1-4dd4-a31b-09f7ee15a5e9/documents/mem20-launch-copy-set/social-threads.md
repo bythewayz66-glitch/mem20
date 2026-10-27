@@ -17,7 +17,7 @@ mem20 competes on proof.
 Hard grounded/simulated partition. Contamination auditing. Evidence-based
 promotion. Append-only origin ledger.
 
-MIT. Self-hosted. 268 tools over MCP.
+MIT. Self-hosted. 270 tools over MCP.
 https://github.com/bythewayz66-glitch/mem20
 ```
 
@@ -58,7 +58,7 @@ Every memory carries its origin. History can't be quietly rewritten.
 Why MIT + self-hosted: you can't audit a black box. If your memory layer is the
 thing under audit, run it yourself.
 
-Python, MCP-native (JSON-RPC 2.0 over stdio), 268 tools across 26 domains.
+Python, MCP-native (JSON-RPC 2.0 over stdio), 270 tools across 27 domains.
 Installs with a clone, a venv and requirements.txt.
 ```
 
@@ -100,7 +100,7 @@ mem20 is persistent memory for AI agents built around that second question:
 — An append-only, origin-tagged ledger for every memory
 — MIT licensed, Python, self-hosted — no lock-in, no black box
 
-268 tools across 26 domains, delivered over MCP (JSON-RPC 2.0 over stdio).
+270 tools across 27 domains, delivered over MCP (JSON-RPC 2.0 over stdio).
 
 It's not a retrieval-quality race. It's a trust and provenance race.
 
@@ -125,7 +125,7 @@ github.com/bythewayz66-glitch/mem20
 ```
 I've been frustrated that most agent-memory tooling is a black box you can't
 self-host end to end. mem20 is an MIT-licensed Python MCP server you run in your
-own VPC: JSON-RPC 2.0 over stdio, 268 tools across 26 domains.
+own VPC: JSON-RPC 2.0 over stdio, 270 tools across 27 domains.
 
 The interesting architectural bit is a HARD partition between grounded memory
 (real source) and simulated memory (agent-generated) — two classes, not a flag.
@@ -180,14 +180,14 @@ Repo: https://github.com/bythewayz66-glitch/mem20
 
 ### r/LangChain (integration angle)
 
-**Title:** `mem20 — MCP-native agent memory (268 tools, grounded/simulated partition)`
+**Title:** `mem20 — MCP-native agent memory (270 tools, grounded/simulated partition)`
 
 **Body:**
 ```
 For anyone wiring memory into LangGraph / CrewAI / Pydantic AI: mem20 is an MCP
 server (JSON-RPC 2.0 over stdio) that adds persistent memory with an audit trail
 — a hard grounded/simulated partition, contamination auditing, evidence-based
-promotion, and an append-only origin-tagged ledger. 268 tools across 26 domains,
+promotion, and an append-only origin-tagged ledger. 270 tools across 27 domains,
 MIT, Python.
 
 Because it speaks MCP, it registers like any other stdio server:
@@ -212,4 +212,4 @@ Repo: https://github.com/bythewayz66-glitch/mem20
 - [x] Benchmarks labelled self-reported / not independently audited
 - [x] Promotion framed as evidence-based, not tamper-proof
 - [x] No banned phrasings, no competitor disparagement
-- [x] Canonical repo only; no `pip install mem20`
+- [x] Canonical repo only; no bare registry install

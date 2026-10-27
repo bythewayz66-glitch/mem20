@@ -2,7 +2,9 @@ import React, { useCallback, useEffect, useState } from "react";
 import StatusPill from "./components/StatusPill.jsx";
 import LoginGate from "./components/LoginGate.jsx";
 import { ErrorBanner, NoticeBanner } from "./components/Banner.jsx";
+import { StateNotice, StaleRibbon } from "./components/StateNotice.jsx";
 import { KNOWN_STATUSES } from "./status.js";
+import { LIFECYCLE, lifecycleFor, ageSecondsOf, formatAge } from "./lifecycle.js";
 import { useResource, formatClock } from "./hooks.js";
 import { fetchAuthStatus, isUnauthorized } from "./auth.js";
 import Overview from "./tabs/Overview.jsx";
@@ -98,6 +100,12 @@ export default function App() {
 
   const healthData = health.data;
 
+  // The shell's own lifecycle, separate from the fleet's status vocabulary.
+  // `backendDown` means we have never received a usable /api/health response, so
+  // there is nothing honest to render inside the content area.
+  const backendState = lifecycleFor(health);
+  const backendDown = backendState === LIFECYCLE.UNREACHABLE;
+
   if (locked) {
     return <LoginGate status={authStatus} onAuthenticated={handleAuthenticated} />;
   }
@@ -178,12 +186,28 @@ export default function App() {
 
         {health.error ? (
           <div className="strip">
-            <ErrorBanner title="cannot reach the control plane API" error={health.error} onRetry={health.refresh} />
+            <StateNotice
+              state={backendState}
+              context="control-plane API"
+              resource={health}
+              onRetry={health.refresh}
+            />
           </div>
         ) : null}
-        {registry.error ? (
+        {!health.error && registry.error ? (
           <div className="strip">
-            <ErrorBanner title="registry unavailable" error={registry.error} onRetry={registry.refresh} />
+            <StateNotice
+              state={lifecycleFor(registry)}
+              context="registry"
+              resource={registry}
+              onRetry={registry.refresh}
+            />
+          </div>
+        ) : null}
+        {!health.error && !registry.error ? (
+          <div className="strip strip-quiet">
+            <StaleRibbon resource={health} context="control-plane API" onRetry={health.refresh} />
+            <StaleRibbon resource={registry} context="registry" onRetry={registry.refresh} />
           </div>
         ) : null}
 
@@ -198,13 +222,26 @@ export default function App() {
         ) : null}
 
         <div className="content">
-          {view === "overview" ? (
-            <Overview health={health} registry={registry} manifest={manifest} onRefreshAll={refreshAll} />
-          ) : null}
-          {view === "subsystems" ? <Subsystems registry={registry} coverage={coverage} /> : null}
-          {view === "cli" ? <CliCoverage coverage={coverage} /> : null}
-          {view === "websites" ? <Websites manifest={manifest} /> : null}
-          {view === "dreams" ? <Dreams /> : null}
+          {backendDown ? (
+            // Never a blank pane: the backend is gone, so say so once, here,
+            // instead of letting five tabs each render an empty rectangle.
+            <StateNotice
+              state={backendState}
+              context="control plane"
+              resource={health}
+              onRetry={health.refresh}
+            />
+          ) : (
+            <>
+              {view === "overview" ? (
+                <Overview health={health} registry={registry} manifest={manifest} onRefreshAll={refreshAll} />
+              ) : null}
+              {view === "subsystems" ? <Subsystems registry={registry} coverage={coverage} /> : null}
+              {view === "cli" ? <CliCoverage coverage={coverage} /> : null}
+              {view === "websites" ? <Websites manifest={manifest} /> : null}
+              {view === "dreams" ? <Dreams /> : null}
+            </>
+          )}
         </div>
       </main>
     </div>

@@ -1244,3 +1244,73 @@ textarea.input {
   line-height: 1.6;
   resize: vertical;
 }
+
+/* ---- lifecycle / offline states (issue #39) ------------------------------ */
+/* A panel must never be blank where a failure occurred: these blocks replace the
+   empty rectangle with a named state, its cause, and a way out. */
+
+.state-notice {
+  border: 1px solid var(--line);
+  border-left: 3px solid var(--line);
+  border-radius: 4px;
+  background: var(--surface, transparent);
+  padding: 12px 14px;
+  margin: 0 0 12px;
+}
+
+.state-notice-head {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-bottom: 6px;
+}
+
+.state-notice-title {
+  font-size: 13px;
+  line-height: 1.4;
+}
+
+.state-notice-body {
+  margin: 0;
+  font-size: 12.5px;
+  line-height: 1.6;
+  max-width: 82ch;
+  opacity: 0.85;
+}
+
+.state-notice-meta {
+  margin: 6px 0 0;
+  font-size: 11.5px;
+  opacity: 0.6;
+}
+
+.state-notice-compact {
+  padding: 8px 10px;
+  margin-bottom: 8px;
+}
+
+/* Each state borrows the tone already used by its pill so the shell does not
+   invent a second colour language. */
+.state-notice-backend-unreachable { border-left-color: #b4453a; }
+.state-notice-store-missing    { border-left-color: #8a6d1f; }
+.state-notice-stale            { border-left-color: #b07b1e; }
+.state-notice-starting         { border-left-color: #5b6673; }
+
+.stale-ribbon {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  flex-wrap: wrap;
+  font-size: 11.5px;
+  line-height: 1.5;
+  padding: 5px 10px;
+  margin: 0 0 8px;
+  border: 1px dashed #b07b1e;
+  border-radius: 4px;
+  opacity: 0.9;
+}
+
+.strip-quiet:empty {
+  display: none;
+}

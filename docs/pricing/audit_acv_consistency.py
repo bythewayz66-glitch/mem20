@@ -28,6 +28,18 @@ LOGOS = 120
 TIERS = [("Team", 6_000, 72), ("Business", 18_000, 12),
          ("Scale", 36_000, 12), ("Enterprise", 80_000, 4)]
 
+# --- tool surface -----------------------------------------------------------
+# Live surface is 270 tools / 27 domains. 257/26 and 268/26 are both retired; the
+# gate exists so a retired number cannot be reintroduced into canonical docs.
+SURFACE_LIVE = "270 tools / 27 domains"
+SURFACE_HIT = re.compile(r"\b(?:257|268)\s*(?:-|\s)?tools?\b|\b26\s*(?:-|\s)?domains?\b"
+                         r"|\b(?:257|268)\s*/\s*26\b", re.I)
+# A retirement marker within +/-2 lines means the text is quoting history on
+# purpose rather than asserting the current surface.
+SURFACE_HISTORY = re.compile(
+    r"retir|supersed|legacy|histor|no\s+longer|previously|stale|drift"
+    r"|banned|~~|was\s+(?:25|26)\b", re.I)
+
 SCAN_SUFFIXES = {".md", ".html", ".htm", ".csv", ".json", ".txt"}
 SKIP_DIRS = {".git", "node_modules", "corpus", ".sitemap", "target", "dist",
              ".venv", "venv", "__pycache__", "vendor", "site-packages"}
@@ -107,10 +119,54 @@ def iter_files(root: pathlib.Path):
         yield p
 
 
+def check_surface_drift(root: pathlib.Path) -> tuple[list[str], int]:
+    """Retired tool surface must not be REINTRODUCED into canonical docs.
+
+    The surface migrated 257/26 -> 268/26 -> 270/27. A retired number in an old
+    published artefact is a historical record, so this check runs only over the
+    canonical docs tree (`docs/` and the root README) and reuses the SAME
+    SKIP_DIRS as the ACV sweep. Diaries and changelogs are excluded because
+    their entire job is to narrate retired numbers.
+
+    A hit fails unless the same line marks it as history ("retired", "was",
+    "superseded", ...). That is what stops an accepted mention from being
+    quietly rewritten into a current-tense assertion.
+    """
+    errs: list[str] = []
+    n = 0
+    skip_names = {"CHANGELOG.md", "DIARY.md", "CANONICAL.md"}
+    for path in sorted((root / "docs").rglob("*")):
+        if not path.is_file() or path.suffix.lower() not in SCAN_SUFFIXES:
+            continue
+        if any(part in SKIP_DIRS for part in path.parts):
+            continue
+        if path.name in skip_names or path.name == pathlib.Path(__file__).name:
+            continue
+        if "pricing" in path.parts:          # registers + this harness live here
+            continue
+        rel = str(path.relative_to(root))
+        try:
+            lines = path.read_text(encoding="utf-8", errors="replace").splitlines()
+        except OSError:
+            continue
+        for i, line in enumerate(lines, 1):
+            if not SURFACE_HIT.search(line):
+                continue
+            window = "\n".join(lines[max(0, i - 2):i + 1])
+            if SURFACE_HISTORY.search(window):
+                continue
+            n += 1
+            errs.append(f"{rel}:{i} states a retired tool surface "
+                        f"({SURFACE_LIVE} is current): {line.strip()[:100]}")
+    return errs, n
+
+
 def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--root", default=".")
     ap.add_argument("-v", "--verbose", action="store_true")
+    ap.add_argument("--no-surface", action="store_true",
+                    help="ACV invariant only (skip the tool-surface gate)")
     args = ap.parse_args()
     root = pathlib.Path(args.root).resolve()
 
@@ -165,6 +221,19 @@ def main() -> int:
             print(f"  {f}:{ln}  ${val:,.0f}  |  {snip}")
         failures.extend(f"{f}:{ln} states ${v:,.0f} ACV" for f, ln, _, v in drift)
 
+    # ------------------------------------------------------- surface sweep
+    if not args.no_surface:
+        surface_errs, n_surface = check_surface_drift(root)
+        print(f"retired-surface claims in canonical docs : {n_surface}")
+        if surface_errs:
+            print("\nSURFACE DRIFT DETECTED — retired tool surface reintroduced:")
+            for e in surface_errs:
+                print("  ", e)
+            print(f"\n  Fix: state {SURFACE_LIVE}. If the line is a deliberate")
+            print("  historical note, mark it 'retired' / 'superseded' / 'was' on")
+            print("  the same line.")
+        failures.extend(surface_errs)
+
     if failures:
         print("\nAUDIT FAIL")
         for e in failures:
@@ -172,7 +241,8 @@ def main() -> int:
         return 1
 
     print("AUDIT PASS — every blended ACV figure equals the $14,000 house number,")
-    print("and the tier ladder reproduces it exactly (delta $0).")
+    print("the tier ladder reproduces it exactly (delta $0),")
+    print(f"and no canonical doc reintroduces a retired tool surface ({SURFACE_LIVE} is live).")
     return 0
 
 

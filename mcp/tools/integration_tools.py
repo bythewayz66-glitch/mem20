@@ -18,9 +18,14 @@ try:
     from mcp.server import Server
     from mcp.server.lowlevel.server import ServerRequestContext
     import mcp_types as mt
-except ImportError:
-    print("Error: mcp package not installed. Please install with: pip install mcp")
-    sys.exit(1)
+    MCP_SDK_AVAILABLE = True
+    MCP_SDK_IMPORT_ERROR = None
+except ImportError as _mcp_sdk_exc:  # pragma: no cover - only without the SDK
+    # Never sys.exit() at import time: pytest imports this module during
+    # collection and a SystemExit aborts the whole session instead of
+    # reporting one collection error. Full note in mcp/server.py.
+    MCP_SDK_AVAILABLE = False
+    MCP_SDK_IMPORT_ERROR = _mcp_sdk_exc
 
 sys.path.insert(0, os.environ.get("MEM20_STORE_PATH", os.path.expanduser("~/.mem20/store")))
 try:

@@ -113,7 +113,7 @@ fn start_backend(backend: tauri::State<'_, Mutex<Backend>>) -> Result<String, St
     // window is small but unavoidable without passing the fd through.
     drop(listener);
 
-    let child = spec.spawn().map_err(|e| e.to_string())?;
+    let child = spec.spawn().map_error(|e| e.to_string())?;
     let base = endpoint.base_url();
 
     {

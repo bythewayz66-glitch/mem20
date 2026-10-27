@@ -46,7 +46,9 @@ while no new instance can land. Fails on newly added:
 - `__pycache__/` or `*.pyc` (issue #22)
 - `*.db` / `*.sqlite3` / `-wal` / `-shm` (issue #83)
 - a dangling gitlink, mode `160000`
-- an absolute host path — `/home/<user>/`, `/Users/<user>/`, `/root/.venv` (issues #79, #80)
+- an absolute host path: a home directory under `/home/` or `/Users/`, or the root account's
+  `~/.venv` (issues #79, #80). This bullet deliberately names the shapes, not the literals, so the
+  policy document does not itself fail the gate it defines.
 - a secret-shaped line (`ghp_…`, `github_pat_…`, `sk-…`, `AKIA…`, private-key header). The count and
   rule are printed; the value never is, so the log cannot become the leak.
 

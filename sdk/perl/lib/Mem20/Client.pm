@@ -203,8 +203,30 @@ sub job_from {
     return $decoded;
 }
 
-# Poll job_status until the job leaves the running state, or the deadline
-# passes. Returns the last decoded status hashref.
+# The statuses that mean "finished, but there is no result in it". `ok` is the
+# only success spelling the server has.
+my %JOB_FAILED = map { $_ => 1 } qw(error not_found);
+
+# Poll job_status until the job reaches a terminal state, or the deadline
+# passes. Returns the decoded TERMINAL status hashref.
+#
+# Raises instead of returning whenever there is no result to return:
+#
+#   Mem20::JobTimeoutError  the deadline passed with the job still running
+#   Mem20::JobFailedError   the job ended `error` or `not_found`
+#
+# Returning the last observed status on timeout would be the job-path twin of
+# the isError bug: {"status":"running","result":null} is a truthy hashref with
+# no data in it, so `if ($final)` succeeds and ->{result} is undef. The whole
+# point of this method is to hand back an answer, so "no answer yet" has to be
+# an exception. `timeout => 0` is rejected rather than read as "never time
+# out" -- an unbounded poll loop is how a client hangs a cron job forever.
+#
+# Status vocabulary from mcp/server.py: _spawn_job() starts at 'running',
+# _run_job() ends at 'ok' or 'error', _job_status() answers 'not_found' for an
+# unknown id. There is no done/complete/finished spelling. pending and queued
+# are treated as non-terminal too, so a future server that queues work before
+# starting it does not silently become a dropped result.
 sub wait_for_job {
     my ($self, $job_id, %opts) = @_;
 
@@ -213,21 +235,71 @@ sub wait_for_job {
 
     my $timeout  = defined $opts{timeout} ? $opts{timeout} : $self->{config}->timeout;
     my $interval = defined $opts{interval} && $opts{interval} > 0 ? $opts{interval} : 0.25;
-    my $deadline = time + $timeout;
 
+    Mem20::ValidationError->throw(
+        message => 'wait_for_job timeout must be greater than 0 (an unbounded poll loop cannot be cancelled)',
+        tool    => 'job_status',
+    ) unless defined $timeout && $timeout =~ /^[0-9.]+$/ && $timeout > 0;
+
+    my $deadline = Time::HiRes::time() + $timeout;
+    my $polls    = 0;
     my $last;
+
     while (1) {
+        $polls++;
         my $raw = $self->tool( 'job_status', job_id => "$job_id" );
-        $last = $self->_decode_json_text($raw) // { status => 'unknown', raw => $self->text($raw) };
 
-        my $status = $last->{status} // '';
-        return $last if $status ne 'running' && $status ne 'pending' && $status ne 'queued';
+        $last = $self->_decode_json_text($raw)
+            // { status => 'unknown', raw => $self->text($raw) };
 
-        my $left = $deadline - time;
-        last if $left <= 0;
+        my $status = defined $last->{status} ? "$last->{status}" : '';
+
+        # Success: the only terminal state that carries a result.
+        if ( $status eq 'ok' ) {
+            # An `ok` with a null result is still a dropped answer. Do not
+            # pretend otherwise just because the status word looks good.
+            Mem20::JobFailedError->throw(
+                message => "job $job_id reported status 'ok' but carried no result",
+                job_id  => $job_id,
+                status  => $status,
+                last    => $last,
+            ) if !exists $last->{result} || !defined $last->{result};
+            return $last;
+        }
+
+        # Terminal failure: surface the server's own error text.
+        if ( $JOB_FAILED{$status} ) {
+            my $detail = defined $last->{error} ? $last->{error} : '';
+            $detail = $last->{raw} // '' if !length $detail && defined $last->{raw};
+            Mem20::JobFailedError->throw(
+                message => length $detail
+                    ? "job $job_id ended '$status': $detail"
+                    : "job $job_id ended '$status'",
+                job_id => $job_id,
+                status => $status,
+                last   => $last,
+            );
+        }
+
+        # Anything else is treated as "not finished yet", including an
+        # unrecognised status: guessing that an unknown word means success is
+        # how a future server state silently becomes a dropped result.
+        my $left = $deadline - Time::HiRes::time();
+        if ( $left <= 0 ) {
+            Mem20::JobTimeoutError->throw(
+                message => "job $job_id never reached a terminal state within ${timeout}s"
+                         . " (last status: " . ( length $status ? $status : 'unknown' )
+                         . ", polls: $polls)",
+                job_id  => $job_id,
+                status  => length $status ? $status : 'unknown',
+                polls   => $polls,
+                timeout => $timeout,
+                last    => $last,
+            );
+        }
+
         Time::HiRes::sleep( $interval < $left ? $interval : $left );
     }
-    return $last;
 }
 
 # Call a tool and, when it answers with a job envelope, wait for the real
@@ -673,7 +745,11 @@ Callable as a function or a method.
 =item C<< job_from($result) >> - decode a background-job envelope, or undef.
 
 =item C<< wait_for_job($job_id, %opts) >> - poll C<job_status> until the job
-finishes or C<timeout> passes.
+reaches a terminal state. Returns the terminal status hashref and B<never> a
+still-running one: it raises C<Mem20::JobTimeoutError> if C<timeout> passes
+with the job unfinished, and C<Mem20::JobFailedError> if the job ended C<error>
+or C<not_found> (or reported C<ok> with a null result). C<timeout> must be
+greater than 0.
 
 =item C<< call_tool_await($name, @args) >> - call a tool and, if it returns a
 job envelope, wait for the real result.
@@ -701,7 +777,23 @@ F<sdk/perl/AUDIT.md>.
 
 =head1 LONG-RUNNING TOOLS
 
-LLM-backed tools return a job envelope instead of an answer. Use
+LLM-backed tools (25 of them: C<cog_*>, C<imagination_*>, C<tot_*>,
+C<beam_search>, C<least_to_most>, C<react_reason>, C<theory_of_mind_*>,
+C<self_model_reflect>, C<memory_auto_consolidate>, C<cognitive_substrate>)
+answer with a job envelope -- C<{"job_id":...,"status":"running"}> -- as the
+text of a B<successful> result, so the answer is not in the response. Use
 C<call_tool_await> for those, or C<wait_for_job> on the C<job_id>.
+
+The envelope is not an answer and this SDK does not treat it as one:
+
+    my $final = eval { $client->call_tool_await(cog_plan => (goal => 'x')) };
+    if (my $err = $@) {
+        if (ref $err && $err->isa('Mem20::JobTimeoutError')) { warn "still running\n" }
+        if (ref $err && $err->isa('Mem20::JobFailedError'))  { warn "$err\n" }
+    }
+    else { print $final->{result} }
+
+Status vocabulary is the server's: C<running> while going, C<ok> when there is a
+result, C<error> when the job raised, C<not_found> when the id is unknown.
 
 =cut

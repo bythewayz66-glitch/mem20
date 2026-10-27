@@ -1,0 +1,90 @@
+--- a/docs/dashboard.html
++++ b/docs/dashboard.html
+@@ -316,6 +316,7 @@
+       <span class="chip">13 snapshots on launch day</span>
+       <span class="chip">Attribution: per-utm_content</span>
+       <span class="chip amber">Adversarial 0.000 disclosed</span>
++      <span class="chip hot">Surface 270 tools / 27 domains</span>
+       <span class="chip">No vanity metrics</span>
+       <span class="chip" id="repoChip">repo: bythewayz66-glitch/mem20</span>
+     </div>
+@@ -353,12 +354,13 @@
+         </div>
+         <div class="big sm" style="color:var(--amber)">403</div>
+         <div class="card-sub">
+-          The launch page — and this dashboard — return <b>403 Forbidden</b> to a plain anonymous request.
+-          Referral traffic from HN &middot; Product Hunt &middot; Reddit cannot load the page until the host resolves
+-          publicly, and every tracked link in section&nbsp;05 points there.
++          The <code>/sites/</code> copy of the launch page returns <b>403 Forbidden</b> to a plain anonymous
++          request under both a bare client and a Chrome UA, so it is <b>not</b> a usable public link and no
++          campaign link may point at it. The public surface is <b>GitHub Pages</b> at
++          <code>bythewayz66-glitch.github.io/mem20/</code>, which returns <b>200</b>.
+         </div>
+-        <div class="src">GET …/webpages/mem20-launch/index.html → {"detail":"Forbidden"}</div>
+-        <div class="statline"><span>verified <b>anon · no-UA · chrome-UA · with-UTM · +tk=200</b></span></div>
++        <div class="src">GET …/webpages/mem20-launch-v5/index.html → 403 · GitHub Pages /mem20/ → 200</div>
++        <div class="statline"><span>re-verified <b>2026-10-27 08:52 UTC · anon · no-UA + chrome-UA · token-free</b></span><span>token-bearing fetch returns 200 (content only, not public)</span></div>
+       </article>
+ 
+       <article class="card">
+@@ -669,9 +671,46 @@
+     </div>
+   </section>
+ 
+-  <!-- ============ 07 BENCHMARK CONTEXT ============ -->
++  <!-- ============ 07 TOOL SURFACE (270/27) ============ -->
++  <section id="surface">
++    <div class="sec-head"><span class="sec-num">07</span><h2>Tool surface &mdash; 270 tools / 27 domains</h2></div>
++    <p class="sec-sub">
++      The live surface <code>main</code> actually serves, counted by instantiating <code>Mem20MCPServer</code>
++      and reading <code>server.tools</code> &mdash; not copied from a prose sentence. The retired 257 / 26 figure
++      is retained below as a stated prior value so the change is auditable rather than silent.
++    </p>
++    <div class="bench">
++      <div class="row">
++        <div class="bcell"><div class="k">Tools</div><div class="v">270</div></div>
++        <div class="bcell"><div class="k">Domains</div><div class="v">27</div></div>
++        <div class="bcell"><div class="k">Capability registry</div><div class="v">889</div></div>
++        <div class="bcell adv"><div class="k">Retired surface</div><div class="v">257 / 26</div></div>
++      </div>
++      <div class="tablewrap" style="margin-top:16px">
++        <table>
++          <thead><tr><th>Source of truth</th><th>Carries</th><th>Role</th></tr></thead>
++          <tbody>
++            <tr><td><code>verify_mcp.py</code></td><td>270 (pinned default)</td><td>live <code>tools/list</code> handshake &mdash; CI fails on any drift</td></tr>
++            <tr><td><code>README.md</code></td><td>270 tools / 27 domains</td><td>public documentation surface</td></tr>
++            <tr><td><code>docs/index.html</code></td><td>270 tools / 27 domains</td><td>launch page this dashboard accompanies</td></tr>
++            <tr><td><code>docs/finance/inputs.json</code></td><td>270 / 27, prior 257 / 26</td><td>finance model input, records the retirement</td></tr>
++            <tr><td><code>CHANGELOG.md</code></td><td>270 / 27</td><td>records the correction from 257 / 26</td></tr>
++          </tbody>
++        </table>
++      </div>
++      <p class="caveat">
++        <b>27 is a grouping of 37 raw tool prefixes, not a contraction of the surface.</b>
++        Several prefixes share a domain (for example <code>cog_*</code> / <code>tot_*</code>,
++        <code>cloud_*</code> / <code>cloudstorage_*</code>, <code>self_model_*</code>), so the domain
++        table has more rows than there are domains. The tool total &mdash; 270 &mdash; is the hard number
++        and is enforced in CI.
++      </p>
++    </div>
++  </section>
++
++  <!-- ============ 08 BENCHMARK CONTEXT ============ -->
+   <section id="benchmarks">
+-    <div class="sec-head"><span class="sec-num">07</span><h2>Benchmark context</h2></div>
++    <div class="sec-head"><span class="sec-num">08</span><h2>Benchmark context</h2></div>
+     <div class="bench">
+       <p class="caveat" style="color:var(--text)">
+         mem20's published hit rates, shown here in full — including the row that does not flatter it.
+@@ -690,9 +729,9 @@
+     </div>
+   </section>
+ 
+-  <!-- ============ 08 HOW TO WIRE LIVE DATA ============ -->
++  <!-- ============ 09 HOW TO WIRE LIVE DATA ============ -->
+   <section id="notes">
+-    <div class="sec-head"><span class="sec-num">08</span><h2>Wiring &amp; guardrails</h2></div>
++    <div class="sec-head"><span class="sec-num">09</span><h2>Wiring &amp; guardrails</h2></div>
+     <div class="notes">
+       <div class="note">
+         <h3>To make sessions live</h3>

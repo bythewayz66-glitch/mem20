@@ -25,6 +25,13 @@ module Mem20
 
     attr_reader :config
 
+    # Replace the lazily built transport. Used by tests (an in-process double
+    # instead of a child process) and by callers bringing their own transport;
+    # it is synchronised so it cannot race the lazy `#transport` build.
+    def transport=(candidate)
+      @transport_mutex.synchronize { @transport = candidate }
+    end
+
     # Lazily start (and memoise) the underlying transport, completing the MCP
     # handshake before the first call.
     def transport
@@ -72,6 +79,54 @@ module Mem20
     end
 
     def text(result) = self.class.text(result)
+
+    # --- background jobs -------------------------------------------------
+    #
+    # A long-running tool (`cog_*`, `tot_*`, `imagination_*`, `beam_search`,
+    # `react_reason`, ...) answers `tools/call` with a job envelope instead of a
+    # result. These helpers turn that envelope back into a value.
+    #
+    #   job = client.job_from(client.cog_reason(question: "why is the sky blue?"))
+    #   result = client.wait_for_job(job, timeout: 120)
+    #   result.value   # => the tool's payload
+    #
+    # A rejected job raises Mem20::JobError; it never comes back as `nil`.
+
+    # Parse the envelope returned by a long-running tool. Accepts the
+    # `tools/call` result Hash, a {Mem20::JobEnvelope}, or a bare job id.
+    def job_from(response)
+      JobEnvelope.from(response)
+    end
+
+    # One non-blocking `job_status` poll. Returns a {Mem20::JobResult}; raises
+    # {Mem20::JobError} when the job was rejected.
+    def job_status(job)
+      Job.status(self, job)
+    end
+
+    # Server-side block: `job_wait` on the server, bounded by `timeout_ms`.
+    def job_wait(job, timeout_ms: 30_000)
+      envelope = JobEnvelope.from(job)
+      result = tool(envelope.wait_tool, job_id: envelope.job_id, timeout_ms: timeout_ms)
+      JobResult.from_snapshot(JobResult.snapshot(result), attempts: 1, timed_out: false)
+    end
+
+    # Poll a job until it reaches a terminal state, or until the wait window
+    # closes. Returns a {Mem20::JobResult}: `#ok?` with a decoded `#value` when
+    # the job finished, `#timed_out?` and still `running` when the window
+    # closed first. A rejected job (`error` / `not_found`) raises
+    # {Mem20::JobError}, so this never returns `nil`.
+    #
+    #   client.wait_for_job(job, timeout: 120, interval: 1)
+    #   client.wait_for_job(job, max_attempts: 3)   # bound a hung job
+    #   client.wait_for_job(job, Mem20::Job::WaitWindow.build(timeout: 5))
+    #
+    # `max_attempts` bounds the number of polls independently of `timeout`, so
+    # a job that keeps answering `running` is still bounded.
+    def wait_for_job(job, window = nil, **options)
+      window ||= Job::WaitWindow.build(**options)
+      Job.wait(self, job, window)
+    end
 
     # --- health surface --------------------------------------------------
 

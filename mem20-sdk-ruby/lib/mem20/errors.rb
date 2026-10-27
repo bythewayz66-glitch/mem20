@@ -20,6 +20,25 @@ module Mem20
     end
   end
 
+  # Raised when a background job did not produce a result: the server reported
+  # `error`, timed the job out, or no longer knows the job id (`not_found`).
+  #
+  # A rejected job raises rather than returning `nil`, so a non-nil return from
+  # `Client#wait_for_job` always means a real answer.
+  class JobError < Error
+    attr_reader :job_id, :status
+
+    def initialize(message, job_id: nil, status: nil)
+      super(message)
+      @job_id = job_id
+      @status = status
+    end
+  end
+
+  # Raised when a response cannot be read as a job envelope: the payload is not
+  # JSON, or it is JSON without a `job_id` / `status`.
+  class EnvelopeError < Error; end
+
   # Raised when the transport cannot reach (or died before answering) the server.
   class TransportError < Error; end
 end

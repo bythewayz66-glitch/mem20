@@ -4,6 +4,7 @@ require_relative "mem20/version"
 require_relative "mem20/errors"
 require_relative "mem20/config"
 require_relative "mem20/transport/stdio"
+require_relative "mem20/job"
 require_relative "mem20/client"
 
 # mem20 - Ruby SDK.

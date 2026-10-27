@@ -1,0 +1,13 @@
+[package]
+name = "mem20desktop"
+version = "0.1.0"
+edition = "2021"
+description = "Decision logic for the mem20controlz desktop shell (no Tauri, no WebView)"
+license = "MIT OR Apache-2.0"
+
+# Deliberately tiny. `serde_json` is here only because the payload we must
+# interpret is JSON from the backend; there is no HTTP client, no async runtime
+# and no Tauri type in this crate. That is what lets every rule in `tray` and
+# `poller` be tested on a machine with no display and no network.
+[dependencies]
+serde_json = "1"

@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=1920, initial-scale=1.0">
+    <title>mem20 — Auditable Agent Memory - Slide 9</title>
+    <!-- Google Fonts - Inter for modern, clean typography -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        * {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+        }
+        body {
+            height: 1080px;
+            width: 1920px;
+            margin: 0;
+            padding: 0;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+        }
+    </style>
+</head>
+<body>
+    <div style="position:relative;width:1920px;height:1080px;box-sizing:border-box;background:linear-gradient(135deg,#0B0A1F,#161340);color:#F5F5FF;font-family:Inter,sans-serif;overflow:hidden;padding:64px 90px;">
+  <div style="font-size:24px;letter-spacing:5px;color:#818CF8;font-weight:700;">TRUST &amp; GUARDRAILS</div>
+  <div style="font-size:62px;font-weight:800;margin-top:12px;">Published numbers &#8212; including the bad one</div>
+  <div style="font-size:21px;color:#A5A4C7;margin-top:10px;">From the mem20 claim ledger. Nothing rounded up, and the weakness is shown rather than buried.</div>
+
+  <div style="display:flex;gap:22px;margin-top:30px;">
+    <div style="width:400px;padding:26px 28px;box-sizing:border-box;background:rgba(34,197,94,0.10);border:1px solid rgba(34,197,94,0.4);border-radius:18px;text-align:center;">
+      <div style="font-size:56px;font-weight:900;color:#4ADE80;line-height:1;">1.000</div>
+      <div style="font-size:21px;color:#BBF7D0;margin-top:12px;font-weight:600;">Hit rate &#183; direct</div>
+    </div>
+    <div style="width:400px;padding:26px 28px;box-sizing:border-box;background:rgba(99,102,241,0.12);border:1px solid rgba(99,102,241,0.42);border-radius:18px;text-align:center;">
+      <div style="font-size:56px;font-weight:900;color:#A5B4FC;line-height:1;">0.800</div>
+      <div style="font-size:21px;color:#C7D2FE;margin-top:12px;font-weight:600;">Hit rate &#183; multi-hop</div>
+    </div>
+    <div style="width:400px;padding:26px 28px;box-sizing:border-box;background:rgba(245,158,11,0.12);border:1px solid rgba(245,158,11,0.48);border-radius:18px;text-align:center;">
+      <div style="font-size:56px;font-weight:900;color:#FBBF24;line-height:1;">0.000</div>
+      <div style="font-size:21px;color:#FCD34D;margin-top:12px;font-weight:600;">Adversarial hit &#9888;</div>
+    </div>
+    <div style="width:400px;padding:26px 28px;box-sizing:border-box;background:rgba(34,197,94,0.10);border:1px solid rgba(34,197,94,0.4);border-radius:18px;text-align:center;">
+      <div style="font-size:56px;font-weight:900;color:#4ADE80;line-height:1;">0.000</div>
+      <div style="font-size:21px;color:#BBF7D0;margin-top:12px;font-weight:600;">Leak rate</div>
+    </div>
+    <div style="width:400px;padding:26px 28px;box-sizing:border-box;background:rgba(34,197,94,0.10);border:1px solid rgba(34,197,94,0.4);border-radius:18px;text-align:center;">
+      <div style="font-size:56px;font-weight:900;color:#4ADE80;line-height:1;">0.0</div>
+      <div style="font-size:21px;color:#BBF7D0;margin-top:12px;font-weight:600;">Contamination rate</div>
+    </div>
+  </div>
+
+  <div style="margin-top:28px;padding:24px 32px;background:rgba(245,158,11,0.10);border-left:6px solid #F59E0B;border-radius:16px;">
+    <div style="font-size:22px;color:#FCD34D;line-height:1.6;"><strong>&#9888; Read this before quoting:</strong> adversarial hit rate <strong>0.000</strong> is a real, published weakness &#8212; mem20 does not claim resistance to adversarial memory injection. The benchmark corpus is deliberately small (<span style="font-family:Consolas,monospace;">mem20-agent-kb-v1</span>, 14 facts, 13 queries): a regression gate, not a leaderboard. There is <strong>no published LoCoMo / LongMemEval result</strong> and none is implied.</div>
+  </div>
+
+  <div style="display:flex;gap:24px;margin-top:24px;">
+    <div style="width:900px;padding:22px 30px;background:rgba(99,102,241,0.10);border-radius:14px;font-size:21px;color:#C7D2FE;line-height:1.6;"><strong>Audit surface:</strong> <span style="font-family:Consolas,monospace;color:#A5B4FC;">memory_audit_contamination()</span> inspects the grounded store and the BM25 corpus, returning <span style="font-family:Consolas,monospace;">contamination_rate</span> and violation counts. A clean system reports 0.0.</div>
+    <div style="flex:1;padding:22px 30px;background:rgba(99,102,241,0.10);border-radius:14px;font-size:21px;color:#C7D2FE;line-height:1.6;"><strong>Honest wording:</strong> promotion is evidence-based with an append-only, origin-tagged trail &#8212; not a security guarantee. A self-attestation weak point is documented and tracked.</div>
+  </div>
+</div>
+</body>
+</html>

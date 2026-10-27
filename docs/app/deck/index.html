@@ -38,15 +38,15 @@
   <div class="eyebrow">INVESTOR &amp; BOARD REVIEW - 27 OCTOBER 2026</div>
   <h1>mem20 - Investor &amp; Board Deck</h1>
   <p class="lede">Thirteen slides. Every claim carries the repo SHA or docs path it came from. The adversarial retrieval row is shown rather than omitted. Nothing on these slides is recalled from memory or rounded up.</p>
-  <div class="sha">baseline - 1264076698a00878acc3adacf7bf1d51eea315cc</div>
+  <div class="sha">baseline - 45445f4850377814cd95b7fa50c0a9153f76c163</div>
 
   <h2>Slides</h2>
   <div class="sub">13 slides - all reachable - each source-marked</div>
   <table>
     <thead><tr><th>#</th><th>Slide</th><th>Claim it makes</th><th>Source</th></tr></thead>
     <tbody>
-      <tr><td class="n">01</td><td><a href="slides/slide_01.html">Cover</a></td><td>7,974 files / 3.0.0 / 270-27 / $14,000, all pinned to one commit</td><td class="src">git ls-files / VERSION / verify_mcp.py:5 / docs/finance/inputs.json</td></tr>
-      <tr><td class="n">02</td><td><a href="slides/slide_02.html">The baseline, pinned</a></td><td>Eight facts read at 1264076, plus disclosed drift of main to b9de9aa</td><td class="src">GITHUB_GET_A_BRANCH / roster section 1 / inputs.json</td></tr>
+      <tr><td class="n">01</td><td><a href="slides/slide_01.html">Cover</a></td><td>7,975 files / 3.0.0 / 270-27 / $14,000, all pinned to one commit</td><td class="src">git ls-files / VERSION / verify_mcp.py:5 / docs/finance/inputs.json</td></tr>
+      <tr><td class="n">02</td><td><a href="slides/slide_02.html">The baseline, pinned</a></td><td>Eight facts re-read at 45445f48, which is main's head &mdash; no drift to disclose</td><td class="src">GITHUB_GET_A_BRANCH / roster section 1 / inputs.json</td></tr>
       <tr><td class="n">03</td><td><a href="slides/slide_03.html">What mem20 is</a></td><td>Contamination 0.0 / simulated records [] / 41 diagnostics, all healthy</td><td class="src">benchmarks/results/latest.md</td></tr>
       <tr><td class="n">04</td><td><a href="slides/slide_04.html">The tool surface</a></td><td>270 tools / 27 domains asserted in four independent places; 257/26 retired</td><td class="src">verify_mcp.py:5 / mcp-verify.yml:63 / README.md:161-242 / inputs.json</td></tr>
       <tr><td class="n">05</td><td><a href="slides/slide_05.html">Market sizing</a></td><td>TAM $1.28B / SAM $282M (22.03%) / SOM $1.68M (0.60%); SAM integer build is $12,000 short</td><td class="src">docs/finance/inputs.json / docs/finance/README.md:17-19, :80-82</td></tr>
@@ -55,7 +55,7 @@
       <tr><td class="n">08</td><td><a href="slides/slide_08.html">The adversarial row, shown</a></td><td>All nine retrieval rows verbatim; three adversarial rows at 0.000 on n=3</td><td class="src">benchmarks/results/latest.md - Retrieval quality</td></tr>
       <tr><td class="n">09</td><td><a href="slides/slide_09.html">What 0.000 means</a></td><td>Fails closed not confidently; a small denominator; not comparable to 92.5/94.4/94.8</td><td class="src">benchmarks/results/latest.md - preamble, Notes</td></tr>
       <tr><td class="n">10</td><td><a href="slides/slide_10.html">Trust surface</a></td><td>Six self-checks PASS; 14 facts / 3 simulated / 13 queries; rerank 101.4 vs 15.7 ms</td><td class="src">benchmarks/results/latest.md - Trustworthiness, Reranking</td></tr>
-      <tr><td class="n">11</td><td><a href="slides/slide_11.html">Our own audit findings</a></td><td>9,873 vs 7,974 tracked files; aiohttp missing; adversarial n=3</td><td class="src">inputs.json / a2a_tools.py:19 / server.py:87 / requirements*.txt</td></tr>
+      <tr><td class="n">11</td><td><a href="slides/slide_11.html">Our own audit findings</a></td><td>9,873 vs 7,975 tracked files; aiohttp missing; adversarial n=3</td><td class="src">inputs.json / a2a_tools.py:19 / server.py:87 / requirements*.txt</td></tr>
       <tr><td class="n">12</td><td><a href="slides/slide_12.html">The ask</a></td><td>Four decisions, each tied to a number; no change to TAM/SAM/SOM</td><td class="src">inputs.json / README.md / latest.md / requirements.txt</td></tr>
       <tr><td class="n">13</td><td><a href="slides/slide_13.html">Source register</a></td><td>Slide to claim to source, for all thirteen</td><td class="src">the register itself</td></tr>
     </tbody>
@@ -64,9 +64,9 @@
   <h2>Verification</h2>
   <div class="sub">how each headline number was checked</div>
   <table>
-    <thead><tr><th>Fact</th><th>Value</th><th>How verified at 1264076</th><th>Status</th></tr></thead>
+    <thead><tr><th>Fact</th><th>Value</th><th>How verified at 45445f48</th><th>Status</th></tr></thead>
     <tbody>
-      <tr><td>Tracked files</td><td class="ok">7,974</td><td class="src">git ls-files | wc -l</td><td class="ok">verified</td></tr>
+      <tr><td>Tracked files</td><td class="ok">7,975</td><td class="src">git ls-files | wc -l</td><td class="ok">verified</td></tr>
       <tr><td>VERSION</td><td class="ok">3.0.0</td><td class="src">cat VERSION</td><td class="ok">verified</td></tr>
       <tr><td>Tool surface</td><td class="ok">270 / 27</td><td class="src">verify_mcp.py:5, mcp-verify.yml:63, README.md:161-242, inputs.json</td><td class="ok">verified 4x</td></tr>
       <tr><td>Blended ACV</td><td class="ok">$14,000</td><td class="src">docs/finance/inputs.json - blended_acv</td><td class="ok">verified</td></tr>
@@ -74,7 +74,7 @@
       <tr><td>SAM</td><td class="ok">$282M</td><td class="src">docs/finance/inputs.json (carried input)</td><td class="warn">quoted; integer build $12k short</td></tr>
       <tr><td>SOM</td><td class="ok">$1.68M</td><td class="src">docs/finance/inputs.json - 120 x $14,000</td><td class="ok">exact, $0 variance</td></tr>
       <tr><td>Adversarial hit rate</td><td class="warn">0.000</td><td class="src">benchmarks/results/latest.md, n=3 per mode</td><td class="warn">reported, small n</td></tr>
-      <tr><td>Repo snapshot in finance file</td><td class="warn">9,873</td><td class="src">inputs.json repo_state vs measured 7,974</td><td class="warn">stale by 1,899</td></tr>
+      <tr><td>Repo snapshot in finance file</td><td class="warn">9,873</td><td class="src">inputs.json repo_state vs measured 7,975</td><td class="warn">stale by 1,898</td></tr>
     </tbody>
   </table>
 
@@ -84,13 +84,13 @@
   </div>
 
   <div class="flag">
-    <div class="t">DISCLOSED DRIFT</div>
-    <p>main has advanced to <span class="mono">b9de9aa84b04341ac873689875a9bf8dd1cc3b7c</span> (CI workflow restore, #117) since this baseline was cut. Every figure here was read at <span class="mono">1264076698a00878acc3adacf7bf1d51eea315cc</span>, so a reviewer diffing against today's main sees one commit of difference - not an inconsistency.</p>
+    <div class="t">PINNED TO CURRENT MAIN</div>
+    <p>This deck was rebased onto <span class="mono">45445f4850377814cd95b7fa50c0a9153f76c163</span>, main's head at the time of writing, and every figure was re-read there. A reviewer diffing against today's main sees the same tree. The earlier cut at <span class="mono">1264076</span> is superseded and no longer cited.</p>
   </div>
 
   <footer>
     mem20 - INVESTOR &amp; BOARD DECK - 27 OCTOBER 2026<br>
-    source of truth: github.com/bythewayz66-glitch/mem20 @ 1264076698a00878acc3adacf7bf1d51eea315cc<br>
+    source of truth: github.com/bythewayz66-glitch/mem20 @ 45445f4850377814cd95b7fa50c0a9153f76c163<br>
     deck source: docs/app/deck/ - branch content/ws3-investor-deck - live copies recorded in PERMANENT_URL.md
   </footer>
 </div>

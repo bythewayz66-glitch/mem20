@@ -2,39 +2,16 @@
 #include "mem20/errors.hpp"
 #include "mem20/version.hpp"
 
-#include <sstream>
-#include <utility>
-
-// transport internals
-namespace mem20 {
-namespace detail {
-class ChildProcess;
-ChildProcess* spawn_child_placeholder();
-}  // namespace detail
-}  // namespace mem20
+#include "child_process.hpp"  // internal: shared with transport.cpp
 
 #include <cstdio>
 #include <memory>
+#include <sstream>
+#include <string>
+#include <utility>
+#include <vector>
 
-// Re-declare ChildProcess interface used by this TU (defined in transport.cpp).
 namespace mem20 {
-namespace detail {
-
-class ChildProcess {
- public:
-  int pid{-1};
-  int to_child{-1};
-  int from_child{-1};
-  ~ChildProcess();
-  void close_all();
-  static ChildProcess spawn(const std::vector<std::string>& cmd,
-                            const std::string& cwd,
-                            const std::vector<std::pair<std::string, std::string>>& env);
-  void write_line(const std::string& line);
-  std::string read_line();
-};
-
-}  // namespace detail
 
 struct Session::Impl {
   ServerConfig cfg;
@@ -86,17 +63,89 @@ Result<Session> Session::spawn(const ServerConfig& cfg) {
 
 ServerInfo Session::server_info() const { return impl_->info; }
 
+namespace {
+
+// Pull the per-tool "name" values out of a tools/list reply.
+//
+// Depth-tracked on purpose: a tool's inputSchema can legitimately contain its own
+// "name" keys, and those sit one level deeper inside the tool object. Only a
+// "name" key sitting directly on a tool object (depth 2: array -> object) is a
+// tool name.
+std::vector<std::string> extract_tool_names(const std::string& resp) {
+  const std::string tools_key = "\"tools\":[";
+  std::vector<std::string> names;
+
+  const std::size_t start = resp.find(tools_key);
+  if (start == std::string::npos) return names;
+
+  int depth = 1;  // we are already inside the tools array
+  bool in_string = false;
+  bool escaped = false;
+
+  for (std::size_t i = start + tools_key.size(); i < resp.size(); ++i) {
+    const char c = resp[i];
+
+    if (in_string) {
+      if (escaped) {
+        escaped = false;
+      } else if (c == '\\') {
+        escaped = true;
+      } else if (c == '"') {
+        in_string = false;
+      }
+      continue;
+    }
+
+    if (c == '"') {
+      if (depth == 2 && resp.compare(i, 7, "\"name\":") == 0) {
+        std::size_t j = i + 7;
+        while (j < resp.size() && resp[j] == ' ') ++j;  // tolerate pretty-printing
+        if (j < resp.size() && resp[j] == '"') {
+          ++j;
+          std::string value;
+          bool value_escaped = false;
+          for (; j < resp.size(); ++j) {
+            const char d = resp[j];
+            if (value_escaped) {
+              value.push_back(d);
+              value_escaped = false;
+            } else if (d == '\\') {
+              value_escaped = true;
+            } else if (d == '"') {
+              break;
+            } else {
+              value.push_back(d);
+            }
+          }
+          names.push_back(std::move(value));
+          i = j;
+        }
+        continue;
+      }
+      in_string = true;
+      continue;
+    }
+
+    if (c == '[') {
+      ++depth;
+    } else if (c == ']') {
+      if (--depth <= 0) break;
+    } else if (c == '{') {
+      ++depth;
+    } else if (c == '}') {
+      --depth;
+    }
+  }
+
+  return names;
+}
+
+}  // namespace
+
 Result<std::vector<std::string>> Session::list_tools() {
   try {
     const std::string resp = impl_->rpc("tools/list", "{}");
-    // Minimal parse: count "name" occurrences is fragile; return raw-backed stub list size note.
-    std::vector<std::string> names;
-    // Clients should prefer full JSON parse; we expose a single synthetic entry if empty parse.
-    if (resp.find("\"name\"") != std::string::npos) {
-      names.push_back("(see tools/list JSON in server response)");
-    }
-    (void)resp;
-    return Result<std::vector<std::string>>::ok(std::move(names));
+    return Result<std::vector<std::string>>::ok(extract_tool_names(resp));
   } catch (const std::exception& e) {
     return Result<std::vector<std::string>>::fail(e.what());
   }
@@ -194,7 +243,7 @@ Result<std::vector<LedgerEntry>> Session::read_ledger(const LedgerFilter& filter
 Result<HealthStatus> Session::health() {
   HealthStatus h;
   h.ok = true;  // stdio session alive implies process is up; HTTP probe optional
-  return Result<HealthStatus>::ok(h);
+  return Result<HealthStatus>::ok(std::move(h));
 }
 
 Result<std::string> Session::tool(const std::string& name, const std::string& args_json) {

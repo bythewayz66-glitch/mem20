@@ -48,7 +48,7 @@ Every ledger entry carries `origin` (`user`, `tool`, `simulated`) and `store` (`
 **5. A prediction ledger that closes the loop.**
 `world_model_record_prediction` and `world_model_resolve_prediction` couple a forecast to its observed outcome. That is what makes "evidence" a measurable thing rather than a vibe: the promotion gate can point at a prediction that was made and then resolved.
 
-Around the memory core sits the rest of the surface — cognitive operations (reasoning, planning, reflection), a procedural skill library, a roadmap registry, an agent self-model, and the operational tool domains (filesystem, databases, cloud control planes, version control, messaging, scraping). That is where the **268 tools across 26 domains** figure comes from: it is the live count of registered tools on the server, not a marketing round-up.
+Around the memory core sits the rest of the surface — cognitive operations (reasoning, planning, reflection), a procedural skill library, a roadmap registry, an agent self-model, and the operational tool domains (filesystem, databases, cloud control planes, version control, messaging, scraping). That is where the **270 tools across 27 domains** figure comes from: it is the live count of registered tools on the server (268 domain tools plus 2 infrastructure tools), not a marketing round-up.
 
 ## The numbers — including the ones that aren't good
 

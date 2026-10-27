@@ -1,0 +1,720 @@
+{
+  "schema_version": "1.0",
+  "generated_at": "2026-10-27T08:52:26Z",
+  "repository": "bythewayz66-glitch/mem20",
+  "mode": "repo",
+  "telemetry_disclaimer": "mem20 has no visitor or install telemetry. Nothing in this file is derived from users, sessions, traffic or downloads. Every figure comes from git history, the GitHub REST API, or a local test collection run.",
+  "window": {
+    "since": "2026-10-20T00:00:00Z",
+    "until": "2026-10-27T08:50:00Z",
+    "until_inclusive": false,
+    "semantics": "half-open [since, until)",
+    "span_days": 7.3681
+  },
+  "commit_velocity": {
+    "branch": "main",
+    "window": {
+      "since": "2026-10-20T00:00:00Z",
+      "until": "2026-10-27T08:50:00Z",
+      "span_days": 7.3681
+    },
+    "commits": 134,
+    "commits_per_day": 18.187,
+    "commits_per_week": 127.31,
+    "distinct_authors": 12,
+    "top_authors": [
+      {
+        "author": "bythewayz66-glitch",
+        "commits": 84
+      },
+      {
+        "author": "Mem20 Content",
+        "commits": 30
+      },
+      {
+        "author": "Slides Assistant",
+        "commits": 4
+      },
+      {
+        "author": "dependabot[bot]",
+        "commits": 4
+      },
+      {
+        "author": "UX Researcher Agent",
+        "commits": 2
+      },
+      {
+        "author": "aurorajammee",
+        "commits": 2
+      },
+      {
+        "author": "UX Researcher",
+        "commits": 2
+      },
+      {
+        "author": "Mem20-admin",
+        "commits": 2
+      },
+      {
+        "author": "mem20-webdev",
+        "commits": 1
+      },
+      {
+        "author": "Finance Assistant",
+        "commits": 1
+      }
+    ],
+    "busiest_day": {
+      "date_utc": "2026-10-27",
+      "commits": 64
+    },
+    "busiest_day_author_local": {
+      "date_author_local": "2026-10-26",
+      "commits": 55
+    },
+    "days_with_commits": 6,
+    "utc_by_day": {
+      "2026-10-20": 14,
+      "2026-10-22": 19,
+      "2026-10-23": 30,
+      "2026-10-24": 6,
+      "2026-10-25": 1,
+      "2026-10-27": 64
+    },
+    "author_local_by_day": {
+      "2026-10-19": 7,
+      "2026-10-20": 7,
+      "2026-10-21": 18,
+      "2026-10-22": 25,
+      "2026-10-23": 9,
+      "2026-10-24": 3,
+      "2026-10-25": 1,
+      "2026-10-26": 55,
+      "2026-10-27": 9
+    },
+    "bucket_note": "utc_by_day bills each commit to its UTC calendar date and always sums to `commits`. author_local_by_day uses the author's own offset (git log --date=short) and matches a hand count done that way. Near midnight the two move commits between days by up to the offset, so both are reported.",
+    "merge_commits": 6,
+    "head_sha": "1264076698a00878acc3adacf7bf1d51eea315cc",
+    "head_commit_at": "2026-10-27T08:39:10Z",
+    "commits_all_time_on_branch": 297
+  },
+  "pr_cycle_time": {
+    "per_pr": [
+      {
+        "number": 103,
+        "title": "Wire mem20oreo into mem20agentz via the oreo extra; restore OREO tests (#30)",
+        "state": "open",
+        "draft": false,
+        "opened_at": "2026-10-24T05:00:36Z",
+        "merged_at": null,
+        "closed_at": null,
+        "merge_commit_sha": "d2c5434b2ebf034bed514369a4b7133be5303db2",
+        "cycle_hours": null,
+        "cycle_minutes": null,
+        "merged": false,
+        "head_sha": "44c687d564fdda2fb56326954bd1d16038b32732"
+      },
+      {
+        "number": 104,
+        "title": "Triage: fix/issues-5-18-complete (21 commits) \u2014 superseded by main, do not merge as-is",
+        "state": "open",
+        "draft": false,
+        "opened_at": "2026-10-27T01:56:22Z",
+        "merged_at": null,
+        "closed_at": null,
+        "merge_commit_sha": null,
+        "cycle_hours": null,
+        "cycle_minutes": null,
+        "merged": false,
+        "head_sha": "d25015a149ae7cc00138af3887f0df3e278579c6"
+      },
+      {
+        "number": 105,
+        "title": "Prove the Telegram turnstile bridge without a live bot token (#43)",
+        "state": "open",
+        "draft": false,
+        "opened_at": "2026-10-27T02:00:23Z",
+        "merged_at": null,
+        "closed_at": null,
+        "merge_commit_sha": "4acc45105fa2f6167139222a893f0c4065cbda75",
+        "cycle_hours": null,
+        "cycle_minutes": null,
+        "merged": false,
+        "head_sha": "fc8e0a44070c38c62c1e2c8f7d9bd7fc91183308"
+      },
+      {
+        "number": 106,
+        "title": "docs(sdk/cpp): verify 270/27 surface against live server; fix stale baseline version and citations",
+        "state": "open",
+        "draft": false,
+        "opened_at": "2026-10-27T02:00:44Z",
+        "merged_at": null,
+        "closed_at": null,
+        "merge_commit_sha": "428baee08b302e50bde69dfe0fed8135e3800698",
+        "cycle_hours": null,
+        "cycle_minutes": null,
+        "merged": false,
+        "head_sha": "c8b8ab904cfdb0fc6a595d65d3c6a22a006ac82f"
+      },
+      {
+        "number": 107,
+        "title": "Fix Ruby SDK: pin mem20 surface to 270 tools / 27 domains + fix #tool binding",
+        "state": "open",
+        "draft": false,
+        "opened_at": "2026-10-27T02:01:35Z",
+        "merged_at": null,
+        "closed_at": null,
+        "merge_commit_sha": "f54963def2ad3bfde94655a3b3fab2664e1ab2f5",
+        "cycle_hours": null,
+        "cycle_minutes": null,
+        "merged": false,
+        "head_sha": "051cc8667e1f2cc2fc61383ad8649ed7c103d420"
+      },
+      {
+        "number": 108,
+        "title": "mem20controlz: first-class offline/degraded lifecycle states (#39)",
+        "state": "open",
+        "draft": false,
+        "opened_at": "2026-10-27T02:04:32Z",
+        "merged_at": null,
+        "closed_at": null,
+        "merge_commit_sha": "4413eb21b2641214aaec22dd68657ac2ff857f7c",
+        "cycle_hours": null,
+        "cycle_minutes": null,
+        "merged": false,
+        "head_sha": "ea7450768773c33a7088c5eabfdbd28be4fb6a20"
+      },
+      {
+        "number": 109,
+        "title": "mem20controlz: Cmd-K command palette across panels, CLI audit and dreams (#38)",
+        "state": "open",
+        "draft": false,
+        "opened_at": "2026-10-27T02:07:28Z",
+        "merged_at": null,
+        "closed_at": null,
+        "merge_commit_sha": "563d3b82ec58e41f20eaf4a010bbccfe30bfa529",
+        "cycle_hours": null,
+        "cycle_minutes": null,
+        "merged": false,
+        "head_sha": "93999a55e6a610e9ba90723ed44212a4120c1615"
+      },
+      {
+        "number": 110,
+        "title": "fix(sdk/perl): bind the 270-tool / 27-domain surface correctly, stop reporting failures as success",
+        "state": "open",
+        "draft": false,
+        "opened_at": "2026-10-27T02:11:49Z",
+        "merged_at": null,
+        "closed_at": null,
+        "merge_commit_sha": "b1b625eda921e9c5a6951f8bc7e6199778efe3d8",
+        "cycle_hours": null,
+        "cycle_minutes": null,
+        "merged": false,
+        "head_sha": "d8cc16b23937743c61fcbaf615dbd38de782a00f"
+      },
+      {
+        "number": 111,
+        "title": "docs(ops): publish the one working GitHub access path + evidence register",
+        "state": "open",
+        "draft": false,
+        "opened_at": "2026-10-27T07:43:16Z",
+        "merged_at": null,
+        "closed_at": null,
+        "merge_commit_sha": "7fa30d64c1548d8cdeeed4d78fba93c1141b8d6f",
+        "cycle_hours": null,
+        "cycle_minutes": null,
+        "merged": false,
+        "head_sha": "bef79279c2b99f44b14f3d60b11bacd865f537d0"
+      },
+      {
+        "number": 112,
+        "title": "fix(syntax-gate): make the tree-wide Syntax gate pass everywhere (#17, #80)",
+        "state": "closed",
+        "draft": false,
+        "opened_at": "2026-10-27T07:56:47Z",
+        "merged_at": "2026-10-27T08:28:34Z",
+        "closed_at": "2026-10-27T08:28:34Z",
+        "merge_commit_sha": "d3ec87699242e89830c66914e49763a352f4f25e",
+        "cycle_hours": 0.5297,
+        "cycle_minutes": 31.78,
+        "merged": true,
+        "head_sha": "38a3c8073bef498f8873f4a449663687595ba934"
+      },
+      {
+        "number": 113,
+        "title": "feat(tray): #37 system tray, fleet-health glyph and native notifications",
+        "state": "open",
+        "draft": false,
+        "opened_at": "2026-10-27T08:19:54Z",
+        "merged_at": null,
+        "closed_at": null,
+        "merge_commit_sha": "f75c3918c0fe595b9dae77d195abaa8b081a1ca8",
+        "cycle_hours": null,
+        "cycle_minutes": null,
+        "merged": false,
+        "head_sha": "201c8315fc11a474df68fe4400b2b9517963289e"
+      }
+    ],
+    "summary": {
+      "prs_in_range": 11,
+      "merged": 1,
+      "open_or_unmerged": 10,
+      "cycle_time_samples": 1,
+      "cycle_hours_mean": 0.5297,
+      "cycle_hours_median": 0.5297,
+      "cycle_hours_min": 0.5297,
+      "cycle_hours_max": 0.5297,
+      "note": "Cycle time is only measurable on merged PRs. A single merged PR in the range yields an n=1 mean -- an observation, not a distribution. Do not report it as an average cycle time."
+    }
+  },
+  "issues": {
+    "open": 5,
+    "closed": 51,
+    "total": 56,
+    "open_numbers": [
+      30,
+      35,
+      36,
+      37,
+      40
+    ],
+    "endpoint_note": "GitHub's /issues endpoint also returns pull requests; those are excluded here, otherwise 'open issues' is overstated by exactly the open PR count."
+  },
+  "branch_divergence": {
+    "base": "main",
+    "base_sha": "1264076698a00878acc3adacf7bf1d51eea315cc",
+    "side_branches": 31,
+    "diverged_with_unique_commits": 30,
+    "fully_merged_no_unique_commits": 1,
+    "total_unique_commits_ahead": 116,
+    "max_ahead": 21,
+    "max_behind": 120,
+    "stale_100_plus_behind": 10,
+    "cutoff": "2026-10-27T08:44:00Z",
+    "side_branches_at_cutoff": 29,
+    "created_after_cutoff": 2,
+    "branches_created_after_cutoff": [
+      "fix/restore-ci-yml-full",
+      "docs/ws1-workload-roster-2026-10-27"
+    ],
+    "branches": [
+      {
+        "branch": "fix/issues-5-18-complete",
+        "tip_sha": "d25015a149ae7cc00138af3887f0df3e278579c6",
+        "tip_at": "2026-10-22T06:50:54Z",
+        "ahead": 21,
+        "behind": 107,
+        "created_after_cutoff": false
+      },
+      {
+        "branch": "chore/wave1-git-hygiene",
+        "tip_sha": "8a038f697a446ffab8ca497abff0f024de475e1d",
+        "tip_at": "2026-10-21T01:51:21Z",
+        "ahead": 11,
+        "behind": 120,
+        "created_after_cutoff": false
+      },
+      {
+        "branch": "chore/tool-count-270-27",
+        "tip_sha": "85ca1ba4f8442577d72fee770cd11bb948692760",
+        "tip_at": "2026-10-27T02:02:53Z",
+        "ahead": 7,
+        "behind": 63,
+        "created_after_cutoff": false
+      },
+      {
+        "branch": "fix/ruby-sdk-mem20-surface-270",
+        "tip_sha": "051cc8667e1f2cc2fc61383ad8649ed7c103d420",
+        "tip_at": "2026-10-27T02:01:09Z",
+        "ahead": 7,
+        "behind": 58,
+        "created_after_cutoff": false
+      },
+      {
+        "branch": "chore/merge-adapz-autoz",
+        "tip_sha": "72b46985109faffd57333a6ea2e81f805a9efd24",
+        "tip_at": "2026-10-21T02:35:41Z",
+        "ahead": 6,
+        "behind": 120,
+        "created_after_cutoff": false
+      },
+      {
+        "branch": "feat/first-class-sdks-readme",
+        "tip_sha": "e665bab9864aa2c062dd4a7e8d146903d3a609d5",
+        "tip_at": "2026-10-22T05:06:37Z",
+        "ahead": 6,
+        "behind": 112,
+        "created_after_cutoff": false
+      },
+      {
+        "branch": "feat/ws2-tauri-shell-35",
+        "tip_sha": "0eae49153f94c07d736320ef5939ab50bd824a32",
+        "tip_at": "2026-10-27T08:04:50Z",
+        "ahead": 6,
+        "behind": 6,
+        "created_after_cutoff": false
+      },
+      {
+        "branch": "fix/perl-sdk-270-surface",
+        "tip_sha": "d8cc16b23937743c61fcbaf615dbd38de782a00f",
+        "tip_at": "2026-10-27T02:12:23Z",
+        "ahead": 6,
+        "behind": 38,
+        "created_after_cutoff": false
+      },
+      {
+        "branch": "feat/ws2-tray-notifications-37",
+        "tip_sha": "201c8315fc11a474df68fe4400b2b9517963289e",
+        "tip_at": "2026-10-27T08:19:09Z",
+        "ahead": 5,
+        "behind": 6,
+        "created_after_cutoff": false
+      },
+      {
+        "branch": "fix/restore-ci-yml-full",
+        "tip_sha": "ac224573ea2da0a9d2dfe253f46873423f97b2d2",
+        "tip_at": "2026-10-27T08:48:09Z",
+        "ahead": 4,
+        "behind": 0,
+        "created_after_cutoff": true
+      },
+      {
+        "branch": "fix/ws2-mcp-bootstrap-collect",
+        "tip_sha": "b08576617344149477cbe324efef64b2e15d7f2a",
+        "tip_at": "2026-10-23T23:48:49Z",
+        "ahead": 4,
+        "behind": 91,
+        "created_after_cutoff": false
+      },
+      {
+        "branch": "feat/38-command-palette",
+        "tip_sha": "93999a55e6a610e9ba90723ed44212a4120c1615",
+        "tip_at": "2026-10-27T02:07:14Z",
+        "ahead": 3,
+        "behind": 56,
+        "created_after_cutoff": false
+      },
+      {
+        "branch": "fix/issues-18-25",
+        "tip_sha": "6e03e463f972b6f1d270bcf091767c8182434473",
+        "tip_at": "2026-10-22T04:49:49Z",
+        "ahead": 3,
+        "behind": 117,
+        "created_after_cutoff": false
+      },
+      {
+        "branch": "fix/ws2-syntax-gate-tree-wide",
+        "tip_sha": "38a3c8073bef498f8873f4a449663687595ba934",
+        "tip_at": "2026-10-27T08:01:27Z",
+        "ahead": 3,
+        "behind": 6,
+        "created_after_cutoff": false
+      },
+      {
+        "branch": "chore/wave1-portable-paths",
+        "tip_sha": "94a224341fd820fb47f6fc0626591cd35e0bc8c0",
+        "tip_at": "2026-10-21T02:18:58Z",
+        "ahead": 2,
+        "behind": 120,
+        "created_after_cutoff": false
+      },
+      {
+        "branch": "docs/ionos-dns-mem20",
+        "tip_sha": "a114762f8dda6b99e9e9a30bd6a9504850c8a557",
+        "tip_at": "2026-10-27T08:42:09Z",
+        "ahead": 2,
+        "behind": 0,
+        "created_after_cutoff": false
+      },
+      {
+        "branch": "docs/ws1-github-access-path",
+        "tip_sha": "bef79279c2b99f44b14f3d60b11bacd865f537d0",
+        "tip_at": "2026-10-27T07:42:23Z",
+        "ahead": 2,
+        "behind": 6,
+        "created_after_cutoff": false
+      },
+      {
+        "branch": "feat/scale-corpus-2000",
+        "tip_sha": "d0f21e2d040b5279dca36ae1f9c2b0baa8382064",
+        "tip_at": "2026-10-21T01:47:38Z",
+        "ahead": 2,
+        "behind": 120,
+        "created_after_cutoff": false
+      },
+      {
+        "branch": "feat/ws2-tauri-sidecar-36",
+        "tip_sha": "b7163284d6f8d6ba3cb137e53b0275f9ad84cd01",
+        "tip_at": "2026-10-27T08:05:48Z",
+        "ahead": 2,
+        "behind": 6,
+        "created_after_cutoff": false
+      },
+      {
+        "branch": "fix/39-offline-degraded-ux",
+        "tip_sha": "ea7450768773c33a7088c5eabfdbd28be4fb6a20",
+        "tip_at": "2026-10-27T02:04:19Z",
+        "ahead": 2,
+        "behind": 56,
+        "created_after_cutoff": false
+      },
+      {
+        "branch": "fix/batch-13-47",
+        "tip_sha": "e0100159fbd0bb2111aadcd15d11848a16fc280d",
+        "tip_at": "2026-10-22T04:54:16Z",
+        "ahead": 2,
+        "behind": 117,
+        "created_after_cutoff": false
+      },
+      {
+        "branch": "fix/syntax-gate-diff-scope",
+        "tip_sha": "ddb147053420de975808873d190a8a7de2a5e342",
+        "tip_at": "2026-10-27T08:33:08Z",
+        "ahead": 2,
+        "behind": 5,
+        "created_after_cutoff": false
+      },
+      {
+        "branch": "dependabot/cargo/braid/ed25519-dalek-3",
+        "tip_sha": "b0a3a6e19445da1454033833b387a1e0963a9d4f",
+        "tip_at": "2026-10-22T05:03:37Z",
+        "ahead": 1,
+        "behind": 115,
+        "created_after_cutoff": false
+      },
+      {
+        "branch": "docs/ws1-workload-roster-2026-10-27",
+        "tip_sha": "05da8465c607ee0fa12982d50268bdbf35f88067",
+        "tip_at": "2026-10-27T08:47:01Z",
+        "ahead": 1,
+        "behind": 0,
+        "created_after_cutoff": true
+      },
+      {
+        "branch": "fix/43-telegram-turnstile-proof",
+        "tip_sha": "fc8e0a44070c38c62c1e2c8f7d9bd7fc91183308",
+        "tip_at": "2026-10-27T02:00:01Z",
+        "ahead": 1,
+        "behind": 56,
+        "created_after_cutoff": false
+      },
+      {
+        "branch": "fix/issue-30-mem20oreo-resolution",
+        "tip_sha": "44c687d564fdda2fb56326954bd1d16038b32732",
+        "tip_at": "2026-10-24T05:00:08Z",
+        "ahead": 1,
+        "behind": 66,
+        "created_after_cutoff": false
+      },
+      {
+        "branch": "fix/issues-5-18-safe",
+        "tip_sha": "8babe092a56a1f83ae3c9aead08617b96ccbc12d",
+        "tip_at": "2026-10-22T05:40:16Z",
+        "ahead": 1,
+        "behind": 107,
+        "created_after_cutoff": false
+      },
+      {
+        "branch": "fix/sdk-cpp-surface-verification",
+        "tip_sha": "c8b8ab904cfdb0fc6a595d65d3c6a22a006ac82f",
+        "tip_at": "2026-10-27T02:00:25Z",
+        "ahead": 1,
+        "behind": 54,
+        "created_after_cutoff": false
+      },
+      {
+        "branch": "fix/tests-unit-marker-exit5",
+        "tip_sha": "9e880351ed6ee5cd66bba69a3551d17f4726ffc2",
+        "tip_at": "2026-10-27T08:38:49Z",
+        "ahead": 1,
+        "behind": 1,
+        "created_after_cutoff": false
+      },
+      {
+        "branch": "probe/workflow-scope-check",
+        "tip_sha": "b8b98aa5d8bd8aec014a33065505d87b6d8973af",
+        "tip_at": "2026-10-27T08:25:37Z",
+        "ahead": 1,
+        "behind": 6,
+        "created_after_cutoff": false
+      },
+      {
+        "branch": "chore/tool-count-270",
+        "tip_sha": "7c0b3e8d9525cd8c3a9f8f1825267aed52fac68a",
+        "tip_at": "2026-10-27T01:50:05Z",
+        "ahead": 0,
+        "behind": 63,
+        "created_after_cutoff": false
+      }
+    ]
+  },
+  "tracked_file_growth": {
+    "base": "main",
+    "window_commits": 134,
+    "range_from_sha": "efe38d5e6201ee5be7e3dd46656dec97dce302fc",
+    "start_tracked_files": 7693,
+    "end_tracked_files": 7974,
+    "net_growth": 281,
+    "gross_added": 323,
+    "gross_removed": 42,
+    "ci_and_meta_added": 15,
+    "ci_and_meta_removed": 0,
+    "net_excluding_ci_and_meta": 266,
+    "added_sample": [
+      ".github/copilot-instructions.md",
+      ".github/dependabot.yml",
+      ".github/instructions/mcp-surface.instructions.md",
+      ".github/instructions/python-core.instructions.md",
+      ".github/instructions/rust-braid.instructions.md",
+      ".github/instructions/sdks.instructions.md",
+      ".github/instructions/web-frontend.instructions.md",
+      ".github/instructions/workflows.instructions.md",
+      ".github/pull_request_template.md",
+      ".github/workflows/copilot-setup-steps.yml",
+      ".github/workflows/finance-model-drift.yml",
+      ".github/workflows/mcp-verify.yml",
+      ".github/workflows/mem20-web.yml",
+      ".github/workflows/pr-gate.yml",
+      ".mcp.json",
+      ".pre-commit-config.yaml",
+      ".vscode/mcp.json",
+      "SDKS.md",
+      "braid/Cargo.lock",
+      "docs/INDEX.md",
+      "docs/app/.nojekyll",
+      "docs/app/assets/index-BMgU54DU.css",
+      "docs/app/assets/index-BmhMl8hv.js",
+      "docs/app/index.html",
+      "docs/benchmarks/README.md"
+    ],
+    "removed_sample": [
+      "chroma/chroma.sqlite3",
+      "data/ucg.sqlite3",
+      "data/ucg.sqlite3-shm",
+      "data/ucg.sqlite3-wal",
+      "entries/harness-roster-955868f47aab-phase-0-bootstrap.json",
+      "entries/harness-roster-955868f47aab-phase-1-dialogue-system.json",
+      "entries/harness-roster-955868f47aab-phase-2-executive-office.json",
+      "entries/harness-roster-955868f47aab-phase-3---characters---300-agent-population.json",
+      "entries/harness-roster-955868f47aab-phase-4-game-flow-systems.json",
+      "entries/harness-roster-955868f47aab-phase-5-6-factory-audio-vfx-polish.json",
+      "entries/harness-roster-955868f47aab-phase-7---performance---stress-testing.json",
+      "entries/harness-roster-955868f47aab-tlo.json",
+      "entries/harness:project-955868f47aab.json",
+      "entries/harness:project-lumen-forge.json",
+      "kanban/kanban_3.db",
+      "kanban/kanban_3.db-shm",
+      "kanban/kanban_3.db-wal",
+      "ledger.jsonl",
+      "mem20adaptiveachievementenginez/CAPABILITY.json",
+      "mem20officez/src_harvest/.github/CODEOWNERS",
+      "mem20officez/src_harvest/.github/FUNDING.yml",
+      "mem20officez/src_harvest/.github/ISSUE_TEMPLATE/bug_report.md",
+      "mem20officez/src_harvest/.github/ISSUE_TEMPLATE/config.yml",
+      "mem20officez/src_harvest/.github/ISSUE_TEMPLATE/feature_request.md",
+      "mem20officez/src_harvest/.github/SECURITY.md"
+    ],
+    "by_top_level_dir": {
+      "mem20orcaz": 2797,
+      "mem20officez": 616,
+      "mem20owebz": 595,
+      "published": 164,
+      "braid": 80,
+      "docs": 71,
+      "mem20agentz": 58,
+      "entries": 57,
+      "mem20controlz": 57,
+      "roadmaps": 55,
+      "2.0_roadmap": 45,
+      "mcp": 45,
+      ".": 43,
+      "mem20kilnz": 42,
+      "mem20_mcp": 35,
+      "mem20adaptiveinterfacecomposerz": 32,
+      "mem20-sdk-ruby": 30,
+      "mem20zimr": 30,
+      "mem20crewz": 29,
+      "mem20gamez": 25,
+      "mem20mktz": 25,
+      "sdk": 25,
+      "web": 25,
+      "bench": 24,
+      "mem20botz": 24
+    },
+    "note": "A large net delta inside a short window is usually CI and tracking-hygiene work rather than product surface; net_excluding_ci_and_meta separates the two."
+  },
+  "test_collection": {
+    "attempted": true,
+    "pytest_available": true,
+    "pytest_version": "pytest 9.1.1",
+    "whole_repo_collected": null,
+    "whole_repo_status": "exit 3",
+    "scoped_collected": 1814,
+    "scoped_errors": 29,
+    "scoped_exclude": "mcp",
+    "blocker": "whole-repo collection aborted: SystemExit: 1",
+    "method": "python3 -m pytest --collect-only -q",
+    "note": "Collection count only -- not a pass rate. A run that aborts during collection returns 0 tests; that is a harness defect and must not be reported as 'no tests'."
+  },
+  "reconciliation": {
+    "checks": [
+      {
+        "metric": "head_sha",
+        "anchor_value": "1264076698a00878acc3adacf7bf1d51eea315cc",
+        "measured_value": "1264076698a00878acc3adacf7bf1d51eea315cc",
+        "agree": true,
+        "delta": null,
+        "anchor_source": "ops baseline 2026-10-27 08:44Z (git log -1 after clone)",
+        "resolution": "measured == anchor"
+      },
+      {
+        "metric": "tracked_files",
+        "anchor_value": 7974,
+        "measured_value": 7974,
+        "agree": true,
+        "delta": 0,
+        "anchor_source": "ops baseline (git ls-files | wc -l)",
+        "resolution": "measured == anchor"
+      },
+      {
+        "metric": "side_branches_at_cutoff",
+        "anchor_value": 29,
+        "measured_value": 29,
+        "agree": true,
+        "delta": 0,
+        "anchor_source": "ops baseline (git for-each-ref refs/remotes/origin)",
+        "resolution": "measured == anchor"
+      },
+      {
+        "metric": "open_issues",
+        "anchor_value": 5,
+        "measured_value": 5,
+        "agree": true,
+        "delta": 0,
+        "anchor_source": "ops baseline (GitHub issues, state=open)",
+        "resolution": "measured == anchor"
+      },
+      {
+        "metric": "pr_112_opened_at",
+        "anchor_value": "2026-10-27T07:56:47Z",
+        "measured_value": "2026-10-27T07:56:47Z",
+        "agree": true,
+        "delta": null,
+        "anchor_source": "ops baseline (PR #112 created_at)",
+        "resolution": "measured == anchor"
+      },
+      {
+        "metric": "pr_112_merged_at",
+        "anchor_value": "2026-10-27T08:28:34Z",
+        "measured_value": "2026-10-27T08:28:34Z",
+        "agree": true,
+        "delta": null,
+        "anchor_source": "ops baseline (PR #112 merged_at)",
+        "resolution": "measured == anchor"
+      }
+    ],
+    "agree": 6,
+    "disagree": 0,
+    "policy": "Where a computed metric disagrees with a hand count, both are reported. No value is adjusted to fit an anchor."
+  }
+}

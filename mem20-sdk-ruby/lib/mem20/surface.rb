@@ -28,7 +28,7 @@ module Mem20
     DOMAIN_TOOLS = 268
 
     # Tools registered by the server itself, outside any domain module.
-    INFRA_TOOLS = %w[job_status job_wait].freeze
+    INFRA_TOOLS = ["job_status", "job_wait"].freeze
 
     # Every tool the server registers: the domain half plus the infra tools.
     TOOL_COUNT = DOMAIN_TOOLS + INFRA_TOOLS.size

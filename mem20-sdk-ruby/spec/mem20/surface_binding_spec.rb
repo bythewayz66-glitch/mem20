@@ -7,7 +7,7 @@ RSpec.describe Mem20::Client do
   subject(:client) { described_class.new(Mem20::Config.new) }
 
   let(:transport) { RecordingTransport.new }
-  let(:tool_list) { %w[memory_status memory_probe lie_status job_wait] }
+  let(:tool_list) { ["memory_status", "memory_probe", "lie_status", "job_wait"] }
 
   before do
     allow(client).to receive(:transport).and_return(transport)

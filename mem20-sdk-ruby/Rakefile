@@ -23,13 +23,13 @@ end
 # Run from the SDK directory with the repo checked out one level up:
 #
 #   rake surface:check
-namespace :surface do
-  REPO_ROOT = File.expand_path("../..", __dir__)
+module SurfaceCheck
+  REPO_ROOT = File.expand_path("..", __dir__)
   MCP_DIR = File.join(REPO_ROOT, "mcp")
 
   # `self.tools["name"] = mt.Tool(...)` is the only registration style in the
   # server; there is no decorator form to account for.
-  REGISTRATION = /self\.tools\["([a-z0-9_]+)"\]\s*=/.freeze
+  REGISTRATION = /self\.tools\["([a-z0-9_]+)"\]\s*=/
 
   # Domain modules: the 24 mixins under mcp/tools/ plus the three that live
   # directly in mcp/. `lie_bootstrap.py` / `error_handler.py` register nothing.
@@ -44,11 +44,16 @@ namespace :surface do
   # to the transport rather than to any domain.
   INFRA_FILE = File.join(MCP_DIR, "server.py")
 
-  def self.names_in(path)
+  DRIFT_MESSAGE = "surface drift detected - update lib/mem20/surface.rb " \
+                  "and the counts in README.md/docs/"
+
+  module_function
+
+  def names_in(path)
     File.read(path).scan(REGISTRATION).flatten.uniq
   end
 
-  def self.measure
+  def measure
     domain_files = DOMAIN_GLOBS.flat_map { |glob| Dir[glob] }.sort.uniq
     domain = domain_files.to_h { |path| [path, names_in(path)] }.reject { |_p, names| names.empty? }
     domain_tools = domain.values.flatten.uniq
@@ -56,44 +61,59 @@ namespace :surface do
     { modules: domain.size, domain: domain_tools.sort, infra: infra.sort }
   end
 
-  desc "Recount the mem20 tool surface from mcp/ and compare with Mem20::Surface"
-  task :check do
-    require_relative "lib/mem20/surface"
+  def actual
+    @actual ||= measure
+  end
 
+  def total
+    @total ||= (actual[:domain] + actual[:infra]).uniq
+  end
+
+  def mismatch(label, got, want, const_name)
+    return nil if got == want
+
+    "#{label}: source #{got} != Surface::#{const_name} #{want}"
+  end
+
+  def infra_problems
+    source = actual[:infra].sort
+    expected = Mem20::Surface::INFRA_TOOLS.sort
+    return [] if source == expected
+
+    ["infra tools: source #{source.inspect} != Surface::INFRA_TOOLS #{expected.inspect}"]
+  end
+
+  def problems
+    [
+      mismatch("domain modules", actual[:modules], Mem20::Surface::DOMAIN_COUNT, "DOMAIN_COUNT"),
+      mismatch("domain tools", actual[:domain].size, Mem20::Surface::DOMAIN_TOOLS, "DOMAIN_TOOLS"),
+      mismatch("total tools", total.size, Mem20::Surface::TOOL_COUNT, "TOOL_COUNT")
+    ].compact + infra_problems
+  end
+
+  def report
+    puts "source:  #{actual[:modules]} modules, #{actual[:domain].size} domain tools, " \
+         "#{actual[:infra].size} infra tools (#{actual[:infra].join(", ")}), #{total.size} total"
+    puts "surface: #{Mem20::Surface.summary}"
+  end
+
+  def run!
     abort "rake surface:check: no mcp/ directory at #{MCP_DIR}" unless Dir.exist?(MCP_DIR)
 
-    actual = measure
-    expected = Mem20::Surface
-    total = (actual[:domain] + actual[:infra]).uniq
+    require_relative "lib/mem20/surface"
 
-    problems = []
-    unless actual[:modules] == expected::DOMAIN_COUNT
-      problems << "domain modules: source #{actual[:modules]} != Surface::DOMAIN_COUNT " \
-                  "#{expected::DOMAIN_COUNT}"
-    end
-    unless actual[:domain].size == expected::DOMAIN_TOOLS
-      problems << "domain tools: source #{actual[:domain].size} != Surface::DOMAIN_TOOLS " \
-                  "#{expected::DOMAIN_TOOLS}"
-    end
-    unless actual[:infra].sort == expected::INFRA_TOOLS.sort
-      problems << "infra tools: source #{actual[:infra].inspect} != Surface::INFRA_TOOLS " \
-                  "#{expected::INFRA_TOOLS.inspect}"
-    end
-    unless total.size == expected::TOOL_COUNT
-      problems << "total tools: source #{total.size} != Surface::TOOL_COUNT " \
-                  "#{expected::TOOL_COUNT}"
-    end
+    report
+    problems.each { |problem| warn "MISMATCH #{problem}" }
+    abort DRIFT_MESSAGE unless problems.empty?
 
-    puts "source:  #{actual[:modules]} modules, #{actual[:domain].size} domain tools, " \
-         "#{actual[:infra].size} infra tools (#{actual[:infra].join(', ')}), #{total.size} total"
-    puts "surface: #{expected.summary}"
+    puts "OK - Mem20::Surface matches mcp/"
+  end
+end
 
-    if problems.empty?
-      puts "OK - Mem20::Surface matches mcp/"
-    else
-      problems.each { |p| warn "MISMATCH #{p}" }
-      abort "surface drift detected - update lib/mem20/surface.rb and the counts in README.md/docs/"
-    end
+namespace :surface do
+  desc "Recount the mem20 tool surface from mcp/ and compare with Mem20::Surface"
+  task :check do
+    SurfaceCheck.run!
   end
 end
 

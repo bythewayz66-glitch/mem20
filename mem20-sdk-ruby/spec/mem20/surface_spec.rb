@@ -13,7 +13,7 @@ RSpec.describe Mem20::Surface do
   end
 
   it "names the two infra tools registered outside any domain" do
-    expect(described_class::INFRA_TOOLS).to eq(%w[job_status job_wait])
+    expect(described_class::INFRA_TOOLS).to eq(["job_status", "job_wait"])
   end
 
   it "reports an internally consistent surface" do
@@ -30,16 +30,16 @@ RSpec.describe Mem20::Surface do
   # the gemspec once quoted 268, 270 and 257 respectively for the same surface.
   it "keeps the documented count and the surface constant in agreement" do
     root = File.expand_path("../..", __dir__)
-    documented = %w[README.md docs/USAGE.md docs/INSTALL.md mem20-sdk.gemspec]
+    documented = ["README.md", "docs/USAGE.md", "docs/INSTALL.md", "mem20-sdk.gemspec"]
                  .select { |f| File.exist?(File.join(root, f)) }
                  .to_h { |f| [f, File.read(File.join(root, f))] }
 
     documented.each do |file, body|
       expect(body).not_to include("257"), "#{file} still quotes the stale 257-tool surface"
       expect(body).not_to match(/268 tools across 26 domains/),
-                             "#{file} still quotes 268 tools across 26 domains"
+                          "#{file} still quotes 268 tools across 26 domains"
       expect(body).not_to match(/tool_names\.size\s+#\s*268/),
-                             "#{file} still predicts 268 from tool_names.size"
+                          "#{file} still predicts 268 from tool_names.size"
     end
 
     # Wherever a total is stated, it must be the same one.

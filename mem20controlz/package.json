@@ -1,8 +1,17 @@
 {
   "name": "mem20controlz",
   "private": true,
+  "version": "0.1.0",
+  "description": "Desktop + web entry points for the mem20 control plane.",
   "scripts": {
+    "web:install": "cd mem20controlz/web && npm ci",
+    "web:build": "cd mem20controlz/web && npm run build",
+    "desktop:core:test": "cd src-tauri/mem20desktop && cargo test",
     "desktop:dev": "cd src-tauri && cargo tauri dev",
-    "desktop:build": "cd src-tauri && cargo tauri build"
+    "desktop:build": "cd src-tauri && cargo tauri build",
+    "desktop:check": "cd src-tauri && cargo check --all-targets"
+  },
+  "devDependencies": {
+    "@tauri-apps/cli": "^2.1.0"
   }
 }

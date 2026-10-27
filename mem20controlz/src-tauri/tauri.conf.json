@@ -4,8 +4,8 @@
   "version": "0.1.0",
   "identifier": "com.mem20.controlz",
   "build": {
-    "frontendDist": "../mem20controlz/static",
-    "devUrl": "http://127.0.0.1:8741"
+    "frontendDist": "../../mem20controlz/static",
+    "devUrl": "http://127.0.0.1:5173"
   },
   "app": {
     "windows": [
@@ -13,14 +13,26 @@
         "title": "mem20 control plane",
         "width": 1280,
         "height": 800,
-        "resizable": true
+        "minWidth": 960,
+        "minHeight": 640,
+        "resizable": true,
+        "center": true
       }
     ],
-    "security": { "csp": null }
+    "security": {
+      "csp": "default-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'self' ipc: http://ipc.localhost"
+    }
   },
   "bundle": {
     "active": true,
     "targets": "all",
-    "icon": []
+    "icon": [
+      "icons/32x32.png",
+      "icons/128x128.png",
+      "icons/128x128@2x.png",
+      "icons/icon.png"
+    ],
+    "shortDescription": "Unified control plane for the mem20 fleet",
+    "longDescription": "Desktop shell for the mem20 control plane. Reuses the existing React console; the backend lifecycle, tray presence and packaging land in issues #36, #37 and #40."
   }
 }

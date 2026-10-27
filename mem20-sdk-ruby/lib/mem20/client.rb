@@ -10,7 +10,8 @@ module Mem20
   #   client.memory_store(content: "the sky is blue", category: "general")
   #   client.memory_recall(query: "sky", limit: 5)
   #
-  # {#tool} reaches every one of the 257 tools the server registers. The
+  # {#tool} reaches every one of the {Surface::TOOL_COUNT} tools the server
+  # registers (see {Mem20::Surface} for how that count decomposes). The
   # convenience accessors below cover the memory primitives; the dynamic
   # bindings let you call any registered tool as if it were a method.
   class Client
@@ -34,8 +35,18 @@ module Mem20
     end
 
     # Call any mem20 tool by name.
-    def tool(name, **params)
-      transport.request("tools/call", "name" => name.to_s, "arguments" => stringify(params))
+    #
+    # Arguments may be given as keywords or as a single Hash - both spellings
+    # are documented, and both must work. Under Ruby 3.x a trailing Hash is no
+    # longer converted to keywords automatically, so `tool("memory_status", {})`
+    # used to raise `ArgumentError: wrong number of arguments (given 2)`.
+    #
+    #   client.tool("memory_recall", query: "sky", limit: 5)
+    #   client.tool("memory_recall", {"query" => "sky", "limit" => 5})
+    #   client.tool("memory_status")
+    def tool(name, arguments = nil, **params)
+      merged = arguments.nil? ? params : merge_arguments(name, arguments, params)
+      transport.request("tools/call", "name" => name.to_s, "arguments" => stringify(merged))
     end
 
     # List the tools the server exposes.
@@ -139,6 +150,14 @@ module Mem20
       JSON.parse(body)
     rescue StandardError => e
       raise TransportError, "could not read #{@config.health_url}#{path}: #{e.message}"
+    end
+
+    def merge_arguments(name, arguments, params)
+      unless arguments.is_a?(Hash)
+        raise ArgumentError, "tool(#{name.inspect}) arguments must be a Hash, got #{arguments.class}"
+      end
+
+      arguments.to_h.merge(params)
     end
 
     def stringify(params)

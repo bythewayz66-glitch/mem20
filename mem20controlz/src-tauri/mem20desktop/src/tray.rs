@@ -56,6 +56,27 @@ impl FleetHealth {
         }
     }
 
+    /// The tray tooltip for this state.
+    ///
+    /// Leads with the **probe age**, not with "last refresh succeeded". Those
+    /// two numbers differ by the cache age, and showing the refresh clock is
+    /// how a 40-second-old reading gets read as live (AC-37-04). When the
+    /// reading is stale the tooltip says so, because a user who never opens the
+    /// window has only this text to go on.
+    pub fn tooltip(self, age_s: f64, stale: bool) -> String {
+        let state = self.accessible_name();
+        // A negative or non-finite age is not a measurement, so it is not shown.
+        if !age_s.is_finite() || age_s < 0.0 {
+            return state.to_string();
+        }
+        let age = format_age(age_s);
+        if stale {
+            format!("{state} - last probed {age} ago (stale)")
+        } else {
+            format!("{state} - probed {age} ago")
+        }
+    }
+
     /// Only these two are worth a native notification (README 1.3 AC-V3).
     /// `no-health` is a probe gap and `unknown` is an unconfirmed reading;
     /// notifying on either would accuse a subsystem on absent evidence.
@@ -98,7 +119,7 @@ impl RegistryPayload {
         let value: Value = serde_json::from_str(raw).ok()?;
         let object = value.as_object()?;
 
-        let panels = object
+        let panels: Vec<Panel> = object
             .get("panels")
             .and_then(Value::as_array)
             .map(|items| {
@@ -111,7 +132,7 @@ impl RegistryPayload {
                             name: panel
                                 .get("name")
                                 .and_then(Value::as_str)
-                                .unwrap_or_else(|| "unnamed")
+                                .unwrap_or("unnamed")
                                 .to_string(),
                             status: panel
                                 .get("status")
@@ -190,6 +211,22 @@ pub fn aggregate_fleet_health(payload: &RegistryPayload) -> FleetHealth {
     }
 }
 
+/// Human-readable age, always with a unit and never rounding a real age to
+/// zero. `age_s` is the backend's own figure, so it is quoted rather than
+/// recomputed from a local clock (AC-37-04).
+pub fn format_age(age_s: f64) -> String {
+    let seconds = age_s.max(0.0);
+    if seconds < 60.0 {
+        // At least "1 s": reporting a real 0.4 s reading as "0 s ago" makes a
+        // fresh probe look like it never ran.
+        format!("{} s", seconds.round().max(1.0) as u64)
+    } else if seconds < 3600.0 {
+        format!("{} min", (seconds / 60.0).round().max(1.0) as u64)
+    } else {
+        format!("{} h", (seconds / 3600.0).round().max(1.0) as u64)
+    }
+}
+
 /// Why an observation did not produce a notification.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum Suppressed {
@@ -218,6 +255,12 @@ impl Suppressed {
 }
 
 /// Suppression counters, so every observation is accounted for (AC-37-09).
+///
+/// `emitted` counts *notifications*; `panels_emitted` counts the panels those
+/// notifications covered. Keeping both is what makes the identity checkable:
+/// every panel observation ends up either in `panels_emitted` or in exactly one
+/// suppression bucket. An uncounted observation is how a "we never alert" bug
+/// hides, so the identity is asserted rather than assumed.
 #[derive(Debug, Default, Clone, PartialEq, Eq)]
 pub struct SuppressionCounts {
     pub unchanged: u32,
@@ -225,11 +268,18 @@ pub struct SuppressionCounts {
     pub stale: u32,
     pub authenticated_out: u32,
     pub muted: u32,
+    /// Notifications raised (a coalesced toast counts once).
     pub emitted: u32,
-
-    /// Number of observations rejected before panel-level evaluation. Kept out
-    /// of `emitted + suppressed` so the identity below stays exact.
-    pub out_of_scope: u32,
+    /// Panel observations covered by those notifications.
+    pub panels_emitted: u32,
+    /// A notification-worthy panel seen fewer than CONFIRMATIONS_REQUIRED
+    /// times. Not a suppression for a *reason* -- it is simply not yet
+    /// evidence -- so it gets its own named bucket rather than vanishing.
+    pub pending_confirmation: u32,
+    /// Panels whose status is not notification-worthy at all (`ok`,
+    /// `no-health`, `unknown`). Out of scope by design, counted so that
+    /// "out of scope" can never be confused with "silently dropped".
+    pub not_worthy: u32,
 }
 
 impl SuppressionCounts {
@@ -247,9 +297,20 @@ impl SuppressionCounts {
         self.unchanged + self.cached + self.stale + self.authenticated_out + self.muted
     }
 
-    /// Every panel observation ended up either emitted or suppressed.
+    /// Every panel observation was either notified, suppressed for one of the
+    /// five documented reasons, still awaiting confirmation, or not worthy of a
+    /// notification in the first place. Nothing is silently dropped.
+    ///
+    /// The last two buckets are not "suppressions" in the README's sense -- the
+    /// five reasons stay exactly as specified -- but they must still be counted,
+    /// because an uncounted observation is indistinguishable from a bug that
+    /// never fires.
     pub fn is_accounted(&self, panel_observations: u32) -> bool {
-        self.emitted + self.suppressed_total() + self.out_of_scope == panel_observations
+        self.panels_emitted
+            + self.suppressed_total()
+            + self.pending_confirmation
+            + self.not_worthy
+            == panel_observations
     }
 }
 
@@ -269,6 +330,11 @@ pub struct NotificationEngine {
     confirmations: std::collections::HashMap<String, (String, u32)>,
     /// panel_id -> (status, transition_seq) already notified.
     notified: std::collections::HashMap<String, (String, u64)>,
+    /// panel_id -> the transition sequence currently in force.
+    epochs: std::collections::HashMap<String, u64>,
+    /// panel_id -> status seen on the previous fresh sweep. Used to detect a
+    /// transition, including recovery to `ok`, which must re-arm the panel.
+    last_status: std::collections::HashMap<String, String>,
     transition_seq: u64,
     pub muted: bool,
     pub counts: SuppressionCounts,
@@ -295,70 +361,82 @@ impl NotificationEngine {
         payload: &RegistryPayload,
         authenticated: bool,
     ) -> Option<Notification> {
-        let panel_observations = payload.panels.len() as u32;
-        self.counts.out_of_scope += panel_observations;
+        let observations = payload.panels.len() as u32;
 
         // Pre-login: /api/registry is not ours to call, and a 401 is not an
         // outage (AC-37-14). Nothing is evaluated, nothing is accused.
         if !authenticated {
-            self.counts.authenticated_out += panel_observations;
-            self.counts.out_of_scope = self.counts.out_of_scope.saturating_sub(panel_observations);
+            self.counts.authenticated_out += observations;
             return None;
         }
 
         // Muted: the glyph still updates, alerts do not (AC-37-11).
         if self.muted {
-            self.counts.muted += panel_observations;
-            self.counts.out_of_scope = self.counts.out_of_scope.saturating_sub(panel_observations);
+            self.counts.muted += observations;
             return None;
         }
 
         // A stale or cached sweep is not evidence. Both suppress before any
-        // counter is incremented, so a frozen refresher can never drift into
-        // an alarm (AC-37-05, AC-37-06).
+        // confirmation counter moves, so a frozen refresher can never drift
+        // into an alarm (AC-37-05, AC-37-06).
         if is_stale(payload) {
-            self.counts.stale += panel_observations;
-            self.counts.out_of_scope = self.counts.out_of_scope.saturating_sub(panel_observations);
+            self.counts.stale += observations;
             return None;
         }
         if payload.cached {
-            self.counts.cached += panel_observations;
-            self.counts.out_of_scope = self.counts.out_of_scope.saturating_sub(panel_observations);
+            self.counts.cached += observations;
             return None;
         }
 
-        self.counts.out_of_scope = self.counts.out_of_scope.saturating_sub(panel_observations);
-
         let mut candidates: Vec<&Panel> = Vec::new();
-        let mut suppressed_panels: u32 = 0;
 
         for panel in &payload.panels {
+            let previous = self.last_status.get(&panel.id).cloned();
+            let changed = previous.as_deref() != Some(panel.status.as_str());
+
+            if changed {
+                // Any status change is a new transition -- including recovery
+                // to `ok`, which must re-arm the panel so a later re-failure is
+                // counted as new rather than deduped against the old toast.
+                self.transition_seq += 1;
+                let seq = self.transition_seq;
+                self.epochs.insert(panel.id.clone(), seq);
+                self.last_status
+                    .insert(panel.id.clone(), panel.status.clone());
+                self.confirmations
+                    .insert(panel.id.clone(), (panel.status.clone(), 1));
+                self.notified.remove(&panel.id);
+            } else {
+                let entry = self
+                    .confirmations
+                    .entry(panel.id.clone())
+                    .or_insert_with(|| (panel.status.clone(), 0));
+                entry.1 += 1;
+            }
+
             let health = status_to_health(&panel.status);
             if !health.is_notification_worthy() {
-                // ok / no-health / unknown: never notify.
+                self.counts.not_worthy += 1;
+                // ok / no-health / unknown: never notify. `no-health` is a probe
+                // gap and `unknown` is an unconfirmed reading; accusing on
+                // either is the false alarm this module exists to prevent.
                 continue;
             }
 
-            let entry = self
+            let confirmations = self
                 .confirmations
-                .entry(panel.id.clone())
-                .or_insert_with(|| (panel.status.clone(), 0));
-
-            if entry.0 == panel.status {
-                entry.1 += 1;
-            } else {
-                // A different status is a new transition, counted from zero.
-                *entry = (panel.status.clone(), 1);
-            }
-
-            if entry.1 < CONFIRMATIONS_REQUIRED {
+                .get(&panel.id)
+                .map(|(_, n)| *n)
+                .unwrap_or(0);
+            if confirmations < CONFIRMATIONS_REQUIRED {
+                self.counts.pending_confirmation += 1;
                 continue;
             }
 
+            let epoch = *self.epochs.get(&panel.id).unwrap_or(&0);
             if let Some((status, seq)) = self.notified.get(&panel.id) {
-                if status == &panel.status && *seq == self.transition_seq {
-                    self.counts.unchanged += 1;
-                    suppressed_panels += 1;
+                if status == &panel.status && *seq == epoch {
+                    self.counts.record(Suppressed::Unchanged);
                     continue;
                 }
             }
@@ -367,23 +445,29 @@ impl NotificationEngine {
         }
 
         if candidates.is_empty() {
-            if suppressed_panels > 0 {
-                // Already accounted individually above.
-                return None;
-            }
-            let _ = suppressed_panels;
             return None;
         }
 
-        self.transition_seq += 1;
-        let seq = self.transition_seq;
         for panel in &candidates {
-            self.notified
-                .insert(panel.id.clone(), (panel.status.clone(), seq));
+            self.notified.insert(
+                panel.id.clone(),
+                (panel.status.clone(), *self.epochs.get(&panel.id).unwrap_or(&0)),
+            );
         }
         self.counts.emitted += 1;
+        self.counts.panels_emitted += candidates.len() as u32;
 
         Some(coalesce(&candidates))
+    }
+
+    /// Record that the session itself lapsed, with no panel payload to blame.
+    ///
+    /// A 401 carries zero panels, so routing it through [`Self::observe`] with an
+    /// empty payload would account for zero observations and leave the
+    /// `authenticated_out` counter at 0 -- the counter AC-37-14 asks a reviewer
+    /// to read. The lapse is one observation even though it names no panel.
+    pub fn note_authenticated_out(&mut self) {
+        self.counts.authenticated_out += 1;
     }
 
     /// Statuses for every panel, for the tray glyph refresh.
@@ -422,7 +506,12 @@ fn coalesce(panels: &[&Panel]) -> Notification {
             .clone()
             .unwrap_or_else(|| format!("status: {}", panels[0].status))
     } else {
-        let names = panels.iter().take(3).map(|p| p.id.as_str()).collect::<Vec<_>>().join(", ");
+        let names = panels
+            .iter()
+            .take(3)
+            .map(|p| p.id.as_str())
+            .collect::<Vec<_>>()
+            .join(", ");
         if total > 3 {
             format!("{names} and {} more", total - 3)
         } else {
@@ -534,6 +623,35 @@ mod tests {
     }
 
     #[test]
+    fn the_tooltip_leads_with_probe_age_and_marks_staleness() {
+        let fresh = FleetHealth::Ok.tooltip(3.0, false);
+        assert!(fresh.contains("probed 3 s ago"), "{fresh}");
+        assert!(!fresh.contains("stale"));
+
+        let stale = FleetHealth::Ok.tooltip(90.0, true);
+        assert!(stale.contains("stale"), "{stale}");
+        assert!(stale.contains("2 min"), "age must use age_s: {stale}");
+    }
+
+    #[test]
+    fn a_real_age_is_never_rounded_down_to_zero() {
+        // "0 s ago" would make a just-run probe look like it never ran.
+        assert_eq!(format_age(0.2), "1 s");
+        assert_eq!(format_age(0.0), "1 s");
+        assert_eq!(format_age(59.6), "60 s");
+        assert_eq!(format_age(60.0), "1 min");
+        assert_eq!(format_age(3600.0), "1 h");
+    }
+
+    #[test]
+    fn a_non_measurement_age_is_not_presented_as_an_age() {
+        let tip = FleetHealth::Unknown.tooltip(f64::NAN, false);
+        assert_eq!(tip, "Fleet: unknown");
+        let neg = FleetHealth::Unknown.tooltip(-5.0, false);
+        assert_eq!(neg, "Fleet: unknown");
+    }
+
+    #[test]
     fn every_state_has_a_distinct_accessible_name() {
         let names: Vec<&str> = [
             FleetHealth::Starting,
@@ -641,8 +759,9 @@ mod tests {
         engine.observe(&down, true);
         assert!(engine.observe(&down, true).is_some());
 
-        // Recovery resets nothing explicitly, but the status change re-arms
-        // the confirmation counter.
+        // Recovery to `ok` advances the panel's epoch, which re-arms it. Without
+        // that, the re-failure below would be deduped against the first toast
+        // and never notified -- the T10 case in the doc's matrix.
         engine.observe(&up, true);
         engine.observe(&up, true);
 
@@ -668,9 +787,17 @@ mod tests {
         engine.observe(&p, true);
         let n = engine.observe(&p, true).expect("should coalesce");
 
-        assert!(n.title.contains('5'), "title must state the true total: {}", n.title);
+        assert!(
+            n.title.contains('5'),
+            "title must state the true total: {}",
+            n.title
+        );
         assert_eq!(n.panel_ids.len(), 3, "names at most 3");
-        assert!(n.body.contains("2 more"), "body must say how many are unnamed: {}", n.body);
+        assert!(
+            n.body.contains("2 more"),
+            "body must say how many are unnamed: {}",
+            n.body
+        );
         assert_eq!(engine.counts.emitted, 1, "one toast, not five");
     }
 
@@ -734,20 +861,41 @@ mod tests {
     }
 
     #[test]
-    fn every_observation_is_accounted_for() {
+    fn every_observation_is_accounted_for_across_a_mixed_sequence() {
         let mut engine = NotificationEngine::new();
-        let p = fresh(vec![panel("a", "unreachable"), panel("b", "ok")]);
-        for _ in 0..4 {
-            engine.observe(&p, true);
+        let mut observations = 0u32;
+
+        // A deliberately messy run: fresh, cached, stale and signed out.
+        let down = fresh(vec![panel("a", "unreachable"), panel("b", "ok")]);
+        let mut cached = down.clone();
+        cached.cached = true;
+        let mut stale = down.clone();
+        stale.stale = true;
+
+        for _ in 0..3 {
+            engine.observe(&down, true);
+            observations += 2;
         }
-        // 2 panels x 4 sweeps = 8 observations, each emitted-with or suppressed.
-        // `emitted` counts notifications (1), not panels, so compare panels
-        // only: suppressed + explicitly-considered must cover the rest.
+        engine.observe(&cached, true);
+        observations += 2;
+        engine.observe(&stale, true);
+        observations += 2;
+        engine.observe(&down, false);
+        observations += 2;
+
         assert!(
-            engine.counts.suppressed_total() + engine.counts.emitted <= 9,
-            "counters must not exceed observations"
+            engine.counts.is_accounted(observations),
+            "counters must cover every observation: {:?} vs {observations}",
+            engine.counts
         );
-        assert!(engine.counts.unchanged > 0);
+        assert_eq!(engine.counts.panels_emitted, 1, "one panel notified once");
+        assert_eq!(engine.counts.emitted, 1);
+        // 'a' was pending on its first sweep; 'b' is ok and out of scope.
+        assert_eq!(engine.counts.pending_confirmation, 1);
+        assert!(
+            engine.counts.not_worthy >= 3,
+            "ok panels are counted, not dropped"
+        );
     }
 
     #[test]

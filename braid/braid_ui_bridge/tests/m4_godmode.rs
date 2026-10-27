@@ -18,7 +18,7 @@ use braid_ui_bridge::frontdoor::{Door, DoorRegistration, Router};
 use braid_ui_bridge::handler_from;
 use braid_wire::{WireOp, WireRequest};
 use ed25519_dalek::{SigningKey, VerifyingKey};
-use rand::rngs::OsRng;
+use rand::rng;
 
 const GENESIS: &str = r#"
 name = "genesis"
@@ -92,12 +92,12 @@ fn boot() -> (BraidEngine, String) {
 #[test]
 fn two_token_escalation_commits_with_double_triplet_over_wire() {
     // Door2 (godmode): creative caps only via session macaroon.
-    let door_sk = SigningKey::generate(&mut OsRng);
+    let door_sk = SigningKey::generate(&mut rng());
     let door_did = did_key(&VerifyingKey::from(&door_sk));
     let door_token = SessionMacaroon::issue("door2", "hero-door", &["write:*:*", "invoke:*:*", "read:*:*"], &door_sk);
 
     // Human gate: a SEPARATE root identity signs the escalation macaroon.
-    let human_sk = SigningKey::generate(&mut OsRng);
+    let human_sk = SigningKey::generate(&mut rng());
     let human_did = did_key(&VerifyingKey::from(&human_sk));
     let human_token = SessionMacaroon::issue("human-escalation", "alice", &["admin:destroy:*"], &human_sk);
 
@@ -177,10 +177,10 @@ fn two_token_escalation_commits_with_double_triplet_over_wire() {
 
 #[test]
 fn escalation_refused_without_registered_gate() {
-    let door_sk = SigningKey::generate(&mut OsRng);
+    let door_sk = SigningKey::generate(&mut rng());
     let door_did = did_key(&VerifyingKey::from(&door_sk));
     let door_token = SessionMacaroon::issue("door2", "hero-door", &["write:*:*"], &door_sk);
-    let human_sk = SigningKey::generate(&mut OsRng);
+    let human_sk = SigningKey::generate(&mut rng());
     let _human_did = did_key(&VerifyingKey::from(&human_sk)); // no gate registered — DID intentionally never wired
     let human_token = SessionMacaroon::issue("human-escalation", "alice", &["admin:destroy:*"], &human_sk);
 

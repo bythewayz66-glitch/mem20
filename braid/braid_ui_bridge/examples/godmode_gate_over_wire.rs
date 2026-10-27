@@ -19,7 +19,7 @@ use braid_core::policy::{policy_from_toml, PolicySnapshot};
 use braid_keys::{did_key, SessionMacaroon};
 use braid_wire::{http_post_raw, BraidWireServer, WireOp, WireRequest, WireResponse};
 use ed25519_dalek::{SigningKey, VerifyingKey};
-use rand::rngs::OsRng;
+use rand::rng;
 
 use braid_ui_bridge::frontdoor::{Door, DoorRegistration, Router};
 use braid_ui_bridge::handler_from;
@@ -91,10 +91,10 @@ fn main() {
     });
 
     // --- identities ---
-    let door_sk = SigningKey::generate(&mut OsRng);
+    let door_sk = SigningKey::generate(&mut rng());
     let door_did = did_key(&VerifyingKey::from(&door_sk));
     let door_token = mac("door2", "hero-door", &["write:*:*", "invoke:*:*", "read:*:*"], &door_sk);
-    let human_sk = SigningKey::generate(&mut OsRng);
+    let human_sk = SigningKey::generate(&mut rng());
     let human_did = did_key(&VerifyingKey::from(&human_sk));
     let human_token = mac("human-escalation", "alice", &["admin:destroy:*"], &human_sk);
 

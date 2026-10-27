@@ -7,7 +7,8 @@ use overload '""' => sub { $_[0]->{message} }, fallback => 1;
 #
 # Deliberately hand-rolled rather than built on Exception::Class: the whole
 # point of this SDK is that it installs with no non-core dependencies, so the
-# exception hierarchy is four tiny packages instead of one CPAN prerequisite.
+# exception hierarchy is a handful of tiny packages instead of one CPAN
+# prerequisite.
 
 sub new {
     my ($class, %args) = @_;
@@ -53,28 +54,61 @@ use strict;
 use warnings;
 our @ISA = ('Mem20::Error');
 
+# A locally rejected argument. Derives from ConfigurationError so existing
+# `isa('Mem20::ConfigurationError')` handlers keep working after this class was
+# introduced; `isa('Mem20::ValidationError')` is available when the distinction
+# matters.
+package Mem20::ValidationError;
+use strict;
+use warnings;
+our @ISA = ('Mem20::ConfigurationError');
+
+sub new {
+    my ($class, %args) = @_;
+    my $self = $class->SUPER::new(%args);
+    $self->{tool}   = $args{tool};
+    $self->{params} = $args{params};
+    return $self;
+}
+
+sub tool   { $_[0]{tool} }
+sub params { $_[0]{params} }
+
 package Mem20::TransportError;
 use strict;
 use warnings;
 our @ISA = ('Mem20::Error');
 
+# A tool-level failure reported by the server.
+#
+# Two distinct protocol shapes collapse into this one class, because callers
+# care that the tool failed, not which of the server's two failure idioms it
+# used (see sdk/perl/AUDIT.md for the transcripts):
+#
+#   is_error   => 1   the envelope carried result.isError = true
+#   soft_error => 1   the envelope said isError = false but the text payload
+#                     begins with "Error" (mem20's tool-internal failure path)
 package Mem20::ToolError;
 use strict;
 use warnings;
 our @ISA = ('Mem20::Error');
 
-# A tool-level failure reported by the server as a JSON-RPC error object.
-# Carries the numeric code and any structured data alongside the message.
 sub new {
     my ($class, %args) = @_;
     my $self = $class->SUPER::new(%args);
-    $self->{code} = $args{code};
-    $self->{data} = $args{data};
+    $self->{code}       = $args{code};
+    $self->{data}       = $args{data};
+    $self->{tool}       = $args{tool};
+    $self->{is_error}   = $args{is_error}   ? 1 : 0;
+    $self->{soft_error} = $args{soft_error} ? 1 : 0;
     return $self;
 }
 
-sub code { $_[0]{code} }
-sub data { $_[0]{data} }
+sub code       { $_[0]{code} }
+sub data       { $_[0]{data} }
+sub tool       { $_[0]{tool} }
+sub is_error   { $_[0]{is_error} }
+sub soft_error { $_[0]{soft_error} }
 
 # `Mem20::Errors` is the name callers naturally reach for (the file is
 # Errors.pm), and it is a friendlier home for the one behaviour that is not a
@@ -97,10 +131,12 @@ Mem20::Error - exception hierarchy for the mem20 Perl SDK
 
     use Mem20::Errors;
 
-    eval { $client->memory_store(content => 'x') };
+    eval { $client->memory_store(content => 'x', epistemic_status => 'observed') };
     if (my $err = $@) {
         if (ref $err && $err->isa('Mem20::ToolError')) {
-            warn "server said: " . $err->message . " (code " . ($err->code // '?') . ")\n";
+            warn "server said: " . $err->message . "\n";
+            warn "tool: "       . ($err->tool // '?') . "\n";
+            warn "soft error\n" if $err->soft_error;
         }
     }
 
@@ -112,23 +148,27 @@ Mem20::Error - exception hierarchy for the mem20 Perl SDK
 
 =item B<Mem20::ConfigurationError> - bad options, out-of-range values, unknown keys.
 
-=item B<Mem20::TransportError> - the child server could not be started, died, or timed out.
+=item B<Mem20::ValidationError> - a tool argument rejected I<locally> before it
+was sent, because it violates the tool's own advertised C<inputSchema>.
+Derives from C<Mem20::ConfigurationError>. Carries C<tool> and C<params>.
 
-=item B<Mem20::ToolError> - the server answered with a JSON-RPC error object.
-Also carries C<code> and C<data>.
+=item B<Mem20::TransportError> - the child server could not be started, died,
+timed out, or emitted non-JSON.
 
-=back
-
-=head1 METHODS
-
-=over 4
-
-=item C<< Class->throw(message => ...) >> - construct and C<die> with the object.
-
-=item C<< Class->rethrow($err) >> - pass a Mem20::Error through untouched, wrap anything else.
-
-=item C<message>, C<code>, C<data> - accessors (C<code>/C<data> on ToolError only).
+=item B<Mem20::ToolError> - the call reached the server and failed there.
+Carries C<code>/C<data> for a JSON-RPC error object, and C<tool>, C<is_error>,
+C<soft_error> for a tool-level failure inside a successful response.
 
 =back
+
+=head1 TWO FAILURE SHAPES
+
+mem20 does not report every tool failure as a JSON-RPC error object. A JSON-RPC
+error object (unknown I<method>) throws a C<ToolError> from the transport. But
+an unknown I<tool>, and a handler exception, come back as a B<successful>
+JSON-RPC response whose envelope sets C<result.isError>; and a tool-internal
+failure (for example a rejected C<epistemic_status>) comes back with
+C<result.isError> B<false> and a text payload starting with C<Error>. The client
+raises C<ToolError> for all three and flags the third as C<soft_error>.
 
 =cut

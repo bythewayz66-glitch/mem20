@@ -104,6 +104,12 @@ export default function App() {
 
   return (
     <div className="shell">
+      {/* The nav is a 248px rail of buttons before the content, and panels are swapped
+          by state rather than by URL, so there is no browser "skip to main" to lean
+          on: without this every panel change costs ~8 Tab presses. */}
+      <a className="skip-link" href="#main-content">
+        skip to content
+      </a>
       <aside className="nav">
         <div className="nav-brand">
           <span className="nav-brand-name">mem20</span>
@@ -139,7 +145,9 @@ export default function App() {
         </div>
       </aside>
 
-      <main className="main">
+      {/* tabIndex={-1} is what makes the skip link work: a <main> without it is not
+          focusable, so the anchor scrolls but focus stays on the link. */}
+      <main className="main" id="main-content" tabIndex={-1}>
         <header className="topbar">
           <div className="topbar-left">
             <h1>mem20 control plane</h1>

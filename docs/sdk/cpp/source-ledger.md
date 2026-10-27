@@ -6,7 +6,9 @@ previous repo location.
 
 **Canonical repository:** https://github.com/bythewayz66-glitch/mem20
 **Branch:** `main`
-**Pinned commit:** `c274404a116f203b0ed99ab7156e3752f0953ea8`
+**Verified at commit:** `7c0b3e8d9525cd8c3a9f8f1825267aed52fac68a`
+("chore(ops): record 2026-10-26 daily ops sweep findings + owner assignment roster")
+**Earlier pinned commit:** `c274404a116f203b0ed99ab7156e3752f0953ea8`
 ("docs: designate canonical repository and record full-codebase publication", 2026-10-14)
 **Base snapshot commit:** `64c73359f3f7602b350b29d81c82630a86e01c5d`
 **License:** MIT
@@ -25,7 +27,7 @@ previous repo location.
 |---|---|---|---|
 | S1 | Canonical repo URL is `github.com/bythewayz66-glitch/mem20`, branch `main`, MIT | `CANONICAL.md`, `LICENSE` | file read |
 | S2 | `JaysonAIOnline/mem20` is **not** canonical (absent / historical) | `CANONICAL.md` § Canonical designation (`JaysonAIOnline/mcp-cognitive-substrate` "earlier, much smaller … Historical / reference only") | file read |
-| S3 | Package name/version is `mem20` **2.1.0rc2**, `requires-python >=3.10` | `pyproject.toml` (`[project] name/version/requires-python`) | file read |
+| S3 | Package name/version is `mem20` **3.0.0**, `requires-python >=3.10` | `pyproject.toml` (`[project] name/version/requires-python`) | file read |
 | S4 | Runtime deps: `mcp>=2.1.1`, `pydantic>=2.13.4`, `anyio>=4.14.2`, `numpy>=1.24`, `faiss-cpu>=1.7.4`, `sentence-transformers>=2.2.0` | `requirements.txt`, `pyproject.toml` | file read |
 | S5 | Canonical entry point is the script `mcp/mcp_server.py` (thin shim → `server.py:main`) | `mcp/mcp_server.py` (`from server import main`) | file read |
 | S6 | `mcp/` is a *script directory*, not an importable package (no `__init__.py`) | `README.md` § Transport/protocol; `launcher.py` docstring | file read |
@@ -50,15 +52,16 @@ previous repo location.
 
 | # | Claim | Source path | Verified by |
 |---|---|---|---|
-| T1 | The surface is **270 tools across 27 domains** | `README.md` § Transport/protocol ("exposes **270 tools across 27 domains** (verified by instantiating the server and counting `server.tools`)") | file read |
-| T2 | Domain counts: `memory_*` 52, `cog_*`/`tot_*`/… 15, `world_model_*` 9, `vcs_*` 11, `cloud_*` 10, `db_*` 10, `prod_*` 10, `fs_*` 13, `braid_*` 9, `lie_*` 10, … `blender_*` 7 (optional), `unity_*` 5 (optional) | `README.md` § Tool domains (27) table | file read |
+| T1 | The surface is **270 tools** | measured, not quoted: `len(Mem20MCPServer().tools) == 270`, and `tools/list` over stdio returns 270 unique names | live introspection |
+| T2 | The 270 tools span **27 domains** | `mcp/server.py::_setup_tools()` makes 28 `register_*` calls; `register_memory_tools` + `register_enhanced_memory_tools` are both Core memory → 27 distinct domains. Table: `docs/README.md` § "270 Tools Across 27 Domains" | source read + live count |
+| T4 | `serverInfo` is `{"name": "mem20-mcp", "version": ""}`; `protocolVersion` negotiates to `2025-06-18` | live `initialize` result over stdio | live introspection |
 | T3 | Server tool modules: `mcp/memory_tools.py`, `enhanced_memory_tools.py`, `cognitive_tools.py`, `thought_process.py`, `roadmap_tools.py`, `tools/world_tools.py`, `tools/braid_tools.py`, `tools/blender_tools.py`, `tools/unity_tools.py`, `tools/integration_tools.py` | `README.md` § Transport/protocol | file read |
 
 ## 4. Tools the SDK binds to (name + schema verified in source)
 
 | # | Tool | Partition / role | Source path |
 |---|---|---|---|
-| M1 | `memory_store` — `content` (req), `category` ∈ {user_pref, project, tool, general} default general, `tags` (comma-separated) | grounded write | `mcp/memory_tools.py` (`self.tools["memory_store"]`) |
+| M1 | `memory_store` — `content` (req), `category` ∈ {user_pref, project, tool, general} default general, `tags` (comma-separated); live schema also marks `epistemic_status` **required** (`observed` / `inferred` / `imagined` / `user_stated` / `hypothesis` / `agent_generated` / `unlabeled`) | grounded write | `mcp/memory_tools.py` (`self.tools["memory_store"]`, `"required": ["content", "epistemic_status"]`); `tools/list` |
 | M2 | `memory_recall` — `query` (req), `category`, `limit` (1..50, default 10) | grounded recall | `mcp/memory_tools.py` (`self.tools["memory_recall"]`) |
 | M3 | `memory_simulate_store` — `topic`, `content`, `tags[]`; "NEVER written to grounded memory or the semantic indexes" | simulated write | `mcp/memory_tools.py` (`self.tools["memory_simulate_store"]`) |
 | M4 | `memory_list_simulated` — lists the simulated partition | simulated read | `mcp/memory_tools.py` |
@@ -120,6 +123,11 @@ repo documentation itself:
 | `docs/01-architecture.md` (diagram + heading) | `111 tools · 15 domains` | `257 tools · 26 domains` |
 | `docs/02-tools-reference.md` (intro) | "all 111 tools" | "all 257 tools" |
 | `docs/README.md` (tools table + version) | "111 MCP tools"; version `2.1-rc2` | "257 MCP tools"; version `2.1.0rc2` |
+
+> **Superseded:** the `257 tools · 26 domains` figures in the rows above are the values
+> *as corrected in that earlier pass*, not the current surface. The live surface at the
+> commit pinned above is **270 tools across 27 domains** (T1/T2). The table is kept as a
+> change record and is not itself a current claim.
 
 Remaining `JaysonAIOnline/*` mentions are **intentional**: `CANONICAL.md` deliberately
 lists those repos as *non-canonical / satellite* so readers know not to use them.

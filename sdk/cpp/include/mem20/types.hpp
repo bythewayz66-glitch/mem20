@@ -95,6 +95,9 @@ struct Result {
   std::optional<std::string> error_message;
 
   explicit operator bool() const { return value.has_value(); }
+  // Non-const overload is required to move a payload (e.g. Session) out of a
+  // Result; without it every `std::move(*r)` binds to the const overload.
+  T& operator*() { return *value; }
   const T& operator*() const { return *value; }
   T* operator->() { return &*value; }
   const T* operator->() const { return &*value; }

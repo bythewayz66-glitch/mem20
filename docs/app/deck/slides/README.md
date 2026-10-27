@@ -5,7 +5,7 @@ step, no external assets beyond Google Fonts. Open any file directly in a
 browser, or view the live copies listed in `../PERMANENT_URL.md`.
 
 Every figure on every slide was read at
-`1264076698a00878acc3adacf7bf1d51eea315cc` - not at `main`, and not from
+`45445f4850377814cd95b7fa50c0a9153f76c163` - not at `main`, and not from
 memory. Slide footers carry the source for each claim; slide 13 is the
 full register.
 

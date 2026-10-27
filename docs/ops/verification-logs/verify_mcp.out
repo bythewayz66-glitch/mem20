@@ -1,0 +1,8 @@
+INIT: {"capabilities": {"tools": {"listChanged": false}}, "protocolVersion": "2025-06-18", "serverInfo": {"name": "mem20-mcp", "version": ""}}
+TOOL_COUNT: 270
+FIRST_8: ['memory_store', 'memory_recall', 'memory_probe', 'memory_reason', 'memory_status', 'memory_contradict', 'memory_related', 'memory_feedback']
+LIE_TOOLS: 10 ['lie_acknowledge_cue', 'lie_dual_acknowledge', 'lie_feed_audio', 'lie_feed_transcript', 'lie_get_cues', 'lie_list_sessions', 'lie_seal_session', 'lie_set_baseline', 'lie_start_session', 'lie_status']
+STDERR: 2026-10-27 15:19:45,903 WARNING mem20.mcp health endpoint disabled (could not bind :8080): [Errno 98] Address already in use
+
+RESULT: PASS
+EXIT_CODE=0

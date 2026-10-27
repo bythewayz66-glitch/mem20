@@ -151,13 +151,16 @@ export function restoreTarget(preferred, fallback, isConnected) {
  * feel random. This returns the live-region sentence, and it is stable between
  * identical states so React does not re-announce on every render.
  */
-export function resultAnnouncement({ total, shown, active, title }) {
+export function resultAnnouncement({ total, shown, active, title, noun }) {
   const t = Number.isInteger(total) ? total : 0;
   const s = Number.isInteger(shown) ? shown : 0;
-  if (s <= 0) return `no results for ${t ? "this query" : "an empty query"}`;
+  // `noun` lets a caller say "panels" or "commands" instead of "results". The
+  // default keeps every pre-existing call site (and its test) byte-identical.
+  const word = typeof noun === "string" && noun.trim() ? noun.trim() : "results";
+  if (s <= 0) return `no ${word} for ${t ? "this query" : "an empty query"}`;
   const position = Number.isInteger(active) && active >= 0 && active < s ? `, ${active + 1} of ${s}` : "";
   const named = title ? `: ${title}` : "";
-  return `${s} of ${t} results${position}${named}`;
+  return `${s} of ${t} ${word}${position}${named}`;
 }
 
 /** Also the visible label for the result count — one string, two consumers. */
@@ -193,6 +196,54 @@ export function prefersReducedMotion(win) {
 export function motionDuration(prefersReduced, requestedMs) {
   const ms = Number.isFinite(requestedMs) ? Math.max(0, requestedMs) : 0;
   return prefersReduced ? 0 : ms;
+}
+
+/**
+ * `aria-activedescendant` for a listbox whose focus stays on the search field.
+ *
+ * Returns `undefined` — i.e. the attribute is omitted entirely — when there is no
+ * selection or the index has run past the list. That matters: an
+ * `aria-activedescendant` pointing at a node that does not exist is an accessibility
+ * error in every audit tool, and it is exactly what a naive `prefix + index` leaves
+ * behind for one render after a query narrows the list.
+ */
+export function activeDescendant(prefix, index, count) {
+  if (!Number.isInteger(index) || index < 0) return undefined;
+  if (Number.isInteger(count) && index >= count) return undefined;
+  return activeOptionId(prefix, index);
+}
+
+/**
+ * The live-region sentence for a command palette.
+ *
+ * Two rules, both learned from how a screen reader actually behaves:
+ *
+ *   - **Closed means silent.** The region is mounted with the palette, so returning
+ *     text while `open` is false would announce the whole result set on page load,
+ *     before the user did anything. Empty string is the off switch.
+ *   - **Position is included only when it is real.** `active` arrives as 0 on a
+ *     freshly opened palette with no results; claiming "1 of 0" is worse than
+ *     saying nothing, so an out-of-range cursor degrades to the bare count.
+ */
+export function paletteAnnouncement({ open, total, shown, active, title }) {
+  if (!open) return "";
+  return resultAnnouncement({ total, shown, active, title });
+}
+
+/**
+ * Inline style that applies a motion preference to a single element.
+ *
+ * The stylesheet already zeroes `--motion-duration` under the media query, which
+ * covers every rule written against the token. This exists for the other half:
+ * components that set `transition`/`animation` in JS, or that animate a property the
+ * media query cannot retarget (a transform on an overlay). Returning an object keeps
+ * it assertable without a DOM.
+ */
+export function motionStyle(prefersReduced, requestedMs, properties = ["transitionDuration"]) {
+  const ms = motionDuration(prefersReduced, requestedMs);
+  const style = {};
+  for (const property of properties) style[property] = `${ms}ms`;
+  return style;
 }
 
 /**
@@ -243,6 +294,17 @@ function parseHex(hex) {
   const n = m[1];
   return [parseInt(n.slice(0, 2), 16), parseInt(n.slice(2, 4), 16), parseInt(n.slice(4, 6), 16)];
 }
+
+/**
+ * The duration a11y.css ships in `--motion-duration`, in ms.
+ *
+ * Declared here as a number so the stylesheet's value and the JS-side motion
+ * plumbing can be asserted to match. They are read by different runtimes and there
+ * is no import between them, so `web/test/a11y.test.js` parses the CSS custom
+ * property and compares it to this constant: change one without the other and the
+ * suite fails instead of the two drifting into subtly different timings.
+ */
+export const MOTION_DURATION_MS = 140;
 
 /** AA for normal text. The pill text is 11px, so this is the bar, not 3:1. */
 export const AA_NORMAL_TEXT = 4.5;

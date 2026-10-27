@@ -205,10 +205,10 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.11'
-      - name: pip audit
+      - name: Dependency vulnerability scan (issue #19)
         run: |
           python3 -m pip install --upgrade pip pip-audit
-          python3 -m pip_audit -r requirements.txt || {
+          pip-audit --requirement requirements.txt || {
             echo "::warning::pip-audit reported findings — review and bump pins"
             exit 0
           }

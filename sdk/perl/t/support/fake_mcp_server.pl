@@ -20,9 +20,20 @@
 #   softerror   tools/call answers isError = false but text begins "Error"
 #   job         cog_plan returns a background-job envelope; job_status walks
 #               running -> running -> ok
+#   jobhang     cog_plan returns a job envelope; job_status answers `running`
+#               for ever (a job that never reaches a terminal state)
+#   jobfailed   cog_plan returns a job envelope; job_status goes straight to
+#               `error` with an error string, the way a raised job does
+#   joblost     cog_plan returns a job envelope; job_status answers `not_found`,
+#               which is what mem20 sends for a job_id it does not know
 #
 # The failure shapes mirror what mem20 3.0.0 actually emits; see
 # sdk/perl/AUDIT.md for the raw transcripts that established them.
+#
+# The job status vocabulary is taken from mcp/server.py, not invented:
+# _run_job() sets "ok" on success and "error" on failure, _spawn_job() starts at
+# "running", and _job_status() answers "not_found" for an unknown job_id. There
+# is no finished "done"/"complete"/"failed" spelling.
 
 use strict;
 use warnings;
@@ -240,7 +251,7 @@ while (defined(my $line = <STDIN>)) {
         }
 
         if ($name eq 'cog_plan') {
-            if ($MODE eq 'job') {
+            if ($MODE =~ /^job/) {
                 emit( {
                     jsonrpc => '2.0',
                     id      => $id,
@@ -260,6 +271,49 @@ while (defined(my $line = <STDIN>)) {
 
         if ($name eq 'job_status') {
             $job_polls++;
+
+            # A job that never finishes. Deliberately answers `running` with no
+            # end, so the only way out of a poll loop is the caller's deadline.
+            if ($MODE eq 'jobhang') {
+                emit( {
+                    jsonrpc => '2.0',
+                    id      => $id,
+                    result  => tool_result( $json->encode( {
+                        job_id => $args->{job_id}, status => 'running',
+                    } ) ),
+                } );
+                next;
+            }
+
+            # A job whose handler raised: mem20 sets status "error" and an
+            # error string, with result left null.
+            if ($MODE eq 'jobfailed') {
+                emit( {
+                    jsonrpc => '2.0',
+                    id      => $id,
+                    result  => tool_result( $json->encode( {
+                        job_id => $args->{job_id},
+                        status => 'error',
+                        tool   => 'cog_plan',
+                        result => undef,
+                        error  => 'RuntimeError: cog_plan raised',
+                    } ) ),
+                } );
+                next;
+            }
+
+            # mem20 answers not_found for a job_id it never issued.
+            if ($MODE eq 'joblost') {
+                emit( {
+                    jsonrpc => '2.0',
+                    id      => $id,
+                    result  => tool_result( $json->encode( {
+                        job_id => $args->{job_id}, status => 'not_found',
+                    } ) ),
+                } );
+                next;
+            }
+
             my $status = $job_polls >= 3
                 ? { job_id => $args->{job_id}, status => 'ok', result => 'the plan' }
                 : { job_id => $args->{job_id}, status => 'running' };

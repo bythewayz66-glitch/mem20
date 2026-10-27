@@ -2,7 +2,7 @@
 
 **Written:** 2026-10-26 · **Surface:** `mem20controlz/` @ `main` · **Owner:** UX research
 **All paths below are repository-root-relative** (this file lives at `docs/ux/`).
-**Scope:** the three UX-shaped issues in the 8-issue backlog — #37, #38, #39.
+**Scope:** the four UX-shaped issues in the 8-issue backlog — #37, #38, #39, #40.
 
 Each document below is written to be **implementable** (every criterion names a
 concrete surface, trigger, timeout or string an engineer can build against) and
@@ -15,9 +15,10 @@ in the tree — no new backend contract is introduced here.
 | #37 | System tray, fleet-health glyph and native notifications | `enhancement`, `severity:medium` | [issue-37-tray-and-notifications.md](./issue-37-tray-and-notifications.md) |
 | #38 | Command palette (Cmd-K) across panels, CLI audit and dream | `enhancement`, `severity:medium` | [issue-38-command-palette.md](./issue-38-command-palette.md) |
 | #39 | Offline / degraded UX pass using the backend's status vocab | `enhancement`, `severity:medium` | [issue-39-offline-degraded-ux.md](./issue-39-offline-degraded-ux.md) |
+| #40 | Desktop install, code-signing, auto-update — first run, the update prompt, and every failure state | `enhancement`, `severity:medium` | [issue-40-install-update-ux.md](./issue-40-install-update-ux.md) |
 
-Source of all three: [`docs/audit/mem20controlz-desktop-overhaul-plan.md`](../audit/mem20controlz-desktop-overhaul-plan.md)
-clauses **C5** (#37), **C6** (#38), **C8** (#39).
+Source of all four: [`docs/audit/mem20controlz-desktop-overhaul-plan.md`](../audit/mem20controlz-desktop-overhaul-plan.md)
+clauses **C5** (#37), **C6** (#38), **C8** (#39), **C7** (#40).
 
 ---
 

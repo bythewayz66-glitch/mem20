@@ -324,8 +324,80 @@ never wants this build gets asked at every launch.
 
 > **AC-40-16. [specifiable now]** `check failed` is a distinct, visible state with the
 > reason and a retry. It is never silent, and it never degrades into `up to date`.
-> **Verify:** 500 from the feed → "Couldn't check for updates — <reason>" + retry, and
-> no green state anywhere.
+> **Verify:** 500 from the feed → the §4.5 banner for that cause
+> (`Update check didn't complete` / `The update feed returned an error (HTTP 500).`)
+> + retry, and no green state anywhere.
+
+### 4.5 When the check itself fails
+
+The check is the one update step that runs when there is nothing to install, so it is
+also the step most likely to fail quietly and be reported as success. AC-40-16 names the
+state; this section gives the words. **The copy below is the copy, not a sketch** — a
+placeholder like `<reason>` in the shipped string is the same defect as no message at
+all, because it tells the user nothing they can act on.
+
+Four facts, in this order, every time:
+
+1. **What didn't happen** — "we couldn't check", never "there is no update".
+2. **Why**, in one clause, in the user's words, from the cause table below.
+3. **What version they are actually running** — the read from `/api/health`
+   (AC-40-01), so a failed check does not cost them the one fact they had.
+4. **One action** — retry, plus `Details` for the raw error, collapsed.
+
+```
+Update check didn't complete
+We couldn't reach the update feed, so we don't know whether a newer version exists.
+You're on 3.0.0.
+[ Try again ]   Details
+```
+
+The second line is the only line that varies, and it varies by cause:
+
+| Cause | The line the user reads |
+|---|---|
+| No network / DNS resolution failed | `We couldn't reach the network.` |
+| Timeout — no answer inside the check budget | `The update feed didn't answer in time.` |
+| HTTP 5xx | `The update feed returned an error (HTTP 503).` |
+| HTTP 429, or a 403 from rate limiting | `The update feed is rate-limiting us. Try again in a few minutes.` |
+| TLS / certificate failure | `We couldn't make a secure connection to the update feed.` |
+| Body that is not the feed (HTML, truncated JSON, no version field) | `The update feed sent something we couldn't read.` |
+| Supplied version unparseable (`not-a-version`) | `The feed offered a version we can't interpret, so we can't compare it.` |
+| Installed version unknown (`/api/health` down) | `We can't tell which version is running, so there's nothing to compare against.` |
+
+In the last row the check is **not attempted at all**: comparing against an unknown
+version is meaningless, so the control is disabled with that sentence as its reason
+(AC-40-01) and no request is made. The third line becomes
+`We can't confirm which version is running.` rather than repeating a stale number.
+
+What this state must never do:
+
+| Never | Why |
+|---|---|
+| Render `You're on the latest version`, `Up to date`, or a green check | The check did not succeed. §1, and automatic-fail #1. |
+| Collapse to silence — no banner, no About line | A silent check failure is indistinguishable from "no update": the same lie with better manners. |
+| Show a spinner that never resolves | A spinner is a claim that work is happening (AC-40-25 applied to the check). |
+| Retry automatically in a loop | Repeated calls to a failing or rate-limiting feed is how a soft failure becomes a block. Retry is user-initiated, once per press. |
+| Offer `Skip this version` / `Later` here | There is no version to skip or snooze; offering them teaches the user the control does nothing. |
+
+> **AC-40-16a. [specifiable now]** The `check failed` banner uses the fixed lead line
+> `Update check didn't complete` and never the words "latest", "up to date", or "newer
+> version available", and never a green tone. Each of the eight causes above renders its
+> own sentence, chosen from the error class that `update_check{result=failed}` records.
+> **Verify:** eight injected failures → eight distinct second lines sharing one lead
+> line, zero occurrences of "latest"/"up to date", zero green affordances.
+
+> **AC-40-16b. [specifiable now]** The failed state is reported in two places that never
+> disagree: the chrome slot the update banner occupies (§4.1), and About →
+> `Last checked <time>: check failed`, with `Details` holding the HTTP status or error
+> class. Dismissing the chrome banner leaves the About line intact (AC-40-14).
+> **Verify:** fail a manual check, dismiss the banner → About still reads `check failed`
+> for that timestamp.
+
+> **AC-40-16c. [specifiable now]** The running version is still stated while the check is
+> failed, because it is still known. If `/api/health` is also down, the sentence becomes
+> `We can't confirm which version is running` instead of echoing the last known number.
+> **Verify:** stop the sidecar, then check → the unknown wording appears, no stale
+> version is quoted.
 
 ---
 
@@ -356,6 +428,50 @@ is the difference between a user who can act and a user who files "update broken
 > is never a warning to be ignored.
 > **Verify:** corrupt the staged artifact → refusal, old version untouched, message
 > names the digest mismatch.
+
+### 5.1.1 The six messages, as the user reads them
+
+AC-40-17 requires that the stage be named. This is what naming it looks like, and the
+strings below are the ones that ship. In each, the version numbers are the two resolved
+at runtime — installed from `/api/health`, offered from the parsed feed — and never
+literals baked into the copy.
+
+All six share one shape: **the headline names the failure and the version**; **the second
+line names the stage in the user's words**; **the third line states the machine state
+truthfully**. Only the third line is gated. It may say
+`You're still on 3.0.0 and it's working normally. Nothing was replaced.` **only** when
+the resolved outcome is `unchanged` (§5.2). That sentence is the most reassuring true
+statement available, which is precisely why it may not be used speculatively.
+
+| # | Stage | Outcome | The message |
+|---|---|---|---|
+| 1 | `download` | `unchanged` | **The update to 3.1.0 didn't finish.**<br>It stopped while downloading the new version — the download didn't complete.<br>**You're still on 3.0.0 and it's working normally. Nothing was replaced.**<br>`[ Try again ]` `[ Details ]` |
+| 2 | `verify` | `unchanged` | **The update to 3.1.0 didn't finish.**<br>It stopped while checking the file — what we downloaded doesn't match the published digest, so we deleted it instead of installing it.<br>**You're still on 3.0.0 and it's working normally. Nothing was replaced.**<br>`[ Download again ]` `[ Details ]` |
+| 3 | `stage` | `unchanged` | **The update to 3.1.0 didn't finish.**<br>It stopped while preparing the install — we couldn't write the new version alongside the current one (not enough space, or not permitted).<br>**You're still on 3.0.0 and it's working normally. Nothing was replaced.**<br>`[ Try again ]` `[ Details ]` |
+| 4 | `apply` | `unknown` | **The update to 3.1.0 didn't finish.**<br>It stopped while installing — we couldn't confirm the switch to the new version completed.<br>**We don't know which version is running right now.**<br>`[ Check what's running ]` `[ Try again ]` `[ Details ]` |
+| 5 | `restart` | `unknown` | **The update to 3.1.0 didn't finish.**<br>It stopped while starting the new version — the app closed and the new version didn't come back up.<br>**We don't know which version is running right now.**<br>`[ Start mem20controlz again ]` `[ Details ]` |
+| 6 | `re-verify` | `installed but unverified` | **3.1.0 is installed but didn't confirm it started correctly.**<br>We couldn't get a healthy response from the new version.<br>**The files were replaced; we can't confirm the new version works.**<br>`[ Go back to 3.0.0 ]` `[ Try again ]` `[ Details ]` |
+
+Two rules the table encodes, both testable:
+
+- **`Nothing was replaced` appears in exactly three of the six** — and only three, because
+  `apply` onward is where the claim stops being true.
+- **`Try again` appears in five; stage 2 offers `Download again` instead** — re-running a
+  stage-2 failure with the artifact we already rejected fails the digest check again, so
+  the action has to name the thing that must change.
+
+> **AC-40-17a. [specifiable now]** The phrase `Nothing was replaced` is reachable only
+> when the resolved outcome is `unchanged`. A stage-4/5/6 failure rendering it is an
+> automatic fail: it is the sentence that would make a broken install look safe.
+> **Verify:** drive all six stages; assert the phrase is present for 1–3 and absent for
+> 4–6.
+
+> **AC-40-17b. [specifiable now]** Both version numbers in all six messages are runtime
+> values; a literal version string compiled into the copy is a fail. Where the installed
+> version is unknown, `You're still on <v>` is replaced by
+> `We can't confirm which version is running`, never by the last known number.
+> **Verify:** grep the built bundle's update copy for a hardcoded version → no hits; kill
+> the sidecar mid-stage and read the fallback sentence.
 
 ### 5.2 The three machine states after a failure
 
@@ -520,7 +636,8 @@ cell must render a named state with text; zero blank cells, zero bare spinners.
 | **First run** | OS alert with the version-correct bypass path; in-product unsigned banner + digest + better channel | SmartScreen; in-product banner + digest | No OS warning — so the in-product banner carries the whole trust burden and must not be skipped |
 | **Update available** | Non-modal banner, both versions, three actions | same | same |
 | **Later / Skip / Esc** | snooze ≠ skip; visible & clearable in About | same | same |
-| **Failed update** | stage named + one of `unchanged` / `unverified` / `unknown` | same | same |
+| **Failed update** | stage named + one of `unchanged` / `unverified` / `unknown`, with the §5.1.1 message | same | same |
+| **Update check failed** | `Update check didn't complete` + cause sentence + running version + retry; no green tone, no "latest" (§4.5) | same | same |
 | **Sidecar died mid-update** | `update interrupted`, once, retry/stop | same | same |
 | **Lifecycle `backend unreachable`** | no update prompt (§AC-40-10) | same | same |
 | **Lifecycle `starting`** | no update prompt; `starting` per #39 with text | same | same |
@@ -552,6 +669,11 @@ cell must render a named state with text; zero blank cells, zero bare spinners.
 12. Publishing the stale committed `.deb` as a current artifact. *(§2 finding 1)*
 13. An installed app with no icon presenting itself at the moment trust is decided.
     *(§2 finding 2)*
+
+14. A `<reason>` placeholder, or the words "latest" / "up to date", rendered in the
+    check-failed state. *(§4.5, AC-40-16a)*
+15. `Nothing was replaced` shown for a stage whose outcome was not `unchanged`.
+    *(AC-40-17a)*
 
 ---
 
@@ -596,7 +718,7 @@ the parts that are still missing. Signing is a procurement problem; honest copy 
 
 ---
 
-**Written:** 2026-10-27 · **Baseline:** `main` @ `1264076698a00878acc3adacf7bf1d51eea315cc`
+**Written:** 2026-10-27 · **Baseline:** `main` @ `1264076698a00878acc3adacf7bf1d51eea315cc`, rebased onto `45445f4850377814cd95b7fa50c0a9153f76c163` (no path in this document's scope changed)
 **Owner:** UX research · **Branch:** `docs/ws1-issue-40-update-ux`
 **Predecessors:** `issue-37-tray-and-notifications.md`, `issue-38-command-palette.md`,
 `issue-39-offline-degraded-ux.md` — this document shares their vocabulary and cites

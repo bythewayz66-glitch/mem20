@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { Panel, Section, Row, Json, Chips, Table } from "../components/ui.jsx";
 import StatusPill, { TonePill } from "../components/StatusPill.jsx";
 import { ErrorBanner } from "../components/Banner.jsx";
@@ -189,11 +189,20 @@ function Detail({ panel, coverageRow }) {
   );
 }
 
-export default function Subsystems({ registry, coverage }) {
+export default function Subsystems({ registry, coverage, focusRequest }) {
   const [query, setQuery] = useState("");
   const [kind, setKind] = useState("all");
   const [status, setStatus] = useState("all");
   const [selectedId, setSelectedId] = useState(null);
+
+  // A Cmd-K entry can name a specific panel, so honour it once per request.
+  // Keyed on `nonce` rather than the id: picking the same panel twice in a row
+  // must still work, which an id-only check would swallow.
+  useEffect(() => {
+    if (focusRequest && focusRequest.view === "subsystems" && focusRequest.select !== undefined) {
+      setSelectedId(focusRequest.select);
+    }
+  }, [focusRequest && focusRequest.nonce]);
 
   const registryData = registry.data;
   const panels = registryData && Array.isArray(registryData.panels) ? registryData.panels : null;

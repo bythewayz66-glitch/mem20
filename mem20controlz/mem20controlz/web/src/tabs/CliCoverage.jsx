@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { Panel, Section, Row, Json, Chips, Table } from "../components/ui.jsx";
 import { TonePill } from "../components/StatusPill.jsx";
 import { ErrorBanner } from "../components/Banner.jsx";
@@ -34,11 +34,23 @@ function Extra({ label, value }) {
   );
 }
 
-export default function CliCoverage({ coverage }) {
+export default function CliCoverage({ coverage, focusRequest }) {
   const [query, setQuery] = useState("");
   const [naming, setNaming] = useState("all");
   const [onlyGaps, setOnlyGaps] = useState(false);
   const [selectedName, setSelectedName] = useState(null);
+
+  // Honour a Cmd-K entry naming a CLI row. Cleared filters first, otherwise the
+  // row can be selected but filtered out of the list — selected and invisible is
+  // the worst of both states.
+  useEffect(() => {
+    if (focusRequest && focusRequest.view === "cli" && focusRequest.select !== undefined) {
+      setQuery("");
+      setNaming("all");
+      setOnlyGaps(false);
+      setSelectedName(focusRequest.select);
+    }
+  }, [focusRequest && focusRequest.nonce]);
 
   const data = coverage.data;
   const results = data && Array.isArray(data.results) ? data.results : null;

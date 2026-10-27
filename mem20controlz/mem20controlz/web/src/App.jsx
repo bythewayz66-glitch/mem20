@@ -1,8 +1,10 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import StatusPill from "./components/StatusPill.jsx";
 import LoginGate from "./components/LoginGate.jsx";
 import { ErrorBanner, NoticeBanner } from "./components/Banner.jsx";
 import { StateNotice, StaleRibbon } from "./components/StateNotice.jsx";
+import CommandPalette from "./components/CommandPalette.jsx";
+import { buildCommands } from "./commandPalette.js";
 import { KNOWN_STATUSES } from "./status.js";
 import { LIFECYCLE, lifecycleFor, ageSecondsOf, formatAge } from "./lifecycle.js";
 import { useResource, formatClock } from "./hooks.js";
@@ -54,6 +56,13 @@ export default function App() {
   const [authStatus, setAuthStatus] = useState(null);
   const [authChecked, setAuthChecked] = useState(false);
 
+  // Cmd-K state. `paletteSeen` gates the one fetch the palette needs, so opening
+  // the app still issues the same requests it did before #38 — the dream list is
+  // only fetched once someone actually reaches for the palette or the tab.
+  const [paletteOpen, setPaletteOpen] = useState(false);
+  const [paletteSeen, setPaletteSeen] = useState(false);
+  const [focusRequest, setFocusRequest] = useState(null);
+
   const checkAuth = useCallback(async () => {
     try {
       const status = await fetchAuthStatus();
@@ -76,6 +85,7 @@ export default function App() {
   const registry = useResource("/api/registry", { pollMs: POLL_MS });
   const manifest = useResource("/api/websites/manifest", { enabled: view === "websites" || view === "overview" });
   const coverage = useResource("/api/cli/coverage", { enabled: view === "cli" || view === "subsystems" });
+  const dreams = useResource("/api/dreams", { enabled: paletteSeen || view === "dreams" });
 
   // A 401 on any protected route means the session lapsed, so show the gate
   // rather than leaving four red "unauthorized" banners on screen.
@@ -91,6 +101,57 @@ export default function App() {
     registry.refresh();
     manifest.refresh();
     coverage.refresh();
+    dreams.refresh();
+  }
+
+  // Cmd-K / Ctrl-K opens the palette; Esc inside it closes it. Registered once at
+  // the document level because the palette must be reachable from any panel
+  // without every panel wiring its own listener.
+  useEffect(() => {
+    function onKey(event) {
+      const isPalette = (event.metaKey || event.ctrlKey) && (event.key === "k" || event.key === "K");
+      if (isPalette) {
+        event.preventDefault();
+        setPaletteSeen(true);
+        setPaletteOpen((open) => !open);
+      }
+    }
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, []);
+
+  const commands = useMemo(
+    () => buildCommands({ nav: NAV, registry, coverage, dreams }),
+    [registry, registry.data, coverage, coverage.data, dreams, dreams.data],
+  );
+
+  // A palette entry can name an entity *inside* a panel, so hand the target down
+  // rather than only switching the tab — otherwise "open panel X" lands the user
+  // on a list they still have to search.
+  function runCommand(command) {
+    const action = command && command.action ? command.action : {};
+    if (action.type === "refresh") {
+      refreshAll();
+      return;
+    }
+    if (action.type === "retry") {
+      health.refresh();
+      registry.refresh();
+      return;
+    }
+    if (action.type === "copy") {
+      const path = action.path || "/api/registry";
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(new URL(path, window.location.origin).toString()).catch(() => {});
+      }
+      return;
+    }
+    if (action.type === "nav") {
+      setView(action.view);
+      if (action.select !== undefined) {
+        setFocusRequest({ view: action.view, select: action.select, sub: action.sub, nonce: Date.now() });
+      }
+    }
   }
 
   function handleAuthenticated() {
@@ -181,6 +242,18 @@ export default function App() {
             <button type="button" className="btn btn-primary" onClick={refreshAll}>
               refresh
             </button>
+            <button
+              type="button"
+              className="btn btn-ghost palette-trigger"
+              onClick={() => {
+                setPaletteSeen(true);
+                setPaletteOpen(true);
+              }}
+              title="open the command palette (Cmd-K)"
+              aria-keyshortcuts="Meta+K Control+K"
+            >
+              <kbd>⌘K</kbd>
+            </button>
           </div>
         </header>
 
@@ -236,14 +309,25 @@ export default function App() {
               {view === "overview" ? (
                 <Overview health={health} registry={registry} manifest={manifest} onRefreshAll={refreshAll} />
               ) : null}
-              {view === "subsystems" ? <Subsystems registry={registry} coverage={coverage} /> : null}
-              {view === "cli" ? <CliCoverage coverage={coverage} /> : null}
+              {view === "subsystems" ? (
+                <Subsystems registry={registry} coverage={coverage} focusRequest={focusRequest} />
+              ) : null}
+              {view === "cli" ? (
+                <CliCoverage coverage={coverage} focusRequest={focusRequest} />
+              ) : null}
               {view === "websites" ? <Websites manifest={manifest} /> : null}
-              {view === "dreams" ? <Dreams /> : null}
+              {view === "dreams" ? <Dreams focusRequest={focusRequest} /> : null}
             </>
           )}
         </div>
       </main>
+
+      <CommandPalette
+        open={paletteOpen}
+        onClose={() => setPaletteOpen(false)}
+        commands={commands}
+        onRun={runCommand}
+      />
     </div>
   );
 }

@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=1920, initial-scale=1.0">
+    <title>mem20 — Auditable Agent Memory - Slide 3</title>
+    <!-- Google Fonts - Inter for modern, clean typography -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        * {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+        }
+        body {
+            height: 1080px;
+            width: 1920px;
+            margin: 0;
+            padding: 0;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+        }
+    </style>
+</head>
+<body>
+    <div style="position:relative;width:1920px;height:1080px;box-sizing:border-box;background:linear-gradient(135deg,#0B0A1F,#161340);color:#F5F5FF;font-family:Inter,sans-serif;overflow:hidden;padding:68px 90px;">
+  <div style="font-size:24px;letter-spacing:5px;color:#818CF8;font-weight:700;">WHAT IT IS</div>
+  <div style="font-size:66px;font-weight:800;margin-top:14px;">A memory substrate, exposed as an agent runtime</div>
+  <div style="font-size:24px;color:#A5A4C7;margin-top:14px;width:1520px;line-height:1.55;">Three layers, one server: a store that enforces provenance in code, a cognitive layer that refuses to plan on unproven facts, and a tool surface an agent calls directly &#8212; no client library to write.</div>
+
+  <div style="display:flex;gap:22px;margin-top:40px;">
+    <div style="width:430px;height:150px;padding:26px 30px;box-sizing:border-box;background:rgba(99,102,241,0.12);border:1px solid rgba(99,102,241,0.4);border-radius:18px;">
+      <div style="font-size:58px;font-weight:900;color:#FFD700;line-height:1;">270</div>
+      <div style="font-size:23px;color:#C7D2FE;margin-top:10px;font-weight:600;">tools registered on the MCP surface</div>
+    </div>
+    <div style="width:430px;height:150px;padding:26px 30px;box-sizing:border-box;background:rgba(99,102,241,0.12);border:1px solid rgba(99,102,241,0.4);border-radius:18px;">
+      <div style="font-size:58px;font-weight:900;color:#FFD700;line-height:1;">27</div>
+      <div style="font-size:23px;color:#C7D2FE;margin-top:10px;font-weight:600;">tool domains, counted by instantiation</div>
+    </div>
+    <div style="width:430px;height:150px;padding:26px 30px;box-sizing:border-box;background:rgba(99,102,241,0.12);border:1px solid rgba(99,102,241,0.4);border-radius:18px;">
+      <div style="font-size:58px;font-weight:900;color:#A5B4FC;line-height:1;">4</div>
+      <div style="font-size:23px;color:#C7D2FE;margin-top:10px;font-weight:600;">retrieval modes over one store</div>
+    </div>
+    <div style="width:430px;height:150px;padding:26px 30px;box-sizing:border-box;background:rgba(34,197,94,0.10);border:1px solid rgba(34,197,94,0.4);border-radius:18px;">
+      <div style="font-size:58px;font-weight:900;color:#4ADE80;line-height:1;">0.0</div>
+      <div style="font-size:23px;color:#BBF7D0;margin-top:10px;font-weight:600;">contamination rate on a clean store</div>
+    </div>
+  </div>
+
+  <div style="display:flex;gap:24px;margin-top:34px;">
+    <div style="width:560px;padding:24px 30px;background:rgba(99,102,241,0.08);border-radius:16px;border-left:5px solid #6366F1;">
+      <div style="font-size:25px;font-weight:700;">Memory</div>
+      <div style="font-size:21px;color:#A5A4C7;margin-top:8px;line-height:1.6;">Grounded vs simulated partitions, vector + BM25 indexes, entity graph, append-only ledger.</div>
+    </div>
+    <div style="width:560px;padding:24px 30px;background:rgba(99,102,241,0.08);border-radius:16px;border-left:5px solid #6366F1;">
+      <div style="font-size:25px;font-weight:700;">Cognition</div>
+      <div style="font-size:21px;color:#A5A4C7;margin-top:8px;line-height:1.6;">Reasoning, planning and reflection with an epistemic veto: a plan built on <span style="font-family:Consolas,monospace;color:#C7D2FE;">hypothesis</span> facts is refused.</div>
+    </div>
+    <div style="width:560px;padding:24px 30px;background:rgba(99,102,241,0.08);border-radius:16px;border-left:5px solid #6366F1;">
+      <div style="font-size:25px;font-weight:700;">Surface</div>
+      <div style="font-size:21px;color:#A5A4C7;margin-top:8px;line-height:1.6;">One MCP server over stdio (JSON-RPC 2.0), plus an HTTP health endpoint for container health checks.</div>
+    </div>
+  </div>
+
+  <div style="margin-top:32px;font-size:21px;color:#8B8AB0;">Counts obtained by instantiating <span style="font-family:Consolas,monospace;color:#A5B4FC;">Mem20MCPServer</span> and counting registered tools &#8212; the same figure carried in README.md and docs/index.html.</div>
+</div>
+</body>
+</html>

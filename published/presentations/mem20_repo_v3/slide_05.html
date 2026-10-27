@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=1920, initial-scale=1.0">
+    <title>mem20 — Auditable Agent Memory - Slide 5</title>
+    <!-- Google Fonts - Inter for modern, clean typography -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        * {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+        }
+        body {
+            height: 1080px;
+            width: 1920px;
+            margin: 0;
+            padding: 0;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+        }
+    </style>
+</head>
+<body>
+    <div style="position:relative;width:1920px;height:1080px;box-sizing:border-box;background:linear-gradient(135deg,#0B0A1F,#161340);color:#F5F5FF;font-family:Inter,sans-serif;overflow:hidden;padding:66px 90px;">
+  <div style="font-size:24px;letter-spacing:5px;color:#818CF8;font-weight:700;">TOOL SURFACE</div>
+  <div style="font-size:70px;font-weight:800;margin-top:12px;">270 tools across 27 domains</div>
+  <div style="font-size:22px;color:#A5A4C7;margin-top:10px;">Counts obtained by instantiating <span style="font-family:Consolas,monospace;color:#A5B4FC;">Mem20MCPServer</span> and counting registered tools. One figure, used everywhere.</div>
+
+  <div style="display:flex;gap:28px;margin-top:30px;">
+    <div style="width:590px;">
+      <div style="font-size:20px;letter-spacing:3px;color:#FFD700;font-weight:700;margin-bottom:14px;">MEMORY &amp; REASONING</div>
+      <div style="font-size:22px;line-height:1.95;color:#C7D2FE;"><span style="font-family:Consolas,monospace;color:#FFF;">memory_*</span> &#183; core memory, recall, epistemic audit<br/><span style="font-family:Consolas,monospace;color:#FFF;">cog_* / tot_*</span> &#183; reasoning, planning, tree-of-thought<br/><span style="font-family:Consolas,monospace;color:#FFF;">world_model_*</span> &#183; predictions and resolution<br/><span style="font-family:Consolas,monospace;color:#FFF;">imagination_*</span> &#183; counterfactual simulation<br/><span style="font-family:Consolas,monospace;color:#FFF;">affective_* / self_model_*</span> &#183; values, identity<br/><span style="font-family:Consolas,monospace;color:#FFF;">procedural_*</span> &#183; reusable skill library<br/><span style="font-family:Consolas,monospace;color:#FFF;">theory_of_mind_* / corrigibility_*</span></div>
+    </div>
+    <div style="width:590px;">
+      <div style="font-size:20px;letter-spacing:3px;color:#FFD700;font-weight:700;margin-bottom:14px;">INFRASTRUCTURE &amp; SYSTEMS</div>
+      <div style="font-size:22px;line-height:1.95;color:#C7D2FE;"><span style="font-family:Consolas,monospace;color:#FFF;">vcs_*</span> &#183; git + GitHub issues and PRs<br/><span style="font-family:Consolas,monospace;color:#FFF;">cloud_* / cloudstorage_*</span> &#183; control planes, object stores<br/><span style="font-family:Consolas,monospace;color:#FFF;">db_*</span> &#183; SQL across six engines<br/><span style="font-family:Consolas,monospace;color:#FFF;">fs_*</span> &#183; sandboxed filesystem<br/><span style="font-family:Consolas,monospace;color:#FFF;">dev_*</span> &#183; tests, lint, sandboxed exec<br/><span style="font-family:Consolas,monospace;color:#FFF;">braid_*</span> &#183; content-addressed provenance ledger<br/><span style="font-family:Consolas,monospace;color:#FFF;">job_* / roadmap_*</span> &#183; background work, plans</div>
+    </div>
+    <div style="width:590px;">
+      <div style="font-size:20px;letter-spacing:3px;color:#FFD700;font-weight:700;margin-bottom:14px;">COMMUNICATION &amp; CREATION</div>
+      <div style="font-size:22px;line-height:1.95;color:#C7D2FE;"><span style="font-family:Consolas,monospace;color:#FFF;">comm_*</span> &#183; email, Slack, Discord, Telegram, SMS<br/><span style="font-family:Consolas,monospace;color:#FFF;">a2a_* / irc_*</span> &#183; peer agents, shared channel<br/><span style="font-family:Consolas,monospace;color:#FFF;">prod_*</span> &#183; tasks, notes, goals, habits<br/><span style="font-family:Consolas,monospace;color:#FFF;">mkt_* / scrape_* / search_*</span> &#183; growth, web data<br/><span style="font-family:Consolas,monospace;color:#FFF;">design_* / fin_*</span> &#183; assets, quotes, budgets<br/><span style="font-family:Consolas,monospace;color:#FFF;">blender_* / unity_*</span> &#183; 3D and game engine<br/><span style="font-size:19px;color:#8B8AB0;">(Blender and Unity are optional and degrade gracefully)</span></div>
+    </div>
+  </div>
+
+  <div style="margin-top:32px;padding:20px 32px;background:rgba(99,102,241,0.12);border:1px solid rgba(99,102,241,0.34);border-radius:14px;font-size:22px;color:#C7D2FE;">Tool <em>prefixes</em> and tool <em>domains</em> are not the same thing &#8212; several prefixes share one domain, and a few are spelled differently from their domain (<span style="font-family:Consolas,monospace;">tot_*</span> for tree-of-thought). 270 tools, 27 domains.</div>
+</div>
+</body>
+</html>

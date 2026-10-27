@@ -1,7 +1,4 @@
 """
-from mcp.server import Server
-from mcp.server.lowlevel.server import ServerRequestContext
-import mcp_types as mt
 Productivity Tools Mixin for mem20 MCP Server
 
 Provides productivity tools:
@@ -16,9 +13,6 @@ Provides productivity tools:
 - Meeting notes
 - Document templates
 """
-from mcp.server import Server
-from mcp.server.lowlevel.server import ServerRequestContext
-import mcp_types as mt
 
 import os
 import sys
@@ -33,9 +27,14 @@ try:
     from mcp.server import Server
     from mcp.server.lowlevel.server import ServerRequestContext
     import mcp_types as mt
-except ImportError:
-    print("Error: mcp package not installed. Please install with: pip install mcp")
-    sys.exit(1)
+    MCP_SDK_AVAILABLE = True
+    MCP_SDK_IMPORT_ERROR = None
+except ImportError as _mcp_sdk_exc:  # pragma: no cover - only without the SDK
+    # Never sys.exit() at import time: pytest imports this module during
+    # collection and a SystemExit aborts the whole session instead of
+    # reporting one collection error. Full note in mcp/server.py.
+    MCP_SDK_AVAILABLE = False
+    MCP_SDK_IMPORT_ERROR = _mcp_sdk_exc
 
 
 class ProductivityToolsMixin:

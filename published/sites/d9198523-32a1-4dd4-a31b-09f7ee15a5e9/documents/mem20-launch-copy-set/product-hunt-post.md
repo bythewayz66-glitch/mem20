@@ -18,8 +18,8 @@ Auditable memory for AI agents — grounded vs simulated
 mem20 gives AI agents persistent memory you can actually prove. A hard partition
 separates grounded memory from simulated content, contamination auditing catches
 bleed between them, and an append-only origin-tagged ledger records where every
-memory came from. MIT-licensed MCP server, Python, self-hosted — 268 tools
-across 26 domains. Built for teams who need "here's the evidence," not
+memory came from. MIT-licensed MCP server, Python, self-hosted — 270 tools
+across 27 domains. Built for teams who need "here's the evidence," not
 "probably relevant."
 ```
 

@@ -5,9 +5,10 @@
 **Target:** GitHub Pages site `bythewayz66-glitch/mem20` (legacy build, source `main:/docs`)
 
 > Status in one line: **DNS is fully applied to all four zones and verified.** `mem20.com` is the
-> registered primary custom domain and serves **HTTP 200** with the real mem20 page. `mem20.org`,
-> `mem20.store` and `mem20.info` carry the correct GitHub Pages DNS records but return **HTTP 404**
-> from GitHub, because GitHub Pages permits only one registered custom domain per repository.
+> registered primary custom domain and serves **HTTP and HTTPS 200** with the real mem20 page.
+> `mem20.org`, `mem20.store` and `mem20.info` carry the correct GitHub Pages DNS records but return
+> **HTTP 404** from GitHub, because GitHub Pages permits only one registered custom domain per
+> repository.
 
 ---
 
@@ -231,16 +232,20 @@ The `9115`-byte 404 body on the other hosts is GitHub's own "Site not found" pag
 
 ## 7. Honest summary
 
-| Domain | DNS → GitHub Pages | Pages registration | Live HTTP |
-|---|---|---|---|
-| mem20.com | ✅ 4 × A + www CNAME | ✅ primary | **200** (real page) |
-| mem20.org | ✅ 4 × A + www CNAME | ❌ not registerable alongside | 404 from GitHub |
-| mem20.store | ✅ 4 × A + www CNAME | ❌ not registerable alongside | 404 from GitHub |
-| mem20.info | ✅ 4 × A + www CNAME | ❌ not registerable alongside | 404 from GitHub |
+| Domain | DNS → GitHub Pages | Pages registration | Live HTTP | Live HTTPS |
+|---|---|---|---|---|
+| mem20.com | ✅ 4 × A + www CNAME | ✅ primary | **200** (real page) | **200** |
+| mem20.org | ✅ 4 × A + www CNAME | ❌ not registerable alongside | 404 from GitHub | n/a |
+| mem20.store | ✅ 4 × A + www CNAME | ❌ not registerable alongside | 404 from GitHub | n/a |
+| mem20.info | ✅ 4 × A + www CNAME | ❌ not registerable alongside | 404 from GitHub | n/a |
 
-HTTPS: a certificate covering `mem20.com` + `www.mem20.com` was requested and is provisioning
-(state `authorization_created` at the time of writing), so verification above is over HTTP. Enforce
-HTTPS should be switched on once the certificate reports `approved`.
+HTTPS: the certificate covering `mem20.com` + `www.mem20.com` reached state `approved` (expires
+2027-01-25), and `https://mem20.com/` returns **200**. The only remaining Pages setting is
+`https_enforced`, currently `false`, which can be switched on to make HTTP redirect to HTTPS.
+
+`www.mem20.com` still answers 404: GitHub only auto-redirects `www` ↔ apex for the hostnames it has
+certificated in the correct pairing, and the `www` half needs the enforced-HTTPS/redirect step to
+engage. Its DNS is correct (§4).
 
 **Not done, and not blocked by DNS:** getting all four hosts to answer 200 simultaneously requires a
 redirect layer in front of GitHub Pages — a CDN/proxy with per-host redirect rules, or a small

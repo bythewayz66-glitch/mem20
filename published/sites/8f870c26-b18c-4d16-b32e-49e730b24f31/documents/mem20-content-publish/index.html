@@ -1,1 +1,114 @@
-PLACEHOLDER_B4
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>mem20 — Content Asset Pack (canonical repo)</title>
+<style>
+  :root{--bg:#0b0d12;--card:#141821;--line:#242c3a;--ink:#e7ecf3;--dim:#93a0b4;--acc:#5ee0a0;--acc2:#7aa2ff;--warn:#ffb454}
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.65 -apple-system,BlinkMacSystemFont,"Segoe UI",Inter,Roboto,sans-serif}
+  .wrap{max-width:980px;margin:0 auto;padding:56px 24px 96px}
+  header{border-bottom:1px solid var(--line);padding-bottom:28px;margin-bottom:40px}
+  h1{font-size:34px;line-height:1.2;margin:0 0 12px;letter-spacing:-.02em}
+  h2{font-size:20px;margin:44px 0 14px;letter-spacing:-.01em}
+  h3{font-size:16px;margin:26px 0 10px;color:var(--acc2)}
+  p{margin:0 0 14px}
+  .sub{color:var(--dim);font-size:16px;margin:0 0 20px}
+  .pill{display:inline-block;border:1px solid var(--line);background:var(--card);color:var(--dim);
+        border-radius:999px;padding:5px 12px;font-size:12.5px;margin:0 8px 8px 0;font-family:ui-monospace,SFMono-Regular,Menlo,monospace}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:22px 24px;margin:18px 0}
+  table{width:100%;border-collapse:collapse;margin:16px 0;font-size:14.5px}
+  th,td{text-align:left;padding:10px 12px;border-bottom:1px solid var(--line);vertical-align:top}
+  th{color:var(--dim);font-weight:600;font-size:12.5px;text-transform:uppercase;letter-spacing:.06em}
+  code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:13.5px;
+       background:#0e1218;border:1px solid var(--line);border-radius:5px;padding:1.5px 5px;color:#cfe3ff}
+  pre{background:#0e1218;border:1px solid var(--line);border-radius:10px;padding:16px 18px;overflow-x:auto}
+  pre code{background:none;border:none;padding:0;color:var(--ink)}
+  a{color:var(--acc2);text-decoration:none;border-bottom:1px solid rgba(122,162,255,.35)}
+  a:hover{border-bottom-color:var(--acc2)}
+  ul{margin:0 0 14px;padding-left:22px}
+  li{margin:6px 0}
+  .tag{font-size:11.5px;text-transform:uppercase;letter-spacing:.08em;color:var(--acc);border:1px solid rgba(94,224,160,.35);
+       border-radius:999px;padding:3px 10px;display:inline-block;margin-bottom:10px}
+  .warn{border-left:3px solid var(--warn);padding-left:14px;color:#f0d6ae;margin:16px 0}
+  footer{margin-top:64px;padding-top:24px;border-top:1px solid var(--line);color:var(--dim);font-size:13.5px}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <span class="tag">Content asset pack · v3</span>
+  <h1>mem20 — content assets, refreshed to the canonical repo</h1>
+  <p class="sub">Every long-form article, launch-copy asset, README/docs rewrite, Show HN / Product Hunt post, landing-copy update and social thread, refreshed to the single canonical repository.</p>
+  <span class="pill">Repo: github.com/bythewayz66-glitch/mem20</span>
+  <span class="pill">MIT · Python · 270 tools · 27 domains</span>
+  <span class="pill">protocol 2025-06-18</span>
+</header>
+
+<h2>What this pack is</h2>
+<p>One consistent set of copy for the mem20 launch. Every asset names the same canonical repo, uses the same install path, and carries the same claim ledger — so no published surface contradicts another.</p>
+
+<div class="card">
+  <h3 style="margin-top:0">The wedge, in one line</h3>
+  <p style="margin-bottom:0"><strong>mem20 is persistent memory for AI agents — with a hard partition between what an agent actually knows and what it made up.</strong></p>
+</div>
+
+<h2>Canonical references</h2>
+<table>
+  <tr><th>Thing</th><th>Canonical value</th></tr>
+  <tr><td>Repo</td><td><code>https://github.com/bythewayz66-glitch/mem20</code></td></tr>
+  <tr><td>Branch / license / language</td><td><code>main</code> · MIT · Python</td></tr>
+  <tr><td>Install</td><td>from source — <code>git clone</code> + <code>pip install -e .</code>. The package is <strong>not</strong> on PyPI.</td></tr>
+  <tr><td>Run</td><td><code>mem20-mcp</code> (console entry point from <code>pyproject.toml</code>)</td></tr>
+  <tr><td>Tool surface</td><td><strong>270 tools across 27 domains</strong> (268 domain tools + 2 infra tools)</td></tr>
+  <tr><td>Protocol</td><td>MCP · JSON-RPC 2.0 over stdio · <code>2025-06-18</code></td></tr>
+</table>
+
+<h2>The assets</h2>
+<table>
+  <tr><th>Asset</th><th>What it is</th></tr>
+  <tr><td><strong>Launch copy pack</strong></td><td>One-liner, Show HN, H1/subhead/CTA, 3 + 6 value bullets, channel variants, claim ledger, guardrails.</td></tr>
+  <tr><td><strong>Long-form article</strong></td><td>Dev.to / Medium deep-dive on the trust problem in agent memory.</td></tr>
+  <tr><td><strong>Show HN post</strong></td><td>Publish-ready title, body and comment strategy.</td></tr>
+  <tr><td><strong>Product Hunt post</strong></td><td>Tagline, description, maker comment, topics.</td></tr>
+  <tr><td><strong>Social threads</strong></td><td>X single + thread, LinkedIn, three Reddit variants.</td></tr>
+  <tr><td><strong>README / install block</strong></td><td>Repo H1, badges, install, run, MCP client config.</td></tr>
+  <tr><td><strong>Landing-page copy update</strong></td><td>Exact string replacements for the live page.</td></tr>
+  <tr><td><strong>Tracked links</strong></td><td>Channel rows for the launch sequence.</td></tr>
+  <tr><td><strong>Reference audit</strong></td><td>Machine audit, per asset, per rule.</td></tr>
+</table>
+
+<h2>Install block (canonical — use verbatim)</h2>
+<pre><code>git clone https://github.com/bythewayz66-glitch/mem20.git
+cd mem20
+pip install -e .     # installs mem20 + its declared dependencies
+mem20-mcp            # start the stdio server</code></pre>
+
+<div class="warn">
+  <p style="margin-bottom:0"><strong>The package is not on PyPI.</strong> Do not publish a bare <code>pip install mem20</code> — it returns 404. Every asset in this pack ships the source install above.</p>
+</div>
+
+<h2>Guardrails that hold across every asset</h2>
+<ul>
+  <li><strong>No LoCoMo / LongMemEval claim.</strong> No numeric retrieval benchmark is published, and none is implied.</li>
+  <li><strong>The adversarial-retrieval weakness is disclosed</strong> wherever limits are discussed.</li>
+  <li><strong>Promotion is described as <em>evidence-based with an append-only audit trail</em></strong> — never tamper-proof or unfakeable.</li>
+  <li><strong>No competitor disparagement.</strong> Third-party figures are vendor self-reported and never used as a baseline.</li>
+</ul>
+
+<h2>Open blockers</h2>
+<ul>
+  <li><strong>The registry package is unpublished</strong> — PyPI 404; every asset ships the source install.</li>
+  <li><strong>Posting is manual</strong> — there is no HN / X / GitHub / MCP-directory account wired up; all copy is paste-ready.</li>
+  <li><strong>The <code>/sites/</code> pages are token-gated</strong> — they return 403 to anonymous visitors. The public-facing URL is GitHub Pages.</li>
+</ul>
+
+<footer>
+  <p>Prepared by Mem20-Content. Canonical repo: <a href="https://github.com/bythewayz66-glitch/mem20">github.com/bythewayz66-glitch/mem20</a> · MIT · self-hosted.</p>
+</footer>
+
+</div>
+</body>
+</html>

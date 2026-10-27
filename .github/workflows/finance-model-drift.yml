@@ -35,6 +35,53 @@ jobs:
           fi
           echo "Finance artefacts match the model."
 
+      - name: Assert the reconciliation ledger is append-only
+        run: |
+          set -e
+          # The ledger must never shrink and must never lose a historical row.
+          # 5 rows  (run 1, 2026-10-26)
+          # 5 rows  (run 2, 2026-10-27 re-confirm + SOM proof)
+          # 3 rows  (run 3, 2026-10-27 rebase to 45445f48: TAM/SAM carried, SOM written out)
+          rows=$(python3 -c "import csv;print(len(list(csv.reader(open('docs/finance/reconciliation_log.csv'))))-1)")
+          if [ "$rows" -lt 13 ]; then
+            echo "::error::reconciliation_log.csv has $rows rows; 13 were committed on 2026-10-27. History was overwritten."
+            exit 1
+          fi
+          for item in \
+            "Blended ACV (tier-weighted)" \
+            "Tool surface (tools/domains)" \
+            "SOM ARR (accounts x ACV)" \
+            "TAM accounts (floor of TAM / ACV)" \
+            "SAM accounts (floor of SAM / ACV)" \
+            "SOM ARR from the ramp (terminal accounts x ACV)" \
+            "TAM (carried, not re-derived)" \
+            "SAM (carried, not re-derived)" \
+            "SOM ARR (equation written out)"; do
+            grep -qF "$item" docs/finance/reconciliation_log.csv \
+              || { echo "::error::historical row missing from the ledger: $item"; exit 1; }
+          done
+          echo "Ledger intact: $rows rows, all run-1/2/3 checks present."
+
+      - name: Assert the SOM arithmetic is shown, not asserted
+        run: |
+          set -e
+          # $1.68M must appear as an ordered equation with both of its terms.
+          grep -qF '120 accounts x $14,000 blended ACV = $1,680,000' \
+            docs/finance/reconciliation_log.csv \
+            || { echo "::error::SOM equation missing from the ledger."; exit 1; }
+          grep -qF '120 accounts x $14,000 blended ACV = $1,680,000' \
+            docs/finance/derivation_trace.csv \
+            || { echo "::error::SOM equation missing from derivation_trace.csv."; exit 1; }
+          # No heredocs here: YAML strips the block indent, which would leave the
+          # Python source at column 0 and trip an IndentationError. python3 -c.
+          python3 -c "import json; d=json.load(open('docs/finance/inputs.json'))['house_numbers']; assert d['som_accounts']*d['blended_acv_usd']==d['som_arr_usd'], 'SOM does not compute'; print('SOM =', d['som_accounts'], 'x', d['blended_acv_usd'], '=', d['som_arr_usd'])"
+          python3 -c "import json; eq=json.load(open('docs/finance/model_output.json'))['market']['som_equation']; assert eq=='120 accounts x \$14,000 blended ACV = \$1,680,000', eq; print('SOM shown as:', eq)"
+
+      - name: Assert the retired 257/26 surface is not a live input
+        run: |
+          set -e
+          python3 -c "import json; s=json.load(open('docs/finance/inputs.json'))['tool_surface']; assert (s['tools'], s['domains'])==(270, 27), (s['tools'], s['domains']); assert (s['previous_tools'], s['previous_domains'])==(257, 26); print('live surface 270/27; 257/26 retired provenance only')"
+
       - name: Assert house numbers appear verbatim
         run: |
           set -e

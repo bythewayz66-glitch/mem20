@@ -2,14 +2,28 @@
   "schema": "mem20.finance.inputs/1",
   "as_of": "2026-10-26",
   "as_of_ts": "2026-10-26T19:52:23-06:00",
-  "deadline_utc": "2026-10-27T02:47:00Z",
+  "deadline_utc": "2026-10-27T18:00:00Z",
+  "deadline_local": "2026-10-27 12:00 MDT",
   "house_numbers": {
     "blended_acv_usd": 14000,
     "tam_usd": 1280000000,
     "sam_usd": 282000000,
     "som_arr_usd": 1680000,
     "som_accounts": 120,
-    "provenance": "carried verbatim from the owner directive; NOT re-derived in this file"
+    "provenance": "carried verbatim from the owner directive; NOT re-derived in this file",
+    "source": {
+      "source_doc": "docs/pricing/RECONCILIATION_NOTE.md (SS2 tier ladder, SS5 SAM/TAM variance) + published/sites/aca25e94-a97f-497c-8669-fbfac01f72bc/documents/mem20-finance-pricing-publish/ (frozen 2026-10-14 snapshot)",
+      "rule": "TAM and SAM are CARRIED, never re-derived. They are asserted equal to the house figure on every run. The account floors are derived FROM the carried dollars, one way only: an account count is never multiplied back into a TAM or SAM figure, because that would restate $1.28B as $1,279,992,000 and $282M as $281,988,000."
+    }
+  },
+  "reconciliation_run": {
+    "run_seq": 3,
+    "run_utc": "2026-10-27T15:30:00Z",
+    "previous_run_utc": "2026-10-27T09:20:00Z",
+    "branch": "fix/ws2-finance-270",
+    "base_main_sha": "45445f4850377814cd95b7fa50c0a9153f76c163",
+    "previous_base_main_sha": "1264076698a00878acc3adacf7bf1d51eea315cc",
+    "note": "stamps rows appended to the reconciliation ledger. Fixed values, not clock reads, so regenerating the model is idempotent and the CI drift check stays green. Run 3 re-runs the model with the branch rebased onto main 45445f48."
   },
   "tool_surface": {
     "tools": 270,
@@ -17,6 +31,7 @@
     "previous_tools": 257,
     "previous_domains": 26,
     "authority": "verify_mcp.py MEM20_EXPECTED_TOOLS default = 270 (instantiates Mem20MCPServer, counts server.tools); CI .github/workflows/mcp-verify.yml pins 270; CHANGELOG.md [Unreleased] and docs/README.md carry 270/27",
+    "asserted_on_every_run": true,
     "owner_of_migration": "Webpage Developer (P1)",
     "note": "257/26 is retired for the finance model. It survives only as a stated prior value in the corrections register."
   },

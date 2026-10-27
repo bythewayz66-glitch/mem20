@@ -4,6 +4,7 @@ use warnings;
 use Test::More;
 use Cwd qw(abs_path);
 use File::Basename qw(dirname);
+use Time::HiRes ();
 
 use Mem20::Config;
 use Mem20::Client;
@@ -93,7 +94,7 @@ subtest 'tools/list, tool_names and schemas' => sub {
     is_deeply( $schema->{required}, [ 'content', 'epistemic_status' ],
         'the advertised required list is what the client validates against' );
 
-    ok( $client->tool_schema('nope_not_here') == undef, 'an unknown tool has no schema' );
+    ok( !defined $client->tool_schema('nope_not_here'), 'an unknown tool has no schema' );
 
     $client->close;
 };
@@ -291,11 +292,15 @@ subtest 'close is idempotent and leaves no child running' => sub {
     my $client = Mem20::Client->new( config => config_for('ok') );
     $client->tool('memory_status');
 
-    my $pid = $client->transport->pid;
+    # Capture the transport BEFORE closing: the accessor builds a fresh one on
+    # demand, so asking for it after close() inspects a new, never-started
+    # object instead of the one that owned the child.
+    my $transport = $client->transport;
+    my $pid = $transport->pid;
     ok( $pid && $pid > 0, 'child is running' );
 
     $client->close;
-    ok( !$client->transport->pid, 'pid cleared' );
+    ok( !$transport->pid, 'pid cleared on the transport that owned the child' );
 
     # waitpid(-1, WNOHANG) must find nothing left to reap: a leaked child
     # would still hold the store lock.

@@ -1,8 +1,12 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import StatusPill from "./components/StatusPill.jsx";
 import LoginGate from "./components/LoginGate.jsx";
 import { ErrorBanner, NoticeBanner } from "./components/Banner.jsx";
+import { StateNotice, StaleRibbon } from "./components/StateNotice.jsx";
+import CommandPalette from "./components/CommandPalette.jsx";
+import { buildCommands } from "./commandPalette.js";
 import { KNOWN_STATUSES } from "./status.js";
+import { LIFECYCLE, lifecycleFor, ageSecondsOf, formatAge } from "./lifecycle.js";
 import { useResource, formatClock } from "./hooks.js";
 import { fetchAuthStatus, isUnauthorized } from "./auth.js";
 import Overview from "./tabs/Overview.jsx";
@@ -52,6 +56,13 @@ export default function App() {
   const [authStatus, setAuthStatus] = useState(null);
   const [authChecked, setAuthChecked] = useState(false);
 
+  // Cmd-K state. `paletteSeen` gates the one fetch the palette needs, so opening
+  // the app still issues the same requests it did before #38 — the dream list is
+  // only fetched once someone actually reaches for the palette or the tab.
+  const [paletteOpen, setPaletteOpen] = useState(false);
+  const [paletteSeen, setPaletteSeen] = useState(false);
+  const [focusRequest, setFocusRequest] = useState(null);
+
   const checkAuth = useCallback(async () => {
     try {
       const status = await fetchAuthStatus();
@@ -74,6 +85,7 @@ export default function App() {
   const registry = useResource("/api/registry", { pollMs: POLL_MS });
   const manifest = useResource("/api/websites/manifest", { enabled: view === "websites" || view === "overview" });
   const coverage = useResource("/api/cli/coverage", { enabled: view === "cli" || view === "subsystems" });
+  const dreams = useResource("/api/dreams", { enabled: paletteSeen || view === "dreams" });
 
   // A 401 on any protected route means the session lapsed, so show the gate
   // rather than leaving four red "unauthorized" banners on screen.
@@ -89,6 +101,57 @@ export default function App() {
     registry.refresh();
     manifest.refresh();
     coverage.refresh();
+    dreams.refresh();
+  }
+
+  // Cmd-K / Ctrl-K opens the palette; Esc inside it closes it. Registered once at
+  // the document level because the palette must be reachable from any panel
+  // without every panel wiring its own listener.
+  useEffect(() => {
+    function onKey(event) {
+      const isPalette = (event.metaKey || event.ctrlKey) && (event.key === "k" || event.key === "K");
+      if (isPalette) {
+        event.preventDefault();
+        setPaletteSeen(true);
+        setPaletteOpen((open) => !open);
+      }
+    }
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, []);
+
+  const commands = useMemo(
+    () => buildCommands({ nav: NAV, registry, coverage, dreams }),
+    [registry, registry.data, coverage, coverage.data, dreams, dreams.data],
+  );
+
+  // A palette entry can name an entity *inside* a panel, so hand the target down
+  // rather than only switching the tab — otherwise "open panel X" lands the user
+  // on a list they still have to search.
+  function runCommand(command) {
+    const action = command && command.action ? command.action : {};
+    if (action.type === "refresh") {
+      refreshAll();
+      return;
+    }
+    if (action.type === "retry") {
+      health.refresh();
+      registry.refresh();
+      return;
+    }
+    if (action.type === "copy") {
+      const path = action.path || "/api/registry";
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(new URL(path, window.location.origin).toString()).catch(() => {});
+      }
+      return;
+    }
+    if (action.type === "nav") {
+      setView(action.view);
+      if (action.select !== undefined) {
+        setFocusRequest({ view: action.view, select: action.select, sub: action.sub, nonce: Date.now() });
+      }
+    }
   }
 
   function handleAuthenticated() {
@@ -98,12 +161,24 @@ export default function App() {
 
   const healthData = health.data;
 
+  // The shell's own lifecycle, separate from the fleet's status vocabulary.
+  // `backendDown` means we have never received a usable /api/health response, so
+  // there is nothing honest to render inside the content area.
+  const backendState = lifecycleFor(health);
+  const backendDown = backendState === LIFECYCLE.UNREACHABLE;
+
   if (locked) {
     return <LoginGate status={authStatus} onAuthenticated={handleAuthenticated} />;
   }
 
   return (
     <div className="shell">
+      {/* The nav is a 248px rail of buttons before the content, and panels are swapped
+          by state rather than by URL, so there is no browser "skip to main" to lean
+          on: without this every panel change costs ~8 Tab presses. */}
+      <a className="skip-link" href="#main-content">
+        skip to content
+      </a>
       <aside className="nav">
         <div className="nav-brand">
           <span className="nav-brand-name">mem20</span>
@@ -139,7 +214,9 @@ export default function App() {
         </div>
       </aside>
 
-      <main className="main">
+      {/* tabIndex={-1} is what makes the skip link work: a <main> without it is not
+          focusable, so the anchor scrolls but focus stays on the link. */}
+      <main className="main" id="main-content" tabIndex={-1}>
         <header className="topbar">
           <div className="topbar-left">
             <h1>mem20 control plane</h1>
@@ -173,17 +250,45 @@ export default function App() {
             <button type="button" className="btn btn-primary" onClick={refreshAll}>
               refresh
             </button>
+            <button
+              type="button"
+              className="btn btn-ghost palette-trigger"
+              onClick={() => {
+                setPaletteSeen(true);
+                setPaletteOpen(true);
+              }}
+              title="open the command palette (Cmd-K)"
+              aria-keyshortcuts="Meta+K Control+K"
+            >
+              <kbd>⌘K</kbd>
+            </button>
           </div>
         </header>
 
         {health.error ? (
           <div className="strip">
-            <ErrorBanner title="cannot reach the control plane API" error={health.error} onRetry={health.refresh} />
+            <StateNotice
+              state={backendState}
+              context="control-plane API"
+              resource={health}
+              onRetry={health.refresh}
+            />
           </div>
         ) : null}
-        {registry.error ? (
+        {!health.error && registry.error ? (
           <div className="strip">
-            <ErrorBanner title="registry unavailable" error={registry.error} onRetry={registry.refresh} />
+            <StateNotice
+              state={lifecycleFor(registry)}
+              context="registry"
+              resource={registry}
+              onRetry={registry.refresh}
+            />
+          </div>
+        ) : null}
+        {!health.error && !registry.error ? (
+          <div className="strip strip-quiet">
+            <StaleRibbon resource={health} context="control-plane API" onRetry={health.refresh} />
+            <StaleRibbon resource={registry} context="registry" onRetry={registry.refresh} />
           </div>
         ) : null}
 
@@ -198,15 +303,39 @@ export default function App() {
         ) : null}
 
         <div className="content">
-          {view === "overview" ? (
-            <Overview health={health} registry={registry} manifest={manifest} onRefreshAll={refreshAll} />
-          ) : null}
-          {view === "subsystems" ? <Subsystems registry={registry} coverage={coverage} /> : null}
-          {view === "cli" ? <CliCoverage coverage={coverage} /> : null}
-          {view === "websites" ? <Websites manifest={manifest} /> : null}
-          {view === "dreams" ? <Dreams /> : null}
+          {backendDown ? (
+            // Never a blank pane: the backend is gone, so say so once, here,
+            // instead of letting five tabs each render an empty rectangle.
+            <StateNotice
+              state={backendState}
+              context="control plane"
+              resource={health}
+              onRetry={health.refresh}
+            />
+          ) : (
+            <>
+              {view === "overview" ? (
+                <Overview health={health} registry={registry} manifest={manifest} onRefreshAll={refreshAll} />
+              ) : null}
+              {view === "subsystems" ? (
+                <Subsystems registry={registry} coverage={coverage} focusRequest={focusRequest} />
+              ) : null}
+              {view === "cli" ? (
+                <CliCoverage coverage={coverage} focusRequest={focusRequest} />
+              ) : null}
+              {view === "websites" ? <Websites manifest={manifest} /> : null}
+              {view === "dreams" ? <Dreams focusRequest={focusRequest} /> : null}
+            </>
+          )}
         </div>
       </main>
+
+      <CommandPalette
+        open={paletteOpen}
+        onClose={() => setPaletteOpen(false)}
+        commands={commands}
+        onRun={runCommand}
+      />
     </div>
   );
 }

@@ -1,0 +1,14 @@
+[package]
+name = "mem20desktop"
+version = "0.1.0"
+edition = "2021"
+rust-version = "1.77"
+description = "Decision logic for the mem20controlz desktop shell: control-plane health parsing, a std-only HTTP probe, sidecar launch, and tray/poller rules. Deliberately free of Tauri, async runtimes and TLS so it is unit-testable on a machine with no WebView."
+license = "MIT"
+
+# Only `serde_json` (no derive macros) is pulled in on purpose: the health
+# contract is three fields wide, and navigating `serde_json::Value` keeps the
+# dependency graph small enough that `cargo test` finishes in seconds. That is
+# what makes the decision logic cheap to prove in CI.
+[dependencies]
+serde_json = "1"

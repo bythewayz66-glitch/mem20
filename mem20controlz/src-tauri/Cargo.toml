@@ -1,14 +1,22 @@
 [package]
 name = "mem20controlz-desktop"
 version = "0.1.0"
-description = "Tauri shell for mem20controlz (issue #35)"
 edition = "2021"
+rust-version = "1.77"
+description = "Tauri 2 desktop shell for the mem20controlz control plane (issue #35)"
+license = "MIT"
 
 [build-dependencies]
 tauri-build = { version = "2", features = [] }
 
 [dependencies]
+# All of the shell's decision logic lives here, and is unit-tested without a
+# WebView. This crate only wires it to a window.
+mem20desktop = { path = "mem20desktop" }
 tauri = { version = "2", features = [] }
+# Issue #37: `tray_surface` calls `NotificationExt` for native notifications.
+# The plugin was imported but never declared, so the tray could not compile.
+tauri-plugin-notification = "2"
 serde = { version = "1", features = ["derive"] }
 serde_json = "1"
 

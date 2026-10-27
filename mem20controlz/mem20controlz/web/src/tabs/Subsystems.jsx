@@ -1,5 +1,7 @@
-import React, { useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { Panel, Section, Row, Json, Chips, Table } from "../components/ui.jsx";
+import LiveRegion from "../components/LiveRegion.jsx";
+import { resultAnnouncement } from "../a11y.js";
 import StatusPill, { TonePill } from "../components/StatusPill.jsx";
 import { ErrorBanner } from "../components/Banner.jsx";
 import Stdout from "../components/Stdout.jsx";
@@ -189,11 +191,20 @@ function Detail({ panel, coverageRow }) {
   );
 }
 
-export default function Subsystems({ registry, coverage }) {
+export default function Subsystems({ registry, coverage, focusRequest }) {
   const [query, setQuery] = useState("");
   const [kind, setKind] = useState("all");
   const [status, setStatus] = useState("all");
   const [selectedId, setSelectedId] = useState(null);
+
+  // A Cmd-K entry can name a specific panel, so honour it once per request.
+  // Keyed on `nonce` rather than the id: picking the same panel twice in a row
+  // must still work, which an id-only check would swallow.
+  useEffect(() => {
+    if (focusRequest && focusRequest.view === "subsystems" && focusRequest.select !== undefined) {
+      setSelectedId(focusRequest.select);
+    }
+  }, [focusRequest && focusRequest.nonce]);
 
   const registryData = registry.data;
   const panels = registryData && Array.isArray(registryData.panels) ? registryData.panels : null;
@@ -213,6 +224,14 @@ export default function Subsystems({ registry, coverage }) {
   }, [panels, query, kind, status]);
 
   const selected = filtered ? filtered.find((panel) => panel.id === selectedId) || filtered[0] || null : null;
+
+  // Two announcements, not one: the filter result count answers "did my typing do
+  // anything", and the selection answers "what am I looking at now". A single
+  // region that flapped between the two would interrupt itself on every keystroke.
+  const filterAnnouncement = panels
+    ? resultAnnouncement({ total: panels.length, shown: filtered.length, active: -1, noun: "panels" })
+    : "";
+  const selectionAnnouncement = selected ? `selected ${selected.name || selected.id}` : "";
   const coverageRow = coverage.data ? coverageRowFor(coverage.data, selected) : null;
 
   const counts = registryData && registryData.counts && typeof registryData.counts === "object" ? registryData.counts : null;
@@ -228,6 +247,11 @@ export default function Subsystems({ registry, coverage }) {
               className="input"
               type="search"
               placeholder="filter panels…"
+              // The placeholder was the only label this field ever had, and a
+              // placeholder is not an accessible name: a screen reader announced
+              // "search, blank". The text is identical so nothing moves visually.
+              aria-label="filter panels"
+              aria-describedby="subsystems-filter-status"
               value={query}
               onChange={(event) => setQuery(event.target.value)}
             />
@@ -255,7 +279,9 @@ export default function Subsystems({ registry, coverage }) {
         <ErrorBanner title="/api/registry failed" error={registry.error} onRetry={registry.refresh} />
         <div className="split">
           <div className="split-list">
-            <div className="filter-summary">
+            <LiveRegion message={filterAnnouncement} />
+            <LiveRegion message={selectionAnnouncement} />
+            <div className="filter-summary" id="subsystems-filter-status">
               {panels ? (
                 <>
                   showing <strong>{filtered.length}</strong> of <strong>{panels.length}</strong> panels

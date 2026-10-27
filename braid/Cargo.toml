@@ -19,7 +19,14 @@ license = "MIT"
 [workspace.dependencies]
 blake3 = "1"
 ed25519-dalek = { version = "3", features = ["rand_core"] }
-rand = "0.8"
+# rand MUST track the rand_core major that ed25519-dalek 3 re-exports.
+# dalek 3 depends on rand_core 0.10, whose RNG traits (`TryRng`/`TryCryptoRng`)
+# are what `SigningKey::generate` bounds on. rand 0.8's `rngs::OsRng` only
+# implements rand_core 0.6's `RngCore`/`CryptoRng`, so every
+# `SigningKey::generate(&mut OsRng)` fails with "the trait bound `OsRng:
+# CryptoRng` is not satisfied". rand 0.10 ships `rand::rng()` (ThreadRng),
+# which implements the 0.10 traits. Keep these two pins in lockstep.
+rand = "0.10"
 serde = { version = "1", features = ["derive"] }
 # float_roundtrip is REQUIRED for content addressing, not an optimisation.
 # Without it serde_json parses decimals with a fast approximate
@@ -32,7 +39,14 @@ serde = { version = "1", features = ["derive"] }
 serde_json = { version = "1", features = ["float_roundtrip"] }
 toml = "0.8"
 sha2 = "0.11"
-hmac = "0.12"
+# hmac MUST track sha2's digest major. sha2 0.11 builds on digest 0.11 (it is
+# also the version ed25519-dalek v3 pulls in, so cargo unifies the whole
+# workspace on it). hmac 0.12 is a digest 0.10 crate: pairing the two gives
+# `Hmac<Sha256>` an `HmacCore<Sha256>` that implements digest 0.10's
+# `MacMarker`/`Update`/`FixedOutput` while `Mac` is re-exported from digest
+# 0.11, so `HmacSha256::new_from_slice` reports E0599/E0277 unsatisfied trait
+# bounds. Keep these two pins in lockstep - issue #21.
+hmac = "0.13"
 bs58 = "0.5"
 
 [profile.release]

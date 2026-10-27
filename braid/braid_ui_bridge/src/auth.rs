@@ -70,11 +70,11 @@ mod tests {
     use super::*;
     use braid_keys::did_key;
     use ed25519_dalek::SigningKey;
-    use rand::rngs::OsRng;
+    use rand::rng;
 
     #[test]
     fn macaroon_verifies_and_scopes() {
-        let sk = SigningKey::generate(&mut OsRng);
+        let sk = SigningKey::generate(&mut rng());
         let did = did_key(&ed25519_dalek::VerifyingKey::from(&sk));
         let m = SessionMacaroon::issue("door1", "s1", &["read:timeline:*"], &sk);
 
@@ -86,14 +86,14 @@ mod tests {
 
     #[test]
     fn tampered_or_wrong_identity_is_refused() {
-        let sk = SigningKey::generate(&mut OsRng);
+        let sk = SigningKey::generate(&mut rng());
         let did = did_key(&ed25519_dalek::VerifyingKey::from(&sk));
         let m = SessionMacaroon::issue("door1", "s1", &["read:timeline:*"], &sk);
 
         // wrong location
         assert!(verify_macaroon(&m, &did, "door2").is_err());
         // foreign did
-        let sk2 = SigningKey::generate(&mut OsRng);
+        let sk2 = SigningKey::generate(&mut rng());
         let did2 = did_key(&ed25519_dalek::VerifyingKey::from(&sk2));
         assert!(verify_macaroon(&m, &did2, "door1").is_err());
         // tampered caveat

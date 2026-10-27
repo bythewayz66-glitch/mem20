@@ -33,9 +33,8 @@ BARE: ['reflexion']
 
 ```
 initialize -> {"protocolVersion":"2025-06-18","serverInfo":{"name":"mem20-mcp","version":""}}
-```
-
 tools/list -> TOOL_COUNT: 270   UNIQUE: 270
+```
 
 `serverInfo.version` is the empty string, so the SDK does not assert on it.
 
@@ -139,7 +138,7 @@ are the poll primitives; `Mem20::Client` adds `job_from`, `wait_for_job` and
 |---|---|---|
 | T1 | Timeout path **hung forever**: `_drain_stderr` did a blocking `sysread` on stderr while composing the timeout message. Reproduced as `timeout 12` exit 124. | stderr put in `O_NONBLOCK`; the drain is bounded and cannot block. Now throws at 2.00s with the stderr tail. |
 | T2 | No lazy handshake: `tool()` sent `tools/call` before `initialize`, and the server answered `-32602 Invalid request parameters`. | `request()` performs `initialize_session` for any method except `initialize`. |
-| T3 | `Config->cwd` never applied. | `chdir` before `open3`, with a clear `TransportError` if the directory is missing. |
+| T3 | `Config->cwd` never applied. | `chdir` before `open3`, restored after the spawn; a clear `TransportError` if the directory is missing. |
 | T4 | One `sysread` could deliver several responses; only the first was consumed. | Complete lines are buffered in `pending`; a single unterminated frame is capped at 8 MiB. |
 | B1 | `tool($name, {})` (the README's own example) built `{"HASH(0x...)": undef}` as `arguments`. | `_params_from` accepts a hashref **or** a flat pair list, refuses odd-length and mixed forms. |
 | B2 | `Mem20::Client::text($hits)` returned `''` — the documented call consumed the envelope as its invocant. | `text` works as both function and method. |
@@ -149,17 +148,21 @@ are the poll primitives; `Mem20::Client` adds `job_from`, `wait_for_job` and
 
 ## 8. Verified
 
+All of the following were run against a **clean clone of this branch**, so they
+describe the tree the PR actually ships.
+
 ```
 $ prove -Ilib t/*.t
 t/00-load.t ......... ok
 t/10-config.t ....... ok
 t/20-client.t ....... ok
-t/90-live-server.t .. skipped
-Result: PASS   Files=4, Tests=64
+t/90-live-server.t .. skipped: set MEM20_MCP_DIR and MEM20_PYTHON ...
+All tests successful.
+Files=4, Tests=57, Result: PASS
 
 $ MEM20_MCP_DIR=/opt/mem20/mcp MEM20_PYTHON=python3 prove -Ilib t/90-live-server.t
-t/90-live-server.t .. ok
-Result: PASS   Files=1, Tests=8
+All tests successful.
+Files=1, Tests=8, Result: PASS
 
 $ MEM20_PYTHON=/opt/mem20/.venv/bin/python perl -Ilib examples/quickstart.pl /opt/mem20
 stored one fact

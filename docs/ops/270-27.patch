@@ -1,0 +1,190 @@
+diff --git a/README.md b/README.md
+index ba8df85..ad02907 100644
+--- a/README.md
++++ b/README.md
+@@ -158,7 +158,7 @@ Find code with the sitemap instead of grepping:
+ | `memory_engine/` | The store: append-only ledger, vector + BM25 + graph indexes, contamination firewall |
+ | `mem20api/` | Stable Python API over the engine — bind a store, get honest diagnostics |
+ | `mem20benchmarkz/` | The benchmark suite in this README |
+-| `mcp/` | MCP server: **268 tools across 26 domains** |
++| `mcp/` | MCP server: **270 tools across 27 domains** |
+ | `cog/` | Cognitive engine (reasoning, planning, reflection) |
+ | `braid/` | **Append-only cryptographic ledger in Rust** — see below |
+ | `mem20dreamz/` | The dream engine |
+@@ -168,7 +168,7 @@ Find code with the sitemap instead of grepping:
+ | `mem20owebz/` | Chat front-end + LiteLLM model gateway |
+ | `mem20ircz/`, `mem20botz/` | The IRC channel where agents talk and take jobs |
+ | `mem20controlz/` | Unified control plane with per-subsystem panels |
+-| `toolchest/` | Registry of 889 capabilities (268 MCP tools, 318 CLIs, 303 subsystems) with runtime status |
++| `toolchest/` | Registry of 889 capabilities (270 MCP tools, 318 CLIs, 303 subsystems) with runtime status |
+ 
+ ### Braid: the ledger everything else could be built on
+ 
+@@ -181,7 +181,7 @@ Find code with the sitemap instead of grepping:
+ 
+ ### The MCP surface
+ 
+-268 tools in 26 domains. The largest:
++270 tools in 27 domains. The largest:
+ 
+ | Prefix | Tools | Domain |
+ |---|---:|---|
+@@ -224,7 +224,7 @@ Plus `blender_*` and `unity_*` as **optional** integrations that require the ext
+ ```
+                         ┌────────────────────────────────────────────┐
+    MCP client  --stdio▶│  mcp/mcp_server.py  (Mem20MCPServer)       │
+-   (Hermes, Claude,    │  JSON-RPC 2.0 · 268 tools · 26 domains     │
++   (Hermes, Claude,    │  JSON-RPC 2.0 · 270 tools · 27 domains     │
+     any MCP host)      └──────────────────────┬─────────────────────┘
+                                            │ calls
+                  ┌─────────────────────────┼─────────────────────────┐
+@@ -239,7 +239,7 @@ Plus `blender_*` and `unity_*` as **optional** integrations that require the ext
+ ### Transport / protocol
+ 
+ - **MCP server** speaking JSON-RPC 2.0 over stdio. `mcp/` is a script directory, not an importable package — it has no `__init__.py`, so importing it as `mcp.*` would shadow the upstream `mcp` SDK. That is why `mcp_server.py` does `from server import main` (script-dir relative) and why the installed console script `mem20-mcp` goes through `launcher.py` instead.
+-- `Mem20MCPServer` (in `server.py`) aggregates per-domain mixin classes and dispatches in `_execute_tool()`. It exposes **268 tools across 26 domains** (verified by instantiating the server and counting `server.tools`).
++- `Mem20MCPServer` (in `server.py`) aggregates per-domain mixin classes and dispatches in `_execute_tool()`. It exposes **270 tools across 27 domains** (verified by instantiating the server and counting `server.tools`, and reproducible from source with the greps in [`docs/TOOL-DOMAINS.md`](docs/TOOL-DOMAINS.md)).
+ - Tool schemas + handlers live in per-domain modules under `mcp/` and `mcp/tools/`: `memory_tools.py`, `enhanced_memory_tools.py`, `cognitive_tools.py`, `thought_process.py`, `roadmap_tools.py`, `tools/world_tools.py`, `tools/braid_tools.py`, `tools/blender_tools.py` (OPTIONAL Blender), `tools/unity_tools.py` (OPTIONAL Unity), and `tools/integration_tools.py` (filesystem + blank template for new optional integrations).
+ - `mcp_server.py` is a thin entry-point shim preserving the systemd unit path.
+ 
+@@ -277,15 +277,15 @@ The core substrate is a fraction of the tree. Three nested projects carry their
+ 
+ ---
+ 
+-## Tool domains (26)
++## Tool domains (27)
+ 
+-Counts below are the live surface, obtained by instantiating `Mem20MCPServer` and counting its registered tools. 268 total across 26 domains; the 29 rows below are tool *prefixes*, and several prefixes share one domain.
++Counts below are the live surface, obtained by instantiating `Mem20MCPServer` and counting its registered tools. **270 total across 27 domains**; the 30 rows below are tool *prefixes*, and several prefixes share one domain. The domain count is derived as **28 `register_*_tools` groups minus the A2A Hermes transport layer** — see [`docs/TOOL-DOMAINS.md`](docs/TOOL-DOMAINS.md) for the full mapping and the derivation of both numbers.
+ 
+ | Prefix | Tools | Domain | What it does |
+ |--------|------:|--------|-------------|
+-| `memory_*` | 49 | Core memory | Store, recall, probe entities, reason across entities, contradiction detection, epistemic audit, namespaces, pins, contamination audit |
++| `memory_*` | 52 | Core memory | Store, recall, probe entities, reason across entities, contradiction detection, epistemic audit, namespaces, pins, contamination audit |
+ | `cog_*`, `tot_*`, `cognitive_substrate`, `beam_search`, `react_reason`, `least_to_most`, `reflexion` | 15 | Cognitive processing | Reasoning (deductive, inductive, abductive, analogical, causal), planning, reflection, working memory, 28-paradigm substrate, tree-of-thought diagnostics |
+-| `world_model_*` | 9 | World forecasting | Variables and rules, record predictions, resolve against observed outcomes |
++| `world_model_*` | 8 | World forecasting | Variables and rules, record predictions, resolve against observed outcomes |
+ | `vcs_*` | 11 | Version control | Git status/diff/log/branch/commit/stash/remote/tag, GitHub issues and PRs |
+ | `cloud_*` | 10 | Cloud control planes | AWS EC2/Lambda/S3, Azure blob, GCP storage, Kubernetes, Docker, Heroku, DigitalOcean, Cloudflare Workers |
+ | `db_*` | 10 | Databases | SQL across sqlite/postgres/mysql/redis/mongodb, schema inspection, transactions |
+@@ -303,10 +303,11 @@ Counts below are the live surface, obtained by instantiating `Mem20MCPServer` an
+ | `search_*` | 7 | Search | Web, news, images, academic (arXiv/Semantic Scholar), code, knowledge base, local files |
+ | `affective_*` | 6 | Values, emotions, goals | Track agent values, emotional states, and goal hierarchies |
+ | `procedural_*` | 6 | Skill library | Add, get, execute, and search reusable procedural skills (how-to knowledge) |
+-| `a2a_*` | 5 | Agent-to-agent | Discover, call, and orchestrate peer agents over A2A |
++| `a2a_*` | 5 | Agent-to-agent (transport layer) | Discover, call, and orchestrate peer agents over A2A. This is the A2A Hermes layer: one of the 28 registration groups, **not** counted as one of the 27 tool domains |
++| `lie_*` | 10 | Live intent elicitation | Start and seal an elicitation session, feed transcript or audio, set a baseline, acknowledge cues, read status |
+ | `irc_*` | 5 | Shared channel | Join, read, send on the IRC room where agents coordinate |
+ | `unity_*` | 5 | Unity automation | **OPTIONAL** — Game-engine scripting, project builds, test runs (requires Unity Editor) |
+-| `imagination_*` | 8 | Counterfactual simulation | Generate hypotheticals, run "what-if" scenarios, simulate futures, recombine concepts, mental models |
++| `imagination_*` | 9 | Counterfactual simulation | Generate hypotheticals, run "what-if" scenarios, simulate futures, recombine concepts, mental models |
+ | `roadmap_*` | 4 | Roadmap registry | Create, list, get, and update multi-phase project plans |
+ | `self_model_*` | 3 | Agent self-model | Track the agent's own identity, capabilities, and values over time |
+ | `corrigibility_*` | 2 | Shutdown / capability tiers | Control the agent's capability levels and shutdown behavior |
+diff --git a/docs/02-tools-reference.md b/docs/02-tools-reference.md
+index 4c65065..1f86709 100644
+--- a/docs/02-tools-reference.md
++++ b/docs/02-tools-reference.md
+@@ -1,7 +1,7 @@
+ # mem20 MCP Tools Reference
+ 
+ > Reference for the MCP tool surface, organised by domain. The live server exposes
+-> **268 tools across 26 domains** (verified by instantiating `Mem20MCPServer` and
++> **270 tools across 27 domains** (verified by instantiating `Mem20MCPServer` and
+ > counting `server.tools`); the sections below document the core subset in detail,
+ > so a section heading counts the tools listed under it, not the whole domain.
+ 
+diff --git a/docs/05-complete-tools-reference.md b/docs/05-complete-tools-reference.md
+index 9aa0503..89ab648 100644
+--- a/docs/05-complete-tools-reference.md
++++ b/docs/05-complete-tools-reference.md
+@@ -1,6 +1,6 @@
+ # mem20 MCP — Complete Tools Reference
+ 
+-> Every tool, every feature, every command. 268 tools across 26 domains. Written for someone who has never seen mem20 before.
++> Every tool, every feature, every command. 270 tools across 27 domains. Written for someone who has never seen mem20 before.
+ 
+ ---
+ 
+@@ -1347,7 +1347,7 @@ These track values, emotions, and goals — mem20's emotional intelligence layer
+   "arguments": {
+     "name": "complete_mem20_docs",
+     "priority": 1,
+-    "target_state": "All 268 tools fully documented"
++    "target_state": "All 270 tools fully documented"
+   }
+ }
+ ```
+@@ -3178,7 +3178,7 @@ These are advanced memory operations beyond the core tools.
+   "name": "prod_task_create",
+   "arguments": {
+     "title": "Complete mem20 docs",
+-    "description": "Write feature-by-feature documentation for all 268 tools",
++    "description": "Write feature-by-feature documentation for all 270 tools",
+     "priority": "high",
+     "due_date": "2026-09-07"
+   }
+@@ -3321,7 +3321,7 @@ These are advanced memory operations beyond the core tools.
+   "name": "prod_goal_set",
+   "arguments": {
+     "goal": "Complete all mem20 documentation",
+-    "target": "All 26 domains documented",
++    "target": "All 27 domains documented",
+     "deadline": "2026-09-15"
+   }
+ }
+@@ -3724,7 +3724,7 @@ These are advanced memory operations beyond the core tools.
+     "action": "create",
+     "repo": "bythewayz66-glitch/mem20",
+     "title": "Add tool documentation",
+-    "body": "Need comprehensive docs for all 268 tools"
++    "body": "Need comprehensive docs for all 270 tools"
+   }
+ }
+ ```
+@@ -4676,4 +4676,4 @@ claude mcp add mem20 -- python3 /path/to/mem20/mcp/mcp_server.py
+ | Cloud Storage | 7 | cloudstorage_upload, cloudstorage_download, cloudstorage_list, cloudstorage_delete, cloudstorage_copy, cloudstorage_sync, cloudstorage_metadata, cloudstorage_presigned_url |
+ | Marketing | 7 | mkt_seo_analyze, mkt_social_post, mkt_social_analytics, mkt_email_campaign, mkt_content_generate, mkt_ab_test, mkt_analytics, mkt_competitor_analysis, mkt_hashtag_research |
+ | Finance | 7 | fin_stock_quote, fin_crypto_price, fin_portfolio, fin_budget, fin_invoice, fin_tax_calc, fin_expense_track, fin_financial_news |
+-| **TOTAL** | **268** | 26 domains |
++| **TOTAL** | **270** | 27 domains |
+diff --git a/docs/index.html b/docs/index.html
+index 5dddf92..b21236f 100644
+--- a/docs/index.html
++++ b/docs/index.html
+@@ -413,7 +413,7 @@ sweep(document)})();</script>
+       <p class="lede">
+         mem20 is an MIT-licensed MCP server that gives AI agents persistent memory with a hard
+         partition between grounded and simulated content, contamination auditing, evidence-based
+-        promotion, and an append-only, origin-tagged ledger. 268 tools across 26 domains.
++        promotion, and an append-only, origin-tagged ledger. 270 tools across 27 domains.
+         Self-hosted. Zero lock-in.
+       </p>
+       <p class="lede-short">
+@@ -562,7 +562,7 @@ sweep(document)})();</script>
+           <div class="hood-item">
+             <span class="n">05</span>
+             <strong>MCP-native and broad</strong>
+-            <span>JSON-RPC 2.0 over stdio, 268 tools across 26 domains — drops into LangGraph, CrewAI, Pydantic AI and the wider MCP ecosystem.</span>
++            <span>JSON-RPC 2.0 over stdio, 270 tools across 27 domains — drops into LangGraph, CrewAI, Pydantic AI and the wider MCP ecosystem.</span>
+           </div>
+           <div class="hood-item">
+             <span class="n">06</span>
+@@ -782,7 +782,7 @@ python -m mem20 --stdio</pre>
+       <div>
+         <ul class="install-list">
+           <li><span class="tick">&#10003;</span><span>MIT licensed — read every line before it runs in your VPC.</span></li>
+-          <li><span class="tick">&#10003;</span><span>MCP-native: JSON-RPC 2.0 over stdio, 268 tools across 26 domains.</span></li>
++          <li><span class="tick">&#10003;</span><span>MCP-native: JSON-RPC 2.0 over stdio, 270 tools across 27 domains.</span></li>
+           <li><span class="tick">&#10003;</span><span>Drops into LangGraph, CrewAI, Pydantic AI and the wider MCP ecosystem.</span></li>
+           <li><span class="tick">&#10003;</span><span>Zero lock-in — your memory, your ledger, your infrastructure.</span></li>
+         </ul>
+@@ -838,7 +838,7 @@ python -m mem20 --stdio</pre>
+         <ul class="foot-links">
+           <li>MCP server · JSON-RPC 2.0 over stdio</li>
+           <li>MIT licensed · Python</li>
+-          <li>268 tools · 26 domains</li>
++          <li>270 tools · 27 domains</li>
+           <li>v2.1.0rc2</li>
+           <li>Benchmarks self-published</li>
+         </ul>

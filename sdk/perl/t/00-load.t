@@ -42,7 +42,7 @@ my %is_core = map { $_ => 1 } qw(strict warnings utf8 parent base constant overl
 # HTTP::Tiny and Time::HiRes are all core, and an allowlist that forgot them
 # would fail the build for the wrong reason.
 #
-# The single-argument form is the right question here — is this module shipped
+# The single-argument form is the right question here -- is this module shipped
 # with some perl core? Every module used has been core for far longer than the
 # 5.20 floor in Makefile.PL.
 use Module::CoreList ();

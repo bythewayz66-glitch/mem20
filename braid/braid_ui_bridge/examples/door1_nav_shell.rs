@@ -20,7 +20,7 @@ use braid_ui_bridge::frontdoor::{Door, DoorRegistration, Router};
 use braid_ui_bridge::{door1_shell, handler_from, Door1Surface};
 use braid_wire::{http_get_raw, http_post_raw, BraidWireServer, WireOp, WireRequest};
 use ed25519_dalek::{SigningKey, VerifyingKey};
-use rand::rngs::OsRng;
+use rand::rng;
 
 const GENESIS: &str = r#"
 name = "genesis-nav"
@@ -58,7 +58,7 @@ fn main() {
         policy: policy_from_toml(GENESIS).expect("genesis"),
     });
 
-    let door_sk = SigningKey::generate(&mut OsRng);
+    let door_sk = SigningKey::generate(&mut rng());
     let door_did = did_key(&VerifyingKey::from(&door_sk));
 
     // THREE doors on ONE router: door1 Lumen (witness), door2 Axiom

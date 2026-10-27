@@ -16,7 +16,7 @@ use braid_ui_bridge::frontdoor::{Door, DoorRegistration, Router};
 use braid_ui_bridge::handler_from;
 use braid_wire::{WireOp, WireRequest};
 use ed25519_dalek::{SigningKey, VerifyingKey};
-use rand::rngs::OsRng;
+use rand::rng;
 
 const GENESIS: &str = r#"
 name = "genesis-quest3d"
@@ -79,8 +79,8 @@ fn mac(location: &str, sk: &SigningKey, caps: &[&str]) -> SessionMacaroon {
 #[test]
 fn world_returns_spatial_walk_in_over_one_real_wire() {
     let (engine, _engine_id) = boot();
-    let door_sk = SigningKey::generate(&mut OsRng);
-    let human_sk = SigningKey::generate(&mut OsRng);
+    let door_sk = SigningKey::generate(&mut rng());
+    let human_sk = SigningKey::generate(&mut rng());
     let door_did = did_key(&VerifyingKey::from(&door_sk));
     let human_did = did_key(&VerifyingKey::from(&human_sk));
     let router = Router::new(
@@ -178,7 +178,7 @@ fn world_returns_spatial_walk_in_over_one_real_wire() {
 #[test]
 fn world_is_cap_gated_and_respects_engine_facts() {
     let (engine, _engine_id) = boot();
-    let door_sk = SigningKey::generate(&mut OsRng);
+    let door_sk = SigningKey::generate(&mut rng());
     let door_did = did_key(&VerifyingKey::from(&door_sk));
     let router = Router::new(
         engine.clone(),

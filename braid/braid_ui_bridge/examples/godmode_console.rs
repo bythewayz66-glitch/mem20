@@ -33,7 +33,7 @@ use braid_ui_bridge::frontdoor::{Door, DoorRegistration, Router};
 use braid_ui_bridge::{door1_shell, door2_shell, handler_from, mount_planned_surfaces, Door1Surface, GodmodeTokens};
 use braid_wire::{http_get_raw, http_post_raw, BraidWireServer, WireOp, WireRequest};
 use ed25519_dalek::{SigningKey, VerifyingKey};
-use rand::rngs::OsRng;
+use rand::rng;
 
 const GENESIS: &str = r#"
 name = "genesis-godmode"
@@ -102,9 +102,9 @@ fn main() {
         policy: policy_from_toml(ESCALATION).expect("escalation"),
     });
 
-    let door_sk = SigningKey::generate(&mut OsRng);
+    let door_sk = SigningKey::generate(&mut rng());
     let door_did = did_key(&VerifyingKey::from(&door_sk));
-    let human_sk = SigningKey::generate(&mut OsRng);
+    let human_sk = SigningKey::generate(&mut rng());
     let human_did = did_key(&VerifyingKey::from(&human_sk));
 
     // THREE doors on ONE router + the human escalation gate (D2.4): godmode

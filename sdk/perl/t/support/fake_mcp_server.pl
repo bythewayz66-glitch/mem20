@@ -14,6 +14,15 @@
 #               stderr-pipe-deadlock case)
 #   crash       exits immediately without answering
 #   garbage     answers with unparseable text instead of JSON
+#   silent      answers initialize/tools/list but never answers tools/call
+#               (the timeout path, and the blocking-stderr-drain hang)
+#   iserror     tools/call answers with result.isError = true
+#   softerror   tools/call answers isError = false but text begins "Error"
+#   job         cog_plan returns a background-job envelope; job_status walks
+#               running -> running -> ok
+#
+# The failure shapes mirror what mem20 3.0.0 actually emits; see
+# sdk/perl/AUDIT.md for the raw transcripts that established them.
 
 use strict;
 use warnings;
@@ -26,12 +35,64 @@ $| = 1;
 
 my $json = JSON::PP->new->utf8->canonical;
 
-# A deliberately small but structurally faithful tool list.
+# A deliberately small but structurally faithful tool list. memory_store
+# carries the real inputSchema's required list, because the client validates
+# required arguments against the advertised schema.
 my @TOOLS = (
-    { name => 'memory_store',  description => 'Store a fact' },
-    { name => 'memory_recall', description => 'Search stored facts' },
+    {
+        name        => 'memory_store',
+        description => 'Store a grounded fact',
+        inputSchema => {
+            type       => 'object',
+            properties => {
+                content          => { type => 'string' },
+                category         => {
+                    type    => 'string',
+                    enum    => [ 'user_pref', 'project', 'tool', 'general' ],
+                    default => 'general',
+                },
+                tags             => { type => 'string', default => '' },
+                epistemic_status => {
+                    type => 'string',
+                    enum => [ 'observed', 'inferred', 'imagined', 'user_stated',
+                              'hypothesis', 'agent_generated', 'unlabeled' ],
+                },
+            },
+            required => [ 'content', 'epistemic_status' ],
+        },
+    },
+    {
+        name        => 'memory_recall',
+        description => 'Search stored facts',
+        inputSchema => {
+            type       => 'object',
+            properties => {
+                query    => { type => 'string' },
+                category => { type => 'string', enum => [ 'user_pref', 'project', 'tool', 'general' ], default => '' },
+                limit    => { type => 'integer', default => 10, minimum => 1, maximum => 50 },
+            },
+            required => [ 'query' ],
+        },
+    },
     { name => 'memory_status', description => 'Store health' },
-    { name => 'cog_plan',      description => 'Plan a goal' },
+    {
+        name        => 'cog_plan',
+        description => 'Plan a goal',
+        inputSchema => {
+            type       => 'object',
+            properties => { goal => { type => 'string' } },
+            required   => ['goal'],
+        },
+    },
+    {
+        name        => 'job_status',
+        description => 'Check a background job',
+        inputSchema => {
+            type       => 'object',
+            properties => { job_id => { type => 'string' } },
+            required   => ['job_id'],
+        },
+    },
 );
 
 # NOT `send`: that is a CORE function (socket send), and defining a sub with
@@ -40,6 +101,16 @@ sub emit {
     my ($payload) = @_;
     print $json->encode($payload);
     return;
+}
+
+# One tool result envelope. `is_error` defaults to false, which is what mem20
+# sends for a tool-level failure too.
+sub tool_result {
+    my ( $text, $is_error ) = @_;
+    return {
+        content => [ { type => 'text', text => $text } ],
+        isError => $is_error ? JSON::PP::true : JSON::PP::false,
+    };
 }
 
 if ($MODE eq 'crash') {
@@ -52,6 +123,8 @@ if ($MODE eq 'noisy') {
     # the client hangs until its timeout.
     print STDERR 'x' x 200_000;
 }
+
+my $job_polls = 0;
 
 while (defined(my $line = <STDIN>)) {
     chomp $line;
@@ -100,6 +173,12 @@ while (defined(my $line = <STDIN>)) {
         my $name = $message->{params}{name}      // '';
         my $args = $message->{params}{arguments} // {};
 
+        # Start and never answer: exercises timeout and the stderr drain.
+        if ($MODE eq 'silent') {
+            print STDERR "silent mode: no reply coming\n";
+            next;
+        }
+
         if ($MODE eq 'error') {
             emit( {
                 jsonrpc => '2.0',
@@ -113,15 +192,31 @@ while (defined(my $line = <STDIN>)) {
             next;
         }
 
+        if ($MODE eq 'iserror') {
+            emit( {
+                jsonrpc => '2.0',
+                id      => $id,
+                result  => tool_result( "Error: Unknown tool '$name'", 1 ),
+            } );
+            next;
+        }
+
+        if ($MODE eq 'softerror') {
+            # Exactly mem20's tool-internal failure shape: a protocol SUCCESS
+            # whose text begins "Error".
+            emit( {
+                jsonrpc => '2.0',
+                id      => $id,
+                result  => tool_result( "Error storing memory: Invalid epistemic_status 'x'", 0 ),
+            } );
+            next;
+        }
+
         if ($name eq 'memory_store') {
             # Echo the arguments back so the test can assert on what was sent,
             # which is how the tags-array-vs-string behaviour is verified.
             my $reply = $json->encode( { stored => $args } );
-            emit( {
-                jsonrpc => '2.0',
-                id      => $id,
-                result  => { content => [ { type => 'text', text => $reply } ] },
-            } );
+            emit( { jsonrpc => '2.0', id => $id, result => tool_result($reply) } );
             next;
         }
 
@@ -140,11 +235,35 @@ while (defined(my $line = <STDIN>)) {
         }
 
         if ($name eq 'memory_status') {
-            emit( {
-                jsonrpc => '2.0',
-                id      => $id,
-                result  => { content => [ { type => 'text', text => 'ok' } ] },
-            } );
+            emit( { jsonrpc => '2.0', id => $id, result => tool_result('ok') } );
+            next;
+        }
+
+        if ($name eq 'cog_plan') {
+            if ($MODE eq 'job') {
+                emit( {
+                    jsonrpc => '2.0',
+                    id      => $id,
+                    result  => tool_result( $json->encode( {
+                        job_id => 'deadbeef01',
+                        status => 'running',
+                        tool   => 'cog_plan',
+                        poll   => 'job_status',
+                        wait   => 'job_wait',
+                    } ) ),
+                } );
+                next;
+            }
+            emit( { jsonrpc => '2.0', id => $id, result => tool_result('planned inline') } );
+            next;
+        }
+
+        if ($name eq 'job_status') {
+            $job_polls++;
+            my $status = $job_polls >= 3
+                ? { job_id => $args->{job_id}, status => 'ok', result => 'the plan' }
+                : { job_id => $args->{job_id}, status => 'running' };
+            emit( { jsonrpc => '2.0', id => $id, result => tool_result( $json->encode($status) ) } );
             next;
         }
 

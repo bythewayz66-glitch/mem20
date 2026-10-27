@@ -1,0 +1,63 @@
+mcp/tests/test_epistemic_labeling_tools.py::TestStoreToolRequiresALabel::test_missing_label_is_refused_with_guidance
+mcp/tests/test_epistemic_labeling_tools.py::TestStoreToolRequiresALabel::test_refusal_names_every_valid_status
+mcp/tests/test_epistemic_labeling_tools.py::TestStoreToolRequiresALabel::test_refusal_points_at_the_simulated_tool
+mcp/tests/test_epistemic_labeling_tools.py::TestStoreToolRequiresALabel::test_labeled_write_succeeds_and_echoes_the_label
+mcp/tests/test_epistemic_labeling_tools.py::TestStoreToolRequiresALabel::test_schema_declares_the_label_required
+mcp/tests/test_epistemic_labeling_tools.py::TestRecallRendersTheLabel::test_fact_line_marks_each_status_distinctly
+mcp/tests/test_epistemic_labeling_tools.py::TestRecallRendersTheLabel::test_fact_line_defaults_a_missing_label_to_unlabeled
+mcp/tests/test_epistemic_labeling_tools.py::TestRecallRendersTheLabel::test_untrusted_statuses_are_visually_louder
+mcp/tests/test_epistemic_labeling_tools.py::TestSetEpistemicStatusToolAcceptsUnlabeled::test_schema_includes_unlabeled
+mcp/tests/test_epistemic_labeling_tools.py::TestSharedStoreAlsoRequiresALabel::test_schema_requires_the_label
+mcp/tests/test_epistemic_labeling_tools.py::TestSharedStoreAlsoRequiresALabel::test_missing_label_is_refused
+mcp/tests/test_epistemic_labeling_tools.py::TestCoverageToolsAreRegistered::test_coverage_and_backfill_tools_exist
+mcp/tests/test_epistemic_labeling_tools.py::TestCoverageToolsAreRegistered::test_coverage_tool_reports_a_denominator_on_an_empty_store
+mcp/tests/test_epistemic_labeling_tools.py::TestCoverageToolsAreRegistered::test_backfill_tool_on_a_fresh_store_changes_nothing
+mcp/tests/test_operational_surface.py::test_health_reports_service_liveness
+mcp/tests/test_operational_surface.py::test_health_content_type_is_json
+mcp/tests/test_operational_surface.py::test_ready_is_true_only_when_tools_are_registered
+mcp/tests/test_operational_surface.py::test_ready_is_false_for_a_server_with_no_tools
+mcp/tests/test_operational_surface.py::test_metrics_endpoint_returns_a_mapping
+mcp/tests/test_operational_surface.py::test_an_unknown_path_is_a_json_404_not_an_html_error
+mcp/tests/test_operational_surface.py::test_trailing_slashes_are_tolerated
+mcp/tests/test_operational_surface.py::test_query_strings_are_ignored_when_routing
+mcp/tests/test_operational_surface.py::test_health_handler_never_crashes_on_an_unknown_route
+mcp/tests/test_operational_surface.py::test_an_event_is_appended_to_the_local_log
+mcp/tests/test_operational_surface.py::test_telemetry_can_be_switched_off_entirely
+mcp/tests/test_operational_surface.py::test_report_never_raises_even_when_the_store_is_unwritable
+mcp/tests/test_operational_surface.py::test_metrics_of_an_empty_log_are_zero_not_an_error
+mcp/tests/test_operational_surface.py::test_metrics_count_events_and_unique_installs
+mcp/tests/test_operational_surface.py::test_metrics_group_by_channel_platform_and_version
+mcp/tests/test_operational_surface.py::test_a_corrupt_line_does_not_lose_the_good_events
+mcp/tests/test_operational_surface.py::test_blank_lines_are_ignored
+mcp/tests/test_operational_surface.py::test_first_and_last_seen_reflect_event_order
+mcp/tests/test_operational_surface.py::test_events_missing_an_install_id_are_not_counted_as_installs
+mcp/tests/test_operational_surface.py::test_recent_window_excludes_old_events
+mcp/tests/test_operational_surface.py::test_first_run_is_recorded_only_once
+mcp/tests/test_operational_surface.py::test_first_run_writes_a_marker_so_the_check_is_local
+mcp/tests/test_operational_surface.py::test_first_run_honours_a_different_channel
+mcp/tests/test_operational_surface.py::test_an_unparseable_timestamp_does_not_break_metrics
+
+==================================== ERRORS ====================================
+_____________ ERROR collecting mcp/tests/test_search_rate_limit.py _____________
+ImportError while importing test module '/workspace/mem20/mcp/tests/test_search_rate_limit.py'.
+Hint: make sure your test modules/packages have valid Python names.
+Traceback:
+tests/test_search_rate_limit.py:15: in <module>
+    from tools.search_tools import DefaultErrorHandler  # noqa: E402
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   ImportError: cannot import name 'DefaultErrorHandler' from 'tools.search_tools' (/workspace/mem20/mcp/tools/search_tools.py)
+=============================== warnings summary ===============================
+../../../usr/local/lib/python3.11/site-packages/fastapi/applications.py:18
+  /usr/local/lib/python3.11/site-packages/fastapi/applications.py:18: StarletteDeprecationWarning: 'HTTP_422_UNPROCESSABLE_ENTITY' is deprecated. Use 'HTTP_422_UNPROCESSABLE_CONTENT' instead.
+    from fastapi.exception_handlers import (
+
+../../../usr/local/lib/python3.11/site-packages/fastapi/applications.py:30
+  /usr/local/lib/python3.11/site-packages/fastapi/applications.py:30: StarletteDeprecationWarning: 'HTTP_422_UNPROCESSABLE_ENTITY' is deprecated. Use 'HTTP_422_UNPROCESSABLE_CONTENT' instead.
+    from fastapi.openapi.utils import get_openapi
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+ERROR tests/test_search_rate_limit.py
+!!!!!!!!!!!!!!!!!!!! Interrupted: 1 error during collection !!!!!!!!!!!!!!!!!!!!
+38 tests collected, 1 error in 0.27s
+EXIT_CODE=2

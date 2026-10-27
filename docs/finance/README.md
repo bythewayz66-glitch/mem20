@@ -1,7 +1,7 @@
 # mem20 — Finance: reconciled model (canonical home)
 
 **As of:** 2026-10-26 · **Canonical repo:** [bythewayz66-glitch/mem20](https://github.com/bythewayz66-glitch/mem20) (`main`, MIT)
-**Prepared by:** Finance Assistant · **Deadline:** 2026-10-27T02:47Z
+**Prepared by:** Finance Assistant · **Deadline:** 2026-10-27 12:00 MDT (`2026-10-27T18:00:00Z`)
 
 This directory is the repo-side home of the mem20 financial model. It supersedes the
 finance artefacts under `published/sites/…/documents/mem20-finance-pricing-publish/`,
@@ -21,6 +21,16 @@ which remain in place as a **frozen snapshot dated 2026-10-14**.
 The house numbers are declared in [`inputs.json`](inputs.json) under `house_numbers`.
 The model treats them as **inputs, not outputs**: `compute_model.py` recomputes each one
 and exits non-zero rather than emit a drifted figure. It cannot silently agree with itself.
+
+**Source of the carried figures.** TAM ($1.28B) and SAM ($282M) are carried from
+`docs/pricing/RECONCILIATION_NOTE.md` (the §2 ladder and §5 SAM/TAM variance note) and the
+frozen 2026-10-14 snapshot at
+`published/sites/aca25e94-a97f-497c-8669-fbfac01f72bc/documents/mem20-finance-pricing-publish/`.
+They are asserted equal to the house figure on every run and are **never re-derived**. The
+account floors (91,428 / 20,142) are derived *from* the carried dollars, one way only: an
+account count is never multiplied back into a TAM or SAM, because that would restate $1.28B
+as $1,279,992,000 and $282M as $281,988,000 and quietly convert a house number into a
+derived one.
 
 ```bash
 python3 docs/finance/compute_model.py --check   # verify only, writes nothing
@@ -152,7 +162,7 @@ constraint in the model.
 | `unit_economics.csv` | cost stack, ACV tier ladder, acquisition and LTV metrics, ramp |
 | `market_sizing.csv` | TAM → SAM → SOM bridge with account counts and residuals |
 | `derivation_trace.csv` | figure → expression → computed value, for audit |
-| `reconciliation_log.csv` | every input checked against its house number, with delta and status |
+| `reconciliation_log.csv` | **append-only** ledger: every check ever run against its house number, with `run_seq` / `run_utc` |
 
 ## 6. Change discipline
 
@@ -160,3 +170,124 @@ If a house number is to move, it moves in `inputs.json` **and** in the owner dir
 same commit, and the assertion that pins it is updated in the same diff. A figure that moves
 without an updated directive is drift; the model is designed to fail loudly on it rather than
 publish a quietly different number.
+
+## 7. Re-run of 2026-10-27 — 270/27 re-confirmed, ledger made append-only
+
+This run was dispatched on the premise that this directory *still models the retired
+257/26 surface*. **That premise was checked and does not hold.** `inputs.json`
+declares `tools: 270, domains: 27`, with `previous_tools: 257` / `previous_domains: 26`
+kept beside it as retired provenance and `provenance` on the house numbers kept intact
+as instructed. 257 appears in this directory only as that stated prior value and in the
+narrative of §2.2 above — never as a live input. No number was moved and none was
+re-derived.
+
+### 7.1 What the re-run did change
+
+Two genuine defects were found while verifying the premise, and both are fixed here:
+
+1. **The reconciliation ledger was being truncated on every run.** `write_artefacts()`
+   rewrote `reconciliation_log.csv` from scratch, so each run destroyed the previous
+   run's rows — history was silently overwritten, which is precisely what a
+   reconciliation log exists to prevent. It is now an **append-only** ledger keyed on
+   `(item, implied_by_model, house_value, status)`, with `run_seq` and `run_utc` stamps
+   added on the right of the original eight columns so the 2026-10-26 rows survive a
+   schema change untouched. The five historical rows of run 1 are backfilled
+   losslessly with `run_seq = 1` and the original `as_of_ts`.
+2. **`model_output.json` was stale on `main`** — the committed copy had been
+   hand-compacted (tiers and ramp on one line each) while the generator emits
+   `json.dump(..., indent=2)`. That alone put the `finance-model-drift` CI red. It is
+   regenerated here, unmodified in content.
+
+Run stamps are **fixed values in `inputs.json`, not clock reads**, so regenerating is
+byte-idempotent and the drift check — regenerate, then `git diff --quiet` — stays green.
+
+### 7.2 Arithmetic now proven in the ledger (run 2)
+
+| Check | Implied by model | House | Delta | Status |
+|---|---|---|---|---|
+| ACV ladder, term by term | $14,000 | $14,000 | $0.00 | **EXACT** |
+| SOM ARR from the ramp (terminal accounts × ACV) | $1,680,000 | $1,680,000 | $0.00 | **EXACT** |
+| SOM ARR as a share of SAM | 0.595745% | 0.596% | −0.000255 | RECONCILED |
+| SOM ARR as a share of TAM | 0.131250% | 0.131% | +0.000250 | RECONCILED |
+| Model re-run against the live tool surface | 270 / 27 | 270 / 27 | 0 | **RECONFIRMED** |
+
+**SOM = 120 accounts × $14,000 ACV = $1,680,000**, and it now holds on two
+independent routes: the house pair (120 × $14,000) and the ramp's terminal rung
+(40 → 80 → **120** accounts, × $14,000). The ACV itself is proven term by term —
+4,320 + 2,160 + 4,320 + 3,200 = **14,000** on shares summing to exactly 1.0.
+
+### 7.3 What the 270/27 migration does and does not move
+
+Nothing downstream of the tool count moves, because **no revenue, market or unit-economics
+figure in this model reads it**. It is carried as context and re-asserted on every run
+precisely so that a future count migration cannot pass unnoticed — the assertion at
+`compute_model.py` fails the run on any surface other than 270/27 rather than emitting a
+model built on a stale premise. The unit-economics lines (CAC $16,800, gross margin 69.43%,
+payback 1.73 yr, 3-yr LTV:CAC 2.01×) are driven by `repo_state` and
+`acquisition_inputs`, both unchanged.
+
+**Standing caveat, unchanged and not to be smoothed:** the 3-year LTV:CAC of **2.01×
+remains below the 3.0× institutional hurdle**, and the SAM's 20,142-account floor
+undershoots the $282M house figure by $12,000 (0.0043%). Both stay disclosed.
+
+### 7.4 Ledger at the end of run 2
+
+Ten rows: the five original checks of 2026-10-26 (run 1) and the five proofs above
+(run 2). No row was edited or removed.
+
+## 8. Re-run of 2026-10-27 (run 3) — rebased onto `main` 45445f48
+
+The branch `fix/ws2-finance-270` was 1 ahead / 1 behind `main` (mergeable clean, no PR).
+It is rebased onto `45445f4850377814cd95b7fa50c0a9153f76c163` and the model re-run so that
+the committed artefacts are generated **against that base**, not against the older
+`1264076` baseline. The rebase re-parents only: every tracked file in this directory is
+byte-identical to commit `619cccb` (`git rev-parse <commit>:<path>` matches blob-for-blob
+for all nine touched files), because `main` moved only in `docs/ops/` and `.github/` and
+never touched `docs/finance/`.
+
+### 8.1 SOM arithmetic is shown, not asserted
+
+The house SOM is written out as one ordered equation and checked as such:
+
+```
+SOM = 120 accounts × $14,000 blended ACV = $1,680,000
+```
+
+Both terms are declared inputs (`house_numbers.som_accounts = 120`,
+`house_numbers.blended_acv_usd = 14000`); the product is the house figure. It appears in
+three places so it cannot be restated without being recomputed:
+
+| Artefact | Where |
+|---|---|
+| `reconciliation_log.csv` | row `SOM ARR (equation written out)`, status **EXACT** |
+| `derivation_trace.csv` | row `SOM ARR (written out)` |
+| `model_output.json` | `market.som_equation` |
+
+And it now holds on **three** independent routes: the house pair (120 × $14,000), the ramp's
+terminal rung (40 → 80 → **120** × $14,000), and the term-by-term ACV ladder
+(4,320 + 2,160 + 4,320 + 3,200 = 14,000 on shares summing to exactly 1.0).
+
+### 8.2 TAM and SAM are carried, with their source
+
+New in run 3: two `CARRIED` rows in the ledger record *that* the carried figures were
+carried and *from where*, rather than leaving `provenance` as prose. `house_numbers.source`
+now names the source document, and the rule that the account floors are one-way (dollars →
+accounts, never accounts → dollars) is written into the model instead of implied.
+
+### 8.3 Tool surface
+
+Still **270 tools / 27 domains**, asserted on every run — the model fails rather than emit
+anything on a different surface. `257 / 26` survives only as `previous_tools` /
+`previous_domains` (retired provenance). No revenue, market or unit-economics figure reads
+the tool count, so the migration moves nothing downstream of it.
+
+### 8.4 Ledger at the end of run 3
+
+**13 rows**, all preserved: 5 (run 1) + 5 (run 2) + 3 (run 3). No row edited or removed.
+Regeneration is byte-idempotent — running `compute_model.py` twice leaves the tree clean,
+which is exactly what the CI drift step asserts (`git diff --quiet`). 
+
+`finance-model-drift.yml` was extended to enforce the new invariants: the ledger floor is
+now 13 rows with all nine historical row-keys required present, the SOM equation must
+appear verbatim in the ledger and the trace, and a dedicated step asserts the live surface
+is 270/27 with 257/26 present only as retired provenance.

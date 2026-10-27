@@ -23,7 +23,11 @@ permissions:
 jobs:
   test:
     name: Ruby ${{ matrix.ruby }}
-    runs-on: ubuntu-latest
+    # Pinned, not ubuntu-latest: `ubuntu-latest` now resolves to ubuntu-26.04,
+    # which ruby/setup-ruby has no prebuilt 3.1/3.2/3.3 for. The job then dies
+    # at the setup step with "Unavailable version 3.1.7 for ruby on
+    # ubuntu-26.04" before any gem code runs. 24.04 is covered by the matrix.
+    runs-on: ubuntu-24.04
     strategy:
       fail-fast: false
       matrix:

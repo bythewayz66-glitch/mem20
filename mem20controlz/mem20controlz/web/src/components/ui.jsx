@@ -1,14 +1,40 @@
 import React from "react";
 
 export function TabBar({ tabs, active, onChange, label = "views" }) {
+  // Real tablist keyboard model: only the selected tab is a tab stop, Arrow keys move
+  // between tabs. Before this, every tab was tabbable and the arrows did nothing, so
+  // a screen reader announced "tab, 1 of 5" five times on the way into the panel.
+  const index = tabs.findIndex((tab) => tab.id === active);
+
+  function onKeyDown(event) {
+    if (event.key !== "ArrowRight" && event.key !== "ArrowLeft" && event.key !== "Home" && event.key !== "End") {
+      return;
+    }
+    event.preventDefault();
+    let next = index;
+    if (event.key === "ArrowRight") next = (index + 1) % tabs.length;
+    if (event.key === "ArrowLeft") next = (index - 1 + tabs.length) % tabs.length;
+    if (event.key === "Home") next = 0;
+    if (event.key === "End") next = tabs.length - 1;
+    const target = tabs[next];
+    if (!target) return;
+    onChange(target.id);
+    // Move focus with the selection so the next arrow press continues from here.
+    const node = event.currentTarget.querySelector(`[data-tab-id="${target.id}"]`);
+    if (node && typeof node.focus === "function") node.focus();
+  }
+
   return (
-    <div className="tabbar" role="tablist" aria-label={label}>
+    <div className="tabbar" role="tablist" aria-label={label} onKeyDown={onKeyDown}>
       {tabs.map((tab) => (
         <button
           key={tab.id}
           type="button"
           role="tab"
+          id={`tab-${label.replace(/\s+/g, "-")}-${tab.id}`}
+          data-tab-id={tab.id}
           aria-selected={active === tab.id}
+          tabIndex={active === tab.id ? 0 : -1}
           className={`tab${active === tab.id ? " tab-active" : ""}`}
           onClick={() => onChange(tab.id)}
         >
@@ -128,17 +154,18 @@ export function Json({ value, empty = "no data" }) {
   return <pre className="json">{text}</pre>;
 }
 
-export function Table({ columns, rows, empty = "no rows returned by the API", rowKey, onRowClick, selectedKey }) {
+export function Table({ columns, rows, empty = "no rows returned by the API", rowKey, onRowClick, selectedKey, caption }) {
   if (!Array.isArray(rows) || rows.length === 0) {
     return <div className="table-empty">{empty}</div>;
   }
   return (
     <div className="table-wrap">
       <table className="grid-table">
+        {caption ? <caption className="sr-only">{caption}</caption> : null}
         <thead>
           <tr>
             {columns.map((column) => (
-              <th key={column.key} style={column.width ? { width: column.width } : undefined}>
+              <th key={column.key} scope="col" style={column.width ? { width: column.width } : undefined}>
                 {column.label}
               </th>
             ))}
@@ -147,11 +174,28 @@ export function Table({ columns, rows, empty = "no rows returned by the API", ro
         <tbody>
           {rows.map((row, index) => {
             const key = rowKey ? rowKey(row, index) : index;
+            const selected = selectedKey !== undefined && selectedKey === key;
             return (
               <tr
                 key={key}
-                className={`${onRowClick ? "clickable" : ""} ${selectedKey !== undefined && selectedKey === key ? "selected" : ""}`}
+                className={`${onRowClick ? "clickable" : ""} ${selected ? "selected" : ""}`}
                 onClick={onRowClick ? () => onRowClick(row, index) : undefined}
+                // A click handler on a <tr> is invisible to the keyboard. tabIndex +
+                // Enter/Space makes the same row reachable and activatable without
+                // turning the table into a grid (which would require aria-selected
+                // on a role that the native table does not have).
+                tabIndex={onRowClick ? 0 : undefined}
+                onKeyDown={
+                  onRowClick
+                    ? (event) => {
+                        if (event.key === "Enter" || event.key === " ") {
+                          event.preventDefault();
+                          onRowClick(row, index);
+                        }
+                      }
+                    : undefined
+                }
+                aria-selected={onRowClick ? Boolean(selected) : undefined}
               >
                 {columns.map((column) => (
                   <td key={column.key} className={column.className || ""}>

@@ -1,18 +1,16 @@
 """Hermetic test for `oreo build` vertical slice.
 
-Skipped when mem20oreo is not checked out (dangling gitlink) — issue #30.
+The build must run its full path without touching the shared substrate:
+architecture NL engine (deterministic, no LLM), graph persistence through
+injected hooks, emitted app file, and a real loopback HTTP round-trip in a
+(promptly-terminated) subprocess. The sealed backend makes any unexpected
+substrate call explode.
 """
 
 from __future__ import annotations
 
+import json
 import pathlib
-
-import pytest
-
-pytest.importorskip(
-    "mem20oreo",
-    reason="mem20oreo gitlink not populated (docs/hygiene/oreo-gitlink.md, #30)",
-)
 
 from mem20agentz import _substrate
 from mem20agentz.oreo import build, status
@@ -21,6 +19,7 @@ from mem20agentz.oreo import build, status
 def _sealed_backend() -> _substrate.Backend:
     backend = _substrate.Backend(use_substrate=False)
     memory: dict[str, list[dict]] = {}
+    order: list[str] = []
 
     def remember(topic, content, tags=None, actor="agent",
                  epistemic_status="observed"):
@@ -31,6 +30,7 @@ def _sealed_backend() -> _substrate.Backend:
             "tags": tags or [],
             "actor": actor,
         })
+        order.append(topic)
         return {"ok": True}
 
     def recall(topic=None, tags=None, k=10, **kw):
@@ -59,7 +59,11 @@ def test_oreo_build_full_slice(tmp_path: pathlib.Path):
     assert res["ok"] is True
     assert res["served"] is True
     assert res["hit"]["status"] == 200
+    assert res["hit"]["page"] == "Landing"
+    assert res["hit"]["database"] == "MainDB"
+    assert res["hit"]["secure"] is True
     assert pathlib.Path(res["app_path"]).exists()
+
     graphs = status(backend=backend)["graphs"]
     assert any(g["name"] == res["graph_name"] for g in graphs)
 
@@ -72,4 +76,6 @@ def test_oreo_build_app_file_is_runnable():
     spec = importlib.util.spec_from_file_location("built_app", res["app_path"])
     mod = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(mod)
+    routes = {p: n for p, n in mod.ROUTES.items()}
+    assert "/" in routes
     assert res["served"] is True

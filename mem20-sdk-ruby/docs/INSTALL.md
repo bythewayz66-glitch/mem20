@@ -126,12 +126,19 @@ Mem20.configure { |c| c.cwd = "/opt/mem20/mem20" }
 client = Mem20.client
 
 puts client.transport.initialize_session.protocol_version  # "2025-06-18"
-puts client.tool_names.size                                 # 268
-puts client.tools.dig("tools").size                        # 268
+puts client.tool_names.size                                 # 270
+puts client.tools.dig("tools").size                        # 270
+puts Mem20::Surface.summary                                 # 270 tools across 27 domains
 puts client.healthy?                                       # true when :8080/health answers 200
 
 client.close
 ```
+
+The live surface is **270 tools across 27 domains**: 268 tools registered by the 27
+domain mixins (`mcp/tools/*.py` plus `mcp/memory_tools.py`, `cognitive_tools.py` and
+`roadmap_tools.py`), plus the 2 job tools `job_status` / `job_wait` that
+`mcp/server.py` registers itself. `Mem20::Surface` encodes that decomposition and
+`rake surface:check` re-derives it from the Python sources.
 
 Or from the shell:
 

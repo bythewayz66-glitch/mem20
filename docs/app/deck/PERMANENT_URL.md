@@ -1,9 +1,18 @@
 # Permanent URL Record — mem20 Investor & Board Deck
 
 **Recorded:** 2026-10-27
-**Baseline commit:** `1264076698a00878acc3adacf7bf1d51eea315cc`
+**Baseline commit:** `45445f4850377814cd95b7fa50c0a9153f76c163` (main head)
 **Deck source (this directory):** `docs/app/deck/`
 **Branch:** `content/ws3-investor-deck`
+
+> **Rebase note.** This branch was rebased from `75243c4c6dd5` (4 ahead / 1
+> behind) onto main `45445f48`. The only commit it was behind was the
+> docs/ops workload roster (#116), which touches no file this deck reads, so
+> the rebase was conflict-free. Every figure was then **re-read at
+> `45445f48`** rather than carried over: tracked files moved 7,974 -> **7,975**
+> and the finance file's staleness moved 1,899 -> **1,898**. The previous
+> baseline `1264076698a00878acc3adacf7bf1d51eea315cc` is superseded and is no
+> longer cited anywhere in the deck.
 
 Every slide below was published to permanent storage and asserted `HTTP 200` before this record was written. These `static.teamily.ai` URLs are the live copies; the `docs/app/deck/` files are the reviewable source.
 
@@ -41,10 +50,10 @@ Result: all thirteen returned `200`, sizes 9,102-17,829 bytes. Slide 08
 
 ## Baseline numbers used in this deck — and nothing else
 
-| Fact | Value | Source at `1264076698a00878acc3adacf7bf1d51eea315cc` |
+| Fact | Value | Source at `45445f4850377814cd95b7fa50c0a9153f76c163` |
 |---|---|---|
-| Main / baseline commit | `1264076698a00878acc3adacf7bf1d51eea315cc` | `GITHUB_GET_A_BRANCH` (main) + `git rev-parse HEAD` |
-| Tracked files | **7,974** | `git ls-files \| wc -l` |
+| Main / baseline commit | `45445f4850377814cd95b7fa50c0a9153f76c163` | `GITHUB_GET_A_BRANCH` (main) + `git rev-parse HEAD` |
+| Tracked files | **7,975** | `git ls-files \| wc -l` |
 | VERSION | **3.0.0** | `cat VERSION` |
 | Tool surface | **270 tools / 27 domains** | `verify_mcp.py:5`, `.github/workflows/mcp-verify.yml:63`, `README.md:161/184/227/242`, `docs/finance/inputs.json` |
 | Blended ACV | **$14,000** | `docs/finance/inputs.json` -> `blended_acv` |
@@ -67,13 +76,13 @@ trust checks, corpus scale, latency) are each attributed on-slide to
   of three private or vendor-defined, different metrics. Nothing here
   reproduces or refutes them.
 - **`docs/finance/inputs.json` records `tracked_files: 9873`** against a
-  measured **7,974** - stale by 1,899.
+  measured **7,975** - stale by 1,898.
 - **`aiohttp`** imported at module scope in `mcp/tools/a2a_tools.py:19`, reached
   from `mcp/server.py:87`, and absent from both `requirements.txt` and
   `requirements-optional.txt` - a clean install cannot boot the server.
-- **Drift:** `main` advanced to `b9de9aa84b04341ac873689875a9bf8dd1cc3b7c`
-  (CI workflow restore, #117) after this baseline was cut. Every number here
-  was read at `1264076`.
+- **Drift:** none. This deck is pinned to `45445f48`, which is main's head at
+  the time of writing, so a reviewer diffing against main sees the same tree.
+  The earlier cut at `1264076` is superseded.
 
 ## Files in this directory
 

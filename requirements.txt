@@ -1,6 +1,16 @@
 # mem20 core runtime (required for full function)
 # Pinned to versions verified in the build venv; loosen the lower bounds if needed.
+#
+# aiohttp and mcp-types are imported at MODULE SCOPE, not lazily, by modules the
+# MCP server loads before it can serve a single request:
+#   aiohttp      -> mcp/tools/a2a_tools.py:19    (the a2a_* tools)
+#   mcp-types    -> mcp/server.py:48, mcp/tools/*.py (`import mcp_types as mt`)
+# Neither ships as a dependency of `mcp`, so a clean
+# `pip install -r requirements.txt` that omits them cannot boot the server:
+# a2a_tools.py fails on `import aiohttp` before `tools/` is even reachable.
 mcp>=2.1.1
+mcp-types>=2.3.0
+aiohttp>=3.9
 pydantic>=2.13.4
 anyio>=4.14.2
 numpy>=1.24

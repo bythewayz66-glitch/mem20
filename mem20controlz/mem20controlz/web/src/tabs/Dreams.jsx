@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { TabBar } from "../components/ui.jsx";
 import { ErrorBanner } from "../components/Banner.jsx";
 import { useResource } from "../hooks.js";
@@ -23,10 +23,18 @@ const SUBTABS = [
  * threaded through the sub-views rather than each one polling on its own timer, so
  * a promotion or a run refreshes everything that depends on it exactly once.
  */
-export default function Dreams() {
+export default function Dreams({ focusRequest }) {
   const [sub, setSub] = useState("review");
   const [selected, setSelected] = useState(null);
   const [bump, setBump] = useState(0);
+
+  // A Cmd-K entry naming a dream lands on its review detail directly.
+  useEffect(() => {
+    if (focusRequest && focusRequest.view === "dreams" && focusRequest.select !== undefined) {
+      setSelected(focusRequest.select);
+      if (focusRequest.sub) setSub(focusRequest.sub);
+    }
+  }, [focusRequest && focusRequest.nonce]);
 
   const manifest = useResource("/api/dreams/manifest", { enabled: sub === "new" });
 

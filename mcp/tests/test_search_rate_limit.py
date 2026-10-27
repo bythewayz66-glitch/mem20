@@ -12,7 +12,10 @@ _ROOT = Path(__file__).resolve().parents[1]
 if str(_ROOT) not in sys.path:
     sys.path.insert(0, str(_ROOT))
 
-from tools.search_tools import DefaultErrorHandler  # noqa: E402
+# DefaultErrorHandler lives in tools/error_handler.py (issue #10). Importing it
+# from tools.search_tools raised `ImportError: cannot import name
+# 'DefaultErrorHandler'`, which took this whole module out of collection.
+from tools.error_handler import DefaultErrorHandler  # noqa: E402
 
 
 @pytest.mark.unit

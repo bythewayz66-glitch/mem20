@@ -1,5 +1,6 @@
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import { login as apiLogin } from "../auth.js";
+import FocusTrap from "./FocusTrap.jsx";
 
 // Shown whenever the API answers 401. Explains the two ways in, because a user
 // behind Cloudflare Access will never see a password prompt work - Access has
@@ -8,6 +9,7 @@ export default function LoginGate({ status, onAuthenticated }) {
   const [password, setPassword] = useState("");
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState(null);
+  const inputRef = useRef(null);
 
   const viaAccess = status && status.trust_cf_access;
   const passwordAvailable = !status || status.password_configured;
@@ -28,11 +30,22 @@ export default function LoginGate({ status, onAuthenticated }) {
     }
   }
 
+  // The gate is the only thing on screen, so it is a real modal dialog rather than a
+  // region: focus goes to the password field on mount (not to <body>), Tab stays
+  // inside the card, and the error paragraph is announced by role="alert" below.
   return (
-    <div className="login-gate" role="region" aria-label="Sign in">
+    <FocusTrap
+      className="login-gate"
+      role="dialog"
+      labelledBy="login-title"
+      describedBy="login-sub"
+      initialFocus={inputRef.current}
+    >
       <form className="login-card" onSubmit={submit}>
-        <h1 className="login-title">mem20 control plane</h1>
-        <p className="login-sub">This panel is restricted. Sign in to continue.</p>
+        <h1 className="login-title" id="login-title">mem20 control plane</h1>
+        <p className="login-sub" id="login-sub">
+          This panel is restricted. Sign in to continue.
+        </p>
 
         {status && !passwordAvailable && !viaAccess ? (
           <p className="login-error">
@@ -54,16 +67,22 @@ export default function LoginGate({ status, onAuthenticated }) {
         </label>
         <input
           id="login-password"
+          ref={inputRef}
           className="login-input"
           type="password"
           autoComplete="current-password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           disabled={busy || !passwordAvailable}
-          autoFocus
+          aria-invalid={error ? "true" : undefined}
+          aria-describedby={error ? "login-error" : undefined}
         />
 
-        {error ? <p className="login-error">{error}</p> : null}
+        {error ? (
+          <p className="login-error" id="login-error" role="alert">
+            {error}
+          </p>
+        ) : null}
 
         <button
           className="login-submit"
@@ -81,6 +100,6 @@ export default function LoginGate({ status, onAuthenticated }) {
           </p>
         ) : null}
       </form>
-    </div>
+    </FocusTrap>
   );
 }

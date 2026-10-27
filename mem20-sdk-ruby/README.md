@@ -108,6 +108,7 @@ ruby -Ilib examples/quickstart.rb
 | `Mem20.configure` / `Mem20.client` | module-level entry points |
 | `Mem20::Config` | frozen, validated configuration mapped to the documented `MEM20_*` variables |
 | `Mem20::Client` | thread-safe facade: `#tool`, `#tools`, `#memory_store`, `#memory_recall`, `#health`, `#metrics` |
+| `Mem20::Surface` | the verified surface: `TOOL_COUNT` (270), `DOMAIN_COUNT` (27), `DOMAIN_TOOLS` (268), `INFRA_TOOLS` |
 | `Mem20::Transport::Stdio` | JSON-RPC 2.0 over stdio with the MCP handshake, timeouts and mutex-serialised access |
 | typed errors | `ConfigurationError`, `ToolError` (`#code`, `#data`), `TransportError` |
 
@@ -116,9 +117,14 @@ ruby -Ilib examples/quickstart.rb
 - Transport: **stdio**, one JSON-RPC 2.0 message per line.
 - Handshake: `initialize` → `notifications/initialized`, then `tools/list` / `tools/call`.
 - Protocol revision: **`2025-06-18`**, as negotiated in `initialize`.
-- The server registers **270 tools** across 27 domains; the SDK reaches every one
-  through `#tool` or a dynamic binding, and ships convenience accessors for the
-  memory primitives.
+- The server registers **270 tools across 27 domains**: 268 tools from the 27 domain
+  mixins (`mcp/tools/*.py` plus `mcp/memory_tools.py`, `mcp/cognitive_tools.py`,
+  `mcp/roadmap_tools.py`) **plus** the 2 job tools `job_status` / `job_wait` that
+  `mcp/server.py` registers itself. `tools/list` returns all 270, so `tool_names.size`
+  is 270 — the SDK reaches every one through `#tool` or a dynamic binding.
+  `Mem20::Surface` is the single source of truth for those numbers,
+  `spec/mem20/surface_spec.rb` pins them, and `rake surface:check` re-derives them
+  from the Python sources.
 - The server also exposes `/health`, `/ready` and `/metrics` on `MEM20_HEALTH_PORT`
   (`8080` by default); `Client#health`, `#ready`, `#healthy?` and `#metrics` use them.
 
@@ -129,6 +135,7 @@ bundle install
 bundle exec rspec        # unit + real child-process transport specs
 bundle exec rubocop      # style gate
 bundle exec rake build   # gem build mem20-sdk.gemspec
+bundle exec rake surface:check   # recount the surface from mcp/ and compare
 ```
 
 ## Releasing

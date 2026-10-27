@@ -15,4 +15,86 @@ task :build do
   sh "gem build mem20-sdk.gemspec"
 end
 
+# --- surface:check ---------------------------------------------------------
+#
+# Recounts the mem20 tool surface from the Python sources and compares it with
+# Mem20::Surface. The counts quoted in the README and docs/ went stale three
+# different ways (257 / 268 / 270) precisely because nothing recounted them.
+# Run from the SDK directory with the repo checked out one level up:
+#
+#   rake surface:check
+namespace :surface do
+  REPO_ROOT = File.expand_path("../..", __dir__)
+  MCP_DIR = File.join(REPO_ROOT, "mcp")
+
+  # `self.tools["name"] = mt.Tool(...)` is the only registration style in the
+  # server; there is no decorator form to account for.
+  REGISTRATION = /self\.tools\["([a-z0-9_]+)"\]\s*=/.freeze
+
+  # Domain modules: the 24 mixins under mcp/tools/ plus the three that live
+  # directly in mcp/. `lie_bootstrap.py` / `error_handler.py` register nothing.
+  DOMAIN_GLOBS = [
+    File.join(MCP_DIR, "tools", "*.py"),
+    File.join(MCP_DIR, "memory_tools.py"),
+    File.join(MCP_DIR, "cognitive_tools.py"),
+    File.join(MCP_DIR, "roadmap_tools.py")
+  ].freeze
+
+  # Tools registered by the server itself (`register_job_tools`), which belong
+  # to the transport rather than to any domain.
+  INFRA_FILE = File.join(MCP_DIR, "server.py")
+
+  def self.names_in(path)
+    File.read(path).scan(REGISTRATION).flatten.uniq
+  end
+
+  def self.measure
+    domain_files = DOMAIN_GLOBS.flat_map { |glob| Dir[glob] }.sort.uniq
+    domain = domain_files.to_h { |path| [path, names_in(path)] }.reject { |_p, names| names.empty? }
+    domain_tools = domain.values.flatten.uniq
+    infra = names_in(INFRA_FILE)
+    { modules: domain.size, domain: domain_tools.sort, infra: infra.sort }
+  end
+
+  desc "Recount the mem20 tool surface from mcp/ and compare with Mem20::Surface"
+  task :check do
+    require_relative "lib/mem20/surface"
+
+    abort "rake surface:check: no mcp/ directory at #{MCP_DIR}" unless Dir.exist?(MCP_DIR)
+
+    actual = measure
+    expected = Mem20::Surface
+    total = (actual[:domain] + actual[:infra]).uniq
+
+    problems = []
+    unless actual[:modules] == expected::DOMAIN_COUNT
+      problems << "domain modules: source #{actual[:modules]} != Surface::DOMAIN_COUNT " \
+                  "#{expected::DOMAIN_COUNT}"
+    end
+    unless actual[:domain].size == expected::DOMAIN_TOOLS
+      problems << "domain tools: source #{actual[:domain].size} != Surface::DOMAIN_TOOLS " \
+                  "#{expected::DOMAIN_TOOLS}"
+    end
+    unless actual[:infra].sort == expected::INFRA_TOOLS.sort
+      problems << "infra tools: source #{actual[:infra].inspect} != Surface::INFRA_TOOLS " \
+                  "#{expected::INFRA_TOOLS.inspect}"
+    end
+    unless total.size == expected::TOOL_COUNT
+      problems << "total tools: source #{total.size} != Surface::TOOL_COUNT " \
+                  "#{expected::TOOL_COUNT}"
+    end
+
+    puts "source:  #{actual[:modules]} modules, #{actual[:domain].size} domain tools, " \
+         "#{actual[:infra].size} infra tools (#{actual[:infra].join(', ')}), #{total.size} total"
+    puts "surface: #{expected.summary}"
+
+    if problems.empty?
+      puts "OK - Mem20::Surface matches mcp/"
+    else
+      problems.each { |p| warn "MISMATCH #{p}" }
+      abort "surface drift detected - update lib/mem20/surface.rb and the counts in README.md/docs/"
+    end
+  end
+end
+
 task default: :spec

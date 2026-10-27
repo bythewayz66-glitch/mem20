@@ -5,7 +5,9 @@
 //! verifiable without talking to a central service.
 
 use ed25519_dalek::{SigningKey, VerifyingKey};
-use hmac::{Hmac, Mac};
+// hmac 0.13 (digest 0.11) moved `new_from_slice` off `Mac` and onto `KeyInit`,
+// so both traits must be in scope. See braid/Cargo.toml - issue #21.
+use hmac::{Hmac, KeyInit, Mac};
 use sha2::Sha256;
 
 type HmacSha256 = Hmac<Sha256>;
@@ -123,18 +125,18 @@ mod tests {
 
     #[test]
     fn did_key_is_stable_and_unambiguous() {
-        let sk = SigningKey::generate(&mut rand::rngs::OsRng);
+        let sk = SigningKey::generate(&mut rand::rng());
         let vk = VerifyingKey::from(&sk);
         let d1 = did_key(&vk);
         let d2 = did_key(&vk);
         assert_eq!(d1, d2);
         assert!(d1.starts_with("did:key:z"));
-        assert_ne!(did_key(&VerifyingKey::from(&SigningKey::generate(&mut rand::rngs::OsRng))), d1);
+        assert_ne!(did_key(&VerifyingKey::from(&SigningKey::generate(&mut rand::rng()))), d1);
     }
 
     #[test]
     fn macaroon_round_trip_and_tamper() {
-        let sk = SigningKey::generate(&mut rand::rngs::OsRng);
+        let sk = SigningKey::generate(&mut rand::rng());
         let vk = VerifyingKey::from(&sk);
         let did = did_key(&vk);
         let m = SessionMacaroon::issue("door1", "session-1", &["read:timeline:*"], &sk);

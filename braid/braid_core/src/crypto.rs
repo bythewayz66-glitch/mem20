@@ -1,7 +1,7 @@
 //! Braid crypto: Ed25519 identity, BLAKE3-256 content addressing, CIDs.
 
 use ed25519_dalek::{Signature, Signer, SigningKey, Verifier, VerifyingKey};
-use rand::rngs::OsRng;
+use rand::rng;
 
 const TAG: &[u8] = b"braid/1";
 
@@ -42,7 +42,7 @@ pub fn from_hex(s: &str) -> Result<Vec<u8>, String> {
 
 /// Generate a fresh Ed25519 identity.
 pub fn new_signing_key() -> SigningKey {
-    SigningKey::generate(&mut OsRng)
+    SigningKey::generate(&mut rng())
 }
 
 /// Sign a raw byte payload. Returns the 64-byte signature.

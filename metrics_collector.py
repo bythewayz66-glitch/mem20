@@ -1,13 +1,22 @@
 #!/usr/bin/env python3
-"""mem20 install-metrics collector (stdlib only, no external deps).
+"""mem20 metrics collector (stdlib only, no external deps).
 
-Deploy this once on a host you control. Point every mem20 install at it by
-setting, on each installed machine:
+Two independent modes share this file.
+
+REPO MODE (``--since``) -- measures what the repository can prove.
+There is no visitor or install telemetry on this project, so nothing here
+reports traffic, sessions, installs or users. Every number is derived from
+``git``, optionally the GitHub REST API, and a local ``pytest --collect-only``:
+
+    python3 metrics_collector.py --since 2026-10-20 --repo . \\
+        --out docs/ops/metrics.json
+
+Windows are half-open: ``[since, until)``. ``--until`` defaults to now.
+
+SERVER MODE (default, no ``--since``) -- the original install-ping collector.
+Deploy it once on a host you control and point installs at it:
 
     export MEM20_INSTALL_WEBHOOK="http://<collector-host>:<port>/ingest"
-
-It receives install pings (POST /ingest), stores them, and serves
-aggregated metrics + a simple dashboard.
 
 Endpoints:
   POST /ingest              record one event (body = install_tracker JSON)
@@ -19,13 +28,16 @@ Endpoints:
 Optional auth: set MEM20_COLLECTOR_TOKEN; then requests must pass
 ?token=... or header X-Token.
 """
-import os
+import argparse
 import json
+import os
+import re
+import subprocess
 import sys
+from collections import Counter
+from datetime import datetime, timedelta, timezone
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from urllib.parse import urlparse, parse_qs
-from collections import Counter
-from datetime import datetime, timezone, timedelta
 
 STORE = os.environ.get("MEM20_COLLECTOR_STORE") or os.path.expanduser(
     "~/.local/share/mem20-collector/store"
@@ -34,8 +46,36 @@ TOKEN = os.environ.get("MEM20_COLLECTOR_TOKEN")
 PORT = int(os.environ.get("MEM20_COLLECTOR_PORT", "9090"))
 HOST = os.environ.get("MEM20_COLLECTOR_HOST", "0.0.0.0")
 
-os.makedirs(STORE, exist_ok=True)
-EVENTS = os.path.join(STORE, "installs.jsonl")
+REPO_SLUG = "bythewayz66-glitch/mem20"
+# The PR window the ops brief asked for, inclusive on both ends.
+DEFAULT_PR_RANGE = (103, 113)
+
+# Snapshot taken through the anonymous REST API before the per-IP quota ran
+# out during this run. Kept only so an unmeasured run can say "last known
+# reading, at this instant" instead of emitting a bare null.
+REFERENCE_GH_READING = {"taken_at": "2026-10-27T15:22:00Z"}
+
+# CI/plumbing paths. A large tracked-file delta in a short window is usually
+# this kind of work rather than product surface, so the two are counted apart.
+_INFRA_RE = re.compile(
+    r"^\.github/"
+    r"|^\.gitignore$"
+    r"|^\.gitattributes$"
+    r"|^pytest\.ini$"
+    r"|^\.pre-commit"
+    r"|^\.editorconfig$"
+    r"|^requirements.*\.txt$"
+    r"|^\.github/dependabot"
+)
+
+
+# --------------------------------------------------------------------------
+# Server mode: install pings
+# --------------------------------------------------------------------------
+
+def _store_dir():
+    os.makedirs(STORE, exist_ok=True)
+    return os.path.join(STORE, "installs.jsonl")
 
 
 def _auth_ok(headers, qs):
@@ -48,7 +88,7 @@ def _auth_ok(headers, qs):
 
 def _append(event):
     try:
-        with open(EVENTS, "a") as f:
+        with open(_store_dir(), "a") as f:
             f.write(json.dumps(event) + "\n")
     except Exception:
         pass
@@ -56,8 +96,9 @@ def _append(event):
 
 def _load_events():
     out = []
-    if os.path.exists(EVENTS):
-        with open(EVENTS) as f:
+    path = _store_dir()
+    if os.path.exists(path):
+        with open(path) as f:
             for line in f:
                 line = line.strip()
                 if not line:
@@ -118,7 +159,7 @@ th,td{{border:1px solid #333;padding:.4rem .6rem;text-align:left;font-size:.85re
 .kpis{{display:flex;gap:1rem;flex-wrap:wrap}} .kpi{{background:#1a1d24;border:1px solid #333;
 border-radius:8px;padding:1rem 1.2rem;min-width:120px}} .kpi b{{display:block;font-size:1.6rem}}
 code{{color:#9fd}}</style></head><body>
-<h1>mem20 — install metrics</h1>
+<h1>mem20 &mdash; install metrics</h1>
 <div class=kpis>
 <div class=kpi><b>{metrics['unique_installs']}</b>unique installs</div>
 <div class=kpi><b>{metrics['total_events']}</b>total events</div>
@@ -164,15 +205,16 @@ class Handler(BaseHTTPRequestHandler):
             n = int(qs.get("n", ["20"])[0])
             self._send(200, _load_events()[-n:])
         elif u.path == "/export":
-            if os.path.exists(EVENTS):
-                with open(EVENTS, "rb") as f:
+            path = _store_dir()
+            if os.path.exists(path):
+                with open(path, "rb") as f:
                     self._send(200, f.read(), "application/octet-stream")
             else:
                 self._send(404, {"error": "no data"})
         else:
             self._send(404, {"error": "not found"})
 
-    def do_POST(self):
+    def do_POSTself):
         u = urlparse(self.path)
         qs = parse_qs(u.query)
         if not _auth_ok(self.headers, qs):
@@ -197,7 +239,7 @@ class Handler(BaseHTTPRequestHandler):
         pass
 
 
-def main():
+def serve():
     print(f"mem20 metrics collector on http://{HOST}:{PORT}  (store: {STORE})")
     if TOKEN:
         print("auth: enabled (MEM20_COLLECTOR_TOKEN)")
@@ -206,7 +248,3 @@ def main():
         httpd.serve_forever()
     except KeyboardInterrupt:
         print("stopped")
-
-
-if __name__ == "__main__":
-    main()

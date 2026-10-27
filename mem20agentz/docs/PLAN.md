@@ -187,9 +187,36 @@ mem20agentz/
   a fake Bot API server: poll→dispatch→send); phase-01 **30/30**. Branding
   sweep exit 1. **Verified live**: `gateway status` shows telegram
   `unconfigured: no telegram token`, `gateway pair/unpair` round-trips
-  pair state, `gateway serve` fails honestly (rc 1). **NOT LIVE**: telegram
-  turnstile requires a real bot token + network — blocked on external
-  dependency (honest), hermetic fake-Bot-API dry-run proves the loop.
+  pair state, `gateway serve` fails honestly (rc 1).
+- **2.5 turnstile — VERIFIED TOKEN-FREE (2026-10-26, issue #43)**. The
+  Telegram turnstile is **no longer an unverified claim**. Because the Bot API
+  base URL is injectable, the whole poll→dispatch→send loop is exercised
+  against a fake Bot API bound to an ephemeral loopback port — no bot token,
+  no Telegram account, no network. Proof:
+  `mem20agentz/tests/test_telegram_turnstile.py`, **9/9 passing**:
+
+  ```
+  python -m pytest mem20agentz/tests/test_telegram_turnstile.py -v
+  ... 9 passed in 3.92s
+  ```
+
+  What the suite demonstrates, asserting on the bytes the adapter actually
+  put on the wire rather than on a mock's return value:
+  - `TelegramTransport.start()` performs a real `getMe` and accepts the reply;
+  - `poll()` parses a `getUpdates` envelope into a `Message` and advances the
+    offset, so a delivered update is never replayed;
+  - `Bridge.handle()` dispatches to the agent factory and returns its reply;
+  - `Bridge.send()` performs a real `sendMessage` carrying that reply text;
+  - pairing is enforced — an unpaired chat is ignored and receives no reply;
+  - media-only messages reach the agent, annotated rather than dropped;
+  - with no token the transport raises `TelegramAuthError` instead of
+    pretending to be connected, and a 401 from the API surfaces as the same
+    error rather than hanging.
+
+  The token-gated path is **kept unchanged** for real deployments: a live bot
+  still needs `MEM20AGENTZ_TELEGRAM_TOKEN` (or `TELEGRAM_BOT_TOKEN`) and
+  network reachability. What changed is epistemic, not functional — the loop
+  is now proven, so "not live" no longer means "not tested".
 - **2.6** webgateway/dashboard/serve + MCP client/server + ACP + computer-use.
   **DONE (2026-09-09)**: `gateway_web.py` — `WebGateway` (ThreadingHTTPServer,
   `server_side`): `POST /chat` (message/chat_id `w<hex>`, `web:` session prefix,
@@ -322,6 +349,9 @@ as phase 01.
    prints mem20 version (no old-name string anywhere).
 2. `mem20agentz [all documented commands]` parity across 1.1–1.3.
 3. At least one live bridge turnstile (telegram) + one webgateway route.
+   The telegram turnstile is proven end-to-end without a token against a fake
+   Bot API (`tests/test_telegram_turnstile.py`, 9/9); a *live* bot remains
+   gated on an external token, as designed.
 4. Hermetic test suite for every module (store clean after tests).
 5. `grep -ri <oldname> /opt/mem20/mem20agentz` → zero matches.
 6. Phase 07 sweep removes the old installs once verified.
@@ -340,8 +370,9 @@ as phase 01.
   `loopback-deliver accept-lab "Reply with exactly: loopback-live-ok"` →
   real AgentCore (nvidia NIM, not Ollama) → `loopback-recv` returned
   `loopback-live-ok`; ledger `chat:accept-lab` shows `in:`/`out:` pairs.
-  WEBGATEWAY: `/` 200 + `/status` 200 live on :18999. (Telegram turnstile
-  still gated on an external token; loopback is the account-free proof.)
+  WEBGATEWAY: `/` 200 + `/status` 200 live on :18999. (Telegram turnstile is
+  now proven token-free against a fake Bot API on loopback — see §2.5 and
+  `tests/test_telegram_turnstile.py`; only a *live* bot remains token-gated.)
 - ✅ (4) Hermetic: 130/130 (`once` state), phase-01 30/30, doctor green;
   store-clean proof: backup export fact count 33 before vs 33 after the
   sealed suite — real ledger untouched.

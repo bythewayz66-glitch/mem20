@@ -1,0 +1,216 @@
+/* mem20 control plane — accessibility layer.
+ *
+ * See docs/ux/frontend-a11y-audit.md.
+ *
+ * Imported from main.jsx AFTER styles.css, and it deliberately owns every visual
+ * change the a11y pass needs. styles.css is not touched by this branch at all:
+ * issues #38 and #39 both append to the foot of styles.css, so editing it here
+ * would guarantee a conflict on a surface this branch does not own. Every rule
+ * below is either a new selector or an equal-specificity override of a styles.css
+ * rule, which is why import order is the only thing that has to hold (and why
+ * --motion-duration has to be redefined on :root rather than edited in place).
+ */
+
+/* =========================================================================
+   1. Tokens — status colour and text, raised to WCAG AA
+   =========================================================================
+   Every ratio below is recomputed by web/test/a11y.test.js. The pills draw their
+   text over a 12–14% tint of the SAME hue, so the effective background is not the
+   panel — it is the panel shifted toward the text colour. Numbers are measured
+   against that composite, worst case first (--panel-2). */
+
+:root {
+  /* Was #5f7081 = 3.41:1 on --panel-2, below AA for the 12px body copy .muted
+     paints (~70 call sites). Now 5.71:1 there, 6.49:1 on --bg — still dimmer than
+     --text-dim (#8b9cad, 7.01), so the three-level hierarchy survives. */
+  --text-faint: #8496a8;
+
+  /* 11px pill text; AA normal-text bar (4.5:1) applies, not the 3:1 large-text bar.
+     Worst case over each token's own tint: 7.16 / 7.15 / 5.76 / 5.62 / 5.66 / 6.82. */
+  --ok: #56d364; /* was #3fb950 — 5.86 on panel-2 over tint */
+  --degraded: #e3b341; /* was #d29922 — 5.91 */
+  --unreachable: #ff7b72; /* was #f85149 — 4.70, below AA where pills actually sit */
+  --unknown: #93a4b5; /* was #6e7f91 — 3.77, the tone every unclassified status falls to */
+  --no-health: #9aa4ad; /* was #7d8590 — 4.10 */
+  --error: #ffa198; /* was #ff7b72 — 5.76 */
+
+  /* Focus ring: lighter than --accent so it clears 3:1 on the deepest surface too.
+     11.40 vs --bg, 10.61 vs --panel, 10.04 vs --panel-2. */
+  --focus: #8ecbff;
+
+  /* One knob for motion, so honouring the preference is automatic instead of
+     remembered. Zeroed by §5. */
+  --motion-duration: 140ms;
+}
+
+/* =========================================================================
+   2. Status pills — tint and border follow the raised tokens
+   ========================================================================= */
+
+.pill {
+  transition:
+    color var(--motion-duration) linear,
+    background-color var(--motion-duration) linear;
+}
+
+.pill-ok {
+  color: var(--ok);
+  border-color: rgba(86, 211, 100, 0.5);
+  background: rgba(86, 211, 100, 0.12);
+}
+
+.pill-degraded {
+  color: var(--degraded);
+  border-color: rgba(227, 179, 65, 0.5);
+  background: rgba(227, 179, 65, 0.12);
+}
+
+.pill-unreachable {
+  color: var(--unreachable);
+  border-color: rgba(255, 123, 114, 0.5);
+  background: rgba(255, 123, 114, 0.12);
+}
+
+.pill-unknown {
+  color: var(--unknown);
+  border-color: rgba(147, 164, 181, 0.5);
+  background: rgba(147, 164, 181, 0.12);
+}
+
+.pill-no-health {
+  color: var(--no-health);
+  border-color: rgba(154, 164, 173, 0.5);
+  background: rgba(154, 164, 173, 0.12);
+}
+
+.pill-error {
+  color: var(--error);
+  border-color: rgba(255, 161, 152, 0.5);
+  background: rgba(255, 161, 152, 0.14);
+}
+
+/* The warn badge sits on --line, a surface ~3x lighter than --bg: it needed the
+   larger alpha bump to keep the count legible at 10.5px. */
+.nav-badge-warn {
+  background: rgba(227, 179, 65, 0.2);
+  color: var(--degraded);
+}
+
+/* =========================================================================
+   3. Focus visibility
+   =========================================================================
+   The shell had zero :focus-visible rules in 1,258 lines, so every button and
+   clickable row relied on Chromium's `auto` ring: a 1px black/white dashed halo,
+   where the black half is invisible on #070b10 and the white half reads as a
+   hairline against --line. */
+
+:where(a, button, input, select, textarea, summary, [tabindex]):focus-visible {
+  outline: 2px solid var(--focus);
+  outline-offset: 2px;
+  border-radius: 3px;
+}
+
+/* styles.css:1010 already draws a 1px inset ring on .input:focus. Deeper is better
+   here: an inset ring is drawn inside the field border and gets clipped by the
+   input's own rounded corners at 1px. Same specificity, later source. */
+.input:focus-visible {
+  outline: 2px solid var(--focus);
+  outline-offset: 1px;
+}
+
+/* styles.css:1142 shipped `outline: none` on the login field, leaving only a 1px
+   border tint change as the cue for the product's first interaction. This matches
+   plain :focus as well as :focus-visible so the suppression cannot win. */
+.login-input:focus,
+.login-input:focus-visible {
+  outline: 2px solid var(--focus);
+  outline-offset: 2px;
+  border-color: var(--accent);
+}
+
+/* Windows High Contrast discards a custom outline colour; hand it to the OS. */
+@media (forced-colors: active) {
+  :where(a, button, input, select, textarea, summary, [tabindex]):focus-visible {
+    outline: 2px solid Highlight;
+  }
+}
+
+/* Inline chips sit in dense runs of text where a 2px offset ring collides with
+   the neighbours it is meant to distinguish. */
+:where(code, .chip, .tag):focus-visible {
+  outline-offset: 1px;
+}
+
+/* =========================================================================
+   4. Screen-reader-only text, and the skip link
+   =========================================================================
+   There was no visually-hidden utility in the tree, so announce-only strings (table
+   captions, result counts) went in visible chrome or nowhere. clip-rect rather than
+   display:none — the latter removes the node from the a11y tree, which is the bug
+   the utility exists to avoid. */
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* The nav rail is ~8 stops before <main>, and the app swaps panels by state rather
+   than by URL, so there is no browser "skip to main" affordance to lean on. */
+.skip-link {
+  position: absolute;
+  left: 8px;
+  top: -48px;
+  z-index: 300;
+  background: var(--panel-2);
+  color: var(--text);
+  border: 1px solid var(--focus);
+  border-radius: 4px;
+  padding: 6px 10px;
+  font-size: 12px;
+  text-decoration: none;
+  transition: top var(--motion-duration) ease-out;
+}
+
+.skip-link:focus,
+.skip-link:focus-visible {
+  top: 8px;
+}
+
+/* =========================================================================
+   5. Motion preference
+   =========================================================================
+   Nothing in the shell animates at main today — which is exactly why this belongs
+   here now. #108 adds .stale-ribbon/.state-notice transitions and #109 adds a
+   backdrop blur with item highlights; neither would think to honour a preference
+   that lives in the stylesheet rather than in their feature. */
+
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --motion-duration: 0ms;
+  }
+
+  /* Safety net for motion written without the knob. 0.01ms rather than 0s so
+     transitionend/animationend still fire and anything awaiting them does not hang.
+     The !important is scoped to these four properties only: outline, opacity and
+     colour are never touched, because a reduced-motion user must still get every
+     focus ring and every state cue. */
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  .skip-link {
+    transition: none;
+  }
+}

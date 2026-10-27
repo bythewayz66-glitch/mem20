@@ -4,11 +4,13 @@
     mem20benchmarkz drift --out benchmarks/results
     mem20benchmarkz render benchmarks/results
 
-    # Scale (2000 facts by default)
-    mem20benchmarkz generate-scale --out /tmp/mem20-scale-corpus-v1
-    mem20benchmarkz ingest-scale --corpus /tmp/mem20-scale-corpus-v1 --store /tmp/mem20-scale-store
-    mem20benchmarkz run-scale --store /tmp/mem20-scale-store --corpus /tmp/mem20-scale-corpus-v1 \
-        --out benchmarks/results-scale
+    # Scale corpus (mem20-scale-corpus-v2: 2000 records, 250 probes)
+    mem20benchmarkz generate-scale --out /tmp/mem20-scale-corpus-v2
+    mem20benchmarkz validate-scale /tmp/mem20-scale-corpus-v2
+    mem20benchmarkz ingest-scale --corpus /tmp/mem20-scale-corpus-v2 \\
+        --store /tmp/mem20-scale-store --bulk
+    mem20benchmarkz run-scale --corpus /tmp/mem20-scale-corpus-v2 --bulk \\
+        --modes keyword,semantic --out benchmarks/results
 """
 from __future__ import annotations
 
@@ -24,11 +26,12 @@ for _p in (str(_REPO_ROOT / "mem20api"), str(_REPO_ROOT)):
         sys.path.insert(0, _p)
 
 from .bench import Report, render_markdown, run, save  # noqa: E402
+from .bulk_ingest import ingest as bulk_ingest, verify as bulk_verify  # noqa: E402
 from .corpus import load  # noqa: E402
 from .scale_corpus import (  # noqa: E402
-    SCALE_FACTS,
     build_scale_corpus,
     load_jsonl_corpus,
+    validate as validate_corpus,
     write_scale_corpus,
 )
 
@@ -63,8 +66,11 @@ def _trust_exit(report: Report) -> int:
             bad.append(f"stale_pointer_rate={t.get('stale_pointer_rate')}")
     for mode, kinds in (report.recall or {}).items():
         for kind, m in kinds.items():
-            if kind == "adversarial" and m.get("leak_rate", 0) != 0.0:
-                bad.append(f"{mode} leaked {m['leak_rate']} of adversarial queries")
+            # Every kind that carries a leak column must be clean. Checking only
+            # `adversarial` let a regression in adversarial_hard or contradiction
+            # pass as long as the plain class stayed clean.
+            if "leak_rate" in m and kind != "direct" and m["leak_rate"] != 0.0:
+                bad.append(f"{mode}/{kind} leaked {m['leak_rate']} of queries")
     if bad:
         print("\nFAILED TRUST CHECKS:", file=sys.stderr)
         for b in bad:
@@ -156,17 +162,38 @@ def cmd_render(args) -> int:
 def cmd_generate_scale(args) -> int:
     out = write_scale_corpus(args.out, n_facts=args.facts)
     man = json.loads((out / "manifest.json").read_text())
+    val = json.loads((out / "validation.json").read_text())
     print(json.dumps(man, indent=2))
+    print(f"\nvalidation: {val['status']} "
+          f"({val['error_count']} errors, "
+          f"{val['answerable_probes_checked']} answerable probes checked)",
+          file=sys.stderr)
+    for e in val["errors"]:
+        print(f"  - {e}", file=sys.stderr)
     print(f"wrote corpus under {out}", file=sys.stderr)
-    return 0
+    # Non-zero on failure. Printing the manifest and returning 0 regardless
+    # would let a corpus the validator rejected land in a pipeline as success.
+    return 0 if val["status"] == "PASS" else 1
+
+
+def cmd_validate_scale(args) -> int:
+    """Re-validate a corpus on disk.
+
+    This exists so a generated corpus can be checked without re-generating it,
+    and so CI can fail on an answer-free probe instead of shipping one.
+    """
+    corpus = load_jsonl_corpus(args.corpus)
+    report = validate_corpus(corpus)
+    print(json.dumps(report, indent=2))
+    return 0 if report["status"] == "PASS" else 1
 
 
 def cmd_ingest_scale(args) -> int:
     from mem20api import open_store
 
     corpus_dir = Path(args.corpus)
-    if not (corpus_dir / "facts.jsonl").is_file():
-        print(f"missing facts.jsonl in {corpus_dir}; run generate-scale first", file=sys.stderr)
+    if not (corpus_dir / "grounded.jsonl").is_file():
+        print(f"missing grounded.jsonl in {corpus_dir}; run generate-scale first", file=sys.stderr)
         return 2
     corpus = load_jsonl_corpus(corpus_dir)
     store_path = Path(args.store)
@@ -175,6 +202,17 @@ def cmd_ingest_scale(args) -> int:
         f"ingesting {len(corpus.facts)} facts + {len(corpus.simulated)} simulated -> {store_path}",
         file=sys.stderr,
     )
+    if args.bulk:
+        stats = bulk_ingest(corpus_dir, store_path, progress=args.progress)
+        check = bulk_verify(store_path)
+        print(json.dumps({"ingest": stats, "verify": check}, indent=2), flush=True)
+        if check["vector_indexed"] != len(corpus.facts):
+            print(f"ERROR: indexed {check['vector_indexed']} of "
+                  f"{len(corpus.facts)} grounded records", file=sys.stderr)
+            return 2
+        print("ingest ok (bulk)", file=sys.stderr)
+        return 0
+
     with open_store(str(store_path)) as store:
         n = 0
         for f in corpus.facts:
@@ -225,10 +263,21 @@ def cmd_run_scale(args) -> int:
     if args.store:
         store_path = args.store
         seed = False
+        print(f"using existing store {store_path}", file=sys.stderr)
     else:
         store_path = tempfile.mkdtemp(prefix="mem20-scale-")
         seed = True
         print(f"isolated scale store: {store_path}", file=sys.stderr)
+
+    if seed and args.bulk:
+        # Per-record remember() encodes one sentence at a time (~0.5s/record
+        # measured). Bulk writes the same ledger envelopes and builds each
+        # index in one batched pass, then the store is opened normally below.
+        corpus_dir = args.corpus or write_scale_corpus(
+            Path(store_path) / "corpus", n_facts=args.facts)
+        stats = bulk_ingest(corpus_dir, store_path)
+        print(json.dumps(stats, indent=2), file=sys.stderr)
+        seed = False
 
     with open_store(store_path) as store:
         if seed:
@@ -243,7 +292,8 @@ def cmd_run_scale(args) -> int:
             k=args.k,
             corpus=corpus,
             compare_rerank=not args.no_rerank_compare,
-            modes=tuple(args.modes.split(",")) if args.modes else ("keyword", "semantic", "hybrid"),
+            modes=tuple(args.modes.split(",")) if args.modes
+            else ("keyword", "semantic", "hybrid"),
         )
 
     paths = save(report, args.out)
@@ -271,22 +321,32 @@ def main(argv=None) -> int:
     n = sub.add_parser("render", help="re-render markdown from latest.json")
     n.add_argument("dir", nargs="?", default="benchmarks/results")
 
-    g = sub.add_parser("generate-scale", help="write mem20-scale-corpus-v1 JSONL (default 2000 facts)")
-    g.add_argument("--out", default="benchmarks/corpora/mem20-scale-corpus-v1")
-    g.add_argument("--facts", type=int, default=SCALE_FACTS)
+    g = sub.add_parser("generate-scale",
+                       help="write mem20-scale-corpus-v2 JSONL (2000 records)")
+    g.add_argument("--out", default="benchmarks/corpora/mem20-scale-corpus-v2")
+    g.add_argument("--facts", type=int, default=None,
+                   help="cap grounded records (smoke runs); default builds the full set")
 
     ing = sub.add_parser("ingest-scale", help="seed a store from a scale corpus directory")
-    ing.add_argument("--corpus", required=True, help="directory with facts.jsonl")
+    ing.add_argument("--corpus", required=True, help="directory with grounded.jsonl")
     ing.add_argument("--store", required=True, help="target store path")
     ing.add_argument("--progress", action="store_true")
+    ing.add_argument("--bulk", action="store_true",
+                     help="append ledgers + build indexes once (~40x faster)")
 
-    rs = sub.add_parser("run-scale", help="run suite on scale corpus (2000 facts default)")
+    vs = sub.add_parser("validate-scale", help="re-validate a corpus directory on disk")
+    vs.add_argument("corpus", help="directory written by generate-scale")
+
+    rs = sub.add_parser("run-scale", help="run suite on mem20-scale-corpus-v2")
     rs.add_argument("--out", default="benchmarks/results-scale")
     rs.add_argument("-k", type=int, default=5)
     rs.add_argument("--no-rerank-compare", action="store_true")
     rs.add_argument("--corpus", default=None, help="JSONL dir from generate-scale")
     rs.add_argument("--store", default=None, help="existing store; if omitted, temp + seed")
-    rs.add_argument("--facts", type=int, default=SCALE_FACTS, help="when no --corpus, generate N in memory")
+    rs.add_argument("--facts", type=int, default=None,
+                   help="when no --corpus, cap grounded records")
+    rs.add_argument("--bulk", action="store_true",
+                   help="bulk-ingest into a fresh store instead of per-record remember()")
     rs.add_argument(
         "--modes",
         default="keyword,semantic,hybrid",
@@ -299,6 +359,7 @@ def main(argv=None) -> int:
         "drift": cmd_drift,
         "render": cmd_render,
         "generate-scale": cmd_generate_scale,
+        "validate-scale": cmd_validate_scale,
         "ingest-scale": cmd_ingest_scale,
         "run-scale": cmd_run_scale,
     }[args.cmd](args)

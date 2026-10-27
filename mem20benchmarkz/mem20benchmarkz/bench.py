@@ -13,8 +13,8 @@ Recall metrics
                and nothing else.
     `mrr`    — mean reciprocal rank, which penalises finding the right fact
                eighth instead of first.
-    `leak@k` — for adversarial queries, the fraction that returned any grounded
-               support at all. This is the number that should be zero, and a
+    `leak@k` — for adversarial queries, the fraction that returned simulated
+               content at all. This is the number that should be zero, and a
                system without a hard simulated/grounded partition cannot score
                it.
 
@@ -39,6 +39,11 @@ The suite refuses to report a quality score on a store whose indexes it knows
 are unhealthy. A number produced from a stale index measures the index, not the
 retriever, and publishing it would be the same error the diagnostics were added
 to prevent.
+
+The same principle applies to a query class whose verdict is decided by the
+scorer rather than by retrieval. An adversarial probe whose answer is not in the
+corpus, scored by a branch that returns False unconditionally, produces 0.000
+that looks like a retrieval finding and is not one. See ADVERSARIAL_KINDS.
 """
 from __future__ import annotations
 
@@ -49,6 +54,14 @@ from dataclasses import asdict, dataclass, field
 from pathlib import Path
 
 from .corpus import Corpus, load
+
+# Query kinds whose results must ALSO be checked for simulated leakage, on top
+# of being scored for evidence like any other answerable query. They are
+# answerable by construction: the gold record is in the corpus. If one of these
+# ever scored 0.000 across the board again, that is a finding about retrieval or
+# about corpus coverage and it has to be explainable — not the guaranteed
+# consequence of a constant in the scorer.
+ADVERSARIAL_KINDS = ("adversarial", "adversarial_hard", "contradiction")
 
 
 @dataclass
@@ -143,15 +156,20 @@ def _run_mode(store, q, mode: str, k: int) -> tuple[list[dict], str | None,
 
 
 def _answerable_ids(corpus: Corpus) -> set[str]:
-    """Ids of grounded facts, so we can tell support from coincidence."""
+    """Ids of grounded facts, so we can tell support from coincidence.
+
+    Must agree with the id the store actually assigned, which for the bulk
+    ingest path is derived from the record key (see `bulk_ingest._record_id`).
+    The previous version synthesised `<topic>-<ordinal>`, which matches nothing a
+    real store emits — so the id half of `_hit()` could never fire and every
+    verdict fell through to the `expect` substring test.
+    """
+    import hashlib
+
     out: set[str] = set()
-    per_topic: dict[str, int] = {}
     for f in corpus.facts:
-        per_topic[f.topic] = per_topic.get(f.topic, 0) + 1
-    counters: dict[str, int] = {}
-    for f in corpus.facts:
-        counters[f.topic] = counters.get(f.topic, 0) + 1
-        out.add(f"{f.topic}-{counters[f.topic]}")
+        if f.key:
+            out.add(f"b{hashlib.md5(f.key.encode()).hexdigest()[:14]}")
     return out
 
 
@@ -165,9 +183,10 @@ def _distinctive(text: str) -> str:
       1. A rare-looking long word — "BLAKE3", "contaminated", "Zephyra".
       2. A capitalised token, because a fabricated proper noun is the usual tell.
       3. The leading clause, as a last resort.
-    """
-    import re as _re
 
+    Kept only for result shapes that carry no partition label; `_leak()` prefers
+    the label because marker matching does not survive a corpus of any size.
+    """
     words = [w.strip(".,;:!?\"'()[]{}") for w in text.split()]
     longish = [w for w in words if len(w) >= 8]
     if longish:
@@ -183,23 +202,44 @@ def _distinctive(text: str) -> str:
 def _leak(hits: list[dict], forbidden: tuple[str, ...]) -> bool:
     """Did an adversarial query surface any simulated content?
 
-    The test is whether the *simulated text* came back, not whether the query
+    The test is whether a *simulated record* came back, not whether the query
     returned anything. An earlier version flagged any non-empty result list as a
     leak and reported `leak_rate: 1.000` on a store where contamination was
     measurably 0.0 — the query had simply matched unrelated grounded facts,
     which is normal retrieval behaviour and not a partition failure.
 
-    Adversarial queries are near-duplicates of real ones by design: "did prod
-    migrate to build 4200" must be answerable from the grounded "prod runs build
-    4127". Returning that is correct. Returning "Zephyra is a real city" is the
-    failure. So the needle is the distinctive simulated token.
+    Labels first, text second. Every memory record carries the partition it was
+    written to (`epistemic_status`, `tags`, `topic`), and `store.contamination()`
+    validates those same labels. Reading them is exact; inferring the partition
+    from prose is not. The previous version built one short marker per simulated
+    record and substring-searched the result text for it, so with 1,300 markers
+    the union of their words covered most of the vocabulary and it reported a
+    0.87 leak against a CLEAN store. `forbidden` is now only a fallback for
+    result shapes that carry no labels at all.
     """
+    for h in hits:
+        status = str(h.get("epistemic_status") or "").lower()
+        if status and status != "observed":
+            return True
+        tags = {str(t).lower() for t in (h.get("tags") or ())}
+        if tags & {"simulated", "ungrounded", "false", "fiction"}:
+            return True
+        topic = str(h.get("topic") or "").lower()
+        if topic.startswith("bench.fiction") or topic.startswith("bench.false"):
+            return True
+
     if not forbidden:
         return False
     for h in hits:
-        blob = str(h.get("content", "")).lower()
-        if any(f.lower() in blob for f in forbidden):
-            return True
+        if h.get("epistemic_status") or h.get("tags") or h.get("topic"):
+            continue  # labelled already, and it was not simulated
+        blob = " ".join(str(h.get("content", "")).lower().split())
+        if not blob:
+            continue
+        for f in forbidden:
+            needle = " ".join(f.lower().split())
+            if needle and len(needle.split()) > 1 and needle in blob:
+                return True
     return False
 
 
@@ -269,8 +309,8 @@ def run(store, modes=("keyword", "semantic", "hybrid", "graph"),
 
     supports_all = _answerable_ids(corpus)
 
-    # Distinctive substrings from the simulated facts. If any of these appears in
-    # a retrieval result, the grounded/simulated partition has failed.
+    # Distinctive substrings from the simulated facts, used only as a fallback
+    # when a result row carries no partition label.
     sim_markers: tuple[str, ...] = tuple(
         _distinctive(f.content) for f in corpus.simulated)
 
@@ -303,12 +343,26 @@ def run(store, modes=("keyword", "semantic", "hybrid", "graph"),
                 continue
 
             sup = {s for s in q.supports if s in supports_all}
-            if q.kind == "adversarial":
+            if q.kind == "unanswerable":
+                # The CONTROL. Nothing in the corpus can answer it, so a
+                # correct verdict is a miss and this row must read 0.000. It
+                # is the only kind whose hit is computed as a constant, and it
+                # is labelled `unanswerable` precisely so that constant never
+                # stands in for a real measurement.
                 hit, rank = False, None
+                # Leak is a property of what came back, independent of whether
+                # the query was answerable, so the control is still checked.
                 leaked = _leak(hits, sim_markers)
             else:
+                # Every answerable kind — direct, multi_hop, adversarial,
+                # adversarial_hard, contradiction — is scored by the same
+                # evidence check. Adversarial used to be excluded here and had
+                # its verdict hardcoded to False, which is why every
+                # adversarial row in every published run read exactly 0.000
+                # regardless of what retrieval returned.
                 hit, rank = _hit(hits, q.expect, sup)
-                leaked = False
+                leaked = (_leak(hits, sim_markers)
+                          if q.kind in ADVERSARIAL_KINDS else False)
 
             results.append(QueryResult(
                 qid=q.qid, kind=q.kind, mode=mode, hit=hit, rank=rank,
@@ -469,8 +523,7 @@ def render_markdown(report: Report) -> str:
         a("### Reranking cost")
         a("")
         a("Cross-encoder reranking is why hybrid is ~10x slower than the vector "
-          "half alone. It is on by default and now has a `MEM20_RERANK=0` "
-          "opt-out. Measured both ways on this corpus:")
+          "half alone. Measured both ways on this corpus:")
         a("")
         a("| Setting | p50 ms | direct MRR | multi-hop MRR |")
         a("|---|---:|---:|---:|")
@@ -518,11 +571,13 @@ def render_markdown(report: Report) -> str:
     a("## Reproduce")
     a("")
     a("```bash")
-    a("mem20benchmarkz run --out benchmarks/results")
+    a("mem20benchmarkz generate-scale --out /tmp/mem20-scale-corpus-v2")
+    a("mem20benchmarkz run-scale --corpus /tmp/mem20-scale-corpus-v2 --bulk \\")
+    a("    --modes keyword,semantic --out benchmarks/results")
     a("```")
     a("")
-    a("The run uses an isolated temporary store, seeds the corpus through the "
-      "real `remember` path, and never touches live data.")
+    a("The run uses an isolated store, ingests the corpus through the engine's "
+      "own ledger and index build paths, and never touches live data.")
     return "\n".join(L)
 
 
@@ -533,4 +588,3 @@ def save(report: Report, out_dir: str | Path) -> dict[str, str]:
     j.write_text(json.dumps(report.to_dict(), indent=2, default=str))
     md = out / "latest.md"
     md.write_text(render_markdown(report))
-    return {"json": str(j), "markdown": str(md)}

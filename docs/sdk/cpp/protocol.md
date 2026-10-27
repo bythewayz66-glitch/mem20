@@ -1,7 +1,7 @@
 # mem20 C++ SDK — Protocol
 
 Wire contract the SDK speaks to a mem20 server.
-**Server baseline:** `mem20` 2.1.0rc2 · **Repo:** https://github.com/bythewayz66-glitch/mem20 (`main`)
+**Server baseline:** `mem20` **3.0.0** (`pyproject.toml` / `VERSION`) · **Repo:** https://github.com/bythewayz66-glitch/mem20 (`main`)
 
 Everything here is derived from the mem20 server source. Per-claim file paths and the
 commit are listed in [`source-ledger.md`](source-ledger.md).
@@ -92,7 +92,7 @@ handshake completes (or fails).
   "result": {
     "protocolVersion": "<server value>",
     "capabilities": { "tools": { "listChanged": true } },
-    "serverInfo": { "name": "mem20", "version": "2.1.0rc2" }
+    "serverInfo": { "name": "mem20-mcp", "version": "" }
   }
 }
 ```
@@ -155,9 +155,22 @@ returning a `ListToolsResult`.
 `ToolDescriptor` in the SDK captures `name`, `title`, `description`, and the raw
 `inputSchema` (kept as JSON so unknown/future fields survive round-trips).
 
-The documented baseline surface is **270 tools across 27 domains**; see `README.md`
-for the domain table. Tool *names* are the authority — the SDK resolves a tool by exact
-name and never invents one.
+The baseline surface is **270 tools across 27 domains**. Both figures are *measured*,
+not quoted — reproduce them from the repo root:
+
+```bash
+cd mcp && python3 -c "from server import Mem20MCPServer; print(len(Mem20MCPServer().tools))"
+# -> 270
+```
+
+`mcp/server.py::_setup_tools()` performs 28 `register_*` calls; `register_memory_tools`
+and `register_enhanced_memory_tools` both register the Core memory domain, giving
+**27 distinct domains** for the 270 tools. The domain table is in `docs/README.md`
+§ "270 Tools Across 27 Domains".
+
+> Treat the count as a moving target: tool *names* are the authority. The SDK resolves a
+> tool by exact name from `tools/list` and never invents one, so a server whose surface
+> differs still works as long as the tools the caller asks for exist.
 
 ---
 

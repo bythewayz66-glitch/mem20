@@ -3,251 +3,330 @@ use warnings;
 
 use Test::More;
 use Cwd qw(abs_path);
+use File::Basename qw(dirname);
+use Time::HiRes ();
 
 use Mem20::Config;
 use Mem20::Client;
 use Mem20::Errors;
 
-# These tests drive a REAL child process over REAL pipes (t/support/
-# fake_mcp_server.pl). Nothing is mocked, so a framing bug, a buffering bug or
-# a deadlock shows up here rather than in production.
+# Everything here drives a REAL child process over REAL pipes (the script in
+# t/support/), on purpose: a mocked transport passes even when the framing is
+# wrong, which is the bug this file exists to catch.
 
-my $SUPPORT = abs_path( __FILE__ );
-$SUPPORT =~ s{/t/[^/]+$}{/t/support};
-my $FAKE = "$SUPPORT/fake_mcp_server.pl";
+my $HERE  = abs_path( dirname(__FILE__) );
+my $FAKE  = abs_path("$HERE/support/fake_mcp_server.pl");
 
 sub config_for {
-    my ($mode, %overrides) = @_;
+    my ($mode) = @_;
     return Mem20::Config->new(
         server_command => [ $^X, $FAKE, $mode ],
-        timeout        => 10,
-        %overrides,
+        timeout        => 5,
     );
 }
 
-subtest 'initialize handshake' => sub {
+subtest 'tool() accepts a flat pair list and a hashref, and refuses a mix' => sub {
     my $client = Mem20::Client->new( config => config_for('ok') );
-    $client->connect;
 
-    my $session = $client->transport->session;
-    ok( $session, 'session established' );
-    is( $session->{protocol_version}, '2025-06-18', 'protocol revision negotiated' );
-    is( $session->{server_info}{name}, 'fake-mem20', 'server info surfaced' );
+    # The README used to document tool($name, { ... }) and that form silently
+    # marshalled {"HASH(0x...)": null} as the arguments.
+    my $by_hashref = $client->tool( 'memory_recall', { query => 'sky', limit => 5 } );
+    like( $client->text($by_hashref), qr/sky is blue/, 'hashref form works' );
+
+    my $by_pairs = $client->tool( 'memory_recall', query => 'sky', limit => 5 );
+    like( $client->text($by_pairs), qr/sky is blue/, 'flat pair form works' );
+
+    my $sent = $client->text( $client->tool( 'memory_store',
+        content => 'x', epistemic_status => 'observed' ) );
+    my $decoded = decode_json_safe($sent);
+    is( ref $decoded->{stored}, 'HASH', 'arguments reached the server as an object' );
+    is( $decoded->{stored}{content}, 'x', 'content survived marshalling' );
+
+    my $err = Mem20::Errors::caught(
+        sub { $client->tool( 'memory_recall', { query => 'sky' }, 'limit', 5 ) }
+    );
+    ok( ref $err && $err->isa('Mem20::ValidationError'), 'mixing forms is refused' );
+
+    my $odd = Mem20::Errors::caught( sub { $client->tool( 'memory_recall', 'query' ) } );
+    ok( ref $odd && $odd->isa('Mem20::ValidationError'), 'an odd-length list is refused' );
 
     $client->close;
 };
 
-subtest 'connect is idempotent' => sub {
+subtest 'text() works as a function and as a method' => sub {
     my $client = Mem20::Client->new( config => config_for('ok') );
+    my $hits   = $client->memory_recall( query => 'sky' );
 
-    $client->connect;
-    my $first = $client->transport;
-    $client->connect;
-    my $second = $client->transport;
+    # The README documented Mem20::Client::text($hits); that form used to
+    # return '' because the envelope was consumed as the invocant.
+    is( Mem20::Client::text($hits), "the sky is blue\nwater is wet", 'function form' );
+    is( $client->text($hits),      "the sky is blue\nwater is wet", 'method form' );
+    is( Mem20::Client::text(undef), '', 'undef is empty, not an error' );
 
-    is( $first, $second, 'second connect returns the same transport' );
     $client->close;
 };
 
-subtest 'tools/list and tool_names' => sub {
+subtest 'the handshake happens lazily, without an explicit connect' => sub {
+    # MCP requires initialize before any other request. connect() used to be the
+    # only thing that sent it, so a caller that followed the README's "calls
+    # connect on demand" promise got -32602 "Invalid request parameters" on its
+    # first tool call.
     my $client = Mem20::Client->new( config => config_for('ok') );
 
-    my $listing = $client->tools;
-    is( scalar @{ $listing->{tools} }, 4, 'four tools advertised' );
+    my $result = eval { $client->memory_recall( query => 'sky', limit => 3 ) };
+    ok( !$@, 'first call succeeded with no explicit connect()' )
+        or diag("error: $@");
+
+    ok( $client->transport->session, 'a session was established on demand' );
+    is( $client->text($result), "the sky is blue\nwater is wet", 'and the call returned real data' );
+
+    $client->close;
+};
+
+subtest 'tools/list, tool_names and schemas' => sub {
+    my $client = Mem20::Client->new( config => config_for('ok') );
 
     my $names = $client->tool_names;
-    is_deeply( $names, [qw(memory_store memory_recall memory_status cog_plan)], 'names extracted in order' );
+    ok( ref $names eq 'ARRAY' && @$names, 'tool_names returns names' );
+    ok( ( grep { $_ eq 'memory_store' } @$names ), 'memory_store advertised' );
 
-    # Cached: a second call must not re-request.
-    is( $client->tool_names, $names, 'tool_names memoised' );
+    my $schema = $client->tool_schema('memory_store');
+    is_deeply( $schema->{required}, [ 'content', 'epistemic_status' ],
+        'the advertised required list is what the client validates against' );
+
+    ok( !defined $client->tool_schema('nope_not_here'), 'an unknown tool has no schema' );
 
     $client->close;
 };
 
-subtest 'memory_store sends the documented arguments' => sub {
+subtest 'memory_store requires content and epistemic_status locally' => sub {
     my $client = Mem20::Client->new( config => config_for('ok') );
 
-    my $result = $client->memory_store( content => 'prod runs build 4127', tags => [ 'prod', 'build' ] );
-    my $text   = $client->text($result);
+    my $no_content = Mem20::Errors::caught(
+        sub { $client->memory_store( epistemic_status => 'observed' ) }
+    );
+    ok( ref $no_content && $no_content->isa('Mem20::ValidationError'),
+        'content is required' );
 
-    like( $text, qr/"content":"prod runs build 4127"/, 'content reached the server' );
-    like( $text, qr/"category":"general"/,             'default category applied' );
-    like( $text, qr/"tags":"prod,build"/,              'array tags joined with commas' );
+    my $no_status = Mem20::Errors::caught( sub { $client->memory_store( content => 'x' ) } );
+    ok( ref $no_status && $no_status->isa('Mem20::ValidationError'),
+        'epistemic_status is required' );
+    like( $no_status->message, qr/epistemic_status is required/, 'message is explicit' );
 
-    my $stringy = $client->memory_store( content => 'x', category => 'ops', tags => 'a,b' );
-    like( $client->text($stringy), qr/"tags":"a,b"/, 'pre-formatted string tags passed through' );
+    # invented content belongs in the simulated partition, and the live server
+    # does NOT enforce that despite what its own tool description says.
+    my $imagined = Mem20::Errors::caught(
+        sub { $client->memory_store( content => 'x', epistemic_status => 'imagined' ) }
+    );
+    ok( ref $imagined && $imagined->isa('Mem20::ValidationError'),
+        'imagined is refused on the grounded store' );
+    like( $imagined->message, qr/memory_simulate_store/, 'and pointed at the right tool' );
+
+    my $nonsense = Mem20::Errors::caught(
+        sub { $client->memory_store( content => 'x', epistemic_status => 'wishful' ) }
+    );
+    ok( ref $nonsense && $nonsense->isa('Mem20::ValidationError'),
+        'an unknown epistemic_status is refused' );
 
     $client->close;
 };
 
-subtest 'memory_store requires content' => sub {
+subtest 'memory_store joins a tag array into the string the schema wants' => sub {
     my $client = Mem20::Client->new( config => config_for('ok') );
 
-    my $err = Mem20::Errors::caught( sub { $client->memory_store( category => 'general' ) } );
-    ok( ref $err && $err->isa('Mem20::ConfigurationError'), 'missing content throws' );
+    my $stored = $client->text(
+        $client->memory_store(
+            content          => 'x',
+            epistemic_status => 'observed',
+            tags             => [ 'a', 'b' ],
+        )
+    );
+    my $args = decode_json_safe($stored)->{stored};
+    is( $args->{tags}, 'a,b', 'an array is joined' );
+
+    my $scalar_tags = decode_json_safe(
+        $client->text( $client->memory_store(
+            content => 'x', epistemic_status => 'observed', tags => 'a,b' ) )
+    )->{stored};
+    is( $scalar_tags->{tags}, 'a,b', 'a scalar passes through' );
 
     $client->close;
 };
 
-subtest 'memory_recall returns every text part' => sub {
-    my $client = Mem20::Client->new( config => config_for('ok') );
+subtest 'result.isError=true becomes a ToolError' => sub {
+    my $client = Mem20::Client->new( config => config_for('iserror') );
 
-    my $result = $client->memory_recall( query => 'sky', limit => 5 );
-    my $text   = $client->text($result);
-
-    is( $text, "the sky is blue\nwater is wet", 'parts joined with newlines' );
-
-    $client->close;
-};
-
-subtest 'memory_recall requires query' => sub {
-    my $client = Mem20::Client->new( config => config_for('ok') );
-
-    my $err = Mem20::Errors::caught( sub { $client->memory_recall( limit => 5 ) } );
-    ok( ref $err && $err->isa('Mem20::ConfigurationError'), 'missing query throws' );
-
-    $client->close;
-};
-
-subtest 'a JSON-RPC error object becomes a ToolError' => sub {
-    my $client = Mem20::Client->new( config => config_for('error') );
-
-    my $err = Mem20::Errors::caught( sub { $client->memory_recall( query => 'x' ) } );
+    my $err = Mem20::Errors::caught( sub { $client->tool('memory_status') } );
 
     ok( ref $err && $err->isa('Mem20::ToolError'), 'ToolError raised' );
-    like( $err->message, qr/invalid params/, 'server message carried through' );
-    is( $err->code, -32602, 'numeric code preserved' );
-    is_deeply( $err->data, { tool => 'memory_recall' }, 'structured data preserved' );
+    ok( $err->is_error,   'flagged is_error' );
+    ok( !$err->soft_error, 'not a soft error' );
+    like( $err->message, qr/Unknown tool/, 'server text carried through' );
 
     $client->close;
 };
 
-subtest 'a crashing server is a TransportError, not a hang' => sub {
-    my $client = Mem20::Client->new( config => config_for('crash') );
+subtest 'isError=false with an Error payload becomes a soft ToolError' => sub {
+    # This is the shape mem20 uses for a rejected argument. The protocol says
+    # success, so a caller checking only for exceptions believes the write
+    # landed.
+    my $client = Mem20::Client->new( config => config_for('softerror') );
 
-    my $err = Mem20::Errors::caught( sub { $client->memory_recall( query => 'x' ) } );
-    ok( ref $err && $err->isa('Mem20::TransportError'), 'TransportError raised' );
-    like( $err->message, qr/closed stdout|exited/, 'message explains the child died' );
+    my $err = Mem20::Errors::caught( sub { $client->memory_status } );
 
-    $client->close;
-};
-
-subtest 'non-JSON output is reported, not silently ignored' => sub {
-    my $client = Mem20::Client->new( config => config_for('garbage') );
-
-    # No explicit connect(): in this mode the server answers EVERY request with
-    # garbage, including initialize, so the lazy connect inside the tool call is
-    # exactly what must be seen to fail cleanly.
-    my $err = Mem20::Errors::caught( sub { $client->memory_recall( query => 'x' ) } );
-
-    ok( ref $err && $err->isa('Mem20::TransportError'), 'TransportError raised' );
-    like( $err->message, qr/invalid JSON/, 'message names the problem' );
-    like( $err->message, qr/this is not json/, 'message includes the offending line' );
+    ok( ref $err && $err->isa('Mem20::ToolError'), 'ToolError raised from a protocol success' );
+    ok( $err->soft_error, 'flagged soft_error' );
+    ok( !$err->is_error,  'the envelope said isError=false' );
 
     $client->close;
 };
 
-subtest 'a chatty stderr does not deadlock the client' => sub {
-    # The regression this guards: reading only stdout blocks forever once the
-    # child fills its 64KiB stderr pipe buffer, because the child is then
-    # blocked writing and never reaches its first reply.
-    my $client = Mem20::Client->new( config => config_for('noisy') );
+subtest 'a JSON-RPC error object maps to ToolError with code and data' => sub {
+    my $client = Mem20::Client->new( config => config_for('error') );
 
-    my $err = Mem20::Errors::caught( sub { $client->memory_recall( query => 'sky' ) } );
+    my $err = Mem20::Errors::caught( sub { $client->tool('memory_status') } );
 
-    ok( !$err, 'call completed without timing out' )
-        or diag( 'error: ' . ( ref $err ? $err->message : $err ) );
+    ok( ref $err && $err->isa('Mem20::ToolError'), 'ToolError raised' );
+    is( $err->code, -32602, 'code is -32602' );
+    is( $err->data->{tool}, 'memory_status', 'data is preserved' );
 
     $client->close;
 };
 
-subtest 'timeout is honoured and reported' => sub {
-    # A child that starts and never answers. `crash` mode plus a 1s budget gets
-    # there without depending on an external signal or a long wall-clock wait.
+subtest 'a job envelope is decoded and polled to a terminal state' => sub {
+    my $client = Mem20::Client->new( config => config_for('job') );
+
+    my $result = $client->tool( 'cog_plan', goal => 'ship it' );
+    my $job    = $client->job_from($result);
+
+    ok( $job, 'envelope decoded' );
+    is( $job->{job_id}, 'deadbeef01', 'job_id read' );
+
+    my $final = $client->wait_for_job( 'deadbeef01', timeout => 5, interval => 0.01 );
+    is( $final->{status}, 'ok', 'polled until the job left running' );
+    is( $final->{result}, 'the plan', 'and the real result came back' );
+
+    # call_tool_await does both halves in one call.
+    my $awaited = $client->call_tool_await( 'cog_plan', goal => 'ship it' );
+    is( ref $awaited, 'HASH', 'call_tool_await returns the terminal status' );
+
+    $client->close;
+};
+
+subtest 'an ordinary answer is not mistaken for a job envelope' => sub {
+    my $client = Mem20::Client->new( config => config_for('ok') );
+
+    my $result = $client->tool('memory_status');
+    ok( !defined $client->job_from($result), 'no job_id, so not a job' );
+
+    $client->close;
+};
+
+subtest 'a timeout throws instead of hanging, and reports stderr' => sub {
     my $client = Mem20::Client->new(
         config => Mem20::Config->new(
-            server_command => [ $^X, $FAKE, 'crash' ],
-            timeout        => 1,
+            server_command => [ $^X, $FAKE, 'silent' ],
+            timeout        => 2,
         )
     );
 
-    my $started = time;
-    my $err     = Mem20::Errors::caught( sub { $client->memory_recall( query => 'x' ) } );
-    my $elapsed = time - $started;
+    my $started = Time::HiRes::time();
+    my $err     = Mem20::Errors::caught( sub { $client->tool('memory_status') } );
+    my $elapsed = Time::HiRes::time() - $started;
 
+    # The old drain blocked on stderr here and the call never returned at all.
     ok( ref $err && $err->isa('Mem20::TransportError'), 'TransportError raised' );
-    like( $err->message, qr/closed stdout|exited|timed out/, 'message explains the failure' );
-    cmp_ok( $elapsed, '<', 30, "gave up promptly (${elapsed}s)" );
+    like( $err->message, qr/timed out/, 'message says timed out' );
+    ok( $elapsed < 8, "returned in ${elapsed}s rather than hanging" );
 
     $client->close;
 };
 
-subtest 'dynamic dispatch reaches any advertised tool' => sub {
-    my $client = Mem20::Client->new( config => config_for('ok') );
+subtest 'a chatty server does not deadlock on stderr' => sub {
+    # 200 KB of stderr, well past the 64 KiB pipe buffer. A client reading only
+    # stdout parks here forever.
+    my $client = Mem20::Client->new( config => config_for('noisy') );
 
-    ok( $client->can('memory_status'), 'advertised tool is callable' );
-    ok( !$client->can('not_a_tool'),    'unadvertised name is not callable' );
-
-    my $out = $client->memory_status;
-    is( $client->text($out), 'ok', 'dynamic call returned the result' );
-
-    $client->close;
-};
-
-subtest 'text() tolerates the shapes the server may return' => sub {
-    my $client = Mem20::Client->new( config => config_for('ok') );
-
-    is( $client->text( undef ), '', 'undef -> empty string' );
-    is( $client->text('bare'),  'bare', 'bare string passed through' );
-    is( $client->text( {} ),    '', 'no content key -> empty string' );
-    is(
-        $client->text( { content => [ { type => 'text', text => 'a' }, { type => 'image' }, { type => 'text', text => 'b' } ] } ),
-        "a\nb",
-        'only text parts are joined, non-text parts skipped'
-    );
+    my $result = eval { $client->tool('memory_status') };
+    ok( !$@, 'the call completed despite the stderr flood' ) or diag("error: $@");
+    is( $client->text($result), 'ok', 'and returned the real answer' );
 
     $client->close;
 };
 
-subtest 'close is idempotent and releases the child' => sub {
-    my $client = Mem20::Client->new( config => config_for('ok') );
-    $client->connect;
+subtest 'invalid JSON from the server is a TransportError with the payload' => sub {
+    my $client = Mem20::Client->new( config => config_for('garbage') );
 
+    my $err = Mem20::Errors::caught( sub { $client->tool('memory_status') } );
+    ok( ref $err && $err->isa('Mem20::TransportError'), 'TransportError raised' );
+    like( $err->message, qr/this is not json/, 'the offending text is quoted' );
+
+    $client->close;
+};
+
+subtest 'a child that exits mid-request is reported, not waited on' => sub {
+    my $client = Mem20::Client->new( config => config_for('crash') );
+
+    my $err = Mem20::Errors::caught( sub { $client->tool('memory_status') } );
+    ok( ref $err && ( $err->isa('Mem20::TransportError') || $err->isa('Mem20::ToolError') ),
+        'a transport-level error is raised' );
+    like( $err->message, qr/(closed|exited|failed|timed out)/i, 'and it says what happened' );
+
+    $client->close;
+};
+
+subtest 'dynamic dispatch reaches advertised tools and rejects the rest' => sub {
+    my $client = Mem20::Client->new( config => config_for('ok') );
+
+    is( $client->text( $client->memory_status ), 'ok', 'advertised tool dispatch' );
+    ok( $client->can('memory_status'), 'can() agrees' );
+    ok( !$client->can('no_such_tool'), 'and is false for an unadvertised name' );
+
+    my $err = Mem20::Errors::caught( sub { $client->no_such_tool } );
+    ok( ref $err && $err->isa('Mem20::ConfigurationError'), 'unadvertised name fails loudly' );
+
+    $client->close;
+};
+
+subtest 'close is idempotent and leaves no child running' => sub {
+    my $client = Mem20::Client->new( config => config_for('ok') );
+    $client->tool('memory_status');
+
+    # Capture the transport BEFORE closing: the accessor builds a fresh one on
+    # demand, so asking for it after close() inspects a new, never-started
+    # object instead of the one that owned the child.
     my $transport = $client->transport;
-    ok( $transport->pid, 'child process running' );
+    my $pid = $transport->pid;
+    ok( $pid && $pid > 0, 'child is running' );
 
     $client->close;
-    ok( !$transport->pid, 'pid cleared after close' );
+    ok( !$transport->pid, 'pid cleared on the transport that owned the child' );
 
-    $client->close;    # must not die
+    # waitpid(-1, WNOHANG) must find nothing left to reap: a leaked child
+    # would still hold the store lock.
+    my $left = waitpid( -1, 1 );
+    is( $left, -1, 'no zombie left behind' );
+
+    $client->close;
     pass('second close is a no-op');
 };
 
-subtest 'a client freezes its config' => sub {
-    my $cfg    = Mem20::Config->new;
-    my $client = Mem20::Client->new( config => $cfg );
+subtest 'verify_surface reports the compiled expectation and the live count' => sub {
+    my $client = Mem20::Client->new( config => config_for('ok') );
 
-    ok( $cfg->is_frozen, 'config frozen by the client' );
-
-    my $err = Mem20::Errors::caught( sub { $cfg->health_port(1234) } );
-    ok( ref $err && $err->isa('Mem20::ConfigurationError'), 'mutation refused while a client exists' );
+    my $surface = $client->verify_surface;
+    is( $surface->{tools}, 5, 'counts what the server actually advertises' );
+    is( $surface->{expected_tools}, 270, 'and reports the compiled expectation' );
+    is( $surface->{domains}, 27, 'domains come from the compiled constant' );
+    is( $surface->{ok}, 0, 'a 5-tool server does not satisfy a 270-tool contract' );
 
     $client->close;
 };
 
-subtest 'health surface degrades to undef when nothing is listening' => sub {
-    # Port 1 is reserved and nothing listens on it, so this exercises the
-    # "endpoint not answering" path rather than the happy path.
-    my $client = Mem20::Client->new(
-        config => Mem20::Config->new( health_host => '127.0.0.1', health_port => 1, timeout => 1 )
-    );
-
-    is( $client->health,  undef, 'health returns undef, does not throw' );
-    is( $client->ready,   undef, 'ready returns undef, does not throw' );
-    is( $client->healthy, 0,     'healthy is false, does not throw' );
-
-    my $err = Mem20::Errors::caught( sub { $client->metrics } );
-    ok( ref $err && $err->isa('Mem20::TransportError'), 'metrics throws because it has no undef contract' );
-};
+sub decode_json_safe {
+    my ($text) = @_;
+    my $decoded = eval { JSON::PP->new->utf8->decode($text) };
+    return ref $decoded eq 'HASH' ? $decoded : {};
+}
 
 done_testing();

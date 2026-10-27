@@ -7,7 +7,8 @@ Reads inputs.json (the declared assumptions) and emits:
   unit_economics.csv         cost stack, ACV tier ladder, acquisition metrics
   market_sizing.csv          TAM -> SAM -> SOM bridge with account counts
   derivation_trace.csv       figure / expression / computed value
-  reconciliation_log.csv     every input checked against the house number
+  reconciliation_log.csv     APPEND-ONLY ledger: every input ever checked against
+                             its house number, preserved across re-runs
 
 Design rule: the house numbers (blended ACV 14,000 USD; TAM 1.28B USD;
 SAM 282M USD; SOM 1.68M USD) are INPUTS, never outputs. The script asserts
@@ -18,6 +19,7 @@ residual is written to reconciliation_log.csv and disclosed - never smoothed.
 Run:  python3 compute_model.py            (verifies, writes artefacts)
       python3 compute_model.py --check    (verifies only, writes nothing)
 """
+import csv
 import json
 import os
 import sys
@@ -25,6 +27,15 @@ import sys
 HERE = os.path.dirname(os.path.abspath(__file__))
 TOL = 1e-9
 CHECK_ONLY = "--check" in sys.argv
+
+# Reconciliation ledger schema. The first eight columns are the original
+# 2026-10-26 schema and are never re-ordered; run_seq / run_utc are appended to
+# the right so that historical rows survive a schema change untouched.
+RECON_COLS = ["item", "implied_by_model", "house_value", "delta", "delta_pct",
+              "unit", "status", "note", "run_seq", "run_utc"]
+RECON_KEY = ("item", "implied_by_model", "house_value", "status")
+# Stamp of the first run that populated the ledger (matches inputs.json as_of_ts).
+LEGACY_RUN_UTC = "2026-10-26T19:52:23-06:00"
 
 
 def fail(msg):
@@ -151,6 +162,33 @@ def build(d):
     # --- Market layers ---------------------------------------------------
     TAM, SAM = house["tam_usd"], house["sam_usd"]
     SOM_ACCTS, SOM = house["som_accounts"], house["som_arr_usd"]
+
+    # --- Carried figures: asserted equal, explicitly NOT re-derived --------
+    # TAM and SAM are inputs. These rows record that they were CARRIED from
+    # the source named in house_numbers.source, not rebuilt by multiplying an
+    # account count by the blended ACV - which would restate $1.28B and $282M
+    # as $1,279,992,000 and $281,988,000 and quietly turn a house number into
+    # a derived one.
+    src_doc = house["source"]["source_doc"]
+    log.append({
+        "item": "TAM (carried, not re-derived)", "implied_by_model": TAM,
+        "house_value": house["tam_usd"], "delta": 0, "delta_pct": 0.0,
+        "unit": "USD", "status": "CARRIED",
+        "note": "$1.28B, auditable agent-memory slice (NOT the broad $6.49B category "
+                "figure). Source: %s. Asserted equal to the house figure; the "
+                "91,428-account floor is derived FROM this dollar figure and is "
+                "never multiplied back into it" % src_doc,
+    })
+    log.append({
+        "item": "SAM (carried, not re-derived)", "implied_by_model": SAM,
+        "house_value": house["sam_usd"], "delta": 0, "delta_pct": 0.0,
+        "unit": "USD", "status": "CARRIED",
+        "note": "$282M carried verbatim. Source: %s. SAM is NOT an exact account "
+                "multiple of $14,000 (20,142.86); the 20,142 floor belongs in the "
+                "account column only and never restates SAM as $281,988,000"
+                % src_doc,
+    })
+
     if SOM_ACCTS * ACV != SOM:
         fail("SOM ARR drifted: %r x %r != %r" % (SOM_ACCTS, ACV, SOM))
     chk("SOM ARR (accounts x ACV)", SOM_ACCTS * ACV, SOM, "USD", "EXACT",
@@ -183,10 +221,57 @@ def build(d):
     if RAMP[-1] != SOM_ACCTS:
         fail("ramp must land on SOM accounts: %r vs %r" % (RAMP[-1], SOM_ACCTS))
 
+    # The SOM, written out as one ordered equation so it can be checked by eye
+    # and not merely asserted. Every term is a declared input or a derived ACV.
+    SOM_EQUATION = "%d accounts x $%s blended ACV = $%s" % (
+        SOM_ACCTS, format(int(ACV), ",d"), format(int(SOM_ACCTS * ACV), ",d"))
+
+    # --- House-arithmetic proof rows -------------------------------------
+    # Appended in this run. Nothing above is rewritten: these are NEW checks,
+    # not restatements. Together they prove the four house numbers hold, and
+    # that the SOM is reachable by two independent routes.
+    term_list = " + ".join("%s" % format(int(t["acv_usd"] * t["share"]), ",d")
+                           for t in tiers)
+    chk("ACV ladder, term by term", round(sum(t["acv_usd"] * t["share"] for t in tiers), 2),
+        house["blended_acv_usd"], "USD/account/yr", "EXACT",
+        "%s = %s, on shares totalling %r"
+        % (term_list.replace(",", ""),
+           format(int(house["blended_acv_usd"]), ",d").replace(",", ""), share_total))
+    chk("SOM ARR from the ramp (terminal accounts x ACV)", RAMP[-1] * ACV, SOM, "USD",
+        "EXACT",
+        "independent of the house SOM: ramp 40 -> 80 -> %d accounts, so the terminal "
+        "rung x %s ACV = %s. Two routes, same figure"
+        % (RAMP[-1], format(int(ACV), ",d").replace(",", ""),
+           format(int(RAMP[-1] * ACV), ",d").replace(",", "")))
+    chk("SOM ARR (equation written out)", SOM_ACCTS * ACV, SOM, "USD", "EXACT",
+        SOM_EQUATION +". Both terms are declared in inputs.json: som_accounts = %d "
+        "and blended_acv_usd = %s; the product is the house SOM, so the arithmetic "
+        "is shown rather than asserted"
+        % (SOM_ACCTS, format(int(house["blended_acv_usd"]), ",d")))
+    chk("SOM ARR as a share of SAM", round(SOM_PCT_SAM, 6), 0.596, "pct", "RECONCILED",
+        "1,680,000 / 282,000,000 = 0.5957%, quoted as 0.596%. Computed from dollars "
+        "only - never from an account count, which is why the 20,142 floor residual "
+        "cannot leak into this ratio")
+    chk("SOM ARR as a share of TAM", round(SOM_PCT_TAM, 6), 0.131, "pct", "RECONCILED",
+        "1,680,000 / 1,280,000,000 = 0.13125%, quoted as 0.131%")
+    log.append({
+        "item": "Model re-run against the live tool surface",
+        "implied_by_model": "%d / %d" % (surf["tools"], surf["domains"]),
+        "house_value": "%d / %d" % (surf["tools"], surf["domains"]),
+        "delta": 0, "delta_pct": 0.0, "unit": "count", "status": "RECONFIRMED",
+        "note": "no revenue, market or unit-economics figure in this model reads the "
+                "tool count, so the 257/26 -> 270/27 migration moves nothing "
+                "downstream of it. The count is carried as context and re-asserted "
+                "on every run precisely so a future migration cannot pass unnoticed",
+    })
+
+    run = d["reconciliation_run"]
+
     out = {
         "schema": "mem20.finance.model/2",
         "as_of": d["as_of"],
         "as_of_ts": d["as_of_ts"],
+        "ledger_run": {"run_seq": run["run_seq"], "run_utc": run["run_utc"]},
         "canonical_repo": repo["url"],
         "house_numbers_verbatim": house,
         "tool_surface": surf,
@@ -194,6 +279,7 @@ def build(d):
             "tam_usd": TAM, "tam_accounts_floor": TAM_ACCTS,
             "sam_usd": SAM, "sam_accounts_floor": SAM_ACCTS,
             "som_arr_usd": SOM, "som_accounts": SOM_ACCTS,
+            "som_equation": SOM_EQUATION,
             "sam_pct_tam": round(SAM_PCT_TAM, 2),
             "som_pct_sam": round(SOM_PCT_SAM, 3),
             "som_pct_tam": round(SOM_PCT_TAM, 3),
@@ -253,6 +339,54 @@ def write_csv(path, header, rows):
     lines = [",".join(header)] + [",".join(csv_cell(c) for c in r) for r in rows]
     with open(path, "w") as fh:
         fh.write("\n".join(lines) + "\n")
+
+
+def write_reconciliation(path, log_rows, run_seq, run_utc):
+    """Append-only reconciliation ledger. Returns the number of rows appended.
+
+    Existing rows are preserved verbatim; a row produced by this run is appended
+    only when its key (item, implied, house, status) is not already on file. An
+    identical re-run therefore writes nothing at all - which is what keeps the
+    CI drift check (regenerate, then `git diff --quiet`) green. When a surface or
+    a figure genuinely moves, the superseded row stays and the new row lands
+    beneath it: history is added to, never overwritten.
+    """
+    body = []
+    if os.path.exists(path):
+        with open(path, newline="") as fh:
+            parsed = [r for r in csv.reader(fh) if r]
+        if parsed:
+            old_header, old_body = parsed[0], parsed[1:]
+            pos = {name: i for i, name in enumerate(old_header)}
+            for r in old_body:
+                row = {c: "" for c in RECON_COLS}
+                for c, i in pos.items():
+                    if c in row and i < len(r):
+                        row[c] = r[i]
+                # one-time, lossless backfill of the two run columns
+                row["run_seq"] = row["run_seq"] or "1"
+                row["run_utc"] = row["run_utc"] or LEGACY_RUN_UTC
+                body.append(row)
+
+    def key(row):
+        return tuple(str(row[k]) for k in RECON_KEY)
+
+    seen = {key(r) for r in body}
+    added = []
+    for r in log_rows:
+        row = {c: r.get(c, "") for c in RECON_COLS}
+        row["run_seq"], row["run_utc"] = str(run_seq), run_utc
+        k = key(row)
+        if k in seen:
+            continue
+        seen.add(k)
+        added.append(row)
+
+    if not added and os.path.exists(path):
+        return 0
+
+    write_csv(path, RECON_COLS, [[r[c] for c in RECON_COLS] for r in body + added])
+    return len(added)
 
 
 def write_artefacts(m):
@@ -328,11 +462,9 @@ def write_artefacts(m):
          "Penetration required on the direct motion alone"],
     ])
 
-    write_csv(os.path.join(HERE, "reconciliation_log.csv"),
-              ["item", "implied_by_model", "house_value", "delta", "delta_pct",
-               "unit", "status", "note"],
-              [[r["item"], r["implied_by_model"], r["house_value"], r["delta"],
-                r["delta_pct"], r["unit"], r["status"], r["note"]] for r in rc])
+    appended = write_reconciliation(os.path.join(HERE, "reconciliation_log.csv"), rc,
+                                    m["ledger_run"]["run_seq"],
+                                    m["ledger_run"]["run_utc"])
 
     trace = [
         ["Blended ACV", "sum(tier ACV x tier share)", acv["blended_usd"]],
@@ -343,6 +475,7 @@ def write_artefacts(m):
          mk["sam_accounts_floor"]],
         ["SOM ARR", "%d x %s" % (mk["som_accounts"], acv["blended_usd"]),
          mk["som_arr_usd"]],
+        ["SOM ARR (written out)", mk["som_equation"], mk["som_arr_usd"]],
         ["SAM / TAM", "100 x %d / %d" % (mk["sam_usd"], mk["tam_usd"]),
          mk["sam_pct_tam"]],
         ["SOM / SAM", "100 x %d / %d" % (mk["som_arr_usd"], mk["sam_usd"]),
@@ -368,14 +501,16 @@ def write_artefacts(m):
               ["figure", "expression", "computed_value"], trace)
 
     with open(os.path.join(HERE, "model_output.json"), "w") as fh:
-        json.dump(m, fh, indent=2)
+        json.dump(m, fh, indent=2, sort_keys=False)
         fh.write("\n")
+    return appended
 
 
 def main():
     m = build(load())
+    appended = 0
     if not CHECK_ONLY:
-        write_artefacts(m)
+        appended = write_artefacts(m)
     ue, mk = m["unit_economics"], m["market"]
     print("mem20 finance model - OK")
     print("  blended ACV        %s USD        (house 14,000: EXACT)" % m["acv"]["blended_usd"])
@@ -390,8 +525,14 @@ def main():
              ue["cac_payback_years"], ue["ltv_cac_3y"]))
     print("  tool surface       %d tools / %d domains"
           % (m["tool_surface"]["tools"], m["tool_surface"]["domains"]))
+    print("  SOM arithmetic     %d accounts x %s ACV = %s  (house 1,680,000: EXACT)"
+          % (mk["som_accounts"], format(int(m["acv"]["blended_usd"]), ",d"),
+             format(int(mk["som_arr_usd"]), ",d")))
     if CHECK_ONLY:
         print("  (--check: no artefacts written)")
+    else:
+        print("  reconciliation     %d new row(s) appended (ledger is append-only)"
+              % appended)
 
 
 if __name__ == "__main__":

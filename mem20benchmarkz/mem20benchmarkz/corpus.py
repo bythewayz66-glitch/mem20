@@ -13,7 +13,7 @@ number we can stand behind.
 This corpus is **not** a LoCoMo clone and the resulting scores are **not**
 comparable to anyone's published numbers.
 
-For a larger synthetic set (2000 facts), see `scale_corpus.py` and:
+For a larger synthetic set, see `scale_corpus.py` and:
 
     mem20benchmarkz generate-scale
     mem20benchmarkz run-scale
@@ -25,22 +25,67 @@ from dataclasses import dataclass, field
 
 @dataclass(frozen=True)
 class Fact:
+    """One record in the corpus.
+
+    `content` is the only field the memory store sees; everything else is
+    benchmark metadata kept beside it. `category` says whether the claim is
+    checkable against a real source (grounded), internally consistent but
+    unsourced (ungrounded), or demonstrably wrong (false).
+    """
+
     topic: str
     content: str
     tags: tuple[str, ...] = ()
     priority: str = "normal"
     epistemic_status: str = "observed"
+    category: str = "grounded"       # grounded | ungrounded | false
+    key: str | None = None
+    subject: str | None = None
+    predicate: str | None = None
+    object: str | None = None
+    source: str | None = None
+    evidence: str | None = None
+    contradicts: str | None = None   # false: key of the grounded record it contradicts
+    true_value: str | None = None
+    confidence: float = 1.0
 
 
 @dataclass(frozen=True)
 class Query:
+    """One probe.
+
+    `kind` decides how the query is scored, and the four answerable kinds are
+    scored identically:
+
+      direct           verbatim-ish lookup, evidence expected in the top-k
+      multi_hop        two grounded records behind one entity
+      adversarial      paraphrase of one grounded fact: a different designator
+                       (symbol / alpha-2) is used in place of the canonical
+                       name. The answer token is NOT in the query, but the
+                       record holding it IS in the corpus.
+      adversarial_hard same, with the relation label replaced by a synonym, so
+                       lexical matching has only the designator to work with.
+      contradiction    a false record's claim, asked for correction. The true
+                       value exists in the corpus, so this is answerable too.
+      unanswerable     a CONTROL. The subject is fictional and no record in the
+                       corpus can answer it. A correct store scores 0.000 here,
+                       and any non-zero value means the metric is handing out
+                       free hits.
+
+    The previous corpus made every `adversarial` query answer-free ("is Zephyra
+    a real city"), and the scorer hardcoded its verdict to False, so the 0.000
+    it published measured the harness, not retrieval. See `docs/benchmarks/`.
+    """
+
     qid: str
     text: str
-    kind: str  # direct | multi_hop | adversarial
+    kind: str
     supports: tuple[str, ...] = ()
     expect: tuple[str, ...] = ()
     hops: int = 1
     entity: str | None = None
+    difficulty: str = "medium"
+    gold_key: str | None = None
 
 
 @dataclass
@@ -128,12 +173,19 @@ _CORPUS = Corpus(
         Query("m5", "what relates to the braid ledger",
               "multi_hop", supports=("braid-1",),
               expect=("braid",), hops=2, entity="braid"),
-        Query("a1", "is Zephyra a real city with a mem20 node", "adversarial",
+        # a1 is the unanswerable CONTROL: Zephyra is fictional and no record in
+        # this corpus mentions it, so 0.000 is the only correct score.
+        Query("a1", "is Zephyra a real city with a mem20 node", "unanswerable",
               supports=(), expect=()),
+        # a2/a3 are answerable: the corpus holds the true fact each one denies,
+        # so the store should surface the correction. They used to be scored
+        # False by hardcode and therefore could never be anything but 0.000.
         Query("a2", "was the braid ledger rewritten to remove a bad commit",
-              "adversarial", supports=(), expect=()),
-        Query("a3", "did prod migrate to build 4200", "adversarial",
-              supports=(), expect=()),
+              "contradiction", supports=("braid-1", "braid-2"),
+              expect=("Merkle DAG",), gold_key="braid-1"),
+        Query("a3", "did prod migrate to build 4200", "contradiction",
+              supports=("deploy-1",), expect=("build 4127",),
+              gold_key="deploy-1"),
     ],
 )
 

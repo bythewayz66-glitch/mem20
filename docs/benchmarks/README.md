@@ -155,6 +155,12 @@ stale index. A clean store reports `0.0` contamination and a `True` index health
   and Zep's DMR (94.8%) are recall numbers on different corpora — two of the three
   private or vendor-defined — with different metrics. Nothing here refutes or
   reproduces them, and this table must not be cited as if it did.
+  Per-figure corpus, metric, source and verdict: [`comparability-matrix.md`](comparability-matrix.md).
+  That document also corrects the "private corpus" wording above — all three corpora are
+  public; what is unstandardised is the harness, and it alone is disqualifying.
+  The sharpest single fact it records: Mem0's LoCoMo 92.5 is 1425/1540, i.e. the public
+  release **minus** the 446-question adversarial class, while this table's adversarial
+  hit rate is **0.000**. Setting those two in one row is a category error, not a comparison.
 - **It is not the scale run.** 14 facts and 13 queries is the CI regression corpus.
   A 2000-fact result would answer a different question (does recall hold as the
   corpus grows) and is `not yet measured`.

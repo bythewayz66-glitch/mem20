@@ -66,3 +66,11 @@ Metrics/BlockLength:
 # making anything clearer, so the budget is raised deliberately.
 Metrics/ClassLength:
   Max: 130
+
+# examples/ and the stdio test stub are invoked as `ruby path/to/file`, never
+# executed directly, so they carry a shebang without the execute bit. The cop
+# flags that combination; it is intentional here, not a packaging mistake.
+Lint/ScriptPermission:
+  Exclude:
+    - "examples/**/*"
+    - "spec/support/**/*"

@@ -2,8 +2,16 @@ AllCops:
   NewCops: enable
   TargetRubyVersion: 3.1
   SuggestExtensions: false
+  # NOTE: setting AllCops/Exclude REPLACES RuboCop's built-in list rather than
+  # extending it, so the defaults (vendor/, node_modules/, tmp/, .git/) must be
+  # repeated here. CI installs gems into vendor/bundle via bundler-cache, and
+  # without these entries RuboCop lints 55 MB of third-party gems and fails.
   Exclude:
     - "mem20-sdk.gemspec"
+    - "vendor/**/*"
+    - "node_modules/**/*"
+    - "tmp/**/*"
+    - ".git/**/*"
 
 # This SDK is documented through the README and docs/ rather than per-class
 # RDOC, so the class-comment cop is not useful here.

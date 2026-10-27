@@ -1,0 +1,189 @@
+{
+  "corpus": "mem20-scale-corpus-v2",
+  "facts": 700,
+  "simulated": 1300,
+  "queries": 250,
+  "environment": {
+    "python": "3.11.15",
+    "platform": "Linux-6.8.0-142-generic-x86_64-with-glibc2.36",
+    "machine": "x86_64",
+    "processor": "unknown",
+    "store": "/tmp/mem20-scale-4rc0quy2",
+    "vector_available": true,
+    "bm25_available": true,
+    "embedding_model": "sentence-transformers/all-MiniLM-L6-v2",
+    "embedding_dim": 384,
+    "cross_encoder": true
+  },
+  "recall": {
+    "keyword": {
+      "adversarial": {
+        "n": 60,
+        "hit_rate": 1.0,
+        "mrr": 1.0,
+        "leak_rate": 0.0,
+        "median_latency_ms": 110.24
+      },
+      "adversarial_hard": {
+        "n": 40,
+        "hit_rate": 0.0,
+        "mrr": 0.0,
+        "leak_rate": 0.0,
+        "median_latency_ms": 192.12
+      },
+      "contradiction": {
+        "n": 40,
+        "hit_rate": 0.05,
+        "mrr": 0.03,
+        "leak_rate": 0.0,
+        "median_latency_ms": 184.52
+      },
+      "direct": {
+        "n": 60,
+        "hit_rate": 1.0,
+        "mrr": 1.0,
+        "leak_rate": 0.0,
+        "median_latency_ms": 146.79
+      },
+      "multi_hop": {
+        "n": 30,
+        "hit_rate": 0.8,
+        "mrr": 0.8,
+        "leak_rate": 0.0,
+        "median_latency_ms": 184.86
+      },
+      "unanswerable": {
+        "n": 20,
+        "hit_rate": 0.0,
+        "mrr": 0.0,
+        "leak_rate": 0.0,
+        "median_latency_ms": 108.84
+      }
+    },
+    "semantic": {
+      "adversarial": {
+        "n": 60,
+        "hit_rate": 0.95,
+        "mrr": 0.8839,
+        "leak_rate": 0.0,
+        "median_latency_ms": 102.35
+      },
+      "adversarial_hard": {
+        "n": 40,
+        "hit_rate": 0.9,
+        "mrr": 0.81,
+        "leak_rate": 0.0,
+        "median_latency_ms": 102.08
+      },
+      "contradiction": {
+        "n": 40,
+        "hit_rate": 1.0,
+        "mrr": 1.0,
+        "leak_rate": 0.0,
+        "median_latency_ms": 104.33
+      },
+      "direct": {
+        "n": 60,
+        "hit_rate": 0.9,
+        "mrr": 0.8639,
+        "leak_rate": 0.0,
+        "median_latency_ms": 103.05
+      },
+      "multi_hop": {
+        "n": 30,
+        "hit_rate": 1.0,
+        "mrr": 0.95,
+        "leak_rate": 0.0,
+        "median_latency_ms": 105.33
+      },
+      "unanswerable": {
+        "n": 20,
+        "hit_rate": 0.0,
+        "mrr": 0.0,
+        "leak_rate": 0.0,
+        "median_latency_ms": 105.8
+      }
+    }
+  },
+  "latency_ms": {
+    "keyword": {
+      "n": 250,
+      "p50": 112.01,
+      "p95": 203.41,
+      "p99": 289.76,
+      "max": 419.7,
+      "mean": 151.95
+    },
+    "semantic": {
+      "n": 250,
+      "p50": 103.5,
+      "p95": 195.37,
+      "p99": 291.55,
+      "max": 438.81,
+      "mean": 122.74
+    }
+  },
+  "trust": {
+    "contamination_rate": 0.0,
+    "contamination_violations": 0,
+    "simulated_in_bm25": [],
+    "stale_pointer_rate": 0.0,
+    "stale_pointers": 0,
+    "indexed_entries": 1400,
+    "index_healthy": true,
+    "graph_entities": 654,
+    "graph_edges": 3601,
+    "degraded_queries": 0,
+    "queries_with_drift_diagnostic": 500,
+    "all_reported_healthy": true,
+    "ledger_records": 700,
+    "rerank_off_comparison": null
+  },
+  "notes": [
+    "Scores are NOT comparable to Mem0's LoCoMo/LongMemEval or Zep's DMR. Those run on different corpora (two of them private or vendor-defined) with different metrics. These numbers describe this corpus only."
+  ],
+  "corpus_scale": {
+    "records": 2000,
+    "queries": 250,
+    "by_category": {
+      "grounded": 700,
+      "ungrounded": 650,
+      "false": 650
+    },
+    "query_kinds": {
+      "direct": 60,
+      "adversarial": 60,
+      "adversarial_hard": 40,
+      "contradiction": 40,
+      "multi_hop": 30,
+      "unanswerable": 20
+    },
+    "seed": 20261027,
+    "name": "mem20-scale-corpus-v2",
+    "validation": {
+      "status": "PASS",
+      "error_count": 0,
+      "answerable_probes_checked": 230
+    },
+    "records_sha256": "ca4505863e87da4a4f1b6c84a86a28bab69aa79c872bd84e70a1375e092c9784",
+    "queries_sha256": "412ec15679232f35f18f47b13c91208e7159b25a94ee445be660cd667f12cd00"
+  },
+  "supersedes": {
+    "corpus": "mem20-agent-kb-v1",
+    "facts": 14,
+    "simulated": 3,
+    "queries": 13
+  },
+  "what_changed": [
+    "Corpus: 17 records / 13 queries -> 2000 records / 250 queries across grounded, ungrounded and false.",
+    "Adversarial class rebuilt: probes paraphrase a fact that IS in the corpus, with the answer token absent from the probe text. The old class was answer-free (supports=(), expect=()).",
+    "The scorer no longer hardcodes hit=False for adversarial; every answerable kind shares one evidence check.",
+    "unanswerable is a separate control kind that must read 0.000.",
+    "Leak test reads the store partition label instead of substring-matching prose.",
+    "Bulk ingest appends ledger envelopes and builds verses/bm25/graph once, making a 2,000-record run take seconds instead of hours."
+  ],
+  "per_query": {
+    "rows": 500,
+    "note": "500 per-query rows are omitted from the committed results files; re-run the harness at seed 20261027 to reproduce all of them."
+  }
+}

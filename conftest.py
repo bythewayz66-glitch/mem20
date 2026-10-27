@@ -121,3 +121,48 @@ for _project in _project_roots():
         # to be pre-bound, and any that fail still import normally on demand.
         pass
 
+# 5. Never let an import-time sys.exit() abort the whole collection session.
+#
+# Several modules under mcp/ used to respond to a missing optional dependency by
+# calling sys.exit(1) inside a module-scope `except ImportError:` guard (see
+# mcp/server.py and the module-scope guards under mcp/tools/). That is not a
+# collection error - pytest reports it as
+#
+#     INTERNALERROR> SystemExit: 1
+#     mainloop: caught unexpected SystemExit!
+#     no tests collected
+#
+# and exits with status 3. The consequence is that ONE absent dependency hides
+# the entire suite, and `pytest --collect-only` stops being a usable answer to
+# "how many tests do we have". It also makes the failure look like a pytest bug
+# rather than a missing requirement, which is why it took so long to attribute.
+#
+# The guards themselves are fixed to raise instead of exit, but this hook keeps
+# the property true for any module added later: a SystemExit raised while
+# importing a collection target is turned into a normal, reported collection
+# error, so the rest of the session still runs and still reports `collected`.
+import pytest as _pytest
+
+
+@_pytest.hookimpl(hookwrapper=True)
+def pytest_make_collect_report(collector):
+    """Report an import-time SystemExit as a collection error instead of dying."""
+    outcome = yield
+    try:
+        outcome.get_result()
+    except SystemExit as _exc:
+        _report = _pytest.CollectReport(
+            nodeid=collector.nodeid,
+            outcome="failed",
+            longrepr=(
+                "SystemExit(%r) was raised while importing this module at "
+                "collection time. A module-scope `except ImportError:` guard is "
+                "almost certainly calling sys.exit() (or exiting the process) "
+                "instead of raising. Raise an ImportError and record the missing "
+                "dependency's absence instead - exiting is only correct in a "
+                "`__main__`/entry-point path, never at import." % (_exc.code,)
+            ),
+            result=[],
+        )
+        _report.collector = collector
+        outcome.force_result(_report)

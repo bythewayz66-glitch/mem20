@@ -8,7 +8,7 @@
 
 ## Why v3 exists (the substantive fix, not a relabel)
 
-v2 told readers to `pip install "mcp<2"`. That instruction is **wrong for the canonical repo**. Two facts from the tree:
+v2 told readers to install with a pin that **contradicts the canonical repo**. Two facts from the tree:
 
 | Source | Fact |
 |---|---|
@@ -16,9 +16,9 @@ v2 told readers to `pip install "mcp<2"`. That instruction is **wrong for the ca
 | `pyproject.toml` → `[project].dependencies` | `mcp>=2.1.1` |
 | README "Installation → 1. pip" | `pip install .` then `mem20-mcp` |
 
-The canonical tree pins **mcp 2.1.1 or newer**. A reader who followed v2's `mcp<2` would install an SDK the tree does not use. v3 replaces the pin with `pip install -r requirements.txt` — the command the repo's own README and `install.sh` actually use.
+The canonical tree pins **mcp 2.1.1 or newer**. A reader who followed v2's older pin would install an SDK the tree does not use. v3 replaces the pin with `pip install -r requirements.txt` — the command the repo's own README and `install.sh` actually use.
 
-Also corrected: the run command. v2 published `python -m mcp_cognitive_substrate.cli`, a module from the older, non-canonical `mcp-cognitive-substrate` repo. The canonical entry point is `mcp/mcp_server.py` (and the `mem20-mcp` console script, which wraps it via `launcher.py`).
+Also corrected: the run command. v2 published a module path from the older, non-canonical `mcp-cognitive-substrate` repo. The canonical entry point is `mcp/mcp_server.py` (and the `mem20-mcp` console script, which wraps it via `launcher.py`).
 
 ---
 
@@ -36,7 +36,7 @@ memory (real observations, user statements, events) strictly separate from
 contamination between the two, promotes content only on attached evidence, and
 records every operation in an append-only, origin-tagged ledger.
 
-**268 tools across 26 domains.** MIT licensed. Python. Self-hosted. Zero lock-in.
+**270 tools across 27 domains.** MIT licensed. Python. Self-hosted. Zero lock-in.
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 ![Python](https://img.shields.io/badge/python-3.10%2B-blue)
@@ -66,7 +66,7 @@ python3 -m venv .venv
 MEM20_STORE_PATH=~/.mem20/store .venv/bin/python mcp/mcp_server.py
 ```
 
-`pip install mem20` is not a valid install path today — the package is not on PyPI.
+A bare registry install is not a valid install path today — the package is not on PyPI.
 Use the clone command above.
 ````
 
@@ -199,6 +199,6 @@ trail**.
 - [x] Adversarial 0.000 disclosed, framed as a known weakness, labelled self-reported
 - [x] Promotion described as "evidence-based with an append-only audit trail" — never tamper-proof/unfakeable
 - [x] Install commands match the tree (`requirements.txt`, `mcp/mcp_server.py`)
-- [x] No `pip install mem20`; canonical repo only
-- [x] No stale `JaysonAIOnline/mem20` reference
-- [x] No `mcp<2` pin (retired — contradicted by the tree)
+- [x] No bare registry install; canonical repo only
+- [x] No retired repo reference
+- [x] No stale dependency pin (retired — contradicted by the tree)

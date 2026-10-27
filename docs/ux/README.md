@@ -1,6 +1,7 @@
 # mem20controlz — UX acceptance specs
 
 **Written:** 2026-10-26 · **Surface:** `mem20controlz/` @ `main` · **Owner:** UX research
+**All paths below are repository-root-relative** (this file lives at `docs/ux/`).
 **Scope:** the three UX-shaped issues in the 8-issue backlog — #37, #38, #39.
 
 Each document below is written to be **implementable** (every criterion names a
@@ -29,8 +30,8 @@ working tree, not proposed.
 
 ### 1.1 The five subsystem statuses
 
-Emitted by `registry.registry()` in `mem20controlz/registry.py` and mirrored in
-`mem20controlz/web/src/status.js`.
+Emitted by `registry.registry()` in `mem20controlz/mem20controlz/registry.py` and
+mirrored in `mem20controlz/mem20controlz/web/src/status.js`.
 
 | Status | Meaning (verbatim intent from source) | Where the backend sets it |
 |---|---|---|

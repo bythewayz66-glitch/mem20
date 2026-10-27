@@ -3,7 +3,7 @@
 | | |
 |---|---|
 | **Issue** | [#37](https://github.com/bythewayz66-glitch/mem20/issues/37) — `enhancement`, `severity:medium` |
-| **Surface** | `mem20controlz/` — Tauri 2 shell (`src-tauri/`) + React UI (`mem20controlz/web/src/`) |
+| **Surface** | Tauri 2 shell (`mem20controlz/src-tauri/`) + React UI (`mem20controlz/mem20controlz/web/src/`) |
 | **Source clause** | `docs/audit/mem20controlz-desktop-overhaul-plan.md` **C5** |
 | **Depends on** | #35 (shell scaffold, landed), #39 (shares this vocabulary — see `README.md` §1) |
 | **Blocked by** | Nothing. Testable in `cargo tauri dev` against an already-running backend; the bundled sidecar (#36) is a later wiring change, not an AC precondition. |
@@ -38,6 +38,11 @@ that.
 
 **No backend change is required by this issue.** If an implementer finds
 themselves adding a route, the aggregate is being computed in the wrong place.
+
+> `counts` in a `/api/registry` payload is the **backend-ready bucket shape** and
+> is not orderable against a glyph rank as values (e.g. `ok` may outnumber
+> `no-health`). Match on `panels[].status`, which is both orderable and
+> attributable. `counts` is for the Overview tab's summary numbers.
 
 ## 3. State model to implement
 

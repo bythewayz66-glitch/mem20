@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=1920, initial-scale=1.0">
+<title>mem20 - Investor &amp; Board Deck - Slide 9</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<style>
+  *{font-family:'Inter',-apple-system,sans-serif}
+  body{height:1080px;width:1920px;margin:0;padding:0}
+</style>
+</head>
+<body>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&family=Inter:wght@300;400;500;600&display=swap');
+</style>
+<div style="position:relative;width:1920px;height:1080px;background:#04181A;overflow:hidden;box-sizing:border-box;font-family:'Inter',sans-serif;color:#E8EFF7">
+  <div style="position:absolute;width:1100px;height:900px;right:-320px;bottom:-460px;background:radial-gradient(circle,rgba(245,184,65,0.12) 0%,rgba(4,24,26,0) 66%)"></div>
+
+  <div style="position:absolute;left:140px;top:118px;font-family:'JetBrains Mono',monospace;font-size:15px;letter-spacing:0.22em;color:#F5B841">08 / WHAT 0.000 MEANS</div>
+  <div style="position:absolute;left:140px;top:156px;font-family:'Space Grotesk',sans-serif;font-size:60px;font-weight:600;letter-spacing:-0.02em;color:#F0F6FF">We put our weakest number on its own slide</div>
+  <div style="position:absolute;left:140px;top:252px;width:1570px;font-size:21px;line-height:1.65;color:#B8C6D6;font-weight:300">A board that finds a 0.000 hit rate in an appendix after the meeting stops trusting the other twelve slides. So: here is the row, here is what it costs us, and here is why it is not the headline.</div>
+
+  <div style="position:absolute;left:140px;top:372px;width:790px">
+    <div style="font-family:'JetBrains Mono',monospace;font-size:13px;letter-spacing:0.16em;color:#F5B841">WHAT IT SAYS</div>
+    <div style="font-family:'Space Grotesk',sans-serif;font-size:34px;font-weight:500;line-height:1.35;color:#F0F6FF;margin-top:18px">On adversarial queries, all three retrieval modes score zero.</div>
+    <div style="font-size:19px;line-height:1.75;color:#8296AC;font-weight:300;margin-top:22px">Adversarial means the query is built to look answerable from a staler or adjacent record. n=3 per mode. <span style="color:#CFE5F2">A hit rate of 0.000 on n=3 is 3 misses</span> &mdash; a real failure, and also a small denominator. Both facts belong on the slide.</div>
+  </div>
+
+  <div style="position:absolute;left:1010px;top:372px;width:710px">
+    <div style="font-family:'JetBrains Mono',monospace;font-size:13px;letter-spacing:0.16em;color:#2FD4C4">WHY IT IS NOT A LEAK</div>
+    <div style="font-family:'Space Grotesk',sans-serif;font-size:34px;font-weight:500;line-height:1.35;color:#F0F6FF;margin-top:18px">Leak rate is 0.000 on every row.</div>
+    <div style="font-size:19px;line-height:1.75;color:#8296AC;font-weight:300;margin-top:22px">The system does not answer from the wrong record. It declines to retrieve, and the call reports a diagnostic. Failing closed is a different &mdash; and far cheaper &mdash; failure than leaking a stale fact into an answer.</div>
+  </div>
+
+  <div style="position:absolute;left:140px;top:614px;width:1570px;font-family:'JetBrains Mono',monospace;font-size:14px;line-height:1.6;color:#7C8FA0">SOURCE &nbsp;<span style="color:#4FE3D4">benchmarks/results/latest.md</span> &mdash; Retrieval quality (all three adversarial rows, n=3 each) &middot; Leak column &middot; corpus preamble</div>
+
+  <div style="position:absolute;left:140px;top:672px;width:1640px;height:1px;background:rgba(47,212,196,0.14)"></div>
+
+  <div style="position:absolute;left:140px;top:704px;width:520px">
+    <div style="font-family:'JetBrains Mono',monospace;font-size:13px;letter-spacing:0.16em;color:#F5B841">01</div>
+    <div style="font-size:20px;line-height:1.6;color:#CFE5F2;margin-top:12px;font-weight:400">It fails <span style="color:#F0F6FF;font-weight:600">closed</span>, not confident.</div>
+    <div style="font-size:17px;line-height:1.65;color:#8296AC;margin-top:10px;font-weight:300">0.000 hit with 0.000 leak is a refusal, not a wrong answer.</div>
+  </div>
+
+  <div style="position:absolute;left:740px;top:704px;width:520px">
+    <div style="font-family:'JetBrains Mono',monospace;font-size:13px;letter-spacing:0.16em;color:#F5B841">02</div>
+    <div style="font-size:20px;line-height:1.6;color:#CFE5F2;margin-top:12px;font-weight:400">It is scoped to <span style="color:#F0F6FF;font-weight:600">3 queries per mode</span>.</div>
+    <div style="font-size:17px;line-height:1.65;color:#8296AC;margin-top:10px;font-weight:300">Directional, not statistically powered. We will not quote it as a population estimate.</div>
+  </div>
+
+  <div style="position:absolute;left:1340px;top:704px;width:440px">
+    <div style="font-family:'JetBrains Mono',monospace;font-size:13px;letter-spacing:0.16em;color:#F5B841">03</div>
+    <div style="font-size:20px;line-height:1.6;color:#CFE5F2;margin-top:12px;font-weight:400">It is the <span style="color:#F0F6FF;font-weight:600">work queue</span>.</div>
+    <div style="font-size:17px;line-height:1.65;color:#8296AC;margin-top:10px;font-weight:300">Adversarial robustness is the named next investment, not a solved claim.</div>
+  </div>
+
+  <div style="position:absolute;left:140px;top:880px;width:1640px;background:rgba(245,184,65,0.07);border-left:3px solid #F5B841;padding:22px 28px;box-sizing:border-box">
+    <div style="font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:0.16em;color:#F5B841;margin-bottom:9px">AND WE DO NOT COMPARE OURSELVES TO 92.5 / 94.4</div>
+    <div style="font-size:18px;line-height:1.6;color:#CFE5F2;font-weight:300">Mem0's LoCoMo 92.5, LongMemEval 94.4 and Zep's DMR 94.8 come from different corpora &mdash; two of three private or vendor-defined &mdash; measured with different metrics. <span style="color:#F0F6FF">Nothing in our results reproduces or refutes them.</span> The benchmark file says this in its own preamble; we are not going to quietly drop that caveat in a board deck.</div>
+  </div>
+
+  <div style="position:absolute;left:140px;bottom:30px;font-family:'JetBrains Mono',monospace;font-size:14px;letter-spacing:0.08em;color:#4A5F6E">mem20 &middot; INVESTOR &amp; BOARD DECK</div>
+  <div style="position:absolute;right:140px;bottom:30px;font-family:'JetBrains Mono',monospace;font-size:14px;color:#2FD4C4">09 / 13</div>
+</div>
+</body>
+</html>

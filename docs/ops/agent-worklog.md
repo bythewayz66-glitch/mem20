@@ -29,7 +29,7 @@ Access path for everyone: [`docs/ops/GITHUB_ACCESS.md`](./GITHUB_ACCESS.md).
 | (telegram workstream) | Prove the Telegram turnstile bridge without a live bot token (#43) | `fix/43-telegram-turnstile-proof` | `fc8e0a44070c38c62c1e2c8f7d9bd7fc91183308` | PR #105 open, 2 files |
 | mem20 Orchestrator | Wire mem20oreo via the `oreo` extra, restore OREO tests (#30) | `fix/issue-30-mem20oreo-resolution` | `44c687d564fdda2fb56326954bd1d16038b32732` | PR #103 open — **already pushed since 2026-10-24**, contradicting the "never pushed" report |
 | mem20 Orchestrator | This register + [`GITHUB_ACCESS.md`](./GITHUB_ACCESS.md) | `docs/ws1-github-access-path` | see PR | — |
-| GitHub Repo Assistant | Fix the whole-tree Syntax gate so every other agent's branch can turn green (#17 core.py shim rule, #80 policy doc self-failure) | `fix/ws2-syntax-gate-tree-wide` | `3b4fd5c156ef55c866f78fc597ab35803530ee3c` (code) + this docs commit | both core.py implementations folded into `mem20core` (`fixes.py` overlay) + 6-line shims, `docs/git/README.md` reworded; Syntax gate all 6 guards + py_compile pass locally |
+| GitHub Repo Assistant | Fix the whole-tree Syntax gate so every other agent's branch can turn green (#17 core.py shim rule, #80 policy doc self-failure) | `fix/ws2-syntax-gate-tree-wide` | `309dd4d24e30d51e2e9aff3c64c46768df4c5313` | PR #112, 6 files. Syntax gate, hygiene, suite, Gitlink guard, dependency audit all green on this head. Both core.py implementations folded into `mem20core` (`fixes.py` overlay) as 6-line shims; `docs/git/README.md` reworded |
 
 ## Open issues with no branch yet
 

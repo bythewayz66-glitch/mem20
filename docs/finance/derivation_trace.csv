@@ -1,0 +1,16 @@
+figure,expression,computed_value
+Blended ACV,sum(tier ACV x tier share),14000.0
+Tier share total,sum(tier share),1.0
+TAM accounts (floor),1280000000 / 14000.0,91428
+SAM accounts (floor),282000000 / 14000.0,20142
+SOM ARR,120 x 14000.0,1680000
+SAM / TAM,100 x 282000000 / 1280000000,22.03
+SOM / SAM,100 x 1680000 / 282000000,0.596
+SOM / TAM,100 x 1680000 / 1280000000,0.131
+Blended CAC,210 USD/touch x 32 touches / 0.400 close,16800.0
+Support COGS,24 tickets x 100 USD x (1 - deflection),2400.0
+Gross profit per account,14000.0 - 4280.0,9720.0
+Gross margin,gross profit / ACV,69.43
+3-yr LTV:CAC,GP x multiplier / CAC,2.01
+SOM gross profit,1680000 x 0.6943,1166400
+SOM acquisition cost,120 x 16800.0,2016000

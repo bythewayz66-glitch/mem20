@@ -1,0 +1,47 @@
+name: finance-model-drift
+
+# Fails if the committed finance artefacts do not match the model output, or if a
+# house number has drifted. Regenerate with: python3 docs/finance/compute_model.py
+on:
+  push:
+    paths:
+      - "docs/finance/**"
+  pull_request:
+    paths:
+      - "docs/finance/**"
+  workflow_dispatch:
+
+jobs:
+  drift:
+    name: finance model drift check
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Verify house numbers and invariants
+        run: python3 docs/finance/compute_model.py --check
+
+      - name: Regenerate and assert artefacts are unchanged
+        run: |
+          python3 docs/finance/compute_model.py
+          if ! git diff --quiet -- docs/finance; then
+            echo "::error::Committed finance artefacts are stale. Run python3 docs/finance/compute_model.py and commit the result."
+            git --no-pager diff --stat -- docs/finance
+            exit 1
+          fi
+          echo "Finance artefacts match the model."
+
+      - name: Assert house numbers appear verbatim
+        run: |
+          set -e
+          grep -q '"blended_acv_usd": 14000'  docs/finance/inputs.json
+          grep -q '"tam_usd": 1280000000'     docs/finance/inputs.json
+          grep -q '"sam_usd": 282000000'      docs/finance/inputs.json
+          grep -q '"som_arr_usd": 1680000'    docs/finance/inputs.json
+          grep -q '"tools": 270'              docs/finance/inputs.json
+          grep -q '"domains": 27'             docs/finance/inputs.json
+          echo "House numbers and 270/27 surface present."

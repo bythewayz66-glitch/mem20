@@ -1,0 +1,32 @@
+metric,value,unit,basis
+Blended ACV,14000.0,USD/account/yr,"Tier-weighted across the declared ladder; asserts equal to house 14,000"
+Team tier ACV,6000,USD/account/yr,72% of paying accounts (weighted 4320.0)
+Business tier ACV,18000,USD/account/yr,12% of paying accounts (weighted 2160.0)
+Scale tier ACV,36000,USD/account/yr,12% of paying accounts (weighted 4320.0)
+Enterprise tier ACV,80000,USD/account/yr,4% of paying accounts (weighted 3200.0)
+Hosting COGS,1880,USD/account/yr,Declared
+Support COGS,2400.0,USD/account/yr,0 community deflection channels
+Total COGS,4280.0,USD/account/yr,Hosting + support
+Gross profit per account,9720.0,USD/account/yr,ACV - COGS
+Gross margin,69.43,%,Derived
+Blended CAC,16800.0,USD,0 inbound signals at the captured repo state
+CAC payback,1.73,years,CAC / gross profit
+Logo churn,12.0,%,Declared
+Average account life,8.33,years,1 / churn
+"LTV (gross profit, full life)",81000,USD,Gross profit x life
+LTV:CAC (full life),4.82,x,Derived
+NRR,115,%,Declared
+3-yr GP multiplier (NRR-compounded),3.4725,x,1 + NRR + NRR^2
+3-yr LTV:CAC (Y1 cohort),2.01,x,Below the 3.0x institutional hurdle
+SOM accounts,120,accounts,House SOM / ACV
+SOM ARR,1680000,USD,120 x 14000.0
+SOM gross profit (annual),1166400,USD,SOM ARR x GM
+SOM acquisition cost,2016000,USD,120 x 16800.0 CAC
+SOM support cost (annual),288000,USD,120 x 2400.0
+SOM acquisition cost / annual gross profit,1.73,x,Cash-out vs steady-state GP
+Year 1 accounts,40,accounts,Ramp
+Year 1 exit ARR,560000.0,USD,40 x 14000.0
+Year 2 accounts,80,accounts,Ramp
+Year 2 exit ARR,1120000.0,USD,80 x 14000.0
+Year 3 accounts,120,accounts,Ramp
+Year 3 exit ARR,1680000.0,USD,120 x 14000.0

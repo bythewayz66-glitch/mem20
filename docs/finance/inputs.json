@@ -1,0 +1,85 @@
+{
+  "schema": "mem20.finance.inputs/1",
+  "as_of": "2026-10-26",
+  "as_of_ts": "2026-10-26T19:52:23-06:00",
+  "deadline_utc": "2026-10-27T02:47:00Z",
+  "house_numbers": {
+    "blended_acv_usd": 14000,
+    "tam_usd": 1280000000,
+    "sam_usd": 282000000,
+    "som_arr_usd": 1680000,
+    "som_accounts": 120,
+    "provenance": "carried verbatim from the owner directive; NOT re-derived in this file"
+  },
+  "tool_surface": {
+    "tools": 270,
+    "domains": 27,
+    "previous_tools": 257,
+    "previous_domains": 26,
+    "authority": "verify_mcp.py MEM20_EXPECTED_TOOLS default = 270 (instantiates Mem20MCPServer, counts server.tools); CI .github/workflows/mcp-verify.yml pins 270; CHANGELOG.md [Unreleased] and docs/README.md carry 270/27",
+    "owner_of_migration": "Webpage Developer (P1)",
+    "note": "257/26 is retired for the finance model. It survives only as a stated prior value in the corrections register."
+  },
+  "tier_ladder": [
+    {"tier": "Team", "acv_usd": 6000, "share": 0.72},
+    {"tier": "Business", "acv_usd": 18000, "share": 0.12},
+    {"tier": "Scale", "acv_usd": 36000, "share": 0.12},
+    {"tier": "Enterprise", "acv_usd": 80000, "share": 0.04}
+  ],
+  "unit_cost_and_funnel": {
+    "hosting_cost_per_account_usd": 1880,
+    "churn": 0.12,
+    "nrr": 1.15,
+    "self_serve_share": 0.45,
+    "sales_led_share": 0.55,
+    "recognition_factor": 0.55,
+    "ramp_accounts": [40, 80, 120]
+  },
+  "repo_state": {
+    "full_name": "bythewayz66-glitch/mem20",
+    "url": "https://github.com/bythewayz66-glitch/mem20",
+    "default_branch": "main",
+    "license": "MIT",
+    "visibility": "public",
+    "primary_language": "Python",
+    "capture_date": "2026-10-14",
+    "capture_note": "stars/forks/releases/package-index captured 2026-10-14; used only for the repo-dependent unit-economics lines (CAC, support, gross margin), not for any house number",
+    "stars": 0,
+    "forks": 0,
+    "releases": 0,
+    "on_package_index": false,
+    "has_issues": false,
+    "has_discussions": false,
+    "contributors": 4,
+    "tracked_files": 9873,
+    "subsystems": 293,
+    "git_size_kb": 34552,
+    "lang_bytes": {
+      "Python": 16490922,
+      "TypeScript": 4057492,
+      "Rust": 527317,
+      "C#": 525082,
+      "JavaScript": 323427,
+      "HTML": 136137,
+      "CSS": 85339,
+      "Shell": 27738,
+      "Faust": 6999,
+      "Dockerfile": 2287,
+      "Makefile": 1314
+    }
+  },
+  "acquisition_inputs": {
+    "outbound_touches_base": 32,
+    "assist_touches_per_signal": 4,
+    "outbound_touches_floor": 8,
+    "close_rate_base": 0.40,
+    "close_rate_per_signal": 0.005,
+    "cost_per_touch_usd": 210,
+    "stars_for_inbound": 100,
+    "forks_for_inbound": 20,
+    "tickets_per_account": 24,
+    "cost_per_ticket_usd": 100,
+    "deflection_per_channel": 0.25,
+    "deflection_ceiling": 0.5
+  }
+}

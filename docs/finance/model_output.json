@@ -1,0 +1,132 @@
+{
+  "schema": "mem20.finance.model/2",
+  "as_of": "2026-10-26",
+  "as_of_ts": "2026-10-26T19:52:23-06:00",
+  "canonical_repo": "https://github.com/bythewayz66-glitch/mem20",
+  "house_numbers_verbatim": {
+    "blended_acv_usd": 14000,
+    "tam_usd": 1280000000,
+    "sam_usd": 282000000,
+    "som_arr_usd": 1680000,
+    "som_accounts": 120,
+    "provenance": "carried verbatim from the owner directive; NOT re-derived in this file"
+  },
+  "tool_surface": {
+    "tools": 270,
+    "domains": 27,
+    "previous_tools": 257,
+    "previous_domains": 26,
+    "authority": "verify_mcp.py MEM20_EXPECTED_TOOLS default = 270 (instantiates Mem20MCPServer, counts server.tools); CI .github/workflows/mcp-verify.yml pins 270; CHANGELOG.md [Unreleased] and docs/README.md carry 270/27",
+    "owner_of_migration": "Webpage Developer (P1)",
+    "note": "257/26 is retired for the finance model. It survives only as a stated prior value in the corrections register."
+  },
+  "market": {
+    "tam_usd": 1280000000,
+    "tam_accounts_floor": 91428,
+    "sam_usd": 282000000,
+    "sam_accounts_floor": 20142,
+    "som_arr_usd": 1680000,
+    "som_accounts": 120,
+    "sam_pct_tam": 22.03,
+    "som_pct_sam": 0.596,
+    "som_pct_tam": 0.131,
+    "self_serve_share_pct": 45,
+    "self_serve_sam_usd": 126900000,
+    "sales_led_share_pct": 55,
+    "sales_led_sam_usd": 155100000,
+    "som_pct_sales_led_sam": 1.08
+  },
+  "acv": {
+    "blended_usd": 14000.0,
+    "tiers": [
+      {"tier": "Team", "acv_usd": 6000, "share": 0.72, "weighted_usd": 4320.0},
+      {"tier": "Business", "acv_usd": 18000, "share": 0.12, "weighted_usd": 2160.0},
+      {"tier": "Scale", "acv_usd": 36000, "share": 0.12, "weighted_usd": 4320.0},
+      {"tier": "Enterprise", "acv_usd": 80000, "share": 0.04, "weighted_usd": 3200.0}
+    ],
+    "share_total": 1.0
+  },
+  "unit_economics": {
+    "inbound_signals": 0,
+    "community_channels": 0,
+    "blended_cac_usd": 16800.0,
+    "support_cost_per_account_usd": 2400.0,
+    "hosting_cost_per_account_usd": 1880,
+    "cogs_per_account_usd": 4280.0,
+    "gross_profit_per_account_usd": 9720.0,
+    "gross_margin_pct": 69.43,
+    "churn_pct": 12.0,
+    "account_life_years": 8.33,
+    "ltv_usd": 81000,
+    "ltv_cac_full": 4.82,
+    "cac_payback_years": 1.73,
+    "nrr_pct": 115,
+    "gp_multiplier_3y": 3.4725,
+    "ltv_cac_3y": 2.01
+  },
+  "som_book": {
+    "accounts": 120,
+    "arr_usd": 1680000,
+    "acquisition_cost_usd": 2016000,
+    "support_cost_usd": 288000,
+    "gross_profit_usd": 1166400,
+    "cac_vs_3y_gross_profit": 1.73
+  },
+  "ramp": [
+    {"year": 1, "accounts": 40, "exit_arr_usd": 560000.0, "recognized_usd": 308000},
+    {"year": 2, "accounts": 80, "exit_arr_usd": 1120000.0, "recognized_usd": 616000},
+    {"year": 3, "accounts": 120, "exit_arr_usd": 1680000.0, "recognized_usd": 924000}
+  ],
+  "reconciliation": [
+    {
+      "item": "Blended ACV (tier-weighted)",
+      "implied_by_model": 14000.0,
+      "house_value": 14000,
+      "delta": 0.0,
+      "delta_pct": 0.0,
+      "unit": "USD/account/yr",
+      "status": "EXACT",
+      "note": "22/41/26/11 is NOT the ladder in this repo; the declared 72/12/12/4 on 6K/18K/36K/80K reconciles to 14,000 exactly"
+    },
+    {
+      "item": "Tool surface (tools/domains)",
+      "implied_by_model": "270 / 27",
+      "house_value": "270 / 27",
+      "delta": 0,
+      "delta_pct": 0.0,
+      "unit": "count",
+      "status": "RECONCILED",
+      "note": "was 257/26 (stale); the finance model no longer depends on the tool count for any revenue figure - it is carried as context only"
+    },
+    {
+      "item": "SOM ARR (accounts x ACV)",
+      "implied_by_model": 1680000.0,
+      "house_value": 1680000,
+      "delta": 0.0,
+      "delta_pct": 0.0,
+      "unit": "USD",
+      "status": "EXACT",
+      "note": "120 accounts x 14000 ACV"
+    },
+    {
+      "item": "TAM accounts (floor of TAM / ACV)",
+      "implied_by_model": 1279992000.0,
+      "house_value": 1280000000,
+      "delta": -8000.0,
+      "delta_pct": -0.000625,
+      "unit": "USD",
+      "status": "ROUNDING",
+      "note": "TAM/ACV = 91428.57 accounts, so the integer build undershoots by $8000.0 (immaterial); SAM/TAM is quoted as a ratio, not rebuilt from accounts"
+    },
+    {
+      "item": "SAM accounts (floor of SAM / ACV)",
+      "implied_by_model": 281988000.0,
+      "house_value": 282000000,
+      "delta": -12000.0,
+      "delta_pct": -0.004255,
+      "unit": "USD",
+      "status": "ROUNDING",
+      "note": "SAM/ACV = 20142.86 accounts, so the integer build undershoots by $12000.0. DISCLOSED, not smoothed: the SAM is stated as $282M and is never re-quoted as an exact account multiple of $14,000"
+    }
+  ]
+}

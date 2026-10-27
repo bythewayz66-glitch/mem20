@@ -306,3 +306,50 @@ jobs:
         run: |
           set -euo pipefail
           prove -Isdk/perl/lib sdk/perl/t/*.t
+
+  mem20agentz-oreo:
+    name: mem20agentz OREO integration
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install mem20agentz with the pinned OREO engine
+        run: python3 -m pip install --upgrade "./mem20agentz[dev,oreo]"
+
+      - name: Build the OREO React editor
+        working-directory: mem20agentz/web
+        run: |
+          npm ci
+          npm run build
+
+      - name: Run the OREO integration slice
+        env:
+          PYTEST_DISABLE_PLUGIN_AUTOLOAD: '1'
+        run: python3 -m pytest -q mem20agentz/tests/test_oreo.py mem20agentz/tests/test_oreditor.py mem20agentz/tests/test_graphstore.py
+
+  controlz-desktop:
+    name: controlz desktop wiring
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Validate Tauri configuration and backend contract
+        run: python3 scripts/validate_controlz_desktop.py
+
+      - name: Build the web bundle used by FastAPI and Tauri
+        working-directory: mem20controlz/mem20controlz/web
+        run: |
+          npm ci
+          npm run build

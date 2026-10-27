@@ -4,7 +4,9 @@
   "version": "0.1.0",
   "identifier": "com.mem20.controlz",
   "build": {
-    "frontendDist": "../../mem20controlz/static",
+    "beforeDevCommand": "npm --prefix ../mem20controlz/web run dev -- --host 127.0.0.1",
+    "beforeBuildCommand": "npm --prefix ../mem20controlz/web run build",
+    "frontendDist": "../mem20controlz/static",
     "devUrl": "http://127.0.0.1:5173"
   },
   "app": {

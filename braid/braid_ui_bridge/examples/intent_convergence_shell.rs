@@ -28,7 +28,7 @@ use braid_ui_bridge::frontdoor::{Door, DoorRegistration, Router};
 use braid_ui_bridge::handler_from;
 use braid_wire::{BraidWireServer, Shell, WireOp, WireRequest};
 use ed25519_dalek::{SigningKey, VerifyingKey};
-use rand::rngs::OsRng;
+use rand::rng;
 
 const PORT: &str = "127.0.0.1:8094";
 const GENESIS: &str = r#"
@@ -92,9 +92,10 @@ fn main() {
         policy: policy_from_toml(ESCALATION).expect("escalation"),
     });
 
-    let door_sk = SigningKey::generate(&mut OsRng);
+    let mut rng = rng();
+    let door_sk = SigningKey::generate(&mut rng);
     let door_did = did_key(&VerifyingKey::from(&door_sk));
-    let human_sk = SigningKey::generate(&mut OsRng);
+    let human_sk = SigningKey::generate(&mut rng);
     let human_did = did_key(&VerifyingKey::from(&human_sk));
 
     let router = Arc::new(

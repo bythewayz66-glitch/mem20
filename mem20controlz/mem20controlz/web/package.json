@@ -8,7 +8,9 @@
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview --port 4173",
-    "test": "node --test test/"
+    "test": "node --test test/",
+    "desktop:dev": "cargo tauri dev --manifest-path ../src-tauri/Cargo.toml",
+    "desktop:build": "cargo tauri build --manifest-path ../src-tauri/Cargo.toml"
   },
   "dependencies": {
     "react": "^18.3.1",

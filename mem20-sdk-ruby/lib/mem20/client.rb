@@ -209,7 +209,8 @@ module Mem20
 
     def merge_arguments(name, arguments, params)
       unless arguments.is_a?(Hash)
-        raise ArgumentError, "tool(#{name.inspect}) arguments must be a Hash, got #{arguments.class}"
+        raise ArgumentError,
+              "tool(#{name.inspect}) arguments must be a Hash, got #{arguments.class}"
       end
 
       arguments.to_h.merge(params)

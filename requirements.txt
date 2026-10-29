@@ -10,7 +10,7 @@
 # a2a_tools.py fails on `import aiohttp` before `tools/` is even reachable.
 mcp>=2.1.1
 mcp-types>=2.3.0
-aiohttp>=3.9
+aiohttp>=3.14.5
 pydantic>=2.13.4
 anyio>=4.14.2
 numpy>=1.24

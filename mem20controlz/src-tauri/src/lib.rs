@@ -53,7 +53,7 @@ fn state_name(liveness: &mem20desktop::ControlPlaneLiveness) -> &'static str {
         L::Up { .. } => "up",
         L::NotOk { .. } => "not-ok",
         L::Foreign { .. } => "foreign",
-        L::Unreachable => "unreachable",
+        L::Unreachable { .. } => "unreachable",
     }
 }
 

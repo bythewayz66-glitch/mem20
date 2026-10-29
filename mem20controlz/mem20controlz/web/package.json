@@ -9,14 +9,15 @@
     "build": "vite build",
     "preview": "vite preview --port 4173",
     "test": "node --test test/",
-    "desktop:dev": "cargo tauri dev --manifest-path ../src-tauri/Cargo.toml",
-    "desktop:build": "cargo tauri build --manifest-path ../src-tauri/Cargo.toml"
+    "desktop:dev": "tauri dev --manifest-path ../src-tauri/Cargo.toml",
+    "desktop:build": "tauri build --manifest-path ../src-tauri/Cargo.toml"
   },
   "dependencies": {
     "react": "^18.3.1",
     "react-dom": "^18.3.1"
   },
   "devDependencies": {
+    "@tauri-apps/cli": "^2.1.0",
     "@vitejs/plugin-react": "^4.3.4",
     "vite": "^5.4.11"
   }

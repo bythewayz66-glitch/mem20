@@ -11,11 +11,12 @@
 //! `cargo test`. This file is glue: register commands, open a window, hand back
 //! verdicts.
 //!
-//! Still out of scope by design, and deliberately not stubbed into looking
-//! finished: tray + notifications (#37), packaging/signing/update (#40).
+//! Release packaging and signed updates (#40) are configured in the Tauri
+//! manifest and published by `.github/workflows/controlz-desktop.yml`.
 
 use std::sync::{Arc, Mutex};
 use tauri::Manager;
+use tauri_plugin_updater::UpdaterExt;
 
 use mem20desktop::sidecar::{self, Endpoint, LaunchSpec, SidecarState};
 
@@ -178,10 +179,51 @@ fn backend_status(backend: tauri::State<'_, Mutex<Backend>>) -> String {
     }
 }
 
+/// Check for a signed release after the window is available and install it in
+/// the background. A failed check is deliberately non-fatal: the control plane
+/// must remain usable when GitHub is unavailable or a release is not published.
+async fn update_from_release(app: tauri::AppHandle) {
+    if cfg!(debug_assertions) {
+        return;
+    }
+
+    let updater = match app.updater() {
+        Ok(updater) => updater,
+        Err(error) => {
+            eprintln!("controlz updater unavailable: {error}");
+            return;
+        }
+    };
+
+    let update = match updater.check().await {
+        Ok(update) => update,
+        Err(error) => {
+            eprintln!("controlz update check failed: {error}");
+            return;
+        }
+    };
+
+    let Some(update) = update else {
+        return;
+    };
+
+    eprintln!("installing signed controlz update {}", update.version);
+    if let Err(error) = update
+        .download_and_install(|_, _| {}, || {})
+        .await
+    {
+        eprintln!("controlz update install failed: {error}");
+        return;
+    }
+
+    app.restart();
+}
+
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
     tauri::Builder::default()
         .plugin(tauri_plugin_notification::init())
+        .plugin(tauri_plugin_updater::Builder::new().build())
         .manage(Mutex::new(Backend::default()))
         .manage(Arc::new(tray_surface::TrayState::default()))
         .invoke_handler(tauri::generate_handler![
@@ -192,6 +234,9 @@ pub fn run() {
         .setup(|app| {
             let handle = app.handle();
             tray_surface::install(handle, tray_surface::load_muted(handle))?;
+
+            let update_handle = handle.clone();
+            tauri::async_runtime::spawn(update_from_release(update_handle));
 
             // #36: start the backend automatically on launch, off the UI thread.
             let start_handle = handle.clone();

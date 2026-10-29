@@ -2,7 +2,7 @@
 name = "mem20controlz-desktop"
 version = "0.1.0"
 edition = "2021"
-rust-version = "1.77"
+rust-version = "1.90"
 description = "Tauri 2 desktop shell for the mem20controlz control plane (issue #35)"
 license = "MIT"
 
@@ -17,6 +17,7 @@ tauri = { version = "2", features = ["tray-icon"] }
 # Issue #37: `tray_surface` calls `NotificationExt` for native notifications.
 # The plugin was imported but never declared, so the tray could not compile.
 tauri-plugin-notification = "2"
+tauri-plugin-updater = "2"
 serde = { version = "1", features = ["derive"] }
 serde_json = "1"
 

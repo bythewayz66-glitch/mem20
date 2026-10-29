@@ -1,13 +1,13 @@
 {
   "$schema": "https://schema.tauri.app/config/2",
   "bundle": {
-    "createUpdaterArtifacts": false
+    "createUpdaterArtifacts": true
   },
   "plugins": {
     "updater": {
-      "active": false,
+      "active": true,
       "dialog": true,
-      "pubkey": "",
+      "pubkey": "dW50cnVzdGVkIGNvbW1lbnQ6IG1pbmlzaWduIHB1YmxpYyBrZXk6IDAxQUQxRDQ0QTYxM0I2RDEKUldUUnRoT21SQjJ0QVUrYmtibWhsYXNwdlFQRXh0UzVqMWQ5dGlnMzQyWXk5YWNSQzY1L002MmgK",
       "endpoints": [
         "https://github.com/bythewayz66-glitch/mem20/releases/latest/download/latest.json"
       ],

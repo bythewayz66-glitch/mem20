@@ -27,12 +27,30 @@
   },
   "bundle": {
     "active": true,
+    "createUpdaterArtifacts": true,
     "targets": "all",
     "icon": [
       "icons/32x32.png",
-      "icons/icon.png"
+      "icons/64x64.png",
+      "icons/128x128.png",
+      "icons/128x128@2x.png",
+      "icons/icon.icns",
+      "icons/icon.ico"
     ],
     "shortDescription": "Unified control plane for the mem20 fleet",
-    "longDescription": "Desktop shell for the mem20 control plane. Reuses the existing React console; the backend lifecycle, tray presence and packaging land in issues #36, #37 and #40."
+    "longDescription": "Desktop shell for the mem20 control plane. Reuses the existing React console, owns the backend lifecycle, reports tray health, and receives signed updates."
+  },
+  "plugins": {
+    "updater": {
+      "active": true,
+      "dialog": true,
+      "pubkey": "dW50cnVzdGVkIGNvbW1lbnQ6IG1pbmlzaWduIHB1YmxpYyBrZXk6IDAxQUQxRDQ0QTYxM0I2RDEKUldUUnRoT21SQjJ0QVUrYmtibWhsYXNwdlFQRXh0UzVqMWQ5dGlnMzQyWXk5YWNSQzY1L002MmgK",
+      "endpoints": [
+        "https://github.com/bythewayz66-glitch/mem20/releases/latest/download/latest.json"
+      ],
+      "windows": {
+        "installMode": "passive"
+      }
+    }
   }
 }

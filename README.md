@@ -474,6 +474,47 @@ Press `Ctrl-C` to stop mem20 and run `termux-wake-unlock` afterward. None of
 the Android paths above install a system service or write outside the user's
 home directory.
 
+### Install on Android with postmarketOS
+
+postmarketOS uses Alpine Linux packages (`apk`) and commonly uses OpenRC. The
+commands below keep mem20 in the normal user home and run it manually; no
+Android root or system service is required. On a postmarketOS image where the
+package-install command is already running as root, omit `doas`.
+
+```bash
+doas apk update
+doas apk add git python3 py3-pip py3-virtualenv python3-dev build-base curl
+
+git clone https://github.com/bythewayz66-glitch/mem20.git "$HOME/mem20"
+cd "$HOME/mem20"
+python3 -m venv .venv
+.venv/bin/python -m pip install --upgrade pip
+.venv/bin/python -m pip install -r requirements.txt
+
+mkdir -p "$HOME/.mem20/store"
+MEM20_STORE_PATH="$HOME/.mem20/store" .venv/bin/python mcp/mcp_server.py
+```
+
+Check the health endpoint from the postmarketOS terminal:
+
+```bash
+curl http://127.0.0.1:8080/health
+```
+
+To run it in the background for the current session:
+
+```bash
+nohup env MEM20_STORE_PATH="$HOME/.mem20/store" \
+  "$HOME/mem20/.venv/bin/python" "$HOME/mem20/mcp/mcp_server.py" \
+  >"$HOME/.mem20/server.log" 2>&1 &
+```
+
+postmarketOS uses musl on many device images, and Android-device builds may
+not have compatible wheels for `faiss-cpu` or another native dependency. If
+`pip install -r requirements.txt` reports that no distribution is available,
+use the Ubuntu or Debian UserLAnd path above, which provides a glibc userspace;
+do not replace the failure with a root install of unrelated system packages.
+
 ### Install on Penguin Linux (ChromeOS Crostini)
 
 Penguin Linux is Debian-based — the standard systemd install works perfectly:

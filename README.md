@@ -372,6 +372,108 @@ python3 -m venv .venv
 MEM20_STORE_PATH=~/.mem20/store .venv/bin/python mcp/mcp_server.py
 ```
 
+### Install on Android with UserLAnd
+
+UserLAnd runs a normal Ubuntu or Debian userspace without requiring Android
+root. Use the matching section below inside the UserLAnd session. These
+sessions generally do not run `systemd`, so start mem20 directly instead of
+using `install.sh` as a system service.
+
+#### Ubuntu UserLAnd
+
+```bash
+sudo apt-get update
+sudo apt-get install -y git python3 python3-venv python3-pip python3-dev build-essential
+
+git clone https://github.com/bythewayz66-glitch/mem20.git ~/mem20
+cd ~/mem20
+python3 -m venv .venv
+.venv/bin/python -m pip install --upgrade pip
+.venv/bin/python -m pip install -r requirements.txt
+
+mkdir -p ~/.mem20/store
+MEM20_STORE_PATH="$HOME/.mem20/store" .venv/bin/python mcp/mcp_server.py
+```
+
+#### Debian UserLAnd
+
+```bash
+sudo apt-get update
+sudo apt-get install -y git python3 python3-venv python3-pip python3-dev build-essential
+
+git clone https://github.com/bythewayz66-glitch/mem20.git ~/mem20
+cd ~/mem20
+python3 -m venv .venv
+.venv/bin/python -m pip install --upgrade pip
+.venv/bin/python -m pip install -r requirements.txt
+
+mkdir -p ~/.mem20/store
+MEM20_STORE_PATH="$HOME/.mem20/store" .venv/bin/python mcp/mcp_server.py
+```
+
+If the UserLAnd image already opens as root, omit `sudo`. Keep the repository
+and store under the UserLAnd home directory when possible; shared Android
+storage can be slower and may have different file-permission behavior.
+
+Verify the server from the same session:
+
+```bash
+curl http://127.0.0.1:8080/health
+```
+
+To leave it running after closing the shell, use the UserLAnd session's own
+background behavior or run it explicitly with `nohup`:
+
+```bash
+nohup env MEM20_STORE_PATH="$HOME/.mem20/store" \
+  "$HOME/mem20/.venv/bin/python" "$HOME/mem20/mcp/mcp_server.py" \
+  >"$HOME/.mem20/server.log" 2>&1 &
+```
+
+### Install on Android with Termux (no root)
+
+Termux does not need, and should not use, `sudo`, `su`, or Android root. Install
+the repository in the Termux home directory:
+
+```bash
+pkg update
+pkg upgrade
+pkg install -y git python clang make cmake
+
+git clone https://github.com/bythewayz66-glitch/mem20.git "$HOME/mem20"
+cd "$HOME/mem20"
+python -m venv .venv
+.venv/bin/python -m pip install --upgrade pip
+.venv/bin/python -m pip install -r requirements.txt
+
+mkdir -p "$HOME/.mem20/store"
+MEM20_STORE_PATH="$HOME/.mem20/store" .venv/bin/python mcp/mcp_server.py
+```
+
+Check it with:
+
+```bash
+pkg install -y curl
+curl http://127.0.0.1:8080/health
+```
+
+Termux is a native Android environment, not a glibc Linux distribution. If
+`faiss-cpu` or another native dependency has no compatible Android wheel, the
+full requirements install will stop there; run the Ubuntu/Debian UserLAnd
+instructions instead. Do not work around that failure by installing root
+tools. A Termux process also stops when Android reclaims the app, so use
+`termux-wake-lock` while it is active and restart the command when needed:
+
+```bash
+termux-wake-lock
+MEM20_STORE_PATH="$HOME/.mem20/store" "$HOME/mem20/.venv/bin/python" \
+  "$HOME/mem20/mcp/mcp_server.py"
+```
+
+Press `Ctrl-C` to stop mem20 and run `termux-wake-unlock` afterward. None of
+the Android paths above install a system service or write outside the user's
+home directory.
+
 ### Install on Penguin Linux (ChromeOS Crostini)
 
 Penguin Linux is Debian-based — the standard systemd install works perfectly:

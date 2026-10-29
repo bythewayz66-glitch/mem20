@@ -1,0 +1,19 @@
+{
+  "id": "RM-MESH",
+  "global_id": 999,
+  "section": "Runtime Roadmaps",
+  "roadmap_index": 0,
+  "title": "mem20 Mesh Gold Runtime",
+  "outcome": "Orchestrate all six mesh runtimes as one first-class gold runtime",
+  "breakthrough": "Six specialized mesh runtimes behave as one cooperative gold runtime",
+  "lane": "Mission dispatch, execution visibility, and real-time operations",
+  "owner": "MEM20",
+  "owner_code": "mem20",
+  "schema_version": "1.0",
+  "operation_kind": "orchestrate",
+  "domain_types": ["meshes","orchestration","aggregation","failover"],
+  "surfaces": ["unified cockpit","mesh dashboard","aggregated metrics"],
+  "techniques": ["orchestration","fan-out","aggregation","failover"],
+  "signature_mode": {"behavior":"Six specialized mesh runtimes behave as one cooperative gold runtime","enabled_by_default":false,"opt_in":true},
+  "sub_meshes": ["crisis","crossdevice","federated","nearby","offline","selfhealing"]
+}

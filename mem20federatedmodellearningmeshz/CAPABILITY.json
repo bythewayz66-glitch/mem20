@@ -10,7 +10,7 @@
   "global_id": 68,
   "id": "RM-068",
   "lane": "Model fabric, activation, routing, and readiness",
-  "operation_kind": "sync",
+  "operation_kind": "federate",
   "outcome": "Learn shared improvements from distributed nodes without centralizing raw private data",
   "owner": "AGS",
   "owner_code": "ags",

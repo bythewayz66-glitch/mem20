@@ -1,0 +1,15 @@
+[project]
+name = "mem20meshz"
+version = "1.0.0"
+description = "mem20 Mesh Gold Runtime — orchestrates all six mesh runtimes"
+requires-python = ">=3.11"
+
+[project.scripts]
+mem20meshz = "mem20meshz.runtime:main"
+
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+include = ["mem20meshz", "mem20meshz.*"]

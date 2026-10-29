@@ -10,7 +10,7 @@
   "global_id": 73,
   "id": "RM-073",
   "lane": "Integration fabric, protocols, and node transport",
-  "operation_kind": "sync",
+  "operation_kind": "selfheal",
   "outcome": "Detect upstream changes and generate compatible connector repairs in a sandbox",
   "owner": "FSIF",
   "owner_code": "fsif",

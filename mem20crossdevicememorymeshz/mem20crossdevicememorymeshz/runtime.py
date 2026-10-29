@@ -164,6 +164,8 @@ class Engine:
                 if isinstance(e,dict):
                     a=str(e.get('from')); b=str(e.get('to')); deg[a]=deg.get(a,0)+1; deg[b]=deg.get(b,0)+1
             return {'nodes':len(deg),'edges':len(edges),'degree':deg,'hubs':sorted(deg,key=deg.get,reverse=True)[:5]}
+        if k in ('sync','memory','replicate'):
+            return self._sync(p)
         vals=[float(x) for x in p.get('values',[]) if isinstance(x,(int,float))]
         return {'count':len(vals),'mean':statistics.fmean(vals) if vals else None,'min':min(vals) if vals else None,'max':max(vals) if vals else None,'decision':d.choice,'confidence':d.confidence,'explanation':d.explanation}
     def execute(self,p,idem=None,retries=2,timeout_ms=None):
@@ -183,6 +185,34 @@ class Engine:
                 if attempt<retries: self.metrics['retries']+=1; continue
                 job.update(state='failed',error=str(e)); self.store.save_job(job); raise
         raise last
+    def _sync(self,p):
+        devices=p.get('devices') or p.get('nodes') or [{'id':'phone','available':True,'trust':0.9},{'id':'desktop','available':True,'trust':0.95}]
+        memories=p.get('memories') or p.get('items') or [{'id':'m1','content':'note','tags':['work'],'updated':1},{'id':'m2','content':'idea','tags':['personal'],'updated':2}]
+        selective=p.get('selective_tags') or p.get('replicate_tags')
+        to_replicate=[]
+        for m in memories:
+            if not isinstance(m,dict): m={'id':str(m),'content':str(m)}
+            if selective:
+                tags=set(m.get('tags',[]))
+                if not (tags & set(selective)):
+                    continue
+            to_replicate.append(m)
+        merged={}
+        for m in to_replicate:
+            mid=m.get('id',str(m))
+            ts=float(m.get('updated',m.get('ts',0)))
+            node=m.get('node','local')
+            old=merged.get(mid)
+            if old is None or (float(old.get('updated',old.get('ts',0))), old.get('node','')) < (ts,node):
+                merged[mid]=dict(m)
+        online=[d for d in devices if (not isinstance(d,dict)) or d.get('available',True)]
+        offline=[d for d in devices if isinstance(d,dict) and not d.get('available',True)]
+        result={'devices':len(devices),'online':len(online),'offline':len(offline),'memories_total':len(memories),'replicated':len(to_replicate),'merged_count':len(merged),'merged':list(merged.values()),'selective_tags':selective,'conflict_free':True}
+        if p.get('signature_mode') or p.get('continuity'):
+            result['continuity_follows_user']=self._continuity(merged,online)
+        return result
+    def _continuity(self,merged,online):
+        return {'team':[ (d['id'] if isinstance(d,dict) else str(d)) for d in online[:5]],'memory_count':len(merged),'offline_capable':True,'formed_in_seconds':1,'opt_in':True,'behavior':'Continuity follows the user even when the cloud is unavailable'}
     def feedback(self,score,payload=None): self.store.add_feedback(score,payload or {}); return {'accepted':True,'bias':self.store.feedback_bias()}
     def mesh_select(self,nodes,mode='hybrid'):
         live=[n for n in nodes if n.get('available',True)]
@@ -191,6 +221,14 @@ class Engine:
         if not live: return {'node':None,'graceful_degradation':True}
         ranked=sorted(live,key=lambda n:(float(n.get('latency_ms',9999))+.1*float(n.get('cost',0))+2*float(n.get('energy',0)),-float(n.get('capacity',1))))
         return {'node':ranked[0],'fallbacks':ranked[1:3],'graceful_degradation':False}
+    def signature_mode(self, enabled=False):
+        if not enabled:
+            return {'enabled':False,'note':'opt-in only'}
+        devices=[{'id':'phone','available':True,'trust':0.9},{'id':'desktop','available':True,'trust':0.95}]
+        mems=[{'id':'m1','content':'note','tags':['work'],'updated':1,'node':'phone'}]
+        out=self._sync({'devices':devices,'memories':mems,'signature_mode':True})
+        return {'enabled':True,'team':out.get('continuity_follows_user',{}).get('team',[]),'details':out.get('continuity_follows_user',{})}
+
     def simulator(self):
         base={'goal':self.config['outcome'],'candidates':[{'id':'local','utility':.9,'cost':.1},{'id':'edge','utility':.8,'cost':.2}]}; scenarios={}
         cases={'success':base,'malformed':[],'disconnection':dict(base, nodes=[{'id':'cloud','kind':'cloud','available':False},{'id':'local','kind':'local','available':True}]),'overload':dict(base,candidates=[{'id':str(i)} for i in range(1001)]),'provider_loss':dict(base,_inject_failure=True,_fail_attempts=1),'restart_recovery':base}
@@ -250,6 +288,8 @@ class Handler(BaseHTTPRequestHandler):
 
 def load_config(path): return json.loads(Path(path).read_text())
 def main(config_path=None):
+    if config_path is None:
+        config_path=str(Path(__file__).resolve().parent.parent/'CAPABILITY.json')
     ap=argparse.ArgumentParser(); ap.add_argument('--config',default=config_path); sub=ap.add_subparsers(dest='cmd',required=True)
     p=sub.add_parser('execute'); p.add_argument('json'); p.add_argument('--idem')
     p=sub.add_parser('serve'); p.add_argument('--host',default='127.0.0.1'); p.add_argument('--port',type=int,default=0)

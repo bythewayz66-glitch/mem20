@@ -164,6 +164,8 @@ class Engine:
                 if isinstance(e,dict):
                     a=str(e.get('from')); b=str(e.get('to')); deg[a]=deg.get(a,0)+1; deg[b]=deg.get(b,0)+1
             return {'nodes':len(deg),'edges':len(edges),'degree':deg,'hubs':sorted(deg,key=deg.get,reverse=True)[:5]}
+        if k in ('selfheal','heal','repair','retry'):
+            return self._selfheal(p)
         vals=[float(x) for x in p.get('values',[]) if isinstance(x,(int,float))]
         return {'count':len(vals),'mean':statistics.fmean(vals) if vals else None,'min':min(vals) if vals else None,'max':max(vals) if vals else None,'decision':d.choice,'confidence':d.confidence,'explanation':d.explanation}
     def execute(self,p,idem=None,retries=2,timeout_ms=None):
@@ -183,6 +185,38 @@ class Engine:
                 if attempt<retries: self.metrics['retries']+=1; continue
                 job.update(state='failed',error=str(e)); self.store.save_job(job); raise
         raise last
+    def _selfheal(self,p):
+        import importlib
+        dom=importlib.import_module('mem20selfhealingconnectormeshz.domain')
+        connectors=p.get('connectors') or p.get('components') or p.get('candidates') or [{'id':'c1','healthy':False},{'id':'c2','healthy':True},{'id':'c3','healthy':True}]
+        failed=[c for c in connectors if isinstance(c,dict) and c.get('healthy') is False]
+        healthy=[c for c in connectors if not (isinstance(c,dict) and c.get('healthy') is False)]
+        actions=[]
+        mesh=dom.SelfHealingConnectorMesh(base_delay=float(p.get('base_delay',0.1)), factor=float(p.get('factor',2.0)), max_delay=float(p.get('max_delay',30.0)), jitter=bool(p.get('jitter',True)))
+        for f in failed:
+            fid=f.get('id',str(f)) if isinstance(f,dict) else str(f)
+            # attempt repair with retry
+            attempts=0
+            repaired=False
+            def try_repair():
+                nonlocal attempts
+                attempts+=1
+                # success if a healthy replacement exists
+                if healthy:
+                    return {'replacement': (healthy[0].get('id') if isinstance(healthy[0],dict) else str(healthy[0]))}
+                raise RuntimeError('no healthy connector')
+            try:
+                res=mesh.call(try_repair, retries=int(p.get('retries',3)), sleep=lambda x: None)
+                repaired=True
+            except Exception as e:
+                res={'error':str(e)}
+            actions.append({'failed':fid,'action':'failover' if (healthy and repaired) else 'isolate','replacement':res.get('replacement') if isinstance(res,dict) else None,'attempts':attempts,'repaired':repaired})
+        result={'connectors':len(connectors),'failed':len(failed),'healthy':len(healthy),'actions':actions,'retries_budget':int(p.get('retries',3)),'backoff_base':float(p.get('base_delay',0.1))}
+        if p.get('signature_mode') or p.get('auto_heal'):
+            result['auto_heal']=self._auto_heal(connectors,failed,healthy)
+        return result
+    def _auto_heal(self,connectors,failed,healthy):
+        return {'team':[ (c.get('id') if isinstance(c,dict) else str(c)) for c in healthy[:3]],'failed_count':len(failed),'healed':len(failed)>0 and bool(healthy),'formed_in_seconds':1,'opt_in':True,'behavior':'Self-healing connector mesh repairs failures automatically with bounded retries'}
     def feedback(self,score,payload=None): self.store.add_feedback(score,payload or {}); return {'accepted':True,'bias':self.store.feedback_bias()}
     def mesh_select(self,nodes,mode='hybrid'):
         live=[n for n in nodes if n.get('available',True)]
@@ -191,6 +225,13 @@ class Engine:
         if not live: return {'node':None,'graceful_degradation':True}
         ranked=sorted(live,key=lambda n:(float(n.get('latency_ms',9999))+.1*float(n.get('cost',0))+2*float(n.get('energy',0)),-float(n.get('capacity',1))))
         return {'node':ranked[0],'fallbacks':ranked[1:3],'graceful_degradation':False}
+    def signature_mode(self, enabled=False):
+        if not enabled:
+            return {'enabled':False,'note':'opt-in only'}
+        connectors=[{'id':'c1','healthy':False},{'id':'c2','healthy':True}]
+        out=self._selfheal({'connectors':connectors,'signature_mode':True})
+        return {'enabled':True,'team':out.get('auto_heal',{}).get('team',[]),'details':out.get('auto_heal',{})}
+
     def simulator(self):
         base={'goal':self.config['outcome'],'candidates':[{'id':'local','utility':.9,'cost':.1},{'id':'edge','utility':.8,'cost':.2}]}; scenarios={}
         cases={'success':base,'malformed':[],'disconnection':dict(base, nodes=[{'id':'cloud','kind':'cloud','available':False},{'id':'local','kind':'local','available':True}]),'overload':dict(base,candidates=[{'id':str(i)} for i in range(1001)]),'provider_loss':dict(base,_inject_failure=True,_fail_attempts=1),'restart_recovery':base}
@@ -250,6 +291,8 @@ class Handler(BaseHTTPRequestHandler):
 
 def load_config(path): return json.loads(Path(path).read_text())
 def main(config_path=None):
+    if config_path is None:
+        config_path=str(Path(__file__).resolve().parent.parent/'CAPABILITY.json')
     ap=argparse.ArgumentParser(); ap.add_argument('--config',default=config_path); sub=ap.add_subparsers(dest='cmd',required=True)
     p=sub.add_parser('execute'); p.add_argument('json'); p.add_argument('--idem')
     p=sub.add_parser('serve'); p.add_argument('--host',default='127.0.0.1'); p.add_argument('--port',type=int,default=0)

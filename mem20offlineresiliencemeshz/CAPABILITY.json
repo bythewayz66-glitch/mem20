@@ -10,7 +10,7 @@
   "global_id": 45,
   "id": "RM-045",
   "lane": "Provider, device, research, and remote-compute fleet control",
-  "operation_kind": "sync",
+  "operation_kind": "offline",
   "outcome": "Keep useful services operating during internet or provider outages",
   "owner": "HSP2",
   "owner_code": "hsp2",

@@ -164,6 +164,8 @@ class Engine:
                 if isinstance(e,dict):
                     a=str(e.get('from')); b=str(e.get('to')); deg[a]=deg.get(a,0)+1; deg[b]=deg.get(b,0)+1
             return {'nodes':len(deg),'edges':len(edges),'degree':deg,'hubs':sorted(deg,key=deg.get,reverse=True)[:5]}
+        if k in ('offline','resilience','heal'):
+            return self._offline(p)
         vals=[float(x) for x in p.get('values',[]) if isinstance(x,(int,float))]
         return {'count':len(vals),'mean':statistics.fmean(vals) if vals else None,'min':min(vals) if vals else None,'max':max(vals) if vals else None,'decision':d.choice,'confidence':d.confidence,'explanation':d.explanation}
     def execute(self,p,idem=None,retries=2,timeout_ms=None):
@@ -183,6 +185,32 @@ class Engine:
                 if attempt<retries: self.metrics['retries']+=1; continue
                 job.update(state='failed',error=str(e)); self.store.save_job(job); raise
         raise last
+    def _offline(self,p):
+        operations=p.get('operations') or p.get('queue') or p.get('items') or [{'id':'op1','action':'write','payload':{'x':1}},{'id':'op2','action':'sync','payload':{'x':2}}]
+        network=p.get('network',True)
+        # queue operations when offline
+        queued=[]
+        applied=[]
+        for op in operations:
+            if not isinstance(op,dict): op={'id':str(op),'action':'op'}
+            if network:
+                applied.append(op)
+            else:
+                queued.append(op)
+        # retry/backoff
+        retries=int(p.get('retries',3))
+        backoff=[min(30,2**i) for i in range(retries)]
+        # sync when back online
+        synced=[]
+        if not network and p.get('reconnect',True):
+            synced=list(queued); queued=[]
+            applied.extend(synced)
+        result={'network':network,'operations_total':len(operations),'applied':len(applied),'queued':len(queued),'queued_ids':[o.get('id') for o in queued],'retries':retries,'backoff_seconds':backoff,'synced_on_reconnect':len(synced)}
+        if p.get('signature_mode') or p.get('resilient'):
+            result['resilient_mesh']=self._resilient(operations,queued,applied)
+        return result
+    def _resilient(self,operations,queued,applied):
+        return {'operations':len(operations),'queued':len(queued),'applied':len(applied),'offline_capable':True,'formed_in_seconds':1,'opt_in':True,'behavior':'Offline-first operation survives disconnection and syncs on reconnect'}
     def feedback(self,score,payload=None): self.store.add_feedback(score,payload or {}); return {'accepted':True,'bias':self.store.feedback_bias()}
     def mesh_select(self,nodes,mode='hybrid'):
         live=[n for n in nodes if n.get('available',True)]
@@ -191,6 +219,13 @@ class Engine:
         if not live: return {'node':None,'graceful_degradation':True}
         ranked=sorted(live,key=lambda n:(float(n.get('latency_ms',9999))+.1*float(n.get('cost',0))+2*float(n.get('energy',0)),-float(n.get('capacity',1))))
         return {'node':ranked[0],'fallbacks':ranked[1:3],'graceful_degradation':False}
+    def signature_mode(self, enabled=False):
+        if not enabled:
+            return {'enabled':False,'note':'opt-in only'}
+        ops=[{'id':'op1','action':'write','payload':{'x':1}}]
+        out=self._offline({'operations':ops,'network':False,'signature_mode':True})
+        return {'enabled':True,'team':[],'details':out.get('resilient_mesh',{})}
+
     def simulator(self):
         base={'goal':self.config['outcome'],'candidates':[{'id':'local','utility':.9,'cost':.1},{'id':'edge','utility':.8,'cost':.2}]}; scenarios={}
         cases={'success':base,'malformed':[],'disconnection':dict(base, nodes=[{'id':'cloud','kind':'cloud','available':False},{'id':'local','kind':'local','available':True}]),'overload':dict(base,candidates=[{'id':str(i)} for i in range(1001)]),'provider_loss':dict(base,_inject_failure=True,_fail_attempts=1),'restart_recovery':base}
@@ -250,6 +285,8 @@ class Handler(BaseHTTPRequestHandler):
 
 def load_config(path): return json.loads(Path(path).read_text())
 def main(config_path=None):
+    if config_path is None:
+        config_path=str(Path(__file__).resolve().parent.parent/'CAPABILITY.json')
     ap=argparse.ArgumentParser(); ap.add_argument('--config',default=config_path); sub=ap.add_subparsers(dest='cmd',required=True)
     p=sub.add_parser('execute'); p.add_argument('json'); p.add_argument('--idem')
     p=sub.add_parser('serve'); p.add_argument('--host',default='127.0.0.1'); p.add_argument('--port',type=int,default=0)

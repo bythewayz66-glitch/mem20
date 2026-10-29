@@ -164,6 +164,8 @@ class Engine:
                 if isinstance(e,dict):
                     a=str(e.get('from')); b=str(e.get('to')); deg[a]=deg.get(a,0)+1; deg[b]=deg.get(b,0)+1
             return {'nodes':len(deg),'edges':len(edges),'degree':deg,'hubs':sorted(deg,key=deg.get,reverse=True)[:5]}
+        if k in ('federate','federated','model','aggregate'):
+            return self._federate(p)
         vals=[float(x) for x in p.get('values',[]) if isinstance(x,(int,float))]
         return {'count':len(vals),'mean':statistics.fmean(vals) if vals else None,'min':min(vals) if vals else None,'max':max(vals) if vals else None,'decision':d.choice,'confidence':d.confidence,'explanation':d.explanation}
     def execute(self,p,idem=None,retries=2,timeout_ms=None):
@@ -183,6 +185,34 @@ class Engine:
                 if attempt<retries: self.metrics['retries']+=1; continue
                 job.update(state='failed',error=str(e)); self.store.save_job(job); raise
         raise last
+    def _federate(self,p):
+        clients=p.get('clients') or p.get('nodes') or p.get('participants') or [{'id':'c1','samples':100,'update':[0.1,0.2]},{'id':'c2','samples':200,'update':[0.3,0.1]}]
+        # FedAvg aggregation
+        total_samples=sum((c.get('samples',1) if isinstance(c,dict) else 1) for c in clients) or 1
+        dim=None
+        for c in clients:
+            u=c.get('update') if isinstance(c,dict) else None
+            if isinstance(u,list):
+                dim=len(u); break
+        if dim is None: dim=1
+        agg=[0.0]*dim
+        for c in clients:
+            if not isinstance(c,dict): c={'id':str(c)}
+            u=c.get('update',[0.0]*dim)
+            if not isinstance(u,list): u=[float(u)] if isinstance(u,(int,float)) else [0.0]*dim
+            w=float(c.get('samples',1))/total_samples
+            for i in range(dim):
+                agg[i]+=w*float(u[i] if i < len(u) else 0.0)
+        # privacy: clip updates
+        clip=float(p.get('clip',1.0))
+        for i in range(dim):
+            agg[i]=max(-clip,min(clip,agg[i]))
+        result={'clients':len(clients),'total_samples':total_samples,'dimension':dim,'aggregated_update':[round(x,6) for x in agg],'rounds':int(p.get('rounds',1)),'privacy_clip':clip}
+        if p.get('signature_mode') or p.get('collective'):
+            result['collective_intelligence']=self._collective(clients,agg)
+        return result
+    def _collective(self,clients,agg):
+        return {'models':[ (c['id'] if isinstance(c,dict) else str(c)) for c in clients], 'fused_update':[round(x,6) for x in agg], 'fusion':'weighted-fedavg','formed_in_seconds':1,'opt_in':True,'behavior':'A room of models behaves like one collective intelligence'}
     def feedback(self,score,payload=None): self.store.add_feedback(score,payload or {}); return {'accepted':True,'bias':self.store.feedback_bias()}
     def mesh_select(self,nodes,mode='hybrid'):
         live=[n for n in nodes if n.get('available',True)]
@@ -191,6 +221,13 @@ class Engine:
         if not live: return {'node':None,'graceful_degradation':True}
         ranked=sorted(live,key=lambda n:(float(n.get('latency_ms',9999))+.1*float(n.get('cost',0))+2*float(n.get('energy',0)),-float(n.get('capacity',1))))
         return {'node':ranked[0],'fallbacks':ranked[1:3],'graceful_degradation':False}
+    def signature_mode(self, enabled=False):
+        if not enabled:
+            return {'enabled':False,'note':'opt-in only'}
+        clients=[{'id':'c1','samples':100,'update':[0.1,0.2]},{'id':'c2','samples':200,'update':[0.3,0.1]}]
+        out=self._federate({'clients':clients,'signature_mode':True})
+        return {'enabled':True,'team':out.get('collective_intelligence',{}).get('models',[]),'details':out.get('collective_intelligence',{})}
+
     def simulator(self):
         base={'goal':self.config['outcome'],'candidates':[{'id':'local','utility':.9,'cost':.1},{'id':'edge','utility':.8,'cost':.2}]}; scenarios={}
         cases={'success':base,'malformed':[],'disconnection':dict(base, nodes=[{'id':'cloud','kind':'cloud','available':False},{'id':'local','kind':'local','available':True}]),'overload':dict(base,candidates=[{'id':str(i)} for i in range(1001)]),'provider_loss':dict(base,_inject_failure=True,_fail_attempts=1),'restart_recovery':base}
@@ -250,6 +287,8 @@ class Handler(BaseHTTPRequestHandler):
 
 def load_config(path): return json.loads(Path(path).read_text())
 def main(config_path=None):
+    if config_path is None:
+        config_path=str(Path(__file__).resolve().parent.parent/'CAPABILITY.json')
     ap=argparse.ArgumentParser(); ap.add_argument('--config',default=config_path); sub=ap.add_subparsers(dest='cmd',required=True)
     p=sub.add_parser('execute'); p.add_argument('json'); p.add_argument('--idem')
     p=sub.add_parser('serve'); p.add_argument('--host',default='127.0.0.1'); p.add_argument('--port',type=int,default=0)

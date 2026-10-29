@@ -14,7 +14,8 @@
 //! Still out of scope by design, and deliberately not stubbed into looking
 //! finished: tray + notifications (#37), packaging/signing/update (#40).
 
-use std::sync::Mutex;
+use std::sync::{Arc, Mutex};
+use tauri::Manager;
 
 use mem20desktop::sidecar::{self, Endpoint, LaunchSpec, SidecarState};
 
@@ -79,6 +80,15 @@ struct Backend {
     endpoint: Option<Endpoint>,
     child: Option<std::process::Child>,
     state: Option<SidecarState>,
+}
+
+impl Drop for Backend {
+    fn drop(&mut self) {
+        if let Some(mut child) = self.child.take() {
+            let _ = child.kill();
+            let _ = child.wait();
+        }
+    }
 }
 
 /// Probe `GET /api/health` on the owned backend, falling back to the documented
@@ -173,19 +183,49 @@ pub fn run() {
     tauri::Builder::default()
         .plugin(tauri_plugin_notification::init())
         .manage(Mutex::new(Backend::default()))
+        .manage(Arc::new(tray_surface::TrayState::default()))
         .invoke_handler(tauri::generate_handler![
             probe_control_plane,
             start_backend,
             backend_status
         ])
         .setup(|app| {
-            // Issue #37: the tray is installed from `setup`, not chained as a
-            // builder method -- `install` takes an `&AppHandle` and returns a
-            // `Result`, so it cannot be a `Builder` step. Without this call
-            // `tray_surface` compiles into nothing and the feature is silently
-            // absent, which is the defect the merge-order doc calls out.
             let handle = app.handle();
             tray_surface::install(handle, tray_surface::load_muted(handle))?;
+
+            // #36: start the backend automatically on launch, off the UI thread.
+            let start_handle = handle.clone();
+            std::thread::spawn(move || {
+                let state = start_handle.state::<Mutex<Backend>>();
+                let _ = start_backend(state);
+            });
+
+            // #37: poll fleet health and paint the tray glyph.
+            let poll_handle = handle.clone();
+            std::thread::spawn(move || {
+                let mut engine = mem20desktop::NotificationEngine::new();
+                loop {
+                    std::thread::sleep(std::time::Duration::from_millis(
+                        mem20desktop::poller::POLL_INTERVAL_MS,
+                    ));
+                    let backend = poll_handle.state::<Mutex<Backend>>();
+                    let endpoint = backend
+                        .lock()
+                        .ok()
+                        .and_then(|b| b.endpoint.clone())
+                        .unwrap_or_else(|| mem20desktop::Endpoint {
+                            host: mem20desktop::DEFAULT_CONTROL_HOST.to_string(),
+                            port: mem20desktop::DEFAULT_CONTROL_PORT,
+                        });
+                    let url = endpoint.health_url();
+                    let result = match mem20desktop::http::http_get(&url, mem20desktop::http::Limits::default()) {
+                        Ok(resp) => mem20desktop::poller::tick(&mut engine, resp.status, &resp.body),
+                        Err(_) => mem20desktop::poller::tick(&mut engine, 0, ""),
+                    };
+                    tray_surface::apply(&poll_handle, &result);
+                }
+            });
+
             Ok(())
         })
         .run(tauri::generate_context!())

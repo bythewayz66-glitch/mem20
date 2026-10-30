@@ -1,0 +1,17 @@
+[build-system]
+requires=["setuptools>=68"]
+build-backend="setuptools.build_meta"
+
+[project]
+name="mem20crossplatformmicrokernelz"
+version="1.0.0"
+description="mem20crossplatformmicrokernelz first-class module"
+requires-python=">=3.11"
+
+[project.scripts]
+mem20crossplatformmicrokernelz="mem20crossplatformmicrokernelz.runtime:main"
+
+[tool.setuptools]
+packages=["mem20crossplatformmicrokernelz"]
+[tool.setuptools.package-data]
+mem20crossplatformmicrokernelz=["CAPABILITY.json","roadmap.json"]

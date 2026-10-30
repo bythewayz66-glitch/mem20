@@ -1,0 +1,17 @@
+[build-system]
+requires=["setuptools>=68"]
+build-backend="setuptools.build_meta"
+
+[project]
+name="mem20customerdigitaltwinlabz"
+version="1.0.0"
+description="mem20customerdigitaltwinlabz first-class module"
+requires-python=">=3.11"
+
+[project.scripts]
+mem20customerdigitaltwinlabz="mem20customerdigitaltwinlabz.runtime:main"
+
+[tool.setuptools]
+packages=["mem20customerdigitaltwinlabz"]
+[tool.setuptools.package-data]
+mem20customerdigitaltwinlabz=["CAPABILITY.json","roadmap.json"]

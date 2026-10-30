@@ -1,0 +1,17 @@
+[build-system]
+requires=["setuptools>=68"]
+build-backend="setuptools.build_meta"
+
+[project]
+name="mem20productledgrowthsimulatorz"
+version="1.0.0"
+description="mem20productledgrowthsimulatorz first-class module"
+requires-python=">=3.11"
+
+[project.scripts]
+mem20productledgrowthsimulatorz="mem20productledgrowthsimulatorz.runtime:main"
+
+[tool.setuptools]
+packages=["mem20productledgrowthsimulatorz"]
+[tool.setuptools.package-data]
+mem20productledgrowthsimulatorz=["CAPABILITY.json","roadmap.json"]

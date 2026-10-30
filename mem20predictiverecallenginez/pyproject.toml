@@ -1,0 +1,17 @@
+[build-system]
+requires=["setuptools>=68"]
+build-backend="setuptools.build_meta"
+
+[project]
+name="mem20predictiverecallenginez"
+version="1.0.0"
+description="mem20predictiverecallenginez first-class module"
+requires-python=">=3.11"
+
+[project.scripts]
+mem20predictiverecallenginez="mem20predictiverecallenginez.runtime:main"
+
+[tool.setuptools]
+packages=["mem20predictiverecallenginez"]
+[tool.setuptools.package-data]
+mem20predictiverecallenginez=["CAPABILITY.json","roadmap.json"]

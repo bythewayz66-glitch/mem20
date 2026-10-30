@@ -1,0 +1,17 @@
+[build-system]
+requires=["setuptools>=68"]
+build-backend="setuptools.build_meta"
+
+[project]
+name="mem20modalitybridgez"
+version="1.0.0"
+description="mem20modalitybridgez first-class module"
+requires-python=">=3.11"
+
+[project.scripts]
+mem20modalitybridgez="mem20modalitybridgez.runtime:main"
+
+[tool.setuptools]
+packages=["mem20modalitybridgez"]
+[tool.setuptools.package-data]
+mem20modalitybridgez=["CAPABILITY.json","roadmap.json"]

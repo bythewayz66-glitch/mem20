@@ -1,0 +1,17 @@
+[build-system]
+requires=["setuptools>=68"]
+build-backend="setuptools.build_meta"
+
+[project]
+name="mem20livingagenteconomyz"
+version="1.0.0"
+description="mem20livingagenteconomyz first-class module"
+requires-python=">=3.11"
+
+[project.scripts]
+mem20livingagenteconomyz="mem20livingagenteconomyz.runtime:main"
+
+[tool.setuptools]
+packages=["mem20livingagenteconomyz"]
+[tool.setuptools.package-data]
+mem20livingagenteconomyz=["CAPABILITY.json","roadmap.json"]

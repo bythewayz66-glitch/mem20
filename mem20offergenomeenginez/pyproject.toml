@@ -1,0 +1,17 @@
+[build-system]
+requires=["setuptools>=68"]
+build-backend="setuptools.build_meta"
+
+[project]
+name="mem20offergenomeenginez"
+version="1.0.0"
+description="mem20offergenomeenginez first-class module"
+requires-python=">=3.11"
+
+[project.scripts]
+mem20offergenomeenginez="mem20offergenomeenginez.runtime:main"
+
+[tool.setuptools]
+packages=["mem20offergenomeenginez"]
+[tool.setuptools.package-data]
+mem20offergenomeenginez=["CAPABILITY.json","roadmap.json"]

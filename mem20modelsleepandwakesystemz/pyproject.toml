@@ -1,0 +1,17 @@
+[build-system]
+requires=["setuptools>=68"]
+build-backend="setuptools.build_meta"
+
+[project]
+name="mem20modelsleepandwakesystemz"
+version="1.0.0"
+description="mem20modelsleepandwakesystemz first-class module"
+requires-python=">=3.11"
+
+[project.scripts]
+mem20modelsleepandwakesystemz="mem20modelsleepandwakesystemz.runtime:main"
+
+[tool.setuptools]
+packages=["mem20modelsleepandwakesystemz"]
+[tool.setuptools.package-data]
+mem20modelsleepandwakesystemz=["CAPABILITY.json","roadmap.json"]

@@ -1,41 +1,41 @@
 {
-  "breakthrough": "New devices join the fleet almost as easily as Bluetooth accessories",
+  "breakthrough": "Nodes that join and heal without manual operations",
   "domain_types": [
-    "entities",
-    "capabilities",
-    "jobs",
-    "events",
-    "state transitions",
-    "outputs"
+    "nodes",
+    "swarm",
+    "discovery",
+    "joining",
+    "tasks",
+    "healing",
+    "quorum",
+    "load"
   ],
   "global_id": 42,
   "id": "RM-042",
   "lane": "Provider, device, research, and remote-compute fleet control",
-  "operation_kind": "analyze",
-  "outcome": "Discover, enroll, configure, update, and recover trusted nodes with minimal manual setup",
+  "operation_kind": "schedule",
+  "outcome": "Autonomous node discovery, joining, task distribution, and healing",
   "owner": "HSP2",
   "owner_code": "hsp2",
   "roadmap_index": 2,
   "schema_version": "1.0",
   "section": "Runtime Roadmaps",
   "signature_mode": {
-    "behavior": "New devices join the fleet almost as easily as Bluetooth accessories",
+    "behavior": "Nodes that join and heal without manual operations",
     "enabled_by_default": false,
     "opt_in": true
   },
   "source": "FreeStack_Off_Record_Futuristic_Roadmap_Lab_246_Maps.json",
   "surfaces": [
-    "fleet globe",
-    "node cockpit",
-    "workload map",
-    "remote experiment terminal"
+    "swarm dashboard",
+    "node registry"
   ],
   "techniques": [
-    "distributed scheduling",
-    "federated search",
-    "capability discovery",
-    "energy models",
-    "fault prediction"
+    "zero-touch discovery",
+    "capacity assignment",
+    "failure healing",
+    "quorum checks",
+    "load balancing"
   ],
   "title": "Zero-Touch Node Swarm"
 }

@@ -1,0 +1,17 @@
+[build-system]
+requires=["setuptools>=68"]
+build-backend="setuptools.build_meta"
+
+[project]
+name="mem20outcomesimulationlabz"
+version="1.0.0"
+description="mem20outcomesimulationlabz first-class module"
+requires-python=">=3.11"
+
+[project.scripts]
+mem20outcomesimulationlabz="mem20outcomesimulationlabz.runtime:main"
+
+[tool.setuptools]
+packages=["mem20outcomesimulationlabz"]
+[tool.setuptools.package-data]
+mem20outcomesimulationlabz=["CAPABILITY.json","roadmap.json"]

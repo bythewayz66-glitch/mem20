@@ -1,0 +1,17 @@
+[build-system]
+requires=["setuptools>=68"]
+build-backend="setuptools.build_meta"
+
+[project]
+name="mem20personalcognitivesearchz"
+version="1.0.0"
+description="mem20personalcognitivesearchz first-class module"
+requires-python=">=3.11"
+
+[project.scripts]
+mem20personalcognitivesearchz="mem20personalcognitivesearchz.runtime:main"
+
+[tool.setuptools]
+packages=["mem20personalcognitivesearchz"]
+[tool.setuptools.package-data]
+mem20personalcognitivesearchz=["CAPABILITY.json","roadmap.json"]

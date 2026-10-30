@@ -3,43 +3,33 @@
 | Corpus | Size | Purpose |
 |--------|------|---------|
 | `mem20-agent-kb-v1` | 14 facts / 13 queries | CI regression gate (in `corpus.py`) |
-| `mem20-scale-corpus-v1` | **2000** facts / 40 simulated / 140 queries | Scale latency + trust |
+| **`mem20-scale-corpus-v2`** (current) | **2,000 records** (700 grounded / 650 ungrounded / 650 false) + 250 probes | Scale latency + trust + adversarial |
+| `mem20-scale-corpus-v1` | 2000 facts / 40 simulated / 140 queries | Superseded by v2 |
 
-## Generate the 2000-entry scale corpus
+## Generate the 2000-entry scale corpus (v2)
 
-Nothing large is committed. Generate deterministically (seed 20):
+Nothing large is committed. Generate deterministically (seed `20261027`):
 
 ```bash
-python -m mem20benchmarkz generate-scale --out benchmarks/corpora/mem20-scale-corpus-v1
-# or:
-mem20benchmarkz generate-scale --out /tmp/mem20-scale-corpus-v1
+mem20benchmarkz generate-scale --out /tmp/mem20-scale-corpus-v2
+mem20benchmarkz validate-scale /tmp/mem20-scale-corpus-v2
 ```
+
+Reference data lives under `reference/v2/` (offline cache).
 
 Produces:
 
-- `facts.jsonl` — 2000 grounded records  
-- `simulated.jsonl` — 40 adversarial-only strings  
-- `queries.jsonl` — 80 direct + 40 multi_hop + 20 adversarial  
+- `records.jsonl` — 2,000 labelled records  
+- `queries.jsonl` — 250 probes (direct / multi / adversarial / adversarial_hard / contradiction / unanswerable)  
 - `manifest.json`
 
 ## Ingest + run
 
 ```bash
-# one-time seed (uses real remember path)
-mem20benchmarkz ingest-scale \
-  --corpus benchmarks/corpora/mem20-scale-corpus-v1 \
-  --store /tmp/mem20-scale-store \
-  --progress
-
-# score against that store
-mem20benchmarkz run-scale \
-  --store /tmp/mem20-scale-store \
-  --corpus benchmarks/corpora/mem20-scale-corpus-v1 \
-  --out benchmarks/results-scale \
-  --no-rerank-compare
-
-# or all-in-one (temp store, in-memory 2000 facts, no JSONL on disk)
-mem20benchmarkz run-scale --out benchmarks/results-scale --facts 2000 --no-rerank-compare
+mem20benchmarkz run-scale --corpus /tmp/mem20-scale-corpus-v2 --bulk \
+    --modes keyword,semantic --out benchmarks/results
 ```
 
 Trust gates still apply: **contamination_rate must be 0.0**, adversarial leak_rate must be 0.0.
+
+Latest measured graph: **654 entities / 3,601 edges** (see `benchmarks/results/latest.md`).

@@ -1,0 +1,29 @@
+{
+  "id": "RM-143",
+  "global_id": 143,
+  "title": "Adaptive Personality Runtime",
+  "outcome": "Adjust communication style and initiative to the user, task, and emotional context",
+  "breakthrough": "The same intelligence can become the right collaborator for each moment",
+  "lane": "Personal intelligence and human capability experience",
+  "owner": "MEM20",
+  "owner_code": "mem20",
+  "schema_version": "1.0",
+  "operation_kind": "personality",
+  "domain_types": [
+    "personality",
+    "communication style",
+    "initiative"
+  ],
+  "surfaces": [
+    "adaptive interface"
+  ],
+  "techniques": [
+    "style adaptation",
+    "initiative tuning"
+  ],
+  "signature_mode": {
+    "behavior": "The same intelligence can become the right collaborator for each moment",
+    "enabled_by_default": false,
+    "opt_in": true
+  }
+}

@@ -1,0 +1,28 @@
+{
+  "id": "RM-202",
+  "global_id": 202,
+  "title": "Adaptive Achievement Engine",
+  "outcome": "Create achievements that respond to actual skill and meaningful progress",
+  "breakthrough": "Recognition stays motivating instead of becoming repetitive badge spam",
+  "lane": "Rewards, motivation, progression, and value exchange",
+  "owner": "MEM20",
+  "owner_code": "mem20",
+  "schema_version": "1.0",
+  "operation_kind": "analyze",
+  "domain_types": [
+    "achievements",
+    "progress"
+  ],
+  "surfaces": [
+    "achievement dashboard"
+  ],
+  "techniques": [
+    "scoring",
+    "progress tracking"
+  ],
+  "signature_mode": {
+    "behavior": "Recognition stays motivating instead of becoming repetitive badge spam",
+    "enabled_by_default": false,
+    "opt_in": true
+  }
+}

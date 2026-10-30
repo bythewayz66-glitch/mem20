@@ -1,0 +1,12 @@
+[project]
+name = "mem20adaptz"
+version = "1.0.0"
+description = "mem20 Adapt Gold Runtime — orchestrates all six adaptive runtimes"
+requires-python = ">=3.11"
+[project.scripts]
+mem20adaptz = "mem20adaptz.runtime:main"
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+[tool.setuptools.packages.find]
+include = ["mem20adaptz", "mem20adaptz.*"]

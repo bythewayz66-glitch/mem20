@@ -1,32 +1,47 @@
 # mem20liez changelog
 
+## 0.3.0 — 2026-10-30
+
+### Added
+- **Hard gates** (`gates.py`)
+  - Consent required for interrogation / clinical / government
+  - Dual-control records and enforcement for government high-priority cues
+  - Formal prohibited-uses list (checked at start and seal)
+  - Operator training acknowledgement gate
+  - Contamination firewall on seal (`epistemic_status=observed_indicator`, banned annotation keys)
+- **MCP tools**
+  - `lie_acknowledge_training`
+  - `lie_dual_acknowledge` (two distinct officer IDs)
+  - `lie_prohibited_uses`
+  - Structured `error_code` refusals from all gates
+- **Manipulation detector** upgraded from scaffold to real rule-based linguistic indicators (confidence capped at 0.65)
+- **Docs**
+  - `docs/use-cases/RISK-REGISTER-LIEZ.md`
+  - `docs/use-cases/TRAINING-MEM20LIEZ.md`
+  - `docs/use-cases/LEGAL-REVIEW-REQUEST.md`
+
+### Changed
+- `LiveLieSession` construction and seal enforce consent, training, dual-control, and prohibited uses
+- Seal package always carries the extended disclaimer and firewall block
+- README status matrix and design rules updated
+
+### Notes
+- Emotion and deception-fusion remain scaffolds (honest confidence 0.0)
+- Legal / regulatory review is **not** complete — see LEGAL-REVIEW-REQUEST.md; production clinical/government use is not authorised by this repo alone
+
 ## 0.2.0 — 2026-10-19
 
 ### Added
 - **Real voice-stress detector** (`detectors/voice_stress.py`)
-  - RMS, zero-crossing rate, autocorrelation pitch, energy variance, burst rate
-  - Optional personal baseline → deviation score and interpretation
 - **Real micro-expression detector** (`detectors/micro_expression.py`)
-  - numpy/PIL frame differencing, regional intensity bands, baseline support
 - **Live path** (`live.py`)
-  - Mic capture via sounddevice or pyaudio; WAV offline replay always available
-  - Earpiece TTS: pyttsx3 → espeak → macOS say → stdout
-  - `run_live_session()` convenience API
-- **CLI** `fs-lie` (`cli.py`): `status`, `live`
-- **MCP surface** (`mcp/tools/lie_tools.py` + `mem20liez/mcp_tools.py`)
-  - Full tool set including government dual-control
-  - Seal writes to grounded memory (`remember`) and braid (`liez.session.sealed`)
-- **Government mode** on `LiveLieSession` + `lie_dual_acknowledge`
-- Use-case docs: `docs/use-cases/UC-MEM-AV-001.md`, `UC-MEM-AV-GOV-001.md`
-- Tests: `test_voice_stress.py`, `test_micro_expression.py`, `test_basic.py`
-
-### Changed
-- Cue generator emits mode-aware text for real voice-stress and micro-expression scores
-- Package version 0.2.0; optional extras `[live]`, `[audio]`, `[vision]`
+- **CLI** `fs-lie`
+- **MCP surface** including government dual-control scaffold
+- Use-case docs UC-MEM-AV-001 / UC-MEM-AV-GOV-001
+- Tests for voice stress and micro-expression
 
 ### Notes
-- Emotion / manipulation / deception fusion remain scaffolds (honest confidence 0.0)
-- MCP server may need one-time `_server_impl.py` recovery — see INTEGRATION.md
+- Emotion / manipulation / deception fusion were scaffolds
 
 ## 0.1.0 — 2026-10-19
 

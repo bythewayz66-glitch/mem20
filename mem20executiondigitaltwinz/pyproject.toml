@@ -1,0 +1,17 @@
+[build-system]
+requires=["setuptools>=68"]
+build-backend="setuptools.build_meta"
+
+[project]
+name="mem20executiondigitaltwinz"
+version="1.0.0"
+description="mem20executiondigitaltwinz first-class module"
+requires-python=">=3.11"
+
+[project.scripts]
+mem20executiondigitaltwinz="mem20executiondigitaltwinz.runtime:main"
+
+[tool.setuptools]
+packages=["mem20executiondigitaltwinz"]
+[tool.setuptools.package-data]
+mem20executiondigitaltwinz=["CAPABILITY.json","roadmap.json"]

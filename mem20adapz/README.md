@@ -1,42 +1,34 @@
-# mem20adapz — adaptive systems runtime
+# mem20adapz — Unified Adaptive Systems Runtime
 
-Unified organ for every former top-level package whose name contains **adaptive**.
-Those packages are absorbed here; implementations are vendored under `members/`.
+**Version 1.0.0** · First-class implementations · No generic templates
 
-## Absorbed members (7)
+Single runtime absorbing every former `mem20adaptive*` organ with real domain logic.
 
-| Short id | Former package |
-|----------|----------------|
-| achievement | mem20adaptiveachievementenginez |
-| dispatch | mem20adaptivedispatchenginez |
-| forgetting | mem20adaptiveforgettingenginez |
-| inference | mem20adaptiveinferencemarketplacez |
-| interface | mem20adaptiveinterfacecomposerz |
-| personality | mem20adaptivepersonalityruntimez |
-| pricing | mem20adaptivepricingbrainz |
+| Short | Former package | What it does |
+|-------|----------------|--------------|
+| achievement | mem20adaptiveachievementenginez | Tiered goals, adaptive targets, reward signals |
+| dispatch | mem20adaptivedispatchenginez | Capability / load / trust / urgency assignment |
+| forgetting | mem20adaptiveforgettingenginez | Ebbinghaus R=exp(-t/S) + spaced review queue |
+| inference | mem20adaptiveinferencemarketplacez | Double-auction inference capacity matching |
+| interface | mem20adaptiveinterfacecomposerz | Capability → interface plan composition |
+| personality | mem20adaptivepersonalityruntimez | Context-aware style profile |
+| pricing | mem20adaptivepricingbrainz | Log-log elasticity → revenue/margin price |
+
+```bash
+pip install -e ".[dev]"
+mem20adapz --demo
+python -m pytest tests -q
+```
 
 ```python
-from mem20adapz import load_member
-load_member("dispatch")
+from mem20adapz import AdaptiveRuntime
+rt = AdaptiveRuntime()
+rt.forgetting.add("k", "v")
+rt.pricing.observe(10, 100)
+print(rt.health())
 ```
 
-## Consolidate (local)
-
+After merge, remove old roots:
 ```bash
-# 1) Copy full source trees into members/ (while old dirs still exist)
-bash scripts/vendor_into_members.sh
-git add mem20adapz/members mem20autoz/members
-git commit -m "chore: vendor adaptive/auto organ sources into members/"
-
-# 2) Remove former root directories
 bash mem20adapz/DELETE_ORIGINALS.sh
-bash mem20autoz/DELETE_ORIGINALS.sh
-git commit -m "chore: remove absorbed adaptive/auto organ roots"
-```
-
-## CLI
-
-```bash
-mem20adapz --version
-mem20adapz --members
 ```

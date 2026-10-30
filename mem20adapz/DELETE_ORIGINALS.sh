@@ -1,6 +1,4 @@
 #!/usr/bin/env bash
-# Run from repo root on branch chore/merge-adapz-autoz after reviewing the merge.
-# Removes former adaptive organ trees (absorbed into mem20adapz).
 set -euo pipefail
 ROOTS=(
   mem20adaptiveachievementenginez
@@ -17,4 +15,4 @@ for d in "${ROOTS[@]}"; do
     git rm -r "$d"
   fi
 done
-echo "Done adaptive. Commit with: git commit -m 'chore: remove absorbed adaptive organ roots'"
+echo "Done. Commit: git commit -m 'chore(adapz): remove absorbed mem20adaptive* organ roots'"

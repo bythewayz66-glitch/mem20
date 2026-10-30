@@ -1,0 +1,17 @@
+[build-system]
+requires=["setuptools>=68"]
+build-backend="setuptools.build_meta"
+
+[project]
+name="mem20communitychallengeenginez"
+version="1.0.0"
+description="mem20communitychallengeenginez first-class module"
+requires-python=">=3.11"
+
+[project.scripts]
+mem20communitychallengeenginez="mem20communitychallengeenginez.runtime:main"
+
+[tool.setuptools]
+packages=["mem20communitychallengeenginez"]
+[tool.setuptools.package-data]
+mem20communitychallengeenginez=["CAPABILITY.json","roadmap.json"]

@@ -1,0 +1,17 @@
+[build-system]
+requires=["setuptools>=68"]
+build-backend="setuptools.build_meta"
+
+[project]
+name="mem20remoteexperimentlabz"
+version="1.0.0"
+description="mem20remoteexperimentlabz first-class module"
+requires-python=">=3.11"
+
+[project.scripts]
+mem20remoteexperimentlabz="mem20remoteexperimentlabz.runtime:main"
+
+[tool.setuptools]
+packages=["mem20remoteexperimentlabz"]
+[tool.setuptools.package-data]
+mem20remoteexperimentlabz=["CAPABILITY.json","roadmap.json"]

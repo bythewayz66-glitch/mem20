@@ -1,0 +1,17 @@
+[build-system]
+requires=["setuptools>=68"]
+build-backend="setuptools.build_meta"
+
+[project]
+name="mem20realtimeeventautopilotz"
+version="1.0.0"
+description="mem20realtimeeventautopilotz first-class module"
+requires-python=">=3.11"
+
+[project.scripts]
+mem20realtimeeventautopilotz="mem20realtimeeventautopilotz.runtime:main"
+
+[tool.setuptools]
+packages=["mem20realtimeeventautopilotz"]
+[tool.setuptools.package-data]
+mem20realtimeeventautopilotz=["CAPABILITY.json","roadmap.json"]

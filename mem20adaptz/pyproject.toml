@@ -1,12 +1,27 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
 [project]
 name = "mem20adaptz"
 version = "1.0.0"
-description = "mem20 Adapt Gold Runtime — orchestrates all six adaptive runtimes"
+description = "mem20 adaptive systems runtime — first-class unified implementation of all adaptive organs"
+readme = "README.md"
 requires-python = ">=3.11"
+license = { text = "MIT" }
+keywords = ["mem20", "adaptive", "runtime"]
+dependencies = []
+
+[project.optional-dependencies]
+dev = ["pytest>=7.0"]
+
 [project.scripts]
-mem20adaptz = "mem20adaptz.runtime:main"
-[build-system]
-requires = ["setuptools>=68"]
-build-backend = "setuptools.build_meta"
+mem20adaptz = "mem20adaptz.cli:main"
+
 [tool.setuptools.packages.find]
-include = ["mem20adaptz", "mem20adaptz.*"]
+where = ["."]
+include = ["mem20adaptz*"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["."]

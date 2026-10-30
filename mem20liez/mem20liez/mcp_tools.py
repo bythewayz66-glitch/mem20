@@ -1,10 +1,7 @@
 """MCP tool surface for mem20liez.
 
-These tools are designed to be registered into the main mem20 MCP server
-(or used standalone). They expose live lie/behavioural-signal sessions
-to any MCP host.
-
-All outputs remain probabilistic observations with explicit confidence.
+Hard gates: consent, dual-control, prohibited uses, training acknowledgement,
+and contamination firewall on seal. All outputs remain probabilistic.
 """
 
 from __future__ import annotations
@@ -12,16 +9,17 @@ from __future__ import annotations
 from typing import Any, Dict, List, Optional
 import base64
 import time
-import uuid
 
 from .pipeline import LieDetector
 from .session import LiveLieSession
-from .types import EarpieceCue
+from .gates import GateError, DISCLAIMER, PROHIBITED_USES
 
-# In-memory session store for the MCP process lifetime.
-# Production deployments should replace with a proper store or the main mem20 ledger.
 _SESSIONS: Dict[str, LiveLieSession] = {}
 _DETECTOR = LieDetector(enabled=True)
+
+# In-process training acknowledgements (operator_id -> version)
+_TRAINING_ACK: Dict[str, str] = {}
+TRAINING_VERSION = "2026-10-30"
 
 
 def _get_session(session_id: str) -> LiveLieSession:
@@ -30,53 +28,86 @@ def _get_session(session_id: str) -> LiveLieSession:
     return _SESSIONS[session_id]
 
 
-# ---------------------------------------------------------------------------
-# Tool implementations
-# ---------------------------------------------------------------------------
+def _gate_error(exc: GateError) -> dict:
+    return exc.as_dict()
+
+
+def lie_acknowledge_training(
+    operator_id: str,
+    version: str = TRAINING_VERSION,
+) -> dict:
+    """Record that an operator has completed mem20liez user training."""
+    if not operator_id or not operator_id.strip():
+        return {"ok": False, "error": "operator_id is required"}
+    _TRAINING_ACK[operator_id.strip()] = version
+    return {
+        "ok": True,
+        "operator_id": operator_id.strip(),
+        "training_version": version,
+        "note": "Training acknowledgement recorded for this process. "
+                "See docs/use-cases/TRAINING-MEM20LIEZ.md.",
+    }
+
 
 def lie_start_session(
     mode: str = "generic",
     consent: bool = False,
+    consent_attested_by: Optional[str] = None,
     subject_id: Optional[str] = None,
     jurisdiction: Optional[str] = None,
+    operator_id: Optional[str] = None,
+    intended_uses: Optional[List[str]] = None,
     enable_earpiece: bool = True,
     capture_baseline: bool = False,
 ) -> dict:
-    """Start a live behavioural-signal session.
+    """Start a live behavioural-signal session under hard gates."""
+    try:
+        training_ok = bool(
+            operator_id and operator_id.strip() in _TRAINING_ACK
+        )
+        training_ver = _TRAINING_ACK.get(operator_id.strip()) if operator_id else None
 
-    mode: interrogation | therapy | clinical | government | generic
-    consent: must be true for high-stakes modes
-    """
-    if mode in ("interrogation", "government", "clinical") and not consent:
-        return {
-            "ok": False,
-            "error": "consent=true is required for interrogation / government / clinical modes",
-        }
+        session = LiveLieSession(
+            detector=_DETECTOR,
+            mode=mode,  # type: ignore
+            enable_earpiece=enable_earpiece,
+            consent=consent,
+            consent_attested_by=consent_attested_by,
+            subject_id=subject_id,
+            jurisdiction=jurisdiction,
+            operator_id=operator_id,
+            intended_uses=intended_uses,
+            training_acknowledged=training_ok,
+            training_version=training_ver,
+        )
+    except GateError as e:
+        return _gate_error(e)
+    except Exception as e:
+        return {"ok": False, "error": str(e)}
 
-    session = LiveLieSession(
-        detector=_DETECTOR,
-        mode=mode,  # type: ignore
-        enable_earpiece=enable_earpiece,
-    )
-    # stash extra metadata
-    session._meta = {  # type: ignore
-        "subject_id": subject_id,
-        "jurisdiction": jurisdiction,
-        "consent": consent,
-        "capture_baseline": capture_baseline,
-    }
+    session._meta["capture_baseline"] = capture_baseline  # type: ignore
     _SESSIONS[session.session_id] = session
 
     return {
         "ok": True,
         "session_id": session.session_id,
         "mode": mode,
+        "consent": consent,
         "enable_earpiece": enable_earpiece,
         "started_at": session.started_at,
+        "gates": {
+            "consent_required": session.gates.requires_consent(),
+            "dual_control_required": session.gates.requires_dual_control(),
+            "training_acknowledged": session.gates.training_acknowledged,
+            "prohibited_uses": sorted(PROHIBITED_USES),
+        },
+        "disclaimer": DISCLAIMER,
         "note": (
             "Feed audio with lie_feed_audio. "
             "Optionally set a calm baseline first with lie_set_baseline. "
-            "Pull cues with lie_get_cues. Seal with lie_seal_session."
+            "Pull cues with lie_get_cues. "
+            "Government high-priority cues need lie_dual_acknowledge. "
+            "Seal with lie_seal_session."
         ),
     }
 
@@ -86,19 +117,22 @@ def lie_set_baseline(
     audio_b64: str,
     sample_width: int = 2,
 ) -> dict:
-    """Capture a neutral voice baseline for the subject."""
-    session = _get_session(session_id)
-    raw = base64.b64decode(audio_b64)
-    # Run once to extract features, then store as baseline
-    result = session.detector.voice.process_audio(raw, sample_width=sample_width)
-    feats = (result.raw_features or result.value.get("features") or {})
-    session.detector.set_baselines(voice=feats)
-    return {
-        "ok": True,
-        "session_id": session_id,
-        "baseline_features": feats,
-        "confidence": result.confidence.model_dump(),
-    }
+    try:
+        session = _get_session(session_id)
+        raw = base64.b64decode(audio_b64)
+        result = session.detector.voice.process_audio(raw, sample_width=sample_width)
+        feats = (result.raw_features or result.value.get("features") or {})
+        session.detector.set_baselines(voice=feats)
+        return {
+            "ok": True,
+            "session_id": session_id,
+            "baseline_features": feats,
+            "confidence": result.confidence.model_dump(),
+        }
+    except GateError as e:
+        return _gate_error(e)
+    except KeyError as e:
+        return {"ok": False, "error": str(e)}
 
 
 def lie_feed_audio(
@@ -107,17 +141,20 @@ def lie_feed_audio(
     timestamp: Optional[float] = None,
     sample_width: int = 2,
 ) -> dict:
-    """Push an audio chunk into the live session."""
-    session = _get_session(session_id)
-    raw = base64.b64decode(chunk_b64)
-    results = session.feed_audio(raw, timestamp=timestamp)
-    # also pass sample_width through to the voice detector on the next call if needed
-    return {
-        "ok": True,
-        "session_id": session_id,
-        "detections": [r.model_dump() for r in results],
-        "pending_cues": len([c for c in session._cues if not c.acknowledged]),
-    }
+    try:
+        session = _get_session(session_id)
+        raw = base64.b64decode(chunk_b64)
+        results = session.feed_audio(raw, timestamp=timestamp)
+        return {
+            "ok": True,
+            "session_id": session_id,
+            "detections": [r.model_dump() for r in results],
+            "pending_cues": len([c for c in session._cues if not c.acknowledged]),
+        }
+    except GateError as e:
+        return _gate_error(e)
+    except KeyError as e:
+        return {"ok": False, "error": str(e)}
 
 
 def lie_feed_transcript(
@@ -125,14 +162,18 @@ def lie_feed_transcript(
     text: str,
     timestamp: Optional[float] = None,
 ) -> dict:
-    """Push a transcript segment (for manipulation / linguistic indicators)."""
-    session = _get_session(session_id)
-    results = session.feed_transcript(text, timestamp=timestamp)
-    return {
-        "ok": True,
-        "session_id": session_id,
-        "detections": [r.model_dump() for r in results],
-    }
+    try:
+        session = _get_session(session_id)
+        results = session.feed_transcript(text, timestamp=timestamp)
+        return {
+            "ok": True,
+            "session_id": session_id,
+            "detections": [r.model_dump() for r in results],
+        }
+    except GateError as e:
+        return _gate_error(e)
+    except KeyError as e:
+        return {"ok": False, "error": str(e)}
 
 
 def lie_get_cues(
@@ -140,24 +181,61 @@ def lie_get_cues(
     since_id: Optional[str] = None,
     acknowledge: bool = False,
 ) -> dict:
-    """Retrieve pending earpiece cues (TTS-ready strings)."""
-    session = _get_session(session_id)
-    cues = session.get_earpiece_cues(since_id=since_id)
-    if acknowledge:
-        for c in cues:
-            session.acknowledge_cue(c.id)
-    return {
-        "ok": True,
-        "session_id": session_id,
-        "cues": [c.model_dump() for c in cues],
-        "count": len(cues),
-    }
+    try:
+        session = _get_session(session_id)
+        cues = session.get_earpiece_cues(since_id=since_id)
+        if acknowledge:
+            for c in cues:
+                session.acknowledge_cue(c.id)
+        return {
+            "ok": True,
+            "session_id": session_id,
+            "cues": [c.model_dump() for c in cues],
+            "count": len(cues),
+            "high_priority_ids": session.high_priority_cue_ids(),
+        }
+    except KeyError as e:
+        return {"ok": False, "error": str(e)}
 
 
 def lie_acknowledge_cue(session_id: str, cue_id: str) -> dict:
-    session = _get_session(session_id)
-    session.acknowledge_cue(cue_id)
-    return {"ok": True, "session_id": session_id, "cue_id": cue_id}
+    try:
+        session = _get_session(session_id)
+        session.acknowledge_cue(cue_id)
+        return {"ok": True, "session_id": session_id, "cue_id": cue_id}
+    except KeyError as e:
+        return {"ok": False, "error": str(e)}
+
+
+def lie_dual_acknowledge(
+    session_id: str,
+    cue_id: str,
+    first_officer_id: str,
+    second_officer_id: str,
+    notes: str = "",
+) -> dict:
+    """Government dual-control: two distinct officers acknowledge a high-priority cue."""
+    try:
+        session = _get_session(session_id)
+        rec = session.dual_acknowledge(
+            cue_id=cue_id,
+            first_officer_id=first_officer_id,
+            second_officer_id=second_officer_id,
+            notes=notes,
+        )
+        return {
+            "ok": True,
+            "session_id": session_id,
+            "cue_id": cue_id,
+            "first_officer_id": rec.first_officer_id,
+            "second_officer_id": rec.second_officer_id,
+            "acknowledged_at": rec.acknowledged_at,
+            "dual_control_count": session.gates.dual_control_count(),
+        }
+    except GateError as e:
+        return _gate_error(e)
+    except KeyError as e:
+        return {"ok": False, "error": str(e)}
 
 
 def lie_seal_session(
@@ -165,24 +243,27 @@ def lie_seal_session(
     annotations: Optional[dict] = None,
     officer_or_clinician_notes: Optional[str] = None,
 ) -> dict:
-    """Seal the session into an immutable package ready for grounded memory."""
-    session = _get_session(session_id)
-    extra = annotations or {}
-    if officer_or_clinician_notes:
-        extra["professional_notes"] = officer_or_clinician_notes
-    meta = getattr(session, "_meta", {})
-    extra.update(meta)
-    package = session.seal(annotations=extra)
-
-    # Remove from live map (package is the durable artefact)
-    _SESSIONS.pop(session_id, None)
-
-    return {
-        "ok": True,
-        "package": package,
-        "ready_for_grounded_memory": True,
-        "disclaimer": package.get("disclaimer"),
-    }
+    """Seal under consent, dual-control, prohibited-use, and contamination gates."""
+    try:
+        session = _get_session(session_id)
+        extra = dict(annotations or {})
+        if officer_or_clinician_notes:
+            extra["professional_notes"] = officer_or_clinician_notes
+        package = session.seal(annotations=extra)
+        _SESSIONS.pop(session_id, None)
+        return {
+            "ok": True,
+            "package": package,
+            "ready_for_grounded_memory": True,
+            "disclaimer": package.get("disclaimer"),
+            "firewall": package.get("firewall"),
+        }
+    except GateError as e:
+        return _gate_error(e)
+    except RuntimeError as e:
+        return {"ok": False, "error": str(e)}
+    except KeyError as e:
+        return {"ok": False, "error": str(e)}
 
 
 def lie_list_sessions() -> dict:
@@ -195,20 +276,41 @@ def lie_list_sessions() -> dict:
                 "started_at": s.started_at,
                 "sealed": s.sealed,
                 "detection_count": len(s._all_detections),
+                "consent": s.gates.consent,
+                "dual_control_count": s.gates.dual_control_count(),
+                "training_acknowledged": s.gates.training_acknowledged,
             }
             for s in _SESSIONS.values()
         ],
     }
 
 
-# ---------------------------------------------------------------------------
-# Schema helpers for MCP registration
-# ---------------------------------------------------------------------------
+def lie_prohibited_uses() -> dict:
+    """Return the formal prohibited-uses list (for training and UI)."""
+    return {
+        "ok": True,
+        "prohibited_uses": sorted(PROHIBITED_USES),
+        "disclaimer": DISCLAIMER,
+        "training_version": TRAINING_VERSION,
+    }
+
 
 TOOL_SCHEMAS = [
     {
+        "name": "lie_acknowledge_training",
+        "description": "Record that an operator completed mem20liez user training (required for high-stakes modes)",
+        "inputSchema": {
+            "type": "object",
+            "properties": {
+                "operator_id": {"type": "string"},
+                "version": {"type": "string", "default": TRAINING_VERSION},
+            },
+            "required": ["operator_id"],
+        },
+    },
+    {
         "name": "lie_start_session",
-        "description": "Start a live behavioural-signal (voice-stress / micro-expression / deception-indicator) session",
+        "description": "Start a live behavioural-signal session under consent / dual-control / prohibited-use gates",
         "inputSchema": {
             "type": "object",
             "properties": {
@@ -218,8 +320,15 @@ TOOL_SCHEMAS = [
                     "default": "generic",
                 },
                 "consent": {"type": "boolean", "default": False},
+                "consent_attested_by": {"type": "string"},
                 "subject_id": {"type": "string"},
                 "jurisdiction": {"type": "string"},
+                "operator_id": {"type": "string"},
+                "intended_uses": {
+                    "type": "array",
+                    "items": {"type": "string"},
+                    "description": "Declared uses; any prohibited use is refused",
+                },
                 "enable_earpiece": {"type": "boolean", "default": True},
                 "capture_baseline": {"type": "boolean", "default": False},
             },
@@ -233,7 +342,7 @@ TOOL_SCHEMAS = [
             "type": "object",
             "properties": {
                 "session_id": {"type": "string"},
-                "audio_b64": {"type": "string", "description": "Base64-encoded PCM audio"},
+                "audio_b64": {"type": "string"},
                 "sample_width": {"type": "integer", "default": 2},
             },
             "required": ["session_id", "audio_b64"],
@@ -281,7 +390,7 @@ TOOL_SCHEMAS = [
     },
     {
         "name": "lie_acknowledge_cue",
-        "description": "Mark an earpiece cue as acknowledged",
+        "description": "Mark an earpiece cue as acknowledged by the primary operator",
         "inputSchema": {
             "type": "object",
             "properties": {
@@ -292,8 +401,23 @@ TOOL_SCHEMAS = [
         },
     },
     {
+        "name": "lie_dual_acknowledge",
+        "description": "Government dual-control: two distinct officers acknowledge a high-priority cue",
+        "inputSchema": {
+            "type": "object",
+            "properties": {
+                "session_id": {"type": "string"},
+                "cue_id": {"type": "string"},
+                "first_officer_id": {"type": "string"},
+                "second_officer_id": {"type": "string"},
+                "notes": {"type": "string"},
+            },
+            "required": ["session_id", "cue_id", "first_officer_id", "second_officer_id"],
+        },
+    },
+    {
         "name": "lie_seal_session",
-        "description": "Seal the live session into an immutable package for grounded memory",
+        "description": "Seal the session under consent, dual-control, prohibited-use, and contamination gates",
         "inputSchema": {
             "type": "object",
             "properties": {
@@ -309,15 +433,23 @@ TOOL_SCHEMAS = [
         "description": "List active lie/behavioural-signal sessions",
         "inputSchema": {"type": "object", "properties": {}},
     },
+    {
+        "name": "lie_prohibited_uses",
+        "description": "Return the formal prohibited-uses list and disclaimer",
+        "inputSchema": {"type": "object", "properties": {}},
+    },
 ]
 
 HANDLERS = {
+    "lie_acknowledge_training": lie_acknowledge_training,
     "lie_start_session": lie_start_session,
     "lie_set_baseline": lie_set_baseline,
     "lie_feed_audio": lie_feed_audio,
     "lie_feed_transcript": lie_feed_transcript,
     "lie_get_cues": lie_get_cues,
     "lie_acknowledge_cue": lie_acknowledge_cue,
+    "lie_dual_acknowledge": lie_dual_acknowledge,
     "lie_seal_session": lie_seal_session,
     "lie_list_sessions": lie_list_sessions,
+    "lie_prohibited_uses": lie_prohibited_uses,
 }

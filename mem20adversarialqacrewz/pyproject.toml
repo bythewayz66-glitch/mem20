@@ -1,0 +1,17 @@
+[build-system]
+requires=["setuptools>=68"]
+build-backend="setuptools.build_meta"
+
+[project]
+name="mem20adversarialqacrewz"
+version="1.0.0"
+description="mem20adversarialqacrewz first-class module"
+requires-python=">=3.11"
+
+[project.scripts]
+mem20adversarialqacrewz="mem20adversarialqacrewz.runtime:main"
+
+[tool.setuptools]
+packages=["mem20adversarialqacrewz"]
+[tool.setuptools.package-data]
+mem20adversarialqacrewz=["CAPABILITY.json","roadmap.json"]

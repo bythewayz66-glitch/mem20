@@ -1,0 +1,17 @@
+[build-system]
+requires=["setuptools>=68"]
+build-backend="setuptools.build_meta"
+
+[project]
+name="mem20agentoutputcompilerz"
+version="1.0.0"
+description="mem20agentoutputcompilerz first-class module"
+requires-python=">=3.11"
+
+[project.scripts]
+mem20agentoutputcompilerz="mem20agentoutputcompilerz.runtime:main"
+
+[tool.setuptools]
+packages=["mem20agentoutputcompilerz"]
+[tool.setuptools.package-data]
+mem20agentoutputcompilerz=["CAPABILITY.json","roadmap.json"]

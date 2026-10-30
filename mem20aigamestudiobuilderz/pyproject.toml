@@ -1,0 +1,17 @@
+[build-system]
+requires=["setuptools>=68"]
+build-backend="setuptools.build_meta"
+
+[project]
+name="mem20aigamestudiobuilderz"
+version="1.0.0"
+description="mem20aigamestudiobuilderz first-class module"
+requires-python=">=3.11"
+
+[project.scripts]
+mem20aigamestudiobuilderz="mem20aigamestudiobuilderz.runtime:main"
+
+[tool.setuptools]
+packages=["mem20aigamestudiobuilderz"]
+[tool.setuptools.package-data]
+mem20aigamestudiobuilderz=["CAPABILITY.json","roadmap.json"]

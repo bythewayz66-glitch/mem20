@@ -24,7 +24,8 @@ def test_process_video_returns_results():
 
 
 def test_live_session_seal():
-    session = LiveLieSession(mode="interrogation")
+    session = LiveLieSession(mode="interrogation", consent=True, consent_attested_by="test-harness",
+                             training_acknowledged=True, training_version="2026-10-30")
     session.feed_audio(b"\x00\x01" * 2000)
     package = session.seal()
     assert package["session_id"]

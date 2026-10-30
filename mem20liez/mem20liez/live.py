@@ -18,6 +18,8 @@ import wave
 import sys
 import threading
 import queue
+import shutil
+import subprocess
 
 from .pipeline import LieDetector
 from .session import LiveLieSession
@@ -74,8 +76,9 @@ class EarpieceTTS:
                 pass
         if self.backend == "espeak":
             bin_ = shutil.which("espeak-ng") or shutil.which("espeak")
-            subprocess.Popen([bin_, "-v", "en", text],
-                             stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+            if bin_:
+                subprocess.Popen([bin_, "-v", "en", text],
+                                 stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
             return
         if self.backend == "say":
             subprocess.Popen(["say", text],

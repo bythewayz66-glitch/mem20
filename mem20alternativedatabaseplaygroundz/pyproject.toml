@@ -5,13 +5,10 @@ build-backend="setuptools.build_meta"
 [project]
 name="mem20alternativedatabaseplaygroundz"
 version="1.0.0"
-description='Benchmark graph, vector, time-series, columnar, and embedded databases against real workloads'
+description="mem20alternativedatabaseplaygroundz first-class module"
 requires-python=">=3.11"
-
-[project.scripts]
-mem20alternativedatabaseplaygroundz="mem20alternativedatabaseplaygroundz.core:cli"
 
 [tool.setuptools]
 packages=["mem20alternativedatabaseplaygroundz"]
 [tool.setuptools.package-data]
-mem20alternativedatabaseplaygroundz=["roadmap.json"]
+mem20alternativedatabaseplaygroundz=["CAPABILITY.json","roadmap.json","domain.py"]

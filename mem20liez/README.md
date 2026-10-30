@@ -15,7 +15,7 @@ Probabilistic detectors for voice stress, micro-expressions, linguistic manipula
 | Voice stress | **Real** | numpy — RMS, ZCR, pitch, energy variance, burst rate + baseline |
 | Micro-expression | **Real** | numpy/PIL — frame-diff + regional intensity |
 | Manipulation (linguistic) | **Real** | rule-based patterns; confidence capped at 0.65 |
-| Emotion / deception fusion | Scaffold | honest placeholders (confidence 0.0) |
+| Emotion / deception fusion | **Real** | classical feature heuristics + multi-signal fusion (bounded confidence) |
 | Live mic → earpiece | **Real** | sounddevice / pyaudio / WAV + TTS |
 | MCP tools | **Real** | consent, dual-control, training, prohibited-use gates |
 | Grounded seal + braid | **Real** | contamination firewall on seal |

@@ -5,13 +5,10 @@ build-backend="setuptools.build_meta"
 [project]
 name="mem20ambientdevicecompanionz"
 version="1.0.0"
-description='Move a live session between phone, desktop, headset, vehicle, and home devices'
+description="mem20ambientdevicecompanionz first-class module"
 requires-python=">=3.11"
-
-[project.scripts]
-mem20ambientdevicecompanionz="mem20ambientdevicecompanionz.core:cli"
 
 [tool.setuptools]
 packages=["mem20ambientdevicecompanionz"]
 [tool.setuptools.package-data]
-mem20ambientdevicecompanionz=["roadmap.json"]
+mem20ambientdevicecompanionz=["CAPABILITY.json","roadmap.json","domain.py"]

@@ -1,0 +1,17 @@
+[build-system]
+requires=["setuptools>=68"]
+build-backend="setuptools.build_meta"
+
+[project]
+name="mem20aiproductionstudiooperatingsystemz"
+version="1.0.0"
+description="mem20aiproductionstudiooperatingsystemz first-class module"
+requires-python=">=3.11"
+
+[project.scripts]
+mem20aiproductionstudiooperatingsystemz="mem20aiproductionstudiooperatingsystemz.runtime:main"
+
+[tool.setuptools]
+packages=["mem20aiproductionstudiooperatingsystemz"]
+[tool.setuptools.package-data]
+mem20aiproductionstudiooperatingsystemz=["CAPABILITY.json","roadmap.json"]

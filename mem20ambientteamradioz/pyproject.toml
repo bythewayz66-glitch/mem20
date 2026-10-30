@@ -5,13 +5,10 @@ build-backend="setuptools.build_meta"
 [project]
 name="mem20ambientteamradioz"
 version="1.0.0"
-description='Create lightweight always-available audio presence with intelligent interruption control'
+description="mem20ambientteamradioz first-class module"
 requires-python=">=3.11"
-
-[project.scripts]
-mem20ambientteamradioz="mem20ambientteamradioz.core:cli"
 
 [tool.setuptools]
 packages=["mem20ambientteamradioz"]
 [tool.setuptools.package-data]
-mem20ambientteamradioz=["roadmap.json"]
+mem20ambientteamradioz=["CAPABILITY.json","roadmap.json","domain.py"]

@@ -1,0 +1,17 @@
+[build-system]
+requires=["setuptools>=68"]
+build-backend="setuptools.build_meta"
+
+[project]
+name="mem20universalhealthnervoussystemz"
+version="1.0.0"
+description="mem20universalhealthnervoussystemz first-class module"
+requires-python=">=3.11"
+
+[project.scripts]
+mem20universalhealthnervoussystemz="mem20universalhealthnervoussystemz.runtime:main"
+
+[tool.setuptools]
+packages=["mem20universalhealthnervoussystemz"]
+[tool.setuptools.package-data]
+mem20universalhealthnervoussystemz=["CAPABILITY.json","roadmap.json"]

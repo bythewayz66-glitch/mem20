@@ -297,6 +297,8 @@ class Handler(BaseHTTPRequestHandler):
 
 def load_config(path):return json.loads(Path(path).read_text())
 def main(config_path=None):
+    if config_path is None:
+        config_path=str(Path(__file__).resolve().parent.parent/'CAPABILITY.json')
     ap=argparse.ArgumentParser();ap.add_argument('--config',default=config_path);sub=ap.add_subparsers(dest='cmd',required=True)
     p=sub.add_parser('execute');p.add_argument('json');p.add_argument('--idem')
     p=sub.add_parser('serve');p.add_argument('--host',default='127.0.0.1');p.add_argument('--port',type=int,default=0)

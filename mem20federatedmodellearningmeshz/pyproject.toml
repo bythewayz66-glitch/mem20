@@ -1,0 +1,15 @@
+[project]
+name = "mem20federatedmodellearningmeshz"
+version = "1.0.0"
+description = "Federated Model Learning Mesh — aggregate model updates across participants"
+requires-python = ">=3.11"
+
+[project.scripts]
+mem20federatedmodellearningmeshz = "mem20federatedmodellearningmeshz.runtime:main"
+
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+include = ["mem20federatedmodellearningmeshz", "mem20federatedmodellearningmeshz.*"]

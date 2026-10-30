@@ -1,13 +1,27 @@
 from __future__ import annotations
-import argparse, json, sys
+import argparse, json, sys, time
 from pathlib import Path
 
-from mem20meshz.meshes import crisis as m_crisis
-from mem20meshz.meshes import crossdevice as m_cross
-from mem20meshz.meshes import federated as m_fed
-from mem20meshz.meshes import nearby as m_nearby
-from mem20meshz.meshes import offline as m_offline
-from mem20meshz.meshes import selfhealing as m_heal
+# Ensure sub-runtimes importable
+ROOT = Path(__file__).resolve().parent.parent.parent
+for sub in [
+    "mem20crisisresponsemeshz",
+    "mem20crossdevicememorymeshz",
+    "mem20federatedmodellearningmeshz",
+    "mem20nearbydevicemeshz",
+    "mem20offlineresiliencemeshz",
+    "mem20selfhealingconnectormeshz",
+]:
+    p = ROOT / sub
+    if p.is_dir() and str(p) not in sys.path:
+        sys.path.insert(0, str(p))
+
+import mem20crisisresponsemeshz as m_crisis
+import mem20crossdevicememorymeshz as m_cross
+import mem20federatedmodellearningmeshz as m_fed
+import mem20nearbydevicemeshz as m_nearby
+import mem20offlineresiliencemeshz as m_offline
+import mem20selfhealingconnectormeshz as m_heal
 
 MESHES = {
     "crisis": m_crisis,
@@ -19,8 +33,7 @@ MESHES = {
 }
 
 def _load_engine(mod):
-    cfg_path = Path(mod.__file__).resolve().parent / "CAPABILITY.json"
-    cfg = mod.load_config(str(cfg_path))
+    cfg = mod.load_config(str(Path(mod.__file__).resolve().parent.parent / "CAPABILITY.json"))
     return mod.Engine(cfg)
 
 class MasterEngine:
@@ -71,13 +84,15 @@ class MasterEngine:
         return out
 
 def main(argv=None):
-    ap = argparse.ArgumentParser(prog="mem20meshz", description="mem20 mesh gold runtime — six domain meshes vendored in-package")
+    ap = argparse.ArgumentParser(prog="mem20meshz", description="mem20 mesh gold runtime — orchestrates all 6 mesh runtimes")
     sub = ap.add_subparsers(dest="cmd", required=True)
-    sub.add_parser("list", help="list sub-meshes")
-    sub.add_parser("simulate", help="run all simulators")
+    # delegate subcommands
+    p = sub.add_parser("list", help="list sub-meshes")
+    p = sub.add_parser("simulate", help="run all simulators")
     p = sub.add_parser("benchmark", help="benchmark all"); p.add_argument("--runs", type=int, default=50)
     p = sub.add_parser("execute"); p.add_argument("json", nargs="?", default="{}"); p.add_argument("--only", default=None)
-    sub.add_parser("signatures", help="enable all signature modes")
+    p = sub.add_parser("signatures", help="enable all signature modes")
+    # per-mesh passthrough
     for name in MESHES:
         pp = sub.add_parser(name, help=f"run {name} mesh CLI")
         pp.add_argument("args", nargs=argparse.REMAINDER)
@@ -95,7 +110,8 @@ def main(argv=None):
         print(json.dumps(eng.signature_modes(), indent=2))
     elif args.cmd in MESHES:
         mod = MESHES[args.cmd]
-        mod.main(list(args.args) if args.args else None)
+        # delegate
+        mod.main(list(args.args))
     return 0
 
 if __name__ == "__main__":

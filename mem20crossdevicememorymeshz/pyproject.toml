@@ -1,0 +1,15 @@
+[project]
+name = "mem20crossdevicememorymeshz"
+version = "1.0.0"
+description = "Cross-Device Memory Mesh — synchronize private memory across trusted devices"
+requires-python = ">=3.11"
+
+[project.scripts]
+mem20crossdevicememorymeshz = "mem20crossdevicememorymeshz.runtime:main"
+
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+include = ["mem20crossdevicememorymeshz", "mem20crossdevicememorymeshz.*"]

@@ -1,0 +1,17 @@
+[build-system]
+requires=["setuptools>=68"]
+build-backend="setuptools.build_meta"
+
+[project]
+name="mem20securecomputecapsulesz"
+version="1.0.0"
+description="mem20securecomputecapsulesz first-class module"
+requires-python=">=3.11"
+
+[project.scripts]
+mem20securecomputecapsulesz="mem20securecomputecapsulesz.runtime:main"
+
+[tool.setuptools]
+packages=["mem20securecomputecapsulesz"]
+[tool.setuptools.package-data]
+mem20securecomputecapsulesz=["CAPABILITY.json","roadmap.json"]

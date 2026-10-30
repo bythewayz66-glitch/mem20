@@ -1,0 +1,17 @@
+[build-system]
+requires=["setuptools>=68"]
+build-backend="setuptools.build_meta"
+
+[project]
+name="mem20assetintakecatalogingandvalidationpipelinez"
+version="1.0.0"
+description="mem20assetintakecatalogingandvalidationpipelinez first-class module"
+requires-python=">=3.11"
+
+[project.scripts]
+mem20assetintakecatalogingandvalidationpipelinez="mem20assetintakecatalogingandvalidationpipelinez.runtime:main"
+
+[tool.setuptools]
+packages=["mem20assetintakecatalogingandvalidationpipelinez"]
+[tool.setuptools.package-data]
+mem20assetintakecatalogingandvalidationpipelinez=["CAPABILITY.json","roadmap.json"]

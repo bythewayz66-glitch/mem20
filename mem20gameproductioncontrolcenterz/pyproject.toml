@@ -1,0 +1,17 @@
+[build-system]
+requires=["setuptools>=68"]
+build-backend="setuptools.build_meta"
+
+[project]
+name="mem20gameproductioncontrolcenterz"
+version="1.0.0"
+description="mem20gameproductioncontrolcenterz first-class module"
+requires-python=">=3.11"
+
+[project.scripts]
+mem20gameproductioncontrolcenterz="mem20gameproductioncontrolcenterz.runtime:main"
+
+[tool.setuptools]
+packages=["mem20gameproductioncontrolcenterz"]
+[tool.setuptools.package-data]
+mem20gameproductioncontrolcenterz=["CAPABILITY.json","roadmap.json"]

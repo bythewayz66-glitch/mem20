@@ -18,9 +18,11 @@ dev = ["pytest>=7.0"]
 [project.scripts]
 mem20adaptz = "mem20adaptz.cli:main"
 
-[tool.setuptools.packages.find]
-where = ["."]
-include = ["mem20adaptz*"]
+[tool.setuptools]
+packages = ["mem20adaptz"]
+
+[tool.setuptools.package-dir]
+mem20adaptz = "mem20adaptz"
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]

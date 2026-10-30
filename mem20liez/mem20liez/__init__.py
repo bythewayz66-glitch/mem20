@@ -8,8 +8,9 @@ from .types import (
 )
 from .pipeline import LieDetector
 from .session import LiveLieSession
+from .gates import GateError, DISCLAIMER, PROHIBITED_USES
 
-__version__ = "0.2.0"
+__version__ = "0.3.0"
 __all__ = [
     "DetectionResult",
     "SignalType",
@@ -17,6 +18,9 @@ __all__ = [
     "EarpieceCue",
     "LieDetector",
     "LiveLieSession",
+    "GateError",
+    "DISCLAIMER",
+    "PROHIBITED_USES",
 ]
 
 try:

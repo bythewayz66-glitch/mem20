@@ -1,0 +1,17 @@
+[build-system]
+requires=["setuptools>=68"]
+build-backend="setuptools.build_meta"
+
+[project]
+name="mem20skillbasedprogressionbrainz"
+version="1.0.0"
+description="mem20skillbasedprogressionbrainz first-class module"
+requires-python=">=3.11"
+
+[project.scripts]
+mem20skillbasedprogressionbrainz="mem20skillbasedprogressionbrainz.runtime:main"
+
+[tool.setuptools]
+packages=["mem20skillbasedprogressionbrainz"]
+[tool.setuptools.package-data]
+mem20skillbasedprogressionbrainz=["CAPABILITY.json","roadmap.json"]

@@ -1,0 +1,17 @@
+[build-system]
+requires=["setuptools>=68"]
+build-backend="setuptools.build_meta"
+
+[project]
+name="mem20goaleconomyschedulerz"
+version="1.0.0"
+description="mem20goaleconomyschedulerz first-class module"
+requires-python=">=3.11"
+
+[project.scripts]
+mem20goaleconomyschedulerz="mem20goaleconomyschedulerz.runtime:main"
+
+[tool.setuptools]
+packages=["mem20goaleconomyschedulerz"]
+[tool.setuptools.package-data]
+mem20goaleconomyschedulerz=["CAPABILITY.json","roadmap.json"]

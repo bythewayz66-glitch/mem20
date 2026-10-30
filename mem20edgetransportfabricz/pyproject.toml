@@ -1,0 +1,17 @@
+[build-system]
+requires=["setuptools>=68"]
+build-backend="setuptools.build_meta"
+
+[project]
+name="mem20edgetransportfabricz"
+version="1.0.0"
+description="mem20edgetransportfabricz first-class module"
+requires-python=">=3.11"
+
+[project.scripts]
+mem20edgetransportfabricz="mem20edgetransportfabricz.runtime:main"
+
+[tool.setuptools]
+packages=["mem20edgetransportfabricz"]
+[tool.setuptools.package-data]
+mem20edgetransportfabricz=["CAPABILITY.json","roadmap.json"]

@@ -2,26 +2,12 @@ from __future__ import annotations
 import argparse, json, sys, time
 from pathlib import Path
 
-# Ensure sub-runtimes importable
-ROOT = Path(__file__).resolve().parent.parent.parent
-for sub in [
-    "mem20crisisresponsemeshz",
-    "mem20crossdevicememorymeshz",
-    "mem20federatedmodellearningmeshz",
-    "mem20nearbydevicemeshz",
-    "mem20offlineresiliencemeshz",
-    "mem20selfhealingconnectormeshz",
-]:
-    p = ROOT / sub
-    if p.is_dir() and str(p) not in sys.path:
-        sys.path.insert(0, str(p))
-
-import mem20crisisresponsemeshz as m_crisis
-import mem20crossdevicememorymeshz as m_cross
-import mem20federatedmodellearningmeshz as m_fed
-import mem20nearbydevicemeshz as m_nearby
-import mem20offlineresiliencemeshz as m_offline
-import mem20selfhealingconnectormeshz as m_heal
+from .meshes import crisis as m_crisis
+from .meshes import crossdevice as m_cross
+from .meshes import federated as m_fed
+from .meshes import nearby as m_nearby
+from .meshes import offline as m_offline
+from .meshes import selfhealing as m_heal
 
 MESHES = {
     "crisis": m_crisis,
@@ -33,7 +19,7 @@ MESHES = {
 }
 
 def _load_engine(mod):
-    cfg = mod.load_config(str(Path(mod.__file__).resolve().parent.parent / "CAPABILITY.json"))
+    cfg = mod.load_config(str(Path(mod.__file__).resolve().parent / "CAPABILITY.json"))
     return mod.Engine(cfg)
 
 class MasterEngine:

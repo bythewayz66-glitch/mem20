@@ -9,6 +9,13 @@ Every figure on every slide was read at
 memory. Slide footers carry the source for each claim; slide 13 is the
 full register.
 
+The pinned baseline is where these numbers were read, and it is not where the
+tree stands now. `VERSION` at `45445f48` was **3.0.0**; the shipped tree is
+**3.1.0** at `27c1e5fb`. The surface figure needs no such note - it was
+270 tools across 27 domains at the baseline and is still 270/27 - but any
+asset that reads a slide's version line aloud must say which commit it came
+from, or it is quoting a past release as the present one.
+
 | File | Slide | Source cited on-slide |
 |---|---|---|
 | slide_01.html | Cover: the four verified numbers | git ls-files / VERSION / verify_mcp.py:5 / docs/finance/inputs.json |
@@ -21,6 +28,3 @@ full register.
 | slide_08.html | Full retrieval table, adversarial 0.000 kept | benchmarks/results/latest.md |
 | slide_09.html | What the 0.000 row means and costs | benchmarks/results/latest.md |
 | slide_10.html | Six self-checks, corpus scale, rerank cost | benchmarks/results/latest.md |
-| slide_11.html | Three audit findings against this baseline | inputs.json, a2a_tools.py:19, server.py:87 |
-| slide_12.html | Four asks, each tied to a number | inputs.json / README.md / latest.md / requirements.txt |
-| slide_13.html | Source register, slide by slide | the register itself |

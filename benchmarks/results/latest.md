@@ -53,12 +53,38 @@ This is the axis mem20 claims as its differentiator, and the one no competitor p
 ## Notes
 
 - Scores are NOT comparable to Mem0's LoCoMo/LongMemEval or Zep's DMR. Those run on different corpora (two of them private or vendor-defined) with different metrics. These numbers describe this corpus only.
-- 500 per-query rows are omitted from the committed results files; re-run the harness at seed 20261027 to reproduce them.
+- 500 per-query rows are omitted from the committed results files. This is a **trimmed** artifact: `docs/benchmarks/render.py --check` exits 3 on it (`artifact has no per_query rows; cannot verify aggregates`), so the aggregates above cannot be re-derived from the committed file alone. Re-run the harness to regenerate them.
+- The seed is `SCALE_SEED = 20261027` in `mem20benchmarkz/mem20benchmarkz/scale_corpus.py`. The harness has **no `--seed` flag**; the seed is a corpus constant, not a run argument.
+
+## Reproducibility status
+
+What was re-verified for this revision, and what was not:
+
+| Step | Status |
+|---|---|
+| `generate-scale` produces 2,000 records / 250 probes | **re-verified** |
+| `validate-scale` → PASS, 0 errors, 230 answerable probes | **re-verified** |
+| `records.jsonl` byte-determinism across two runs | **re-verified** (identical sha256) |
+| The retrieval run behind the table above | **not re-executed** — see below |
+
+The retrieval numbers in the table are the committed measurement from the environment recorded in `latest.json`. They were **not** re-executed for this revision: the audit environment has no embedding stack (`sentence-transformers`, `faiss-cpu`, `rank-bm25` absent), so the store reports `healthy: false` and `run-scale` correctly refuses to score (exit 2). Treat the table as a recorded measurement, not as a number re-verified today.
 
 ## Reproduce
 
 ```bash
+# 1. Fetch the offline reference cache. It is NOT committed: generate-scale
+#    fails with FileNotFoundError on a clean clone until these three files exist.
+mkdir -p reference/v2
+curl -sL -o reference/v2/periodic-table.json https://raw.githubusercontent.com/Bowserinator/Periodic-Table-JSON/master/PeriodicTableJSON.json
+curl -sL -o reference/v2/iso-3166.json https://raw.githubusercontent.com/lukes/ISO-3166-Countries-with-Regional-Codes/master/all/all.json
+curl -sL -o reference/v2/mime-db.json https://raw.githubusercontent.com/jshttp/mime-db/master/db.json
+
+# 2. Generate + validate the corpus (deterministic; seed is a source constant).
 mem20benchmarkz generate-scale --out /tmp/mem20-scale-corpus-v2
+mem20benchmarkz validate-scale /tmp/mem20-scale-corpus-v2
+
+# 3. Score. Requires sentence-transformers + faiss-cpu + rank-bm25; without them
+#    the store is unhealthy and run-scale refuses to score (exit 2).
 mem20benchmarkz run-scale --corpus /tmp/mem20-scale-corpus-v2 --bulk \
     --modes keyword,semantic --out benchmarks/results
 ```

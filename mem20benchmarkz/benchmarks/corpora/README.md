@@ -15,7 +15,17 @@ mem20benchmarkz generate-scale --out /tmp/mem20-scale-corpus-v2
 mem20benchmarkz validate-scale /tmp/mem20-scale-corpus-v2
 ```
 
-Reference data lives under `reference/v2/` (offline cache).
+Reference data lives under `reference/v2/` (offline cache). **The cache is not
+committed** — only its `README.md` is. On a clean clone `generate-scale` fails
+with `FileNotFoundError: missing cached reference data` until the three files are
+fetched:
+
+```bash
+mkdir -p reference/v2
+curl -sL -o reference/v2/periodic-table.json https://raw.githubusercontent.com/Bowserinator/Periodic-Table-JSON/master/PeriodicTableJSON.json
+curl -sL -o reference/v2/iso-3166.json https://raw.githubusercontent.com/lukes/ISO-3166-Countries-with-Regional-Codes/master/all/all.json
+curl -sL -o reference/v2/mime-db.json https://raw.githubusercontent.com/jshttp/mime-db/master/db.json
+```
 
 Produces:
 

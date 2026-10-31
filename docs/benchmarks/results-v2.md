@@ -92,7 +92,22 @@ mem20benchmarkz run-scale --corpus /tmp/mem20-scale-corpus-v2 --bulk \
 ```
 
 Corpus is deterministic: `records.jsonl` sha256
-`ca4505863e87da4a4f1b6c84a86a28bab69aa79c872bd84e70a1375e092c9784`.
+`28f0746be240d216ea5368eeb0babba666e90c05a67f98f32d546369dfc2dbd3`
+(2,000 lines; reproduced byte-identically across two independent runs).
+
+That digest is only stable for a fixed reference cache, because the corpus is
+generated from `reference/v2/*.json`, which is **not committed**. The cache as
+fetched on 2026-10-31 hashes:
+
+| file | sha256 |
+|---|---|
+| `periodic-table.json` | `05e478cb1192c5bbfad8d9600fd3b4c7902c0966ad5d0408bfcc4d5092424c0d` |
+| `iso-3166.json` | `e1434e42786484b1841082a0a16cf27208691443dc6440d125ad81d49007ea42` |
+| `mime-db.json` | `63217b4e2a6816c23a8c025b953b3f78993cc85c7253e395a07de3200f659d42` |
+
+A previously published digest for this file (`ca450586…`) does not reproduce
+against that cache. If a re-run disagrees, compare the reference hashes above
+before assuming the generator changed.
 
 ## Not comparable
 

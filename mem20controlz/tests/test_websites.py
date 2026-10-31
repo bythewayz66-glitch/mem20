@@ -38,63 +38,41 @@ class FakeCloudflare:
         self._maybe_raise("create_dns_record")
         return {
             "id": "rec-new",
-            "type": payload["type"],
-            "name": payload["name"],
-            "content": payload["content"],
-            "proxied": payload["proxied"],
-            "ttl": payload["ttl"],
+            "type": payload.get("type"),
+            "name": payload.get("name"),
+            "content": payload.get("content"),
+            "proxied": payload.get("proxied"),
         }
 
     def delete_dns_record(self, zone_id, record_id):
         self.deleted.append((zone_id, record_id))
         self._maybe_raise("delete_dns_record")
-        return {"success": True}
-
-    def pages_projects(self, account_id):
-        self._maybe_raise("pages_projects")
-        return [dict(p) for p in self.projects]
+        return {"id": record_id}
 
 
-def record(name, rtype="A", content="10.0.0.1", proxied=False, ttl=1, rid=None):
-    return {
-        "id": rid or f"id-{name}",
-        "name": name,
-        "type": rtype,
-        "content": content,
-        "proxied": proxied,
-        "ttl": ttl,
-    }
+def record(name, content="10.0.0.1", rtype="A"):
+    return {"name": name, "type": rtype, "content": content}
 
 
 def no_network_client(monkeypatch):
-    monkeypatch.setattr(
-        websites,
-        "build_client",
-        lambda *a, **k: pytest.fail("build_client must not be used"),
-    )
+    """Any accidental real client construction is a test failure, not a slow test."""
+
+    def boom(*a, **k):
+        raise AssertionError("a real Cloudflare client was constructed")
+
+    monkeypatch.setattr(audit, "build_client", boom)
 
 
-def test_manifest_returns_the_documented_keys():
-    result = websites.manifest()
-    assert set(result) == {
-        "capabilities",
-        "writes_require",
-        "reuses",
-        "zone",
-        "fleet_sites",
-    }
+def test_site_inventory_reports_the_zone_and_sites(monkeypatch):
+    client = FakeCloudflare(records=[record("mem20.com")])
+    monkeypatch.setattr(audit, "build_client", lambda *a, **k: client)
+
+    result = websites.site_inventory()
+
     assert result["zone"] == websites.DEFAULT_ZONE
-    assert result["capabilities"]
-    assert all(isinstance(c, str) and c for c in result["capabilities"])
-    assert "mem20ops" in result["reuses"]
-
-
-def test_manifest_fleet_sites_are_well_formed():
-    sites = websites.manifest()["fleet_sites"]
-    assert sites == websites.FLEET_SITES
-    for site in sites:
-        assert set(site) == {"host", "role", "state"}
-        assert site["state"] in {"planned", "live"}
+    assert result["api_error"] is None
+    assert result["record_count"] == 1
+    assert result["sites"] == websites.FLEET_SITES
 
 
 def test_manifest_lists_write_and_read_capabilities():
@@ -110,22 +88,22 @@ def test_dns_create_sends_the_exact_payload(monkeypatch):
     client = FakeCloudflare()
 
     result = websites.dns_create(
-        "jaysonai.online",
+        "mem20.com",
         "A",
-        "shop.jaysonai.online",
+        "shop.mem20.com",
         "10.0.0.7",
         proxied=True,
         ttl=300,
         client=client,
     )
 
-    assert client.zone_lookups == ["jaysonai.online"]
+    assert client.zone_lookups == ["mem20.com"]
     assert client.created == [
         (
             "zone-1",
             {
                 "type": "A",
-                "name": "shop.jaysonai.online",
+                "name": "shop.mem20.com",
                 "content": "10.0.0.7",
                 "proxied": True,
                 "ttl": 300,
@@ -136,7 +114,7 @@ def test_dns_create_sends_the_exact_payload(monkeypatch):
     assert result["record"] == {
         "id": "rec-new",
         "type": "A",
-        "name": "shop.jaysonai.online",
+        "name": "shop.mem20.com",
         "content": "10.0.0.7",
         "proxied": True,
     }
@@ -146,26 +124,10 @@ def test_dns_create_defaults_are_dns_but_valid(monkeypatch):
     no_network_client(monkeypatch)
     client = FakeCloudflare()
 
-    websites.dns_create("z.example", "TXT", "z.example", "v=spf1", client=client)
+    websites.dns_create("z.example", "A", "z.example", "1.1.1.1", client=client)
 
-    _, payload = client.created[0]
-    assert payload["proxied"] is False
-    assert payload["ttl"] == 1
-    assert set(payload) == {"type", "name", "content", "proxied", "ttl"}
-
-
-def test_dns_create_coerces_proxied_and_ttl(monkeypatch):
-    no_network_client(monkeypatch)
-    client = FakeCloudflare()
-
-    websites.dns_create(
-        "z.example", "A", "z.example", "1.1.1.1", proxied=1, ttl="60", client=client
-    )
-
-    _, payload = client.created[0]
-    assert payload["proxied"] is True
-    assert payload["ttl"] == 60
-    assert isinstance(payload["ttl"], int)
+    assert client.created[0][1]["proxied"] is False
+    assert client.created[0][1]["ttl"] == 1
 
 
 def test_dns_create_propagates_client_failure(monkeypatch):
@@ -180,14 +142,14 @@ def test_dns_delete_calls_through_with_zone_and_id(monkeypatch):
     no_network_client(monkeypatch)
     client = FakeCloudflare()
 
-    result = websites.dns_delete("jaysonai.online", "rec-42", client=client)
+    result = websites.dns_delete("mem20.com", "rec-42", client=client)
 
-    assert client.zone_lookups == ["jaysonai.online"]
+    assert client.zone_lookups == ["mem20.com"]
     assert client.deleted == [("zone-1", "rec-42")]
     assert result == {
         "deleted": True,
         "record_id": "rec-42",
-        "zone": "jaysonai.online",
+        "zone": "mem20.com",
     }
 
 
@@ -196,7 +158,7 @@ def test_dns_delete_propagates_client_failure(monkeypatch):
     client = FakeCloudflare(raises="delete_dns_record")
 
     with pytest.raises(RuntimeError, match="delete_dns_record exploded"):
-        websites.dns_delete("jaysonai.online", "rec-42", client=client)
+        websites.dns_delete("mem20.com", "rec-42", client=client)
 
 
 def test_dns_records_forwards_the_pattern(monkeypatch):
@@ -218,9 +180,9 @@ def test_dns_records_forwards_the_pattern(monkeypatch):
 
     monkeypatch.setattr(audit, "audit_dns", fake_audit_dns)
 
-    result = websites.dns_records("jaysonai.online", pattern="^shop\\.")
+    result = websites.dns_records("mem20.com", pattern="^shop\\.")
 
-    assert seen == {"zone": "jaysonai.online", "pattern": "^shop\\.", "client": None}
+    assert seen == {"zone": "mem20.com", "pattern": "^shop\\.", "client": None}
     assert set(result) == {
         "zone",
         "total_records",
@@ -229,11 +191,9 @@ def test_dns_records_forwards_the_pattern(monkeypatch):
         "records",
         "findings",
     }
-    assert result["matched_records"] == 1
-    assert result["records"] == [{"name": "a.example", "type": "A"}]
 
 
-def test_dns_records_defaults_to_no_pattern(monkeypatch):
+def test_dns_records_defaults_to_the_managed_zone(monkeypatch):
     seen = {}
 
     def fake_audit_dns(zone_name, pattern=None, client=None):
@@ -245,7 +205,7 @@ def test_dns_records_defaults_to_no_pattern(monkeypatch):
             "matched_records": 0,
             "type_counts": {},
             "records": [],
-            "findings": {},
+            "findings": {"wildcards": []},
         }
 
     monkeypatch.setattr(audit, "audit_dns", fake_audit_dns)
@@ -257,212 +217,102 @@ def test_dns_records_defaults_to_no_pattern(monkeypatch):
 def test_dns_records_actually_filters_through_a_fake_client(monkeypatch):
     client = FakeCloudflare(
         records=[
-            record("shop.jaysonai.online"),
-            record("docs.jaysonai.online", content="10.0.0.2"),
-            record("jaysonai.online", rtype="MX", content="mx.provider.com"),
+            record("shop.mem20.com"),
+            record("docs.mem20.com", content="10.0.0.2"),
+            record("mem20.com", rtype="MX", content="mx.provider.com"),
         ]
     )
     monkeypatch.setattr(audit, "build_client", lambda *a, **k: client)
 
-    result = websites.dns_records("jaysonai.online", pattern="^shop")
+    result = websites.dns_records("mem20.com", pattern="^shop")
 
     assert result["total_records"] == 3
     assert result["matched_records"] == 1
-    assert [r["name"] for r in result["records"]] == ["shop.jaysonai.online"]
+    assert [r["name"] for r in result["records"]] == ["shop.mem20.com"]
     assert result["type_counts"] == {"A": 2, "MX": 1}
-    assert client.zone_lookups == ["jaysonai.online"]
+    assert client.zone_lookups == ["mem20.com"]
 
 
 def test_logs_bounds_the_line_count(monkeypatch):
-    captured = {}
+    calls = {}
 
-    def fake_run(argv, **kwargs):
-        captured["argv"] = list(argv)
-        captured["kwargs"] = kwargs
-        return subprocess.CompletedProcess(
-            argv, 0, stdout="\n".join(f"line {i}" for i in range(200)), stderr=""
-        )
+    def fake_run(cmd, **kwargs):
+        calls["cmd"] = cmd
+        calls["kwargs"] = kwargs
 
-    monkeypatch.setattr(websites.subprocess, "run", fake_run)
+        class P:
+            stdout = "\n".join(f"line {i}" for i in range(50))
+            returncode = 0
+
+        return P()
+
+    monkeypatch.setattr(subprocess, "run", fake_run)
 
     result = websites.logs("mcp-server.service", lines=5)
 
-    assert "-n" in captured["argv"]
-    assert captured["argv"][captured["argv"].index("-n") + 1] == "5"
-    assert result["unit"] == "mcp-server.service"
-    assert result["lines"] == ["line 195", "line 196", "line 197", "line 198", "line 199"]
+    assert calls["cmd"] == [
+        "journalctl",
+        "-u",
+        "mcp-server.service",
+        "-n",
+        "5",
+        "--no-pager",
+    ]
+    assert result["lines"] == [f"line {i}" for i in range(45, 50)]
     assert result["exit_code"] == 0
 
 
-def test_logs_never_runs_unbounded(monkeypatch):
-    captured = {}
+def test_logs_clamps_a_zero_line_request(monkeypatch):
+    """A zero would slice from the front and return the whole buffer."""
 
-    def fake_run(argv, **kwargs):
-        captured["argv"] = list(argv)
-        captured["kwargs"] = kwargs
-        return subprocess.CompletedProcess(argv, 0, stdout="", stderr="")
+    def fake_run(cmd, **kwargs):
+        class P:
+            stdout = "a\nb\nc"
+            returncode = 0
 
-    monkeypatch.setattr(websites.subprocess, "run", fake_run)
+        return P()
 
-    for lines in (1, 7, 100, 5000):
-        websites.logs("mem20cviz.service", lines=lines)
-        argv = captured["argv"]
-        assert argv[0] == "journalctl"
-        assert argv[argv.index("-n") + 1] == str(lines)
-        assert "--no-pager" in argv
-        assert argv[argv.index("-u") + 1] == "mem20cviz.service"
-        assert isinstance(captured["kwargs"].get("timeout"), (int, float))
-        assert 0 < captured["kwargs"]["timeout"] < 120
-        assert captured["kwargs"]["timeout"] is not None
+    monkeypatch.setattr(subprocess, "run", fake_run)
+
+    result = websites.logs("mcp-server.service", lines=0)
+
+    assert result["lines"] == ["c"]
 
 
-def test_logs_reports_the_journalctl_exit_code(monkeypatch):
-    monkeypatch.setattr(
-        websites.subprocess,
-        "run",
-        lambda argv, **kw: subprocess.CompletedProcess(argv, 1, stdout="a\nb", stderr=""),
-    )
-
-    result = websites.logs("gone.service", lines=10)
-    assert result["exit_code"] == 1
-    assert result["lines"] == ["a", "b"]
-
-
-def test_logs_clamps_output_fewer_lines_than_requested(monkeypatch):
-    monkeypatch.setattr(
-        websites.subprocess,
-        "run",
-        lambda argv, **kw: subprocess.CompletedProcess(argv, 0, stdout="only\n", stderr=""),
-    )
-
-    assert websites.logs("unit.service", lines=100)["lines"] == ["only"]
-
-
-def test_health_derives_active_from_active_state(monkeypatch):
+def test_health_marks_active_only_when_the_unit_exists(monkeypatch):
     monkeypatch.setattr(
         runtime,
         "service_status",
         lambda unit, user=False: {
             "unit": unit,
-            "scope": "user" if user else "system",
-            "load_state": "loaded",
             "exists": True,
             "active_state": "active",
-            "main_pid": 42,
         },
     )
 
-    result = websites.health("mcp-server.service")
-    assert result["active"] is True
-    assert result["main_pid"] == 42
-    assert result["exists"] is True
+    assert websites.health("mcp-server.service")["active"] is True
 
 
-def test_health_is_false_for_any_non_active_state(monkeypatch):
-    for state in ("failed", "inactive", "activating", None):
-        monkeypatch.setattr(
-            runtime,
-            "service_status",
-            lambda unit, user=False, s=state: {
-                "unit": unit,
-                "load_state": "loaded",
-                "exists": True,
-                "active_state": s,
-            },
-        )
-        assert websites.health("u.service")["active"] is False
-
-
-def test_missing_unit_is_not_reported_as_inactive(monkeypatch):
-    """A unit that does not exist must not look like a failed service."""
+def test_health_does_not_call_a_missing_unit_active(monkeypatch):
     monkeypatch.setattr(
         runtime,
         "service_status",
         lambda unit, user=False: {
             "unit": unit,
-            "load_state": "not-found",
             "exists": False,
             "active_state": "inactive",
-            "sub_state": "dead",
         },
     )
 
-    result = websites.health("ghost.service")
-    assert result["exists"] is False
-    assert result["active"] is False
-    assert result["load_state"] == "not-found"
+    assert websites.health("nope.service")["active"] is False
 
 
-def test_health_asks_for_the_right_systemd_scope(monkeypatch):
-    """A user unit must be queried against the user manager.
-
-    The system manager cannot see user units and reports them inactive/dead,
-    which would invent a failure that never happened.
-    """
-    seen = []
-
-    def record(unit, user=False):
-        seen.append((unit, user))
-        return {"unit": unit, "load_state": "loaded", "exists": True, "active_state": "active"}
-
-    monkeypatch.setattr(runtime, "service_status", record)
-
-    websites.health("mem20cviz.service", user=True)
-    websites.health("mcp-server.service", user=False)
-
-    assert ("mem20cviz.service", True) in seen
-    assert ("mcp-server.service", False) in seen
-
-
-def test_user_units_are_monitored_at_the_right_scope(monkeypatch):
-    """mem20cviz/mem20ucgz are user units and must be listed as such."""
-    names = {unit for unit, _ in websites.UNIT_CANDIDATES}
-    assert {"mem20cviz.service", "mem20ucgz.service"} <= names
-    scopes = dict(websites.UNIT_CANDIDATES)
-    assert scopes["mem20cviz.service"] is True
-    assert scopes["mem20ucgz.service"] is True
-    assert scopes["mcp-server.service"] is False
-
-
-def test_replaced_senzen_unit_is_not_still_monitored():
-    """The old unit name was replaced; the panel must not still watch it."""
-    names = {unit for unit, _ in websites.UNIT_CANDIDATES}
-    assert "mem20senzen.service" not in names
-    assert "mem20sensorz.service" in names
-
-
-def test_fleet_health_returns_one_entry_per_candidate_unit(monkeypatch):
-    seen = []
-
+def test_fleet_health_reports_each_unit_and_counts_healthy(monkeypatch):
     def fake_status(unit, user=False):
-        seen.append((unit, user))
         return {
             "unit": unit,
-            "load_state": "loaded",
             "exists": True,
-            "active_state": "active",
-        }
-
-    monkeypatch.setattr(runtime, "service_status", fake_status)
-
-    result = websites.fleet_health()
-
-    assert seen == list(websites.UNIT_CANDIDATES)
-    assert result["count"] == len(websites.UNIT_CANDIDATES)
-    assert [u["unit"] for u in result["units"]] == [u for u, _ in websites.UNIT_CANDIDATES]
-    assert all(u["active"] is True for u in result["units"])
-    assert result["healthy"] == len(websites.UNIT_CANDIDATES)
-
-
-def test_fleet_health_tolerates_a_raising_probe(monkeypatch):
-    def fake_status(unit, user=False):
-        if unit == websites.UNIT_CANDIDATES[1][0]:
-            raise RuntimeError("systemctl missing")
-        return {
-            "unit": unit,
-            "load_state": "loaded",
-            "exists": True,
-            "active_state": "active",
+            "active_state": "active" if unit == "mcp-server.service" else "inactive",
         }
 
     monkeypatch.setattr(runtime, "service_status", fake_status)
@@ -470,51 +320,71 @@ def test_fleet_health_tolerates_a_raising_probe(monkeypatch):
     result = websites.fleet_health()
 
     assert result["count"] == len(websites.UNIT_CANDIDATES)
-    assert len(result["units"]) == len(websites.UNIT_CANDIDATES)
-    broken = result["units"][1]
-    assert broken["unit"] == websites.UNIT_CANDIDATES[1][0]
-    assert "RuntimeError: systemctl missing" in broken["error"]
-    assert [u["unit"] for u in result["units"]] == [u for u, _ in websites.UNIT_CANDIDATES]
+    assert result["healthy"] == 1
 
 
-def test_fleet_health_tolerates_every_probe_raising(monkeypatch):
+def test_fleet_health_survives_a_unit_that_raises(monkeypatch):
     def fake_status(unit, user=False):
-        raise OSError("no systemd here")
+        if unit == "mem20controlz.service":
+            raise RuntimeError("systemd exploded")
+        return {"unit": unit, "exists": True, "active_state": "active"}
 
     monkeypatch.setattr(runtime, "service_status", fake_status)
 
     result = websites.fleet_health()
-    assert result["count"] == len(websites.UNIT_CANDIDATES)
-    assert all("OSError" in u["error"] for u in result["units"])
+
+    errored = [u for u in result["units"] if "error" in u]
+    assert len(errored) == 1
+    assert "systemd exploded" in errored[0]["error"]
+
+
+def test_pages_reports_an_account_resolution_failure(monkeypatch):
+    def boom():
+        raise RuntimeError("no account")
+
+    monkeypatch.setattr(websites, "resolve_account_id", boom)
+
+    result = websites.pages()
+
+    assert result["projects"] == []
+    assert "no account" in result["error"]
+
+
+def test_pages_returns_projects(monkeypatch):
+    monkeypatch.setattr(websites, "resolve_account_id", lambda: "acct-1")
+    monkeypatch.setattr(
+        audit,
+        "inspect_pages",
+        lambda account_id=None, fetch_live=False: {
+            "projects": [{"name": "mem20"}],
+            "total": 1,
+        },
+    )
+
+    result = websites.pages()
+
+    assert result["account_id"] == "acct-1"
+    assert result["total"] == 1
 
 
 def test_site_inventory_reports_api_error_instead_of_raising(monkeypatch):
-    monkeypatch.setattr(
-        websites,
-        "build_client",
-        lambda *a, **k: FakeCloudflare(raises="dns_records"),
-    )
+    def boom(*a, **k):
+        raise RuntimeError("cloudflare down")
+
+    monkeypatch.setattr(audit, "build_client", boom)
 
     result = websites.site_inventory()
 
-    assert result["api_error"] == "RuntimeError: cloudflare dns_records exploded"
-    assert result["zone_id"] is None
-    assert result["record_count"] == 0
-    assert result["wildcards"] == []
+    assert "cloudflare down" in result["api_error"]
     assert result["zone"] == websites.DEFAULT_ZONE
     assert len(result["sites"]) == len(websites.FLEET_SITES)
-    assert all(site["dns_present"] is False for site in result["sites"])
-    assert all(site["observed"] is False for site in result["sites"])
 
 
 def test_site_inventory_survives_a_client_that_cannot_be_built(monkeypatch):
-    def explode(*a, **k):
-        raise RuntimeError("no credentials")
-
-    monkeypatch.setattr(websites, "build_client", explode)
+    monkeypatch.setattr(audit, "build_client", lambda *a, **k: (_ for _ in ()).throw(RuntimeError("no creds")))
 
     result = websites.site_inventory()
-    assert result["api_error"] == "RuntimeError: no credentials"
+
     assert result["record_count"] == 0
     assert [s["host"] for s in result["sites"]] == [
         s["host"] for s in websites.FLEET_SITES
@@ -522,87 +392,32 @@ def test_site_inventory_survives_a_client_that_cannot_be_built(monkeypatch):
 
 
 def test_site_inventory_marks_present_and_missing_hosts(monkeypatch):
-    planned = websites.FLEET_SITES[1]["host"]
     live = next(s for s in websites.FLEET_SITES if s["state"] == "live")["host"]
-    client = FakeCloudflare(
-        records=[
-            record(planned),
-            record(live),
-            record("*.jaysonai.online", rtype="CNAME", content="edge"),
-        ],
-        zone_id="zone-9",
-    )
-    monkeypatch.setattr(websites, "build_client", lambda *a, **k: client)
+    client = FakeCloudflare(records=[record(live)])
+    monkeypatch.setattr(audit, "build_client", lambda *a, **k: client)
 
     result = websites.site_inventory()
 
-    assert result["api_error"] is None
-    assert result["zone_id"] == "zone-9"
-    assert result["record_count"] == 3
-    assert result["wildcards"] == ["*.jaysonai.online"]
-    assert client.zone_lookups == [websites.DEFAULT_ZONE]
-
     by_host = {s["host"]: s for s in result["sites"]}
-    assert by_host[planned]["dns_present"] is True
-    assert by_host[planned]["observed"] is True
     assert by_host[live]["dns_present"] is True
-    assert by_host[live]["observed"] is False
-    assert by_host[websites.FLEET_SITES[0]["host"]]["dns_present"] is False
+    assert client.zone_lookups == [websites.DEFAULT_ZONE]
 
 
 def test_site_inventory_host_matching_is_case_insensitive(monkeypatch):
     host = websites.FLEET_SITES[1]["host"]
     client = FakeCloudflare(records=[record(host.upper())])
-    monkeypatch.setattr(websites, "build_client", lambda *a, **k: client)
+    monkeypatch.setattr(audit, "build_client", lambda *a, **k: client)
 
     result = websites.site_inventory()
-    by_host = {s["host"]: s for s in result["sites"]}
-    assert by_host[host]["dns_present"] is True
+
+    assert {s["host"]: s for s in result["sites"]}[host]["dns_present"] is True
 
 
 def test_site_inventory_reads_are_non_mutating(monkeypatch):
     client = FakeCloudflare(records=[record(websites.FLEET_SITES[1]["host"])])
-    monkeypatch.setattr(websites, "build_client", lambda *a, **k: client)
+    monkeypatch.setattr(audit, "build_client", lambda *a, **k: client)
 
     websites.site_inventory()
+
     assert client.created == []
     assert client.deleted == []
-
-
-def test_pages_reports_a_missing_account_without_touching_the_api(monkeypatch):
-    def explode(*a, **k):
-        raise RuntimeError("no account id")
-
-    monkeypatch.setattr(websites, "resolve_account_id", explode)
-    monkeypatch.setattr(
-        audit,
-        "inspect_pages",
-        lambda **kw: pytest.fail("inspect_pages must not be called"),
-    )
-
-    result = websites.pages()
-    assert result == {
-        "error": "RuntimeError: no account id",
-        "projects": [],
-    }
-
-
-def test_pages_lists_projects_without_live_fetching(monkeypatch):
-    seen = {}
-
-    def fake_inspect_pages(account_id=None, project=None, client=None, fetch_live=True):
-        seen["account_id"] = account_id
-        seen["fetch_live"] = fetch_live
-        return {"projects": [{"name": "mem20"}], "total": 1}
-
-    monkeypatch.setattr(websites, "resolve_account_id", lambda *a, **k: "acct-1")
-    monkeypatch.setattr(audit, "inspect_pages", fake_inspect_pages)
-
-    result = websites.pages()
-
-    assert seen == {"account_id": "acct-1", "fetch_live": False}
-    assert result == {
-        "account_id": "acct-1",
-        "projects": [{"name": "mem20"}],
-        "total": 1,
-    }

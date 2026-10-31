@@ -159,6 +159,6 @@ curl http://localhost:8080/ready
 
 ## Publication routing
 
-Docs and builds are published to the canonical GitHub repo (`main`) and to the
-**Sidney** live surface, through **gabe** — the sole publish authority. Nothing
-writes to the live surface by any other path.
+Docs and builds are published to the canonical GitHub repo (`main`) only. The
+former **Sidney** live surface and the **gabe** publish gate are **retired** —
+there is no live surface and no publish authority to route through.

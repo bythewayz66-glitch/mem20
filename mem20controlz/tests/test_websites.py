@@ -94,7 +94,7 @@ def test_manifest_fleet_sites_are_well_formed():
     assert sites == websites.FLEET_SITES
     for site in sites:
         assert set(site) == {"host", "role", "state"}
-        assert site["state"] in {"planned", "live"}
+        assert site["state"] in {"planned", "live", "retired"}
 
 
 def test_manifest_lists_write_and_read_capabilities():
@@ -110,22 +110,22 @@ def test_dns_create_sends_the_exact_payload(monkeypatch):
     client = FakeCloudflare()
 
     result = websites.dns_create(
-        "jaysonai.online",
+        "example.com",
         "A",
-        "shop.jaysonai.online",
+        "shop.example.com",
         "10.0.0.7",
         proxied=True,
         ttl=300,
         client=client,
     )
 
-    assert client.zone_lookups == ["jaysonai.online"]
+    assert client.zone_lookups == ["example.com"]
     assert client.created == [
         (
             "zone-1",
             {
                 "type": "A",
-                "name": "shop.jaysonai.online",
+                "name": "shop.example.com",
                 "content": "10.0.0.7",
                 "proxied": True,
                 "ttl": 300,
@@ -136,7 +136,7 @@ def test_dns_create_sends_the_exact_payload(monkeypatch):
     assert result["record"] == {
         "id": "rec-new",
         "type": "A",
-        "name": "shop.jaysonai.online",
+        "name": "shop.example.com",
         "content": "10.0.0.7",
         "proxied": True,
     }
@@ -180,14 +180,14 @@ def test_dns_delete_calls_through_with_zone_and_id(monkeypatch):
     no_network_client(monkeypatch)
     client = FakeCloudflare()
 
-    result = websites.dns_delete("jaysonai.online", "rec-42", client=client)
+    result = websites.dns_delete("example.com", "rec-42", client=client)
 
-    assert client.zone_lookups == ["jaysonai.online"]
+    assert client.zone_lookups == ["example.com"]
     assert client.deleted == [("zone-1", "rec-42")]
     assert result == {
         "deleted": True,
         "record_id": "rec-42",
-        "zone": "jaysonai.online",
+        "zone": "example.com",
     }
 
 
@@ -196,7 +196,7 @@ def test_dns_delete_propagates_client_failure(monkeypatch):
     client = FakeCloudflare(raises="delete_dns_record")
 
     with pytest.raises(RuntimeError, match="delete_dns_record exploded"):
-        websites.dns_delete("jaysonai.online", "rec-42", client=client)
+        websites.dns_delete("example.com", "rec-42", client=client)
 
 
 def test_dns_records_forwards_the_pattern(monkeypatch):
@@ -218,9 +218,9 @@ def test_dns_records_forwards_the_pattern(monkeypatch):
 
     monkeypatch.setattr(audit, "audit_dns", fake_audit_dns)
 
-    result = websites.dns_records("jaysonai.online", pattern="^shop\\.")
+    result = websites.dns_records("example.com", pattern="^shop\\.")
 
-    assert seen == {"zone": "jaysonai.online", "pattern": "^shop\\.", "client": None}
+    assert seen == {"zone": "example.com", "pattern": "^shop\\.", "client": None}
     assert set(result) == {
         "zone",
         "total_records",
@@ -257,20 +257,20 @@ def test_dns_records_defaults_to_no_pattern(monkeypatch):
 def test_dns_records_actually_filters_through_a_fake_client(monkeypatch):
     client = FakeCloudflare(
         records=[
-            record("shop.jaysonai.online"),
-            record("docs.jaysonai.online", content="10.0.0.2"),
-            record("jaysonai.online", rtype="MX", content="mx.provider.com"),
+            record("shop.example.com"),
+            record("docs.example.com", content="10.0.0.2"),
+            record("example.com", rtype="MX", content="mx.provider.com"),
         ]
     )
     monkeypatch.setattr(audit, "build_client", lambda *a, **k: client)
 
-    result = websites.dns_records("jaysonai.online", pattern="^shop")
+    result = websites.dns_records("example.com", pattern="^shop")
 
     assert result["total_records"] == 3
     assert result["matched_records"] == 1
-    assert [r["name"] for r in result["records"]] == ["shop.jaysonai.online"]
+    assert [r["name"] for r in result["records"]] == ["shop.example.com"]
     assert result["type_counts"] == {"A": 2, "MX": 1}
-    assert client.zone_lookups == ["jaysonai.online"]
+    assert client.zone_lookups == ["example.com"]
 
 
 def test_logs_bounds_the_line_count(monkeypatch):
@@ -522,13 +522,21 @@ def test_site_inventory_survives_a_client_that_cannot_be_built(monkeypatch):
 
 
 def test_site_inventory_marks_present_and_missing_hosts(monkeypatch):
-    planned = websites.FLEET_SITES[1]["host"]
-    live = next(s for s in websites.FLEET_SITES if s["state"] == "live")["host"]
+    # Every shipped FLEET_SITES row is "retired" now that jaysonai.online is gone,
+    # so the planned-vs-observed drift path is exercised with an injected row.
+    planned = "planned.example.com"
+    retired = websites.FLEET_SITES[1]["host"]
+    absent = websites.FLEET_SITES[2]["host"]
+    monkeypatch.setattr(
+        websites,
+        "FLEET_SITES",
+        [{"host": planned, "role": "test", "state": "planned"}, *websites.FLEET_SITES],
+    )
     client = FakeCloudflare(
         records=[
             record(planned),
-            record(live),
-            record("*.jaysonai.online", rtype="CNAME", content="edge"),
+            record(retired),
+            record("*.example.com", rtype="CNAME", content="edge"),
         ],
         zone_id="zone-9",
     )
@@ -539,15 +547,15 @@ def test_site_inventory_marks_present_and_missing_hosts(monkeypatch):
     assert result["api_error"] is None
     assert result["zone_id"] == "zone-9"
     assert result["record_count"] == 3
-    assert result["wildcards"] == ["*.jaysonai.online"]
+    assert result["wildcards"] == ["*.example.com"]
     assert client.zone_lookups == [websites.DEFAULT_ZONE]
 
     by_host = {s["host"]: s for s in result["sites"]}
     assert by_host[planned]["dns_present"] is True
     assert by_host[planned]["observed"] is True
-    assert by_host[live]["dns_present"] is True
-    assert by_host[live]["observed"] is False
-    assert by_host[websites.FLEET_SITES[0]["host"]]["dns_present"] is False
+    assert by_host[retired]["dns_present"] is True
+    assert by_host[retired]["observed"] is False
+    assert by_host[absent]["dns_present"] is False
 
 
 def test_site_inventory_host_matching_is_case_insensitive(monkeypatch):

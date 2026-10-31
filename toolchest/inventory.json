@@ -3,7 +3,7 @@
   "format_version": 1,
   "generated_at": "2026-10-29T05:54:53.014607+00:00",
   "toolchest_version": "0.1.0",
-  "host": "sidney",
+  "host": "retired-host",
   "sources": [
     "mcp_server",
     "cli_bins",

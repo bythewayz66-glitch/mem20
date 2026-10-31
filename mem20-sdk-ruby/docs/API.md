@@ -208,5 +208,5 @@ Mem20::Error                 (StandardError)
 
 ## Publication routing
 
-Published to the canonical GitHub repo (`main`) and to the **Sidney** live surface,
-through **gabe**.
+Published to the canonical GitHub repo (`main`) only. The former **Sidney** live
+surface and the **gabe** publish gate are **retired** and no longer exist.

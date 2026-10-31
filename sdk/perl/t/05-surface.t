@@ -2,6 +2,7 @@ use strict;
 use warnings;
 
 use Test::More;
+use File::Basename ();
 use File::Spec ();
 use Mem20::Version ();
 
@@ -26,9 +27,13 @@ use Mem20::Version ();
 # hermetic: it only checks that the SDK agrees with itself, so it runs on any
 # machine with a stock perl.
 
-my $ROOT = File::Spec->rel2abs( File::Spec->catdir( File::Spec->curdir ) );
-$ROOT = File::Spec->rel2abs( File::Spec->catdir( File::Spec->curdir, '..' ) )
-    unless -f File::Spec->catfile( $ROOT, 'README.md' );
+# Resolve the distribution root from THIS file, not from the current working
+# directory. CI runs `prove -Isdk/perl/lib sdk/perl/t/*.t` from the repository
+# root, while a developer runs `prove -Ilib t/` from sdk/perl; a cwd-based root
+# silently produced undef file bodies (and 10 false failures) under CI.
+my $ROOT = File::Spec->rel2abs(
+    File::Spec->catdir( File::Basename::dirname( File::Spec->rel2abs(__FILE__) ), File::Spec->updir )
+);
 
 my $TOOLS   = $Mem20::Version::SURFACE_TOOL_COUNT;
 my $DOMAINS = $Mem20::Version::SURFACE_DOMAIN_COUNT;

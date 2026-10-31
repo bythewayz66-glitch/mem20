@@ -10,7 +10,7 @@ int main() {
   assert(c.command[0] == "python3");
   assert(c.health_port == 8080);
   assert(std::string(mem20::kProtocolVersion) == "2025-06-18");
-  assert(std::string(mem20::kServerBaseline) == "3.0.0");
+  assert(std::string(mem20::kServerBaseline) == "3.1.0");
   std::cout << "ok\n";
   return 0;
 }

@@ -281,8 +281,9 @@ them before any public post goes out.
 | 5 | Merge row 3 to `main` so the live page carries 270/27 and v3.0.0 | Webpage Developer | Delivered and unpublished — currently the worse of the two states |
 | 6 | Re-probe `mem20.com` and `/sites/` anonymously, then decide what may be published | Mem20-admin | §6 carried these forward instead of measuring them |
 
-**Blockers still standing (unchanged, not re-tested this run):** `mem20.jaysonai.online` NXDOMAIN — a
-missing record, not propagation; PyPI 404 on `mem20`/`mem20-ai`/`mem20oreo`, so installs stay
+**Blockers still standing (unchanged, not re-tested this run):** the retired mem20 hostname in the
+retired legacy zone was NXDOMAIN — a missing record, not propagation, and the hostname was
+retired on 2026-10-31 (`mem20.com` is canonical); PyPI 404 on `mem20`/`mem20-ai`/`mem20oreo`, so installs stay
 source-only; Sidney `216.198.115.91` dark; `gabe` publish not attempted.
 
 ---

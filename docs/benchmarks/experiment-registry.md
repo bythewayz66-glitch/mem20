@@ -18,11 +18,11 @@ This registry closes that gap. Every mode below carries a `scored` flag and a `f
 | Scored — as a variant of another mode | 1 |
 | Present but unscored | 8 |
 | Adversarial rows in the published artifact | 9 |
-| Adversarial hit rate | **0.000 — structurally assigned, not measured** |
+| Adversarial hit rate (at baseline) | **0.000 — was structurally assigned, not measured** — since fixed, see §3 |
 
 Three things follow, and they are the reason for this task:
 
-1. **The adversarial `0.000` is not a measurement.** `bench.py:306-307` assigns `hit=False, rank=None` to every adversarial query unconditionally. See §3.
+1. **The adversarial `0.000` was not a measurement.** At the baseline SHA, `bench.py` assigned `hit=False, rank=None` to every adversarial query unconditionally. That branch has since been removed — see §3, which is retained as the record of the defect.
 2. **Eight present modes have no row at all**, including `recall_at` — the bi-temporal path that mem20's trustworthiness claim rests on.
 3. **The published headline hit rates are depressed by the structural zero.** `hybrid`, `keyword` and `semantic` all show `0.692308`; their answerable-only hit rate is `0.900`.
 
@@ -71,17 +71,28 @@ So naming a fifth mode in `run(modes=(...))` is a hard error, not a silent skip.
 
 One caveat that limits it: `METHOD_MANIFEST.json` carries open defect **CE-1** — the `memory.py` recompute block computes cross-encoder scores and lets none reach the output. The working implementation is `retrieval_v2.rerank`. So the "on" arm may be measuring a partially inert code path.
 
-## 3. The adversarial zero is structural
+## 3. The adversarial zero is structural — **RESOLVED**
 
-Every adversarial row in `benchmarks/results/latest.md` reads `0.000`. That number is **assigned, not observed**:
+> **Status: fixed.** This section describes the defect as it stood at the
+> baseline SHA. The `if q.kind == "adversarial": hit, rank = False, None` branch
+> no longer exists. `bench.py` now routes every answerable kind — `direct`,
+> `multi_hop`, `adversarial`, `adversarial_hard`, `contradiction` — through the
+> same `_hit()` evidence check, and the only remaining constant is the
+> `unanswerable` **control** (`bench.py:352`), which is a separate kind precisely
+> so a hardcoded verdict cannot masquerade as a measurement again. The
+> `adversarial` / `adversarial_hard` / `contradiction` rows in
+> `benchmarks/results/latest.md` are now observed values. The analysis below is
+> kept as the record of what was wrong and why it mattered.
+
+At the baseline, every adversarial row in `benchmarks/results/latest.md` read `0.000`. That number was **assigned, not observed**:
 
 ```python
 if q.kind == "adversarial":
-    hit, rank = False, None     # bench.py:307 — unconditional
+    hit, rank = False, None     # bench.py:307 — unconditional (REMOVED)
     leaked = _leak(hits, sim_markers)
 ```
 
-Retrieval is never consulted for `hit`. Three consequences:
+Retrieval was never consulted for `hit`. Three consequences:
 
 **It cannot regress.** An invariant of the scorer does not detect anything, so no future code change, corpus or index state can move it. It is not a signal.
 
@@ -129,12 +140,12 @@ graph:  {"entities": 38, "edges": 70, "facts_referenced": 14, "healthy": true}
 
 | # | Gap | Blocks | Evidence |
 |---|---|---|---|
-| G1 | Adversarial hit rate is hard-coded to 0.000 | Any abstention claim | `bench.py:306-307` |
+| G1 | ~~Adversarial hit rate is hard-coded to 0.000~~ — **resolved**; only the `unanswerable` control is constant now | Any abstention claim | `bench.py:352` |
 | G2 | `recall_at` (bi-temporal) has no row | The trustworthiness differentiator | `api.py:268` |
 | G3 | `graph` has n=2 | Graph quality claim | `latest.json` `recall.graph.multi_hop.n` |
 | G4 | Four MCP retrieval tools unreachable from harness | `memory_probe`, `memory_related`, `memory_shared_recall`, `memory_reason` | `mcp/memory_tools.py:373,418,845,386` |
 | G5 | No gate keeps this registry current | The next false "scored" claim | `cli.py:55-70` |
-| G6 | Scale run never recorded | Any claim above 14 facts | `cli.py:246,292` |
+| G6 | ~~Scale run never recorded~~ — **resolved**; `mem20-scale-corpus-v2` (2,000 records / 250 probes) is recorded in `benchmarks/results/latest.json` | Any claim above 14 facts | `benchmarks/results/latest.json` |
 
 ## 6. How to use the JSON
 
@@ -150,7 +161,7 @@ Suggested check: `diff` the `scored` flags first, then the `measurement.n` value
 
 ## 7. What this registry does not claim
 
-- It does not re-measure anything. Every number here is copied from `benchmarks/results/latest.json` (corpus `mem20-agent-kb-v1`, 14 facts / 3 simulated / 13 queries, introduced in `f505379`), or computed from its `per_query` rows.
+- It does not re-measure anything. Every number here is copied from `docs/benchmarks/results-v1.json` (corpus `mem20-agent-kb-v1`, 14 facts / 3 simulated / 13 queries, introduced in `f505379`), or computed from its `per_query` rows. It is **not** derived from `benchmarks/results/latest.json`, which holds the `mem20-scale-corpus-v2` run and records no `per_query` rows.
 - It does not assert that the unscored modes are broken. They are untested, which is a different statement, and the manifest separately records several of them as `working`.
 - It does not imply comparability with Mem0 LoCoMo 92.5, LongMemEval 94.4 or Zep DMR 94.8. Those run on different corpora with different metrics. Nothing here refutes or reproduces them.
 

@@ -30,7 +30,11 @@ RSpec.describe Mem20::Surface do
   # the gemspec once quoted 268, 270 and 257 respectively for the same surface.
   it "keeps the documented count and the surface constant in agreement" do
     root = File.expand_path("../..", __dir__)
-    documented = ["README.md", "docs/USAGE.md", "docs/INSTALL.md", "mem20-sdk.gemspec"]
+    # Every file that states a surface size. docs/EVIDENCE.md quotes the live
+    # `tools: 270` line and docs/API.md documents the surface accessors, so both
+    # belong here: a guard that skips a file cannot catch that file going stale.
+    documented = ["README.md", "docs/USAGE.md", "docs/INSTALL.md", "docs/API.md",
+                  "docs/EVIDENCE.md", "mem20-sdk.gemspec"]
                  .select { |f| File.exist?(File.join(root, f)) }
                  .to_h { |f| [f, File.read(File.join(root, f))] }
 
@@ -45,5 +49,10 @@ RSpec.describe Mem20::Surface do
     # Wherever a total is stated, it must be the same one.
     expect(documented["README.md"]).to include(described_class::TOOL_COUNT.to_s)
     expect(documented["mem20-sdk.gemspec"]).to include("#{described_class::TOOL_COUNT}-tool")
+
+    # docs/EVIDENCE.md records the measured live surface; its `tools:` line is
+    # the number a reader trusts, so pin it to the constant rather than to prose.
+    expect(documented["docs/EVIDENCE.md"])
+      .to match(/^tools:\s+#{described_class::TOOL_COUNT}$/)
   end
 end

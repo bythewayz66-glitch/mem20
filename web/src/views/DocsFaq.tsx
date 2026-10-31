@@ -108,12 +108,14 @@ const FAQ: Array<{ q: string; a: React.ReactNode; src: string; tags: string[] }>
       <>
         Because DNS is a different layer from Pages. The repo can serve perfectly on{' '}
         <span className="mono">*.github.io/mem20/</span> while{' '}
-        <span className="mono">mem20.jaysonai.online</span> returns NXDOMAIN — that custom domain is now
-        <strong>retired</strong> and will not be restored. GitHub only accepts a custom domain once the
-        record exists, so the site is served from the Pages path only.
+        a custom domain returns NXDOMAIN — GitHub only accepts a custom domain once the record exists.{' '}
+        <span className="mono">docs/CNAME</span> now names <span className="mono">mem20.com</span>, which resolves to
+        GitHub Pages and answers <span className="mono">200</span>, so{' '}
+        <span className="mono">https://mem20.com</span> is the canonical public URL. The earlier hostname is retired and
+        is not cited anywhere in this shell.
       </>
     ),
-    src: 'docs/CNAME · GitHub Pages custom-domain behaviour',
+    src: 'docs/CNAME · docs/gtm/claim-ledger.md § D4–D5',
     tags: ['deploy', 'dns', 'pages', 'cname'],
   },
   {

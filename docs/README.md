@@ -31,7 +31,7 @@
 ```
 MCP client --stdio--> Mem20MCPServer (mcp/mcp_server.py)
                          |
-         +---------------+---------------+
+         +---------------+---------------+ 
          |               |               |
    cognitive_engine    memory.py      roadmaps/
    (LLM-backed)    (store engine)   (JSON files)
@@ -142,4 +142,4 @@ Both degrade gracefully when the respective application is not installed.
 
 MIT — see [LICENSE](https://github.com/bythewayz66-glitch/mem20/blob/main/LICENSE).
 
-Canonical repository: [bythewayz66-glitch/mem20](https://github.com/bythewayz66-glitch/mem20). Originally built by the JaysonAIOnline project.
+Canonical repository: [bythewayz66-glitch/mem20](https://github.com/bythewayz66-glitch/mem20).

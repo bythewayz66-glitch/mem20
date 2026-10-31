@@ -27,17 +27,16 @@ Major trees include the Python MCP server (`mem20_mcp/`, `mcp/`, `mcp_server_dir
 
 ## Canonical designation
 
-The full codebase is published to this repository. Related repositories are **not**
-canonical:
+The full codebase is published to this repository. No other repository is canonical.
 
-- `JaysonAIOnline/mcp-cognitive-substrate` — earlier, much smaller Python MCP server
-  (11 files, v1.0.1). Historical / reference only.
-- `JaysonAIOnline/mem20-site` — marketing website, not the codebase.
-- `JaysonAIOnline/mem20kilnz-engine`, `JaysonAIOnline/hermes-messenger`,
-  `JaysonAIOnline/oreo`, `JaysonAIOnline/sales`, `JaysonAIOnline/mem20-unimpc-3d` —
-  component / satellite repositories.
+The former `JaysonAIOnline/*` organisation is **retired** (2026-10-31): no documentation,
+badge, install snippet, config or launch copy references it, and nothing is published to
+it.
 
-Direct pushes to `JaysonAIOnline/*` are read-only for the canonical publishing account.
+One code-level reference is retained deliberately: the `mem20oreo` dependency in
+`mem20agentz/pyproject.toml` still resolves to a `JaysonAIOnline/oreo` git URL, because
+the package has not been mirrored to a live host. It is a build input, not a publication
+target, and it is the only remaining reference in executable code.
 
 ## Content & editorial surfaces
 
@@ -56,11 +55,12 @@ snippet resolves to this repository.
 
 ## Publication routing
 
-Per the project's publication mandate, work is published to the **Sidney** server via
-`ssh` / `sftp` / `rsync`, and that publication is **routed through gabe**.
+Publication is **GitHub-only**. The former Sidney host and the `gabe` publish authority
+are **retired** (2026-10-31); no publish path routes through either, and no credential,
+hostname or runbook for them is operative.
 
 - GitHub publication channel: this repository (`main`).
-- Server publication channel: Sidney, via ssh/sftp/rsync, routed through gabe.
+- Website publication channel: GitHub Pages, built from `docs/` (custom domain `mem20.com`).
 
 ## Snapshot record
 

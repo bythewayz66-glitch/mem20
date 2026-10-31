@@ -37,6 +37,6 @@ This directory is the **git-side source of truth** for mem20 go-to-market collat
 | `docs/index.html` (the live public page) | Still says **268 / 26 domains** (4× `268`, 4× `26 domains`, 0× `270`). The public page contradicts the live server. | Webpage Developer (P1) |
 | `docs/02-tools-reference.md` | Says **268 / 26**. | Webpage Developer (P1) |
 | `toolchest/inventory.json` | `counts.mcp: 258`, `generated_at: 2026-10-07` — stale. | Webpage Developer (P1) |
-| `docs/CNAME` | Names `mem20.jaysonai.online`, which has **no DNS record**. Pages therefore serves on `github.io` only. | Repo admin |
+| `docs/CNAME` | Names `mem20.com`, which resolves and serves the site. The former `mem20.jaysonai.online` host is **retired** and must not be cited. | Resolved |
 
 Until the `docs/index.html` fix lands, **campaign copy says 270/27 and the public page says 268/26.** That contradiction is one click from any HN commenter. It is a P1, not a documentation nit.

@@ -65,6 +65,9 @@ GATE_WORDS = r"plan|tier|entitle|subscription|sku|upgrade|seat_limit|quota|billi
 # Model-input files: these declare prices but ship no entitlement.
 MODEL_INPUT_ROOTS = ["docs/finance", "docs/pricing"]
 
+# This report quotes every tier price, so it must not count itself.
+SELF_REPORT = "docs/pricing/TIER_SHIPPING_AUDIT.md"
+
 
 def tracked(root: pathlib.Path) -> list[str]:
     try:
@@ -110,11 +113,18 @@ def largest_remainder(shares: list[float], logos: int) -> list[int]:
 
 
 def scan_documented(root: pathlib.Path, files: list[str]) -> dict[str, list[str]]:
-    """Which tracked files state each tier's price?"""
+    """Which tracked files state each tier's price?
+
+    This report is excluded from its own scan: it quotes every tier price in
+    order to discuss them, so counting it would inflate each tier by one and
+    make the count drift every time the report is edited.
+    """
     tok = {n: re.compile(r"\$\s*" + f"{p:,}" + r"\b") for n, p, _ in LADDER}
     hits: dict[str, list[str]] = {n: [] for n, _, _ in LADDER}
     for rel in files:
         if rel.startswith(("published/sites/", "mem20orcaz/")):
+            continue
+        if rel == SELF_REPORT:
             continue
         text = read(root, rel)
         if not text:

@@ -82,6 +82,15 @@ CAC_VALUES = {8_000, 16_800}
 DOC_EXTS = {".md", ".html", ".htm", ".csv", ".json", ".txt", ".yml", ".yaml", ".py"}
 SKIP_DIR_PARTS = {".git", "node_modules", "__pycache__", ".venv", "venv", "dist", "build"}
 
+# The audit must not audit itself. This script and its report quote the
+# standing figures AND deliberately-wrong example figures (the self-test
+# fixture, the "what would make this wrong" cases). Scanning them would
+# report the audit's own quotations as violations.
+SELF_EXCLUDE = {
+    "scripts/audit_market_claims.py",
+    "docs/market/market-claims-consistency-2026-10-31.md",
+}
+
 _MULT = {
     "b": 1_000_000_000, "billion": 1_000_000_000,
     "m": 1_000_000, "million": 1_000_000,
@@ -176,6 +185,8 @@ def tracked_files(root: str) -> list[str]:
         if set(p.split("/")) & SKIP_DIR_PARTS:
             continue
         if os.path.splitext(p)[1].lower() not in DOC_EXTS:
+            continue
+        if p in SELF_EXCLUDE:
             continue
         keep.append(p)
     return keep

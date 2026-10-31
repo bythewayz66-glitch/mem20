@@ -3,7 +3,8 @@
 **Action:** H16 — Market Research
 **Repo:** `github.com/bythewayz66-glitch/mem20`
 **Branch:** `chore/market-claims-consistency`
-**Base (`main`):** `f1672473cd19d5926e1df0c80042259d3b4b17ca`
+**Base (`main`):** `f1672473cd19d5926e1df0c80042259d3b4b17ca` (branch cut)
+**Re-verified on `main`:** `f681b7847a1dde990c2de7d64f7337484b9226e9` — same result, 174/174, exit 0
 
 ---
 
@@ -221,7 +222,11 @@ This audit found no reason to reopen any of them, and did not.
 (`house_numbers`), cross-checked against `docs/finance/market_sizing.csv`,
 `docs/finance/model_output.json` and `docs/gtm/claim-ledger.md` §6 (H1–H5).
 All file:line references above are at base
-`f1672473cd19d5926e1df0c80042259d3b4b17ca`.
+`f1672473cd19d5926e1df0c80042259d3b4b17ca`. The audit was re-run against
+`main` at `f681b7847a1dde990c2de7d64f7337484b9226e9` (three later commits:
+README v3.1.0 rewrite, tag audit, branch inventory) and returned the identical
+result — 6,994 files scanned, 45 files, 174 statements, 174 match, exit 0. The
+README rewrite introduced no market-size or ACV statement.
 
 **DISCLAIMER:** As an AI Agent, I cannot provide legally protected, personalized
 investment advice. This analysis is for informational purposes only and does not

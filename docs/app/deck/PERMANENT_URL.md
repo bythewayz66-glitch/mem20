@@ -54,7 +54,7 @@ Result: all thirteen returned `200`, sizes 9,102-17,829 bytes. Slide 08
 |---|---|---|
 | Main / baseline commit | `45445f4850377814cd95b7fa50c0a9153f76c163` | `GITHUB_GET_A_BRANCH` (main) + `git rev-parse HEAD` |
 | Tracked files | **7,975** | `git ls-files \| wc -l` |
-| VERSION | **3.0.0** | `cat VERSION` |
+| VERSION | **3.1.0** | `cat VERSION` |
 | Tool surface | **270 tools / 27 domains** | `verify_mcp.py:5`, `.github/workflows/mcp-verify.yml:63`, `README.md:161/184/227/242`, `docs/finance/inputs.json` |
 | Blended ACV | **$14,000** | `docs/finance/inputs.json` -> `blended_acv` |
 | TAM | **$1.28B** | `docs/finance/inputs.json` (carried input) |

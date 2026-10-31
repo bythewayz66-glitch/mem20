@@ -72,51 +72,43 @@ stdio entry point. This is a copy fix across every surface, tracked separately.
 
 # DNS — the answer for the owner
 
-The `mem20.jaysonai.online` hostname has **no record**. This is not propagation
-lag.
+> **RETIRED 2026-10-31.** The mem20 hostname in the `<retired-zone>` zone is
+> retired. `docs/CNAME` names **`mem20.com`**, which resolves and returns 200,
+> and that is the canonical public host. The CNAME branch below is obsolete —
+> no DNS record is to be created. This section is kept only as the record of
+> what was measured on 2026-10-26.
+
+The mem20 hostname in the `<retired-zone>` zone had **no record**. This was not
+propagation lag.
 
 Evidence: both Cloudflare and Google DoH return **NXDOMAIN (Status 3)** for the
 name, and the authority section in that answer is the zone's *own* SOA — the
-nameservers that host `jaysonai.online` are themselves saying the name does not
+nameservers that host `<retired-zone>` are themselves saying the name does not
 exist. An apex query on the same zone returns **NOERROR (Status 0)**, so the
 zone is live and answering; only this one name is missing.
 
 ```bash
-curl -s "https://dns.google/resolve?name=mem20.jaysonai.online&type=A" | head -c 200
-# {"Status":3,...}   <- NXDOMAIN
-curl -s "https://dns.google/resolve?name=jaysonai.online&type=A" | head -c 120
+curl -s "https://dns.google/resolve?name=mem20.com&type=A" | head -c 200
+# {"Status":0,...}   <- resolves (the retired hostname returned Status 3)
+curl -s "https://dns.google/resolve?name=<retired-zone>&type=A" | head -c 120
 # {"Status":0,...}   <- apex resolves
-curl -s "https://dns.google/resolve?name=jaysonai.online&type=NS"
+curl -s "https://dns.google/resolve?name=<retired-zone>&type=NS"
 # quentin.ns.cloudflare.com, ainsley.ns.cloudflare.com
 ```
 
-## The record to create
+## The record that was proposed — and is now obsolete
 
-Zone: **`jaysonai.online`** (Cloudflare)
+A DNS-only `CNAME` from `mem20` in the `<retired-zone>` zone to
+`bythewayz66-glitch.github.io` was the proposed fix on 2026-10-26. **It is not
+to be created.** The owner retired the `<retired-zone>` hostname on 2026-10-31
+and `mem20.com` now serves the site, so the record would point a retired name at
+a site that already has a canonical host.
 
-| Field | Value |
-|---|---|
-| Type | `CNAME` |
-| Name | `mem20` |
-| Target | `bythewayz66-glitch.github.io` |
-| Proxy status | **DNS only — grey cloud, OFF** |
-| TTL | Auto |
+`docs/CNAME` in the repo names **`mem20.com`** — the repo half is done and
+correct, and no DNS change is outstanding.
 
-Proxy must be **off**. A GitHub Pages CNAME is validated by GitHub against the
-DNS answer; with the orange cloud on, Cloudflare answers with its own anycast
-addresses and GitHub cannot verify the custom domain, so Pages falls back and
-the certificate will not issue.
+## What replaced it
 
-`docs/CNAME` in the repo already contains exactly `mem20.jaysonai.online`, so
-the repo half is done and correct. DNS is the only missing half.
-
-## Do not point this hostname at the launch page until it exists
-
-Until the launch page rebuild lands at a URL that returns **200**, pointing
-`mem20.jaysonai.online` at it serves a 404 on the public domain. Sequence is:
-rebuild → confirm 200 → then create the CNAME. Creating the record early is
-harmless to the zone but will present a broken site to anyone who visits.
-
-Only a zone-write credential can do this. No agent in the group holds one, and
-this run did not attempt it — the record above is the change to make, not a
-change that was made.
+`mem20.com` is the canonical public host: it resolves to the GitHub Pages
+A-records and returns **200** with bytes identical to the committed
+`docs/index.html`. Nothing needs to be pointed anywhere else.

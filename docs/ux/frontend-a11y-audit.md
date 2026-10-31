@@ -335,7 +335,7 @@ npx vite build           # 58 modules, built clean
   `FocusTrap.jsx`; no new dependencies (`package.json` untouched, still React + Vite).
 
 **Not verified here, and why:** no browser/AT pass was run. This sandbox cannot reach
-`127.0.0.1:8221` or `mem20.jaysonai.online` (`HTTP 000` — the domain's CNAME points at
+`127.0.0.1:8221` or `mem20.com` (`HTTP 000` — the domain's CNAME points at
 `bythewayz66-glitch.github.io`, which is a Pages alias, not this API), so the console
 cannot be booted against live data. Everything above is source-level and
 computation-level verifiable; a real NVDA/VoiceOver pass against a running backend

@@ -128,8 +128,8 @@ only once registered.
 
 ### Root-cause fix applied during this work
 
-`docs/CNAME` on `main` still contained `mem20.jaysonai.online`, a hostname with **no A record** in the
-`jaysonai.online` zone (Cloudflare nameservers, NXDOMAIN on lookup). That orphaned entry is what
+`docs/CNAME` on `main` still contained the retired mem20 hostname, a name with **no A record** in the
+retired legacy zone (Cloudflare nameservers, NXDOMAIN on lookup). That orphaned entry is what
 pushed the site into `status: errored` after the domain switch. Fixed in commit
 **`4ea9361fa2f0e341035f3a9648f1239f4fd0302a`** (`docs/CNAME` → `mem20.com`), after which the site
 returned to `status: building` and then served 200.

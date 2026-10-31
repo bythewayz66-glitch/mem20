@@ -107,10 +107,10 @@ const FAQ: Array<{ q: string; a: React.ReactNode; src: string; tags: string[] }>
     a: (
       <>
         Because DNS is a different layer from Pages. The repo can serve perfectly on{' '}
-        <span className="mono">*.github.io/mem20/</span> while{' '}
-        <span className="mono">mem20.jaysonai.online</span> returns NXDOMAIN — GitHub only accepts a custom domain once the
-        record exists. The fix is one DNS-only CNAME from <span className="mono">mem20</span> to{' '}
-        <span className="mono">bythewayz66-glitch.github.io</span>, which needs zone access this shell does not have.
+        <span className="mono">*.github.io/mem20/</span> while the custom domain does not resolve — GitHub only
+        accepts a custom domain once the record exists. That is now resolved: <span className="mono">docs/CNAME</span>{' '}
+        names <span className="mono">mem20.com</span>, which resolves and serves the site. The earlier{' '}
+        <span className="mono">mem20.jaysonai.online</span> host is retired and is not used.
       </>
     ),
     src: 'docs/CNAME · GitHub Pages custom-domain behaviour',

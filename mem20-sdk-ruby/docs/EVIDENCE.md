@@ -1,9 +1,9 @@
 # mem20 Ruby SDK — verification evidence
 
 This is the raw output behind the results summarised in the README. It was captured on
-the **Sidney** host against the live mem20 server; nothing here is estimated.
+a Linux host against the live mem20 server; nothing here is estimated.
 
-- Host: `sidney` — Kali Linux (7.1.5+kali-amd64), `ruby 3.3.8 (2025-04-09)`
+- Host: Linux (Kali 7.1.5+kali-amd64), `ruby 3.3.8 (2025-04-09)`
 - Canonical repo: `github.com/bythewayz66-glitch/mem20` @ `main` (MIT)
 - Server: mem20-mcp, release `v2.1.0rc2`, protocol `2025-06-18`, 270 tools
 

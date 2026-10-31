@@ -15,20 +15,16 @@ from typing import Any
 from mem20ops import audit
 from mem20ops.cloudflare import CloudflareAPI, build_client, resolve_account_id
 
-# The four sites this fleet serves, plus the origin host. Kept here so the
-# Websites manager can show the intended shape next to what actually exists.
+# The sites this fleet serves. Kept here so the Websites manager can show the
+# intended shape next to what actually exists.
 FLEET_SITES: list[dict[str, str]] = [
-    {"host": "control.jaysonai.online", "role": "control plane", "state": "planned"},
-    {"host": "shop.jaysonai.online", "role": "sales site", "state": "planned"},
-    {"host": "market.jaysonai.online", "role": "marketing command center", "state": "planned"},
-    {"host": "docs.jaysonai.online", "role": "documentation wiki", "state": "planned"},
-    {"host": "jaysonai.online", "role": "fleet landing (apex)", "state": "planned"},
-    {"host": "www.jaysonai.online", "role": "apex alias", "state": "planned"},
-    {"host": "jnet1.jaysonai.online", "role": "box origin", "state": "live"},
-    {"host": "mem20.jaysonai.online", "role": "mem20 pages site (kept)", "state": "live"},
+    {"host": "mem20.com", "role": "mem20 pages site (apex)", "state": "live"},
+    {"host": "www.mem20.com", "role": "apex alias", "state": "live"},
 ]
 
-DEFAULT_ZONE = "jaysonai.online"
+# The former jaysonai.online zone and its hosts are retired (2026-10-31). The only
+# zone this fleet still manages is the one that serves the product site.
+DEFAULT_ZONE = "mem20.com"
 # The units this fleet depends on, and which systemd manager owns each one.
 # Scope matters: the system manager cannot see a user unit and reports it as
 # inactive/dead, so asking the wrong manager invents a failure that never

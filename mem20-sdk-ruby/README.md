@@ -79,9 +79,9 @@ end
 client = Mem20.client
 
 # Store a grounded fact.
-client.memory_store(content: "The release sign-off lives in Sidney.",
+client.memory_store(content: "The release sign-off lives in the ops channel.",
                     category: "project",
-                    tags: %w[release sidney])
+                    tags: %w[release ops])
 
 # Search it back.
 result = client.memory_recall(query: "where does the release sign-off live", limit: 5)
@@ -161,9 +161,9 @@ Run workflow* with `dry_run` left on (the default).
 
 ## Verification — reproduced results
 
-The results below were produced by running the suite and a live round-trip on the
-**Sidney** host (Kali Linux, Ruby 3.3.8) against the mem20 server at **v2.1.0rc2**. They
-are this SDK's actual measured results; the raw command output is reproduced in
+The results below were produced by running the suite and a live round-trip on a
+Linux host (Ruby 3.3.8) against the mem20 server at **v2.1.0rc2**. They are this SDK's
+actual measured results; the raw command output is reproduced in
 [`docs/EVIDENCE.md`](docs/EVIDENCE.md).
 
 | Check | Result |

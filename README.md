@@ -5,7 +5,7 @@
   <strong>A memory substrate and agent runtime for AI systems that have to be trusted.</strong>
 </p>
 <p align="center">
-  <a href="https://mem20.jaysonai.online"><img src="https://img.shields.io/badge/Website-mem20.jaysonai.online-FFD700?style=for-the-badge" alt="Website"></a>
+  <a href="https://mem20.com"><img src="https://img.shields.io/badge/Website-mem20.com-FFD700?style=for-the-badge" alt="Website"></a>
   <a href="https://github.com/bythewayz66-glitch/mem20/blob/main/LICENSE"><img src="https://img.shields.io/badge/License-MIT-green?style=for-the-badge" alt="License: MIT"></a>
   <a href="https://github.com/bythewayz66-glitch/mem20/releases"><img src="https://img.shields.io/github/v/release/bythewayz66-glitch/mem20?style=for-the-badge" alt="Release"></a>
 </p>
@@ -222,10 +222,10 @@ Plus `blender_*` and `unity_*` as **optional** integrations that require the ext
 ## Architecture
 
 ```
-                        ┌────────────────────────────────────────────┐
+                        ┌──────────────────────────────────────────────┐
    MCP client  --stdio▶│  mcp/mcp_server.py  (Mem20MCPServer)       │
    (Hermes, Claude,    │  JSON-RPC 2.0 · 270 tools · 27 domains     │
-    any MCP host)      └────────────────────────┬───────────────────┘
+    any MCP host)      └────────────────────────┬─────────────────┘
                                            │ calls
                  ┌─────────────────────────┼─────────────────────────┐
                  ▼                         ▼                         ▼
@@ -771,7 +771,7 @@ Plain JSON in `roadmaps/`; edit via the `roadmap_*` tools or directly.
 
 ## Documentation
 
-Full docs live at **[mem20.jaysonai.online](https://mem20.jaysonai.online)**.
+Full docs live at **[mem20.com](https://mem20.com)**.
 
 | Resource | What's covered |
 |----------|----------------|
@@ -808,4 +808,4 @@ Contributions are welcome! Before submitting a PR:
 
 MIT — see [LICENSE](LICENSE).
 
-Canonical repository: [bythewayz66-glitch/mem20](https://github.com/bythewayz66-glitch/mem20). Originally built by the JaysonAIOnline project.
+Canonical repository: [bythewayz66-glitch/mem20](https://github.com/bythewayz66-glitch/mem20).

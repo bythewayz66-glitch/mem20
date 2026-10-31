@@ -16,7 +16,7 @@ const SUBTABS = [
   { id: "pages", label: "Pages" },
 ];
 
-const DOCUMENTED_DEFAULT_ZONE = "jaysonai.online";
+const DOCUMENTED_DEFAULT_ZONE = "mem20.com";
 
 export default function Websites({ manifest }) {
   const [sub, setSub] = useState("sites");

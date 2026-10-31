@@ -107,10 +107,10 @@ const FAQ: Array<{ q: string; a: React.ReactNode; src: string; tags: string[] }>
     a: (
       <>
         Because DNS is a different layer from Pages. The repo can serve perfectly on{' '}
-        <span className="mono">*.github.io/mem20/</span> while{' '}
-        <span className="mono">mem20.jaysonai.online</span> returns NXDOMAIN — that custom domain is now
-        <strong>retired</strong> and will not be restored. GitHub only accepts a custom domain once the
-        record exists, so the site is served from the Pages path only.
+        <span className="mono">*.github.io/mem20/</span> while the previously configured custom domain
+        answered NXDOMAIN. That domain is <strong>retired and obsolete</strong> — it will not be restored,
+        so the hostname is not documented anywhere in this shell. GitHub only accepts a custom domain once
+        the record exists, so the site is served from the Pages path only.
       </>
     ),
     src: 'docs/CNAME · GitHub Pages custom-domain behaviour',

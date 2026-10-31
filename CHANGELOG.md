@@ -3,6 +3,28 @@
 All notable changes to mem20 are documented here. The format is based on
 [Keep a Changelog](https://keepachangelog.com/).
 
+## [3.1.0] — 2026-10-31
+
+First release cut since `v3.0.0`, which pointed at `a366ff74` and had drifted 93
+commits behind `main`. `v3.0.0` is left in place and is **not** moved; `v3.1.0` is
+a new tag on a release commit whose parent is `main` at `6b3bdca2`.
+
+### Changed
+- **Retired infrastructure purged from the repository.** `jaysonai.online`
+  (including `mem20.`, `shop.` and `control.`), the Sidney host `216.198.115.91`,
+  and the `gabe` publish gate are all **retired**. Live references in `README.md`,
+  `CANONICAL.md`, `docs/ops/`, `published/`, `roadmaps/`, `tools/` and `web/` now
+  say so instead of pointing at them. Historical records keep their dated findings
+  and carry a retirement note rather than being rewritten.
+- **Dependency bumps landed:** `vite` 5.4.21 → 8.3.5 in `/dashboard` (#141) and
+  `aiohttp` `>=3.9` → `>=3.14.5` (#142).
+
+### Added
+- **Daily-report record closed for 2026-10-27 → 2026-10-31** (#143). The three
+  dates 2026-10-28, 2026-10-29 and 2026-10-30 are filed as **`Status: NOT FILED`
+  gap records** — no daily ops sweep was filed on those dates. They are not
+  backfilled, reconstructed or retroactively filed reports.
+
 ## [Unreleased]
 
 ### Fixed

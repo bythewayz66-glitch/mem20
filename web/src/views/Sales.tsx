@@ -6,11 +6,9 @@
  * statement of position, not a metric.
  */
 import React from 'react';
-import raw from '../data/tools.json';
 import { Pill } from '../components/ui';
 
-type Tool = { name: string; domain: string };
-const CATALOG = raw as unknown as { count: number; tools: Tool[] };
+import { CATALOG } from '../data/catalog';
 const DOMAINS = new Set(CATALOG.tools.map((t) => t.domain)).size;
 
 export default function Sales({ onOpenApp }: { onOpenApp: () => void }) {

@@ -6,11 +6,8 @@
  *   · Tools — the full estate catalog from src/data/tools.json (AST-extracted).
  */
 import React, { useMemo, useState } from 'react';
-import raw from '../data/tools.json';
+import { CATALOG, type Tool } from '../data/catalog';
 import { Panel, Pill } from '../components/ui';
-
-type Tool = { name: string; title: string; description: string; domain: string; params: string[] };
-const CATALOG = raw as unknown as { count: number; tools: Tool[] };
 
 const FAQ: Array<{ q: string; a: React.ReactNode; src: string; tags: string[] }> = [
   {
@@ -106,16 +103,14 @@ const FAQ: Array<{ q: string; a: React.ReactNode; src: string; tags: string[] }>
     q: 'Why did the site 404 at the custom domain?',
     a: (
       <>
-        Because DNS is a different layer from Pages. The repo can serve perfectly on{' '}
-        <span className="mono">*.github.io/mem20/</span> while{' '}
-        a custom domain returns NXDOMAIN — GitHub only accepts a custom domain once the record exists.{' '}
-        <span className="mono">docs/CNAME</span> now names <span className="mono">mem20.com</span>, which resolves to
-        GitHub Pages and answers <span className="mono">200</span>, so{' '}
-        <span className="mono">https://mem20.com</span> is the canonical public URL. The earlier hostname is retired and
-        is not cited anywhere in this shell.
+        Because DNS is a different layer from Pages. A repo can serve perfectly on{' '}
+        <span className="mono">*.github.io/mem20/</span> while a custom domain returns NXDOMAIN — GitHub
+        only accepts a custom domain once the record exists. The old custom domain used here is now
+        <strong>retired</strong> and will not be restored; the current <span className="mono">docs/CNAME</span>{' '}
+        names <span className="mono">mem20.com</span>, which resolves and returns 200.
       </>
     ),
-    src: 'docs/CNAME · docs/gtm/claim-ledger.md § D4–D5',
+    src: 'docs/CNAME · GitHub Pages custom-domain behaviour',
     tags: ['deploy', 'dns', 'pages', 'cname'],
   },
   {
@@ -134,9 +129,11 @@ const FAQ: Array<{ q: string; a: React.ReactNode; src: string; tags: string[] }>
     q: 'How many tools does mem20 actually expose?',
     a: (
       <>
-        {CATALOG.count}, counted from source. The docs' summary line and this shell disagree with an earlier '260'; the count
-        below is produced by parsing every <span className="mono">mt.Tool(…)</span> registration in{' '}
+        {CATALOG.count} tools across {CATALOG.domain_count} domains, counted from source. The count is
+        produced by parsing every <span className="mono">mt.Tool(…)</span> registration in{' '}
         <span className="mono">mcp/tools/*.py</span>, so it is the number this UI stands behind.
+        <span className="mono">257</span>, <span className="mono">258</span> and{' '}
+        <span className="mono">268</span> are retired counts and are not restated here.
       </>
     ),
     src: 'src/data/tools.json (AST extraction)',
@@ -274,7 +271,7 @@ export default function DocsFaq() {
                       inputSchema properties
                     </div>
                     <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>
-                      {toolSel.params.map((p) => (
+                      {toolSel.params.map((p: string) => (
                         <span key={p} className="tag">{p}</span>
                       ))}
                     </div>

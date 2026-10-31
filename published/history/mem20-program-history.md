@@ -474,7 +474,8 @@ By the frontier, the count is **270 tools across 27 domains**, and `verify_mcp.p
 and it states the law the tree lives under:
 
 > 1. **Publish in two places.** … Either one alone is not "done".
-> 2. **Sidney is not a storage location.**
+> 2. **Sidney is retired and is not a storage location.** (The host `216.198.115.91`
+>    and the `gabe` publish gate no longer exist.)
 > 3. **Never edit a preserved file in place.** This is an archive.
 > 4. **Verify with hashes, not prose.** `MANIFEST.tsv` is authoritative; a file whose SHA-256 does not match the manifest has been corrupted or changed.
 

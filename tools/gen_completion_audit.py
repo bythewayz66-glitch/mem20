@@ -104,7 +104,8 @@ def services() -> dict:
 
 def endpoints() -> list[dict]:
     out = []
-    for url in ("https://shop.jaysonai.online/", "https://control.jaysonai.online/api/health"):
+    # jaysonai.online is retired; these endpoints no longer exist and are not probed.
+    for url in ():
         code = sh(f"curl -s -o /dev/null -w '%{{http_code}}' --max-time 25 {url}", timeout=40)
         out.append({"url": url, "code": code or "no response"})
     return out

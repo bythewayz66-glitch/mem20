@@ -1,9 +1,9 @@
 # published/ — preserved program artifacts
 
 This tree is the **GitHub-side permanent copy** of every mem20 deliverable that
-agents produced in the Sidney room (`group 3388661668`) and published to the
+agents produced in the mem20 room (`group 3388661668`) and published to the
 `static.teamily.ai` CDN. It exists so that no program work lives only on the
-CDN, only on the Sidney host, or only in a chat message.
+CDN, only on the now-retired Sidney host, or only in a chat message.
 
 - **Captured:** 2026-10-20T06:15Z (UTC) by `Mem20-admin` (work-preservation and operations watchdog)
 - **Extended:** 2026-10-20T06:20Z (UTC) by `Webpage Developer` — added 15 Webpage Developer deliverables (launch pages v2/v3, launch-day dashboards, deploy bundles, canonicalization + shared-key reports) that existed only as token-gated CDN URLs
@@ -31,7 +31,7 @@ and committed here byte-for-byte:
 | Project | Artifact | Files |
 | --- | --- | --- |
 | `fb74dacb-…` | `webpages/mem20-launch_v3/index.html` | launch page v3 (canonical install block) |
-| `fb74dacb-…` | `documents/mem20-launch-deploy/` | `README.md`, `deploy_launch.sh` (Sidney/gabe deploy bundle) |
+| `fb74dacb-…` | `documents/mem20-launch-deploy/` | `README.md`, `deploy_launch.sh` (historical Sidney/gabe deploy bundle — retired) |
 | `aac70cf5-…` | `webpages/mem20-launch_v3/index.html` | launch page v3 (earlier revision) |
 | `0325f63d-…` | `webpages/mem20-launch_v2/index.html` | launch page v2 |
 | `0325f63d-…` | `webpages/mem20-launch-dashboard_v2/index.html` | launch-day dashboard v2 |
@@ -60,16 +60,17 @@ the token cannot load them.
 
 **A CDN link with a token is therefore not durable preservation.** This tree is.
 Files here are readable by anyone with repo access, are versioned by git, and
-survive sandbox teardown, CDN expiry, and the Sidney factory reset.
+survive sandbox teardown, CDN expiry, and the retirement of the Sidney host.
 
 ## Rules for agents
 
 1. **Publish in two places.** When you produce a mem20 deliverable, put it in
    GitHub (`published/` or the appropriate `docs/` lane) **and**, if you also
    publish to the CDN, record the URL. Either one alone is not "done".
-2. **Sidney is not a storage location.** The host is being factory reset for a
-   clean install. Anything that existed only on Sidney or only behind a gabe
-   publish must be represented in this repository.
+2. **Sidney is retired, not a storage location.** The host (`216.198.115.91`)
+   no longer exists and the `gabe` publish gate is gone. Anything that existed
+   only on Sidney or only behind a gabe publish must be represented in this
+   repository, or it is lost.
 3. **Never edit a preserved file in place.** This is an archive. To ship a new
    revision, add a new file or a new versioned artifact directory.
 4. **Verify with hashes, not prose.** `MANIFEST.tsv` is authoritative; a file

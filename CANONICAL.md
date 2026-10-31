@@ -56,11 +56,14 @@ snippet resolves to this repository.
 
 ## Publication routing
 
-Per the project's publication mandate, work is published to the **Sidney** server via
-`ssh` / `sftp` / `rsync`, and that publication is **routed through gabe**.
+**GitHub is the only publication channel.** Work is published by pushing to this
+repository (`main`).
 
-- GitHub publication channel: this repository (`main`).
-- Server publication channel: Sidney, via ssh/sftp/rsync, routed through gabe.
+The former server channel is **retired**: the Sidney host (`216.198.115.91`) no
+longer exists, and the `gabe` publish gate that routed to it is gone. There is no
+`ssh` / `sftp` / `rsync` target and no gate to route through. Any instruction
+either in this repository or in an older runbook that says to publish via Sidney
+or gabe is historical record, not a live instruction.
 
 ## Snapshot record
 

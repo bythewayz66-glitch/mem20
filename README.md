@@ -5,7 +5,7 @@
   <strong>A memory substrate and agent runtime for AI systems that have to be trusted.</strong>
 </p>
 <p align="center">
-  <a href="https://mem20.jaysonai.online"><img src="https://img.shields.io/badge/Website-mem20.jaysonai.online-FFD700?style=for-the-badge" alt="Website"></a>
+  <a href="https://github.com/bythewayz66-glitch/mem20"><img src="https://img.shields.io/badge/Website-GitHub%20Pages-FFD700?style=for-the-badge" alt="Website"></a>
   <a href="https://github.com/bythewayz66-glitch/mem20/blob/main/LICENSE"><img src="https://img.shields.io/badge/License-MIT-green?style=for-the-badge" alt="License: MIT"></a>
   <a href="https://github.com/bythewayz66-glitch/mem20/releases"><img src="https://img.shields.io/github/v/release/bythewayz66-glitch/mem20?style=for-the-badge" alt="Release"></a>
 </p>
@@ -771,7 +771,9 @@ Plain JSON in `roadmaps/`; edit via the `roadmap_*` tools or directly.
 
 ## Documentation
 
-Full docs live at **[mem20.jaysonai.online](https://mem20.jaysonai.online)**.
+Full docs live in **[`docs/`](docs/)** in this repository. The former custom domain
+`mem20.jaysonai.online` is **retired** (NXDOMAIN) and is no longer a documentation
+surface.
 
 | Resource | What's covered |
 |----------|----------------|

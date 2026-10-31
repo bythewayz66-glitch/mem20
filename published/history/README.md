@@ -1,6 +1,6 @@
 # published/history — the mem20 program record
 
-Durable, in-repository copy of the mem20 program history. This directory exists because a document about durability that lives only behind a token-gated URL is not itself durable — see `published/README.md`, rule 2: *Sidney is not a storage location.*
+Durable, in-repository copy of the mem20 program history. This directory exists because a document about durability that lives only behind a token-gated URL is not itself durable — see `published/README.md`, rule 2: *The Sidney host is retired and is not a storage location.*
 
 | File | What it is |
 |---|---|

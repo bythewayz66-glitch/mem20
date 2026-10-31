@@ -7,7 +7,7 @@
 | **Source clause** | `docs/audit/mem20controlz-desktop-overhaul-plan.md` **C5** |
 | **Depends on** | #35 (shell scaffold, landed), #39 (shares this vocabulary — see `README.md` §1) |
 | **Blocked by** | Nothing. Testable in `cargo tauri dev` against an already-running backend; the bundled sidecar (#36) is a later wiring change, not an AC precondition. |
-| **Precondition for every AC** | A reachable API base URL. In dev that is `http://127.0.0.1:8741` per `tauri.conf.json.build.devUrl`. |
+| **Precondition for every AC** | A reachable API base URL. In dev the UI is served at `http://127.0.0.1:5173` per `tauri.conf.json.build.devUrl`, and the control plane defaults to `http://127.0.0.1:8890` (`mem20controlz/mem20controlz/__main__.py`, `--port` default 8890); the Tauri shell's own `DEFAULT_CONTROL_PORT` is also 8890. |
 
 ## 1. What "done" means
 

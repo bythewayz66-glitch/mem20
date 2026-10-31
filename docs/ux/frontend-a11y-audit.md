@@ -4,13 +4,81 @@
 |---|---|
 | **Surface** | `mem20controlz/mem20controlz/web/src/` |
 | **Audited at** | `main` @ `1264076` (2026-10-27) |
+| **Re-verified at** | `main` @ `f1672473` (2026-10-31) — see §0 |
 | **Branch** | `fix/ws2-controlz-a11y` |
 | **Method** | Source read, then measurement: every colour claim below is a WCAG 2.1 relative-luminance computation against the token actually shipped, not an estimate. `node --test web/test/a11y.test.js` re-asserts the numbers. |
-| **Out of scope** | #38 command palette (`feat/38-command-palette`, PR #109) and #39 offline states (`fix/39-offline-degraded-ux`, PR #108). Both are open and unmerged. Where they introduce a surface this branch must survive, §5 names the contract rather than editing their files. |
+| **Out of scope** | #38 command palette (`feat/38-command-palette`, PR #109) and #39 offline states (`fix/39-offline-degraded-ux`, PR #108). Both were open and unmerged when this audit was written; **both had landed in `main` by the re-verification date** (§0). Where they introduce a surface this branch must survive, §5 names the contract rather than editing their files. |
 
 Status: **11 defects, 8 fixed here, 3 handed off with a written contract.** Nothing
 below is a "would be nice"; each entry names a file, a line on `main`, what a user
 actually experiences, and what changed.
+
+---
+
+## 0. Shipped vs proposed — measured against `main` @ `f1672473` (2026-10-31)
+
+§1 below is the **audit record**: what was wrong on the audit branch and what that
+branch changed. It is not a description of present-day `main`, and three things in it
+have since moved: #38/#39 landed, the test suite grew, and `styles.css` stopped being
+untouched. This section is the ledger that reconciles the two. Every row was checked by
+reading the named file at `f1672473`; the test counts come from running the suite.
+
+**Verdict in one line: all eleven a11y fixes this audit claims are present in
+`web/src/**` and shipped — none is missing.** Breaking that down honestly: **six are
+complete** (A11Y-01, 02, 05, 06, 08, 10); **two carry token debt** because the old
+failing values are still declared in `styles.css` underneath (§0.4, A11Y-03/04); and
+**three carry a still-open proposal** — the part this audit handed off to #38/#39 that
+has not been built (A11Y-07 `tabpanel` wiring, A11Y-09 `role="status"`, A11Y-11 palette
+announcement). Those three are marked **proposal** per row rather than implied shipped.
+
+### 0.1 The eleven defects
+
+| ID | Audit claims | On `main` today | Evidence |
+|---|---|---|---|
+| A11Y-01 | Login field focus ring | **Shipped** | `a11y.css:124–129` — `.login-input:focus, .login-input:focus-visible` draws `2px solid var(--focus)` at `2px` offset and matches plain `:focus`, so the old `outline:none` cannot win |
+| A11Y-02 | Global `:focus-visible` ring | **Shipped** | `a11y.css:107–111` (`:where(a, button, input, …):focus-visible`), `:132–136` (`forced-colors: active` → `Highlight`) |
+| A11Y-03 | Six status-pill tokens raised to AA | **Shipped** | `a11y.css:22–44` (tokens), `:50–90` (tint + `0.5` border alpha per pill). **Debt:** `styles.css:14–19` still declares the old values, overridden one layer up (§0.3) |
+| A11Y-04 | `--text-faint` raised to `#8496a8` | **Shipped** | `a11y.css:26`. **Debt:** `styles.css:14` still ships `#5f7081` underneath |
+| A11Y-05 | Login gate is a real dialog, focus trapped + restored | **Shipped** | `LoginGate.jsx:37–42` (`FocusTrap`, `role="dialog"`, `labelledBy`/`describedBy`, `initialFocus`), `:77–82` (`aria-invalid`, `aria-describedby`, `role="alert"`, `id`); `FocusTrap.jsx:61–62` captures and restores the opener; `:141` sets `aria-modal` itself |
+| A11Y-06 | Table rows keyboard-activatable, `<th scope>`, `<caption>` | **Shipped** | `ui.jsx:157` caption prop → `:164` `.sr-only <caption>`; `:168` `scope="col"`; `:187` `tabIndex`; `:188–198` Enter/Space + `aria-selected`. All four named call sites exist: `tabs/Subsystems.jsx:305`, `tabs/CliCoverage.jsx:142`, `views/DreamListView.jsx:120`, `views/DreamHollowView.jsx:56` |
+| A11Y-07 | `TabBar` roving tabindex + Arrow/Home/End | **Shipped, scope narrower than claimed** | `ui.jsx:3–49` implements the roving model and the four keys. But it has only **two** live call sites — `tabs/Dreams.jsx:52` and `tabs/Websites.jsx:37` — not the three the entry lists. **Still a proposal:** no `role="tabpanel"` / `aria-labelledby` consumer exists anywhere in `src/` (`grep -rn 'role="tabpanel"'` → 0), so the "stable id anchors so a panel can point back at its tab" is an affordance nothing uses yet |
+| A11Y-08 | Skip link + focusable `<main>` | **Shipped** | `App.jsx:179–180` `.skip-link → #main-content`; `:219` `<main id="main-content" tabIndex={-1}>`; `a11y.css:166–184` |
+| A11Y-09 | Pill reason mirrored into `aria-label` | **Shipped, and only that half** | `StatusPill.jsx:14` `aria-label={`${text}: ${reason}`}`, dot stays `aria-hidden` (`:16`). **Still a proposal:** the pill itself has no `role="status"` — the topbar pill (`App.jsx:242`) is not wrapped in a live region. Note `StateNotice.jsx:40,74` *does* carry `role="status"`, but that is #39's banner, not the pill; HANDOFF-01 is therefore still open |
+| A11Y-10 | Reduced-motion handling | **Shipped** | `a11y.css:194–216` (`--motion-duration` → `0ms` plus the scoped `0.01ms` safety net); JS side `a11y.js:179,196,307` (`prefersReducedMotion`, `motionDuration`, `MOTION_DURATION_MS`) |
+| A11Y-11 | `.sr-only` utility; live region for result counts | **Shipped / landed by a different route** | `a11y.css:152–162` clip-rect `.sr-only`. The announce machinery shipped as `components/LiveRegion.jsx` and is wired at `tabs/Subsystems.jsx:282–283`. **Still a proposal:** `CommandPalette.jsx` contains **0** `aria-live`; `paletteAnnouncement()` exists and is tested (`a11y.js:228`) but nothing calls it |
+
+### 0.2 HANDOFF status
+
+| Handoff | Was | Is | What is still a proposal |
+|---|---|---|---|
+| HANDOFF-01 — live topbar status | owner: whoever lands #39 | **Open** | Wrap the topbar `StatusPill` (`App.jsx:242`) in `aria-live="polite"` and reconcile with `ErrorBanner`'s `role="alert"`. #39 landed the banner, not the pill. |
+| HANDOFF-02 — palette trap + announcement order | owner: #109 | **Open as written; its stated blocker is obsolete** | `CommandPalette.jsx:107` is still `role="dialog" aria-modal="true"` with **no** `FocusTrap` import, and `:162` `.palette-foot` is still a plain `<div>` with no live region. So both required changes remain unbuilt. What *has* expired is §6's rationale: `main.jsx:5` now imports `a11y.css`, so the palette inherits the global focus ring and the reduced-motion block — the "put it in `a11y.css` to dodge a conflict on `styles.css`" reasoning no longer constrains anyone. |
+| HANDOFF-03 — browser + AT pass | needs API reach | **Open** | Still no browser/AT verification on record. The host reference was stale and is corrected in §2. |
+
+### 0.3 Statements in this document that were true at audit time and are not true now
+
+These are corrected at their source, listed here so a reader who has an older copy
+knows exactly what changed:
+
+| Claim | Where | Correction |
+|---|---|---|
+| "25 tests, 25 pass" | §2 | The suite is now **70 tests across 5 files**: `a11y.test.js` 25, `a11y_palette.test.js` 13, `command_palette.test.js` 13, `lifecycle.test.js` 9, `status.test.js` 10. All 70 pass on `f1672473`. |
+| "#108 and #109 both append to `styles.css`; both open, neither merged" | §6 | Both had landed on `main` before the re-verification date. `styles.css` is now 1,444 lines (1,246 at the audit baseline) and the other two test files are #38/#39's. |
+| "`web/src/styles.css` is untouched" | §4 | True of the audit branch only. Later feature work edited it. |
+| "no `.sr-only`, no `aria-live`, no `role="status"` anywhere in 27 source files" | §2, A11Y-11 | Still accurate **as a statement about the baseline** (27 files, verified at `1264076`). `src/` now holds 35 files. |
+| "0 occurrences of `transition` / `prefers-reduced-motion` in 1,258 lines" | §2, A11Y-10 | Verified at the baseline: `styles.css` was **1,246** lines with 0 `focus-visible`, 0 `prefers-reduced-motion`, 0 `@keyframes`, 0 `transition`. Line count in the audit reads 1,258 — a 12-line drift worth trusting the measurement (`git show 1264076:…/styles.css \| wc -l`) over the prose. |
+| "no public host; loopback `127.0.0.1:8221`" | §2 | Host names retired from the repo are gone. The loopback default is **8890** (`mem20controlz/__main__.py:19`, `mem20controlz/README.md:16`). |
+| "`vite build` clean, only new imports are `a11y.js`/`a11y.css`/`FocusTrap.jsx`" | §2 | True at the time; no longer a complete inventory of what `src/` imports (`LiveRegion`, `StateNotice`, `lifecycle.js`, `commandPalette.js` have since been added by #38/#39). |
+
+### 0.4 Known debt this audit created and did not close
+
+The `a11y.css`-overrides-`styles.css` strategy was chosen to avoid two conflicts that no
+longer exist. It left the shell shipping **two competing declarations for six status
+tokens and `--text-faint`** — `styles.css:14–19` holds the old failing values, `a11y.css`
+the AA ones. That is a live maintenance hazard, not a cosmetic one: anyone editing
+`styles.css:14–19` will reasonably believe they changed the shipped colour and see
+nothing move. The cleanup (delete the dead tokens from `styles.css`, keep `a11y.css` as
+the single source) is now unblocked and should be its own change.
 
 ---
 
@@ -318,11 +386,11 @@ throws: the safe failure mode for a motion preference is less motion.
 
 ```bash
 cd mem20controlz/mem20controlz/web
-node --test test/        # 25 tests, 25 pass
-npx vite build           # 58 modules, built clean
+node --test test/        # at audit time: 25 tests, 25 pass
+npx vite build           # at audit time: 58 modules, built clean
 ```
 
-- **`node --test` — 25/25 pass.** Covers tab order (visibility filtering, positive
+- **`node --test` — 25/25 pass (at audit time; 70/70 across 5 files on `main` today, §0.3).** Covers tab order (visibility filtering, positive
   `tabindex` precedence, `tabindex=-1` exclusion), wrap-around arithmetic including
   recovery from "nothing focused", trap targets at both edges with the middle left to
   the browser, containment, focus restore with a removed opener, the screen-reader
@@ -334,12 +402,14 @@ npx vite build           # 58 modules, built clean
 - **`vite build` clean** — the only new imports are `a11y.js`, `a11y.css` and
   `FocusTrap.jsx`; no new dependencies (`package.json` untouched, still React + Vite).
 
-**Not verified here, and why:** no browser/AT pass was run. This sandbox cannot reach
-`127.0.0.1:8221` or `mem20.com` (`HTTP 000` — the domain's CNAME points at
-`bythewayz66-glitch.github.io`, which is a Pages alias, not this API), so the console
-cannot be booted against live data. Everything above is source-level and
-computation-level verifiable; a real NVDA/VoiceOver pass against a running backend
-belongs to whoever can reach the API — see HANDOFF-03.
+**Not verified here, and why:** no browser/AT pass was run. At audit time this sandbox
+could not reach the control plane on its loopback port (`127.0.0.1:8221` as it stood
+then; the service now defaults to `127.0.0.1:8890`, see
+`mem20controlz/mem20controlz/__main__.py`), and the service is loopback-only by design
+— there is no public hostname for it — so the console could not be booted against live
+data. Everything above is source-level and computation-level verifiable; a real
+NVDA/VoiceOver pass against a running backend belongs to whoever can reach the API —
+see HANDOFF-03.
 
 ---
 
@@ -378,15 +448,18 @@ the palette needs. One trap for both modals so they cannot drift.
 | `web/src/main.jsx` | imports `a11y.css` after `styles.css` |
 
 `package.json` and `package-lock.json` are **untouched** — no new dependencies.
-`web/src/styles.css` is **untouched** — see the note in §6 on why every rule lives in
-`a11y.css` instead.
+`web/src/styles.css` is **untouched by the audit branch** — see the note in §6 on why
+every rule lives in `a11y.css` instead. (Later feature work did edit `styles.css`; the
+resulting dead-declaration debt is tracked in §0.1.)
 
 ---
 
 ## 5. Contracts handed off (not edited here)
 
-Both target branches are open and unmerged, so editing their files would guarantee a
-conflict on a surface this branch does not own.
+At the time of writing, both target branches were open and unmerged, so editing their
+files would have guaranteed a conflict on a surface this branch does not own. **Both
+have since landed in `main`** — §0 records which handoffs that closed and which are
+still open.
 
 ### HANDOFF-01 — live status announcement (owner: whoever lands #39)
 
@@ -437,20 +510,27 @@ drill-down → palette open/close with focus restoration.
 
 ## 6. Why nothing in `styles.css` changed
 
+> **Status of this section: historical.** #108 and #109 have both landed, so the
+> conflict this section was written to dodge no longer exists, and the justification
+> below no longer constrains anyone. Kept because it explains why the overrides live
+> where they do; do not cite it as a live reason to keep `styles.css` untouched. The
+> cleanup it defers is unblocked — see §0.4.
+
 The obvious place for the token and focus-ring fixes is `styles.css` itself. This
 branch puts all of them in `a11y.css` (imported last, so equal specificity resolves in
 its favour) instead, for one concrete reason: **#108 and #109 both append to the foot of
 `styles.css`** — verified with `git diff --name-only main origin/fix/39-offline-
-degraded-ux -- .../web` and the same for `feat/38-command-palette`. Both are open,
-neither is merged, and a six-line edit in the middle of that file conflicts with both.
-A new file cannot conflict with anything.
+degraded-ux -- .../web` and the same for `feat/38-command-palette`. At the time, both
+were open, neither was merged, and a six-line edit in the middle of that file conflicted
+with both. A new file could not conflict with anything.
 
 The trade-off is honest: the old values still read as the shipped ones in `styles.css`,
 overridden one layer up. That is visible in DevTools as two competing declarations, and
 the right cleanup is a follow-up that deletes the dead tokens from `styles.css` once
-#108 and #109 have landed. The audit keeps the pre-fix line numbers so that cleanup is
-mechanical. `--motion-duration` has to be redefined on `:root` in `a11y.css` rather than
-edited in place for the same reason.
+#108 and #109 have landed. **They have landed** — so this is now plain debt, and the
+audit keeps the pre-fix line numbers so that cleanup is mechanical.
+`--motion-duration` has to be redefined on `:root` in `a11y.css` rather than edited in
+place for the same reason.
 
 ## 7. Reproduce the measurements
 

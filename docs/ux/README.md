@@ -142,11 +142,16 @@ the `title`/detail of a pill, a notification body or a degraded-state banner.
 - **A full registry sweep is expensive** (`~30 subprocesses`, some importing heavy
   ML stacks; `docs/desktop.md` and `app.py` both say so). Shells must not create a
   new poll frequency; they consume the existing cache contract (TTL 45 s).
-- **The sidecar is not wired yet.** `src-tauri/src/lib.rs` is a bare
-  `tauri::Builder::default().run(...)` — no spawn, no port handshake (that is
-  issue #36). Every spec below therefore states its preconditions in terms of
-  "a reachable base URL", so it can be tested against `cargo tauri dev` today and
-  against the bundled sidecar once #36 lands, without rewriting the criteria.
+- **The sidecar is wired.** Corrected 2026-10-31 against `main` @ `f1672473`: this
+  document was written when `src-tauri/src/lib.rs` was a bare
+  `tauri::Builder::default().run(...)`. It no longer is — issue #36 landed, and `lib.rs`
+  now reserves an ephemeral loopback port (`sidecar::reserve_port()`), spawns the
+  FastAPI process (`LaunchSpec::python_module().with_port(...)` → `spec.spawn()`), waits
+  for readiness with `sidecar::wait_until_ready(…, READY_BUDGET)`, and exposes
+  `probe_control_plane` with a `stale`/`age_s` verdict. Every spec below still states
+  its preconditions in terms of "a reachable base URL", which is why that wording was
+  kept: it is testable both against `cargo tauri dev` and against the bundled sidecar,
+  and it did not need rewriting when #36 landed.
 - **Success is not "it renders".** Each spec's final section is a negative test.
   The status vocabulary exists to stop the shell from lying; a test suite that
   only checks the happy path does not test the thing these issues are about.

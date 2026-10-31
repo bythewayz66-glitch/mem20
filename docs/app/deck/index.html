@@ -39,6 +39,7 @@
   <h1>mem20 - Investor &amp; Board Deck</h1>
   <p class="lede">Thirteen slides. Every claim carries the repo SHA or docs path it came from. The adversarial retrieval row is shown rather than omitted. Nothing on these slides is recalled from memory or rounded up.</p>
   <div class="sha">baseline - 45445f4850377814cd95b7fa50c0a9153f76c163</div>
+  <p class="lede" style="margin-top:10px"><strong>Version currency.</strong> This deck is pinned to <code>45445f48</code>, where <code>VERSION</code> was <strong>3.0.0</strong>. The shipped tree is <strong>3.1.0</strong> at <code>27c1e5fb</code>. The 3.0.0 readings on the slides are correct <em>at the pinned commit</em>; they are not restated here as the current version, because rewriting them would make &ldquo;<code>cat VERSION</code> at 45445f48&rdquo; return a value it never returned.</p>
 
   <h2>Slides</h2>
   <div class="sub">13 slides - all reachable - each source-marked</div>
@@ -46,7 +47,7 @@
     <thead><tr><th>#</th><th>Slide</th><th>Claim it makes</th><th>Source</th></tr></thead>
     <tbody>
       <tr><td class="n">01</td><td><a href="slides/slide_01.html">Cover</a></td><td>7,975 files / 3.0.0 / 270-27 / $14,000, all pinned to one commit</td><td class="src">git ls-files / VERSION / verify_mcp.py:5 / docs/finance/inputs.json</td></tr>
-      <tr><td class="n">02</td><td><a href="slides/slide_02.html">The baseline, pinned</a></td><td>Eight facts re-read at 45445f48, which is main's head &mdash; no drift to disclose</td><td class="src">GITHUB_GET_A_BRANCH / roster section 1 / inputs.json</td></tr>
+      <tr><td class="n">02</td><td><a href="slides/slide_02.html">The baseline, pinned</a></td><td>Eight facts re-read at 45445f48, which was main's head at the time of writing</td><td class="src">GITHUB_GET_A_BRANCH / roster section 1 / inputs.json</td></tr>
       <tr><td class="n">03</td><td><a href="slides/slide_03.html">What mem20 is</a></td><td>Contamination 0.0 / simulated records [] / 41 diagnostics, all healthy</td><td class="src">benchmarks/results/latest.md</td></tr>
       <tr><td class="n">04</td><td><a href="slides/slide_04.html">The tool surface</a></td><td>270 tools / 27 domains asserted in four independent places; 257/26 retired</td><td class="src">verify_mcp.py:5 / mcp-verify.yml:63 / README.md:161-242 / inputs.json</td></tr>
       <tr><td class="n">05</td><td><a href="slides/slide_05.html">Market sizing</a></td><td>TAM $1.28B / SAM $282M (22.03%) / SOM $1.68M (0.60%); SAM integer build is $12,000 short</td><td class="src">docs/finance/inputs.json / docs/finance/README.md:17-19, :80-82</td></tr>
@@ -67,7 +68,7 @@
     <thead><tr><th>Fact</th><th>Value</th><th>How verified at 45445f48</th><th>Status</th></tr></thead>
     <tbody>
       <tr><td>Tracked files</td><td class="ok">7,975</td><td class="src">git ls-files | wc -l</td><td class="ok">verified</td></tr>
-      <tr><td>VERSION</td><td class="ok">3.0.0</td><td class="src">cat VERSION</td><td class="ok">verified</td></tr>
+      <tr><td>VERSION</td><td class="ok">3.0.0</td><td class="src">git show 45445f48:VERSION (not cat VERSION, which reads 3.1.0 today)</td><td class="ok">verified at baseline</td></tr>
       <tr><td>Tool surface</td><td class="ok">270 / 27</td><td class="src">verify_mcp.py:5, mcp-verify.yml:63, README.md:161-242, inputs.json</td><td class="ok">verified 4x</td></tr>
       <tr><td>Blended ACV</td><td class="ok">$14,000</td><td class="src">docs/finance/inputs.json - blended_acv</td><td class="ok">verified</td></tr>
       <tr><td>TAM</td><td class="ok">$1.28B</td><td class="src">docs/finance/inputs.json (carried input)</td><td class="ok">quoted</td></tr>
@@ -84,14 +85,15 @@
   </div>
 
   <div class="flag">
-    <div class="t">PINNED TO CURRENT MAIN</div>
-    <p>This deck was rebased onto <span class="mono">45445f4850377814cd95b7fa50c0a9153f76c163</span>, main's head at the time of writing, and every figure was re-read there. A reviewer diffing against today's main sees the same tree. The earlier cut at <span class="mono">1264076</span> is superseded and no longer cited.</p>
+    <div class="t">PINNED TO 45445f48 - NOT TO CURRENT MAIN</div>
+    <p>This deck was rebased onto <span class="mono">45445f4850377814cd95b7fa50c0a9153f76c163</span>, which was main's head at the time of writing, and every figure was re-read there. <strong>Main has since moved.</strong> A reviewer diffing against today's main will see drift, and <span class="mono">VERSION</span> now reads <strong>3.1.0</strong> at <span class="mono">27c1e5fb</span> rather than the 3.0.0 recorded here. The 3.0.0 readings are correct at the pinned commit and are not restated as current. The earlier cut at <span class="mono">1264076</span> is superseded and no longer cited.</p>
   </div>
 
   <footer>
     mem20 - INVESTOR &amp; BOARD DECK - 27 OCTOBER 2026<br>
     source of truth: github.com/bythewayz66-glitch/mem20 @ 45445f4850377814cd95b7fa50c0a9153f76c163<br>
-    deck source: docs/app/deck/ - branch content/ws3-investor-deck - live copies recorded in PERMANENT_URL.md
+    deck source: docs/app/deck/ - branch content/ws3-investor-deck - live copies recorded in PERMANENT_URL.md<br>
+    version currency: 3.0.0 at the pinned baseline; 3.1.0 on the shipped tree at 27c1e5fb
   </footer>
 </div>
 </body>

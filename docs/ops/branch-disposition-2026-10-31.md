@@ -2,23 +2,29 @@
 
 **Measured at:** 2026-10-31, America/Denver
 **Repository:** `github.com/bythewayz66-glitch/mem20`
-**Baseline `main`:** `66d4e5a09d3919f0b0d477777ceb653305c61967`
+**Baseline `main` at measurement:** `66d4e5a09d3919f0b0d477777ceb653305c61967`
+**`main` at final verification:** `5bcc4fc08a671a7f5f806a8c2a1303632e9321c9`
 **Measured by:** Mem20-admin (H5, merge order 5 of 5)
 **Method:** fresh `git clone` + `git fetch --all --prune`, then per branch
 `git rev-list --left-right --count main...<head>`, `git merge-base --is-ancestor`,
 `git cherry main <head>` (patch-equivalence), and `git diff --stat main...<head>`.
 Every row below is a real command result from this run, not a report from another agent.
 
+> **Note on a moving baseline.** `main` advanced three times during this run
+> (`f1672473` → `ca2a72b` → `66d4e5a0` → `10c9b95b` → `5bcc4fc0`) as other agents landed
+> their own lanes. §1 records the state at measurement; §12 records the final re-verification
+> and the two rows that changed underneath this document.
+
 ---
 
-## 1. Disposition table
+## 1. Disposition table (state at measurement, `main` = `66d4e5a0`)
 
 | # | Branch | Head measured | Ahead / Behind | Ancestor of `main`? | Disposition |
 |---|---|---|---:|---|---|
 | 1 | `chore/ws1-purge-retired-infra-refs` | `de37968ac72cb89e9dd555bb67923220e959a260` | 0 / 11 | **YES** | **MERGED (H1)** via #145 → `f1672473`. Delete branch. |
 | 2 | `docs/ws1-retire-jaysonai-hostname` | `080fdda1df70920993d272ed43d8848fe7830875` | 0 / 4 | **YES** | **MERGED (H2)** via `ca2a72b`. Delete branch. |
 | 3 | `chore/ws1-rebuild-app-bundle-purge-jaysonai` | `faf9cef3727950c40e1e7db2f4252baa92a958d9` | 2 / 15 | **no** | **NOT MERGED.** PR **#146 is open**. Keep — do not delete. |
-| 4 | `chore/ruby-sdk-surface-guard` | `c56ccb092eef6858edddd284dddd57828e89ed2f` | 1 / 12 | **no** | **NOT MERGED.** Keep — needs a merge decision. |
+| 4 | `chore/ruby-sdk-surface-guard` | `c56ccb092eef6858edddd284dddd57828e89ed2f` | 1 / 12 | **no** | **NOT MERGED at measurement** — landed later in this run as `10c9b95b` (see §12). |
 | 5 | `docs/ws1-daily-reports-2026-10-31` | `4f20ecfb848f80e2fe4490050ecfb1e178cea401` | 0 / 15 | **YES** | **MERGED (H5)** via #147 → `66d4e5a0`. Delete branch. |
 | 6 | `chore/retire-jaysonai-sidney-gabe` | `d0ac17b065405446ed0bf9a42b4d07330bb2cc7f` | 1 / 15 | **no** | **SUPERSEDED by H1.** Close, do not merge. |
 | 7 | `dependabot/pip/aiohttp-gte-3.14.5` | `6a087a231c9066694208048a69deb780a330e433` | 1 / 89 | **no** | **SUPERSEDED** — #142 merged as `6b3bdca2`. **DELETED this run.** |
@@ -31,8 +37,8 @@ Every row below is a real command result from this run, not a report from anothe
 
 ## 2. Corrections to the SHAs supplied in the H5 task card
 
-Two of the eight SHAs in the task card **do not exist in this repository**, and two
-others are not the branch head. Recorded here so the record is not silently wrong:
+Two of the eight SHAs in the task card **do not exist in this repository**, and one other is
+not the branch head. Recorded here so the record is not silently wrong:
 
 | Branch | SHA given in task | Reality |
 |---|---|---|
@@ -47,9 +53,10 @@ others are not the branch head. Recorded here so the record is not silently wron
 
 ---
 
-## 3. Correction to the merge premise: H3 and H4 are NOT merged
+## 3. Correction to the merge premise: H3 was NOT merged
 
-The task card describes H3 and H4 as "merged". **They are not on `main`.** Evidence:
+The task card described H3 and H4 as "merged". At measurement, **neither was on `main`.**
+Evidence:
 
 ```
 $ git merge-base --is-ancestor faf9cef3727950c40e1e7db2f4252baa92a958d9 main   # H3
@@ -69,18 +76,16 @@ $ git cherry main chore/ruby-sdk-surface-guard
 `+` means the patch is **not** in `main`. Neither branch was squash-merged either —
 `git cherry` would have printed `-` for a patch-equivalent commit.
 
-**H3** is still an open PR (#146, opened 2026-10-31T22:59:45Z, `mergeable_state: unknown`).
-Its content is genuinely absent from `main`: `docs/app/index.html` on `main` still points at
+**H4 has since landed** — merged into `main` as `10c9b95b` during this run (§12).
+
+**H3 is still not merged.** It remains open PR #146 (opened 2026-10-31T22:59:45Z). Its content
+is genuinely absent from `main`: `docs/app/index.html` on `main` still points at
 `index-BmhMl8hv.js`, and that bundle still contains a `jaysonai` string
 (`git grep -c -iE 'jaysonai' main -- 'docs/app/assets/*'` → 1 match). The branch replaces it
 with `index-BS9Fg-qc.js`.
 
-**H4** is a single commit touching one file,
-`mem20-sdk-ruby/spec/mem20/surface_spec.rb` (+10 / −1), extending the surface drift guard to
-every doc that states a tool count. It has no PR.
-
-**Consequence:** the "5 of 5" merge order is complete for H1, H2 and H5 only. H3 and H4
-remain open work and must not be counted as landed.
+**Consequence:** the "5 of 5" merge order is complete for H1, H2, H4 and H5. **H3 remains open
+work and must not be counted as landed.**
 
 ---
 
@@ -110,7 +115,18 @@ $ git merge-base --is-ancestor 4f20ecfb848f80e2fe4490050ecfb1e178cea401 main
 
 ---
 
-## 5. Ref deletions performed this run
+## 5. H5b — this document
+
+| Item | Value |
+|---|---|
+| Path | `docs/ops/branch-disposition-2026-10-31.md` |
+| **Commit SHA** | **`5bcc4fc08a671a7f5f806a8c2a1303632e9321c9`** |
+| Parent | `10c9b95bbab30c042756a529a7f3a16383eedec0` |
+| Size | 11,118 B (first revision) |
+
+---
+
+## 6. Ref deletions performed this run
 
 Both were proven fully contained in `main` before deletion.
 
@@ -120,24 +136,28 @@ Both were proven fully contained in `main` before deletion.
 | `chore/ws1-release-tag-3.1.0` | `git merge-base --is-ancestor 73343f68 main` → exit 0; 0 ahead / 11 behind; tag `v3.1.0` → `97add7fdf43cc55925a3078e56b410cb9bb67233`, also an ancestor of `main`; `VERSION` on `main` = `3.1.0` | **deleted** (HTTP 204) |
 
 Deleting a branch does not delete its commits — both remain reachable from `main`, and the
-`v3.1.0` tag is untouched.
+`v3.1.0` tag is untouched. Confirmed gone:
+`git ls-remote --heads origin 'dependabot/pip/aiohttp-gte-3.14.5' 'chore/ws1-release-tag-3.1.0'` → 0 lines.
 
 ---
 
-## 6. Branches recommended for deletion (not deleted — outside this task's authority)
+## 7. Branches recommended for deletion (not deleted — outside this task's authority)
 
-These are fully merged and carry nothing `main` lacks. Deletion is safe but was **not**
-performed here because the task card only authorised the two deletions above.
+Fully merged, carrying nothing `main` lacks. Deletion is safe but was **not** performed here
+because the task card only authorised the two deletions in §6.
 
 | Branch | Head | Why safe |
 |---|---|---|
-| `chore/ws1-purge-retired-infra-refs` | `de37968ac7` | 0 ahead / 11 behind; ancestor of `main` |
-| `docs/ws1-retire-jaysonai-hostname` | `080fdda1df` | 0 ahead / 4 behind; ancestor of `main` |
-| `docs/ws1-daily-reports-2026-10-31` | `4f20ecfb84` | 0 ahead / 15 behind; ancestor of `main` (merged as #147) |
+| `docs/ws1-retire-jaysonai-hostname` | `080fdda1df` | 0 ahead; ancestor of `main` |
+| `docs/ws1-daily-reports-2026-10-31` | `4f20ecfb84` | 0 ahead; ancestor of `main` (merged as #147) |
+| `chore/ruby-sdk-surface-guard` | `c56ccb092e` | ancestor of `main` (merged as `10c9b95b`) |
+
+`chore/ws1-purge-retired-infra-refs` was on this list at measurement; it has since been
+deleted by another agent (§12).
 
 ---
 
-## 7. `chore/retire-jaysonai-sidney-gabe` — why "superseded" is the right call
+## 8. `chore/retire-jaysonai-sidney-gabe` — why "superseded" is the right call
 
 Head `d0ac17b065405446ed0bf9a42b4d07330bb2cc7f`, 1 ahead / 15 behind, **not** an ancestor of
 `main`, and `git cherry` reports `+` — so it is **not** patch-identical to H1. That is expected:
@@ -155,7 +175,7 @@ be re-cut as a fresh branch against current `main`, not merged as-is.
 
 ---
 
-## 8. Token mandate — verified, not asserted
+## 9. Token mandate — verified, not asserted
 
 The mandate: owner token via remote URL or `GITHUB_TOKEN`/`GH_TOKEN` env only; never in a
 tracked file, workflow YAML, committed `.git/config`, or commit message.
@@ -178,7 +198,7 @@ a workflow file, or a commit message.
 
 ---
 
-## 9. Retired infrastructure
+## 10. Retired infrastructure
 
 Sidney (`216.198.115.91`) and `gabe` are **retired**. This document records no live dependency
 on either. The only remaining mention of the Sidney IP on `main` is the dated retirement
@@ -186,19 +206,59 @@ statement in `CANONICAL.md:62`, which is intentional historical record, not a li
 
 ---
 
-## 10. Follow-ups with owners
+## 11. Follow-ups with owners
 
 | # | Action | Owner | Evidence required |
 |---|---|---|---|
 | 1 | Land **H3** — review and merge PR #146 (`chore/ws1-rebuild-app-bundle-purge-jaysonai`). `main` still serves a bundle containing a `jaysonai` string. | Webpage Developer / GitHub Repo Assistant | merge SHA on `main`; `git grep -c -iE 'jaysonai' main -- 'docs/app/assets/*'` → 0 |
-| 2 | Land **H4** — open a PR for `chore/ruby-sdk-surface-guard` (1 commit, 1 file, +10/−1) and merge. | GitHub Repo Assistant | PR number + merge SHA |
-| 3 | Close `chore/retire-jaysonai-sidney-gabe` without merging (superseded by H1/H2). | GitHub Repo Assistant | closed PR/ref state |
-| 4 | Delete the three fully-merged branches in §6. | GitHub Repo Assistant | 204 on each ref delete |
-| 5 | Re-cut any still-wanted line from `chore/retire-jaysonai-sidney-gabe` against current `main` as a fresh branch. | GitHub Repo Assistant | new branch + PR |
+| 2 | Close `chore/retire-jaysonai-sidney-gabe` without merging (superseded by H1/H2). | GitHub Repo Assistant | closed PR/ref state |
+| 3 | Delete the three fully-merged branches in §7. | GitHub Repo Assistant | 204 on each ref delete |
+| 4 | Re-cut any still-wanted line from `chore/retire-jaysonai-sidney-gabe` against current `main` as a fresh branch. | GitHub Repo Assistant | new branch + PR |
 
 ---
 
-## 11. House numbers (unchanged, carried for consistency)
+## 12. Final re-verification (`main` = `5bcc4fc0`)
+
+Re-run after this document was first committed, because `main` moved during the run.
+
+```
+$ git log --oneline -4 origin/main
+5bcc4fc docs(ops): record branch disposition for all 9 refs measured 2026-10-31 (H5b)
+10c9b95 Merge branch 'chore/ruby-sdk-surface-guard' into main (ruby SDK surface guard, H4)
+66d4e5a Merge pull request #147 from bythewayz66-glitch/docs/ws1-daily-reports-2026-10-31
+d709d1b docs(tools): correct docs/02-tools-reference.md to 270 tools / 27 domains
+```
+
+Two rows in §1 changed underneath this document:
+
+| Branch | Change | Final state |
+|---|---|---|
+| `chore/ruby-sdk-surface-guard` | **H4 landed** as `10c9b95b` (merged by another agent mid-run) | ancestor of `main` = **YES** |
+| `chore/ws1-purge-retired-infra-refs` | **ref deleted** by another agent | branch **GONE**; commits still reachable via `f1672473` |
+
+Final ancestry re-check:
+
+```
+docs/ws1-retire-jaysonai-hostname              080fdda1df   ancestor=YES
+chore/ws1-rebuild-app-bundle-purge-jaysonai    faf9cef372   ancestor=no
+chore/ruby-sdk-surface-guard                   c56ccb092e   ancestor=YES
+docs/ws1-daily-reports-2026-10-31              4f20ecfb84   ancestor=YES
+chore/retire-jaysonai-sidney-gabe              d0ac17b065   ancestor=no
+```
+
+**Net result: of the 9 refs measured, 5 are fully contained in `main` (H1, H2, H4, H5,
+release-tag), 2 were deleted as superseded, 1 is superseded and should be closed
+(`chore/retire-jaysonai-sidney-gabe`), and 1 is genuinely unlanded work
+(`chore/ws1-rebuild-app-bundle-purge-jaysonai`, PR #146).**
+
+Branches that appeared during the run and are **out of scope** for this document (other
+agents' lanes, not part of the 9): `chore/benchmarks-accuracy-2026-10-31`,
+`chore/deck-assets-accuracy`, `chore/launch-copy-accuracy`, `chore/perl-sdk-surface-guard`,
+`chore/ux-docs-accuracy`, `chore/web-src-purge-retired-infra`.
+
+---
+
+## 13. House numbers (unchanged, carried for consistency)
 
 - **257 tools across 26 domains** — legacy house number.
 - Directly counted surface: **270 tools / 27 domains** (`docs/02-tools-reference.md` corrected

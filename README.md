@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="https://img.shields.io/badge/mem20-v3.0.0-6366f1?style=for-the-badge&logo=github" alt="mem20 v3.0.0">
+  <img src="https://img.shields.io/badge/mem20-v3.1.0-6366f1?style=for-the-badge&logo=github" alt="mem20 v3.1.0">
 </p>
 <p align="center">
   <strong>A memory substrate and agent runtime for AI systems that have to be trusted.</strong>
@@ -225,7 +225,7 @@ Plus `blender_*` and `unity_*` as **optional** integrations that require the ext
                         ┌────────────────────────────────────────────┐
    MCP client  --stdio▶│  mcp/mcp_server.py  (Mem20MCPServer)       │
    (Hermes, Claude,    │  JSON-RPC 2.0 · 270 tools · 27 domains     │
-    any MCP host)      └────────────────────────┬───────────────────┘
+    any MCP host)      └────────────────────────┬───────────────┘
                                            │ calls
                  ┌─────────────────────────┼─────────────────────────┐
                  ▼                         ▼                         ▼
@@ -626,8 +626,10 @@ Tools: `roadmap_create`, `roadmap_list`, `roadmap_get`, `roadmap_update_phase`.
 
 ## Installation
 
-mem20 is distributed through four channels. All of them run the **same**
-server (`mcp/mcp_server.py`): an MCP stdio JSON-RPC server plus an HTTP health endpoint
+mem20 is distributed from **source only** — it is **not published to PyPI**, so there
+is no `pip install mem20`. Every install below starts from a clone of this repository
+(or the Docker image built from it). All of them run the **same** server
+(`mcp/mcp_server.py`): an MCP stdio JSON-RPC server plus an HTTP health endpoint
 on `:8080` (`/health`, `/ready`, `/metrics`). Pick whichever fits your environment.
 
 ### 1. pip (Python)
@@ -771,9 +773,9 @@ Plain JSON in `roadmaps/`; edit via the `roadmap_*` tools or directly.
 
 ## Documentation
 
-Full docs live in **[`docs/`](docs/)** in this repository. The former custom domain
-`mem20.jaysonai.online` is **retired** (NXDOMAIN) and is no longer a documentation
-surface.
+Full docs live in **[`docs/`](docs/)** in this repository. The previously advertised
+custom documentation domain is **retired** (NXDOMAIN) and is no longer a documentation
+surface; see [`CANONICAL.md`](CANONICAL.md).
 
 | Resource | What's covered |
 |----------|----------------|

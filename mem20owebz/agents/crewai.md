@@ -1,11 +1,17 @@
-# mem20 crews + Jayson — Installation & Connection
+# CrewAI + mem20 — Installation & Connection
 
-mem20 crews is excellent for role-based multi-agent teams (researcher + writer + reviewer, etc.).
+> **Corrected 2026-10-31 (H22):** a previous rewrite of this file corrupted the
+> upstream package names. `pip install mem20 crews mem20 crews-tools` is not a
+> valid command and mem20 is **not** on PyPI (installs are source-only) — see
+> `docs/gtm/claim-ledger.md` §D1. The commands below are the real upstream ones;
+> for mem20 itself use `git clone` + `pip install -r requirements.txt`.
 
-## 1. Install mem20 crews
+CrewAI is excellent for role-based multi-agent teams (researcher + writer + reviewer, etc.).
+
+## 1. Install CrewAI
 
 ```bash
-pip install mem20 crews mem20 crews-tools
+pip install crewai crewai-tools
 ```
 
 Create your agents and crew as usual.

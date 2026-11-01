@@ -1,0 +1,161 @@
+{
+  "name": "mem20-scale-corpus-v3",
+  "schema_version": "mem20-bench-v3",
+  "seed": 20261101,
+  "records": 122178,
+  "by_category": {
+    "grounded": 40726,
+    "ungrounded": 40726,
+    "false": 40726
+  },
+  "by_family": {
+    "element": 2324,
+    "country": 2680,
+    "mime": 7912,
+    "city": 26322,
+    "codepoint": 38932,
+    "countrymeta": 3282,
+    "fiction": 40726
+  },
+  "probes": 600,
+  "probe_kinds": {
+    "direct": 200,
+    "adversarial": 150,
+    "contradiction": 150,
+    "unanswerable": 100
+  },
+  "total_bytes": 101090449,
+  "total_mib": 96.41,
+  "bytes_per_record": 827.4,
+  "shards": [
+    {
+      "file": "records.part-01.jsonl",
+      "records": 39134,
+      "bytes": 36699632
+    },
+    {
+      "file": "records.part-02.jsonl",
+      "records": 45713,
+      "bytes": 36699580
+    },
+    {
+      "file": "records.part-03.jsonl",
+      "records": 37331,
+      "bytes": 27691237
+    }
+  ],
+  "sources": {
+    "element": "https://raw.githubusercontent.com/Bowserinator/Periodic-Table-JSON/master/PeriodicTableJSON.json",
+    "country": "https://raw.githubusercontent.com/lukes/ISO-3166-Countries-with-Regional-Codes/master/all/all.json",
+    "mime": "https://raw.githubusercontent.com/jshttp/mime-db/master/db.json",
+    "city": "https://download.geonames.org/export/dump/cities15000.zip",
+    "codepoint": "https://www.unicode.org/Public/UCD/latest/ucd/UnicodeData.txt",
+    "countrymeta": "https://raw.githubusercontent.com/mledoze/countries/master/countries.json"
+  },
+  "generator": "benchmarks/v3/build_corpus_v3.py",
+  "schema": {
+    "format": "JSONL, one JSON object per line, UTF-8, no BOM",
+    "record": {
+      "id": "stable unique id, prefix g/u/f + 7-digit ordinal",
+      "key": "stable unique key, human-readable, category-prefixed",
+      "category": "grounded | ungrounded | false",
+      "family": "source family (element, country, mime, city, codepoint, countrymeta, fiction) or <family>-dossier",
+      "topic": "mem20 topic, bench.v3.<family>",
+      "content": "the fact text, one or two sentences",
+      "tags": "list; includes family, category, bench-v3",
+      "epistemic_status": "mem20 vocabulary: observed | imagined | agent_generated",
+      "subject": "the entity the fact is about",
+      "predicate": "the relation asserted",
+      "object": "the value asserted (for false records: the WRONG value)",
+      "confidence": "1.0 grounded, 0.4 ungrounded, 0.2 false",
+      "source": "grounded only: the URL the value was transcribed from",
+      "evidence": "grounded only: the verbatim source fields",
+      "contradicts": "false only: the grounded key this claim denies",
+      "true_value": "false only: the value that grounded key actually holds",
+      "difficulty": "easy | medium | hard | control",
+      "timestamp": "deterministic ISO-8601 instant derived from the key",
+      "schema_version": "mem20-bench-v3",
+      "provenance": "generator, seed, retrieval date, source URL"
+    },
+    "probe": {
+      "qid": "unique probe id",
+      "kind": "direct | adversarial | contradiction | unanswerable",
+      "text": "the query",
+      "expect": "list of literal substrings that prove the answer",
+      "gold_key": "the record that holds the answer (null for controls)",
+      "difficulty": "easy | medium | hard | control"
+    }
+  },
+  "files": [
+    {
+      "file": "probes.jsonl",
+      "bytes": 129454,
+      "sha256": "35747781a28efce24198415b85a899a430ab20bbd6e0be18972bc802e8db93a5"
+    },
+    {
+      "file": "records.part-01.jsonl",
+      "bytes": 36699632,
+      "sha256": "b775afc494cdc3168a0f2dd4a8590654fd251697cc519b6ed2be91bf9cf8b6c0"
+    },
+    {
+      "file": "records.part-02.jsonl",
+      "bytes": 36699580,
+      "sha256": "e594cda0bdd515a07c71d6f95da227e5e1c140545f61f33f4ce9b99196a8974b"
+    },
+    {
+      "file": "records.part-03.jsonl",
+      "bytes": 27691237,
+      "sha256": "8111f9937e60073e13732c5249039329892197864ca75975106076a34497f80c"
+    },
+    {
+      "file": "results.json",
+      "bytes": 621,
+      "sha256": "f0f933c56438c00a80afea0c217b71379f0cef4df80cd5f1f168d68dc2b7809d"
+    },
+    {
+      "file": "validation.json",
+      "bytes": 522,
+      "sha256": "e97f54f3c5ce3a2ed21d1fd3a29962e4ab6a225670c667e6cdc8c2b5431db714"
+    }
+  ],
+  "reference_cache": [
+    {
+      "file": "README.md",
+      "bytes": 2222,
+      "sha256": "84a0b97875e5115e7b1d12629c5d03c05c6bda812247f317de1f65bb63b0bf72"
+    },
+    {
+      "file": "UnicodeData.txt",
+      "bytes": 2243593,
+      "sha256": "0736451de439ae7baf1425136617da495e09ee5afbe6e394374db7009ea08950"
+    },
+    {
+      "file": "cities15000.txt",
+      "bytes": 8546201,
+      "sha256": "a97e931157b541c8e621776afb4a66e81384c11d34acc5537767097cc9f6247c"
+    },
+    {
+      "file": "countries-mledoze.json",
+      "bytes": 1398004,
+      "sha256": "0d92fb23b43ae080bd439f5dc5d61a8845395fdd0af1479b433c59fe079bd6fd"
+    },
+    {
+      "file": "iso-3166.json",
+      "bytes": 65317,
+      "sha256": "e1434e42786484b1841082a0a16cf27208691443dc6440d125ad81d49007ea42"
+    },
+    {
+      "file": "mime-db.json",
+      "bytes": 209696,
+      "sha256": "63217b4e2a6816c23a8c025b953b3f78993cc85c7253e395a07de3200f659d42"
+    },
+    {
+      "file": "periodic-table.json",
+      "bytes": 340343,
+      "sha256": "05e478cb1192c5bbfad8d9600fd3b4c7902c0966ad5d0408bfcc4d5092424c0d"
+    }
+  ],
+  "reproduce": "python benchmarks/v3/build_corpus_v3.py --per-category 48000 --out benchmarks/corpora/v3",
+  "validate": "python benchmarks/v3/validate_corpus_v3.py benchmarks/corpora/v3",
+  "load": "python benchmarks/v3/load_corpus_v3.py benchmarks/corpora/v3 --mode ledger --store /tmp/mem20-v3-store --rebuild"
+}

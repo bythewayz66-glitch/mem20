@@ -16,14 +16,21 @@ Gem::Specification.new do |spec|
                        "270-tool mem20 surface (27 domains)."
   spec.homepage      = "https://github.com/bythewayz66-glitch/mem20"
   spec.license       = "MIT"
-  spec.required_ruby_version = ">= 3.1.0"
+  spec.required_ruby_version     = ">= 3.1.0"
+  spec.required_rubygems_version = ">= 3.3.0"
 
-  spec.metadata["homepage_uri"]      = spec.homepage
-  spec.metadata["source_code_uri"]   = "#{spec.homepage}/tree/main/mem20-sdk-ruby"
-  spec.metadata["changelog_uri"]     = "#{spec.homepage}/blob/main/mem20-sdk-ruby/CHANGELOG.md"
-  spec.metadata["documentation_uri"] = "#{spec.homepage}/tree/main/mem20-sdk-ruby/docs"
+  spec.metadata["homepage_uri"]          = spec.homepage
+  spec.metadata["source_code_uri"]       = "#{spec.homepage}/tree/main/mem20-sdk-ruby"
+  spec.metadata["changelog_uri"]         = "#{spec.homepage}/blob/main/mem20-sdk-ruby/CHANGELOG.md"
+  spec.metadata["documentation_uri"]     = "#{spec.homepage}/tree/main/mem20-sdk-ruby/docs"
+  spec.metadata["bug_tracker_uri"]       = "#{spec.homepage}/issues"
   spec.metadata["rubygems_mfa_required"] = "true"
+  # Pin the push target so a stray `gem push` cannot land on a mirror.
+  spec.metadata["allowed_push_host"]     = "https://rubygems.org"
 
+  # Sorted on purpose: an unsorted Dir[] glob makes the packaged file list
+  # depend on filesystem order, so two builds of the same tree produce .gem
+  # files with different checksums. `spec/mem20/packaging_spec.rb` pins this.
   spec.files = Dir[
     "lib/**/*.rb",
     "docs/**/*.md",
@@ -31,7 +38,8 @@ Gem::Specification.new do |spec|
     "README.md",
     "CHANGELOG.md",
     "LICENSE"
-  ]
+  ].sort
+
   spec.require_paths = ["lib"]
   # Development dependencies live in the Gemfile (see Gemspec/DevelopmentDependencies).
 end

@@ -26,8 +26,8 @@ import subprocess
 from concurrent.futures import ThreadPoolExecutor
 from typing import Any
 
-REPO = "/opt/mem20"
-VENV_BIN = "/usr/local/bin"
+REPO = os.environ.get("MEM20_ROOT", "/opt/mem20")
+VENV_BIN = os.environ.get("MEM20_VENV_BIN", "/usr/local/bin")
 HELP_TIMEOUT = 25
 # Concurrent help probes. Enough to hide the slow CLIs without thrashing the box
 # with 30 simultaneous heavy interpreter starts.

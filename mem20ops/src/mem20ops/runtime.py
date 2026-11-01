@@ -16,6 +16,37 @@ def _iso(timestamp: float) -> str:
     return datetime.fromtimestamp(timestamp, tz=UTC).isoformat()
 
 
+# ``ps`` prints lstart in the host's local time, e.g. "Sun Nov  1 19:43:54 2026".
+# ``%d`` accepts the space-padded day that ps emits for single-digit dates.
+_LSTART_FORMAT = "%a %b %d %H:%M:%S %Y"
+
+
+def _start_epoch(lstart: str) -> float | None:
+    """Absolute start time from a ``ps`` lstart string, or None if unparseable.
+
+    ``lstart`` is the authoritative field: it is an absolute wall-clock stamp, so
+    it cannot drift. ``etimes`` is only a derived convenience column and some
+    container runtimes report a constant bogus value for every process (observed:
+    4108804736 for pid 1 and for a process spawned a second earlier), which makes
+    every process look like it started in 1896 and therefore STALE.
+    """
+    try:
+        parsed = datetime.strptime(" ".join(lstart.split()), _LSTART_FORMAT)
+    except ValueError:
+        return None
+    return parsed.timestamp()
+
+
+def _elapsed_from(started: float | None, etimes: str) -> int:
+    """Elapsed seconds, preferring the absolute start time over ``etimes``."""
+    if started is not None:
+        return max(0, int(time.time() - started))
+    try:
+        return max(0, int(etimes))
+    except (TypeError, ValueError):
+        return 0
+
+
 def _ps_fields() -> list[dict[str, str]]:
     output = subprocess.run(
         ["ps", "-ww", "-eo", "pid=,lstart=,etimes=,args="],
@@ -30,7 +61,16 @@ def _ps_fields() -> list[dict[str, str]]:
         if not match:
             continue
         pid, lstart, etimes, args = match.groups()
-        rows.append({"pid": pid, "lstart": lstart.strip(), "elapsed_s": etimes, "cmd": args.strip()})
+        started = _start_epoch(lstart)
+        rows.append(
+            {
+                "pid": pid,
+                "lstart": lstart.strip(),
+                "started_epoch": started,
+                "elapsed_s": _elapsed_from(started, etimes),
+                "cmd": args.strip(),
+            }
+        )
     return rows
 
 
@@ -90,7 +130,11 @@ def find_stale_processes(
         if not relevant:
             continue
         elapsed = int(row["elapsed_s"])
-        started = time.time() - elapsed
+        # Prefer the absolute start stamp; fall back to now-elapsed only when ps
+        # gave us an lstart we could not parse.
+        started = row.get("started_epoch")
+        if started is None:
+            started = time.time() - elapsed
         rows.append(
             {
                 "pid": int(row["pid"]),

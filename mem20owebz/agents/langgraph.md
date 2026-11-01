@@ -1,12 +1,17 @@
-# mem20 graph substrate + Jayson — Installation & Connection
+# LangGraph + mem20 — Installation & Connection
 
-mem20 graph substrate is the best choice for complex, stateful, production-grade agents.
+> **Corrected 2026-10-31 (H22):** a previous rewrite of this file corrupted the
+> upstream package names. `pip install mem20 graph substrate …` is not a valid
+> command and mem20 is **not** on PyPI (installs are source-only) — see
+> `docs/gtm/claim-ledger.md` §D1. The commands below are the real upstream ones;
+> for mem20 itself use `git clone` + `pip install -r requirements.txt`.
 
-## 1. Install mem20 graph substrate
+LangGraph is the best choice for complex, stateful, production-grade agents.
+
+## 1. Install LangGraph
 
 ```bash
-pip install mem20 graph substrate mem20 chain substrate mem20 chain substrate-openai
-# or the current recommended packages from official docs
+pip install langgraph langchain langchain-openai
 ```
 
 Create your agent graph as usual (nodes, edges, state, tools…).

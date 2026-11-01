@@ -179,6 +179,50 @@ def main() -> int:
             else:
                 unwired[name.value] = {**record, "mixin": sorted(declared)[0]}
 
+        # Second registration style: a module-level ``TOOLS = [{...}, ...]``
+        # list of dicts, registered by an ``install(server)`` the server calls
+        # from its constructor (e.g. tools/webhook_tools.py). These declare no
+        # ``mt.Tool(...)`` call, so the walk above cannot see them; without
+        # this branch the catalog undercounts by exactly those tools.
+        for node in ast.walk(tree):
+            if not isinstance(node, (ast.Assign, ast.AnnAssign)):
+                continue
+            targets = node.targets if isinstance(node, ast.Assign) else [node.target]
+            if not any(isinstance(t, ast.Name) and t.id == "TOOLS" for t in targets):
+                continue
+            if not isinstance(node.value, (ast.List, ast.Tuple)):
+                continue
+            for elt in node.value.elts:
+                if not isinstance(elt, ast.Dict):
+                    continue
+                # Values may be non-literal (e.g. "handler": webhook_verify),
+                # so read each key individually instead of literal_eval-ing
+                # the whole dict.
+                entry = {}
+                for k, v in zip(elt.keys, elt.values):
+                    if not isinstance(k, ast.Constant) or not isinstance(k.value, str):
+                        continue
+                    try:
+                        entry[k.value] = ast.literal_eval(v)
+                    except Exception:
+                        continue
+                nm = entry.get("name")
+                if not isinstance(nm, str):
+                    continue
+                schema = entry.get("inputSchema") or {}
+                props = list(schema.get("properties", {})) if isinstance(schema, dict) else []
+                record = {
+                    "n": nm,
+                    "t": entry.get("title") or "",
+                    "d": entry.get("description") or "",
+                    "x": domain_for(p),
+                    "p": props,
+                }
+                if is_wired:
+                    tools[nm] = record
+                else:
+                    unwired[nm] = {**record, "mixin": sorted(declared)[0] if declared else p.stem}
+
     domains = sorted({t["x"] for t in tools.values()})
     payload = {
         "source": "mcp/**/*.py AST extraction of mt.Tool registrations, "

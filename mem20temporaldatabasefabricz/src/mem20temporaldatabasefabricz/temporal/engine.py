@@ -26,6 +26,9 @@ import time
 from datetime import datetime, timezone
 from typing import Any
 
+from .estate_calls import (check_belief_legality, classify_secret, identity,
+                           validate_event_time)
+from .estate_surface import tool_inventory
 from .interval import Interval, parse_ts
 from .store import TemporalStore, version_id_for
 
@@ -165,7 +168,8 @@ class QueryResult:
 class BiTemporalEngine:
     """Records what was believed, when it was believed, and when it was true."""
 
-    def __init__(self, store: TemporalStore, clock=_utc_now):
+    def __init__(self, store: TemporalStore, clock=_utc_now,
+                 intended_uses=None):
         self.store = store
         self._clock = clock
         self._seq = store.count()
@@ -173,6 +177,59 @@ class BiTemporalEngine:
         # was already current. Surfaced so callers can tell a real sync from a
         # no-op instead of inferring it from timing.
         self.last_sync_added = 0
+        # Declared once, checked on every write: a store that records a
+        # prohibited judgement and keeps it forever *is* the prohibited use, so
+        # the estate gate belongs at the write, not at the caller's discretion.
+        self.intended_uses = list(intended_uses or ["memory_search"])
+        self._identity: dict | None = None
+
+    # -- estate provenance ----------------------------------------------
+
+    def estate_identity(self) -> dict:
+        """Which store this engine is writing into, from mem20ops.
+
+        Computed once per engine. Callers stamp it into provenance so an answer
+        stays attributable to a named store later: an interval is only useful if
+        you can say whose fact it is.
+        """
+        if self._identity is None:
+            self._identity = identity()
+        return self._identity
+
+    def _admit(self, attribute: str, value_ref: str,
+               valid_from: str | None) -> dict:
+        """Everything the estate must clear before an interval is written.
+
+        Three questions this engine cannot answer alone, asked in the order
+        that makes a refusal cheapest:
+
+        1. is the belief legal to hold at all? (mem20liez refusal list)
+        2. is the value safe to keep forever? (mem20secretz credential sweep)
+        3. is the event time a legal one? (memory_engine's own bounds)
+
+        Returns the provenance fragment these answers produce.
+        """
+        estate_checks = check_belief_legality(self.intended_uses)
+
+        classified = classify_secret(attribute, value_ref)
+        if not classified["safe"]:
+            raise InvariantError(
+                f"refusing to record {attribute!r}: the value classifies as "
+                f"{classified['severity']}/{classified['kind']} under "
+                f"{classified['classifier']}. A temporal store is append-only and "
+                f"hash-chained, so a credential written here could never be "
+                f"deleted. Pass a reference instead of the secret itself."
+            )
+
+        fragment = {"estate": {"identity": self.estate_identity(),
+                               "value_class": classified,
+                               "legality": estate_checks}}
+        if valid_from is not None:
+            # Normalised by the ledger's own validator, so this store and the
+            # memory engine cannot disagree about what a legal event time is.
+            fragment["event_time_validated_by"] = "memory_engine.memory.validate_event_time"
+            fragment["valid_from_normalised"] = validate_event_time(valid_from)
+        return fragment
 
     # -- helpers --------------------------------------------------------
 
@@ -216,6 +273,12 @@ class BiTemporalEngine:
         if already:
             return self._row_to_interval(already[0])
 
+        # Estate admission runs before any row is written. It can raise, and
+        # that is the point: a refused belief leaves the store untouched rather
+        # than leaving a half-recorded one behind.
+        provenance = {**(provenance or {}), **self._admit(attribute, value_ref,
+                                                         valid_from)}
+
         # Only one belief per attribute may be open at a time. Asserting while
         # another is open is a correction expressed as an assertion.
         open_now = self._open_known(subject, attribute)
@@ -231,7 +294,7 @@ class BiTemporalEngine:
             "version_id": vid, "subject": subject, "attribute": attribute,
             "valid_from": valid, "valid_to": None,
             "known_from": known_from, "known_to": None,
-            "value_ref": value_ref, "provenance": provenance or {},
+            "value_ref": value_ref, "provenance": provenance,
         }
         self.store.append_event(self.now(), "assert", row)
         self.store.put_version(row, seq=self._seq)
@@ -265,6 +328,8 @@ class BiTemporalEngine:
         # was already true does not make it newly true.
         valid = valid_from or newest.valid_from
 
+        admission = self._admit(attribute, value_ref, valid_from)
+
         self._seq += 1
         row = {
             "version_id": version_id_for(subject, attribute, known_from, value_ref),
@@ -274,7 +339,8 @@ class BiTemporalEngine:
             "value_ref": value_ref,
             "provenance": {**(provenance or {}),
                            "corrects": newest.version_id,
-                           "corrected_at": known_from},
+                           "corrected_at": known_from,
+                           **admission},
         }
         self.store.append_event(self.now(), "correct", row)
         for old in open_now:
@@ -399,7 +465,14 @@ class BiTemporalEngine:
         }
 
     def export(self, subject: str | None = None) -> dict:
-        """Deterministic export: same state always serialises identically."""
+        """Deterministic export: same state always serialises identically.
+
+        The ``estate`` block is the exception to byte-identical output across
+        *different* checkouts: it records what the estate actually exposed at
+        export time (from ``toolchest``), because a snapshot that implies a
+        capability the estate does not have is a false record on the known axis.
+        Within one estate the block is stable, so determinism holds.
+        """
         rows = (self.store.versions_for(subject) if subject
                 else self.store.all_versions())
         rows.sort(key=lambda r: (r["subject"], r["attribute"], r["known_from"],
@@ -409,5 +482,7 @@ class BiTemporalEngine:
             "version_count": len(rows),
             "event_count": self.store.count_events(),
             "chain": self.store.verify_chain(),
+            "estate": {"inventory": tool_inventory(limit=5),
+                       "identity": self.estate_identity()},
             "versions": rows,
         }

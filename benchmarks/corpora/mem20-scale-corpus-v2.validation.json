@@ -1,0 +1,13 @@
+{
+  "status": "PASS",
+  "error_count": 0,
+  "errors": [],
+  "answerable_probes_checked": 230,
+  "total_probes": 250,
+  "records": 2000,
+  "by_category": {
+    "grounded": 700,
+    "ungrounded": 650,
+    "false": 650
+  }
+}

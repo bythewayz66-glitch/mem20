@@ -171,3 +171,28 @@ Each spec names the minimum set it needs; the shared minimum is:
 | `shell_lifecycle{state}` / `panels_treated_stale` | shell | #39 |
 
 `notifications_suppressed{reason}` must carry `reason ∈ {unchanged, cached, stale, authenticated_out, muted}` — the reason is what makes "we did not nag" auditable instead of accidental.
+
+---
+
+## 4. Desktop research — personas and task flows (2026-11-01)
+
+The specs in §1–§3 above cover the `mem20controlz/` desktop shell. The documents below cover
+**`web/src/views/**`**, the nine shipped views reachable from the single nav in
+`web/src/App.tsx:30`. They are grounded in the source at `main` @ `06fa1220`: every persona is
+derived from copy the view actually addresses to someone, and **every flow names the view file
+and line range it exercises**. No flow requires a component that is not in the tree.
+
+| Doc | What it establishes |
+|---|---|
+| [desktop-personas-2026-11-01.md](./desktop-personas-2026-11-01.md) | Five evidence-backed personas (Operator, Crew agent, Trust reviewer, Remote operator, Evaluator), five deliberately rejected personas, and a persona→surface matrix |
+| [desktop-task-flows-2026-11-01.md](./desktop-task-flows-2026-11-01.md) | Fifteen task flows, each anchored to a real view file, plus the ranked dead ends and the patterns not to redesign |
+
+Two constraints they establish that later work must respect:
+
+- **Chat does not count as a surface.** `Teamily.tsx` is a reference table over
+  `mem20botz/identity.py` with `roster pending`, not a channel client. `Teamily.tsx:114-118`
+  states channel state is not streamed into the shell. Any flow starting "the user opens a
+  channel" is designing for a screen that does not exist.
+- **The three honest placeholders are the research agenda, not defects to route around:**
+  `roster pending` (`Teamily.tsx:42`), `live run pending` (`MemoryModel.tsx:130`), and the
+  provenance chain that is promised but never fetched (`Dreams.tsx:132-145`).

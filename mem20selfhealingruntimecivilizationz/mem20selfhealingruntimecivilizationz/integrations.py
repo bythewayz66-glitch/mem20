@@ -55,14 +55,41 @@ from pathlib import Path
 from typing import Any, Dict, List, Optional, Sequence
 
 # ---------------------------------------------------------------------------
+# Import-path bootstrap, BEFORE the static substrate imports below.
+#
+# The static imports are the primary call path, so they must actually resolve.
+# They cannot rely on ``Mem20Paths.install()`` (which runs when a ``Substrate``
+# is constructed) because module import happens first. This adds only the
+# *project* roots — never the repository root, which would let
+# ``<repo>/<project>`` directories win as namespace packages over the real
+# nested packages (the shadowing bug the root ``conftest.py`` documents).
+# ---------------------------------------------------------------------------
+def _bootstrap_estate_paths() -> None:
+    here = Path(__file__).resolve()
+    for parent in here.parents:
+        if (parent / "memory_engine").is_dir() and (parent / "gateway").is_dir():
+            for rel in ("memory_engine", "gateway", "mcp", "toolchest/src",
+                        "mem20kilnz", "mem20selfhealingplansz"):
+                candidate = parent / rel
+                if candidate.is_dir() and str(candidate) not in sys.path:
+                    sys.path.insert(0, str(candidate))
+            return
+
+
+_bootstrap_estate_paths()
+
+# ---------------------------------------------------------------------------
 # Static substrate declarations.
 #
-# These imports are how this module is *statically* linked to the rest of mem20:
-# a reader (and the 4.0 conformance gate's AST scan) can see the dependency edge
-# without executing anything. They succeed only if the estate is on sys.path, so
-# each one is guarded — resolution at runtime still goes through the bridges
-# below, which can also locate ``mcp/health.py`` by file path when the installed
-# MCP SDK owns the ``mcp`` package name.
+# These imports are the PRIMARY call path, not a declaration: each module bound
+# here is invoked directly by the bridge below (``_memory_engine.validate_event_time``,
+# ``_retrieval_v2.decompose_query``, ``_gateway.register_agent``/``broadcast``,
+# ``_toolchest_catalog.discover_subsystems``, ``_kiln_budgets.TRIANGLE_BUDGETS``,
+# ``_plans_engine.Engine``), so the dependency edge is a real call on a tested
+# path. The importlib bridges remain as the fallback for a checkout where the
+# estate was not on ``sys.path`` at import time (and for ``mcp/health.py``,
+# which cannot be imported by module name because the installed MCP SDK owns
+# the ``mcp`` package name).
 # ---------------------------------------------------------------------------
 try:  # pragma: no cover - depends on the estate being on sys.path
     from memory_engine import memory as _memory_engine  # noqa: F401
@@ -91,6 +118,59 @@ try:  # pragma: no cover
 except ImportError:  # pragma: no cover
     _plans_engine = None
 
+
+def _retry_static_imports() -> None:
+    """Re-attempt any static import that failed, now that paths are installed.
+
+    A caller may import this module before the estate is on ``sys.path`` (a bare
+    ``importlib.import_module`` from a test, or a fresh interpreter). The
+    bootstrap above runs at import time, but a *partially* populated
+    ``sys.modules`` can still leave one of these ``None``. Retrying here — after
+    ``Mem20Paths.install()`` has run — is what makes the static binding the real
+    call path in every entry order rather than only the convenient one.
+    """
+    global _memory_engine, _retrieval_v2, _gateway, _toolchest_catalog
+    global _kiln_budgets, _plans_engine
+    # A failed import can leave a *namespace* stub in sys.modules (the outer
+    # project directory bound as a package with __file__ None). That stub makes
+    # every later `from memory_engine import memory` raise ModuleNotFoundError
+    # even after the right roots are on sys.path, so drop it first.
+    for top in ("memory_engine", "gateway", "toolchest", "mem20kilnz",
+                "mem20selfhealingplansz"):
+        mod = sys.modules.get(top)
+        if mod is not None and getattr(mod, "__file__", None) is None:
+            sys.modules.pop(top, None)
+    if _memory_engine is None:
+        try:
+            _memory_engine = importlib.import_module("memory_engine.memory")
+        except Exception:
+            pass
+    if _retrieval_v2 is None:
+        try:
+            _retrieval_v2 = importlib.import_module("memory_engine.retrieval_v2")
+        except Exception:
+            pass
+    if _gateway is None:
+        try:
+            _gateway = importlib.import_module("gateway.mem20_gateway")
+        except Exception:
+            pass
+    if _toolchest_catalog is None:
+        try:
+            _toolchest_catalog = importlib.import_module("toolchest.catalog")
+        except Exception:
+            pass
+    if _kiln_budgets is None:
+        try:
+            _kiln_budgets = importlib.import_module("mem20kilnz.budgets")
+        except Exception:
+            pass
+    if _plans_engine is None:
+        try:
+            _plans_engine = importlib.import_module("mem20selfhealingplansz")
+        except Exception:
+            pass
+
 __all__ = [
     "Mem20Paths",
     "MemoryEngineBridge",
@@ -102,6 +182,24 @@ __all__ = [
     "PlansEngineBridge",
     "Substrate",
 ]
+
+def _static(mod: Any, *attrs: str) -> Any:
+    """Return ``mod`` only if it really carries every named attribute.
+
+    A bare ``import mem20selfhealingplansz`` can bind the *outer project
+    directory* as a namespace package (``__file__ is None``, no ``Engine``) when
+    the repository root is on ``sys.path`` — the shadowing bug the root
+    ``conftest.py`` documents. Checking the attribute is what distinguishes the
+    real module from that stub, so a shadowed import falls through to the
+    importlib bridge instead of raising ``AttributeError`` at call time.
+    """
+    if mod is None:
+        return None
+    for attr in attrs:
+        if getattr(mod, attr, None) is None:
+            return None
+    return mod
+
 
 def _looks_like_repo(path: Path) -> bool:
     """True when ``path`` is a mem20 checkout root (not a single project dir)."""
@@ -314,7 +412,22 @@ class MemoryEngineBridge(_Bridge):
         self.timestamps_validated = 0
 
     def validate_ts(self, ts_iso: str) -> str:
-        """Return the canonical event time, or the input if the engine is absent."""
+        """Return the canonical event time, or the input if the engine is absent.
+
+        The statically imported ``memory_engine.memory`` module is the primary
+        path: when it resolved at import time it is called directly, so the
+        dependency edge is a real call and not a declaration. The importlib
+        bridge is the fallback for a checkout where the estate was not on
+        ``sys.path`` when this module was first imported.
+        """
+        engine = _static(_memory_engine, "validate_event_time")
+        if engine is not None:
+            try:
+                out = engine.validate_event_time(ts_iso)
+                self.timestamps_validated += 1
+                return out
+            except Exception:
+                return ts_iso
         if not self.available:
             return ts_iso
         try:
@@ -326,7 +439,18 @@ class MemoryEngineBridge(_Bridge):
 
     def redact(self, text: str) -> str:
         """Scrub secrets from free text; counts only real redactions."""
-        if not text or not self.available:
+        if not text:
+            return text
+        engine = _static(_memory_engine, "redact_secrets")
+        if engine is not None:
+            try:
+                cleaned, findings = engine.redact_secrets(text)
+            except Exception:
+                return text
+            if findings:
+                self.redactions += len(findings)
+            return cleaned
+        if not self.available:
             return text
         try:
             cleaned, findings = self.mod.redact_secrets(text)
@@ -350,6 +474,16 @@ class RetrievalBridge(_Bridge):
         description = (description or "").strip()
         if not description:
             return []
+        retrieval = _static(_retrieval_v2, "decompose_query")
+        if retrieval is not None:
+            try:
+                decomposed = retrieval.decompose_query(description, k=k)
+            except Exception:
+                return description.split()[:k]
+            parts = decomposed.get("parts") if isinstance(decomposed, dict) else None
+            if not isinstance(parts, list):
+                return description.split()[:k]
+            return [str(p) for p in parts][:k]
         if not self.available:
             return description.split()[:k]
         try:
@@ -475,9 +609,11 @@ class GatewayBridge(_Bridge):
 
     def configure(self, state_dir: Path) -> None:
         """Point the gateway module at ``state_dir`` (never the live gateway)."""
-        if not self.available:
+        gw = _static(_gateway, "register_agent", "broadcast")
+        if gw is None:
+            gw = self.mod if self.available else None
+        if gw is None:
             return
-        gw = self.mod
         self.state_dir = Path(state_dir)
         self.state_dir.mkdir(parents=True, exist_ok=True)
         gw.GATEWAY_DIR = self.state_dir
@@ -493,11 +629,14 @@ class GatewayBridge(_Bridge):
         }
 
     def announce(self, name: str, location: str) -> Optional[Dict[str, Any]]:
-        if not self.available:
+        gw = _static(_gateway, "register_agent", "broadcast")
+        if gw is None:
+            gw = self.mod if self.available else None
+        if gw is None:
             return None
         try:
             with _captured_stdout(self.output):
-                record = self.mod.register_agent(name=name, location=location)
+                record = gw.register_agent(name=name, location=location)
         except Exception as exc:
             self.error = f"{type(exc).__name__}: {exc}"
             return None
@@ -505,11 +644,14 @@ class GatewayBridge(_Bridge):
         return record
 
     def publish(self, name: str, message: str) -> Optional[Dict[str, Any]]:
-        if not self.available or not self.announced:
+        gw = _static(_gateway, "register_agent", "broadcast")
+        if gw is None:
+            gw = self.mod if self.available else None
+        if gw is None or not self.announced:
             return None
         try:
             with _captured_stdout(self.output):
-                record = self.mod.broadcast(
+                record = gw.broadcast(
                     message, agent_name=name, target="mem20-sys-ops"
                 )
         except Exception as exc:
@@ -532,9 +674,13 @@ class ToolchestBridge(_Bridge):
         """Real mem20 subsystem entries found on disk (cached per process)."""
         if self.entries and not refresh:
             return self.entries
-        if not self.available:
+        catalog = _static(_toolchest_catalog, "discover_subsystems")
+        if catalog is not None:
+            pass
+        elif self.available:
+            catalog = self.mod
+        else:
             return []
-        catalog = self.mod
         try:
             if root is not None:
                 catalog.MEM20_ROOT = Path(root)
@@ -583,10 +729,31 @@ class KilnBudgetBridge(_Bridge):
             if key in subsystem:
                 family = key
                 break
-        if not self.available:
+        kiln = _static(_kiln_budgets, "TRIANGLE_BUDGETS")
+        if kiln is not None:
+            # Ask the kiln module to classify the subsystem rather than
+            # re-deriving the family here: infer_family() is the module's own
+            # rule, so the repair budget follows the kiln's taxonomy and a new
+            # asset family is picked up without editing this file.
+            try:
+                family = kiln.infer_family(subsystem) or family
+            except Exception:
+                pass
+            budgets = kiln.TRIANGLE_BUDGETS
+        elif self.available:
+            budgets = self.mod.TRIANGLE_BUDGETS
+        else:
             return {"family": family, "max_repairs": 3, "source": "default"}
-        budgets = self.mod.TRIANGLE_BUDGETS
         lo, hi = budgets.get(family, (2000, 6000))
+        # The band is the kiln's own tier band for this family, so the repair
+        # ceiling tracks the authored budget instead of a hard-coded constant.
+        if kiln is not None:
+            try:
+                band = kiln.tier_band(family)
+                if band:
+                    lo, hi = band
+            except Exception:
+                pass
         # 1 repair attempt per 2k triangles of authored budget, bounded 2..8
         return {
             "family": family,
@@ -616,10 +783,17 @@ class PlansEngineBridge(_Bridge):
         Returns the planner's real output, or ``None`` when unavailable so the
         caller falls back to its own rule.
         """
-        if not self.available or not components:
+        if not components:
+            return None
+        plans = _static(_plans_engine, "Engine")
+        if plans is not None:
+            engine_cls = plans.Engine
+        elif self.available:
+            engine_cls = self.mod.Engine
+        else:
             return None
         try:
-            engine = self.mod.Engine(dict(self.CONFIG), db_path=Path(db_path))
+            engine = engine_cls(dict(self.CONFIG), db_path=Path(db_path))
             return engine.execute({"components": list(components)}, idem="civilization-plan")
         except Exception as exc:
             self.error = f"{type(exc).__name__}: {exc}"
@@ -632,6 +806,7 @@ class Substrate:
     def __init__(self, root: Optional[Path] = None, state_dir: Optional[Path] = None) -> None:
         self.paths = Mem20Paths(root)
         self.paths.install()
+        _retry_static_imports()
         self.memory = MemoryEngineBridge()
         self.retrieval = RetrievalBridge()
         self.health = HealthSurfaceBridge()

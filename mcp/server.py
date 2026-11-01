@@ -104,6 +104,7 @@ from tools.braid_tools import BraidToolsMixin
 from tools.irc_tools import IRCToolsMixin
 from tools.lie_tools import LieToolsMixin
 from tools.verify_tools import VerifyToolsMixin
+from tools.toolchest_tools import ToolchestToolsMixin
 from tools.corez_tools import CorezToolsMixin
 from health import start_health_server
 
@@ -118,7 +119,7 @@ class Mem20MCPServer(MemoryToolsMixin, CognitiveToolsMixin, RoadmapToolsMixin,
                      ProductivityToolsMixin, SearchToolsMixin,
                      VersionControlToolsMixin, WebScrapingToolsMixin,
                      BraidToolsMixin, IRCToolsMixin, LieToolsMixin,
-                     VerifyToolsMixin, CorezToolsMixin):
+                     VerifyToolsMixin, CorezToolsMixin, ToolchestToolsMixin):
     def __init__(self):
         self.tools = {}
         self._start_time = time.time()
@@ -168,6 +169,7 @@ class Mem20MCPServer(MemoryToolsMixin, CognitiveToolsMixin, RoadmapToolsMixin,
         self.register_irc_tools()
         self.register_lie_tools()
         self.register_verify_tools()
+        self.register_toolchest_tools()
         self.register_corez_tools()
         self.register_webhook_tools()
         self.register_job_tools()
@@ -675,6 +677,11 @@ class Mem20MCPServer(MemoryToolsMixin, CognitiveToolsMixin, RoadmapToolsMixin,
             return await self._verify_lint(arguments)
         elif tool_name == "verify_wiring":
             return await self._verify_wiring(arguments)
+        # Toolchest registry tools (registered by ToolchestToolsMixin)
+        elif tool_name == "toolchest_inventory":
+            return await self._toolchest_inventory(arguments)
+        elif tool_name == "toolchest_wiring":
+            return await self._toolchest_wiring(arguments)
         # mem20corez native CoreAI tools (registered by CorezToolsMixin)
         elif tool_name == "corez_infer":
             return await self._corez_infer(arguments)

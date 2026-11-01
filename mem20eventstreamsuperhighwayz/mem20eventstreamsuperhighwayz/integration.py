@@ -18,6 +18,7 @@ mem20 project                API used
 ``mem20verify``              ``dataintegrity.check``
 ``mem20ops``                 ``memchecks.identity_check``
 ``mem20corez``               ``quantizer.quantize_tensor``
+``mem20secretz``             ``sweep.classify``
 ===========================  ==========================================
 
 The imports are static and module-level on purpose: a reader (and the
@@ -91,6 +92,17 @@ try:
 except ImportError as _exc:  # pragma: no cover
     _quantizer = None
     _IMPORT_ERRORS["mem20corez.quantizer"] = str(_exc)
+
+try:
+    # ``mem20secretz/__init__.py`` re-exports the *function* ``sweep``, which
+    # shadows the submodule of the same name on the package object. Import the
+    # submodule explicitly so ``classify`` is reachable.
+    from mem20secretz import sweep as _sweep_mod
+    from mem20secretz.sweep import classify as _classify
+except ImportError as _exc:  # pragma: no cover
+    _sweep_mod = None
+    _classify = None
+    _IMPORT_ERRORS["mem20secretz.sweep"] = str(_exc)
 
 
 def _need(module, name: str, project: str):
@@ -343,6 +355,41 @@ def compact_payload(values: list[float], bits: int = 8) -> dict:
 
 
 # --------------------------------------------------------------------------
+# mem20secretz — credential screening of the event payload
+# --------------------------------------------------------------------------
+
+
+def screen_payload(payload: dict) -> dict:
+    """Screen an event payload for credential-shaped values before it is routed.
+
+    An event that crosses a runtime boundary is the last place a leaked
+    credential can be caught cheaply, so every key/value pair is classified by
+    ``mem20secretz.sweep.classify`` — the estate's own leak-versus-config
+    classifier — and anything it calls a credential refuses the publish.
+
+    ``classify`` returns ``(severity, kind)``. Only ``critical`` blocks: an
+    endpoint URL is configuration duplication and is reported, not refused, so
+    a legitimate payload is never dropped for looking like a URL.
+    """
+    sweep = _need(_classify, "mem20secretz.sweep", "mem20secretz")
+
+    findings = []
+    for name, value in payload.items():
+        if not isinstance(value, str):
+            continue
+        severity, kind = sweep(str(name), value)
+        findings.append({"field": str(name), "severity": severity, "kind": kind})
+
+    blocking = [f for f in findings if f["severity"] == "critical"]
+    return {
+        "clean": not blocking,
+        "blocking": blocking,
+        "findings": findings,
+        "screened": len(findings),
+    }
+
+
+# --------------------------------------------------------------------------
 # the composed path — what the README example and the CLI both run
 # --------------------------------------------------------------------------
 
@@ -368,6 +415,7 @@ def publish_and_persist(
         "memory_id": record.get("id"),
         "memory_topic": record.get("topic"),
         "announced": None,
+        "screening": screen_payload(payload),
     }
     if announce_to_fleet:
         out["announced"] = announce(stream, event)

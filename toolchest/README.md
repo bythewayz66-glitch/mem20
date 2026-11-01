@@ -27,7 +27,40 @@ python -m toolchest list    [--category CAT] [--kind mcp|cli|subsystem] [--json]
 python -m toolchest search  TERM [--kind ...] [--json]            # name + description search
 python -m toolchest show    NAME [--check-path]                   # full entry
 python -m toolchest stats                                        # summary counts
+python -m toolchest wiring [--root DIR] [--json]                 # prove the cross-subsystem edges
 ```
+
+## Cross-subsystem wiring
+
+`toolchest` is not an island: a registry is only useful if it can describe the
+rest of the estate truthfully. `toolchest.integrations` calls six real public
+APIs, and `toolchest wiring` exercises every one of them on a real path:
+
+| edge | what it proves |
+|------|----------------|
+| `memory_engine.pin_block` | the inventory summary is pinned as a grounded block |
+| `mem20kanbanz.sha256` | the inventory file's content identity, via the kanban hasher |
+| `mem20ops.clicheck` | every console script declared by a mem20* pyproject |
+| `mem20corez.CharMLP` | a real model's real parameter count |
+| `mem20cliz.build_envelope` | the estate-wide CLI JSON envelope |
+| `mem20verify.testrun` | which packages actually carry a test suite |
+
+```
+$ python -m toolchest wiring
+estate root: /opt/mem20
+  OK    memory_engine.pin_block            -> {'block_id': 'toolchest:inventory', 'pinned': True, ...}
+  OK    mem20kanbanz.sha256                -> 6b382d72c5b38c448db5b848f0085156b706a806db898ea70451046057d604b3
+  OK    mem20ops.declared_scripts          -> 282
+  OK    mem20corez.CharMLP                 -> 7121
+  OK    mem20cliz.build_envelope           -> mem20.cli/1
+  OK    mem20verify.discover_packages      -> 298
+
+6/6 edges live
+```
+
+A subsystem that is genuinely absent is reported as `FAIL` with the real import
+error — never as a pass. The same two capabilities are exposed to agents as the
+MCP tools `toolchest_inventory` and `toolchest_wiring` (`mcp/tools/toolchest_tools.py`).
 
 Query commands read the generated `inventory.json` (fast). `refresh` performs
 full runtime checks and takes roughly 20-30s (dominated by instantiating the MCP

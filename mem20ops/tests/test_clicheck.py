@@ -39,16 +39,16 @@ def test_probe_help_on_known_good_binary():
 
 
 def test_probe_help_respects_timeout(tmp_path):
-    """A probe that outlives its timeout is reported as timed out, not as a failure.
+    """A binary that never returns must be reported as timed out, not hung on.
 
-    This used to point at ``mem20-metrics`` on the assumption that it was a
-    blocking server with no argument parser. It now has a real ``--help`` that
-    exits 0 immediately, so the test was asserting an incidental property of one
-    binary rather than the timeout logic. A controlled sleeper tests the actual
-    contract and cannot drift when a CLI gains a parser.
+    This used to point at /usr/local/bin/mem20-metrics on the assumption that
+    it ran no argument parser and would block. It has since grown a real
+    argparse parser and exits immediately, so the test was asserting a timeout
+    that could no longer happen. The timeout path is what matters, so exercise
+    it against a binary that genuinely blocks.
     """
     slow = tmp_path / "slow-cli"
-    slow.write_text("#!/bin/sh\nsleep 30\n", encoding="utf-8")
+    slow.write_text("#!/bin/sh\nsleep 30\n")
     slow.chmod(0o755)
 
     result = clicheck.probe_help("slow-cli", str(slow), timeout=1)

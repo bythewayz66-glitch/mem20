@@ -24,11 +24,12 @@ _LSTART_FORMAT = "%a %b %d %H:%M:%S %Y"
 def _start_epoch(lstart: str) -> float | None:
     """Absolute start time from a ``ps`` lstart string, or None if unparseable.
 
-    ``lstart`` is the authoritative field: it is an absolute wall-clock stamp, so
-    it cannot drift. ``etimes`` is only a derived convenience column and some
-    container runtimes report a constant bogus value for every process (observed:
-    4108804736 for pid 1 and for a process spawned a second earlier), which makes
-    every process look like it started in 1896 and therefore STALE.
+    ``lstart`` is the authoritative field: it is an absolute wall-clock stamp,
+    so it cannot drift. ``etimes`` is only a derived convenience column, and
+    some container runtimes report a constant bogus value for every process
+    (observed here: 4108804736 for pid 1 and for a process spawned a second
+    earlier), which makes every process look like it started in 1896 and
+    therefore STALE.
     """
     try:
         parsed = datetime.strptime(" ".join(lstart.split()), _LSTART_FORMAT)
@@ -82,19 +83,29 @@ def _ps_args() -> list[dict[str, str]]:
     for no visible reason. Always pass ``-ww`` here.
     """
     output = subprocess.run(
-        ["ps", "-ww", "-eo", "pid=,etimes=,args="],
+        ["ps", "-ww", "-eo", "pid=,lstart=,etimes=,args="],
         capture_output=True,
         text=True,
         check=False,
     ).stdout
     rows: list[dict[str, str]] = []
-    pattern = re.compile(r"^\s*(\d+)\s+(\d+)\s+(.*)$")
+    pattern = re.compile(r"^\s*(\d+)\s+(.{24})\s+(\d+)\s+(.*)$")
     for line in output.splitlines():
         match = pattern.match(line)
         if not match:
             continue
-        pid, etimes, args = match.groups()
-        rows.append({"pid": pid, "elapsed_s": etimes, "cmd": args.strip()})
+        pid, lstart, etimes, args = match.groups()
+        # Same reasoning as _ps_fields: etimes is unreliable in some container
+        # runtimes, so derive elapsed from the absolute lstart stamp.
+        started = _start_epoch(lstart)
+        rows.append(
+            {
+                "pid": pid,
+                "started_epoch": started,
+                "elapsed_s": _elapsed_from(started, etimes),
+                "cmd": args.strip(),
+            }
+        )
     return rows
 
 

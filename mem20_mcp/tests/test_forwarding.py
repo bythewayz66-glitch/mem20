@@ -15,9 +15,22 @@ import os
 import sys
 from pathlib import Path
 
-import mem20_mcp
 import pytest
-from mem20_mcp import _forward
+
+# ``mem20_mcp/__init__.py`` resolves the canonical root at import time, so on a
+# box without /opt/mem20/mcp the bare ``import mem20_mcp`` below raises
+# ImportError and pytest reports a collection ERROR for the whole module. That
+# is the forwarder behaving correctly -- there is no canonical tree to forward
+# to -- but it is not a test failure, and it made the suite unrunnable in a
+# fresh clone. Skip the module instead, and say why.
+try:
+    import mem20_mcp
+    from mem20_mcp import _forward
+except ImportError as _exc:  # pragma: no cover - only without a canonical tree
+    pytest.skip(
+        f"no canonical MCP tree to forward to ({_exc})",
+        allow_module_level=True,
+    )
 
 REAL_ROOT = Path("/opt/mem20/mcp")
 
@@ -171,11 +184,11 @@ def test_resolved_canonical_root_is_absolute():
 def test_every_shim_module_forwards_rather_than_reimplementing():
     """Each shim module must expose the canonical module's attributes."""
     shim = Path(mem20_mcp.__file__).parent
-    # loader_audit.py and cli.py are loader machinery, not shims of a canonical
-    # module, so they are not expected to forward.
+    # loader_audit.py, cli.py and preflight.py are loader machinery, not shims
+    # of a canonical module, so they are not expected to forward.
     shims = [
         p for p in shim.glob("*.py")
-        if p.stem not in {"_forward", "__init__", "loader_audit", "cli"}
+        if p.stem not in {"_forward", "__init__", "loader_audit", "cli", "preflight"}
     ]
     assert shims, "expected shim modules to check"
     for path in shims:

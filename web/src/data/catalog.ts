@@ -61,6 +61,19 @@ const tools: Tool[] = rawCatalog.tools.map((t) => ({
 
 const domains = rawCatalog.domains ?? [...new Set(tools.map((t) => t.domain))].sort();
 
+/* The header counts are advisory; the records are the evidence.
+ *
+ * `count` and `domain_count` are written by the generator, but they are only
+ * ever *displayed* next to the rows they claim to summarise. If a regeneration
+ * truncates the `tools` array while still writing the old header, or writes a
+ * header from a different scan than the one that emitted the rows, the UI would
+ * print a total that no row on screen can be checked against — exactly the
+ * class of drift this surface exists to stop. So the records win, and the
+ * header is consulted only when there are no records at all to count.
+ */
+const recordCount = tools.length;
+const recordDomainCount = domains.length;
+
 export const CATALOG: {
   source: string;
   files_scanned: number;
@@ -71,10 +84,21 @@ export const CATALOG: {
 } = {
   source: rawCatalog.source ?? 'mcp/tools/*.py',
   files_scanned: rawCatalog.files_scanned ?? 0,
-  count: rawCatalog.count ?? tools.length,
-  domain_count: rawCatalog.domain_count ?? domains.length,
+  count: recordCount || (rawCatalog.count ?? 0),
+  domain_count: recordDomainCount || (rawCatalog.domain_count ?? 0),
   domains,
   tools,
 };
+
+/* The repository release version, mirroring `VERSION` at the repo root
+ * (3.1.0 as of 2026-11-01; tag `v3.1.1` exists on top of it).
+ *
+ * A constant rather than a runtime read: the shell ships as a static bundle and
+ * cannot open a file. `web/package.json` is deliberately NOT the source — it
+ * carries the app's own `0.1.0` manifest, not the mem20 release. When the
+ * release moves, this is the single line to change, and any surface that wants
+ * to print a version imports this instead of typing the string again.
+ */
+export const MEM20_VERSION = '3.1.0';
 
 export default CATALOG;

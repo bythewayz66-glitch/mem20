@@ -23,13 +23,13 @@ our $PROTOCOL_VERSION = '2025-06-18';
 #
 # The extra inline register_job_tools() group adds job_status and job_wait but
 # lives in server.py rather than in mcp/tools/, so it is not a domain module.
-# Bucketing the 270 tool NAMES by their first `_` component yields 37 buckets,
+# Bucketing the 272 tool NAMES by their first `_` component yields 38 buckets,
 # which is why the domain figure must come from registration and never from
 # string-splitting tool names.
 #
 # Verified by instantiating Mem20MCPServer and by a live tools/list round trip;
 # see sdk/perl/AUDIT.md for the raw transcripts.
-our $SURFACE_TOOL_COUNT   = 270;
+our $SURFACE_TOOL_COUNT   = 272;
 our $SURFACE_DOMAIN_COUNT = 27;
 
 1;
@@ -55,11 +55,11 @@ version independently.
 in the C<initialize> handshake.
 
 =item C<$Mem20::Version::SURFACE_TOOL_COUNT> - tools the SDK is compiled
-against (270), used by C<< Mem20::Client->verify_surface >>.
+against (272), used by C<< Mem20::Client->verify_surface >>.
 
 =item C<$Mem20::Version::SURFACE_DOMAIN_COUNT> - domain modules the server
 registers (27). This is a registration count, B<not> a count of tool-name
-prefixes; those are two different numbers (270 names bucket into 37 prefixes).
+prefixes; those are two different numbers (272 names bucket into 38 prefixes).
 
 =back
 

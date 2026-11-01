@@ -167,6 +167,7 @@ class Mem20MCPServer(MemoryToolsMixin, CognitiveToolsMixin, RoadmapToolsMixin,
         self.register_irc_tools()
         self.register_lie_tools()
         self.register_toolchest_tools()
+        self.register_webhook_tools()
         self.register_job_tools()
     async def _handle_list_tools(self, context: ServerRequestContext, params: Optional[mt.PaginatedRequestParams]) -> mt.ListToolsResult:
         """Handle tools/list request."""
@@ -237,6 +238,40 @@ class Mem20MCPServer(MemoryToolsMixin, CognitiveToolsMixin, RoadmapToolsMixin,
                 isError=True,
                 resultType="complete"
             )
+    def register_webhook_tools(self):
+        """Register the webhook tools (mem20webhooksupernetworkz).
+
+        Same two-part contract as the other subsystem tool groups: ``TOOLS`` in
+        the subsystem's module is the declarative list, and this binds each
+        handler as ``_<tool_name>`` so the dynamic dispatcher's ``_<tool_name>``
+        convention actually reaches it. A tool listed in a registry but never
+        bound is the decorative-registration failure this convention exists to
+        prevent.
+        """
+        try:
+            from tools import webhook_tools  # noqa: PLC0415 - mcp/ is on sys.path at runtime
+        except ImportError:
+            sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), "tools"))
+            import webhook_tools  # noqa: PLC0415
+
+        self._webhook_tools = webhook_tools
+        for spec in webhook_tools.TOOLS:
+            name = spec["name"]
+            self.tools[name] = mt.Tool(
+                name=name,
+                title=name.replace("_", " ").title(),
+                description=spec["description"],
+                inputSchema=spec["inputSchema"],
+            )
+            handler = spec["handler"]
+
+            async def _dispatch(arguments, _handler=handler):
+                # The handlers are synchronous and touch SQLite plus subprocess
+                # checks; running them on the loop would block every client.
+                return await asyncio.to_thread(lambda: _handler(**(arguments or {})))
+
+            setattr(self, f"_{name}", _dispatch)
+
     def register_job_tools(self):
         self.tools["job_status"] = mt.Tool(
             name="job_status",

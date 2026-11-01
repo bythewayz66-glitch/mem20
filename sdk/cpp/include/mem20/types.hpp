@@ -112,7 +112,12 @@ struct Result {
     r.error_message = std::move(msg);
     return r;
   }
-  const auto& error() const { return *this; }
+  // Two unambiguous accessors. `error()` used to return *this while `message()`
+  // was a zero-argument member function, so the documented
+  // `r.error().message` could never compile -- it read as a member pointer.
+  // `detail()` is the string form; `message()` is kept as a value accessor so
+  // either spelling works.
+  std::string detail() const { return error_message.value_or(""); }
   std::string message() const { return error_message.value_or(""); }
 };
 

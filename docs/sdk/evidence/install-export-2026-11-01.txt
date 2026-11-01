@@ -1,0 +1,114 @@
+# mem20 C++ SDK -- install / export evidence
+
+Captured: 2026-11-01T17:27:54Z
+Commit under test: 2ea4492209dfaae6afb22ca884132a0d1849bfcf
+
+## 1. Install into a scratch prefix
+```
+$ cmake --install build/cpp --prefix /tmp/mem20-prefix
+-- Install configuration: "Release"
+-- Installing: /tmp/prefix/lib/libmem20_sdk.a
+-- Installing: /tmp/prefix/include/mem20
+-- Installing: /tmp/prefix/include/mem20/client.hpp
+-- Installing: /tmp/prefix/include/mem20/config.hpp
+-- Installing: /tmp/prefix/include/mem20/errors.hpp
+-- Installing: /tmp/prefix/include/mem20/surface.hpp
+-- Installing: /tmp/prefix/include/mem20/types.hpp
+-- Installing: /tmp/prefix/include/mem20/version.hpp
+-- Installing: /tmp/prefix/lib/cmake/mem20/mem20Targets.cmake
+-- Installing: /tmp/prefix/lib/cmake/mem20/mem20Targets-release.cmake
+-- Installing: /tmp/prefix/lib/cmake/mem20/mem20Config.cmake
+-- Installing: /tmp/prefix/lib/cmake/mem20/mem20ConfigVersion.cmake
+-- Installing: /tmp/prefix/lib/pkgconfig/mem20.pc
+```
+
+## 2. Installed tree
+```
+$ find /tmp/mem20-prefix -type f | sort
+/tmp/prefix/include/mem20/client.hpp
+/tmp/prefix/include/mem20/config.hpp
+/tmp/prefix/include/mem20/errors.hpp
+/tmp/prefix/include/mem20/surface.hpp
+/tmp/prefix/include/mem20/types.hpp
+/tmp/prefix/include/mem20/version.hpp
+/tmp/prefix/lib/cmake/mem20/mem20Config.cmake
+/tmp/prefix/lib/cmake/mem20/mem20ConfigVersion.cmake
+/tmp/prefix/lib/cmake/mem20/mem20Targets-release.cmake
+/tmp/prefix/lib/cmake/mem20/mem20Targets.cmake
+/tmp/prefix/lib/libmem20_sdk.a
+/tmp/prefix/lib/pkgconfig/mem20.pc
+```
+
+## 3. pkg-config metadata
+```
+$ PKG_CONFIG_PATH=/tmp/mem20-prefix/lib/pkgconfig pkg-config --modversion --cflags --libs mem20
+0.1.0
+-I/tmp/prefix/include -L/tmp/prefix/lib -lmem20_sdk
+```
+
+## 4. Standalone consumer: find_package(mem20 CONFIG REQUIRED) only
+```
+$ cmake -S sdk/cpp/tests/consumer -B /tmp/consumer -G Ninja \
+      -DCMAKE_PREFIX_PATH=/tmp/mem20-prefix
+-- The CXX compiler identification is GNU 12.2.0
+-- Detecting CXX compiler ABI info
+-- Detecting CXX compiler ABI info - done
+-- Check for working CXX compiler: /usr/bin/c++ - skipped
+-- Detecting CXX compile features
+-- Detecting CXX compile features - done
+-- Performing Test CMAKE_HAVE_LIBC_PTHREAD
+-- Performing Test CMAKE_HAVE_LIBC_PTHREAD - Success
+-- Found Threads: TRUE
+
+$ cmake --build /tmp/consumer
+[1/2] Building CXX object CMakeFiles/mem20_consumer.dir/main.cpp.o
+[2/2] Linking CXX executable mem20_consumer
+
+$ /tmp/consumer/mem20_consumer
+mem20 installed-package consumer
+  sdk version   : 0.1.0
+  protocol      : 2025-06-18
+  server baseline: 3.1.0
+  surface       : 270 tools across 27 domains
+PASS: find_package(mem20 CONFIG REQUIRED) -> mem20::mem20 links and behaves
+exit=0
+```
+
+## 5. Negative controls -- the tests are not vacuous
+
+### NC-A: docs-drift guard must fail on a wrong published count
+```
+$ sed -i 's/270 tools across 27 domains/269 tools across 27 domains/g' sdk/cpp/README.md
+$ ./mem20_test_surface_docs
+mem20 C++ SDK surface docs test
+  expected surface : 270 tools across 27 domains
+FAIL: sdk/cpp/README.md: does not state "270 tools across 27 domains"
+FAIL: 1 surface documentation violation(s)
+NC-A exit=1
+$ ctest --test-dir ... -R surface_docs
+          3 - surface_docs (Failed)
+```
+
+### NC-B: export-name drift must fail install_export
+```
+$ # EXPORT_NAME mem20 -> mem20_sdk in sdk/cpp/CMakeLists.txt
+$ ctest --test-dir ... -R install_export --output-on-failure
+CMake Error at sdk/cpp/tests/test_install_export.cmake:43 (message):
+  install_export: configure consumer failed (exit 1)
+0% tests passed, 1 tests failed out of 1
+          4 - install_export (Failed)
+```
+
+### NC-C: missing server dependency must SKIP, not silently pass
+```
+$ PATH=/tmp/no-mcp-shim:$PATH ./mem20_test_live_surface
+mem20 C++ SDK live surface test
+  sdk version      : 0.1.0
+  requested proto  : 2025-06-18
+SKIP: python3 on PATH cannot 'import mcp'; the mem20 server dependency is not
+      installed (pip install 'mcp>=2.1.1' aiohttp)
+NC-C exit=77
+$ ctest --test-dir ... -R live_surface
+The following tests did not run:
+          2 - live_surface (Skipped)
+```

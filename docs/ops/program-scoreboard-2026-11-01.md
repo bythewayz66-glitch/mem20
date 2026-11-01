@@ -18,7 +18,7 @@
 | # | Signal | Value | Status | Command |
 |---|---|---|---|---|
 | S1 | Check-run pass rate on `main` | **13 / 14 = 92.86 %** | 🟡 1 red | `curl -s "$API/commits/$MAIN_SHA/check-runs?per_page=100"` |
-| S2 | Non-`main` branches | **14** (13 merged, 1 unmerged) | 🟡 13 stale refs | `git ls-remote --heads origin` + `git merge-base --is-ancestor` |
+| S2 | Non-`main` branches | **14** at measurement (13 merged, 1 unmerged) — **15** on re-run after this branch lands | 🟡 13 stale refs | `git ls-remote --heads origin` + `git merge-base --is-ancestor` |
 | S3 | Tag distance, `v3.1.1` → `main` | **63 commits behind** (0 ahead) | 🔴 stale | `git rev-list --left-right --count v3.1.1...origin/main` |
 | S4 | PyPI publication | **0 / 3 published** (`mem20`, `mem20-mcp`, `mem20-sdk` all 404) | 🔴 absent | `curl -s -o /dev/null -w '%{http_code}' https://pypi.org/pypi/<pkg>/json` |
 | S5 | Open PRs / open issues | **0 / 0** | 🟢 clear | `curl -s "$API/pulls?state=open"` · `curl -s "$API"` |
@@ -77,6 +77,14 @@ merged_non_main     : 13
 unmerged_non_main   : 1
 ```
 
+> **Self-reference note (read this before re-running).** The numbers above were taken at
+> `2ea44922` **before** this scoreboard's own branch was pushed. Re-running the script on a
+> clone that includes `docs/ws1-program-scoreboard-2026-11-01` reports
+> `non_main_heads : 15`, `merged_non_main : 13`, `unmerged_non_main : 2` — the extra unmerged
+> head is this branch. That is the correct behaviour, not drift: the scoreboard counts itself.
+> The stable, branch-independent figures are **13 merged stale refs** and **1 pre-existing
+> unmerged branch** (the directive branch).
+
 | State | Ahead | Branch | Head SHA |
 |---|---|---|---|
 | MERGED | 0 | `bench/ws1-retrieval-modes-2026-10-31` | `35500f4c2e4f7823d8bce840c0f1fe64a8abac39` |
@@ -98,7 +106,7 @@ unmerged_non_main   : 1
 returns true, `ahead=0`) — they carry **zero** unmerged commits and are pure stale refs, safe to
 delete. The single unmerged head is the directive branch itself, 1 commit ahead of `main`; it is
 the branch this scoreboard is committed on top of, so it is expected to be unmerged at measurement
-time. **At-risk commits across all side branches: 1.**
+time. **At-risk commits across all side branches: 1** (excluding this scoreboard's own branch).
 
 ---
 
@@ -138,7 +146,7 @@ are stated here rather than silently reconciled.
 
 | Directive claim | Live measurement | Explanation |
 |---|---|---|
-| "13 non-`main` heads; all 13 merged → 0 unmerged" | **14 non-`main` heads; 13 merged, 1 unmerged** | The directive branch `docs/ws1-owner-directive-2026-11-01` @ `06fa1220` was pushed after the register was written. It is 1 commit ahead of `main`. The "13 merged" half of the claim still holds exactly. |
+| "13 non-`main` heads; all 13 merged → 0 unmerged" | **14 non-`main` heads; 13 merged, 1 unmerged** (15 / 13 / 2 once this branch lands) | The directive branch `docs/ws1-owner-directive-2026-11-01` @ `06fa1220` was pushed after the register was written. It is 1 commit ahead of `main`. The "13 merged" half of the claim still holds exactly. |
 | "`v3.1.1` is 63 commits behind" | **63 behind, 0 ahead** — confirmed | No change. |
 | "13 `success` / 1 `failure` of 14" | **13 / 1 of 14** — confirmed | No change. |
 | "`mem20` / `mem20-mcp` / `mem20-sdk` all 404" | **all 404** — confirmed | No change. |
@@ -172,6 +180,10 @@ bash scripts/ops/scoreboard_signals.sh 2ea4492209dfaae6afb22ca884132a0d1849bfcf
 
 Requires `git`, `curl`, `python3`. No token: the repo is public and the GitHub API is called
 unauthenticated (60 req/h ceiling — the script makes 3 API calls).
+
+The script self-heals from a shallow single-branch clone: it fetches `main`, the pinned SHA,
+all remote heads, and tags as needed, so the one-line command above works from a fresh
+`--depth 1` clone without extra setup.
 
 ---
 

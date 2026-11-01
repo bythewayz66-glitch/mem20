@@ -10,8 +10,36 @@ REPO="mem20"
 MAIN_SHA="${1:-2ea4492209dfaae6afb22ca884132a0d1849bfcf}"
 API="https://api.github.com/repos/${OWNER}/${REPO}"
 
+# Resolve a local ref for main that exists in ANY clone (shallow, single-branch,
+# or full). Falls back to the pinned SHA, which is always present once fetched.
+MAIN_REF=""
+for cand in origin/main main "${MAIN_SHA}"; do
+  if git rev-parse --verify --quiet "${cand}^{commit}" >/dev/null 2>&1; then
+    MAIN_REF="${cand}"; break
+  fi
+done
+if [ -z "${MAIN_REF}" ]; then
+  # Shallow single-branch clone: pull main and the pinned SHA down, then retry.
+  git fetch -q --tags origin main 2>/dev/null || true
+  git fetch -q origin "${MAIN_SHA}" 2>/dev/null || true
+  for cand in origin/main main "${MAIN_SHA}"; do
+    if git rev-parse --verify --quiet "${cand}^{commit}" >/dev/null 2>&1; then
+      MAIN_REF="${cand}"; break
+    fi
+  done
+fi
+if [ -z "${MAIN_REF}" ]; then
+  echo "ERROR: no local ref for main; run: git fetch origin main --tags" >&2
+  exit 1
+fi
+# Tags are needed for section 3; fetch them if absent.
+if ! git rev-parse --verify --quiet 'v3.1.1^{commit}' >/dev/null 2>&1; then
+  git fetch -q --tags origin 2>/dev/null || true
+fi
+
 echo "== 0. baseline ==============================================="
 echo "main_sha            : ${MAIN_SHA}"
+echo "main_ref_resolved   : ${MAIN_REF}"
 echo "main_commit_date    : $(git log -1 --format=%ad --date=iso-strict "${MAIN_SHA}")"
 echo "main_commit_subject : $(git log -1 --format=%s "${MAIN_SHA}")"
 echo "VERSION             : $(git show "${MAIN_SHA}:VERSION" | tr -d '\n')"
@@ -47,6 +75,9 @@ for r in runs:
 echo
 echo "== 2. branch count and merge status =========================="
 # Command: git ls-remote --heads origin
+# Ensure every remote head is present locally so merge-base can resolve it
+# (a shallow single-branch clone has none of them).
+git fetch -q origin '+refs/heads/*:refs/remotes/origin/*' 2>/dev/null || true
 TOTAL_HEADS=$(git ls-remote --heads origin | wc -l)
 NON_MAIN=$(git ls-remote --heads origin | awk '{print $2}' | sed 's#refs/heads/##' | grep -vc '^main$')
 echo "remote_heads_total  : ${TOTAL_HEADS}"
@@ -54,8 +85,8 @@ echo "non_main_heads      : ${NON_MAIN}"
 merged=0; unmerged=0
 for b in $(git ls-remote --heads origin | awk '{print $2}' | sed 's#refs/heads/##' | grep -v '^main$'); do
   sha=$(git rev-parse "origin/${b}" 2>/dev/null || echo MISSING)
-  ahead=$(git rev-list --count "origin/main..${sha}" 2>/dev/null || echo "?")
-  if git merge-base --is-ancestor "${sha}" origin/main 2>/dev/null; then
+  ahead=$(git rev-list --count "${MAIN_REF}..${sha}" 2>/dev/null || echo "?")
+  if git merge-base --is-ancestor "${sha}" "${MAIN_REF}" 2>/dev/null; then
     st=MERGED; merged=$((merged+1))
   else
     st=UNMERGED; unmerged=$((unmerged+1))
@@ -69,7 +100,7 @@ echo
 echo "== 3. tag distance to main ==================================="
 # Command: git rev-list --left-right --count <tag>...origin/main
 for t in v3.1.1 v3.1.0 v3.0.0; do
-  read -r ahead behind < <(git rev-list --left-right --count "${t}...origin/main")
+  read -r ahead behind < <(git rev-list --left-right --count "${t}...${MAIN_REF}")
   printf "  %-8s tag_commit=%s  ahead_by=%s  behind_by=%s\n" \
     "${t}" "$(git rev-parse --short=12 "${t}")" "${ahead}" "${behind}"
 done

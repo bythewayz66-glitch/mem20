@@ -57,3 +57,22 @@ set_tests_properties(live_surface PROPERTIES
   TIMEOUT 180
   LABELS "integration;live"
 )
+
+# --- Surface documentation drift guard ---------------------------------------
+# The tool/domain count is stated in exactly one place in code
+# (include/mem20/surface.hpp, with static_asserts on the derivation) and quoted
+# in the two READMEs. This test greps all three and fails when they disagree, so
+# a stale count is a red test rather than a documentation bug that ships. It
+# needs no server and no python3, so it runs everywhere the suite runs.
+add_executable(mem20_test_surface_docs tests/test_surface_docs.cpp)
+target_link_libraries(mem20_test_surface_docs PRIVATE mem20_sdk)
+target_compile_definitions(mem20_test_surface_docs PRIVATE
+  MEM20_TEST_SURFACE_HEADER="${CMAKE_CURRENT_SOURCE_DIR}/include/mem20/surface.hpp"
+  MEM20_TEST_SDK_README="${CMAKE_CURRENT_SOURCE_DIR}/README.md"
+  MEM20_TEST_DOCS_README="${MEM20_REPO_ROOT}/docs/sdk/cpp/README.md"
+)
+add_test(NAME surface_docs COMMAND mem20_test_surface_docs)
+set_tests_properties(surface_docs PROPERTIES
+  SKIP_RETURN_CODE 77
+  LABELS "unit;docs"
+)

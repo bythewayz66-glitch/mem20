@@ -49,13 +49,14 @@ module SurfaceCheck
   ].freeze
 
   # Mixin modules that exist on disk but are never wired into the server.
-  UNREGISTERED_MODULES = %w[lattice_tools.py eventstream_tools.py].freeze
+  # Bracket arrays, not %w[]: .rubocop.yml sets Style/WordArray to `brackets`.
+  UNREGISTERED_MODULES = ["lattice_tools.py", "eventstream_tools.py"].freeze
 
   # Installer modules: they do not define a domain of their own, they
   # monkeypatch `VersionControlToolsMixin#register_versioncontrol_tools` to add
   # one tool each. Their tools belong to the version-control domain, so the
   # names are counted but the files are not counted as modules.
-  INSTALLER_MODULES = %w[rm239_tools.py rm052_tools.py].freeze
+  INSTALLER_MODULES = ["rm239_tools.py", "rm052_tools.py"].freeze
 
   # Tools registered by the server itself (`register_job_tools`), which belong
   # to the transport rather than to any domain.

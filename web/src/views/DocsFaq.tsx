@@ -131,12 +131,17 @@ const FAQ: Array<{ q: string; a: React.ReactNode; src: string; tags: string[] }>
       <>
         {CATALOG.count} tools across {CATALOG.domain_count} domains, counted from source. The count is
         produced by parsing every <span className="mono">mt.Tool(…)</span> registration in{' '}
-        <span className="mono">mcp/tools/*.py</span>, so it is the number this UI stands behind.
-        <span className="mono">257</span>, <span className="mono">258</span> and{' '}
-        <span className="mono">268</span> are retired counts and are not restated here.
+        <span className="mono">mcp/**/*.py</span> and then keeping only the ones whose mixin is
+        actually inherited by <span className="mono">Mem20MCPServer</span> (or whose{' '}
+        <span className="mono">install()</span> is called from{' '}
+        <span className="mono">mcp/tools/__init__.py</span>). A declaration that is never wired is
+        not a tool the server can answer, so it is excluded from the count and listed separately as
+        unwired. <span className="mono">257</span>, <span className="mono">258</span>,{' '}
+        <span className="mono">268</span> and <span className="mono">270</span> are retired counts
+        and are not restated here.
       </>
     ),
-    src: 'src/data/tools.json (AST extraction)',
+    src: 'src/data/tools.json (wiring-checked AST extraction)',
     tags: ['tools', 'catalog', 'count'],
   },
 ];

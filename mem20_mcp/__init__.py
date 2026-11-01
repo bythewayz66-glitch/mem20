@@ -7,13 +7,14 @@ This package therefore boots the identical real tool set instead of stale drift,
 and both ``import mem20_mcp.server`` and the top-level ``tools.*`` imports used by
 the canonical server resolve to one shared implementation.
 
-Resolution is **lazy**. ``canonical_root()`` still raises ``ImportError`` when the
-canonical tree is missing — that refusal is the whole point of the package — but
-it is no longer raised at *import* time. Resolving eagerly made the package
-unimportable anywhere the canonical tree is absent, which is every bare clone:
-the test suite could not be collected and the loader audit could not run, so the
-one tool that detects drift was itself unusable off the production box. Importing
-the package now always succeeds; touching the canonical tree still fails loudly.
+Resolution is **lazy**. ``canonical_root()`` still runs the preflight and still
+raises ``ImportError`` when the canonical tree is missing or refused — that
+refusal is the whole point of the package — but it is no longer raised at
+*import* time. Resolving eagerly made the package unimportable anywhere the
+canonical tree is absent, which is every bare clone: the test suite could not be
+collected and the CLI could not run, so the tools that detect drift were
+themselves unusable off the production box. Importing the package now always
+succeeds; touching the canonical tree still fails loudly.
 """
 
 from ._forward import canonical_root as canonical_root

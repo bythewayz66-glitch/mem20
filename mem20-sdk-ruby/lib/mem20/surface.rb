@@ -20,12 +20,24 @@ module Mem20
   #
   # `268 tools across 26 domains` described only the domain half; the live
   # `tools/list` returns every registered tool, so the SDK sees {TOOL_COUNT}.
+  #
+  # 270 -> 272 (2026-11-01): two merged subsystems each register one more tool
+  # by monkeypatching `VersionControlToolsMixin#register_versioncontrol_tools`
+  # instead of adding a module, so {DOMAIN_COUNT} stays 27 while
+  # {DOMAIN_TOOLS} grows by two:
+  #
+  #   + vcs_asset_release_audit        (RM-239, mcp/tools/rm239_tools.py)
+  #   + graph_execute_reversible_plan  (RM-052, mcp/tools/rm052_tools.py)
+  #
+  # Verified against a live `tools/list` on main @ d99ab5d8, not by grepping
+  # the sources: a static scan double-counts those two, because each name is
+  # assigned both in the installer and in the patched method.
   module Surface
     # Number of domain mixin modules that register at least one tool.
     DOMAIN_COUNT = 27
 
     # Tools contributed by those domain modules.
-    DOMAIN_TOOLS = 268
+    DOMAIN_TOOLS = 270
 
     # Tools registered by the server itself, outside any domain module.
     INFRA_TOOLS = ["job_status", "job_wait"].freeze
@@ -36,7 +48,7 @@ module Mem20
     # The infra tools are excluded from {DOMAIN_COUNT} on purpose, so this
     # identity is the invariant the specs pin.
     def self.consistent?
-      TOOL_COUNT == 270 && DOMAIN_TOOLS == 268 && DOMAIN_COUNT == 27
+      TOOL_COUNT == 272 && DOMAIN_TOOLS == 270 && DOMAIN_COUNT == 27
     end
 
     # Human-readable summary used by `rake surface:check` and the README.

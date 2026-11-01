@@ -31,14 +31,31 @@ module SurfaceCheck
   # server; there is no decorator form to account for.
   REGISTRATION = /self\.tools\["([a-z0-9_]+)"\]\s*=/
 
-  # Domain modules: the 24 mixins under mcp/tools/ plus the three that live
+  # Domain modules: the mixins under mcp/tools/ plus the three that live
   # directly in mcp/. `lie_bootstrap.py` / `error_handler.py` register nothing.
+  #
+  # NOT every file under mcp/tools/ is reachable. `lattice_tools.py` and
+  # `eventstream_tools.py` define `LatticeToolsMixin` / `EventStreamToolsMixin`
+  # but `mcp/server.py` never imports or registers them, so their 10 tools
+  # (lattice_* / stream_*) are absent from `tools/list`. Counting every file in
+  # the directory therefore over-reports by 10 (282 instead of 272). Only the
+  # mixins the server actually registers are counted, which is what the live
+  # surface contains.
   DOMAIN_GLOBS = [
     File.join(MCP_DIR, "tools", "*.py"),
     File.join(MCP_DIR, "memory_tools.py"),
     File.join(MCP_DIR, "cognitive_tools.py"),
     File.join(MCP_DIR, "roadmap_tools.py")
   ].freeze
+
+  # Mixin modules that exist on disk but are never wired into the server.
+  UNREGISTERED_MODULES = %w[lattice_tools.py eventstream_tools.py].freeze
+
+  # Installer modules: they do not define a domain of their own, they
+  # monkeypatch `VersionControlToolsMixin#register_versioncontrol_tools` to add
+  # one tool each. Their tools belong to the version-control domain, so the
+  # names are counted but the files are not counted as modules.
+  INSTALLER_MODULES = %w[rm239_tools.py rm052_tools.py].freeze
 
   # Tools registered by the server itself (`register_job_tools`), which belong
   # to the transport rather than to any domain.
@@ -55,10 +72,12 @@ module SurfaceCheck
 
   def measure
     domain_files = DOMAIN_GLOBS.flat_map { |glob| Dir[glob] }.sort.uniq
+    domain_files = domain_files.reject { |path| UNREGISTERED_MODULES.include?(File.basename(path)) }
     domain = domain_files.to_h { |path| [path, names_in(path)] }.reject { |_p, names| names.empty? }
     domain_tools = domain.values.flatten.uniq
     infra = names_in(INFRA_FILE)
-    { modules: domain.size, domain: domain_tools.sort, infra: infra.sort }
+    modules = domain.keys.reject { |path| INSTALLER_MODULES.include?(File.basename(path)) }
+    { modules: modules.size, domain: domain_tools.sort, infra: infra.sort }
   end
 
   def actual

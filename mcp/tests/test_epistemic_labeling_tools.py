@@ -23,10 +23,10 @@ import pytest
 MCP_ROOT = Path(__file__).resolve().parents[1]
 ENGINE_ROOT = MCP_ROOT.parent / "memory_engine"
 
-# The repo-root conftest pre-binds the installed mcp SDK, because this repo's
-# mcp/ directory shadows the `mcp` name during pytest's collection walk and
-# memory_tools.py answers that ImportError with sys.exit(1) - which aborts the
-# whole session. Skip loudly rather than crash if the SDK is genuinely absent.
+# The repo-root conftest pre-binds the installed mcp SDK, because /opt/mem20/mcp
+# shadows the `mcp` name during pytest's collection walk and memory_tools.py
+# answers that ImportError with sys.exit(1) - which aborts the whole session.
+# Skip loudly rather than crash if the SDK is genuinely absent.
 pytest.importorskip("mcp.server", reason="mcp SDK not installed")
 pytest.importorskip("mcp_types", reason="mcp_types not installed")
 
@@ -37,7 +37,7 @@ EPISTEMIC_STATUSES = ["observed", "inferred", "imagined", "user_stated",
 def _load_by_path(name: str, path: Path):
     """Load a module by explicit file path.
 
-    Deliberately not `importlib.import_module`: putting this repo's mcp/ on
+    Deliberately not `importlib.import_module`: putting /opt/mem20/mcp on
     sys.path shadows the installed `mcp` SDK with this repo's own server.py,
     which then fails to import itself. Loading the canonical file directly makes
     the module under test the same object the running server executes.

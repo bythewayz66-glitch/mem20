@@ -89,7 +89,11 @@ PACKAGE_NAME = "mem20_mcp"
 ACCEPTED_NAMINGS = frozenset({"mem20-native", "fs-standard"})
 
 #: Modules that are the loader machinery itself, not shims of a canonical file.
-LOADER_MODULES = frozenset({"__init__.py", "_forward.py", "loader_audit.py", "cli.py"})
+#: ``preflight.py`` belongs here: it inspects the canonical tree, it does not
+#: re-export a module from it, so it is not expected to forward.
+LOADER_MODULES = frozenset({
+    "__init__.py", "_forward.py", "loader_audit.py", "cli.py", "preflight.py",
+})
 
 #: The call every forwarding shim makes.
 FORWARD_CALL = "_load"

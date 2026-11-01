@@ -10,13 +10,14 @@ service or systemd unit still points at them.
 
 | Identity | What it is | State (verified 2026-11-01) | Action |
 |---|---|---|---|
-| `jaysonai.online` **zone** and the hosts in it (`mem20.`, `shop.`, `control.`, `docs.`, `jnet1.`, apex, `www`) | the retired **infrastructure**: a DNS zone plus the boxes behind it | `jaysonai.online` → **NXDOMAIN**; `mem20.jaysonai.online` → **NXDOMAIN** (Cloudflare + Google DoH, per directive §1) | **purged** from live code and live docs |
-| the retired **publish host** (`216.198.115.91`) and its **publish gate** | the SSH/rsync target and the gate that routed to it | host unreachable: `2222` → `No route to host`, `22` → timeout, `80` → timeout; `sidney` and `gabe` do not resolve | **purged** from live code and live docs |
+| `jaysonai.online` **zone** and the hosts in it (`mem20.`, `shop.`, `control.`, `docs.`, `jnet1.`, apex, `www`) | the retired **infrastructure**: a DNS zone plus the boxes behind it | `jaysonai.online` apex → **NOERROR** (zone still delegated to Cloudflare NS); `mem20.jaysonai.online` → **NXDOMAIN, Status 3** on both Cloudflare and Google DoH | **purged** from live code and live docs |
+| the retired **publish host** (`216.198.115.91`) and its **publish gate** | the SSH/rsync target and the gate that routed to it | host unreachable: `2222` → no route, `22` → timeout, `80` → timeout; `sidney` and `gabe` do not resolve | **purged** from live code and live docs |
 | `JaysonAIOnline` **GitHub org** | a *different, live* thing: the upstream org still serving `JaysonAIOnline/oreo` (**HTTP 200**), a pinned dependency of `mem20agentz` | **live** | **kept** — attribution and a dependency source, not retired infra |
 
 `mem20.jaysonai.online` is **not** recreated by this change. It is NXDOMAIN on both resolvers and
 `jaysonai.online` is delegated to Cloudflare NS; the directive says to leave it dead. Nothing in
-this branch creates a DNS record, a host, or a tunnel.
+this branch creates a DNS record, a host, or a tunnel. Re-verified after the final commit:
+`mem20.jaysonai.online` → Status **3** on both resolvers.
 
 ## 2. What was purged
 
@@ -42,13 +43,16 @@ Live docs — served or read as current guidance:
 
 ## 3. Allowlist — the only places the tokens may remain
 
-`git grep -ciE 'sidney|gabe'` on this branch returns hits in the files below and nowhere else. Each
-entry is a *reason the token cannot be removed without destroying evidence or breaking a real
+`git grep -ciE 'sidney|gabe'` on this branch returns **88 files / 660 hits**, and every one of them
+is accounted for below: **76 files** are the `published/` archive (A1) and **12 files** are the
+named entries A2–A13. There are **0** hits outside this allowlist.
+
+Each entry is a *reason the token cannot be removed without destroying evidence or breaking a real
 path*, not a convenience exemption.
 
 | # | Path | Category | Why it must stay |
 |---|---|---|---|
-| A1 | `published/**` (94 files) | **immutable archive** | `published/` is the GitHub-side permanent copy of every delivered artifact, integrity-pinned by `published/MANIFEST.tsv` (per-file sha-256). Editing a preserved file breaks the manifest and destroys the record of what was actually shipped. `published/README.md` rule 3: *"never edit a preserved file in place."* Many of these files *are* the deploy scripts and publish reports that named the retired host — rewriting them would falsify the delivery record. |
+| A1 | `published/**` (76 files) | **immutable archive** | `published/` is the GitHub-side permanent copy of every delivered artifact, integrity-pinned by `published/MANIFEST.tsv` (per-file sha-256). Editing a preserved file breaks the manifest and destroys the record of what was actually shipped. `published/README.md` rule 3: *"never edit a preserved file in place."* Many of these files *are* the deploy scripts and publish reports that named the retired host — rewriting them would falsify the delivery record. |
 | A2 | `.sitemap/sitemap.json` (2) | **generated snapshot** | a point-in-time index (`root: /opt/mem20`, `generated_at: 2026-10-28T23:54:00-0600`) of README text, including `published/README.md` verbatim. `sitemap build` regenerates it wholesale; hand-editing would desynchronise the index from the tree it describes and would not survive the next build. |
 | A3 | `docs/ops/branch-inventory-2026-10-31.md` (8) | **dated audit record** | names the git branch `chore/retire-jaysonai-sidney-gabe`. A branch name is a git ref, not infrastructure; rewriting it would falsify the inventory. This document is also what *records* G8. |
 | A4 | `docs/ops/branch-disposition-2026-10-31.md` (10) | **dated audit record** | same branch name, plus the dated retirement finding. |
@@ -71,7 +75,8 @@ offending `docs/dashboard.html` (3 hits), `CANONICAL.md` (4), `CHANGELOG.md` (2)
 ### `jaysonai` — a separate question
 
 `git grep -ciE 'jaysonai'` is **not** the acceptance gate (the directive's gate is `sidney|gabe`).
-For completeness, the surviving `jaysonai` hits fall into three classes and all three are kept:
+For completeness, the surviving `jaysonai` hits (77 files) fall into three classes and all three are
+kept:
 
 1. **`JaysonAIOnline` GitHub org** — `CANONICAL.md`, `README.md`, `docs/README.md`,
    `docs/sdk/cpp/source-ledger.md`, `docs/hygiene/oreo-gitlink.md`, `mem20agentz/pyproject.toml`.
@@ -91,12 +96,12 @@ The retired **zone** `jaysonai.online` now appears only in `CHANGELOG.md` and
 | Check | Command | Result |
 |---|---|---|
 | Remote-host directives in any unit | `git grep -nE 'Host=\|HostName\|ssh \|rsync\|sftp\|scp \|StrictHostKey' -- '*service*' '*timer*' ':!published/'` | **no matches** |
-| Shipped unit template | `systemd/mem20.service.template` | clean — local venv path, no remote target |
+| Shipped unit template | `systemd/mem20.service.template` | clean — `ExecStart=__MEM20_VENV_PYTHON__ __MEM20_WORKDIR__/mcp/mcp_server.py`, local only |
 | Deployed unit generator | `packaging/deb/build-deb.sh` | clean — rewrites `ExecStart` to `/opt/mem20/venv/bin/mem20-mcp` |
 | Unit health probe list | `mem20controlz/.../websites.py` `UNIT_CANDIDATES` | 5 local units (`mcp-server`, `mem20controlz`, `mem20cviz`, `mem20ucgz`, `mem20sensorz`) — none remote |
 | CI workflows | `git grep -nE 'sidney\|gabe\|jaysonai\|216\.198' -- '.github/*'` | **no matches** |
 | Archived units | `published/.../mem20-sync.service`, `mem20-sync.timer`, `mem20.service` | archive only (A1). `ExecStart` is local; the only host mention is a comment in the timer. Not installed from this repo. |
-| Host reachability | `curl` + `/dev/tcp` to `216.198.115.91` | `2222` → `No route to host`; `22` → timeout; `80` → timeout |
+| Host reachability | `curl` + `/dev/tcp` to `216.198.115.91` | `2222` → no route; `22` → timeout; `80` → timeout |
 | Name resolution | `getent hosts sidney` / `gabe` | both **NXDOMAIN** |
 
 ## 5. Acceptance
@@ -109,6 +114,17 @@ The gate greps the branch, subtracts exactly the allowlist above, and exits non-
 else matches. It also re-runs the `mem20controlz` suite, because the `FLEET_SITES` change touches
 tested code.
 
+Measured on the final commit, from a **clean clone of the remote branch**:
+
+```
+BRANCH_SHA=5b8c636fbb4585fd55586e8bbb67d9a7cf4800bd
+== files with a hit: 88   hits: 660
+== non-allowlisted files: 0   non-allowlisted hits: 0
+GATE PASSED: every remaining reference is allowlisted.
+== mem20controlz suite
+33 passed
+```
+
 ## 6. What this does not do
 
 - Does not delete or rewrite the `published/` archive or its manifest.
@@ -116,3 +132,6 @@ tested code.
 - Does not remove the `JaysonAIOnline` org attribution or the pinned `oreo` dependency.
 - Does not close the `chore/retire-jaysonai-sidney-gabe` branch — that is GitHub Repo Assistant's
   row (directive §3 row 1 / `branch-disposition` §8).
+- Does not restore the executable bit on `tools/gen_completion_audit.py`. The commit API cannot set
+  file modes, so that file landed as `100644` where `main` has `100755`. Content is byte-identical
+  apart from the one comment hunk; `chmod +x tools/gen_completion_audit.py` fixes the mode.

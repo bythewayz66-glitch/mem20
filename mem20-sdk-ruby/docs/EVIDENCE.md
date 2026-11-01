@@ -1,10 +1,11 @@
 # mem20 Ruby SDK — verification evidence
 
 This is the raw output behind the results summarised in the README. It was captured on
-the **Sidney** host (now retired) against the mem20 server; nothing here is estimated.
+a Kali Linux host against the mem20 server; nothing here is estimated.
 
-- Host: the former `sidney` host — **retired**, no longer exists. Kali Linux
-  (7.1.5+kali-amd64), `ruby 3.3.8 (2025-04-09)` at capture time
+- Host: a Kali Linux box (7.1.5+kali-amd64), `ruby 3.3.8 (2025-04-09)` at capture
+  time. That host has since been **retired** and no longer exists; the capture is
+  kept as the dated record of what was measured.
 - Canonical repo: `github.com/bythewayz66-glitch/mem20` @ `main` (MIT)
 - Server: mem20-mcp, release `v2.1.0rc2`, protocol `2025-06-18`, 270 tools
 

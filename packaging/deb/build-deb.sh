@@ -99,7 +99,7 @@ Section: utils
 Priority: optional
 Architecture: ${ARCH}
 Depends: python3 (>=3.10), systemd, curl
-Maintainer: JaysonAI <noreply@jayson.ai>
+Maintainer: mem20 maintainers <bythewayz66@gmail.com>
 Description: mem20 — trusted, auditable memory + world-model MCP server
  mem20 is a persistent memory + cognition substrate for AI agents, exposed
  over the Model Context Protocol (MCP) as a JSON-RPC service on stdio, with

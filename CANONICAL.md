@@ -59,11 +59,12 @@ snippet resolves to this repository.
 **GitHub is the only publication channel.** Work is published by pushing to this
 repository (`main`).
 
-The former server channel is **retired**: the Sidney host (`216.198.115.91`) no
-longer exists, and the `gabe` publish gate that routed to it is gone. There is no
-`ssh` / `sftp` / `rsync` target and no gate to route through. Any instruction
-either in this repository or in an older runbook that says to publish via Sidney
-or gabe is historical record, not a live instruction.
+There is no remote server channel. The former publish host and the gate that
+routed to it are **retired** and no longer exist: there is no `ssh` / `sftp` /
+`rsync` target and no gate to route through. Any instruction either in this
+repository or in an older runbook that names a remote publish host is historical
+record, not a live instruction. See `CHANGELOG.md` and `docs/releases/v3.1.0.md`
+for the dated retirement record.
 
 ## Snapshot record
 

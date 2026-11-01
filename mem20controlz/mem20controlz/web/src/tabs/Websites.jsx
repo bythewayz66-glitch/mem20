@@ -16,8 +16,8 @@ const SUBTABS = [
   { id: "pages", label: "Pages" },
 ];
 
-// The only zone this panel ever knew (jaysonai.online) is retired, so there is
-// no documented default. The manifest must supply the zone.
+// There is no documented default zone: the only zone this panel ever knew is
+// retired, so the manifest must supply the zone.
 const DOCUMENTED_DEFAULT_ZONE = "";
 
 export default function Websites({ manifest }) {

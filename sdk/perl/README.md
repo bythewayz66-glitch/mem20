@@ -118,7 +118,7 @@ fails immediately and leaves the previous good value in place.
 
 ## Calling tools
 
-Three routes to the same **270-tool surface across 27 domains** (verified live
+Three routes to the same **272-tool surface across 27 domains** (verified live
 against mem20 3.0.0 — see `AUDIT.md`):
 
 ```perl
@@ -135,15 +135,15 @@ $client->memory_status;
 $client->cog_plan(goal => 'ship the 3.0 baseline');
 ```
 
-`verify_surface` compares the live `tools/list` count with the 270/27 this
+`verify_surface` compares the live `tools/list` count with the 272/27 this
 release was built and tested against:
 
 ```perl
 my $s = $client->verify_surface;
-# { ok => 1, tools => 270, expected_tools => 270, domains => 27, server_version => '3.0.0' }
+# { ok => 1, tools => 272, expected_tools => 272, domains => 27, server_version => '3.0.0' }
 ```
 
-Note that 270 tool *names* bucket into 37 prefixes: `memory_*` and `vault_*` sit
+Note that 272 tool *names* bucket into 38 prefixes: `memory_*` and `vault_*` sit
 inside one domain, and a bare `reflexion` has no underscore. The domain figure
 comes from the server's `register_*_tools()` modules, never from splitting
 names.
@@ -254,14 +254,14 @@ MEM20_MCP_DIR=/opt/mem20/mcp MEM20_PYTHON=/opt/mem20/.venv/bin/python \
   prove -Ilib t/90-live-server.t
 ```
 
-That suite asserts the 270-tool surface, a `memory_store` → `memory_recall`
+That suite asserts the 272-tool surface, a `memory_store` → `memory_recall`
 round trip through the grounded partition, local refusal of a missing
 `epistemic_status`, `ToolError` for an unknown tool, `soft_error` for a rejected
 status, and a `cog_plan` job polled to a terminal state.
 
 ## Status
 
-Version 0.2.0, validated against mem20 server **3.0.0** on the **270-tool /
+Version 0.2.1, validated against mem20 server **3.0.0** on the **272-tool /
 27-domain** surface. The SDK versions independently of the server
 (`$Mem20::Version::VERSION` vs `$Mem20::Version::SERVER_VERSION`).
 

@@ -1,11 +1,11 @@
-# Perl SDK surface audit — mem20 3.0.0 @ 7c0b3e8 (2026-10-26)
+# Perl SDK surface audit — mem20 3.0.0 @ d99ab5d8 (2026-11-01)
 
-Scope: `sdk/perl/` only. Target surface **270 tools across 27 domains**.
+Scope: `sdk/perl/` only. Target surface **272 tools across 27 domains**.
 
 Everything below was observed by running the server, not by reading its docs.
 Reproduce with the commands quoted in each section.
 
-## 1. The surface: 270 tools, 27 domains
+## 1. The surface: 272 tools, 27 domains
 
 Two independent probes agree.
 
@@ -22,32 +22,104 @@ $ ls mcp/tools/*.py | grep -v __init__ | wc -l
 26                      # + mcp/{memory,cognitive,roadmap}_tools.py = 27 modules
 ```
 
-**Wire count.** Instantiating the registry and reading `tools/list` both give 270:
+**Wire count.** Instantiating the registry and reading `tools/list` both give 272:
 
 ```
 $ python -c 'from server import Mem20MCPServer; print(len(Mem20MCPServer().tools))'
-TOOL_COUNT: 270
-PREFIX_BUCKETS: 37
+TOOL_COUNT: 272
+PREFIX_BUCKETS: 38
 BARE: ['reflexion']
 ```
 
 ```
 initialize -> {"protocolVersion":"2025-06-18","serverInfo":{"name":"mem20-mcp","version":""}}
-tools/list -> TOOL_COUNT: 270   UNIQUE: 270
+tools/list -> TOOL_COUNT: 272   UNIQUE: 272
 ```
 
 `serverInfo.version` is the empty string, so the SDK does not assert on it.
 
-**Why 37 != 27.** Bucketing the 270 tool *names* by their first `_` component
-yields 37 buckets, because `memory_*` and `vault_*` are separate prefixes inside
-one domain, `cloud_*`/`cloudstorage_*` likewise, and the bare `reflexion` has no
-underscore. The domain count must come from registration; the prefix count is a
-different measurement. `Mem20::Version` records both meanings explicitly.
+**Why 38 != 27.** Bucketing the 272 tool *names* by their first `_` component
+yields 38 buckets, for three reasons — none of them the domain split:
+
+1. Several domain modules expose tools under a **shortened prefix**, so one
+   domain becomes one bucket: `versioncontrol` -> `vcs_`, `filesystem` -> `fs_`,
+   `productivity` -> `prod_`, `database` -> `db_`, `cloudservice` -> `cloud_`,
+   `marketing` -> `mkt_`, `finance` -> `fin_`, `communication` -> `comm_`,
+   `webscraping` -> `scrape_`.
+2. Seven tools are **bare or singleton** names whose first component is not a
+   family at all: `reflexion`, `react_reason`, `least_to_most`, `beam_search`,
+   `cognitive_substrate`, `get_cognitive_tree_state`, `graph_execute_reversible_plan`.
+3. The rest are ordinary `family_*` prefixes (`memory_` 52, `lie_` 10, `prod_` 10,
+   `imagination_` 9, `braid_` 9, ...).
+
+There is **no `vault_` prefix** on this surface (`grep -c '^vault' ` -> 0); an
+earlier revision of this file claimed one and that claim was wrong. The domain
+count must come from registration; the prefix count is a different measurement.
+`Mem20::Version` records both meanings explicitly.
+
+`memory_` is the single largest bucket (52 tools) and is the only prefix that
+maps one-to-one onto a domain, which is why it is the family the SDK gives
+named accessors to.
 
 **Local `mcp/tools/` has 26 files, not 27**: `memory_tools.py`,
 `cognitive_tools.py` and `roadmap_tools.py` live directly in `mcp/`. The 27
 modules are the 27 `register_*_tools()` mixins, which is what the domain figure
 counts.
+
+## 1a. The two tools added since the previous audit
+
+`d99ab5d` ("ci(mcp): bump expected tool count 270 -> 272 after wave-1 merges")
+documents the delta, and the wire confirms both:
+
+```
+$ grep -n 'vcs_asset_release_audit\|graph_execute_reversible_plan' /tmp/live_tools.txt
+114:graph_execute_reversible_plan
+253:vcs_asset_release_audit
+```
+
+| tool | origin | registered by |
+|---|---|---|
+| `vcs_asset_release_audit` | PR #157 (RM-239) | `mcp/tools/rm239_tools.py` |
+| `graph_execute_reversible_plan` | PR #158 (RM-052) | `mcp/tools/rm052_tools.py` |
+
+Both landed inside the **existing** `register_versioncontrol_tools()` call site,
+so the domain count stayed 27 while the tool count moved to 272. That is the
+ordinary case: the tool count drifts on almost every merge, the domain count
+only moves when a new `register_*_tools()` call site appears. A guard that only
+tracked domains would have missed this entirely — which is why
+`t/90-live-server.t` asserts the exact tool count.
+
+**How they attach matters, and it is not a plain mixin.** Neither file defines a
+new `register_*_tools()` that `_setup_tools()` calls. Each one *wraps* the
+existing method on the class:
+
+```python
+# mcp/tools/rm052_tools.py:104-115
+original = VersionControlToolsMixin.register_versioncontrol_tools
+if getattr(original, "_rm052_installed", False):
+    return True
+
+def register_versioncontrol_tools(self):
+    original(self)
+    self.tools["graph_execute_reversible_plan"] = _tool_spec()
+    self._graph_execute_reversible_plan = _handle
+
+register_versioncontrol_tools._rm052_installed = True
+VersionControlToolsMixin.register_versioncontrol_tools = register_versioncontrol_tools
+```
+
+`rm239_tools.py` does the same with its own `_rm239_installed` sentinel. So
+`grep -rn 'def register_versioncontrol_tools'` returns **three** definitions
+(`versioncontrol_tools.py:36`, `rm052_tools.py:107`, `rm239_tools.py:110`) while
+`_setup_tools()` calls it **once**. Consequences worth knowing:
+
+- The "27 domains" figure counts **call sites**, not modules. The module count
+  behind those call sites is higher (29 here: 27 + the two RM wrappers).
+- The `_rmNNN_installed` sentinels make the patch idempotent, so importing the
+  module twice does not double-register. Verified: `TOOL_COUNT: 272` and
+  `UNIQUE: 272` — no duplicates.
+- A tool count derived by grepping `def register_*_tools` would be wrong in both
+  directions, which is why the count here comes from instantiating the registry.
 
 ## 2. `initialize` will not accept an empty `clientInfo`
 
@@ -148,31 +220,90 @@ are the poll primitives; `Mem20::Client` adds `job_from`, `wait_for_job` and
 
 ## 8. Verified
 
-All of the following were run against a **clean clone of this branch**, so they
-describe the tree the PR actually ships.
+All of the following were run on **2026-11-01** against main @ `d99ab5d8`
+(`d99ab5d8e9c5c45a1fb3d02d3b65b2f9a96b5110`), with the server booted from that
+same clone. The transcripts are the runner's own summary lines.
 
 ```
-$ prove -Ilib t/*.t
+$ prove -Ilib t/00-load.t t/05-surface.t t/10-config.t t/20-client.t t/95-jobs.t
 t/00-load.t ......... ok
+t/05-surface.t ...... ok
 t/10-config.t ....... ok
 t/20-client.t ....... ok
-t/90-live-server.t .. skipped: set MEM20_MCP_DIR and MEM20_PYTHON ...
+t/95-jobs.t ......... ok
 All tests successful.
-Files=4, Tests=57, Result: PASS
-
-$ MEM20_MCP_DIR=/opt/mem20/mcp MEM20_PYTHON=python3 prove -Ilib t/90-live-server.t
-All tests successful.
-Files=1, Tests=8, Result: PASS
-
-$ MEM20_PYTHON=/opt/mem20/.venv/bin/python perl -Ilib examples/quickstart.pl /opt/mem20
-stored one fact
-recall returned:
-[2026-10-27T02:02:51] project (pri=normal) [observed]
-   prod runs build 4127
-surface: 270 tools (SDK compiled for 270), 27 domains, ok=1
+Files=5, Tests=109, Result: PASS
 ```
 
-The live suite asserts the 270 count, a `memory_store`->`memory_recall` round
+```
+$ PYTHONPATH=<repo> MEM20_CANONICAL_MCP_ROOT=<repo>/mcp \
+  MEM20_MCP_DIR=<repo>/mcp MEM20_PYTHON=python3 prove -Ilib t/90-live-server.t
+t/90-live-server.t .. ok
+All tests successful.
+Files=1, Tests=8, Result: PASS
+```
+
+```
+$ PYTHONPATH=<repo> MEM20_CANONICAL_MCP_ROOT=<repo>/mcp \
+  MEM20_MCP_DIR=<repo>/mcp MEM20_PYTHON=python3 \
+  perl -Ilib examples/quickstart.pl <repo>
+stored one fact
+recall returned:
+Memory recall results for 'what build is prod on' (category: , limit: 5):
+
+[2026-11-01T22:27:11] project (pri=normal) [observed]
+   prod runs build 4127
+
+[2026-11-01T22:25:00] project (pri=normal) [observed]
+   perl sdk live round trip sdk-live-marker-188676
+
+
+surface: 272 tools (SDK compiled for 272), 27 domains, ok=1
+```
+
+Note the argument to `quickstart.pl` is the **repo root**, not `mcp/`: the
+example appends `mcp/` itself. Passing `mcp/` produces
+`can't open file '<repo>/mcp/mcp/mcp_server.py'`.
+
+The live suite asserts the 272 count, a `memory_store`->`memory_recall` round
 trip through the grounded partition, local refusal of a missing
 `epistemic_status`, `ToolError` for an unknown tool, `soft_error` for a rejected
 status, and a `cog_plan` job polled to a terminal state.
+
+## 9. The 0.2.0 -> 0.2.1 drift, and why the guard missed it
+
+This is the most useful entry in this file, because the failure was in the
+guard rather than in the SDK.
+
+`d99ab5d` bumped the **CI** expectation to 272. `sdk/perl/` was not touched, so
+it kept asserting 270 in four places. The hermetic suite stayed green (it never
+contacts a server) and the live suite failed:
+
+```
+#   Failed test 'tools/list returns 270 tools'
+#   at t/90-live-server.t line 67.
+#          got: '272'
+#     expected: '270'
+```
+
+`t/05-surface.t` exists precisely to catch this and did not, for two reasons:
+
+1. **`270` was not in `@RETIRED`.** The list held 257/268/269/271 — every
+   neighbour *except* the one that was actually live. A retired-count list has
+   to include the count you are retiring.
+2. **The literal check only matched `=>`.** `t/90-live-server.t` wrote
+   `is( $surface->{expected_tools}, 270, ... )` — a comma, not a fat arrow — so
+   the regex `expected_tools\s*=>\s*\d+` never fired.
+
+Both are fixed: `270` is retired, the regex accepts `=>` or `,`, and the guard
+now also asserts the live test *reads* the constants so the assertions cannot
+simply be deleted. Verified by mutation — with the old `270` transcript still in
+this file, `t/05-surface.t` fails at subtest 9:
+
+```
+#           matches '(?^:\b270\b(?=[^\n]{0,40}\b(?:tools?|tool surface)\b))'
+# Looks like you failed 1 test of 44.
+```
+
+That is the guard doing its job on the exact text that used to pass it.
+

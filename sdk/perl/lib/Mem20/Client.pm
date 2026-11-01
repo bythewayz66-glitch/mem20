@@ -155,7 +155,7 @@ sub tool_schema {
 # Compare the live surface against the counts this SDK release was compiled
 # against. Returns a hashref:
 #
-#   { ok => 1, tools => 270, expected_tools => 270, domains => 27, ... }
+#   { ok => 1, tools => 272, expected_tools => 272, domains => 27, ... }
 #
 # `ok` is false when the live tool count differs, and `missing`/`extra` name the
 # tools that moved. Domains are a registration-time figure and cannot be read
@@ -730,7 +730,7 @@ list or a single hashref. Alias: C<call_tool>.
 advertisement, cached after the first call.
 
 =item C<verify_surface> - compare the live tool count with the count this SDK
-was built against (270 across 27 domains). Returns C<ok>, C<tools>,
+was built against (272 across 27 domains). Returns C<ok>, C<tools>,
 C<expected_tools>, C<domains>, C<server_version>.
 
 =item C<< memory_store(%args) >> - store a grounded fact. C<content> and

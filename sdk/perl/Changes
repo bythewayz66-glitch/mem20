@@ -1,0 +1,46 @@
+Revision history for the mem20 Perl SDK (Mem20).
+
+0.2.1  2026-11-01
+    - Surface bump 270 -> 272 tools, verified live against mem20 main
+      @ d99ab5d8e9c5c45a1fb3d02d3b65b2f9a96b5110 (protocol 2025-06-18).
+      The two additions are vcs_asset_release_audit (RM-239, PR #157) and
+      graph_execute_reversible_plan (RM-052, PR #158). Both attach by wrapping
+      the existing register_versioncontrol_tools() method, so the domain count
+      is unchanged at 27 while the tool count moved.
+    - Prefix buckets 37 -> 38. Corrected a false claim in AUDIT.md: there is no
+      vault_* prefix on this surface. The bucket/domain gap is caused by
+      shortened domain prefixes (vcs_, fs_, prod_, db_, cloud_, mkt_, fin_,
+      comm_, scrape_) plus seven bare or singleton tool names.
+    - FIXED a hole in the surface guard (t/05-surface.t) that let this drift
+      ship silently:
+        * 270 was missing from @RETIRED, so the count that was actually live
+          was the one count the guard did not check for;
+        * the hardcoded-literal check only matched `expected_tools => N` and
+          missed the `is( $surface->{expected_tools}, 270 )` comma form used by
+          t/90-live-server.t.
+      The guard now also asserts the live test reads the constants, so the
+      assertions cannot be deleted to make it pass. Verified by mutation: both
+      the comma-form literal and a reverted constant fail the suite.
+    - t/90-live-server.t and t/20-client.t no longer hardcode 270/27; they read
+      $Mem20::Version::SURFACE_TOOL_COUNT / SURFACE_DOMAIN_COUNT.
+    - Stale-count checks now run against prose only, with fenced code blocks
+      stripped. A transcript is evidence: AUDIT.md quotes the real
+      `expected: '270'` failure line and rewriting it would falsify the record.
+    - AUDIT.md re-verified end to end on 2026-11-01; transcripts replaced with
+      output captured from this tree. Documented that quickstart.pl takes the
+      repo root, not mcp/.
+    - Added this Changes file (the distribution had none).
+
+0.2.0  2026-10-27
+    - First CPAN-shaped release: Mem20::Client, Mem20::Config, Mem20::Errors,
+      Mem20::Transport::Stdio, Mem20::Version. Core-Perl only, no CPAN
+      dependencies, Perl 5.20+.
+    - Lazy but unconditional MCP handshake; newline-delimited JSON framing;
+      id correlation; server->client reverse requests answered -32601.
+    - Client-side required-argument validation (mem20 does not enforce
+      inputSchema), grounded/simulated partition enforcement on memory_store,
+      and normalisation of the three distinct failure shapes to Mem20::ToolError.
+    - Job envelope support: job_from, wait_for_job, call_tool_await. wait_for_job
+      raises Mem20::JobTimeoutError rather than returning a still-running status.
+    - verify_surface compares the live tools/list count with the compiled
+      constant.

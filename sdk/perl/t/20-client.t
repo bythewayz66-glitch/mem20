@@ -316,9 +316,12 @@ subtest 'verify_surface reports the compiled expectation and the live count' => 
 
     my $surface = $client->verify_surface;
     is( $surface->{tools}, 5, 'counts what the server actually advertises' );
-    is( $surface->{expected_tools}, 270, 'and reports the compiled expectation' );
-    is( $surface->{domains}, 27, 'domains come from the compiled constant' );
-    is( $surface->{ok}, 0, 'a 5-tool server does not satisfy a 270-tool contract' );
+    is( $surface->{expected_tools}, $Mem20::Version::SURFACE_TOOL_COUNT,
+        'and reports the compiled expectation' );
+    is( $surface->{domains}, $Mem20::Version::SURFACE_DOMAIN_COUNT,
+        'domains come from the compiled constant' );
+    is( $surface->{ok}, 0,
+        "a 5-tool server does not satisfy a $Mem20::Version::SURFACE_TOOL_COUNT-tool contract" );
 
     $client->close;
 };

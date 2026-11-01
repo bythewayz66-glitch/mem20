@@ -33,7 +33,6 @@ def store(tmp_path, monkeypatch):
     yield path
     _reset_engine()
 
-
 def _reset_engine():
     import importlib
 
@@ -235,3 +234,38 @@ def test_stream_report_combines_domain_and_substrate(store):
     assert report["subscribers"] == ["billing"]
     assert report["lag"] == {"billing": 1}
     assert report["inventory"]["total"] > 0
+
+
+# ------------------------------------------------------- mem20secretz (8)
+
+
+def test_screen_payload_flags_a_credential_as_blocking():
+    integ = _integration()
+    out = integ.screen_payload({"api_key": "sk-live-9f2b7c41d8e35a60b4c7f1e2d9a83b56"})
+    assert out["clean"] is False
+    assert out["blocking"][0]["field"] == "api_key"
+    assert out["blocking"][0]["severity"] == "critical"
+
+
+def test_screen_payload_does_not_block_a_plain_endpoint():
+    """A URL is configuration duplication, not a leak — it must not refuse."""
+    integ = _integration()
+    out = integ.screen_payload({"endpoint": "https://api.example.com/v1/events"})
+    assert out["clean"] is True
+    assert out["blocking"] == []
+    assert out["findings"][0]["kind"] == "config"
+
+
+def test_screen_payload_ignores_non_string_values():
+    integ = _integration()
+    out = integ.screen_payload({"id": 11, "ok": True, "ratio": 0.5})
+    assert out["screened"] == 0
+    assert out["clean"] is True
+
+
+def test_publish_and_persist_reports_the_screening(store, gateway_home):
+    integ, dom = _integration(), _domain()
+    stream = dom.create_stream("orders")
+    out = integ.publish_and_persist(stream, "order.created", {"id": 11}, key="o-11")
+    assert out["screening"]["clean"] is True
+    assert out["screening"]["screened"] == 0

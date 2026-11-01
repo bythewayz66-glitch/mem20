@@ -8,7 +8,8 @@ The superhighway is the transport layer of the mem20 estate. It routes typed
 events, tracks per-subscriber offsets and lag, and — since 4.0 — it is wired
 into the substrate rather than standing alone: every routed event can be
 persisted to durable memory, searched multi-hop, announced to the fleet
-gateway, verified for ledger integrity, and compacted for the wire.
+gateway, verified for ledger integrity, screened for leaked credentials, and
+compacted for the wire.
 
 ## Install
 
@@ -42,6 +43,7 @@ out = integration.publish_and_persist(
 print("event seq      :", out["event"]["seq"])
 print("memory topic   :", out["memory_topic"])
 print("announced by   :", out["announced"]["agent_name"])
+print("screening clean:", out["screening"]["clean"])
 
 rows = integration.recall_events("orders", "order.created")
 print("recalled rows  :", len(rows))
@@ -60,6 +62,7 @@ Real output from a run of the block above:
 event seq      : 1
 memory topic   : eventstream.orders.order.created
 announced by   : eventstream-orders
+screening clean: True
 recalled rows  : 1
 recalled body  : {'id': 7, 'total': 42.5}
 throughput/min : 1.0
@@ -117,11 +120,12 @@ Every one of these is a real call on a tested path — see
 | `mem20verify` | `dataintegrity.check` | `integration.verify_memory_integrity` |
 | `mem20ops` | `memchecks.identity_check` | `integration.identity_report` |
 | `mem20corez` | `quantizer.quantize_tensor` | `integration.compact_payload` |
+| `mem20secretz` | `sweep.classify` | `integration.screen_payload` |
 
-### Two estate traps this subsystem has to handle
+### Three estate traps this subsystem has to handle
 
-Both are real and both are documented in `_bootstrap.py` rather than papered
-over:
+All three are real and all three are documented in `_bootstrap.py` rather than
+papered over:
 
 1. **Shim shadowing.** `mem20corez/__init__.py` is a version-only shim sitting
    next to the real package at `mem20corez/mem20corez/`. With the repo root on
@@ -134,6 +138,11 @@ over:
    shim wins, the rebinding lands on the shim and the check reports 0
    round-trips while looking like a data-integrity failure.
    `verify_memory_integrity()` binds the real engine module first.
+3. **`sweep` name collision.** `mem20secretz/__init__.py` re-exports the
+   *function* `sweep`, which shadows the submodule of the same name on the
+   package object — so `from mem20secretz import sweep` hands back a function
+   with no `.classify`. The seam imports `from mem20secretz.sweep import
+   classify` instead.
 
 ## Tests
 
@@ -171,4 +180,5 @@ integration.announce(stream, event, agent_name=None) -> dict
 integration.verify_memory_integrity() -> dict
 integration.identity_report() -> dict
 integration.compact_payload(values, bits=8) -> dict
+integration.screen_payload(payload) -> dict
 ```

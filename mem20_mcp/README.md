@@ -32,32 +32,6 @@ the canonical server became the single source of truth.
 - Not a place to add tools. Add them to `/opt/mem20/mcp/tools/`, which this
   package forwards to.
 
-## Preflight
-
-A forwarder has exactly one failure mode and it is quiet: if the canonical tree
-is stubbed or stale, this package boots it anyway and the estate runs the wrong
-logic while looking healthy. So the tree is checked before it is loaded.
-
-`preflight.py` consults six estate modules, and each answers a question a loader
-cannot answer for itself:
-
-| Estate module | Question it answers | Refusal |
-|---|---|---|
-| `mem20verify.linters.noop_bodies` | is a canonical tool's body real, or `pass`? | `stub_body` |
-| `mem20ops.clicheck.classify_naming` | is the exposed tool name an estate address? | `naming` |
-| `mem20liez.gates.check_prohibited_uses` | may this tree be exposed for the declared purpose? | `prohibited_use` |
-| `mem20temporaldatabasefabricz.temporal.interval.contains` | is this instant inside the tree's release window? | `outside_window` |
-| `mem20ircz.filter.classify` + `NoiseMeter` | which log lines are signal, and how much was swallowed? | (filters, never refuses) |
-| `mem20dreamz.ledger.commit_raw` | which tree did this process actually load? | (records, never refuses) |
-
-`canonical_root()` runs it, so a stubbed canonical tool raises `ImportError` at
-boot instead of serving a well-formed nothing. Set `MEM20_MCP_PREFLIGHT=0` to
-skip it when a caller has already run it.
-
-Note that a module *filename* is not an MCP address: the canonical modules are
-named `health`, `world_tools`, `braid_tools`, all of which classify as `other`.
-The exposed name is what a client addresses, so that is what is checked.
-
 ## Verify
 
 ```bash
@@ -66,41 +40,57 @@ python3 -c "import mem20_mcp; print(mem20_mcp.__canonical_root__)"
 
 That prints `/opt/mem20/mcp`.
 
+## Related
+
+- `/opt/mem20/mcp` — the canonical server and the real tool implementations
+- `mem20-orchestration/` — **not packaged.** It currently contains a single file,
+  `tools/blender_ops.json`, and no Python. It is an unfinished scaffold, not a
+  subsystem, and is deliberately left unpackaged rather than shipped as an empty
+  package.
+
+## Loader-integrity audit
+
+The failure mode of a forwarding package is silent: a shim that stops forwarding
+and starts *containing* code still imports, still exposes the right names, and
+still passes a smoke test — while the estate now has two implementations of the
+same tool. `mem20_mcp.loader_audit` checks every shim for exactly that, and asks
+the estate's own modules rather than re-deriving the rules.
+
 ```bash
-# run the six admission checks over the canonical tree; exit 1 if refused
-python3 mem20_mcp/cli.py preflight
+# audit every forwarding shim in the package
+python3 -m mem20_mcp.cli audit
 
-# list the canonical tool modules and the naming class of each exposed name
-python3 mem20_mcp/cli.py tools
+# machine-readable, for CI
+python3 -m mem20_mcp.cli audit --json
 
-# which tree would be checked
-python3 mem20_mcp/cli.py root
+# declare what the audit is for; checked against the prohibited-use list
+python3 -m mem20_mcp.cli audit --intended-use loader_integrity
 ```
 
-A stubbed canonical tool is refused rather than served:
+Exit code 0 only when every shim forwards, is named like an estate module, and
+has a real body. A broken shim is reported per module, never silently skipped:
 
-```bash
-python3 mem20_mcp/cli.py preflight
+```text
+mem20_mcp loader audit: CLEAN
+root: /opt/mem20/mem20_mcp
+shims: 8  broken: 0
+
+package naming: mem20-native
+
+module              forwards  via                     stubs  result
+blender_bridge.py   True      _load                       0  ok
+mcp_server.py       True      from server import          0  ok
+server.py           True      _load                       0  ok
 ```
 
-```json
-{
-  "refused": true,
-  "check": "stub_body",
-  "reason": "stub_body: 1 stub body/bodies under /opt/mem20/mcp/tools, first at .../stub_tools.py:2 (noop_body)"
-}
-```
+Two forwarding routes are accepted: a direct `_load(...)` call, and importing
+from a sibling shim (`mcp_server.py` gets `main` from the `server` shim, which is
+itself a forwarder). A module that reaches neither is reported as drift.
 
-## Tests
+The audit also records its result as a content-addressed provenance node through
+`mem20dreamz.ledger`, and reports honestly when braid is unreachable
+(`committed: false` with the reason) rather than pretending the node was written.
 
 ```bash
 python3 -m pytest mem20_mcp/tests -q
 ```
-
-## Related
-
-- `/opt/mem20/mcp` - the canonical server and the real tool implementations
-- `mem20-orchestration/` - **not packaged.** It currently contains a single file,
-  `tools/blender_ops.json`, and no Python. It is an unfinished scaffold, not a
-  subsystem, and is deliberately left unpackaged rather than shipped as an empty
-  package.

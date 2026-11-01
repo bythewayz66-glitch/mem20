@@ -101,6 +101,7 @@ from tools.search_tools import SearchToolsMixin
 from tools.versioncontrol_tools import VersionControlToolsMixin
 from tools.webscraping_tools import WebScrapingToolsMixin
 from tools.braid_tools import BraidToolsMixin
+from tools.wasmz_tools import WasmzToolsMixin
 from tools.irc_tools import IRCToolsMixin
 from tools.lie_tools import LieToolsMixin
 from health import start_health_server
@@ -115,7 +116,7 @@ class Mem20MCPServer(MemoryToolsMixin, CognitiveToolsMixin, RoadmapToolsMixin,
                      FinanceToolsMixin, MarketingToolsMixin,
                      ProductivityToolsMixin, SearchToolsMixin,
                      VersionControlToolsMixin, WebScrapingToolsMixin,
-                     BraidToolsMixin, IRCToolsMixin, LieToolsMixin):
+                     BraidToolsMixin, WasmzToolsMixin, IRCToolsMixin, LieToolsMixin):
     def __init__(self):
         self.tools = {}
         self._start_time = time.time()
@@ -162,6 +163,7 @@ class Mem20MCPServer(MemoryToolsMixin, CognitiveToolsMixin, RoadmapToolsMixin,
         self.register_versioncontrol_tools()
         self.register_webscraping_tools()
         self.register_braid_tools()
+        self.register_wasmz_tools()
         self.register_irc_tools()
         self.register_lie_tools()
         self.register_job_tools()

@@ -365,3 +365,55 @@ jobs:
         run: |
           npm ci
           npm run build
+
+  mem20api-http:
+    name: mem20api HTTP service
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      # The service is standard-library only on purpose, so the only test
+      # dependency is pytest itself. If this job ever needs fastapi/uvicorn to
+      # pass, the "starts from a clean checkout" property has been lost.
+      - name: Install pytest
+        run: |
+          python3 -m pip install --upgrade pip
+          python3 -m pip install pytest
+
+      - name: Assert the service imports with no third-party packages
+        run: |
+          set -euo pipefail
+          PYTHONPATH=mem20api python3 - <<'PY'
+          import sys
+          import mem20api.http_server as h
+          third_party = [
+              m for m in ("fastapi", "uvicorn", "httpx", "starlette")
+              if m in sys.modules
+          ]
+          if third_party:
+              raise SystemExit(
+                  "http_server pulled in third-party modules: "
+                  + ", ".join(third_party))
+          print("stdlib-only import ok; api_version =", h.API_VERSION)
+          PY
+
+      - name: Run the HTTP service suite
+        run: PYTHONPATH=mem20api python3 -m pytest -q mem20api/tests
+
+      - name: Refuse a non-loopback bind without a token
+        run: |
+          set -euo pipefail
+          # The guard must fail closed. A zero exit here means an
+          # unauthenticated store could be exposed to a network.
+          if PYTHONPATH=mem20api python3 -c "
+          from mem20api.http_server import make_server
+          make_server('/tmp/x', host='0.0.0.0', port=0, token=None)
+          "; then
+            echo "::error::make_server allowed a non-loopback bind with no token"
+            exit 1
+          fi
+          echo "fail-closed bind guard ok"

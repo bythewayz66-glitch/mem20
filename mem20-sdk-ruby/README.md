@@ -161,20 +161,26 @@ Run workflow* with `dry_run` left on (the default).
 
 ## Verification — reproduced results
 
-The results below were produced by running the suite and a live round-trip on the
-**Sidney** host (now retired; Kali Linux, Ruby 3.3.8) against the mem20 server at
-**v2.1.0rc2**. They
-are this SDK's actual measured results; the raw command output is reproduced in
-[`docs/EVIDENCE.md`](docs/EVIDENCE.md).
+The results below were produced by running the suite and a `gem build` on Debian Linux
+x86_64 with **ruby 3.1.2p20**, rspec 3.13.2 and rubocop 1.92.2, resolved by
+`bundle install` in that run. The raw command output is committed verbatim at
+[`docs/rspec-summary-2026-11-01.txt`](https://github.com/bythewayz66-glitch/mem20/blob/main/docs/rspec-summary-2026-11-01.txt).
 
 | Check | Result |
 |---|---|
-| `ruby -c` on every `lib/**/*.rb` | Syntax OK |
-| `rspec` | **33 examples, 0 failures** |
-| `rubocop` | 19 files inspected, **no offenses detected** |
-| `gem build mem20-sdk.gemspec` | mem20-sdk **0.2.0** built |
-| `require "mem20"` (installed gem) | loads mem20-sdk 0.2.0 |
+| `ruby -c` on every `lib/**/*.rb` | Syntax OK (8 files) |
+| `rspec` | **84 examples, 0 failures** |
+| `rubocop` | 25 files inspected, **no offenses detected** |
+| `rake surface:check` | `OK - Mem20::Surface matches mcp/` |
+| `gem build mem20-sdk.gemspec` | mem20-sdk **0.2.0** built, 18 files packaged |
+| `require "mem20"` (installed gem) | loads `mem20-sdk-0.2.0/lib/mem20.rb` |
 | live stdio round-trip | **270 tools**, protocol **2025-06-18**, stored token recalled |
+
+The live round-trip figure below was measured on the **Sidney** host (now retired;
+Kali Linux, Ruby 3.3.8) against the mem20 server at **v2.1.0rc2**, and is reproduced in
+[`docs/EVIDENCE.md`](docs/EVIDENCE.md). The build/test rows above were re-measured in
+the 2026-11-01 packaging run; the round-trip row has not been re-run since Sidney was
+retired.
 
 The round-trip stores a distinctive token with `memory_store` and reads it back with
 `memory_recall` against the real server; the recorded run recovered the token in

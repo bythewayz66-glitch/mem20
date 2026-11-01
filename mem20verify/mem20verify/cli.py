@@ -14,6 +14,7 @@ import os
 import sys
 
 from . import dataintegrity, linters, outage, shadow, systemd, testrun
+from . import integrations
 
 EXIT_OK = 0
 EXIT_FINDINGS = 1
@@ -341,7 +342,52 @@ def build_parser() -> argparse.ArgumentParser:
     p.add_argument("--unit", dest="units", action="append")
     p.set_defaults(func=cmd_all)
 
+    p = sub.add_parser(
+        "wiring", help="prove the cross-subsystem edges (toolchest, memory, kanban, ops, corez, cliz)")
+    p.add_argument("--root", default=None,
+                   help="estate root (default: the checkout containing mem20verify)")
+    p.add_argument("--json", dest="as_json", action="store_true")
+    p.set_defaults(func=cmd_wiring)
+
+    p = sub.add_parser("drift", help="registry claims vs what is actually on disk")
+    p.add_argument("--root", default=None)
+    p.add_argument("--json", dest="as_json", action="store_true")
+    p.set_defaults(func=cmd_drift)
+
     return parser
+
+
+def cmd_wiring(args) -> int:
+    """Exercise every cross-subsystem edge and report the real result."""
+    from pathlib import Path
+    report = integrations.wiring_report(Path(args.root) if args.root else None)
+    if getattr(args, "as_json", False):
+        print(json.dumps(report, indent=2, default=str))
+    else:
+        print(f"estate root: {report['estate_root']}")
+        for name, edge in report["edges"].items():
+            if edge["ok"]:
+                print(f"  OK    {name:34s} -> {edge['result']}")
+            else:
+                print(f"  FAIL  {name:34s} -> {edge['error']}")
+        print(f"\n{report['edges_ok']}/{report['edges_total']} edges live")
+    return EXIT_OK if report["ok"] else EXIT_FINDINGS
+
+
+def cmd_drift(args) -> int:
+    """Compare the registry's claims with the directories actually on disk."""
+    from pathlib import Path
+    drift = integrations.registry_drift(Path(args.root) if args.root else None)
+    if getattr(args, "as_json", False):
+        print(json.dumps(drift, indent=2, default=str))
+    else:
+        print(f"claimed subsystems : {drift['claimed']}")
+        print(f"on disk            : {drift['on_disk']}")
+        print(f"listed but missing : {len(drift['claimed_but_missing'])}")
+        print(f"on disk but unlisted: {len(drift['on_disk_but_unlisted'])}")
+        print(f"in sync            : {drift['in_sync']}")
+    # Drift is a finding, not an error: the caller decides what to do about it.
+    return EXIT_OK if drift["in_sync"] else EXIT_FINDINGS
 
 
 def main(argv: list[str] | None = None) -> int:

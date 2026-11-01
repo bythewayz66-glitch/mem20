@@ -133,6 +133,17 @@ def broadcast(message: str, agent_name: str = None, target: str = "telegram_chan
     print(f"Broadcast from {agent_name}: {message[:80]}...")
     return entry
 
+def _agent_of(entry: dict) -> str:
+    """The sender's name, read from whichever key the record actually carries.
+
+    `broadcast()` writes the sender under `agent_name`. Records produced by
+    other writers in the fleet (and by older gateway versions) use `agent`.
+    Both shapes are in the store, so read both instead of assuming one; a
+    record with neither key yields "" rather than raising.
+    """
+    return entry.get("agent_name") or entry.get("agent") or ""
+
+
 def read_messages(since: str = None, agent: str = None, limit: int = 50):
     """
     Read messages from the gateway.
@@ -149,9 +160,11 @@ def read_messages(since: str = None, agent: str = None, limit: int = 50):
             entry = json.loads(line.strip())
             messages.append(entry)
     
-    # Filter
+    # Filter on the sender's name. Broadcast entries store it under
+    # `agent_name`, so assuming `m["agent"]` raised KeyError on every real
+    # message and made --agent filtering unusable.
     if agent:
-        messages = [m for m in messages if m["agent"] == agent]
+        messages = [m for m in messages if _agent_of(m) == agent]
     
     if since:
         messages = [m for m in messages if m["timestamp"] >= since]
@@ -168,7 +181,7 @@ def read_messages(since: str = None, agent: str = None, limit: int = 50):
     
     print(f"Messages ({len(messages)}):")
     for m in messages:
-        print(f"  [{m['timestamp']}] {m['agent']}: {m['message'][:100]}")
+        print(f"  [{m['timestamp']}] {_agent_of(m)}: {m['message'][:100]}")
     
     return messages
 

@@ -5,6 +5,7 @@
 **HEAD at capture:** `2ea4492209dfaae6afb22ca884132a0d1849bfcf` (2026-11-01 06:20:25 -0700)
 **Captured:** 2026-11-01 · every row re-measured against a full clone at this HEAD; nothing inherited from v6.
 **Surface of record:** **270 tools / 27 domains.** 257, 258 and 268 are **RETIRED** and survive only in §7.
+**⚠ Open drift (2026-11-01, post-capture):** the CI handshake now asserts **272**, not 270 — see §0.6.
 **Supersedes:** v6 (HEAD `f1672473cd19d5926e1df0c80042259d3b4b17ca`, 2026-10-31).
 
 > **Acceptance rule** (owner directive 2026-11-01, `docs/ops/owner-directive-2026-11-01.md` @ `06fa1220`):
@@ -19,18 +20,25 @@
 > Harnesses cited by the Command cells ship alongside this file: `docs/gtm/verify/check_ledger.py`,
 > `docs/gtm/verify/bench_rows.py`, `docs/gtm/verify/partition.py`.
 
-### This ledger is six files — read them in order
+### This ledger is six files — three ship today, three are still owed
 
-| File | Sections |
-|---|---|
-| `claim-ledger.md` (this file) | §0 weakest measured row · §0.5 the `Adversarial` column |
-| `claim-ledger-02-facts.md` | §1 verified product facts · §1.1 version · §1.2 the 270/27 figure · §2 surface of record |
-| `claim-ledger-03-distribution.md` | §3 distribution state · §4 live partition, audit and promotion-gate evidence |
-| `claim-ledger-04-benchmark.md` | §5 the benchmark — every row the file ships |
-| `claim-ledger-05-commercial.md` | §6 house numbers · §7 retired values (the sole register) |
-| `claim-ledger-06-guardrails.md` | §8 guardrails · §9 say / never say · §10 hand-off |
+| File | Sections | State |
+|---|---|---|
+| `claim-ledger.md` (this file) | §0 weakest measured row · §0.5 the `Adversarial` column | **SHIPPED** |
+| `claim-ledger-02-facts.md` | §1 verified product facts · §1.1 version · §1.2 the 270/27 figure · §2 surface of record | **SHIPPED** |
+| `claim-ledger-03-distribution.md` | §3 distribution state · §4 live partition, audit and promotion-gate evidence | **SHIPPED** |
+| `claim-ledger-04-benchmark.md` | §5 the benchmark — every row the file ships | **OWED** — not in this branch |
+| `claim-ledger-05-commercial.md` | §6 house numbers · §7 retired values (the sole register) | **OWED** — not in this branch |
+| `claim-ledger-06-guardrails.md` | §8 guardrails · §9 say / never say · §10 hand-off | **OWED** — not in this branch |
+
+> **Honesty note (2026-11-01).** An earlier revision of this index asserted all six files were
+> present. They are not: parts 04, 05 and 06 were never committed to this branch. The three
+> shipped parts are complete and gate-clean; the three owed parts are listed above rather than
+> silently implied. Do not cite §5, §6, §7, §8, §9 or §10 from this branch until they land.
 
 `check_ledger.py` globs `docs/gtm/claim-ledger*.md`, so the split does not weaken the acceptance check.
+It currently validates the three shipped parts only — a PASS here is **not** evidence that parts
+04–06 exist.
 
 ### Why v7 exists — five v6 findings were wrong
 
@@ -94,3 +102,30 @@ Every claim table (§1, §3, §4, §6, §9) carries an **Adversarial** column an
 | **`n/a: <reason>`** | Not a retrieval claim; the rows do not bound it. Reason mandatory. | Still carry §0 if the same asset quotes any retrieval number. |
 
 Three rules, all machine-checked: **(1)** no cell blank, `—` or `TBD` — a blank cell fails `check_ledger.py`; **(2)** a `0.000` cell is a citation, not a label — it obliges §0 in the destination asset; **(3)** `n/a` is never a claim of strength — it says the rows do not *speak to* this claim, not that the claim is unaffected by retrieval weakness.
+
+### 0.6 Post-capture drift — the tool count moved 270 → 272
+
+The header's **270 tools / 27 domains** was measured at `2ea44922` (2026-11-01 06:20 -0700).
+`main` has since moved. Two merged subsystems each register one new MCP tool, and the CI
+handshake guard was bumped to match:
+
+| Field | Value | Command that settles it |
+|---|---|---|
+| Old expected count | `270` | `git show d99ab5d8 -- .github/workflows/` (removed line) |
+| New expected count | `272` | `git show d99ab5d8 -- .github/workflows/` (added line) |
+| New tool 1 | `vcs_asset_release_audit` (RM-239, PR #157) | commit message of `d99ab5d8` |
+| New tool 2 | `graph_execute_reversible_plan` (RM-052, PR #158) | commit message of `d99ab5d8` |
+| Live handshake at `a1db867` | `TOOL_COUNT: 272` | `d99ab5d8` commit body, quoted verbatim |
+| Domain count | **27 — unchanged** | `docs/TOOL-DOMAINS.md` line 19 |
+
+**Status: `CHANGED`.** The 270 figure is not wrong for its capture HEAD; it is stale for `main`.
+Any asset that quotes a tool count must say **272 tools / 27 domains** and cite `d99ab5d8`, or
+quote 270 and pin the capture HEAD. A bare "270" with no HEAD is a defect.
+
+**What did NOT change.** The domain count stays 27. The 257 / 258 / 268 values stay **RETIRED**.
+No benchmark row in §0 moved — the two new tools are VCS and graph-execution surfaces, not
+retrieval modes, so the weakest-row table above is unaffected.
+
+**Do not** re-derive the count from `self.tools[...]` string matches: a naive regex over `mcp/`
+returns 282 because it double-counts aliases and re-registrations. The handshake count is the
+only number of record.

@@ -8,7 +8,7 @@ re-implementing them.
 
 The checks themselves live in :mod:`checks` (one per owning subsystem) and the
 verdict types in :mod:`estate`. This module composes them into a single verdict
-and audits a live registry.
+and audits a live registry. The command-line entry point is :mod:`cli`.
 
 Every check returns a reason, so a refusal is diagnosable rather than a bare
 ``False``. Nothing here mutates the registry: :func:`admit_tool` reports, and
@@ -38,7 +38,6 @@ __all__ = [
     "check_naming",
     "check_notification",
     "check_temporal_window",
-    "main",
 ]
 
 

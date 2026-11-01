@@ -18,6 +18,7 @@ from pathlib import Path
 from typing import Any, Dict, List, Optional
 
 from toolchest import __version__
+from toolchest import integrations
 from toolchest.catalog import (
     REQUIRED_FIELDS, build_inventory, load_inventory, write_inventory,
 )
@@ -146,6 +147,22 @@ def cmd_show(args: argparse.Namespace) -> int:
     return 0
 
 
+def cmd_wiring(args: argparse.Namespace) -> int:
+    """Exercise every cross-subsystem edge and report the real result."""
+    report = integrations.wiring_report(Path(args.root) if args.root else None)
+    if getattr(args, "json", False):
+        print(json.dumps(report, indent=2, default=str))
+    else:
+        print(f"estate root: {report['estate_root']}")
+        for name, edge in report["edges"].items():
+            if edge["ok"]:
+                print(f"  OK    {name:34s} -> {edge['result']}")
+            else:
+                print(f"  FAIL  {name:34s} -> {edge['error']}")
+        print(f"\n{report['edges_ok']}/{report['edges_total']} edges live")
+    return 0 if report["ok"] else 1
+
+
 def cmd_stats(args: argparse.Namespace) -> int:
     inv = load_inventory(args.inventory)
     print(f"format      : {inv['format']} v{inv['format_version']}")
@@ -205,8 +222,16 @@ def main(argv: Optional[List[str]] = None) -> int:
     p_stats = sub.add_parser("stats", help="summary counts")
     p_stats.set_defaults(func=cmd_stats)
 
+    p_wiring = sub.add_parser(
+        "wiring", help="prove the cross-subsystem edges (memory, kanban, ops, corez, cliz, verify)")
+    p_wiring.add_argument("--root", default=None,
+                          help="estate root (default: the checkout containing toolchest)")
+    p_wiring.add_argument("--json", action="store_true",
+                          help="emit the wiring report as JSON")
+    p_wiring.set_defaults(func=cmd_wiring)
+
     args = parser.parse_args(argv)
-    if args.command not in ("refresh",):
+    if args.command not in ("refresh", "wiring"):
         if not Path(args.inventory).exists():
             print(f"inventory not found: {args.inventory} — run "
                   f"'python -m toolchest refresh' first", file=sys.stderr)

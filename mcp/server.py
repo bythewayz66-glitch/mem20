@@ -104,6 +104,10 @@ from tools.braid_tools import BraidToolsMixin
 from tools.irc_tools import IRCToolsMixin
 from tools.lie_tools import LieToolsMixin
 from tools.agentz_tools import AgentzToolsMixin
+from tools.ops_tools import OpsToolsMixin
+from tools.verify_tools import VerifyToolsMixin
+from tools.toolchest_tools import ToolchestToolsMixin
+from tools.corez_tools import CorezToolsMixin
 from health import start_health_server
 
 class Mem20MCPServer(MemoryToolsMixin, CognitiveToolsMixin, RoadmapToolsMixin,
@@ -117,7 +121,7 @@ class Mem20MCPServer(MemoryToolsMixin, CognitiveToolsMixin, RoadmapToolsMixin,
                      ProductivityToolsMixin, SearchToolsMixin,
                      VersionControlToolsMixin, WebScrapingToolsMixin,
                      BraidToolsMixin, IRCToolsMixin, LieToolsMixin,
-                     AgentzToolsMixin):
+                     AgentzToolsMixin, OpsToolsMixin, CorezToolsMixin, ToolchestToolsMixin, VerifyToolsMixin):
     def __init__(self):
         self.tools = {}
         self._start_time = time.time()
@@ -166,6 +170,10 @@ class Mem20MCPServer(MemoryToolsMixin, CognitiveToolsMixin, RoadmapToolsMixin,
         self.register_braid_tools()
         self.register_irc_tools()
         self.register_lie_tools()
+        self.register_ops_tools()
+        self.register_verify_tools()
+        self.register_toolchest_tools()
+        self.register_corez_tools()
         self.register_webhook_tools()
         self.register_agentz_tools()
         self.register_job_tools()
@@ -664,6 +672,37 @@ class Mem20MCPServer(MemoryToolsMixin, CognitiveToolsMixin, RoadmapToolsMixin,
         elif tool_name == "scrape_submit_form":
             return await self._scrape_submit_form(arguments)
         
+        # mem20ops operator console tools (registered by OpsToolsMixin)
+        elif tool_name == "ops_registry":
+            return await self._ops_registry(arguments)
+        elif tool_name == "ops_cli_audit":
+            return await self._ops_cli_audit(arguments)
+        elif tool_name == "ops_wiring":
+            return await self._ops_wiring(arguments)
+        # mem20verify verification tools (registered by VerifyToolsMixin)
+        elif tool_name == "verify_drift":
+            return await self._verify_drift(arguments)
+        elif tool_name == "verify_tests":
+            return await self._verify_tests(arguments)
+        elif tool_name == "verify_lint":
+            return await self._verify_lint(arguments)
+        elif tool_name == "verify_wiring":
+            return await self._verify_wiring(arguments)
+        # Toolchest registry tools (registered by ToolchestToolsMixin)
+        elif tool_name == "toolchest_inventory":
+            return await self._toolchest_inventory(arguments)
+        elif tool_name == "toolchest_wiring":
+            return await self._toolchest_wiring(arguments)
+        # mem20corez native CoreAI tools (registered by CorezToolsMixin)
+        elif tool_name == "corez_infer":
+            return await self._corez_infer(arguments)
+        elif tool_name == "corez_quantize":
+            return await self._corez_quantize(arguments)
+        elif tool_name == "corez_evaluate":
+            return await self._corez_evaluate(arguments)
+        elif tool_name == "corez_wiring":
+            return await self._corez_wiring(arguments)
+
         # Dynamic fallback: any tool registered in self.tools whose handler follows
         # the "_<tool_name>" convention gets dispatched here. This prevents the
         # "registered but never dispatched" failure mode from recurring.

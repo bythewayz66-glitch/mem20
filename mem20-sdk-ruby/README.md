@@ -87,7 +87,7 @@ client.memory_store(content: "The release sign-off lives in the repo.",
 result = client.memory_recall(query: "where does the release sign-off live", limit: 5)
 puts Mem20::Client.text(result)
 
-# Any one of the 270 registered tools, by name…
+# Any one of the 272 registered tools, by name…
 client.tool("memory_status", {})
 # …or as a dynamic binding.
 client.memory_status
@@ -108,7 +108,7 @@ ruby -Ilib examples/quickstart.rb
 | `Mem20.configure` / `Mem20.client` | module-level entry points |
 | `Mem20::Config` | frozen, validated configuration mapped to the documented `MEM20_*` variables |
 | `Mem20::Client` | thread-safe facade: `#tool`, `#tools`, `#memory_store`, `#memory_recall`, `#health`, `#metrics` |
-| `Mem20::Surface` | the verified surface: `TOOL_COUNT` (270), `DOMAIN_COUNT` (27), `DOMAIN_TOOLS` (268), `INFRA_TOOLS` |
+| `Mem20::Surface` | the verified surface: `TOOL_COUNT` (272), `DOMAIN_COUNT` (27), `DOMAIN_TOOLS` (270), `INFRA_TOOLS` |
 | `Mem20::Transport::Stdio` | JSON-RPC 2.0 over stdio with the MCP handshake, timeouts and mutex-serialised access |
 | typed errors | `ConfigurationError`, `ToolError` (`#code`, `#data`), `TransportError` |
 
@@ -117,11 +117,11 @@ ruby -Ilib examples/quickstart.rb
 - Transport: **stdio**, one JSON-RPC 2.0 message per line.
 - Handshake: `initialize` → `notifications/initialized`, then `tools/list` / `tools/call`.
 - Protocol revision: **`2025-06-18`**, as negotiated in `initialize`.
-- The server registers **270 tools across 27 domains**: 268 tools from the 27 domain
+- The server registers **272 tools across 27 domains**: 270 tools from the 27 domain
   mixins (`mcp/tools/*.py` plus `mcp/memory_tools.py`, `mcp/cognitive_tools.py`,
   `mcp/roadmap_tools.py`) **plus** the 2 job tools `job_status` / `job_wait` that
-  `mcp/server.py` registers itself. `tools/list` returns all 270, so `tool_names.size`
-  is 270 — the SDK reaches every one through `#tool` or a dynamic binding.
+  `mcp/server.py` registers itself. `tools/list` returns all 272, so `tool_names.size`
+  is 272 — the SDK reaches every one through `#tool` or a dynamic binding.
   `Mem20::Surface` is the single source of truth for those numbers,
   `spec/mem20/surface_spec.rb` pins them, and `rake surface:check` re-derives them
   from the Python sources.
@@ -174,7 +174,7 @@ are this SDK's actual measured results; the raw command output is reproduced in
 | `rubocop` | 19 files inspected, **no offenses detected** |
 | `gem build mem20-sdk.gemspec` | mem20-sdk **0.2.0** built |
 | `require "mem20"` (installed gem) | loads mem20-sdk 0.2.0 |
-| live stdio round-trip | **270 tools**, protocol **2025-06-18**, stored token recalled |
+| live stdio round-trip | **272 tools**, protocol **2025-06-18**, stored token recalled |
 
 The round-trip stores a distinctive token with `memory_store` and reads it back with
 `memory_recall` against the real server; the recorded run recovered the token in

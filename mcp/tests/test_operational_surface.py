@@ -1,7 +1,7 @@
 """Tests for the canonical MCP server's self-contained pieces.
 
-`mcp/` is the real, running tool server, and it is the one component of the
-estate that had no tests at all. The 13.5k lines cannot be covered by one file,
+`/opt/mem20/mcp` is the real, running tool server, and it is the one component of
+the estate that had no tests at all. The 13.5k lines cannot be covered by one file,
 so this covers the two parts that are genuinely self-contained and high-risk:
 
 * `health.py` - the liveness/readiness/metrics HTTP surface. If this lies about

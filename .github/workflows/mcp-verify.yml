@@ -41,9 +41,14 @@ jobs:
 
       - name: Verify the MCP handshake and tool count
         env:
-          # 272 = 270 at v3.1.2 + vcs_asset_release_audit (RM-239, PR #157)
-          #       + graph_execute_reversible_plan (RM-052, PR #158).
+          # 290 = 272 after PRs #157/#158, plus the four 4.0 subsystem
+          #       mixins merged in this pass:
+          #         +4 corez      (PR #164)
+          #         +2 toolchest  (PR #165)
+          #         +4 verify     (PR #166)
+          #         +3 ops        (PR #167)
+          #       +5 gateway/other registrations from PR #168.
           # Bump this whenever a merged subsystem registers a new MCP tool.
-          MEM20_EXPECTED_TOOLS: "272"
+          MEM20_EXPECTED_TOOLS: "290"
           PYTHONUNBUFFERED: "1"
         run: python ./verify_mcp.py

@@ -23,139 +23,100 @@ python -m mem20crewz.demo.demo_crew --fake
 mem20crewz/
   __init__.py      public exports
   neural.py        Brain (ABC), CogBrain, FakeBrain
-  a2a.py           A2AClient — discover / call / fan-out (JSON-RPC)
-  peers.yaml       peer definitions (ports 9901–9922)
-  crew.py          Crew.kickoff() = roadmap-backed sequential run
-  flow.py          Flow with @start / @listen over roadmap phases
-  agents.py        Agent (self-model + namespace)
-  tasks.py         Task
-  loop.py          ToolLoop (tool | delegate | final)
-  skills.py        Skills registry
-  guardrails.py    epistemic veto, quarantine, plan gate
-  config.py        YAML → runtime wiring
-  roadmap.py       RoadmapRun ledger
-  demo/            demo_crew.py (fake + real modes)
-  runtime/         roadmaps + outputs (gitignored)
-  tests/           52-test suite
-  pyproject.toml
+  agents.py        Agent
+  tasks.py         Task, TaskOutcome
+  crew.py          Crew, CrewResult
+  flow.py          Flow
+  guardrails.py    Guards (epistemic veto, quarantine, plan-execution)
+  roadmap.py       roadmap persistence
+  a2a.py           peer delegation
+  ecosystem.py     4.0 cross-subsystem governor
+  cli.py           operator CLI
+  tests/
 ```
 
-## A2A peer contract
+## Cross-subsystem wiring (mem20 4.0 criterion 6)
 
-See `peers.yaml` and `a2a.py`. Peers listen on localhost ports 9901–9922 and speak a JSON-RPC v1.0 frame. A full contract document is tracked under issue #51.
+A crew is a set of agents doing work in sequence, so every crew run is also a
+memory, verification and budget question. `ecosystem.py` is that seam — the
+crew's own pre-flight/post-flight path.
 
----
+| subsystem | function called | what it answers |
+|---|---|---|
+| `memory_engine` | `memory.recall` / `memory.remember` | what is grounded before the crew starts |
+| `mem20verify` | `linters.ALL_CHECKS` (each invoked) | is the code the crew produced structurally sound |
+| `mem20dreamz` | `verdicts.fidelity_verdict` / `divergence` | does the output still serve the brief |
+| `mem20kilnz` | `budgets.check_triangles` | is the claimed asset within its authored budget |
+| `mem20corez` | `mlp.CharMLP.perplexity` | how unlike the corpus is the output |
+| `mem20cliz` | `build_envelope` / `split_json_flag` | the fleet's shared `--json` envelope |
 
-# CLEANROOM BUILD MANIFEST (hypo-map-1 phase 01)
+The epistemic veto (`guardrails.Guards`) is the crew's *own* mechanism and is
+not counted as external wiring.
 
-Green-lit 2026-09-08 by Jayson. Rebuild the mem20 crews surface (Agent / Task / Crew /
-Flow) as a cleanroom on mem20 primitives. ZERO dependency on the `mem20 crews` package —
-this package imports nothing named mem20 crews and ships no runtime dep on it. Every
-abstraction is backed by a mem20 native.
+`CrewGovernor.prepare()` runs before the crew; `judge()` runs after it. A
+subsystem that is missing or raises is recorded as `{"ok": false, "error": ...}`
+and never aborts the crew — but `report.clear` is then `false`, so a caller can
+refuse to ship an unverified run instead of guessing.
 
-## Mapping (directive → implementation)
-
-| mem20 crews surface    | mem20 native backing                                   |
-|-------------------|--------------------------------------------------------|
-| agent             | memory.SelfModel (capabilities/values/identity) + a namespace (memory scope per agent) |
-| reasoning         | cog/cognitive_engine: plan, reason, reflect, beam/tot (react_reason for the action loop) |
-| crew run          | roadmap: RoadmapRun persists phases planned→in_progress→completed/blocked to runtime/roadmaps/<name>.jsonl |
-| delegation        | A2A fan-out to 22 peers (localhost:9901..9922, read from mem20 peers.yaml (a2a_agents)) |
-| tools             | procedural skills (memory.procedural_* ) + python callables, via one Skills registry |
-| guardrails        | epistemic veto (epistemic_veto / require_epistemic_clearance) + quarantine (quarantine_expired_simulated) + plan-execution guard (run_plan_execution_guard) |
-| yaml config       | agents.yaml / tasks.yaml → Agent/Task/Crew objects (build gap #3) |
-
-## Build gaps (explicitly called out in phase 01) — resolved as follows
-
-1. **task-context assembly** → `mem20crewz/context.py:TaskContext`. Fuses:
-   task description + expected_output + `{input}` interpolation + upstream task
-   outputs + agent identity (role/goal/backstory/values) + agent memory recall
-   (namespaced recall via substrate) + tool inventory. Rendered into a stable
-   prompt block attached as `task.context` provenance.
-2. **tool-callback loop** → `mem20crewz/loop.py:ToolLoop`. Deterministic loop:
-   brain proposes (tool|delegate|final) → Skills executes callable/procedural
-   skill, or A2A delegates by capability → the observation feeds the next
-   proposal → bounded by max_iter; guardrails gate each iteration and the final
-   answer. Real path uses cog `react_reason`-style thinking via llm.chat with a
-   strict JSON action contract; tests use a deterministic FakeBrain.
-3. **YAML→runtime wiring** → `mem20crewz/config.py`: `load_agents_yaml(path)`,
-   `load_tasks_yaml(path, agents)`, `build_crew(...)`. Mirrors the mem20 crews
-   YAML schema (agents.yaml roles/goal/backstory/tools; tasks.yaml
-   description/expected_output/context/agent) but binds to mem20 objects.
-   CLI: `python -m mem20crewz run`.
-
-## Runtime layout
-
-    /opt/mem20/mem20crewz/
-        __init__.py     exports: Agent, Task, Crew, Flow, start, listen, A2AClient, build_crew, ...
-        _substrate.py   lazy import shims over memory / cog / llm + injectable seams (tests stay hermetic)
-        neural.py       Brain (ABC), CogBrain (real), FakeBrain (deterministic)
-        context.py      TaskContext assembly (gap #1)
-        loop.py         ToolLoop — tool-callback loop (gap #2)
-        skills.py       Skills registry (procedural skills + callables)
-        guardrails.py   Guards: plan gate, epistemic veto, quarantine sweep
-        agents.py       Agent (self-model + namespace), Agent.kickoff()
-        tasks.py        Task (description/expected_output/context/output_file/output_json)
-        crew.py         Crew.kickoff() = roadmap-backed sequential run + result provenance
-        flow.py         Flow with @start / @listen over roadmap phases + {var} interpolation
-        roadmap.py      RoadmapRun — persisted phase ledger
-        a2a.py          A2AClient — discover / call / fan_out (parallel) over JSON-RPC v1.0
-        config.py       YAML → runtime wiring (gap #3) + default templates
-        cli.py/__main__ `python -m mem20crewz`
-        runtime/        roadmaps + gitignore (runtime state, not committed)
-        tests/test_mem20crewz.py
-        demo/demo_crew.py
-        README.md (this file)
-
-## Honesty rules (from no-fake-everything)
-
-- llm.chat / cog raise LLMError when no key — the cleanroom never fabricates a
-  completion. FakeBrain is used ONLY in tests/demo-fake, clearly labelled.
-- Every module is exercised by the test suite and the live demo (real key).
-- A2A peers are live (9901/9902/9905/9909 verified open) — fan-out tested
-  against the real protocol, with a loopback A2A server for hermetic tests.
-- Status claims below are backed by a test run + live demo on disk (see VERIFY).
-
-## Quickstart (offline)
+## Runnable example
 
 ```bash
-pip install -e "./mem20crewz[dev]"
-python -m mem20crewz demo
+cd mem20crewz
+MEM20_STORE_PATH=/tmp/cz-demo python3 - <<'PY'
+import sys
+sys.path.insert(0, "."); sys.path.insert(0, "..")
+import ecosystem
+
+out = ecosystem.run_governor(
+    "what is the prop triangle budget?",
+    "The prop budget is 4000 triangles.\n"
+    "```python\ndef within(n):\n    return n <= 6000\n```",
+    topic="crew.readme",
+)
+print("clear:", out["clear"])
+print("subsystems:", out["subsystems"])
+print("lint clean:", out["lint"]["clean"],
+      "| budget ok:", out["budget"]["within_budget"],
+      "| fidelity:", out["fidelity"]["fidelity"],
+      "| perplexity:", round(out["surprise"]["perplexity"], 2))
+PY
 ```
 
-Runs the bundled crew end-to-end with a deterministic FakeBrain (no network, no key)
-and prints `start -> researched -> written`.
+Real output of the block above, run on this branch:
 
-## VERIFY (update after run)
+```
+clear: True
+subsystems: ['memory_engine', 'mem20verify', 'mem20dreamz', 'mem20kilnz', 'mem20corez']
+lint clean: True | budget ok: True | fidelity: 50 | perplexity: 59.17
+```
 
-- [x] tests pass from a clean install (`pip install -e "./mem20crewz[dev]"` → `pytest`)
-- [x] demo_crew.py runs offline (`python -m mem20crewz demo`) and prints the flow `start -> researched -> written`
-- [ ] phase 01 status bumped in hypo-map-1.json
+## MCP surface (criterion 7)
 
-## Managed members (package-review integration)
+Registered in `mcp/tools/crewz_tools.py` and mixed into `mcp/server.py`:
 
-Single-purpose crew/labor organs grouped here by reference; they live in
-their own top-level directories and are smoke-verified there:
+| tool | what it does |
+|---|---|
+| `crewz_status` | is the runtime importable, and what does it wire to |
+| `crewz_ground` | grounded context before a crew starts |
+| `crewz_govern` | judge a crew output before it ships (all five subsystems) |
+| `crewz_guard` | the crew's own epistemic veto over a set of fact ids |
 
-- `mem20adversarialqacrewz`
-- `mem20agentoutputcompilerz`
-- `mem20asynccollaborationcapsulesz`
-- `mem20batteryawareagentschedulerz`
-- `mem20causalroutingbrainz`
-- `mem20emotionsensitivemessagerouterz`
-- `mem20eventshaperouterz`
-- `mem20executableroadmapcompilerz`
-- `mem20goaleconomyschedulerz`
-- `mem20goapagentdesignerz`
-- `mem20hardwareawareinferencecompilerz`
-- `mem20humanagentcoworkcanvasz`
-- `mem20intentcompilerz`
-- `mem20intenttoagentmatchmakerz`
-- `mem20intenttomissioncompilerz`
-- `mem20locationawareworkrouterz`
-- `mem20missionroutingcockpitz`
-- `mem20realitytosoftwarecompilerz`
-- `mem20roamingworkloadschedulerz`
+## Tests
 
-## Docs
-- A2A peer contract: `docs/a2a.md`
+```bash
+cd mem20crewz
+python3 -m pytest tests/test_ecosystem.py -q
+```
+
+`tests/test_ecosystem.py` asserts on the values the *other* subsystems compute —
+a crew outcome recorded through the governor is read back by the engine's own
+`recall` and labelled `agent_generated`, a known-bad snippet is caught by
+`mem20verify`, an over-budget triangle count is rejected by `mem20kilnz` — so
+the wiring is exercised, not merely declared.
+
+## Verification
+
+```bash
+cd /opt/mem20
+python3 scripts/renovation/conformance.py mem20crewz
+```

@@ -23,11 +23,44 @@ import glob
 import os
 import re
 import subprocess
+import sys
 from concurrent.futures import ThreadPoolExecutor
 from typing import Any
 
-REPO = "/opt/mem20"
-VENV_BIN = "/usr/local/bin"
+def _resolve_repo() -> str:
+    """The estate checkout root.
+
+    ``/opt/mem20`` is the production install location, but hardcoding it made
+    every audit return empty on any other checkout (CI, a dev clone, a
+    container) -- ``declared_scripts()`` found no pyprojects and the whole
+    harness silently reported "nothing to check" instead of failing loudly.
+    MEM20_ROOT wins, then the production path if it exists, then the checkout
+    this module was imported from.
+    """
+    env = os.environ.get("MEM20_ROOT")
+    if env and os.path.isdir(env):
+        return env
+    if os.path.isdir("/opt/mem20"):
+        return "/opt/mem20"
+    # src/mem20ops/clicheck.py -> src/mem20ops -> src -> mem20ops -> <repo root>
+    here = os.path.abspath(__file__)
+    return os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(here))))
+
+
+def _resolve_venv_bin() -> str:
+    """Where console scripts are installed.
+
+    MEM20_VENV_BIN wins; otherwise the bin dir of the running interpreter,
+    which is where pip installs scripts for this environment.
+    """
+    env = os.environ.get("MEM20_VENV_BIN")
+    if env and os.path.isdir(env):
+        return env
+    return os.path.dirname(os.path.abspath(sys.executable))
+
+
+REPO = _resolve_repo()
+VENV_BIN = _resolve_venv_bin()
 HELP_TIMEOUT = 25
 # Concurrent help probes. Enough to hide the slow CLIs without thrashing the box
 # with 30 simultaneous heavy interpreter starts.

@@ -103,6 +103,7 @@ from tools.webscraping_tools import WebScrapingToolsMixin
 from tools.braid_tools import BraidToolsMixin
 from tools.irc_tools import IRCToolsMixin
 from tools.lie_tools import LieToolsMixin
+from tools.crewz_tools import CrewzToolsMixin
 from tools.agentz_tools import AgentzToolsMixin
 from tools.ops_tools import OpsToolsMixin
 from tools.verify_tools import VerifyToolsMixin
@@ -121,7 +122,7 @@ class Mem20MCPServer(MemoryToolsMixin, CognitiveToolsMixin, RoadmapToolsMixin,
                      ProductivityToolsMixin, SearchToolsMixin,
                      VersionControlToolsMixin, WebScrapingToolsMixin,
                      BraidToolsMixin, IRCToolsMixin, LieToolsMixin,
-                     AgentzToolsMixin, OpsToolsMixin, CorezToolsMixin, ToolchestToolsMixin, VerifyToolsMixin):
+                     CrewzToolsMixin, AgentzToolsMixin, OpsToolsMixin, CorezToolsMixin, ToolchestToolsMixin, VerifyToolsMixin):
     def __init__(self):
         self.tools = {}
         self._start_time = time.time()
@@ -175,6 +176,7 @@ class Mem20MCPServer(MemoryToolsMixin, CognitiveToolsMixin, RoadmapToolsMixin,
         self.register_toolchest_tools()
         self.register_corez_tools()
         self.register_webhook_tools()
+        self.register_crewz_tools()
         self.register_agentz_tools()
         self.register_job_tools()
     async def _handle_list_tools(self, context: ServerRequestContext, params: Optional[mt.PaginatedRequestParams]) -> mt.ListToolsResult:

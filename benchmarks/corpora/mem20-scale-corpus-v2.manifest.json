@@ -1,0 +1,32 @@
+{
+  "name": "mem20-scale-corpus-v2",
+  "seed": 20261027,
+  "records": 2000,
+  "grounded": 700,
+  "simulated": 1300,
+  "by_category": {
+    "grounded": 700,
+    "ungrounded": 650,
+    "false": 650
+  },
+  "queries": 250,
+  "query_kinds": {
+    "direct": 60,
+    "adversarial": 60,
+    "adversarial_hard": 40,
+    "contradiction": 40,
+    "multi_hop": 30,
+    "unanswerable": 20
+  },
+  "sources": {
+    "element": "https://raw.githubusercontent.com/Bowserinator/Periodic-Table-JSON/master/PeriodicTableJSON.json",
+    "country": "https://raw.githubusercontent.com/lukes/ISO-3166-Countries-with-Regional-Codes/master/all/all.json",
+    "mime": "https://raw.githubusercontent.com/jshttp/mime-db/master/db.json"
+  },
+  "validation": {
+    "status": "PASS",
+    "error_count": 0,
+    "answerable_probes_checked": 230
+  },
+  "description": "Scale corpus v2. Every non-control probe has its gold record in the corpus and does not leak its own answer; the `unanswerable` kind is a control that must score 0.000. Contamination must stay 0.0."
+}

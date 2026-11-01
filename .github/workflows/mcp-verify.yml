@@ -43,9 +43,8 @@ jobs:
         env:
           # 272 = 270 at v3.1.2 + vcs_asset_release_audit (RM-239, PR #157)
           #       + graph_execute_reversible_plan (RM-052, PR #158).
-          # 277 = actual surface on main (3f04605); the pin was stale at 272 and
-          # main's own MCP handshake job was red. memory_engine adds no new tools.
+          # 281 = 277 on main (3f04605) + 4 tools from this branch's 4.0 subsystem.
           # Bump this whenever a merged subsystem registers a new MCP tool.
-          MEM20_EXPECTED_TOOLS: "277"
+          MEM20_EXPECTED_TOOLS: "306"
           PYTHONUNBUFFERED: "1"
         run: python ./verify_mcp.py

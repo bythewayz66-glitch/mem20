@@ -38,10 +38,23 @@ def test_probe_help_on_known_good_binary():
     assert "dns-audit" in result["verbs"]
 
 
-def test_probe_help_respects_timeout():
-    result = clicheck.probe_help("mem20-metrics", "/usr/local/bin/mem20-metrics", timeout=1)
+def test_probe_help_respects_timeout(tmp_path):
+    """A binary that never returns must be reported as timed out, not hung on.
+
+    This used to point at /usr/local/bin/mem20-metrics on the assumption that
+    it ran no argument parser and would block. It has since grown a real
+    argparse parser and exits immediately, so the test was asserting a timeout
+    that could no longer happen. The timeout path is what matters, so exercise
+    it against a binary that genuinely blocks.
+    """
+    slow = tmp_path / "slow-cli"
+    slow.write_text("#!/bin/sh\nsleep 30\n")
+    slow.chmod(0o755)
+
+    result = clicheck.probe_help("slow-cli", str(slow), timeout=1)
     assert result["timed_out"] is True
     assert result["help_ok"] is False
+    assert result["help_exit"] is None
 
 
 def test_probe_help_on_missing_binary():

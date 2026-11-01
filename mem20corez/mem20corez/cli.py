@@ -13,17 +13,24 @@ import asyncio
 import functools
 import json
 import sys
+from pathlib import Path
 
 try:
     from mem20cliz import json_main
 except ImportError as _exc:  # never fail silently: a hidden fallback looks like success
     import sys as _sys
 
+    # Python deletes the ``as _exc`` name when this block ends, so copy it to
+    # a name that survives -- otherwise the warning below raises NameError the
+    # first time it is called instead of reporting why --json is disabled.
+    _json_main_exc = _exc
+
     def json_main(func):
         @functools.wraps(func)
         def _warn(*a, **k):
             _sys.stderr.write(
-                "warning: mem20cliz unavailable, --json disabled for this CLI (%s)\n" % _exc
+                "warning: mem20cliz unavailable, --json disabled for this CLI (%s)\n"
+                % _json_main_exc
             )
             return func(*a, **k)
 
@@ -180,6 +187,23 @@ def _cmd_test(args) -> int:
     return 0
 
 
+def _cmd_wiring(args) -> int:
+    """Exercise every cross-subsystem edge and report the real result."""
+    from mem20corez import integrations
+    report = integrations.wiring_report(Path(args.root) if args.root else None)
+    if args.json:
+        print(json.dumps(report, indent=2, default=str))
+    else:
+        print(f"estate root: {report['estate_root']}")
+        for name, edge in report["edges"].items():
+            if edge["ok"]:
+                print(f"  OK    {name:34s} -> {edge['result']}")
+            else:
+                print(f"  FAIL  {name:34s} -> {edge['error']}")
+        print(f"\n{report['edges_ok']}/{report['edges_total']} edges live")
+    return 0 if report["ok"] else 1
+
+
 @json_main
 def main(argv=None) -> int:
     p = argparse.ArgumentParser(prog="mem20corez", description="mem20 native CoreAI (real)")
@@ -223,6 +247,13 @@ def main(argv=None) -> int:
     b.set_defaults(func=_cmd_benchmark)
 
     sub.add_parser("test", help="Real self-test").set_defaults(func=_cmd_test)
+
+    w = sub.add_parser(
+        "wiring", help="Prove the cross-subsystem edges (toolchest, memory, kanban, ops, cliz, verify)")
+    w.add_argument("--root", default=None,
+                   help="estate root (default: the checkout containing mem20corez)")
+    w.add_argument("--json", action="store_true", help="emit the wiring report as JSON")
+    w.set_defaults(func=_cmd_wiring)
 
     args = p.parse_args(argv)
     return args.func(args)

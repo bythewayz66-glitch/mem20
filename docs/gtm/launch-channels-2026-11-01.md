@@ -21,15 +21,20 @@ G10 — "no anonymous-reachable launch URL" — is correct for `/sites/` artifac
 | ID | Blocker | Severity | Who can fix |
 |---|---|---|---|
 | **B1** | Every `/sites/` artifact URL returns **403** anonymously. No launch asset may live there. | Hard — unfixable | Nobody. Structural. |
-| **B2** | Live page serves **`v3.0.0` ×4** while `VERSION` = `3.1.0`. | Hard — blocks launch | Webpage Developer (row 3) |
+| **B2** | ~~Live page serves `v3.0.0` ×4 while `VERSION` = `3.1.0`.~~ **FIXED mid-run** — page now serves `v3.1.0` ×4. | ~~Hard~~ **Resolved** | Webpage Developer (row 3) — done |
 | **B3** | Canonical Pages URL **301s to `http://`**, not `https://`. | Hard — blocks launch | Repo admin / Pages config |
 | **B4** | **No `og:image`, no `twitter:card`, no favicon.** Grey box on HN/PH/Reddit/X/Slack. PH cannot accept a submission without gallery assets. | Hard — blocks PH | Webpage Developer |
 | **B5** | **No analytics of any kind.** Every `utm_*` link is decorative. | Soft — runs blind | Owner (§5) |
 | **B6** | Repo `homepage` field is a `/sites/` URL returning **403**. | Soft — one field | Repo admin |
 | **B7** | `robots.txt` and `sitemap.xml` both **404**. | Soft | Webpage Developer |
 
-**B1 is the one the directive names, and it is real and unfixable.** B2–B4 are the ones that would
-actually sink the launch, and all three are fixable in one commit.
+**B1 is the one the directive names, and it is real and unfixable.** B3–B4 are the ones that would
+actually sink the launch, and both are fixable in one commit.
+
+**B2 was fixed while this document was being written.** The page served `v3.0.0` ×4 at the start of the
+run and `v3.1.0` ×4 by the end — same 33,429-byte payload, since the version string is the same length.
+The gate caught it on a re-run against the committed script, which is the argument for making the unblock
+condition executable rather than a checklist someone ticks once.
 
 ### 1.1 Host status, as measured
 
@@ -47,8 +52,6 @@ actually sink the launch, and all three are fixable in one commit.
 result. Without `-k` they fail the TLS handshake first, so the user-visible failure is a browser
 interstitial, not a 404. Same end state, worse experience. **All three are out of scope for this plan.**
 
----
-
 ## 2. The exact unblock condition
 
 **A launch may begin on the first day on which all seven checks pass simultaneously.** They are
@@ -64,27 +67,29 @@ machine-checkable; `scripts/check_launch_gate.py` implements them and exits non-
 | 6 | A privacy-respecting analytics snippet is present, **or** an owner waiver is recorded | present or waived |
 | 7 | Repo `homepage` field resolves 200 | `200` |
 
-**Check 1 is necessary but not sufficient — and it is the only one that already passes.** Current state
-is 1 pass / 6 fail. Checks 2–4 would sink the launch; 6 and 7 make it unmeasurable and unclickable.
+**Check 1 is necessary but not sufficient — and it is one of only two that pass.** Current state is
+2 pass / 5 fail. Checks 3–4 would sink the launch; 6 and 7 make it unmeasurable and unclickable.
 
-### 2.1 Gate output — run in this session, unedited
+### 2.1 Gate output — current state, run in this session, unedited
+
+Run against the **committed** script (`sha256 8d945d3f…`), not a local copy:
 
 ```
-$ python3 scripts/check_launch_gate.py
+$ python3 verify/gate.py
 
 mem20 launch gate
   site   : https://mem20.com/
   pages  : https://bythewayz66-glitch.github.io/mem20/
 
   [PASS] anonymous       https://mem20.com/ returned 200, 33429 bytes, no access token
-  [FAIL] version         served page never mentions current version 3.1.0; served page still carries retired version(s): 'v3.0.0' x4, '3.0.0' x4 (repo VERSION = 3.1.0)
+  [PASS] version         served page carries 3.1.0 x4; no retired version strings
   [FAIL] social_preview  no og:image on the served page -> HN/PH/Reddit/X render a bare grey box (twitter:card=absent, favicon=absent)
   [FAIL] https_hop       canonical link hops through plaintext: 301 -> http://mem20.com/
   [FAIL] crawlable       robots.txt returned 404 (want 200)
   [FAIL] analytics       no analytics snippet on the served page -> every utm_* link is decorative and the Day-7 channel readout is a guess (pass --waive-analytics to accept this in writing)
   [FAIL] repo_homepage   repo homepage https://static.teamily.ai/sites/ca954f26-cfef-49bf-92b4-55c652e71f8f/webpages/mem20-site/index.html returned 403 - this is a /sites/ artifact, which is project-member-only and always 403s
 
-LAUNCH GATE: BLOCKED - 6 of 7 gates failed, 1 passed.
+LAUNCH GATE: BLOCKED - 5 of 7 gates failed, 2 passed.
 Do not post to Show HN, Product Hunt or Reddit until every gate passes.
 See docs/gtm/launch-channels-2026-11-01.md section 3.1 for the minimum unblock.
 ```
@@ -95,18 +100,25 @@ Exit code `1`. With the analytics waiver:
 $ python3 scripts/check_launch_gate.py --waive-analytics
 
   [PASS] analytics       owner waiver recorded (--waive-analytics): launch runs without on-page attribution
-LAUNCH GATE: BLOCKED - 5 of 7 gates failed, 2 passed.
+LAUNCH GATE: BLOCKED - 4 of 7 gates failed, 3 passed.
 ```
 
-**The waiver does not open the gate** — it removes one soft failure. Four hard failures remain, and no
+**The waiver does not open the gate** — it removes one soft failure. Three hard failures remain, and no
 waiver can excuse them.
+
+**The `version` gate passed on this run and failed on the first.** The page served `v3.0.0` ×4 at the
+start of the session and `v3.1.0` ×4 by the end — same 33,429-byte payload, since the version string is
+the same length. Confirmed independently: `grep -oE 'v?3\.[0-9]+\.[0-9]+'` now returns `4 v3.1.0` and
+zero `v3.0.0`. `og:image`, `twitter:card`, favicon, analytics, `robots.txt` and `sitemap.xml` are all
+still absent — those five gates are unchanged. This is the argument for making the unblock condition
+executable rather than a checklist someone ticks once.
 
 ### 2.2 Minimum viable unblock — the smallest change that opens the gate
 
 Three commits, no new infrastructure, no owner credentials:
 
-1. **Webpage Developer** — rebuild `docs/index.html`: `v3.0.0` → `3.1.0` (4 occurrences), add `og:image`
-   + `twitter:card` + favicon, add `robots.txt` and `sitemap.xml`. Closes B2, B4, B7.
+1. **Webpage Developer** — rebuild `docs/index.html`: add `og:image` + `twitter:card` + favicon, add
+   `robots.txt` and `sitemap.xml`. Closes B4, B7. *(The `v3.0.0` → `3.1.0` half of this is already done.)*
 2. **Repo admin** — set `homepage` to `https://mem20.com/`. Closes B6. One field.
 3. **Repo admin** — fix the Pages custom-domain redirect to `https://`. Closes B3.
 
@@ -147,8 +159,7 @@ therefore never uses one.
 Show HN: mem20 – Agent memory where grounded vs simulated is enforced in code
 ```
 
-Alternates: `Show HN: mem20 – An MCP memory server that refuses to store made-up facts as real` ·
-`Show HN: mem20 – MIT agent memory with contamination auditing and a provenance ledger`
+Alternates: `Show HN: mem20 – An MCP memory server that refuses to store made-up facts as real`
 
 **Body — the first three lines decide the thread.** Lead with the refusal, not the tool count:
 
@@ -171,8 +182,7 @@ That's the real exception string from the shipped code. The guard isn't a prompt
 or a lint rule — it sits on the write path.
 ```
 
-**Then, and only then, the surface:** 270 tools across 27 domains, four retrieval modes, the append-only
-ledger, MIT.
+**Then the surface:** 270 tools across 27 domains, four retrieval modes, the append-only ledger, MIT.
 
 **The benchmark paragraph must be in the post, not buried.** It is the differentiator:
 
@@ -238,19 +248,19 @@ Assumptions stated so they can be argued with, not asserted:
 | → Day-7 still using | 20% = ~10 | 20% = ~3 | 20% = ~3 |
 
 **Read this honestly: a good launch produces roughly 10 retained users.** That is the correct
-expectation for a source-install developer tool with 1 star. The launch's real output is not the user
-count — it is (a) whether the 0.000-adversarial story lands with the people who care about auditability,
-and (b) whether any of them open an issue. **Issues are the only conversion that matters at this stage.**
+expectation for a source-install developer tool with 1 star. The real output is not the user count — it
+is whether the 0.000-adversarial story lands with people who care about auditability, and whether any of
+them open an issue. **Issues are the only conversion that matters at this stage.**
 
 **Kill criteria.** If Show HN does not reach the front page within 90 minutes, do not repost — HN
-penalises it. Take the thread as-is, answer every comment, move to Day 1. If Reddit removes two of three
-posts, stop and diagnose the account before the third.
+penalises it. Answer every comment, move to Day 1. If Reddit removes two of three posts, stop and
+diagnose the account before the third.
 
 ### 3.6 Measurement — what is actually observable today
 
 | Signal | Available now? | Source |
 |---|---|---|
-| HN rank, points, comment count | **Yes** | HN item page |
+| HN rank, points, comments | **Yes** | HN item page |
 | PH rank, upvotes | **Yes** | PH launch page |
 | Reddit upvote ratio, removals | **Yes** | Reddit post |
 | GitHub stars / forks / watchers | **Yes** | GitHub API (currently 1 / 0 / 0) |
@@ -258,11 +268,9 @@ posts, stop and diagnose the account before the third.
 | Landing-page sessions by channel | **No** | No analytics on the page (B5) |
 | UTM attribution | **No** | UTM survives the redirect but nothing reads it |
 
-**Five of seven signals work today; the two that need a snippet do not.** The plan is measurable without
-analytics — stars, clones, referrers and platform-native metrics are enough to rank channels. What is
-*not* measurable is on-page behaviour: bounce, scroll depth, which section people read. Do not promise that.
-
----
+**Five of seven signals work today; the two that need a snippet do not.** Stars, clones, referrers and
+platform-native metrics are enough to rank channels. What is *not* measurable is on-page behaviour:
+bounce, scroll depth, which section people read. Do not promise that.
 
 ## 4. What this plan will not do
 
@@ -274,8 +282,6 @@ analytics — stars, clones, referrers and platform-native metrics are enough to
 - **Will not use `.org` / `.store` / `.info`.** 404 or TLS failure.
 - **Will not route anyone to Discussions.** `has_discussions: false`. Issues only.
 
----
-
 ## 5. Decisions needed from the owner
 
 1. **Analytics — yes or no?** Without a snippet, channel attribution is impossible and the Day-7 readout
@@ -286,13 +292,11 @@ analytics — stars, clones, referrers and platform-native metrics are enough to
 3. **Repo `homepage` field.** One field, currently a 403. Set it to `https://mem20.com/`. Highest-leverage
    single change in this document.
 
----
-
 ## 6. Handoff
 
 | Item | Owner | Blocking? |
 |---|---|---|
-| `docs/index.html`: 3.0.0 → 3.1.0, `og:image`, favicon, `robots.txt`, `sitemap.xml` | Webpage Developer (row 3) | **Yes** — B2, B4, B7 |
+| `docs/index.html`: `og:image`, favicon, `robots.txt`, `sitemap.xml` | Webpage Developer (row 3) | **Yes** — B4, B7 |
 | Pages redirect → `https://` | Repo admin | **Yes** — B3 |
 | Repo `homepage` field | Repo admin | No — B6 |
 | Analytics snippet decision | Owner | No — B5 |

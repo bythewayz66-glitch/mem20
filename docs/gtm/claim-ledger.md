@@ -19,6 +19,19 @@
 > Harnesses cited by the Command cells ship alongside this file: `docs/gtm/verify/check_ledger.py`,
 > `docs/gtm/verify/bench_rows.py`, `docs/gtm/verify/partition.py`.
 
+### This ledger is six files — read them in order
+
+| File | Sections |
+|---|---|
+| `claim-ledger.md` (this file) | §0 weakest measured row · §0.5 the `Adversarial` column |
+| `claim-ledger-02-facts.md` | §1 verified product facts · §1.1 version · §1.2 the 270/27 figure · §2 surface of record |
+| `claim-ledger-03-distribution.md` | §3 distribution state · §4 live partition, audit and promotion-gate evidence |
+| `claim-ledger-04-benchmark.md` | §5 the benchmark — every row the file ships |
+| `claim-ledger-05-commercial.md` | §6 house numbers · §7 retired values (the sole register) |
+| `claim-ledger-06-guardrails.md` | §8 guardrails · §9 say / never say · §10 hand-off |
+
+`check_ledger.py` globs `docs/gtm/claim-ledger*.md`, so the split does not weaken the acceptance check.
+
 ### Why v7 exists — five v6 findings were wrong
 
 1. **The benchmark scores SEVEN modes, not two.** v6 said `hybrid` and `graph` had "no rows at all" and marked both `unmeasured`. At this HEAD `latest.json` scores `bm25`, `vector`, `hybrid`, `hybrid-rerank-off`, `graph`, `keyword`, `constant`. **Both are measured.**

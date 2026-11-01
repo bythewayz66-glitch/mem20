@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "mem20"
-version = "3.0.0"
+version = "3.1.2"
 description = "mem20 — trusted, auditable memory + world-model layer for agents (MCP server)."
 readme = "README.md"
 requires-python = ">=3.10"
@@ -12,6 +12,13 @@ license = { text = "MIT" }
 keywords = ["agent", "memory", "mcp", "world-model", "cognitive"]
 dependencies = [
     "mcp>=2.1.1",
+    # mcp-types and aiohttp are imported at MODULE SCOPE by modules the server
+    # loads before it can serve a request (mcp/server.py:48 and
+    # mcp/tools/a2a_tools.py:19). Neither ships as a dependency of `mcp`, so
+    # omitting them here produces an install that cannot boot. requirements.txt
+    # has declared both since 78d28ad; this list had not caught up.
+    "mcp-types>=2.3.0",
+    "aiohttp>=3.14.5",
     "pydantic>=2.13.4",
     "anyio>=4.14.2",
     "numpy>=1.24",

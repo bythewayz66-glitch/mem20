@@ -8,7 +8,7 @@ var i=kv.indexOf("=");if(i>0){o[kv.slice(0,i)]=kv.slice(i+1)}})}
 return o})());
 if(T.presentation!=="preview"){return}
 var K="tmly:media-muted:"+String(location.pathname).replace(/[^/]*$/,"");
-var muted=false;try{muted=localStorage.getItem(K)==="1"}catch(e){}
+var muted=false;try{muted=localStorage.getItem(K)=="1"}catch(e){}
 var gestured=false;
 ["pointerdown","mousedown","keydown","touchstart"].forEach(function(t){
 document.addEventListener(t,function(){gestured=true},{capture:true,passive:true})});
@@ -758,10 +758,10 @@ sweep(document)})();</script>
         </ul>
       </div>
       <div class="note">
-        <h3>Publish path — Sidney via gabe</h3>
+        <h3>Publish path</h3>
         <ul>
-          <li>The canonical publish target for mem20 assets is the <b>Sidney</b> server, pushed over <code>ssh</code> / <code>sftp</code> / <code>rsync</code> and passing through <code>gabe</code>.</li>
-          <li>No Sidney credentials exist in the analytics sandbox, so this dashboard publishes to its <code>/sites/</code> URL and the Sidney push is carried by the publishing step.</li>
+          <li><b>GitHub is the only publication channel.</b> mem20 assets are published by pushing to <code>bythewayz66-glitch/mem20</code> on <code>main</code>.</li>
+          <li>There is no remote publish target: the former server host and its publish gate are retired and no longer exist, so there is no <code>ssh</code> / <code>sftp</code> / <code>rsync</code> destination and no gate to route through.</li>
           <li>Re-opening this dashboard with <code>?repo=owner/name</code> re-points the repo card, the footer link and the live API call — no code change needed.</li>
         </ul>
       </div>

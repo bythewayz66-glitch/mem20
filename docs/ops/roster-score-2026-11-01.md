@@ -60,7 +60,7 @@ polled every 90 s across the window, plus the GitHub REST API for check-runs and
 | 20 | UX Researcher | **DELIVERED** | `b7c8659a8d7c86f95540d6aa0b4e3a4a8aa19bfd` | `docs/ux/desktop-personas-2026-11-01.md` + `desktop-task-flows-2026-11-01.md` |
 | 21 | Analytics Reporter | **DELIVERED** | `ffc7aad181dae2c02d54680ca72a1239384a4aca` | `docs/ops/program-scoreboard-2026-11-01.md` + `scripts/ops/scoreboard_signals.sh` |
 | 22 | Mem20-naration | **DELIVERED** | `feba039c68c76bf724896d00153e30e6e744c693` | `docs/app/narrative/serial-2026-11-01.md` + `-11-01b.md` + publication note (`1376fb47`) |
-| 23 | Mem20-admin | **DELIVERED** | *(this file)* | `docs/ops/roster-score-2026-11-01.md` |
+| 23 | Mem20-admin | **DELIVERED** | `bd39d09b95689df31e033567870148de522e6b7e` | `docs/ops/roster-score-2026-11-01.md` on `docs/ws1-roster-score-2026-11-01` |
 
 ## The two absences — stated plainly
 

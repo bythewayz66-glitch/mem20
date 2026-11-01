@@ -22,13 +22,18 @@
 
 namespace {
 
-void print_ledger(const mem20::Session& session) {
+void print_ledger(mem20::Session& session) {
     // The ledger is append-only and exposed READ-ONLY. This function only reads.
     mem20::LedgerFilter filter;
     filter.action = "remember";
     filter.limit  = 10;
 
-    for (const auto& e : session.read_ledger(filter)) {
+    auto entries = session.read_ledger(filter);
+    if (!entries) {
+        std::cerr << "read_ledger failed: " << entries.detail() << "\n";
+        return;
+    }
+    for (const auto& e : *entries) {
         std::cout << "  " << e.ts
                   << "  origin=" << e.origin
                   << "  store="  << e.store
@@ -56,20 +61,20 @@ int main() {
 
     auto spawned = mem20::Session::spawn(cfg);
     if (!spawned) {
-        std::cerr << "spawn failed: " << spawned.error().message << "\n";
+        std::cerr << "spawn failed: " << spawned.detail() << "\n";
         return 1;
     }
     mem20::Session session = std::move(*spawned);
 
     std::cout << "handshake ok\n"
               << "  protocolVersion=" << session.server_info().protocol_version
-              << "  serverInfo="     << session.server_info().server_info.dump()
+              << "  serverInfo="     << session.server_info().server_info
               << "\n";
 
     // --- 2. Discovery --------------------------------------------------------
     auto tools = session.list_tools();
     if (!tools) {
-        std::cerr << "tools/list failed: " << tools.error().message << "\n";
+        std::cerr << "tools/list failed: " << tools.detail() << "\n";
         return 1;
     }
     std::cout << "discovered " << tools->size() << " tools\n";
@@ -84,7 +89,7 @@ int main() {
 
     auto stored = session.store(fact);
     if (!stored) {
-        std::cerr << "memory_store failed: " << stored.error().message << "\n";
+        std::cerr << "memory_store failed: " << stored.detail() << "\n";
         return 1;
     }
     std::cout << "stored grounded id=" << stored->id << "\n";
@@ -100,7 +105,7 @@ int main() {
         std::cout << "stored simulated sim_id=" << simulated->sim_id << "\n";
     } else {
         std::cerr << "warning: memory_simulate_store failed: "
-                  << simulated.error().message << "\n";
+                  << simulated.detail() << "\n";
     }
 
     // --- 5. RECALL (grounded-only indexes) ----------------------------------
@@ -110,7 +115,7 @@ int main() {
 
     auto hits = session.recall("canonical repository", opts);
     if (!hits) {
-        std::cerr << "memory_recall failed: " << hits.error().message << "\n";
+        std::cerr << "memory_recall failed: " << hits.detail() << "\n";
         return 1;
     }
     std::cout << "recall returned " << hits->size() << " hit(s)\n";
@@ -149,7 +154,7 @@ int main() {
                   << " (" << audit->findings.size() << " finding(s))\n";
     } else {
         std::cerr << "memory_audit_contamination failed: "
-                  << audit.error().message << "\n";
+                  << audit.detail() << "\n";
     }
 
     // --- 8. Read the append-only ledger (read-only by construction) ----------

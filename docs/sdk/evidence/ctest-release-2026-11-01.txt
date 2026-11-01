@@ -1,0 +1,85 @@
+# mem20 C++ SDK -- ctest transcript (Release)
+
+Captured: 2026-11-01T17:27:33Z
+Host: Linux 5.15.0-1075-azure x86_64
+Compiler: g++ (Debian 12.2.0-14+deb12u1) 12.2.0
+CMake: cmake version 3.25.1
+Commit under test: 2ea4492209dfaae6afb22ca884132a0d1849bfcf
+
+## Configure
+```
+$ cmake -S sdk/cpp -B build/cpp -G Ninja -DCMAKE_BUILD_TYPE=Release -DMEM20_WARNINGS_AS_ERRORS=ON
+-- The CXX compiler identification is GNU 12.2.0
+-- Detecting CXX compiler ABI info
+-- Detecting CXX compiler ABI info - done
+-- Check for working CXX compiler: /usr/bin/c++ - skipped
+-- Detecting CXX compile features
+-- Detecting CXX compile features - done
+-- Performing Test CMAKE_HAVE_LIBC_PTHREAD
+-- Performing Test CMAKE_HAVE_LIBC_PTHREAD - Success
+-- Found Threads: TRUE
+-- Configuring done
+-- Generating done
+-- Build files have been written to: /tmp/rel
+```
+
+## Build
+```
+$ cmake --build build/cpp
+[1/12] Building CXX object CMakeFiles/mem20_sdk.dir/src/config.cpp.o
+[2/12] Building CXX object CMakeFiles/mem20_sdk.dir/src/transport.cpp.o
+[3/12] Building CXX object CMakeFiles/mem20_sdk_tests.dir/tests/test_config.cpp.o
+[4/12] Building CXX object CMakeFiles/mem20_test_surface_docs.dir/tests/test_surface_docs.cpp.o
+[5/12] Building CXX object CMakeFiles/mem20_store_recall_audit.dir/workspace/mem20/docs/sdk/cpp/examples/store_recall_audit.cpp.o
+[6/12] Building CXX object CMakeFiles/mem20_test_live_surface.dir/tests/test_live_surface.cpp.o
+[7/12] Building CXX object CMakeFiles/mem20_sdk.dir/src/client.cpp.o
+[8/12] Linking CXX static library libmem20_sdk.a
+[9/12] Linking CXX executable mem20_sdk_tests
+[10/12] Linking CXX executable mem20_test_live_surface
+[11/12] Linking CXX executable mem20_test_surface_docs
+[12/12] Linking CXX executable mem20_store_recall_audit
+```
+
+## Test
+```
+$ ctest --test-dir build/cpp --output-on-failure
+Internal ctest changing into directory: /tmp/rel
+Test project /tmp/rel
+    Start 1: mem20_sdk_tests
+1/4 Test #1: mem20_sdk_tests ..................   Passed    0.00 sec
+    Start 2: live_surface
+2/4 Test #2: live_surface .....................   Passed    1.75 sec
+    Start 3: surface_docs
+3/4 Test #3: surface_docs .....................   Passed    0.00 sec
+    Start 4: install_export
+4/4 Test #4: install_export ...................   Passed    1.04 sec
+
+100% tests passed, 0 tests failed out of 4
+
+Label Time Summary:
+docs           =   0.00 sec*proc (1 test)
+integration    =   1.75 sec*proc (1 test)
+live           =   1.75 sec*proc (1 test)
+packaging      =   1.04 sec*proc (1 test)
+unit           =   0.00 sec*proc (1 test)
+
+Total Test time (real) =   2.80 sec
+```
+
+## surface_docs -- the docs-drift guard, standalone output
+```
+$ ./build/cpp/mem20_test_surface_docs
+mem20 C++ SDK surface docs test
+  expected surface : 270 tools across 27 domains
+PASS: surface.hpp, version.hpp and both READMEs agree on 270 tools across 27 domains
+```
+
+## live_surface -- real server, not a skip
+```
+$ ./build/cpp/mem20_test_live_surface
+mem20 C++ SDK live surface test
+  sdk version      : 0.1.0
+  requested proto  : 2025-06-18
+  server script    : <repo>/mcp/mcp_server.py
+PASS: live initialize + tools/list (270 unique tools) + grounded store/recall round trip
+```

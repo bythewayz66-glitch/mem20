@@ -16,7 +16,7 @@
 | Launch copy pack (v3) | `docs/gtm/mem20-launch-copy.md` (this directory) |
 | **Claim ledger (v3)** | `docs/gtm/claim-ledger.md` (this directory) |
 | Sales one-pager (v3) | `docs/gtm/mem20-sales-one-pager.md` (this directory) |
-| Canonical repo | **github.com/bythewayz66-glitch/mem20** — public, `main`, v3.0.0, MIT, HEAD `7c0b3e8` |
+| Canonical repo | **github.com/bythewayz66-glitch/mem20** — public, `main`, MIT, HEAD `7c0b3e8` at capture (**v3.0.0 at that HEAD; the shipped tree is v3.1.0 at `27c1e5fb`**) |
 | Install path | `git clone https://github.com/bythewayz66-glitch/mem20.git` → `pip install -r requirements.txt` — **no PyPI package exists** |
 | Binding rules | Copy pack v3 §6 (claim ledger index) and §7 (guardrails) |
 
@@ -186,5 +186,5 @@ The Pages site is **static HTML with no analytics snippet**, and GitHub Pages gi
 
 1. **Repo `homepage` field is a 403.** GitHub API returns `homepage: "https://static.teamily.ai/sites/ca954f26-…/webpages/mem20-site/index.html"` — an anonymous request to it returns **403**. One-field fix: point it at `https://bythewayz66-glitch.github.io/mem20/?utm_source=github&utm_medium=oss&utm_campaign=mem20_launch_2026q4&utm_content=readme`. Whoever holds repo admin does this; it is the highest-leverage single change in this plan.
 2. **`docs/CNAME` — RESOLVED 2026-10-31.** It names `mem20.com`, which resolves and returns 200. The old legacy-zone hostname is retired and must not be cited; the CNAME branch (creating a DNS record for it) is obsolete.
-3. **`docs/index.html` still says 268 / 26 domains** (4 occurrences of `268`, 4 of `26 domains`, 0 of `270`). The site is the public surface, so this is now the most visible stale number in the estate. Being retired by the P1 owner (Webpage Developer); until that lands, **campaign copy says 270/27 and the page says 268/26** — a visible contradiction a HN commenter will find in one click.
-4. **Two in-tree docs still disagree with the live surface:** `docs/02-tools-reference.md` says 268/26 and `toolchest/inventory.json` says 258 (`generated_at` 2026-10-07). Same P1 owner, same retirement.
+3. ~~**`docs/index.html` still says 268 / 26 domains.**~~ **Closed.** Re-measured at `27c1e5fb`: **0** occurrences of `268`, **10** of `270`. Campaign copy and the public page now agree.
+4. **One in-tree doc still disagrees with the live surface:** `docs/02-tools-reference.md` says 268/26. `toolchest/inventory.json` was regenerated 2026-10-29 and now reports `counts.mcp: 0`, so it no longer contradicts the surface — it simply no longer counts it. Same P1 owner, same retirement.

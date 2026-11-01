@@ -11,7 +11,7 @@ name: mem20 web shell
 on:
   workflow_dispatch:
   push:
-    branches: [mem20frontendz]
+    branches: [main, mem20frontendz]
     paths:
       - 'web/**'
       - '.github/workflows/mem20-web.yml'
@@ -40,20 +40,22 @@ jobs:
           python3 - <<'PY'
           import json
           raw = json.load(open('/tmp/raw-tools.json'))
+          # Keep the extractor's own record shape (n/t/d/x/p) and its header
+          # fields. An earlier version of this step rewrote the records to
+          # long keys and dropped domain_count, which is what left the three
+          # view components reading keys the file no longer had.
           out = {
               "source": raw["source"],
               "files_scanned": raw["files_scanned"],
               "count": raw["count"],
-              "tools": [
-                  {"name": t["n"], "title": t["t"], "description": t["d"],
-                   "domain": t["x"], "params": t["p"]}
-                  for t in raw["tools"]
-              ],
+              "domain_count": len({t["x"] for t in raw["tools"]}),
+              "domains": sorted({t["x"] for t in raw["tools"]}),
+              "tools": raw["tools"],
           }
           with open('web/src/data/tools.json', 'w') as fh:
               fh.write(json.dumps(out, separators=(",", ":")))
           print("tools.json:", out["count"], "tools across",
-                len({t["domain"] for t in out["tools"]}), "domains")
+                out["domain_count"], "domains")
           PY
 
       - name: Set up Node
@@ -72,9 +74,15 @@ jobs:
       - name: Publish bundle to docs/app
         run: |
           set -euo pipefail
-          rm -rf docs/app
-          mkdir -p docs/app
-          cp -r web/dist/. docs/app/
+          # docs/app is NOT a build output directory. It also holds deck/,
+          # narrative/ and desktop-packaging.md, which are hand-maintained and
+          # are not produced by vite. `rm -rf docs/app` (the previous form of
+          # this step) deleted all three on every run. Replace only the shell:
+          # the bundle root files and assets/, leaving every other subtree.
+          rm -rf docs/app/assets
+          mkdir -p docs/app/assets
+          cp -r web/dist/assets/. docs/app/assets/
+          cp web/dist/index.html docs/app/index.html
           touch docs/app/.nojekyll
           echo "--- docs/app ---"
           find docs/app -type f | sort

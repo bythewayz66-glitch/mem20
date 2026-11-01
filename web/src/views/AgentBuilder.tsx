@@ -6,11 +6,9 @@
  * estate's actual registered tools, not a marketing number.
  */
 import React, { useMemo, useState } from 'react';
-import raw from '../data/tools.json';
 import { Notice, Panel, Pill } from '../components/ui';
 
-type Tool = { name: string; title: string; description: string; domain: string; params: string[] };
-const CATALOG = raw as unknown as { count: number; domains?: number; tools: Tool[]; files_scanned: number };
+import { CATALOG } from '../data/catalog';
 
 const LIFECYCLE = ['draft', 'provisioned', 'active', 'paused', 'retired'];
 const SCOPES = [

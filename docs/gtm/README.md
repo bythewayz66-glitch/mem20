@@ -1,6 +1,6 @@
 # docs/gtm — GTM collateral (v3, current)
 
-**Owner:** mem20 GTM Team Lead · **Captured:** 2026-10-26 · **Repo HEAD:** `7c0b3e8` · **Version:** 3.0.0
+**Owner:** mem20 GTM Team Lead · **Captured:** 2026-10-26 · **Repo HEAD:** `7c0b3e8` · **Version at capture:** 3.0.0 (**current `VERSION` = 3.1.0** at `27c1e5fb`; this directory is dated to `7c0b3e8` and its 3.0.0 readings are not restated as current)
 **Canonical repo:** https://github.com/bythewayz66-glitch/mem20
 **Canonical public URL:** https://bythewayz66-glitch.github.io/mem20/
 
@@ -34,9 +34,9 @@ This directory is the **git-side source of truth** for mem20 go-to-market collat
 | Where | Problem | Owner |
 |---|---|---|
 | GitHub repo `homepage` field | Points at a `/sites/` URL that returns **403**. Most-clicked link on the repo is a dead end. | Repo admin (one field) |
-| `docs/index.html` (the live public page) | Still says **268 / 26 domains** (4× `268`, 4× `26 domains`, 0× `270`). The public page contradicts the live server. | Webpage Developer (P1) |
+| `docs/index.html` (the live public page) | **Resolved.** Re-measured at `27c1e5fb`: **0** occurrences of `268`, **10** of `270`. The public page now agrees with the live server. | Closed |
 | `docs/02-tools-reference.md` | Says **268 / 26**. | Webpage Developer (P1) |
-| `toolchest/inventory.json` | `counts.mcp: 258`, `generated_at: 2026-10-07` — stale. | Webpage Developer (P1) |
+| `toolchest/inventory.json` | Regenerated `2026-10-29`; `counts.mcp` now reads `0`, so it no longer contradicts the surface — it simply no longer counts it. | Webpage Developer (P1) |
 | `docs/CNAME` | **Resolved.** Names `mem20.com`, which resolves and returns 200. The old legacy-zone hostname is retired — do not cite it. | Closed (2026-10-31) |
 
-Until the `docs/index.html` fix lands, **campaign copy says 270/27 and the public page says 268/26.** That contradiction is one click from any HN commenter. It is a P1, not a documentation nit.
+The `docs/index.html` contradiction is closed as of this sweep: the public page and the campaign copy both say 270/27. The row is recorded rather than deleted, because this table is the reason the number stopped drifting. The one live P1 that remains is `docs/02-tools-reference.md`, which still prints 268/26 in its header.

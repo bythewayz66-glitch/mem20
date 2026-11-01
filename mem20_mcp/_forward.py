@@ -18,6 +18,10 @@ import sys
 
 DEFAULT_CANONICAL_ROOT = "/opt/mem20/mcp"
 
+#: Set to "0" to skip the preflight. Only for a caller that has already run it
+#: and wants to avoid paying for it twice; the default is to check.
+PREFLIGHT_ENV = "MEM20_MCP_PREFLIGHT"
+
 
 def canonical_root() -> str:
     """Resolve and validate the canonical MCP root, keeping it at sys.path[0].
@@ -25,6 +29,12 @@ def canonical_root() -> str:
     Raises ImportError if the canonical tree is missing its server/tools
     layout, so a broken MEM20_CANONICAL_MCP_ROOT fails loudly instead of
     silently importing stale local copies.
+
+    Then runs :func:`preflight.preflight` over the tree. The layout check alone
+    only proves the directory *looks* right; it cannot tell a stubbed tool from
+    a real one, and a stubbed tool returns a well-formed result that means
+    nothing. That is the quiet failure this package exists to avoid, so the
+    tree is linted before it is loaded.
     """
     root = os.path.abspath(os.environ.get("MEM20_CANONICAL_MCP_ROOT", DEFAULT_CANONICAL_ROOT))
     if not os.path.isfile(os.path.join(root, "server.py")) or not os.path.isdir(os.path.join(root, "tools")):
@@ -33,6 +43,17 @@ def canonical_root() -> str:
             f"(override with MEM20_CANONICAL_MCP_ROOT), but that path has no "
             f"server.py/tools layout. Refusing to load stale local copies."
         )
+
+    if os.environ.get(PREFLIGHT_ENV, "1") != "0":
+        from mem20_mcp import preflight as _preflight
+
+        try:
+            _preflight.preflight(root)
+        except _preflight.PreflightRefused as exc:
+            raise ImportError(
+                f"mem20_mcp refused the canonical tree at {root}: {exc}"
+            ) from exc
+
     if root not in sys.path:
         sys.path.insert(0, root)
     return root

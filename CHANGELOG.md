@@ -3,6 +3,35 @@
 All notable changes to mem20 are documented here. The format is based on
 [Keep a Changelog](https://keepachangelog.com/).
 
+## [3.1.2] — 2026-11-01
+
+Releases the 63 commits `main` gained after `v3.1.1`, and turns `Tests` green.
+`v3.1.1` and `v3.1.0` are left in place and are **not** moved; `v3.1.2` is a new
+tag on a release commit whose parent is `main` at `2ea44922`.
+
+### Fixed
+- **`Tests` was red on every push to `main`.** The `Run the green package set`
+  step named `mem20adaptiveinterfacecomposerz/tests`, but that package was
+  removed in `e9a15295` (*"feat: mem20adaptz self-contained gold runtime; remove
+  original adaptive mods"*) and absorbed into `mem20adaptz` — see
+  `mem20adaptz/ABSORBED.md`, which lists `mem20adaptiveinterfacecomposerz` as an
+  absorbed root. pytest therefore aborted the whole run with **exit code 4**
+  (`ERROR: file or directory not found`) instead of reporting a test failure, so
+  no test ever ran. The green set now names `mem20adaptz` in both pytest steps.
+- **A dangling green-set path now names the offender instead of exiting 4.** The
+  step asserts every listed package still has a `tests/` directory and fails with
+  `::error::Green-set package(s) have no tests/ directory: <pkg>`, so the next
+  package rename produces an actionable message. Verified both ways: 244 passed /
+  1 skipped (exit 0) on the corrected list, and the named error on the old one.
+
+### Added
+- **`docs/ops/owner-directive-2026-11-01.md`** — the owner's verified gap register
+  and 22-agent assignment roster, landed from
+  `docs/ws1-owner-directive-2026-11-01` so the register is reachable from `main`.
+
+### Changed
+- **`VERSION` 3.1.0 → 3.1.2** so the tree agrees with the tag being cut.
+
 ## [3.1.0] — 2026-10-31
 
 First release cut since `v3.0.0`, which pointed at `a366ff74` and had drifted 93

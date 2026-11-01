@@ -6,6 +6,7 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { Pill } from './components/ui';
 import { getDoorBase, door } from './lib/api';
+import { CATALOG, MEM20_VERSION } from './data/catalog';
 import Kanban from './views/Kanban';
 import Dreams from './views/Dreams';
 import AgentBuilder from './views/AgentBuilder';
@@ -131,6 +132,9 @@ export default function App() {
           </div>
           <div style={{ marginTop: 8, color: 'var(--ink-3)', fontSize: 10.5, fontFamily: 'var(--mono)' }}>
             {doorLabel}
+          </div>
+          <div style={{ marginTop: 4, color: 'var(--ink-3)', fontSize: 10.5, fontFamily: 'var(--mono)' }}>
+            mem20 v{MEM20_VERSION} · {CATALOG.count} tools / {CATALOG.domain_count} domains
           </div>
         </div>
       </aside>

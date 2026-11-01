@@ -91,7 +91,7 @@ export const CATALOG: {
 };
 
 /* The repository release version, mirroring `VERSION` at the repo root
- * (3.1.0 as of 2026-11-01; tag `v3.1.1` exists on top of it).
+ * (3.1.2 as of 2026-11-01).
  *
  * A constant rather than a runtime read: the shell ships as a static bundle and
  * cannot open a file. `web/package.json` is deliberately NOT the source — it
@@ -99,6 +99,6 @@ export const CATALOG: {
  * release moves, this is the single line to change, and any surface that wants
  * to print a version imports this instead of typing the string again.
  */
-export const MEM20_VERSION = '3.1.0';
+export const MEM20_VERSION = '3.1.2';
 
 export default CATALOG;

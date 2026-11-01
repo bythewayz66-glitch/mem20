@@ -44,6 +44,7 @@ _FLAT = ("memory_engine", "gateway")
 _SRC = (
     ("toolchest", "toolchest"),
     ("mem20ops", "mem20ops"),
+    ("mem20secretz", "mem20secretz"),
 )
 
 

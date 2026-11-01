@@ -45,6 +45,6 @@ jobs:
           #       + graph_execute_reversible_plan (RM-052, PR #158).
           # 281 = 277 on main (3f04605) + 4 tools from this branch's 4.0 subsystem.
           # Bump this whenever a merged subsystem registers a new MCP tool.
-          MEM20_EXPECTED_TOOLS: "281"
+          MEM20_EXPECTED_TOOLS: "294"
           PYTHONUNBUFFERED: "1"
         run: python ./verify_mcp.py

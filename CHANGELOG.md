@@ -3,35 +3,6 @@
 All notable changes to mem20 are documented here. The format is based on
 [Keep a Changelog](https://keepachangelog.com/).
 
-## [3.1.2] — 2026-11-01
-
-Releases the 63 commits `main` gained after `v3.1.1`, and turns `Tests` green.
-`v3.1.1` and `v3.1.0` are left in place and are **not** moved; `v3.1.2` is a new
-tag on a release commit whose parent is `main` at `2ea44922`.
-
-### Fixed
-- **`Tests` was red on every push to `main`.** The `Run the green package set`
-  step named `mem20adaptiveinterfacecomposerz/tests`, but that package was
-  removed in `e9a15295` (*"feat: mem20adaptz self-contained gold runtime; remove
-  original adaptive mods"*) and absorbed into `mem20adaptz` — see
-  `mem20adaptz/ABSORBED.md`, which lists `mem20adaptiveinterfacecomposerz` as an
-  absorbed root. pytest therefore aborted the whole run with **exit code 4**
-  (`ERROR: file or directory not found`) instead of reporting a test failure, so
-  no test ever ran. The green set now names `mem20adaptz` in both pytest steps.
-- **A dangling green-set path now names the offender instead of exiting 4.** The
-  step asserts every listed package still has a `tests/` directory and fails with
-  `::error::Green-set package(s) have no tests/ directory: <pkg>`, so the next
-  package rename produces an actionable message. Verified both ways: 244 passed /
-  1 skipped (exit 0) on the corrected list, and the named error on the old one.
-
-### Added
-- **`docs/ops/owner-directive-2026-11-01.md`** — the owner's verified gap register
-  and 22-agent assignment roster, landed from
-  `docs/ws1-owner-directive-2026-11-01` so the register is reachable from `main`.
-
-### Changed
-- **`VERSION` 3.1.0 → 3.1.2** so the tree agrees with the tag being cut.
-
 ## [3.1.0] — 2026-10-31
 
 First release cut since `v3.0.0`, which pointed at `a366ff74` and had drifted 93
@@ -40,8 +11,8 @@ a new tag on a release commit whose parent is `main` at `6b3bdca2`.
 
 ### Changed
 - **Retired infrastructure purged from the repository.** `jaysonai.online`
-  (including `mem20.`, `shop.` and `control.`), the Sidney host `216.198.115.91`,
-  and the `gabe` publish gate are all **retired**. Live references in `README.md`,
+  (including `mem20.`, `shop.` and `control.`), the retired publish host, and its
+  publish gate are all **retired**. Live references in `README.md`,
   `CANONICAL.md`, `docs/ops/`, `published/`, `roadmaps/`, `tools/` and `web/` now
   say so instead of pointing at them. Historical records keep their dated findings
   and carry a retirement note rather than being rewritten.
@@ -50,8 +21,8 @@ a new tag on a release commit whose parent is `main` at `6b3bdca2`.
 
 ### Added
 - **Daily-report record closed for 2026-10-27 → 2026-10-31** (#143). The three
-  dates 2026-10-28, 2026-10-29 and 2026-10-30 are filed as **`Status: NOT FILED`
-  gap records** — no daily ops sweep was filed on those dates. They are not
+  dates 2026-10-28, 2026-10-29 and 2026-10-30 are filed as **`Status: NOT FILED`**
+  gap records — no daily ops sweep was filed on those dates. They are not
   backfilled, reconstructed or retroactively filed reports.
 
 ## [Unreleased]

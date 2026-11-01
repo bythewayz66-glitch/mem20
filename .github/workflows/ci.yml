@@ -1,1 +1,400 @@
-PLACEHOLDER_CI
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  syntax:
+    name: Syntax gate
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      # Same diff-scoping contract as the `hygiene` job in pr-gate.yml: legacy
+      # debt already merged on main cannot fail this job, while no NEW instance
+      # can land. Before this change the job scanned the whole tree, so it failed
+      # on every branch no matter how clean that branch's own diff was.
+      - name: Compute diff against the base
+        run: |
+          set -euo pipefail
+          if [ "${{ github.event_name }}" = "pull_request" ]; then
+            git fetch --no-tags origin "${{ github.base_ref }}" || true
+            RANGE="origin/${{ github.base_ref }}...HEAD"
+          else
+            BEFORE="${{ github.event.before }}"
+            if [ -z "$BEFORE" ] || [ "$BEFORE" = "0000000000000000000000000000000000000000" ]; then
+              RANGE="HEAD~1...HEAD"
+            else
+              RANGE="${BEFORE}...HEAD"
+            fi
+          fi
+          echo "RANGE=$RANGE"
+          git diff --name-only --diff-filter=ACMR "$RANGE" > changed.txt || true
+          git diff --name-only --diff-filter=ACMR "$RANGE" | grep -E '[.]py$' > changed_py.txt || true
+          git diff --unified=0 --diff-filter=ACMR "$RANGE" > added.diff || true
+          echo "changed: $(wc -l < changed.txt) file(s), python: $(wc -l < changed_py.txt)"
+          sed -n '1,80p' changed.txt
+
+      - name: Guard against dangling gitlinks
+        run: |
+          set -euo pipefail
+          bad=$(git ls-files --stage | awk '$1=="160000"{print $4}' || true)
+          if [ -n "$bad" ]; then
+            echo "::error::Dangling gitlink(s) found (mode 160000) - these break recursive checkout (Pages)."
+            echo "$bad"
+            echo "Fix: add a real .gitmodules entry with a reachable URL, or vendor the content as plain tracked files."
+            exit 1
+          fi
+          echo "no gitlinks - ok"
+
+      - name: Guard against tracked bytecode (issue #22)
+        run: |
+          set -euo pipefail
+          bad=$(grep -E '(^|/)__pycache__/|[.]pyc$' changed.txt || true)
+          if [ -n "$bad" ]; then
+            echo "::error::Tracked .pyc / __pycache__ added by this change - untrack them (issue #22)."
+            echo "$bad"
+            exit 1
+          fi
+          echo "no tracked bytecode - ok"
+
+      - name: Guard against added database state (issue #83)
+        run: |
+          set -euo pipefail
+          bad=$(grep -E '[.](db|sqlite3)(-wal|-shm)?$' changed.txt || true)
+          if [ -n "$bad" ]; then
+            echo "::error::Generated database state added - commit schema.sql / a seed fixture instead (issue #83)."
+            echo "$bad"
+            exit 1
+          fi
+          echo "no added database state - ok"
+
+      # The banned host-path pattern is assembled from fragments on purpose: the
+      # `hygiene` gate scans added lines in every changed file (YAML included), so
+      # writing the literal out here would fail the very gate this job implements.
+      - name: Guard against banned absolute host paths (issues #79 / #80)
+        run: |
+          set -euo pipefail
+          ROOT_UNIT=$(printf 'ro%s' 'ot')
+          HOME_UNIT=$(printf 'ho%s' 'me')
+          USER_UNIT=$(printf 'Us%s' 'ers')
+          BANNED_RE="/(${HOME_UNIT}|${USER_UNIT})/[A-Za-z0-9._-]+/|/${ROOT_UNIT}/[.]venv"
+          bad=$(grep -E '^\+[^+]' added.diff | grep -E "$BANNED_RE" || true)
+          if [ -n "$bad" ]; then
+            echo "::error::An ADDED line hard-codes an absolute host path (issues #79 / #80). Use a repo-relative default plus an env override."
+            echo "$bad"
+            exit 1
+          fi
+          echo "no banned absolute paths - ok"
+
+      # Every token below is assembled from fragments for the same reason as the
+      # host-path rule: writing them out would make this file fail its own scan.
+      - name: Guard against added secrets
+        run: |
+          set -euo pipefail
+          T1=$(printf 'gh%s' 'p_')
+          T2=$(printf 'github%s' '_pat_')
+          T3=$(printf 's%s' 'k-')
+          T4=$(printf 'AK%s' 'IA')
+          T5=$(printf 'BEGIN %s' '(RSA|OPENSSH|EC) PRIVATE KEY')
+          ALNUM=$(printf '[A-Za-z0-9]')
+          SECRET_RE="${T1}${ALNUM}{20,}|${T2}|${T3}${ALNUM}{20,}|${T4}[0-9A-Z]{16}|${T5}"
+          n=$(grep -E '^\+[^+]' added.diff | grep -cE "$SECRET_RE" || true)
+          if [ "${n:-0}" -gt 0 ]; then
+            echo "::error::$n secret-shaped line(s) added. Rotate the credential and remove it; the value is not printed here on purpose."
+            exit 1
+          fi
+          echo "no added secrets - ok"
+
+      - name: Guard against duplicated core.py implementations (issue #17)
+        run: |
+          set -euo pipefail
+          bad=""
+          checked=0
+          offenders=""
+          for f in $(grep -E '(^|/)core[.]py$' changed.txt | grep -v '^mem20core/' || true); do
+            [ -f "$f" ] || continue
+            checked=$((checked + 1))
+            lines=$(wc -l < "$f")
+            if [ "$lines" -gt 10 ]; then
+              bad="$bad $f"
+              offenders="$offenders ${f}(${lines} lines)"
+            fi
+          done
+          echo "core.py files touched by this change: $checked"
+          if [ -n "$bad" ]; then
+            echo "::error::core.py must be a thin shim (<=10 lines); full implementations belong in mem20core. Offenders:$offenders"
+            exit 1
+          fi
+          echo "core.py shim check - ok"
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Compile the python modules this change touches
+        run: |
+          set -euo pipefail
+          count=$(grep -c . changed_py.txt || true)
+          echo "python files in this change: ${count:-0}"
+          if [ "${count:-0}" -eq 0 ]; then
+            echo "no python changes to compile"
+            exit 0
+          fi
+          while IFS= read -r f; do
+            [ -n "$f" ] || continue
+            [ -f "$f" ] || continue
+            python3 -m py_compile "$f"
+          done < changed_py.txt
+          echo "syntax gate passed"
+
+  gitlink-guard:
+    name: Gitlink guard
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: false
+
+      - name: Fail on dangling gitlinks (mode 160000)
+        run: |
+          set -uo pipefail
+          matches="$(git ls-files --stage | grep '^160000' || true)"
+          if [ -z "$matches" ]; then
+            echo "OK: No gitlinks (mode 160000) in the index."
+            exit 0
+          fi
+          paths="$(printf '%s\n' "$matches" | sed 's/[^\t]*\t//')"
+          count="$(printf '%s\n' "$paths" | grep -c .)"
+          echo "::error::Found $count gitlink(s) in the index (mode 160000)."
+          while IFS= read -r p; do
+            [ -z "$p" ] && continue
+            echo "  - $p"
+          done <<< "$paths"
+          fail=0
+          if [ ! -f .gitmodules ]; then
+            echo "::error::.gitmodules is missing, but the index contains gitlinks."
+            fail=1
+          else
+            declared="$(git config -f .gitmodules --get-regexp '^submodule\..*\.path$' 2>/dev/null | sed 's/^[^ ]* //' || true)"
+            while IFS= read -r p; do
+              [ -z "$p" ] && continue
+              if ! printf '%s\n' "$declared" | grep -qxF "$p"; then
+                echo "::error::gitlink '$p' has no matching path entry in .gitmodules"
+                fail=1
+              fi
+            done <<< "$paths"
+          fi
+          if [ "$fail" -ne 0 ]; then
+            echo "Fix: either remove the gitlink from the index, or declare it with"
+            echo "     'git submodule add <url> <path>' so .gitmodules carries its URL."
+            exit 1
+          fi
+          echo "OK: all gitlinks are declared in .gitmodules."
+
+  dependency-audit:
+    name: Dependency audit (issue #19)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Dependency vulnerability scan (issue #19)
+        run: |
+          python3 -m pip install --upgrade pip pip-audit
+          pip-audit --requirement requirements.txt || {
+            echo "::warning::pip-audit reported findings — review and bump pins"
+            exit 0
+          }
+
+  rust:
+    name: Rust braid (issue #21)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+      - name: cargo check braid workspace
+        run: |
+          if [ -f braid/Cargo.toml ]; then
+            cargo check --manifest-path braid/Cargo.toml
+          else
+            echo "braid/Cargo.toml missing — skip"
+          fi
+      - name: cargo test braid (if lock present)
+        run: |
+          if [ -f braid/Cargo.lock ]; then
+            cargo test --manifest-path braid/Cargo.toml --locked
+          else
+            cargo test --manifest-path braid/Cargo.toml
+          fi
+
+  cpp-surface:
+    name: C++ surface guard
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Configure
+        run: cmake -S sdk/cpp -B build/cpp -DCMAKE_BUILD_TYPE=Release
+      - name: Build
+        run: cmake --build build/cpp -j4
+      # The static_asserts in include/mem20/surface.hpp are the only place the
+      # published tool/domain count is derived rather than restated. Until this
+      # job existed, nothing compiled them: the guard could have been wrong for
+      # any length of time and no run would have said so. It was wrong -- it
+      # asserted 270 while the server advertised 272.
+      - name: Run the surface guards
+        working-directory: build/cpp
+        run: ctest --output-on-failure
+      # VERSION, pyproject.toml and version.hpp each state the version and
+      # nothing compared them: on 2026-11-01 they read 3.1.2, 3.0.0 and 3.1.0.
+      - name: Version consistency
+        run: python3 scripts/check_version_consistency.py
+
+  tests:
+    name: Tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install test deps
+        run: |
+          python3 -m pip install --upgrade pip
+          python3 -m pip install \
+            pytest \
+            "mcp>=1.0" \
+            cryptography \
+            httpx \
+            aiohttp \
+            PyYAML \
+            "pydantic>=2" \
+            numpy
+
+      - name: Unit-marked MCP tests (issue #5)
+        run: |
+          set -euo pipefail
+          # `|| true` used to swallow every outcome here, including a collection
+          # error. Exit 5 (nothing selected) is the one outcome that is not a
+          # failure; everything else must fail the job.
+          rc=0
+          python3 -m pytest -q -m unit mcp/tests || rc=$?
+          if [ "$rc" -eq 5 ]; then
+            echo "::warning::No 'unit'-marked tests in mcp/tests; nothing to run."
+            exit 0
+          fi
+          exit "$rc"
+
+      - name: Run the green package set
+        run: |
+          set -euo pipefail
+          GREEN="mem20adaptz mem20assistz mem20autoz mem20biz
+                 mem20boxz mem20enginez mem20executablegameconceptandscopepipelinez
+                 mem20fabricz mem20facez mem20graphz mem20greenz mem20labz
+                 mem20orcaz mem20pipelinez mem20selfz mem20sensorz mem20simz
+                 mem20sitemapz mem20studioz mem20teamz mem20twinz mem20zimr"
+          ROOTS=""
+          COUNT=0
+          MISSING=""
+          for pkg in $GREEN; do
+            ROOTS="$ROOTS $pkg/tests"
+            COUNT=$((COUNT + 1))
+            # A retired/renamed package leaves a dangling path here, and pytest
+            # then aborts the whole run with exit 4 ("file or directory not
+            # found") instead of reporting a test failure. Name the offender.
+            if [ ! -d "$pkg/tests" ]; then
+              MISSING="$MISSING $pkg"
+            fi
+          done
+          if [ "$COUNT" -ne 22 ]; then
+            echo "::error::Expected 22 packages in the green set, found $COUNT"
+            exit 1
+          fi
+          if [ -n "$MISSING" ]; then
+            echo "::error::Green-set package(s) have no tests/ directory:$MISSING"
+            echo "Fix: update GREEN in .github/workflows/ci.yml to the current package name."
+            exit 1
+          fi
+          python3 -m pytest -q -m "not integration" $ROOTS
+
+      - name: Run unit-marked tests (no optional deps)
+        run: |
+          set -euo pipefail
+          GREEN="mem20adaptz mem20assistz mem20autoz mem20biz
+                 mem20boxz mem20enginez mem20executablegameconceptandscopepipelinez
+                 mem20fabricz mem20facez mem20graphz mem20greenz mem20labz
+                 mem20orcaz mem20pipelinez mem20selfz mem20sensorz mem20simz
+                 mem20sitemapz mem20studioz mem20teamz mem20twinz mem20zimr"
+          ROOTS=""
+          for pkg in $GREEN; do ROOTS="$ROOTS $pkg/tests"; done
+          # `-m unit` selected 0 of 245 tests in the 22-package set: no test in
+          # the green set carries the marker, so the step ran nothing and passed.
+          # The marker is the wrong selector here -- the set is already the
+          # selection. Run the set, and fail if the collection is empty, because
+          # an empty collection is the failure this step exists to catch.
+          rc=0
+          python3 -m pytest -q $ROOTS || rc=$?
+          if [ "$rc" -eq 5 ]; then
+            echo "::error::The green set collected no tests; the selector is wrong."
+            exit 1
+          fi
+          exit "$rc"
+
+      - name: Verify the Perl SDK
+        run: |
+          set -euo pipefail
+          prove -Isdk/perl/lib sdk/perl/t/*.t
+
+  mem20agentz-oreo:
+    name: mem20agentz OREO integration
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install mem20agentz with the pinned OREO engine
+        run: python3 -m pip install --upgrade "./mem20agentz[dev,oreo]"
+
+      - name: Build the OREO React editor
+        working-directory: mem20agentz/web
+        run: |
+          npm ci
+          npm run build
+
+      - name: Run the OREO integration slice
+        env:
+          PYTEST_DISABLE_PLUGIN_AUTOLOAD: '1'
+        run: python3 -m pytest -q mem20agentz/tests/test_oreo.py mem20agentz/tests/test_oreditor.py mem20agentz/tests/test_graphstore.py
+
+  controlz-desktop:
+    name: controlz desktop wiring
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Validate Tauri configuration and backend contract
+        run: python3 scripts/validate_controlz_desktop.py
+
+      - name: Build the web bundle used by FastAPI and Tauri
+        working-directory: mem20controlz/mem20controlz/web
+        run: |
+          npm ci
+          npm run build

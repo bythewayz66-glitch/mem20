@@ -10,13 +10,13 @@
 //
 // What it checks, in order:
 //   1. surface.hpp still spells the literals (a rename or a typo in the header
-//      cannot slip past: the file must literally say `kToolCount = 270`).
+//      cannot slip past: the file must literally say `kToolCount = 272`).
 //   2. The header's derived constants agree with version.hpp's server baseline.
-//   3. sdk/cpp/README.md states the summary string ("270 tools across 27
+//   3. sdk/cpp/README.md states the summary string ("272 tools across 27
 //      domains") verbatim.
 //   4. docs/sdk/cpp/README.md states it too.
 //   5. Neither document re-publishes a retired figure (257 tools / 26 domains /
-//      268 tools) outside an explicit "retired" note.
+//      268 tools / 270 tools) outside an explicit "retired" note.
 //
 // Exit contract:
 //   0  -> documented surface matches the header
@@ -116,7 +116,7 @@ bool contains_number(const std::string& line, const std::string& number) {
 // A retired tool count or domain count must not appear on a line that does not
 // also say it is retired. The check is deliberately narrow -- a retired *tool*
 // number only counts when the line also talks about tools, and likewise for
-// domains -- so ordinary prose ("270 tools across 27 domains") is never caught
+// domains -- so ordinary prose ("272 tools across 27 domains") is never caught
 // by a bare number.
 void check_retired_figures(const std::string& label, const std::string& text) {
   const std::vector<std::string> lines = lines_of(text);
@@ -129,7 +129,7 @@ void check_retired_figures(const std::string& label, const std::string& text) {
     if (mentions_retirement(context)) continue;
 
     if (contains(line, "tools")) {
-      for (const char* retired : {"257", "268", "270 / 26"}) {
+      for (const char* retired : {"257", "268", "270"}) {
         if (contains_number(line, retired)) {
           violation(label + ": states the retired tool count " + retired +
                     " without marking it retired -> " + line);

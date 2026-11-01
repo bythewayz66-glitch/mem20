@@ -1,7 +1,7 @@
 """Tests for the canonical MCP server's self-contained pieces.
 
-`/opt/mem20/mcp` is the real, running tool server, and it is the one component of
-the estate that had no tests at all. The 13.5k lines cannot be covered by one file,
+`mcp/` is the real, running tool server, and it is the one component of the
+estate that had no tests at all. The 13.5k lines cannot be covered by one file,
 so this covers the two parts that are genuinely self-contained and high-risk:
 
 * `health.py` - the liveness/readiness/metrics HTTP surface. If this lies about
@@ -27,7 +27,7 @@ from pathlib import Path
 
 import pytest
 
-MCP_ROOT = Path("/opt/mem20/mcp")
+MCP_ROOT = Path(__file__).resolve().parents[1]
 
 
 def _load(name: str):

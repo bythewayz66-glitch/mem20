@@ -70,14 +70,27 @@ module SurfaceCheck
     File.read(path).scan(REGISTRATION).flatten.uniq
   end
 
+  # Files that actually contribute to the live surface: every domain glob,
+  # minus the mixins the server never registers.
+  def domain_files
+    DOMAIN_GLOBS.flat_map { |glob| Dir[glob] }.sort.uniq
+                .reject { |path| UNREGISTERED_MODULES.include?(File.basename(path)) }
+  end
+
+  # path => tool names, dropping files that register nothing.
+  def domain_map
+    domain_files.to_h { |path| [path, names_in(path)] }
+                .reject { |_path, names| names.empty? }
+  end
+
   def measure
-    domain_files = DOMAIN_GLOBS.flat_map { |glob| Dir[glob] }.sort.uniq
-    domain_files = domain_files.reject { |path| UNREGISTERED_MODULES.include?(File.basename(path)) }
-    domain = domain_files.to_h { |path| [path, names_in(path)] }.reject { |_p, names| names.empty? }
-    domain_tools = domain.values.flatten.uniq
-    infra = names_in(INFRA_FILE)
+    domain = domain_map
     modules = domain.keys.reject { |path| INSTALLER_MODULES.include?(File.basename(path)) }
-    { modules: modules.size, domain: domain_tools.sort, infra: infra.sort }
+    {
+      modules: modules.size,
+      domain: domain.values.flatten.uniq.sort,
+      infra: names_in(INFRA_FILE).sort
+    }
   end
 
   def actual

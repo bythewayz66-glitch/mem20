@@ -118,6 +118,21 @@ class EventStreamToolsMixin:
 
     # ------------------------------------------------------------- handlers
     def _eventstream(self):
+        """Import the subsystem, putting its project dir on sys.path first.
+
+        The subsystem is a sibling project at ``<repo>/mem20eventstreamsuperhighwayz/``
+        with the package one level down, so the project dir — not the repo root —
+        is what makes ``import mem20eventstreamsuperhighwayz`` resolve.
+        """
+        import os
+        import sys
+
+        project = os.path.join(
+            os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))),
+            "mem20eventstreamsuperhighwayz",
+        )
+        if project not in sys.path:
+            sys.path.insert(0, project)
         from mem20eventstreamsuperhighwayz import domain, integration
 
         return domain, integration

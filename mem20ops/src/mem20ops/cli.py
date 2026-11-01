@@ -16,6 +16,7 @@ import sys
 from typing import Any
 
 from . import audit, clicheck, memchecks, runtime
+from . import integrations
 from .cloudflare import CredentialError
 
 EXIT_OK = 0
@@ -286,7 +287,32 @@ def build_parser() -> argparse.ArgumentParser:
     p_cov.add_argument("--timeout", type=int, default=clicheck.HELP_TIMEOUT)
     p_cov.set_defaults(func=_cli_coverage)
 
+    p_wiring = sub.add_parser(
+        "wiring", help="prove the cross-subsystem edges (toolchest, memory, kanban, corez, cliz, verify)"
+    )
+    p_wiring.add_argument("--root", default=None,
+                          help="estate root (default: the checkout containing mem20ops)")
+    p_wiring.set_defaults(func=_wiring)
+
     return parser
+
+
+def _wiring(args, as_json: bool) -> int:
+    """Exercise every cross-subsystem edge and report the real result."""
+    from pathlib import Path
+
+    report = integrations.wiring_report(Path(args.root) if args.root else None)
+    if as_json:
+        print(json.dumps(report, indent=2, default=str))
+    else:
+        print(f"estate root: {report['estate_root']}")
+        for name, edge in report["edges"].items():
+            if edge["ok"]:
+                print(f"  OK    {name:34s} -> {edge['result']}")
+            else:
+                print(f"  FAIL  {name:34s} -> {edge['error']}")
+        print(f"\n{report['edges_ok']}/{report['edges_total']} edges live")
+    return EXIT_OK if report["ok"] else EXIT_FAIL
 
 
 def main(argv: list[str] | None = None) -> int:

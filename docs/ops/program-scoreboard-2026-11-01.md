@@ -66,6 +66,22 @@ base* step (`.github/workflows/ci.yml` line 22); the annotation confirms exit co
 `.github` line 32 but does not itself name the step, so the step attribution is the directive's,
 not this scoreboard's.
 
+**The failure is inherited, not introduced by this branch.** The same `Tests` job also fails on
+this scoreboard's own head `20410a62` (check-run `124922684010`) with the identical annotation —
+`.github` line 32, `Process completed with exit code 4.` — while the other 8 completed checks pass
+(`Syntax gate`, `Gitlink guard`, `hygiene`, `suite`, `Rust braid`, `Dependency audit`,
+`controlz desktop wiring`, `mem20agentz OREO integration`; `CodeRabbit` skipped). This branch's
+diff is 2 files, +316/−0, touching neither `.github/` nor any test:
+
+```
+git diff --stat 2ea44922..20410a62
+ docs/ops/program-scoreboard-2026-11-01.md | 191 +++++
+ scripts/ops/scoreboard_signals.sh         | 125 +++++
+ 2 files changed, 316 insertions(+)
+```
+
+So the red check is G1 itself, owned by GitHub Repo Assistant — not a regression from this work.
+
 ---
 
 ## 3. S2 — Branch count and merge status

@@ -10,7 +10,7 @@ import sys
 import tempfile
 from typing import Any
 
-REPO = "/opt/mem20"
+REPO = os.environ.get("MEM20_ROOT", "/opt/mem20")
 PINNED_BLOCKS_FILE = "pinned_blocks.json"
 
 
@@ -188,6 +188,15 @@ def lint_delta(
             text=True,
             check=False,
         )
+        # ruff exits 0 (clean), 1 (findings) or 2 (error). Anything else — most
+        # commonly "No module named ruff" — means we did not measure anything.
+        # Returning an empty dict here would report a clean delta for a file that
+        # was never linted, which is the worst possible failure for a gate.
+        if out.returncode not in (0, 1):
+            raise RuntimeError(
+                f"ruff did not run (exit {out.returncode}): "
+                f"{(out.stderr or out.stdout).strip()[:300]}"
+            )
         counts: dict[str, int] = {}
         for line in out.stdout.splitlines():
             match = re.search(r"\b([A-Z]+[0-9]+)\b", line)
@@ -196,9 +205,17 @@ def lint_delta(
                 counts[code] = counts.get(code, 0) + 1
         return counts
 
-    before = _counts(baseline.stdout)
-    with open(os.path.join(repo, path), encoding="utf-8") as handle:
-        after = _counts(handle.read())
+    try:
+        before = _counts(baseline.stdout)
+        with open(os.path.join(repo, path), encoding="utf-8") as handle:
+            after = _counts(handle.read())
+    except RuntimeError as exc:
+        return {
+            "path": path,
+            "revision": revision,
+            "error": str(exc),
+            "hint": "Install ruff (`pip install ruff`) — a missing linter must not read as a clean delta.",
+        }
 
     delta = {}
     for code in sorted(set(before) | set(after)):

@@ -48,6 +48,25 @@ STUB_PATTERN = re.compile(
 # Modules that count as "other mem20 modules" for the dependency criterion.
 CORE_MODULES = {"memory_engine", "gateway", "toolchest", "mcp", "braid", "corez"}
 
+# Subsystems that are real subsystems but do not meet the generic discovery
+# floor. `discover()` used to require >= 5 .py files, which silently dropped
+# two rows that the assignments CSV lists as subsystems:
+#
+#   braid   -- Rust only, 0 .py files (8 crates under braid/)
+#   gateway -- 3 .py files, all real (846 src LOC)
+#
+# Neither was ever scored by `--all`, so their rows in the report were blank
+# rather than FAIL. Listing them here makes them gateable; it does not relax
+# any criterion for them.
+DISCOVER_ALWAYS = {"braid", "gateway"}
+
+# Rust stub markers. `todo!()` / `unimplemented!()` are the Rust equivalents of
+# NotImplementedError and must fail criterion 2 exactly the same way.
+RUST_STUB_PATTERN = re.compile(
+    r"\btodo!\s*\(|\bunimplemented!\s*\(|\bunreachable!\s*\(\s*\"TODO",
+    re.MULTILINE,
+)
+
 
 @dataclass
 class Result:
@@ -91,9 +110,89 @@ def python_files(path: Path) -> list[Path]:
     return out
 
 
+def rust_files(path: Path) -> list[Path]:
+    """Rust sources under `path`, excluding build output and vendored deps."""
+    out = []
+    for dirpath, dirnames, filenames in os.walk(path):
+        dirnames[:] = [d for d in dirnames if d not in {"target", ".git", "node_modules"}]
+        for f in filenames:
+            if f.endswith(".rs"):
+                out.append(Path(dirpath) / f)
+    return out
+
+
 def is_test_file(p: Path) -> bool:
     name = p.name.lower()
     return name.startswith("test_") or name.endswith("_test.py") or "tests" in p.parts
+
+
+def rust_cross_modules(name: str, path: Path) -> set[str]:
+    """Sibling crates this subsystem actually calls into.
+
+    Criterion 6 is an architecture rule: a subsystem must be wired into >= 5
+    other mem20 modules with the imported function actually called on a tested
+    path. For a Rust subsystem the unit of "module" is the workspace crate.
+
+    A crate counts only when BOTH hold:
+
+      * it is declared as a path dependency in a Cargo.toml under this
+        subsystem, so the import resolves to real code in this repo rather than
+        to a crates.io package that happens to share the prefix; and
+      * a non-test source file imports a SYMBOL from it (`use braid_core::engine::BraidEngine`)
+        and that symbol is then used in the body (`BraidEngine::new(...)`).
+
+    The symbol test is what separates wiring from a decorative import. Rust
+    code overwhelmingly calls through the imported name, not through a
+    `crate::path` expression, so checking for `crate::` in the body would
+    under-count real wiring -- which is exactly what the first version of this
+    function did (it scored braid 3/7 when 6 crates are genuinely wired).
+    """
+    rs = [p for p in rust_files(path) if not is_test_file(p)]
+    if not rs:
+        return set()
+
+    # Crates declared as path deps anywhere under this subsystem.
+    declared: set[str] = set()
+    for cargo in path.rglob("Cargo.toml"):
+        try:
+            text = cargo.read_text(encoding="utf-8", errors="ignore")
+        except OSError:
+            continue
+        for m in re.finditer(
+            r"^\s*([A-Za-z0-9_-]+)\s*=\s*\{[^}]*path\s*=", text, re.MULTILINE
+        ):
+            declared.add(m.group(1).replace("-", "_"))
+
+    used: set[str] = set()
+    for p in rs:
+        try:
+            text = p.read_text(encoding="utf-8", errors="ignore")
+        except OSError:
+            continue
+        # Strip `use` statements so a symbol only counts when it is used again.
+        body = re.sub(r"^\s*(?:pub\s+)?use\s+[^;]+;", "", text, flags=re.MULTILINE)
+        for m in re.finditer(
+            r"^\s*(?:pub\s+)?use\s+([A-Za-z0-9_]+)::([^;]+);", text, re.MULTILINE
+        ):
+            crate, tail = m.group(1), m.group(2)
+            if crate == name or crate in used or crate not in declared:
+                continue
+            # Symbols named in the import: the last path segment, plus every
+            # name inside a `{...}` group.
+            symbols: set[str] = set()
+            for grp in re.findall(r"\{([^}]*)\}", tail):
+                for part in grp.split(","):
+                    part = part.strip()
+                    if not part:
+                        continue
+                    symbols.add(part.split("::")[-1].split(" as ")[0].strip())
+            last = tail.split("::")[-1].split(" as ")[0].strip()
+            if last and not last.startswith("{"):
+                symbols.add(last)
+            symbols = {s for s in symbols if s and s != "self" and s.isidentifier()}
+            if any(re.search(rf"\b{re.escape(s)}\b", body) for s in symbols):
+                used.add(crate)
+    return used
 
 
 def check_subsystem(name: str, root: Path = REPO_ROOT) -> Result:
@@ -104,29 +203,38 @@ def check_subsystem(name: str, root: Path = REPO_ROOT) -> Result:
         return res
 
     pys = python_files(path)
+    rss = rust_files(path)
     res.py_files = len(pys)
     src = [p for p in pys if not is_test_file(p)]
+    rust_src = [p for p in rss if not is_test_file(p)]
+    # A subsystem is Rust-primary when it has Rust sources and no Python ones.
+    # braid is the only such row today (8 crates, 0 .py). Criteria 1-6 are then
+    # evaluated against the Rust sources with the same thresholds; nothing is
+    # lowered, only the language the evidence is read from changes.
+    rust_primary = bool(rust_src) and not src
 
     # 1. domain logic
     total_loc = 0
-    for p in src:
+    for p in (rust_src if rust_primary else src):
         try:
             total_loc += len(p.read_text(encoding="utf-8", errors="ignore").splitlines())
         except OSError:
             pass
     res.loc = total_loc
-    res.domain_logic = len(src) >= 1 and total_loc >= 50
+    n_src = len(rust_src if rust_primary else src)
+    res.domain_logic = n_src >= 1 and total_loc >= 50
     if not res.domain_logic:
-        res.failures.append(f"domain logic too thin ({len(src)} src files, {total_loc} LOC)")
+        res.failures.append(f"domain logic too thin ({n_src} src files, {total_loc} LOC)")
 
     # 2. no stubs
     hits = []
-    for p in src:
+    pattern = RUST_STUB_PATTERN if rust_primary else STUB_PATTERN
+    for p in (rust_src if rust_primary else src):
         try:
             text = p.read_text(encoding="utf-8", errors="ignore")
         except OSError:
             continue
-        for m in STUB_PATTERN.finditer(text):
+        for m in pattern.finditer(text):
             line = text[: m.start()].count("\n") + 1
             hits.append(f"{p.relative_to(root)}:{line}:{m.group(0).strip()}")
     res.stub_hits = hits[:20]
@@ -135,14 +243,20 @@ def check_subsystem(name: str, root: Path = REPO_ROOT) -> Result:
         res.failures.append(f"{len(hits)} stub marker(s)")
 
     # 3. tests
-    test_files = [p for p in pys if is_test_file(p)]
+    if rust_primary:
+        test_files = [p for p in rss if is_test_file(p)]
+    else:
+        test_files = [p for p in pys if is_test_file(p)]
     res.tests = len(test_files) >= 1
     if not res.tests:
         res.failures.append("no test files")
 
     # 4. CLI
     cli_names = {"cli.py", "__main__.py", "main.py"}
-    res.cli = any(p.name in cli_names for p in pys) or (path / "cli").is_dir()
+    if rust_primary:
+        res.cli = any(p.name == "main.rs" for p in rss) or (path / "src" / "main.rs").is_file()
+    else:
+        res.cli = any(p.name in cli_names for p in pys) or (path / "cli").is_dir()
     if not res.cli:
         res.failures.append("no CLI surface")
 
@@ -150,29 +264,32 @@ def check_subsystem(name: str, root: Path = REPO_ROOT) -> Result:
     readme = path / "README.md"
     if readme.is_file():
         text = readme.read_text(encoding="utf-8", errors="ignore")
-        res.readme_examples = bool(re.search(r"```(?:bash|sh|shell|console|python)?\n.+?```", text, re.S))
+        res.readme_examples = bool(re.search(r"```(?:bash|sh|shell|console|python|rust)?\n.+?```", text, re.S))
     if not res.readme_examples:
         res.failures.append("README missing or has no fenced example")
 
     # 6. cross-module imports (>= 5 distinct other mem20 modules)
-    imported: set[str] = set()
-    for p in src:
-        try:
-            tree = ast.parse(p.read_text(encoding="utf-8", errors="ignore"))
-        except (SyntaxError, OSError):
-            continue
-        for node in ast.walk(tree):
-            mods = []
-            if isinstance(node, ast.Import):
-                mods = [a.name for a in node.names]
-            elif isinstance(node, ast.ImportFrom) and node.module and node.level == 0:
-                mods = [node.module]
-            for m in mods:
-                top = m.split(".")[0]
-                if top == name:
-                    continue
-                if top.startswith("mem20") or top in CORE_MODULES:
-                    imported.add(top)
+    if rust_primary:
+        imported = rust_cross_modules(name, path)
+    else:
+        imported = set()
+        for p in src:
+            try:
+                tree = ast.parse(p.read_text(encoding="utf-8", errors="ignore"))
+            except (SyntaxError, OSError):
+                continue
+            for node in ast.walk(tree):
+                mods = []
+                if isinstance(node, ast.Import):
+                    mods = [a.name for a in node.names]
+                elif isinstance(node, ast.ImportFrom) and node.module and node.level == 0:
+                    mods = [node.module]
+                for m in mods:
+                    top = m.split(".")[0]
+                    if top == name:
+                        continue
+                    if top.startswith("mem20") or top in CORE_MODULES:
+                        imported.add(top)
     res.cross_list = sorted(imported)
     res.cross_modules = len(imported)
     res.cross_ok = res.cross_modules >= 5
@@ -219,6 +336,9 @@ def discover(root: Path = REPO_ROOT) -> list[str]:
     out = []
     for d in sorted(root.iterdir()):
         if not d.is_dir() or d.name.startswith(".") or d.name in NON_SUBSYSTEM:
+            continue
+        if d.name in DISCOVER_ALWAYS:
+            out.append(d.name)
             continue
         if len(python_files(d)) >= 5:
             out.append(d.name)

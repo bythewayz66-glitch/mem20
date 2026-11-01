@@ -1,17 +1,39 @@
 [build-system]
-requires=["setuptools>=68"]
-build-backend="setuptools.build_meta"
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
 
 [project]
-name="mem20selfhealingruntimecivilizationz"
-version="1.0.0"
-description="mem20selfhealingruntimecivilizationz first-class module"
-requires-python=">=3.11"
+name = "mem20selfhealingruntimecivilizationz"
+version = "1.1.0"
+description = "RM-217 self-healing runtime civilization: bounded detect/quarantine/cascade/repair over the mem20 estate"
+readme = "README.md"
+requires-python = ">=3.11"
+license = { text = "Apache-2.0" }
+keywords = ["mem20", "self-healing", "resilience", "fleet", "rm-217"]
+classifiers = [
+    "Programming Language :: Python :: 3.11",
+    "Operating System :: OS Independent",
+    "Topic :: System :: Systems Administration",
+]
+# The subsystem itself is standard-library only. Its substrate (memory_engine,
+# gateway, mcp, toolchest, ...) ships inside the mem20 repository, not on PyPI,
+# so it is reached through the checkout rather than a dependency pin.
+dependencies = []
+
+[project.optional-dependencies]
+test = ["pytest>=7", "hypothesis>=6"]
 
 [project.scripts]
-mem20selfhealingruntimecivilizationz="mem20selfhealingruntimecivilizationz.runtime:main"
+mem20selfhealingruntimecivilizationz = "mem20selfhealingruntimecivilizationz.controller:main"
+
+[project.urls]
+Repository = "https://github.com/bythewayz66-glitch/mem20"
 
 [tool.setuptools]
-packages=["mem20selfhealingruntimecivilizationz"]
+packages = ["mem20selfhealingruntimecivilizationz"]
+
 [tool.setuptools.package-data]
-mem20selfhealingruntimecivilizationz=["CAPABILITY.json","roadmap.json"]
+mem20selfhealingruntimecivilizationz = ["CAPABILITY.json"]
+
+[tool.pytest.ini_options]
+testpaths = ["mem20selfhealingruntimecivilizationz/tests"]

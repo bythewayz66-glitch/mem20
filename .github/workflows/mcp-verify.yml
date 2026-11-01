@@ -1,30 +1,11 @@
 name: MCP verify
 
-# Proves the MCP server starts and registers its full tool table from a checkout with
-# NO git history. The checkout below is deliberately shallow (`fetch-depth: 1`): if
-# anything reintroduces a dependency on git history or a vendored artefact, this job
-# fails instead of shipping a server that cannot start from `git clone --depth 1`.
-
 on:
   push:
-    branches: ["main", "copilot/**"]
-    paths:
-      - "mcp/**"
-      - "mem20liez/**"
-      - "launcher.py"
-      - "verify_mcp.py"
-      - ".github/workflows/mcp-verify.yml"
+    branches: [main]
   pull_request:
-    paths:
-      - "mcp/**"
-      - "mem20liez/**"
-      - "launcher.py"
-      - "verify_mcp.py"
-      - ".github/workflows/mcp-verify.yml"
+    branches: [main]
   workflow_dispatch:
-
-permissions:
-  contents: read
 
 concurrency:
   group: mcp-verify-${{ github.ref }}
@@ -56,10 +37,13 @@ jobs:
       - name: Install core dependencies
         run: |
           python -m pip install --upgrade pip
-          python -m pip install "mcp>=2.1.1" "pydantic>=2.13.4" "anyio>=4.14.2"
+          python -m pip install "mcp>=2.1.1" "pydantic>=2.13.4" "anyio>=4.14.2" "aiohttp>=3.9"
 
       - name: Verify the MCP handshake and tool count
         env:
-          MEM20_EXPECTED_TOOLS: "270"
+          # 272 = 270 at v3.1.2 + vcs_asset_release_audit (RM-239, PR #157)
+          #       + graph_execute_reversible_plan (RM-052, PR #158).
+          # Bump this whenever a merged subsystem registers a new MCP tool.
+          MEM20_EXPECTED_TOOLS: "272"
           PYTHONUNBUFFERED: "1"
         run: python ./verify_mcp.py

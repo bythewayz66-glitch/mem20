@@ -1,0 +1,216 @@
+mem20 Ruby SDK — rspec / packaging transcript
+Captured: 2026-11-01 (owner directive docs/ops/owner-directive-2026-11-01.md @ 06fa1220)
+Repository: github.com/bythewayz66-glitch/mem20 @ main 2ea44922 (+ this branch)
+Directory:  mem20-sdk-ruby/
+Host:       Debian Linux x86_64 sandbox, ruby 3.1.2p20 (2022-04-12 revision 4491bb740a)
+NOTE:       Every line below is verbatim stdout/stderr from the command above it.
+            Nothing here is estimated, summarised, or copied from an earlier run.
+
+$ ruby -v
+ruby 3.1.2p20 (2022-04-12 revision 4491bb740a) [x86_64-linux-gnu]
+
+$ for f in $(find lib -name '*.rb' | sort); do ruby -c "$f"; done
+Syntax OK
+Syntax OK
+Syntax OK
+Syntax OK
+Syntax OK
+Syntax OK
+Syntax OK
+Syntax OK
+
+$ bundle install   # Gemfile resolved for this run
+  * rake (13.4.2)
+  * rspec (3.13.2)
+  * rspec-core (3.13.6)
+  * rspec-expectations (3.13.5)
+  * rspec-mocks (3.13.8)
+  * rspec-support (3.13.7)
+  * rubocop (1.92.2)
+  * rubocop-ast (1.50.0)
+
+$ bundle exec rspec
+
+Randomized with seed 63244
+
+Mem20 error hierarchy
+  roots every error at Mem20::Error
+  carries the JSON-RPC code and data on a ToolError
+
+Mem20::Surface
+  states the surface the server actually exposes
+  summarises both halves so a reader cannot mistake 268 for the total
+  reports an internally consistent surface
+  names the two infra tools registered outside any domain
+  accounts for the total as domain tools plus the infra job tools
+  keeps the documented count and the surface constant in agreement
+
+Mem20::Client
+  #tool argument shapes
+    accepts a positional Hash of String keys
+    rejects a non-Hash second argument with a clear message
+    accepts a tool with no arguments at all
+    accepts a positional Hash of Symbol keys and stringifies them
+    accepts an empty positional Hash, as the README and docs show
+    lets explicit keywords win over the positional Hash
+    accepts keyword arguments
+  dynamic bindings
+    includes the infra job tools in the tool list it binds against
+    resolves any registered tool as a method, including non-memory domains
+
+Mem20::Client
+  stringifies symbol argument keys
+  exposes the frozen configuration
+  passes category and limit through memory_recall
+  joins an Array of tags into the comma-separated form the server expects
+  calls a mem20 tool through tools/call
+  extracts the plain-text payload from a result envelope
+  omits tags when none are supplied
+  lists tools through the client
+
+Mem20::Transport::Stdio
+  round-trips a tool call and returns the known value
+  completes the MCP handshake and reports the negotiated protocol
+  raises ToolError carrying the JSON-RPC code for an error reply
+  reports the child process id and reaps it on close
+  skips notifications while awaiting a response
+
+Mem20 version constants
+  declares the MCP protocol revision sent in the handshake
+  declares the mem20 server release this SDK was validated against
+  declares the SDK version
+
+mem20-sdk packaging
+  declares the Ruby floor the code actually needs
+  packages every library file, and nothing outside the declared globs
+  packages the docs, examples and top-level files a reader needs
+  builds a .gem whose payload matches spec.files
+  requires MFA for pushes and pins the push host
+  ships no runtime dependencies
+  takes its version from Mem20::VERSION rather than repeating it
+  points every metadata URI at the canonical repo
+  keeps spec.files sorted so two builds of one tree are byte-identical
+  never packages a built .gem, a lockfile or the specs
+  loads as a valid Gem::Specification
+
+Mem20 background jobs
+  #job_status
+    raises JobError when the poll reports a rejection
+    makes exactly one poll and returns the observation
+  Mem20::JobEnvelope
+    reports a rejected status as rejected and terminal
+    keeps the raw payload for callers that need the full envelope
+  #job_wait
+    uses the server-side wait tool with the requested timeout
+    defaults to the server's own 30s wait window
+  #wait_for_job
+    does not poll a job whose envelope already reached a terminal state
+    returns the plain text payload when the result is not JSON
+    when the tool call itself failed
+      raises JobError carrying the server's message
+    when the snapshot is malformed
+      raises EnvelopeError rather than guessing a status
+    when the server rejected the job
+      raises JobError instead of returning nil
+    when the job is still running on the first poll
+      polls until the terminal state and decodes the value
+      polls job_status once per attempt, always for the same job id
+    when the job never leaves the running state
+      stops on the deadline even with no attempt cap
+      bounds a hang by the wait window and returns rather than raising
+      bounds a hang by the poll count instead of spinning forever
+    when the job id is unknown to the server
+      raises JobError, treating not_found as a terminal rejection
+      fails on the first poll rather than retrying
+  #job_from
+    raises EnvelopeError for JSON that carries no job_id
+    raises EnvelopeError for a result that is not a job envelope
+    falls back to the documented tool names when the envelope omits them
+    raises EnvelopeError for an unknown object type
+    accepts a bare job id, so a known job can be resumed
+    reads the job id, status and follow-up tools out of a tools/call result
+  the error hierarchy
+    roots the job errors at Mem20::Error
+
+Mem20
+  builds a frozen configuration from a block
+  drops the memoised client when reconfigured
+  accepts keyword options
+  resets configuration and client
+
+Mem20::Config
+  prefers the explicit option over the environment
+  applies the documented defaults
+  reads the documented environment variables
+  builds a child environment for the server process
+  rejects an empty server command
+  exposes the health URL
+  builds through the block DSL and freezes the result
+  rejects unknown options
+  re-validates after each writer
+  is mutable while being configured, then frozen
+  rejects an out-of-range health port
+
+Finished in 0.99071 seconds (files took 0.18987 seconds to load)
+84 examples, 0 failures
+
+Randomized with seed 63244
+
+
+$ bundle exec rubocop --format simple
+
+25 files inspected, no offenses detected
+
+$ bundle exec rake surface:check
+source:  27 modules, 268 domain tools, 2 infra tools (job_status, job_wait), 270 total
+surface: 270 tools across 27 domains (268 domain tools + 2 infra tools: job_status, job_wait)
+OK - Mem20::Surface matches mcp/
+
+$ gem build mem20-sdk.gemspec
+  Successfully built RubyGem
+  Name: mem20-sdk
+  Version: 0.2.0
+  File: mem20-sdk-0.2.0.gem
+
+$ sha256sum mem20-sdk-0.2.0.gem
+2867cd37808e0abb437563f8f44d3f00736b816c8144d6549b7108b11ae8aaae  mem20-sdk-0.2.0.gem
+
+$ tar -xOf mem20-sdk-0.2.0.gem data.tar.gz | tar -tzf - | sort   # packaged payload
+CHANGELOG.md
+LICENSE
+README.md
+docs/API.md
+docs/EVIDENCE.md
+docs/INSTALL.md
+docs/USAGE.md
+examples/health_probe.rb
+examples/quickstart.rb
+examples/rails_initializer.rb
+lib/mem20.rb
+lib/mem20/client.rb
+lib/mem20/config.rb
+lib/mem20/errors.rb
+lib/mem20/job.rb
+lib/mem20/surface.rb
+lib/mem20/transport/stdio.rb
+lib/mem20/version.rb
+
+$ gem install --local ./mem20-sdk-0.2.0.gem --no-document
+Successfully installed mem20-sdk-0.2.0
+1 gem installed
+
+$ cd /tmp && ruby -e 'require "mem20"; ...'   # load from the INSTALLED gem, not the source tree
+loaded_from=/var/lib/gems/3.1.0/gems/mem20-sdk-0.2.0/lib/mem20.rb
+VERSION=0.2.0
+SERVER_VERSION=2.1.0rc2
+PROTOCOL_VERSION=2025-06-18
+surface=270 tools across 27 domains (268 domain tools + 2 infra tools: job_status, job_wait)
+surface_consistent=true
+
+=== NOT ATTEMPTED ===
+$ gem push mem20-sdk-0.2.0.gem
+Not run. No RubyGems API key is present in this environment ($GEM_HOST_API_KEY unset,
+~/.gem/credentials absent), so publishing cannot be performed or verified from here.
+RubyGems still serves 404 for mem20-sdk / mem20 / mem20-mcp as of this date; that gap is
+NOT closed by this branch — it is closed only by a credentialed publish (see
+docs/sdk/ruby-release-2026-11-01.md).

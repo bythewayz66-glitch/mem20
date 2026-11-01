@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""mem20_mcp CLI \u2014 inspect and preflight the canonical MCP tree.
+"""mem20_mcp CLI - inspect and preflight the canonical MCP tree.
 
 ``mem20_mcp`` is a forwarder, so the only questions worth asking about it are
 about the tree it forwards to. This CLI answers them without booting a server:

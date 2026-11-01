@@ -6,6 +6,19 @@
 **SDK location:** `mem20-sdk-ruby/**`
 **Raw transcript:** [`docs/rspec-summary-2026-11-01.txt`](../rspec-summary-2026-11-01.txt)
 
+## Commit chain on this branch
+
+| SHA | What it lands |
+|---|---|
+| `a4d85785ae5437a3b51cf41a94831c6b1d21d92b` | `mem20-sdk.gemspec` (hardened) + `spec/mem20/packaging_spec.rb` (new) |
+| `13335ab9c3d937f47ac42035bfeeff610403a476` | `docs/rspec-summary-2026-11-01.txt` (verbatim transcript) |
+| `a89299e80281ce9b3dda2894fcb7fd05bdc91e55` | `docs/sdk/ruby-release-2026-11-01.md` (this file) |
+| `375429f583d878823ac005788abb4fe38d39dc38` | `mem20-sdk-ruby/CHANGELOG.md`, `mem20-sdk-ruby/docs/EVIDENCE.md` |
+| `53d1f1c9d64c72ce37e5fcc340caac70471158a9` | `mem20-sdk-ruby/README.md` verification table |
+
+**Branch head at time of writing:** `53d1f1c9d64c72ce37e5fcc340caac70471158a9`
+(this document's own commit sits on top of it; the head moves by one when it lands).
+
 ---
 
 ## 1. What the gap actually is
@@ -125,6 +138,30 @@ The suite is **hermetic**: the transport specs spawn
 `spec/support/mini_mcp_server.rb`, a real child process speaking JSON-RPC over stdio,
 so CI needs neither Python nor a running mem20 server. That is what makes "84 examples,
 0 failures" meaningful on a machine with no mem20 install.
+
+### Re-verified from the branch itself
+
+A working tree passing is weaker evidence than the committed tree passing, so the branch
+was cloned fresh and the suite re-run from that clone:
+
+```
+$ git clone --branch ruby-sdk-release-2026-11-01 --depth 1 https://github.com/bythewayz66-glitch/mem20.git verify
+$ cd verify/mem20-sdk-ruby && bundle install && bundle exec rspec
+HEAD=53d1f1c9d64c72ce37e5fcc340caac70471158a9
+Finished in 0.87878 seconds (files took 0.15781 seconds to load)
+84 examples, 0 failures
+
+Randomized with seed 24831
+
+$ bundle exec rubocop --format simple
+25 files inspected, no offenses detected
+
+$ gem build mem20-sdk.gemspec
+  Successfully built RubyGem
+  Name: mem20-sdk
+  Version: 0.2.0
+  File: mem20-sdk-0.2.0.gem
+```
 
 ---
 

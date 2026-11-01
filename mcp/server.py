@@ -103,6 +103,7 @@ from tools.webscraping_tools import WebScrapingToolsMixin
 from tools.braid_tools import BraidToolsMixin
 from tools.irc_tools import IRCToolsMixin
 from tools.lie_tools import LieToolsMixin
+from tools.verify_tools import VerifyToolsMixin
 from tools.toolchest_tools import ToolchestToolsMixin
 from tools.corez_tools import CorezToolsMixin
 from health import start_health_server
@@ -118,7 +119,7 @@ class Mem20MCPServer(MemoryToolsMixin, CognitiveToolsMixin, RoadmapToolsMixin,
                      ProductivityToolsMixin, SearchToolsMixin,
                      VersionControlToolsMixin, WebScrapingToolsMixin,
                      BraidToolsMixin, IRCToolsMixin, LieToolsMixin,
-                     ToolchestToolsMixin, CorezToolsMixin):
+                     VerifyToolsMixin, CorezToolsMixin, ToolchestToolsMixin):
     def __init__(self):
         self.tools = {}
         self._start_time = time.time()
@@ -167,6 +168,7 @@ class Mem20MCPServer(MemoryToolsMixin, CognitiveToolsMixin, RoadmapToolsMixin,
         self.register_braid_tools()
         self.register_irc_tools()
         self.register_lie_tools()
+        self.register_verify_tools()
         self.register_toolchest_tools()
         self.register_corez_tools()
         self.register_webhook_tools()
@@ -666,6 +668,15 @@ class Mem20MCPServer(MemoryToolsMixin, CognitiveToolsMixin, RoadmapToolsMixin,
         elif tool_name == "scrape_submit_form":
             return await self._scrape_submit_form(arguments)
         
+        # mem20verify verification tools (registered by VerifyToolsMixin)
+        elif tool_name == "verify_drift":
+            return await self._verify_drift(arguments)
+        elif tool_name == "verify_tests":
+            return await self._verify_tests(arguments)
+        elif tool_name == "verify_lint":
+            return await self._verify_lint(arguments)
+        elif tool_name == "verify_wiring":
+            return await self._verify_wiring(arguments)
         # Toolchest registry tools (registered by ToolchestToolsMixin)
         elif tool_name == "toolchest_inventory":
             return await self._toolchest_inventory(arguments)

@@ -20,8 +20,8 @@ from pathlib import Path
 
 import pytest
 
-MCP_ROOT = Path("/opt/mem20/mcp")
-ENGINE_ROOT = Path("/opt/mem20/memory_engine")
+MCP_ROOT = Path(__file__).resolve().parents[1]
+ENGINE_ROOT = MCP_ROOT.parent / "memory_engine"
 
 # The repo-root conftest pre-binds the installed mcp SDK, because /opt/mem20/mcp
 # shadows the `mcp` name during pytest's collection walk and memory_tools.py

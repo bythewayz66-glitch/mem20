@@ -27,7 +27,7 @@ from pathlib import Path
 
 import pytest
 
-MCP_ROOT = Path("/opt/mem20/mcp")
+MCP_ROOT = Path(__file__).resolve().parents[1]
 
 
 def _load(name: str):

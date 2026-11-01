@@ -18,7 +18,7 @@
 | # | Signal | Value | Status | Command |
 |---|---|---|---|---|
 | S1 | Check-run pass rate on `main` | **13 / 14 = 92.86 %** | 🟡 1 red | `curl -s "$API/commits/$MAIN_SHA/check-runs?per_page=100"` |
-| S2 | Non-`main` branches | **14** at measurement (13 merged, 1 unmerged) — **15** on re-run after this branch lands | 🟡 13 stale refs | `git ls-remote --heads origin` + `git merge-base --is-ancestor` |
+| S2 | Non-`main` branches | **14** at measurement (13 merged, 1 unmerged) — drifts as agents push; see §3 | 🟡 13 stale refs | `git ls-remote --heads origin` + `git merge-base --is-ancestor` |
 | S3 | Tag distance, `v3.1.1` → `main` | **63 commits behind** (0 ahead) | 🔴 stale | `git rev-list --left-right --count v3.1.1...origin/main` |
 | S4 | PyPI publication | **0 / 3 published** (`mem20`, `mem20-mcp`, `mem20-sdk` all 404) | 🔴 absent | `curl -s -o /dev/null -w '%{http_code}' https://pypi.org/pypi/<pkg>/json` |
 | S5 | Open PRs / open issues | **0 / 0** | 🟢 clear | `curl -s "$API/pulls?state=open"` · `curl -s "$API"` |
@@ -93,13 +93,20 @@ merged_non_main     : 13
 unmerged_non_main   : 1
 ```
 
-> **Self-reference note (read this before re-running).** The numbers above were taken at
-> `2ea44922` **before** this scoreboard's own branch was pushed. Re-running the script on a
-> clone that includes `docs/ws1-program-scoreboard-2026-11-01` reports
-> `non_main_heads : 15`, `merged_non_main : 13`, `unmerged_non_main : 2` — the extra unmerged
-> head is this branch. That is the correct behaviour, not drift: the scoreboard counts itself.
-> The stable, branch-independent figures are **13 merged stale refs** and **1 pre-existing
-> unmerged branch** (the directive branch).
+> **Live-drift note (read this before re-running).** The numbers above were taken at
+> `2ea44922` **before** this scoreboard's own branch was pushed. Branch count is the one signal
+> that moves while the program is running: 22 agents are pushing branches concurrently, so a
+> re-run minutes later legitimately reports a different total. Observed during this run:
+> `14` at measurement → `15` once this branch landed → `24` (14 merged / 10 unmerged) a few
+> minutes later as other agents pushed. **The branch total is therefore a point-in-time reading,
+> not a stable metric.** The stable, branch-independent figures are:
+>
+> - **13 merged stale refs** at baseline `2ea44922` — the deletion target, unchanged
+> - **1 pre-existing unmerged branch** at baseline (the directive branch)
+> - **0 unmerged commits on any of those 13** (`ahead=0` for every one)
+>
+> Re-run the script for the current total; do not quote the total from this page as if it were
+> still current. The other signals (S1, S3, S4, S6–S9) are pinned to `2ea44922` and do not drift.
 
 | State | Ahead | Branch | Head SHA |
 |---|---|---|---|

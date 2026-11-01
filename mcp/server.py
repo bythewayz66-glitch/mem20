@@ -166,11 +166,8 @@ class Mem20MCPServer(MemoryToolsMixin, CognitiveToolsMixin, RoadmapToolsMixin,
         self.register_braid_tools()
         self.register_irc_tools()
         self.register_lie_tools()
-<<<<<<< HEAD
         self.register_webhook_tools()
-=======
         self.register_crewz_tools()
->>>>>>> refs/remotes/origin/feat/4.0-ai-engineer-mem20crewz
         self.register_job_tools()
     async def _handle_list_tools(self, context: ServerRequestContext, params: Optional[mt.PaginatedRequestParams]) -> mt.ListToolsResult:
         """Handle tools/list request."""

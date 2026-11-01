@@ -40,39 +40,80 @@ class RM239ToolsMixin:
     """Large-asset versioning + recovery pipeline (RM-239)."""
 
     def register_rm239_tools(self):
-        self.tools["vcs_asset_release_audit"] = mt.Tool(
-            name="vcs_asset_release_audit",
-            title="Large-Asset Release Audit",
-            description=(
-                "Version a large asset (scene/model/media) and audit the release: "
-                "credential screening, asset budget, grounded ledger write + "
-                "read-back, store integrity, and estate registration. "
-                "Backed by mem20versioncontrollargeassetandrecoverypipelinez (RM-239)."
-            ),
-            inputSchema={
-                "type": "object",
-                "properties": {
-                    "asset_id": {"type": "string"},
-                    "content": {"type": "string", "default": ""},
-                    "family": {"type": "string", "default": "prop"},
-                    "triangles": {"type": "integer", "default": 0},
-                    "metadata": {"type": "object", "default": {}},
-                },
-                "required": ["asset_id"],
-            },
-        )
+        self.tools["vcs_asset_release_audit"] = _tool_spec()
 
     async def _vcs_asset_release_audit(self, args: Dict) -> str:
-        if not RM239_AVAILABLE:
-            return "Error: mem20versioncontrollargeassetandrecoverypipelinez is not importable"
-        try:
-            result = rm239_audit_asset_release(
-                asset_id=args.get("asset_id", ""),
-                content=args.get("content", ""),
-                family=args.get("family", "prop"),
-                triangles=int(args.get("triangles", 0) or 0),
-                metadata=args.get("metadata") or {},
-            )
-            return json.dumps(result, indent=2, sort_keys=True)
-        except Exception as e:
-            return f"Error: {type(e).__name__}: {e}"
+        return await _handle(args)
+
+
+def _tool_spec():
+    return mt.Tool(
+        name="vcs_asset_release_audit",
+        title="Large-Asset Release Audit",
+        description=(
+            "Version a large asset (scene/model/media) and audit the release: "
+            "credential screening, asset budget, grounded ledger write + "
+            "read-back, store integrity, and estate registration. "
+            "Backed by mem20versioncontrollargeassetandrecoverypipelinez (RM-239)."
+        ),
+        inputSchema={
+            "type": "object",
+            "properties": {
+                "asset_id": {"type": "string"},
+                "content": {"type": "string", "default": ""},
+                "family": {"type": "string", "default": "prop"},
+                "triangles": {"type": "integer", "default": 0},
+                "metadata": {"type": "object", "default": {}},
+            },
+            "required": ["asset_id"],
+        },
+    )
+
+
+async def _handle(args: Dict) -> str:
+    if not RM239_AVAILABLE:
+        return "Error: mem20versioncontrollargeassetandrecoverypipelinez is not importable"
+    try:
+        result = rm239_audit_asset_release(
+            asset_id=args.get("asset_id", ""),
+            content=args.get("content", ""),
+            family=args.get("family", "prop"),
+            triangles=int(args.get("triangles", 0) or 0),
+            metadata=args.get("metadata") or {},
+        )
+        return json.dumps(result, indent=2, sort_keys=True)
+    except Exception as e:
+        return f"Error: {type(e).__name__}: {e}"
+
+
+def install() -> bool:
+    """Attach the RM-239 tool to the version-control mixin.
+
+    ``mcp/server.py`` is a 47 KB module that is expensive and risky to transmit
+    through the contents API, so the registration is attached here instead of
+    editing the server. ``Mem20MCPServer._setup_tools`` already calls
+    ``register_versioncontrol_tools()``, so wrapping that one method is enough
+    for the tool to appear in ``self.tools`` and to be dispatched by the
+    ``_<tool_name>`` convention in ``_execute_tool``.
+
+    Idempotent: a second call is a no-op.
+    """
+    try:
+        from tools.versioncontrol_tools import VersionControlToolsMixin
+    except Exception:
+        return False
+
+    original = VersionControlToolsMixin.register_versioncontrol_tools
+    if getattr(original, "_rm239_installed", False):
+        return True
+
+    def register_versioncontrol_tools(self):
+        original(self)
+        self.tools["vcs_asset_release_audit"] = _tool_spec()
+        # Bound as an instance attribute: _execute_tool does
+        # getattr(self, "_vcs_asset_release_audit") and awaits it with (args).
+        self._vcs_asset_release_audit = _handle
+
+    register_versioncontrol_tools._rm239_installed = True
+    VersionControlToolsMixin.register_versioncontrol_tools = register_versioncontrol_tools
+    return True

@@ -319,16 +319,62 @@ def derive_surface(root: pathlib.Path) -> tuple[int | None, int | None, list[str
     pkg = root / "mcp"
     if not pkg.is_dir():
         return None, None, ["mcp/ not found - surface not derivable"]
-    sites, names, groups = [], set(), set()
+
+    # The surface is what the SERVER WIRES, not what exists on disk. A module
+    # that defines register_*_tools but is never called from _setup_tools()
+    # contributes zero tools to tools/list, so counting every file over-states
+    # the surface. Anchor on the call sites in mcp/server.py, then read the
+    # registrations out of exactly those modules.
+    server = pkg / "server.py"
+    if not server.is_file():
+        return None, None, ["mcp/server.py not found - surface not derivable"]
+    wired = re.findall(r"self\.(register_[a-z0-9_]*_tools)\(\)",
+                       server.read_text(encoding="utf-8", errors="replace"))
+    if not wired:
+        return None, None, ["no register_*_tools() calls in mcp/server.py"]
+
+    # group name -> the module that defines it
+    owner: dict[str, pathlib.Path] = {}
     for p in pkg.rglob("*.py"):
         if "__pycache__" in p.parts:
             continue
         text = p.read_text(encoding="utf-8", errors="replace")
+        for m in re.finditer(r"def\s+(register_[a-z0-9_]*_tools)\s*\(", text):
+            owner.setdefault(m.group(1), p)
+
+    sites, names, groups = [], set(), set()
+    for g in wired:
+        groups.add(g)
+        p = owner.get(g)
+        if p is None:
+            return None, None, [f"{g}() is wired in server.py but defined nowhere"]
+        text = p.read_text(encoding="utf-8", errors="replace")
         for m in re.finditer(r'self\.tools\[\s*"([^"]+)"\s*\]', text):
             sites.append(m.group(1))
             names.add(m.group(1))
-        for m in re.finditer(r"def\s+(register_[a-z0-9_]*_tools)\s*\(", text):
-            groups.add(m.group(1))
+
+    # Wave-1 subsystems attach their tools by WRAPPING an already-wired
+    # register_*_tools method from mcp/tools/__init__.py, so they never appear
+    # as a call site in server.py. They are still on the live surface, so read
+    # the installers the package actually imports and count what they add.
+    init = pkg / "tools" / "__init__.py"
+    injected: list[str] = []
+    if init.is_file():
+        itext = init.read_text(encoding="utf-8", errors="replace")
+        for m in re.finditer(r"from\s+tools\.([a-z0-9_]+)\s+import\s+install", itext):
+            mod = pkg / "tools" / f"{m.group(1)}.py"
+            if not mod.is_file():
+                continue
+            mtext = mod.read_text(encoding="utf-8", errors="replace")
+            for t in re.finditer(r'self\.tools\[\s*"([^"]+)"\s*\]', mtext):
+                injected.append(t.group(1))
+                sites.append(t.group(1))
+                names.add(t.group(1))
+    if injected:
+        emit("surface_injected",
+             f"  installer-injected tools : {len(set(injected))} "
+             f"({', '.join(sorted(set(injected)))})")
+
     domains = len(groups) - 1          # minus register_a2a_tools (transport)
     emit("surface_sites",   f"  registration sites      : {len(sites)}")
     emit("surface_distinct", f"  distinct tool names     : {len(names)}")

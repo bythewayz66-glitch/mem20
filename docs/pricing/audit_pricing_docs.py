@@ -64,9 +64,9 @@ REQUIRED = [
     ("drift_scale",      "0.56 accounts"),
     ("drift_enterprise", "0.23 accounts"),
     ("leverage",         "18×"),
-    ("surface_tools",    "270"),
+    ("surface_tools",    "272"),
     ("surface_domains",  "27"),
-    ("surface_sites",    "271"),
+    ("surface_sites",    "274"),
     ("surface_groups",   "28"),
     ("stale_total",      "258"),
     ("stale_marked",     "82"),
@@ -247,11 +247,11 @@ def main() -> int:
     # ---------------------------------------------------------- C. identity
     print("\n== C. IDENTITY - the docs must not contradict the model's core claim ==")
     for rel, text in texts.items():
-        if "270 tools / 27 domains" not in text and "270/27" not in text:
-            failures.append(f"{rel} does not state the live surface 270/27")
+        if "272 tools / 27 domains" not in text and "272/27" not in text:
+            failures.append(f"{rel} does not state the live surface 272/27")
         if "$14,000" not in text:
             failures.append(f"{rel} does not state the $14,000 house ACV")
-    print("  both docs state 270/27 and $14,000")
+    print("  both docs state 272/27 and $14,000")
 
     if failures:
         print("\nAUDIT FAIL")
@@ -260,7 +260,7 @@ def main() -> int:
         return 1
 
     print("\nAUDIT PASS - every quoted figure is emitted by the model, no doc states a")
-    print("retired surface in the present tense, and both docs carry 270/27 and $14,000.")
+    print("retired surface in the present tense, and both docs carry 272/27 and $14,000.")
     return 0
 
 

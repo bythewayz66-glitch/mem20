@@ -11,7 +11,7 @@
 > blends to $14,000 by printing a weighted-sum table, and it carried the retired
 > **257 / 26** tool surface in §4. A table is a result, not a derivation: it shows four
 > products add up, not that the four shares are the ones the target forces. This version
-> derives the shares, shows every equation, and states the surface as **270 / 27** —
+> derives the shares, shows every equation, and states the surface as **272 / 27** —
 > measured from executable code in this repo, not quoted from another doc.
 
 ---
@@ -26,7 +26,7 @@ The house number **holds**, and it now holds by derivation rather than by assert
 | Ladder blend, percentage space | **$14,000.00** |
 | Delta from the house figure | **$0.00** — exact, not within tolerance |
 | `120 × $14,000` | **$1,680,000** = SOM, exactly |
-| Live tool surface (derived from `mcp/`) | **270 tools / 27 domains** |
+| Live tool surface (derived from `mcp/`) | **272 tools / 27 domains** |
 | Tiers shipped in code or commerce config | **0 of 4** — see `TIER_SHIPPING_AUDIT.md` |
 
 Two findings in this pass are **corrections to the previous note**, not restatements.
@@ -222,23 +222,36 @@ ceiling.
 
 ---
 
-## 7. Tool surface — 270 / 27, derived from code
+## 7. Tool surface — 272 / 27, derived from code
 
 The previous version of this note carried **257 / 26** as "the legacy house surface" and
 listed 86 stale lines as a P1 owner's problem. That framing is retired. The live surface
-is **270 tools / 27 domains**, and it is derived here from the MCP server that actually
+is **272 tools / 27 domains**, and it is derived here from the MCP server that actually
 registers it — not quoted from another document:
 
-| Measurement | Command | Value |
+| Measurement | How it is derived | Value |
 |---|---|---:|
-| Registration sites | `grep -rho 'self\.tools\["[^"]*"\]' mcp --include=*.py \| wc -l` | 271 |
-| Distinct tool names | same, `\| sort -u \| wc -l` | **270** |
-| `register_*_tools` groups | `grep -rn 'def register_.*_tools' mcp --include=*.py \| wc -l` | 28 |
+| `register_*_tools` groups wired | `self.register_*_tools()` call sites in `mcp/server.py` | 28 |
 | Domains | 28 − 1 (A2A transport) | **27** |
+| Registration sites | `self.tools["…"]` in the modules those 28 groups own, plus installer-injected tools | 274 |
+| Distinct tool names | same set, de-duplicated | **272** |
+| Installer-injected tools | `mcp/tools/__init__.py` wraps `register_versioncontrol_tools` | 2 |
 
-The 271 → 270 gap is a real defect, not a rounding: `lie_status` is assigned twice
+Two corrections to the earlier count, both of which move the number **up**:
+
+1. **Count what the server wires, not what exists on disk.** Four modules define a
+   `register_*_tools` method that `_setup_tools()` never calls, so they contribute
+   nothing to `tools/list`. Counting every file on disk over-states the surface.
+2. **Count the installer-injected tools.** RM-239 (`vcs_asset_release_audit`) and
+   RM-052 (`graph_execute_reversible_plan`) attach by wrapping
+   `register_versioncontrol_tools` from `mcp/tools/__init__.py`, so they never appear
+   as a call site in `server.py` but are on the live surface. This is the +2 that
+   reconciles the count to the `MEM20_EXPECTED_TOOLS: "272"` gate in
+   `.github/workflows/mcp-verify.yml`.
+
+The 274 → 272 gap is a real defect, not a rounding: `lie_status` is assigned twice
 (`mcp/tools/lie_tools.py:69` and `:77`), so the second assignment overwrites the first.
-The server exposes 270 tools while the source contains 271 assignments. Recorded in
+The server exposes 272 tools while the source contains 274 assignments. Recorded in
 `docs/ops/tool-count-270-27.md`; not fixed here, because removing a registration changes
 the exposed schema and belongs with the tests.
 
@@ -262,7 +275,7 @@ every retired number in order to explain that it is retired.
 the repo is derived from a tool count. The surface is stated here so that pricing
 collateral stops propagating a retired number, not because it prices anything.
 
-**Rule for any collateral touched from here:** if a tool count is cited, use **270 / 27**.
+**Rule for any collateral touched from here:** if a tool count is cited, use **272 / 27**.
 
 ---
 
@@ -297,4 +310,4 @@ figures are carried verbatim.
 ---
 
 **Carried verbatim:** blended ACV $14,000 · TAM $1.28B / SAM $282M / SOM $1.68M ·
-tool surface **270/27** (257/26 and 268/26 retired) · COGS $4,280/account.
+tool surface **272/27** (257/26 and 268/26 retired) · COGS $4,280/account.

@@ -309,20 +309,27 @@ doc-to-model check.
 
 ---
 
-## 9. Tool surface — 270 / 27, and what the gate catches
+## 9. Tool surface — 272 / 27, and what the gate catches
 
-The live surface is **270 tools / 27 domains**, derived from the MCP server that registers
+The live surface is **272 tools / 27 domains**, derived from the MCP server that registers
 it rather than quoted from a doc:
 
 | Measurement | Value |
 |---|---:|
-| Registration sites (`self.tools["…"]`) | 271 |
-| Distinct tool names | **270** |
-| `register_*_tools` groups | 28 |
+| `register_*_tools` groups wired in `mcp/server.py` | 28 |
 | Domains (28 − 1 A2A transport) | **27** |
+| Registration sites (`self.tools["…"]`, incl. installer-injected) | 274 |
+| Distinct tool names | **272** |
+| Installer-injected tools (RM-239, RM-052) | 2 |
 
-The 271 → 270 gap is the duplicate `lie_status` assignment
+The 274 → 272 gap is the duplicate `lie_status` assignment
 (`mcp/tools/lie_tools.py:69` and `:77`). `257/26` and `268/26` are both retired.
+
+Two counting corrections move the number up from the earlier 270: four modules define a
+`register_*_tools` method that `_setup_tools()` never calls (so they add nothing to
+`tools/list`), and RM-239/RM-052 attach by wrapping `register_versioncontrol_tools` from
+`mcp/tools/__init__.py` rather than appearing as a call site in `server.py`. The result
+agrees with the `MEM20_EXPECTED_TOOLS: "272"` gate in `.github/workflows/mcp-verify.yml`.
 
 `audit_acv_consistency.py` enforces the surface invariant over the canonical `docs/` tree
 only, with a retirement-marker escape hatch, so it fires on drift and not on history. It
@@ -355,4 +362,4 @@ figures are carried verbatim.
 ---
 
 **Carried verbatim:** blended ACV $14,000 · TAM $1.28B / SAM $282M / SOM $1.68M ·
-tool surface **270/27** (257/26 and 268/26 retired) · COGS $4,280/account.
+tool surface **272/27** (257/26 and 268/26 retired) · COGS $4,280/account.

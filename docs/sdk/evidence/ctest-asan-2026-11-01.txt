@@ -1,0 +1,58 @@
+# mem20 C++ SDK -- ctest transcript (ASan + UBSan)
+
+Captured: 2026-11-01T17:27:33Z
+Host: Linux 5.15.0-1075-azure x86_64
+Compiler: g++ (Debian 12.2.0-14+deb12u1) 12.2.0
+CMake: cmake version 3.25.1
+Commit under test: 2ea4492209dfaae6afb22ca884132a0d1849bfcf
+
+ASan needs ASLR disabled in this container kernel (vm.mmap_rnd_bits is not
+writable), so the suite is run under `setarch -R`. That is an environment
+workaround, not a code change.
+
+## Configure
+```
+$ cmake -S sdk/cpp -B build/cpp-asan -G Ninja -DCMAKE_BUILD_TYPE=RelWithDebInfo \
+      -DMEM20_ENABLE_SANITIZERS=ON -DMEM20_WARNINGS_AS_ERRORS=ON
+-- Found Threads: TRUE
+-- Configuring done
+-- Generating done
+-- Build files have been written to: /tmp/asan
+```
+
+## Build
+```
+$ cmake --build build/cpp-asan
+[7/12] Building CXX object CMakeFiles/mem20_store_recall_audit.dir/workspace/mem20/docs/sdk/cpp/examples/store_recall_audit.cpp.o
+[8/12] Linking CXX executable mem20_store_recall_audit
+[9/12] Building CXX object CMakeFiles/mem20_test_surface_docs.dir/tests/test_surface_docs.cpp.o
+[10/12] Linking CXX executable mem20_test_surface_docs
+[11/12] Building CXX object CMakeFiles/mem20_test_live_surface.dir/tests/test_live_surface.cpp.o
+[12/12] Linking CXX executable mem20_test_live_surface
+```
+
+## Test
+```
+$ setarch -R ctest --test-dir build/cpp-asan --output-on-failure
+Internal ctest changing into directory: /tmp/asan
+Test project /tmp/asan
+    Start 1: mem20_sdk_tests
+1/4 Test #1: mem20_sdk_tests ..................   Passed    0.01 sec
+    Start 2: live_surface
+2/4 Test #2: live_surface .....................   Passed    1.79 sec
+    Start 3: surface_docs
+3/4 Test #3: surface_docs .....................   Passed    0.01 sec
+    Start 4: install_export
+4/4 Test #4: install_export ...................   Passed    1.22 sec
+
+100% tests passed, 0 tests failed out of 4
+
+Label Time Summary:
+docs           =   0.01 sec*proc (1 test)
+integration    =   1.79 sec*proc (1 test)
+live           =   1.79 sec*proc (1 test)
+packaging      =   1.22 sec*proc (1 test)
+unit           =   0.01 sec*proc (1 test)
+
+Total Test time (real) =   3.03 sec
+```

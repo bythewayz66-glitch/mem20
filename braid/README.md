@@ -6,6 +6,47 @@ to the crate they are listed under (`braid_core/`, `braid_drive/`, `braid_her/`,
 Toolchain: rustc/cargo 1.98.1 (rustup stable default)
 Test interpreter note: use `/root/.cargo/bin` for PATH inside shell sessions.
 
+## Quick start
+
+Build and test the whole workspace (72 tests, clippy clean):
+
+```bash
+cd braid
+cargo test --workspace
+cargo clippy --workspace --all-targets
+```
+
+Run the m1 acceptance example — three doors, one braid:
+
+```bash
+cargo run -p braid_core --example three_uis
+```
+
+Run the m2 example — three doors over one wire:
+
+```bash
+cargo run -p braid_ui_bridge --example three_doors_over_wire
+```
+
+Re-verify the substrate in three commands after any change:
+
+```bash
+./smoke.sh
+```
+
+Talk to a running shell with the stateless terminal door:
+
+```bash
+cargo run -p braid_cli -- inspect --base http://127.0.0.1:8095
+cargo run -p braid_cli -- tail --base http://127.0.0.1:8095 --limit 10
+cargo run -p braid_cli -- prove <cid> --base http://127.0.0.1:8095
+```
+
+`braid_cli` subcommands are `inspect | tail | query <cap> | policy | prove <cid>`,
+with `--base url`, `--since cid` and `--limit n`. `BRAID_BASE` sets the default
+address. The toolchain is rustc/cargo 1.98.1; if `cargo` is not on PATH, add
+`/root/.cargo/bin`.
+
 ## Members
 - `braid_core` 0.1.0 — the substrate crate
   - `src/crypto.rs` — Ed25519 (ed25519-dalek), BLAKE3-256 hashing, `br`+hex CIDs

@@ -6,7 +6,30 @@ All notable changes to the mem20 Ruby SDK are documented here. The format follow
 
 ## [Unreleased]
 
+### Added
+- `spec/mem20/packaging_spec.rb`: 11 examples pinning the packaging contract, including
+  one that builds the real `.gem` and compares its payload against `spec.files`. The
+  library specs never touched the gemspec, so a `.gem` could ship missing a file.
+- `spec.metadata["allowed_push_host"] = "https://rubygems.org"` and
+  `spec.metadata["bug_tracker_uri"]`; `spec.required_rubygems_version = ">= 3.3.0"`.
+- `docs/rspec-summary-2026-11-01.txt`: verbatim transcript of the 2026-11-01 build
+  (`84 examples, 0 failures`).
+- `Mem20::Surface` (`lib/mem20/surface.rb`): the single source of truth for the surface —
+  `TOOL_COUNT` (270), `DOMAIN_COUNT` (27), `DOMAIN_TOOLS` (268), `INFRA_TOOLS`
+  (`job_status`, `job_wait`), plus `.consistent?` and `.summary`.
+- `rake surface:check`: recounts registrations from `mcp/` and fails on drift from
+  `Mem20::Surface`, so the count can no longer go stale silently.
+- `spec/mem20/surface_spec.rb` and `spec/mem20/surface_binding_spec.rb`: pin the counts,
+  guard the documented files against re-introducing 257/268, and cover both `#tool`
+  argument shapes plus dynamic binding of non-memory tools.
+
 ### Fixed
+- **`spec.files` was built from an unsorted `Dir[]` glob**, so the packaged entry list
+  depended on filesystem order. It is now sorted, and a spec asserts it stays sorted.
+- **`README.md` and `docs/EVIDENCE.md` still quoted the retired-host run** (33 examples,
+  19 files inspected). The README verification table now carries the 2026-11-01 numbers
+  (84 examples, 25 files inspected) and EVIDENCE.md marks its 33-example capture as
+  stale rather than letting it read as current.
 - **`Client#tool` rejected the documented call form.** `def tool(name, **params)` cannot
   accept a positional Hash under Ruby 3.x, so `client.tool("memory_status", {})` — the
   spelling used in `README.md`, `docs/USAGE.md` and `docs/API.md` — raised
@@ -17,15 +40,10 @@ All notable changes to the mem20 Ruby SDK are documented here. The format follow
   `docs/INSTALL.md` predicted **268** from `tool_names.size`. The live surface is **270**.
   `268` was the domain-only subtotal and was being quoted as the total.
 
-### Added
-- `Mem20::Surface` (`lib/mem20/surface.rb`): the single source of truth for the surface —
-  `TOOL_COUNT` (270), `DOMAIN_COUNT` (27), `DOMAIN_TOOLS` (268), `INFRA_TOOLS`
-  (`job_status`, `job_wait`), plus `.consistent?` and `.summary`.
-- `rake surface:check`: recounts registrations from `mcp/` and fails on drift from
-  `Mem20::Surface`, so the count can no longer go stale silently.
-- `spec/mem20/surface_spec.rb` and `spec/mem20/surface_binding_spec.rb`: pin the counts,
-  guard the documented files against re-introducing 257/268, and cover both `#tool`
-  argument shapes plus dynamic binding of non-memory tools.
+### Known limit
+- The gem is **not on RubyGems** — `mem20-sdk` 404s. Packaging is release-ready and
+  `.github/workflows/release.yml` is wired and tag-guarded, but publishing needs a
+  `RUBYGEMS_API_KEY` that does not exist yet. See `docs/sdk/ruby-release-2026-11-01.md`.
 
 ## [0.2.0] - 2026-10-14
 

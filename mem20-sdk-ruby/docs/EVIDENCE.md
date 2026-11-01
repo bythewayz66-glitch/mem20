@@ -26,6 +26,12 @@ Finished in 0.32609 seconds (files took 0.155 seconds to load)
 33 examples, 0 failures
 ```
 
+> **Stale capture.** This suite was 33 examples when it was recorded on Sidney. It is
+> **84 examples** as of the 2026-11-01 packaging run (`gem build` + install +
+> surface binding + packaging specs were added since). The current, verbatim transcript
+> lives at
+> [`docs/rspec-summary-2026-11-01.txt`](https://github.com/bythewayz66-glitch/mem20/blob/main/docs/rspec-summary-2026-11-01.txt).
+
 The suite covers the config object, the module entry points, the error hierarchy, the
 version constants, the client facade (argument stringification, the memory primitives,
 the text extraction), and the stdio transport against a **real child process** (`initialize`

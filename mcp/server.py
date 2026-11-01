@@ -104,6 +104,7 @@ from tools.braid_tools import BraidToolsMixin
 from tools.irc_tools import IRCToolsMixin
 from tools.lie_tools import LieToolsMixin
 from tools.toolchest_tools import ToolchestToolsMixin
+from tools.corez_tools import CorezToolsMixin
 from health import start_health_server
 
 class Mem20MCPServer(MemoryToolsMixin, CognitiveToolsMixin, RoadmapToolsMixin,
@@ -117,7 +118,7 @@ class Mem20MCPServer(MemoryToolsMixin, CognitiveToolsMixin, RoadmapToolsMixin,
                      ProductivityToolsMixin, SearchToolsMixin,
                      VersionControlToolsMixin, WebScrapingToolsMixin,
                      BraidToolsMixin, IRCToolsMixin, LieToolsMixin,
-                     ToolchestToolsMixin):
+                     ToolchestToolsMixin, CorezToolsMixin):
     def __init__(self):
         self.tools = {}
         self._start_time = time.time()
@@ -167,6 +168,7 @@ class Mem20MCPServer(MemoryToolsMixin, CognitiveToolsMixin, RoadmapToolsMixin,
         self.register_irc_tools()
         self.register_lie_tools()
         self.register_toolchest_tools()
+        self.register_corez_tools()
         self.register_webhook_tools()
         self.register_job_tools()
     async def _handle_list_tools(self, context: ServerRequestContext, params: Optional[mt.PaginatedRequestParams]) -> mt.ListToolsResult:
@@ -669,6 +671,15 @@ class Mem20MCPServer(MemoryToolsMixin, CognitiveToolsMixin, RoadmapToolsMixin,
             return await self._toolchest_inventory(arguments)
         elif tool_name == "toolchest_wiring":
             return await self._toolchest_wiring(arguments)
+        # mem20corez native CoreAI tools (registered by CorezToolsMixin)
+        elif tool_name == "corez_infer":
+            return await self._corez_infer(arguments)
+        elif tool_name == "corez_quantize":
+            return await self._corez_quantize(arguments)
+        elif tool_name == "corez_evaluate":
+            return await self._corez_evaluate(arguments)
+        elif tool_name == "corez_wiring":
+            return await self._corez_wiring(arguments)
 
         # Dynamic fallback: any tool registered in self.tools whose handler follows
         # the "_<tool_name>" convention gets dispatched here. This prevents the

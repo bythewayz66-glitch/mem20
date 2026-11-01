@@ -263,19 +263,31 @@ jobs:
       - name: Run the green package set
         run: |
           set -euo pipefail
-          GREEN="mem20adaptiveinterfacecomposerz mem20assistz mem20autoz mem20biz
+          GREEN="mem20adaptz mem20assistz mem20autoz mem20biz
                  mem20boxz mem20enginez mem20executablegameconceptandscopepipelinez
                  mem20fabricz mem20facez mem20graphz mem20greenz mem20labz
                  mem20orcaz mem20pipelinez mem20selfz mem20sensorz mem20simz
                  mem20sitemapz mem20studioz mem20teamz mem20twinz mem20zimr"
           ROOTS=""
           COUNT=0
+          MISSING=""
           for pkg in $GREEN; do
             ROOTS="$ROOTS $pkg/tests"
             COUNT=$((COUNT + 1))
+            # A retired/renamed package leaves a dangling path here, and pytest
+            # then aborts the whole run with exit 4 ("file or directory not
+            # found") instead of reporting a test failure. Name the offender.
+            if [ ! -d "$pkg/tests" ]; then
+              MISSING="$MISSING $pkg"
+            fi
           done
           if [ "$COUNT" -ne 22 ]; then
             echo "::error::Expected 22 packages in the green set, found $COUNT"
+            exit 1
+          fi
+          if [ -n "$MISSING" ]; then
+            echo "::error::Green-set package(s) have no tests/ directory:$MISSING"
+            echo "Fix: update GREEN in .github/workflows/ci.yml to the current package name."
             exit 1
           fi
           python3 -m pytest -q -m "not integration" $ROOTS
@@ -283,7 +295,7 @@ jobs:
       - name: Run unit-marked tests (no optional deps)
         run: |
           set -euo pipefail
-          GREEN="mem20adaptiveinterfacecomposerz mem20assistz mem20autoz mem20biz
+          GREEN="mem20adaptz mem20assistz mem20autoz mem20biz
                  mem20boxz mem20enginez mem20executablegameconceptandscopepipelinez
                  mem20fabricz mem20facez mem20graphz mem20greenz mem20labz
                  mem20orcaz mem20pipelinez mem20selfz mem20sensorz mem20simz

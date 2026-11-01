@@ -1,0 +1,12 @@
+kind,player,tier_or_plan,usd_per_year,share_of_book,multiple_of_blended_acv,gross_margin_pct,cac_payback_years,source_id,verification
+published,Letta,Pro (personal),240,,0.02,,,S2,primary-live-read
+published,Zep,Flex,1500,,0.11,,,S3,primary-live-read
+published,Zep,Flex Plus,4500,,0.32,,,S3,primary-live-read
+published,Mem0,Free,0,,0.00,,,S1,primary-live-read
+published,Mem0,Custom,unpublished,,,,,,S1,primary-live-read
+published,Zep,Enterprise,unpublished,,,,,,S3,primary-live-read
+rung,mem20,Team,6000,0.72,0.43,28.7,9.77,R4,computed-from-model
+rung,mem20,Business,18000,0.12,1.29,76.2,1.22,R4,computed-from-model
+rung,mem20,Scale,36000,0.12,2.57,88.1,0.53,R4,computed-from-model
+rung,mem20,Enterprise,80000,0.04,5.71,94.7,0.22,R4,computed-from-model
+blend,mem20,Blended ACV,14000,1.00,1.00,69.43,1.73,R3,computed-from-model

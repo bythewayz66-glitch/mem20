@@ -7,7 +7,14 @@
 | **Source clause** | `docs/audit/mem20controlz-desktop-overhaul-plan.md` **C7** |
 | **Depends on** | `README.md` §1 (shared status vocabulary) and §1.3 (`starting` / `backend unreachable` / `store missing`); the `deriveLifecycleState` function specified in #39 |
 | **Blocks** | Nothing. This is the last UX gap in the desktop chain. |
-| **Blocked by** | #36 (sidecar) for §7 only, and by release infrastructure that does not exist for all of §4–§6. **Both are marked per-criterion below.** |
+| **Blocked by** | #36 (sidecar) for §7 only — **and #36 has since landed** (see §2). Release infrastructure that did not exist for all of §4–§6 has also partly landed (bundle targets, icons, updater plugin, signing CI). **Both are marked per-criterion below.** |
+
+> **Re-verified 2026-10-31 against `main` @ `f1672473`.** This document was written at an
+> earlier baseline, and §2's "what exists today" table no longer described the tree even
+> before this pass — the shell grew a sidecar, a tray, an updater and a release workflow
+> while the specs were being written. §2 and §11 are corrected below. Everything in
+> §3–§6 that describes **copy, prompts and failure semantics** is still a **proposal**:
+> no update UI ships, so those sections describe behaviour the product does not have.
 
 This is the surface where a product loses a user before that user ever sees it work.
 Every other UX issue in this backlog assumes the app is already running. This one is
@@ -95,24 +102,29 @@ they disagree:
 
 ## 2. What exists today (measured, not assumed)
 
-Everything in this section was read from the tree at the baseline commit. It is here
-so that no reader mistakes the specifications below for a description of current
-behaviour.
+Everything in this section was read from the tree. It is here so that no reader mistakes
+the specifications below for a description of current behaviour.
+
+> **This table was re-measured on 2026-10-31 at `main` @ `f1672473`** and replaces the
+> original baseline reading, which had gone stale in nine of its thirteen rows. The
+> earlier version reported the shell scaffold as a bare builder — #35/#36/#37 have since
+> landed. Do not re-cite the old "not implemented" verdicts.
 
 | Capability | Status today | Evidence |
 |---|---|---|
 | Tauri shell scaffold | **exists** | `mem20controlz/src-tauri/{Cargo.toml,tauri.conf.json,src/main.rs,src/lib.rs}` |
 | Native window | **exists** | `tauri.conf.json` → `app.windows[]`, 1280×800, title `mem20 control plane` |
-| Bundle icon | **not implemented** | `tauri.conf.json` → `bundle.icon` is `[]` |
-| Updater plugin | **not implemented** | `Cargo.toml` has no `tauri-plugin-updater`; `grep -c updater` = `0` |
-| Updater endpoint / pubkey | **not implemented** | `tauri.conf.json` has no `plugins` key at all |
-| Any update UI | **not implemented** | `web/src/` contains `App.jsx api.js auth.js components hooks.js main.jsx status.js styles.css tabs views` — no update surface |
-| macOS `.dmg` + notarization | **not implemented** | `packaging/README.md` lists four channels: pip, docker, npm, apt |
-| Windows `.msi` + Authenticode | **not implemented** | same |
-| Linux `.AppImage` | **not implemented** | same |
-| `.deb` build | **partial** | `packaging/deb/build-deb.sh` builds from package metadata; no signature, no checksum step |
-| Sidecar spawn / port handshake | **not implemented** | `src-tauri/src/lib.rs` is a bare `Builder::default().run(...)`; main.rs comment defers sidecar to #36 and signing to #40 |
-| Rollback / previous-version retention | **not implemented** | nothing staged; `cargo tauri build` output is unsigned and unretained |
+| Bundle icon | **exists** | `tauri.conf.json` → `bundle.icon` lists 32/64/128/128@2x + `icon.icns` + `icon.ico`; `icons/` holds them plus 256/512 |
+| Updater plugin | **exists** | `Cargo.toml` → `tauri-plugin-updater = "2"`; `lib.rs` → `use tauri_plugin_updater::UpdaterExt` |
+| Updater endpoint / pubkey | **exists** | `tauri.conf.json` → `plugins.updater` with `active: true`, a minisign `pubkey`, and `endpoints[]` → GitHub releases `latest.json`; `tauri.updater.conf.json` sets `createUpdaterArtifacts: true` and Windows `installMode: passive` |
+| Any update UI | **not implemented** | `web/src/` has no update surface. The plugin is wired in Rust and `dialog: true` is set, so the *native* prompt exists; the in-window prompt §4 specifies does not |
+| macOS `.app` / `.dmg` bundle targets | **exists** | `tauri.macos.conf.json` → `targets: ["app","dmg"]`, `hardenedRuntime: true`, `minimumSystemVersion 10.15`; window geometry for the dmg layout |
+| macOS notarization | **configured, not verifiable from source** | `.github/workflows/controlz-desktop.yml` imports an Apple signing certificate (`security import certificate.p12`, `codesign` identity lookup). Whether notarization completes needs a real run — treat as **proposed until a release is produced** |
+| Windows `.msi` + Authenticode | **configured, not verifiable from source** | `tauri.windows.conf.json` → `targets: ["msi","nsis"]`; workflow has a `Configure Windows Authenticode signing` step. Same caveat as above |
+| Linux `.AppImage` / `.deb` | **exists** | `tauri.linux.conf.json` → `targets: ["deb","appimage"]`; `packaging/deb/build-deb.sh` also builds a deb from package metadata |
+| Sidecar spawn / port handshake | **exists** | `lib.rs` → `sidecar::reserve_port()`, `LaunchSpec::python_module().with_port(…)`, `spec.spawn()`, `sidecar::wait_until_ready(…, READY_BUDGET)`; `DEFAULT_CONTROL_PORT = 8890` in `mem20desktop/src/lib.rs:47` |
+| Tray / native notifications | **exists** | `src/tray_surface.rs` (`TrayIconBuilder`, `CheckMenuItem` for mute, `NotificationExt`), installed from `lib.rs:236` against a `TrayState` |
+| Rollback / previous-version retention | **not implemented** | nothing stages a previous version; update artifacts are produced but not retained N−1 |
 
 Two of these deserve to be stated as findings rather than gaps, because they are
 already user-visible defects today:
@@ -699,26 +711,34 @@ be read as describing behaviour that exists.
 
 | Behaviour | Status | Blocked on | Can be specified now |
 |---|---|---|---|
-| Single version authority (AC-40-01/03) | **not implemented** — five disagreeing numbers (§1.2) | release infra | yes |
+| Single version authority (AC-40-01/03) | **not implemented** — `VERSION` 3.1.0 vs `src-tauri/Cargo.toml` 0.1.0 vs `web/package.json` 0.1.0 (§1.2) | release infra | yes |
 | Unsigned first-run notice + refusal list (§3) | **not implemented** — no such copy in the tree | nothing | yes |
-| Bundle icon (§2 finding 2) | **not implemented** — `bundle.icon: []` | nothing | yes |
-| Update prompt + Later/Skip/Esc semantics (§4) | **not implemented** — no update UI in `web/src` | updater plugin | yes |
-| Check-failed ≠ up-to-date (§1, AC-40-16) | **not implemented** | updater plugin | yes |
-| Six-stage failure model + three machine states (§5.1–5.2) | **not implemented** | updater plugin | yes — and this is the piece to build first (AC-40-21) |
-| Rollback / N−1 retention (§5.3) | **not implemented** | updater plugin + release infra | rules only, not copy |
-| Refuse update during a dream run (AC-40-22) | **not implemented** | #36 | yes |
-| Interrupted-update marker (AC-40-24) | **not implemented** — no sidecar lifecycle | #36 | yes |
-| Sidecar spawn at all | **not implemented** — `lib.rs` is a bare builder | #36 | no |
-| Signed/notarized macOS, Authenticode Windows, AppImage | **not implemented** — `packaging/` has pip/docker/npm/apt only | certs + CI | no |
+| Bundle icon (§2 finding 2) | **shipped since the baseline** — `bundle.icon` is populated and the files exist | — | yes |
+| Update prompt + Later/Skip/Esc semantics (§4) | **not implemented** — no update UI in `web/src`; only the plugin's native dialog | nothing | yes |
+| Check-failed ≠ up-to-date (§1, AC-40-16) | **not implemented** | — | yes |
+| Six-stage failure model + three machine states (§5.1–5.2) | **not implemented** | — | yes — and this is the piece to build first (AC-40-21) |
+| Rollback / N−1 retention (§5.3) | **not implemented** | release infra | rules only, not copy |
+| Refuse update during a dream run (AC-40-22) | **not implemented** | dream-run lifecycle | yes |
+| Interrupted-update marker (AC-40-24) | **not implemented** | — | yes |
+| Sidecar spawn at all | **shipped since the baseline** — `lib.rs` reserves a port, spawns and waits for readiness | — | no |
+| Tray / native notifications (#37) | **shipped since the baseline** — `src/tray_surface.rs`, installed in `lib.rs` | — | no |
+| macOS/Windows bundle targets + signing CI | **shipped/configured** — `tauri.{macos,windows}.conf.json`, `controlz-desktop.yml`; notarization/Authenticode need a real release run to confirm | a produced release | no |
 | `.deb` signing | **not implemented** — `build-deb.sh` has no signing step | release infra | no |
 
+> **Re-measured 2026-10-31 at `f1672473`.** Four rows above changed verdict since this
+> table was written; every other verdict was re-checked and held. The shape of the table
+> is the message: **the parts that can be built without certificates are the parts that
+> protect the user from being lied to**, and the ones still missing are all in
+> `web/src` — the cheapest place to fix them.
+
 The shape of that table is the message: **the parts that can be built without
-certificates are the parts that protect the user from being lied to**, and they are also
-the parts that are still missing. Signing is a procurement problem; honest copy is not.
+certificates are the parts that protect the user from being lied to**, and they are the
+ones still missing. Signing is a procurement problem; honest copy is not.
 
 ---
 
 **Written:** 2026-10-27 · **Baseline:** `main` @ `1264076698a00878acc3adacf7bf1d51eea315cc`, rebased onto `45445f4850377814cd95b7fa50c0a9153f76c163` (no path in this document's scope changed)
+**Re-verified:** 2026-10-31 · `main` @ `f1672473` — §2 and §11 re-measured; §3–§6 remain proposals
 **Owner:** UX research · **Branch:** `docs/ws1-issue-40-update-ux`
 **Predecessors:** `issue-37-tray-and-notifications.md`, `issue-38-command-palette.md`,
 `issue-39-offline-degraded-ux.md` — this document shares their vocabulary and cites

@@ -64,6 +64,17 @@ try:
 except ImportError:
     VECTOR_AVAILABLE = False
 
+# numpy is used by the BM25 half of recall_hybrid() as well as by the vector
+# half, so it must not be bound only inside the vector try-block above. When
+# sentence_transformers/faiss were absent, `np` was undefined and every
+# recall_hybrid() call raised NameError inside the BM25 block -- which a bare
+# `except: pass` swallowed, so hybrid recall silently returned zero results on
+# any box without the vector backend. Import it on its own.
+try:
+    import numpy as np
+except ImportError:  # pragma: no cover - numpy is a hard dep of the estate
+    np = None
+
 try:
     from rank_bm25 import BM25Okapi
     BM25_AVAILABLE = True
@@ -3712,6 +3723,7 @@ def recall_hybrid(query: str, k: int = 5, topic: str | None = None,
     
     # BM25 search
     bm25_results = []
+    bm25_error = None
     if BM25_AVAILABLE:
         try:
             bm25 = _get_bm25_index()
@@ -3752,8 +3764,11 @@ def recall_hybrid(query: str, k: int = 5, topic: str | None = None,
                             "content": full_rec.get("content", "")[:500],
                             "_bm25_score": float(scores[idx]),
                         })
-        except Exception:
-            pass
+        except Exception as e:
+            # Never swallow this. A silent failure here is what hid the
+            # NameError that made BM25 return nothing for every query.
+            bm25_error = f"{type(e).__name__}: {e}"
+            print(f"Warning: BM25 search failed: {bm25_error}", file=sys.stderr)
     
     # Reciprocal Rank Fusion (RRF)
     # Combine vector and BM25 results
@@ -3761,6 +3776,14 @@ def recall_hybrid(query: str, k: int = 5, topic: str | None = None,
     
     # Add vector results with ranks
     for rank, r in enumerate(vector_results):
+        # recall_semantic() reports an unavailable dependency as a single
+        # {"error": ...} dict rather than raising. Indexing that with ["id"]
+        # raised KeyError, and the bare `except: pass` around the BM25 block
+        # swallowed it -- so a store with BM25 installed but no vector backend
+        # returned ZERO results while both halves looked healthy. Skip
+        # non-result entries explicitly instead of relying on an exception.
+        if "id" not in r:
+            continue
         rid = r["id"]
         if rid not in all_results:
             all_results[rid] = {**r, "_vector_rank": rank, "_bm25_rank": float('inf')}

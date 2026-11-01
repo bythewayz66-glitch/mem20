@@ -1,0 +1,22 @@
+AUDIT.md
+Changes
+cpanfile
+examples/quickstart.pl
+lib/Mem20.pm
+lib/Mem20/Client.pm
+lib/Mem20/Config.pm
+lib/Mem20/Errors.pm
+lib/Mem20/Transport/Stdio.pm
+lib/Mem20/Version.pm
+LICENSE
+Makefile.PL
+MANIFEST			This list of files
+MANIFEST.SKIP
+README.md
+t/00-load.t
+t/05-surface.t
+t/10-config.t
+t/20-client.t
+t/90-live-server.t
+t/95-jobs.t
+t/support/fake_mcp_server.pl

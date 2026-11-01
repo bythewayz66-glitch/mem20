@@ -1,0 +1,19 @@
+# prove -l t/ — mem20 Perl SDK 0.2.0
+# Captured: 2026-11-01
+# Base commit: 06fa1220e964f84aabac78127fc18463dfa6798d
+# Perl: 5.36.0
+# CWD: sdk/perl
+
+Name "Mem20::Version::PROTOCOL_VERSION" used only once: possible typo at t/00-load.t line 29.
+Name "Mem20::Version::SERVER_VERSION" used only once: possible typo at t/00-load.t line 28.
+t/00-load.t ......... ok
+t/05-surface.t ...... ok
+t/10-config.t ....... ok
+t/20-client.t ....... ok
+t/90-live-server.t .. skipped: set MEM20_MCP_DIR and MEM20_PYTHON to run the live-server tests
+t/95-jobs.t ......... ok
+All tests successful.
+Files=6, Tests=103,  6 wallclock secs ( 0.03 usr  0.02 sys + 0.69 cusr  0.31 csys = 1.05 CPU)
+Result: PASS
+
+# exit status: 0

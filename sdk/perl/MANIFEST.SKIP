@@ -1,0 +1,7 @@
+blib/
+pm_to_blib
+Makefile$
+MYMETA\.(yml|json)$
+\.tar\.gz$
+Mem20-[0-9.]+/
+MANIFEST\.bak$

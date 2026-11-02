@@ -1,7 +1,7 @@
 # mem20 4.0 — Subsystem Renovation Plan
 
 **Issued:** 2026-11-01 · **Owner directive:** bythewayz66 · **Prepared by:** Mem20-admin (work-preservation & ops watchdog)
-**Baseline commit:** `48c241a1edff1fdc9f0d0b38f51796c3c8b88b2b` (main, tag `v3.1.2`, 2026-11-01T17:33:30Z)
+**Baseline commit:** `d99ab5d8e9c5c45a1fb3d02d3b65b2f9a96b5110` (main, 2026-11-01T20:13:47Z) — re-measured; the original baseline was `48c241a1edff1fdc9f0d0b38f51796c3c8b88b2b` (tag `v3.1.2`)
 **Repo of record:** `github.com/bythewayz66-glitch/mem20` (public). `JaysonAIOnline/mem20` returns 404 — not the live repo.
 **Target release:** mem20 **4.0**
 
@@ -26,41 +26,44 @@ subsystem. Every number in this document is reproducible with the commands in §
 
 | Metric | Value |
 |---|---|
-| Subsystems discovered (≥5 Python files) | **209** |
-| Plus non-Python subsystems named in the directive (`braid` Rust, `gateway`) | **+2 → 211 total** |
-| Total Python source LOC across subsystems | **205,153** |
+| Subsystems discovered by the gate (language-aware) | **211** |
+| Total Python source LOC across subsystems (gate `loc` sum, non-test) | **182,319** |
 | Rust LOC in `braid/` (63 `.rs` files) | 12,621 |
-| Subsystems fully conformant (7/7) | **0** |
-| Subsystems at 6/7 | 2 |
-| Subsystems at 5/7 | 42 |
-| Subsystems at 4/7 | 148 |
+| Subsystems fully conformant (7/7) | **6** |
+| Subsystems at 6/7 | 3 |
+| Subsystems at 5/7 | 41 |
+| Subsystems at 4/7 | 144 |
 | Subsystems at 3/7 | 17 |
 | Stub markers found (TODO / FIXME / NotImplementedError) | **56 across 9 subsystems** |
+
+> Regenerated 2026-11-01 against `main` @ `d99ab5d8e9c5c45a1fb3d02d3b65b2f9a96b5110` with
+> `python3 scripts/renovation/conformance.py --all --json /tmp/conf.json`. The earlier table was
+> captured before the language-aware discovery change and before the wave-1 merges, and was never
+> regenerated (issue #182).
 
 ### 2.1 Per-criterion pass rate — where the real gap is
 
 | # | Criterion | Passing | Rate |
 |---|---|---|---|
-| 1 | Domain logic present | 209 / 209 | 100% |
-| 2 | No stubs | 200 / 209 | 95.7% |
-| 3 | Tests present | 200 / 209 | 95.7% |
-| 4 | CLI surface | 192 / 209 | 91.9% |
-| 5 | README with runnable example | 59 / 209 | **28.2%** |
-| 6 | **≥5 other mem20 modules imported and used** | **0 / 209** | **0.0%** |
-| 7 | Registered with MCP server / gateway | 5 / 209 | **2.4%** |
+| 1 | Domain logic present | 211 / 211 | 100% |
+| 2 | No stubs | 202 / 211 | 95.7% |
+| 3 | Tests present | 201 / 211 | 95.3% |
+| 4 | CLI surface | 194 / 211 | 91.9% |
+| 5 | README with runnable example | 65 / 211 | **30.8%** |
+| 6 | **≥5 other mem20 modules imported and used** | **7 / 211** | **3.3%** |
+| 7 | Registered with MCP server / gateway | 12 / 211 | **5.7%** |
 
-**Read this plainly.** The repo is not short of code — 205k LOC already exists and domain logic is
-universally present. The renovation is not a rewrite; it is a **wiring and hardening** job. Two
-criteria are effectively at zero across the entire program:
+**Read this plainly.** The repo is not short of code — 182k LOC of non-test source already exists and
+domain logic is universally present. The renovation is not a rewrite; it is a **wiring and
+hardening** job. Two criteria are still near zero across the entire program:
 
-- **Criterion 6 (≥5-module dependency wiring) is 0/209.** No subsystem currently imports five other
-  mem20 modules. The highest observed is `mcp` at 4. This is the single largest piece of work in the
-  program and the one that turns 209 silos into one ecosystem.
-- **Criterion 7 (MCP/gateway registration) is 5/209.** Only `mcp`, `mem20_mcp`, `gateway`,
-  `memory_engine` and `toolchest` are reachable from the server surface. 204 subsystems are
-  unreachable by any client.
+- **Criterion 6 (≥5-module dependency wiring) is 7/211.** Only seven subsystems import and use five
+  other mem20 modules. This is the single largest piece of work in the program and the one that
+  turns 211 silos into one ecosystem.
+- **Criterion 7 (MCP/gateway registration) is 12/211.** 199 subsystems are unreachable by any
+  client.
 
-Criterion 5 (README examples) at 28% is the cheapest win and should be batched with criterion 6,
+Criterion 5 (README examples) at 30.8% is the cheapest win and should be batched with criterion 6,
 since writing the example is how you prove the wiring works.
 
 ### 2.2 Stub debt — 56 markers, 9 subsystems
@@ -69,15 +72,15 @@ These are the only subsystems that fail criterion 2. They are named here so no a
 
 | Subsystem | Stub markers |
 |---|---|
-| `mem20gamez` | 5 |
-| `mem20yetiz` | 4 |
-| `mem20orcaz` | 3 |
-| `mem20unitiz` | 3 |
+| `mem20gamez` | 20 |
+| `mem20yetiz` | 13 |
+| `mem20orcaz` | 7 |
+| `mem20unitiz` | 6 |
+| `mem20langz` | 5 |
 | `mem20rpgz` | 2 |
-| `mem20sitemapz` | 1 |
+| `mem20AIonbordz` | 1 |
 | `mem20factoryz` | 1 |
-| `mem20langz` | 1 |
-| `mcp` | 1 |
+| `mem20sitemapz` | 1 |
 
 ---
 
@@ -226,9 +229,9 @@ These are live facts as of the baseline commit and will bite agents who assume o
 ```bash
 git clone https://github.com/bythewayz66-glitch/mem20.git
 cd mem20
-git checkout 48c241a1edff1fdc9f0d0b38f51796c3c8b88b2b
+git checkout d99ab5d8e9c5c45a1fb3d02d3b65b2f9a96b5110
 
-# full conformance sweep across all 209 subsystems
+# full conformance sweep across all 211 subsystems
 python3 scripts/renovation/conformance.py --all --json /tmp/conf.json
 
 # one subsystem, human-readable
@@ -270,6 +273,6 @@ mem20 4.0 ships when **all** of the following hold, each backed by a check run a
 
 ---
 
-*Prepared by Mem20-admin. Inventory and conformance figures measured at baseline
-`48c241a1edff1fdc9f0d0b38f51796c3c8b88b2b` on 2026-11-01. Nothing in this document is an estimate
-that was not labelled as one.*
+*Prepared by Mem20-admin. Inventory and conformance figures re-measured at
+`d99ab5d8e9c5c45a1fb3d02d3b65b2f9a96b5110` on 2026-11-01 (issue #182). Nothing in this document is
+an estimate that was not labelled as one.*

@@ -1,0 +1,52 @@
+[Unit]
+Description=mem20 HTTP/JSON API (read surface over the memory store)
+Documentation=file://__MEM20_WORKDIR__/docs/ops/mem20-api-service-2026-11-01.md
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=__MEM20_USER__
+Group=__MEM20_USER__
+WorkingDirectory=__MEM20_WORKDIR__
+
+# The token is read from an EnvironmentFile, never from this unit and never
+# from a tracked file. Create it with mode 0600:
+#   install -m 0600 /dev/null /etc/mem20/api.env
+#   printf 'MEM20_API_TOKEN=%s\n' "$(openssl rand -hex 32)" > /etc/mem20/api.env
+EnvironmentFile=-/etc/mem20/api.env
+Environment=MEM20_STORE_PATH=__MEM20_STORE_PATH__
+Environment=MEM20_API_HOST=127.0.0.1
+Environment=MEM20_API_PORT=8099
+Environment=PYTHONPATH=__MEM20_WORKDIR__/mem20api
+Environment=PYTHONUNBUFFERED=1
+
+# Refuse to start if the store is unusable, rather than serving 503s forever.
+ExecStartPre=__MEM20_VENV_PYTHON__ -m mem20api.http_server --check --store __MEM20_STORE_PATH__
+ExecStart=__MEM20_VENV_PYTHON__ -m mem20api.http_server --store __MEM20_STORE_PATH__ --host 127.0.0.1 --port 8099
+
+Restart=on-failure
+RestartSec=5s
+TimeoutStopSec=20s
+
+# The service only reads the store and writes nothing outside its own log, so
+# it needs no write access to the tree.
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=read-only
+ReadWritePaths=__MEM20_STORE_PATH__
+ProtectKernelTunables=true
+ProtectKernelModules=true
+ProtectControlGroups=true
+RestrictAddressFamilies=AF_INET AF_INET6 AF_UNIX
+RestrictNamespaces=true
+LockPersonality=true
+MemoryDenyWriteExecute=true
+
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=mem20-api
+
+[Install]
+WantedBy=multi-user.target

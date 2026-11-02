@@ -47,3 +47,50 @@ That prints `/opt/mem20/mcp`.
   `tools/blender_ops.json`, and no Python. It is an unfinished scaffold, not a
   subsystem, and is deliberately left unpackaged rather than shipped as an empty
   package.
+
+## Loader-integrity audit
+
+The failure mode of a forwarding package is silent: a shim that stops forwarding
+and starts *containing* code still imports, still exposes the right names, and
+still passes a smoke test — while the estate now has two implementations of the
+same tool. `mem20_mcp.loader_audit` checks every shim for exactly that, and asks
+the estate's own modules rather than re-deriving the rules.
+
+```bash
+# audit every forwarding shim in the package
+python3 -m mem20_mcp.cli audit
+
+# machine-readable, for CI
+python3 -m mem20_mcp.cli audit --json
+
+# declare what the audit is for; checked against the prohibited-use list
+python3 -m mem20_mcp.cli audit --intended-use loader_integrity
+```
+
+Exit code 0 only when every shim forwards, is named like an estate module, and
+has a real body. A broken shim is reported per module, never silently skipped:
+
+```text
+mem20_mcp loader audit: CLEAN
+root: /opt/mem20/mem20_mcp
+shims: 8  broken: 0
+
+package naming: mem20-native
+
+module              forwards  via                     stubs  result
+blender_bridge.py   True      _load                       0  ok
+mcp_server.py       True      from server import          0  ok
+server.py           True      _load                       0  ok
+```
+
+Two forwarding routes are accepted: a direct `_load(...)` call, and importing
+from a sibling shim (`mcp_server.py` gets `main` from the `server` shim, which is
+itself a forwarder). A module that reaches neither is reported as drift.
+
+The audit also records its result as a content-addressed provenance node through
+`mem20dreamz.ledger`, and reports honestly when braid is unreachable
+(`committed: false` with the reason) rather than pretending the node was written.
+
+```bash
+python3 -m pytest mem20_mcp/tests -q
+```

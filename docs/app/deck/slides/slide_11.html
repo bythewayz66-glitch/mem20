@@ -1,72 +1,100 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=1920, initial-scale=1.0">
-<title>mem20 - Investor &amp; Board Deck - Slide 11</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<style>
-  *{font-family:'Inter',-apple-system,sans-serif}
-  body{height:1080px;width:1920px;margin:0;padding:0}
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=1920, initial-scale=1.0">
+    <title>mem20 — Investor &amp; Board Deck - Slide 11</title>
+    <!-- Google Fonts - Inter for modern, clean typography -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        * {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+        }
+        body {
+            height: 1080px;
+            width: 1920px;
+            margin: 0;
+            padding: 0;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+        }
+    </style>
 </head>
 <body>
-<style>
+    <style>
 @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&family=Inter:wght@300;400;500;600&display=swap');
 </style>
 <div style="position:relative;width:1920px;height:1080px;background:#04181A;overflow:hidden;box-sizing:border-box;font-family:'Inter',sans-serif;color:#E8EFF7">
   <div style="position:absolute;width:1000px;height:800px;right:-320px;top:-400px;background:radial-gradient(circle,rgba(245,184,65,0.10) 0%,rgba(4,24,26,0) 66%)"></div>
 
-  <div style="position:absolute;left:140px;top:118px;font-family:'JetBrains Mono',monospace;font-size:15px;letter-spacing:0.22em;color:#F5B841">10 / OUR OWN AUDIT</div>
-  <div style="position:absolute;left:140px;top:156px;font-family:'Space Grotesk',sans-serif;font-size:60px;font-weight:600;letter-spacing:-0.02em;color:#F0F6FF">Three things this baseline got wrong</div>
-  <div style="position:absolute;left:140px;top:250px;width:1560px;font-size:21px;line-height:1.6;color:#8296AC;font-weight:300">Found while checking the numbers against the repository rather than against each other. Each is reproducible from the pinned commit in one command.</div>
+  <div style="position:absolute;left:140px;top:104px;font-family:'JetBrains Mono',monospace;font-size:15px;letter-spacing:0.22em;color:#F5B841">10 / OUR OWN AUDIT</div>
+  <div style="position:absolute;left:140px;top:140px;font-family:'Space Grotesk',sans-serif;font-size:58px;font-weight:600;letter-spacing:-0.02em;color:#F0F6FF">Three things still wrong &mdash; and two now fixed</div>
+  <div style="position:absolute;left:140px;top:228px;width:1580px;font-size:21px;line-height:1.6;color:#8296AC;font-weight:300">Rechecked against the repository at <span style="font-family:'JetBrains Mono',monospace;font-size:17px;color:#4FE3D4">2ea4492</span> rather than against the previous deck. Two of the three defects the last cut raised have been closed; three have not.</div>
 
-  <div style="position:absolute;left:140px;top:344px;width:1640px;background:rgba(13,36,41,0.66);border:1px solid rgba(245,184,65,0.26);border-left:3px solid #F5B841;border-radius:5px;box-sizing:border-box;padding:28px 34px">
+  <div style="position:absolute;left:140px;top:310px;width:800px;background:rgba(47,212,196,0.06);border:1px solid rgba(47,212,196,0.28);border-left:3px solid #2FD4C4;border-radius:5px;box-sizing:border-box;padding:22px 28px;height:150px">
+    <div style="display:flex;align-items:baseline;gap:14px">
+      <div style="font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:0.16em;color:#2FD4C4">FIXED 01</div>
+      <div style="font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:0.14em;color:#5E7183">was: clean install could not boot</div>
+    </div>
+    <div style="font-size:20px;line-height:1.5;color:#F0F6FF;margin-top:12px;font-weight:500">aiohttp is now a declared dependency</div>
+    <div style="font-family:'JetBrains Mono',monospace;font-size:14px;line-height:1.6;color:#4FE3D4;margin-top:10px">requirements.txt:13 &rarr; aiohttp&gt;=3.14.5</div>
+  </div>
+
+  <div style="position:absolute;left:980px;top:310px;width:800px;background:rgba(47,212,196,0.06);border:1px solid rgba(47,212,196,0.28);border-left:3px solid #2FD4C4;border-radius:5px;box-sizing:border-box;padding:22px 28px;height:150px">
+    <div style="display:flex;align-items:baseline;gap:14px">
+      <div style="font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:0.16em;color:#2FD4C4">FIXED 02</div>
+      <div style="font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:0.14em;color:#5E7183">was: 0.000 on n=3</div>
+    </div>
+    <div style="font-size:20px;line-height:1.5;color:#F0F6FF;margin-top:12px;font-weight:500">the adversarial class is now properly sized</div>
+    <div style="font-family:'JetBrains Mono',monospace;font-size:14px;line-height:1.6;color:#4FE3D4;margin-top:10px">n=3 &rarr; n=60 on a 2,000-record corpus</div>
+  </div>
+
+  <div style="position:absolute;left:140px;top:492px;width:1640px;background:rgba(13,36,41,0.66);border:1px solid rgba(245,184,65,0.26);border-left:3px solid #F5B841;border-radius:5px;box-sizing:border-box;padding:24px 32px">
     <div style="display:flex;align-items:flex-start">
-      <div style="width:110px;font-family:'Space Grotesk',sans-serif;font-size:44px;font-weight:600;color:#F5B841;line-height:1">01</div>
-      <div style="width:960px">
-        <div style="font-size:26px;font-weight:500;color:#F0F6FF">The finance file's repo snapshot is stale by 1,898 files</div>
-        <div style="font-size:18px;line-height:1.65;color:#8296AC;font-weight:300;margin-top:10px"><span style="font-family:'JetBrains Mono',monospace;font-size:16px;color:#CFE5F2">docs/finance/inputs.json</span> records <span style="font-family:'JetBrains Mono',monospace;font-size:16px;color:#F5B841">tracked_files: 9873</span>. Measured at this commit: <span style="font-family:'JetBrains Mono',monospace;font-size:16px;color:#4FE3D4">7,975</span>. It is not a house number, but it feeds the repo-dependent unit-economics lines.</div>
+      <div style="width:104px;font-family:'Space Grotesk',sans-serif;font-size:40px;font-weight:600;color:#F5B841;line-height:1">01</div>
+      <div style="width:930px">
+        <div style="font-size:24px;font-weight:500;color:#F0F6FF">The finance file's repo snapshot is stale by 1,337 files</div>
+        <div style="font-size:18px;line-height:1.6;color:#8296AC;font-weight:300;margin-top:9px"><span style="font-family:'JetBrains Mono',monospace;font-size:15px;color:#CFE5F2">docs/finance/inputs.json</span> still records <span style="font-family:'JetBrains Mono',monospace;font-size:15px;color:#F5B841">tracked_files: 9873</span>. Measured now: <span style="font-family:'JetBrains Mono',monospace;font-size:15px;color:#4FE3D4">8,536</span>. The gap has <em>shrunk</em> from 1,898 to 1,337 files &mdash; but only because the tree grew by 561, not because the file was corrected. The literal is still stale, and it will be stale by a different amount after the next merge.</div>
       </div>
-      <div style="width:520px;text-align:right">
-        <div style="font-family:'JetBrains Mono',monospace;font-size:13px;color:#7C8FA0">REPRODUCE</div>
-        <div style="font-family:'JetBrains Mono',monospace;font-size:14px;line-height:1.6;color:#4FE3D4;margin-top:8px">git ls-files | wc -l<br><span style="color:#7C8FA0">&rarr; 7975</span></div>
+      <div style="width:540px;text-align:right">
+        <div style="font-family:'JetBrains Mono',monospace;font-size:12px;color:#7C8FA0">REPRODUCE</div>
+        <div style="font-family:'JetBrains Mono',monospace;font-size:14px;line-height:1.6;color:#4FE3D4;margin-top:8px">git ls-files | wc -l<br><span style="color:#7C8FA0">&rarr; 8536</span></div>
       </div>
     </div>
   </div>
 
-  <div style="position:absolute;left:140px;top:530px;width:1640px;background:rgba(13,36,41,0.66);border:1px solid rgba(245,184,65,0.26);border-left:3px solid #F5B841;border-radius:5px;box-sizing:border-box;padding:28px 34px">
+  <div style="position:absolute;left:140px;top:684px;width:1640px;background:rgba(13,36,41,0.66);border:1px solid rgba(245,184,65,0.26);border-left:3px solid #F5B841;border-radius:5px;box-sizing:border-box;padding:24px 32px">
     <div style="display:flex;align-items:flex-start">
-      <div style="width:110px;font-family:'Space Grotesk',sans-serif;font-size:44px;font-weight:600;color:#F5B841;line-height:1">02</div>
-      <div style="width:960px">
-        <div style="font-size:26px;font-weight:500;color:#F0F6FF">The server cannot boot from a clean requirements install</div>
-        <div style="font-size:18px;line-height:1.65;color:#8296AC;font-weight:300;margin-top:10px"><span style="font-family:'JetBrains Mono',monospace;font-size:16px;color:#CFE5F2">mcp/tools/a2a_tools.py:19</span> imports <span style="font-family:'JetBrains Mono',monospace;font-size:16px;color:#F5B841">aiohttp</span> at module scope, and <span style="font-family:'JetBrains Mono',monospace;font-size:16px;color:#CFE5F2">mcp/server.py:87</span> imports that module. <span style="font-family:'JetBrains Mono',monospace;font-size:16px;color:#F5B841">aiohttp</span> appears in neither <span style="font-family:'JetBrains Mono',monospace;font-size:16px;color:#CFE5F2">requirements.txt</span> (8 lines) nor <span style="font-family:'JetBrains Mono',monospace;font-size:16px;color:#CFE5F2">requirements-optional.txt</span>.</div>
+      <div style="width:104px;font-family:'Space Grotesk',sans-serif;font-size:40px;font-weight:600;color:#F5B841;line-height:1">02</div>
+      <div style="width:930px">
+        <div style="font-size:24px;font-weight:500;color:#F0F6FF">Production hybrid is the worst-performing non-baseline mode</div>
+        <div style="font-size:18px;line-height:1.6;color:#8296AC;font-weight:300;margin-top:9px">Hybrid with the reranker on scores <span style="font-family:'JetBrains Mono',monospace;font-size:15px;color:#F5B841">0.167</span> adversarial hit rate. The same path with it off scores <span style="font-family:'JetBrains Mono',monospace;font-size:15px;color:#4FE3D4">0.650</span>. Slide 09. Unowned as of this deck.</div>
       </div>
-      <div style="width:520px;text-align:right">
-        <div style="font-family:'JetBrains Mono',monospace;font-size:13px;color:#7C8FA0">REPRODUCE</div>
-        <div style="font-family:'JetBrains Mono',monospace;font-size:14px;line-height:1.6;color:#4FE3D4;margin-top:8px">grep -n aiohttp requirements*.txt<br><span style="color:#7C8FA0">&rarr; no match</span></div>
+      <div style="width:540px;text-align:right">
+        <div style="font-family:'JetBrains Mono',monospace;font-size:12px;color:#7C8FA0">SOURCE</div>
+        <div style="font-family:'JetBrains Mono',monospace;font-size:14px;line-height:1.6;color:#4FE3D4;margin-top:8px">latest.md, adversarial rows<br><span style="color:#7C8FA0">hybrid vs hybrid-rerank-off</span></div>
       </div>
     </div>
   </div>
 
-  <div style="position:absolute;left:140px;top:716px;width:1640px;background:rgba(13,36,41,0.66);border:1px solid rgba(245,184,65,0.26);border-left:3px solid #F5B841;border-radius:5px;box-sizing:border-box;padding:28px 34px">
+  <div style="position:absolute;left:140px;top:876px;width:800px;background:rgba(13,36,41,0.66);border:1px solid rgba(245,184,65,0.26);border-left:3px solid #F5B841;border-radius:5px;box-sizing:border-box;padding:20px 28px;height:118px">
     <div style="display:flex;align-items:flex-start">
-      <div style="width:110px;font-family:'Space Grotesk',sans-serif;font-size:44px;font-weight:600;color:#F5B841;line-height:1">03</div>
-      <div style="width:960px">
-        <div style="font-size:26px;font-weight:500;color:#F0F6FF">The adversarial row rests on three queries</div>
-        <div style="font-size:18px;line-height:1.65;color:#8296AC;font-weight:300;margin-top:10px">n=3 per mode. The 0.000 is a real failure and a small denominator at the same time. Until the corpus scales, it is <span style="color:#F0F6FF">directional evidence of a gap</span>, not a rate we can put a confidence interval on.</div>
-      </div>
-      <div style="width:520px;text-align:right">
-        <div style="font-family:'JetBrains Mono',monospace;font-size:13px;color:#7C8FA0">SOURCE</div>
-        <div style="font-family:'JetBrains Mono',monospace;font-size:14px;line-height:1.6;color:#4FE3D4;margin-top:8px">benchmarks/results/latest.md<br><span style="color:#7C8FA0">Retrieval quality, n column</span></div>
+      <div style="width:80px;font-family:'Space Grotesk',sans-serif;font-size:32px;font-weight:600;color:#F5B841;line-height:1">03</div>
+      <div style="width:640px">
+        <div style="font-size:19px;font-weight:500;color:#F0F6FF">Guardrail corpus lacks unanswerable rows</div>
+        <div style="font-size:16px;line-height:1.55;color:#8296AC;font-weight:300;margin-top:6px">Contradiction n=40, but no dedicated unanswerable set in the trust table.</div>
       </div>
     </div>
   </div>
 
-  <div style="position:absolute;left:140px;top:938px;width:1640px;font-size:19px;line-height:1.55;color:#8296AC;font-weight:300">None of these change a house number. All three change what a reviewer should believe about the numbers' freshness &mdash; which is the reason to raise them here rather than in a footnote.</div>
+  <div style="position:absolute;left:980px;top:876px;width:800px;background:rgba(47,212,196,0.05);border-left:3px solid #2FD4C4;box-sizing:border-box;padding:20px 28px;height:118px">
+    <div style="font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:0.14em;color:#2FD4C4;margin-bottom:8px">AND ONE THING THAT IS NOT A DEFECT</div>
+    <div style="font-size:16px;line-height:1.5;color:#B8C6D6;font-weight:300">The <span style="font-family:'JetBrains Mono',monospace;font-size:14px">lie_status</span> double-registration is recorded, deliberate, and scheduled &mdash; removing it changes the exposed schema.</div>
+  </div>
 
-  <div style="position:absolute;left:140px;bottom:30px;font-family:'JetBrains Mono',monospace;font-size:14px;letter-spacing:0.08em;color:#4A5F6E">mem20 &middot; INVESTOR &amp; BOARD DECK</div>
-  <div style="position:absolute;right:140px;bottom:30px;font-family:'JetBrains Mono',monospace;font-size:14px;color:#2FD4C4">11 / 13</div>
+  <div style="position:absolute;left:140px;bottom:26px;font-family:'JetBrains Mono',monospace;font-size:13px;letter-spacing:0.04em;color:#4A5F6E">docs/finance/inputs.json &middot; requirements.txt &middot; benchmarks/results/latest.md &middot; docs/ops/tool-count-270-27.md</div>
+  <div style="position:absolute;right:140px;bottom:26px;font-family:'JetBrains Mono',monospace;font-size:14px;color:#2FD4C4">11 / 13</div>
 </div>
 </body>
 </html>

@@ -35,29 +35,29 @@
 </head>
 <body>
 <div class="wrap">
-  <div class="eyebrow">INVESTOR &amp; BOARD REVIEW - 27 OCTOBER 2026</div>
+  <div class="eyebrow">INVESTOR &amp; BOARD REVIEW - 1 NOVEMBER 2026</div>
   <h1>mem20 - Investor &amp; Board Deck</h1>
-  <p class="lede">Thirteen slides. Every claim carries the repo SHA or docs path it came from. The adversarial retrieval row is shown rather than omitted. Nothing on these slides is recalled from memory or rounded up.</p>
-  <div class="sha">baseline - 45445f4850377814cd95b7fa50c0a9153f76c163</div>
-  <p class="lede" style="margin-top:10px"><strong>Version currency.</strong> This deck is pinned to <code>45445f48</code>, where <code>VERSION</code> was <strong>3.0.0</strong>. The shipped tree is <strong>3.1.0</strong> at <code>27c1e5fb</code>. The 3.0.0 readings on the slides are correct <em>at the pinned commit</em>; they are not restated here as the current version, because rewriting them would make &ldquo;<code>cat VERSION</code> at 45445f48&rdquo; return a value it never returned.</p>
+  <p class="lede">Thirteen slides. Every claim carries the repo SHA or docs path it came from. The retrieval table is shown rather than shortened. Nothing on these slides is recalled from memory or rounded up.</p>
+  <div class="sha">baseline - 2ea4492209dfaae6afb22ca884132a0d1849bfcf</div>
+  <p class="lede" style="margin-top:10px"><strong>What this cut does that the last one did not.</strong> The previous deck was pinned to <span class="mono">45445f48</span> and led with an adversarial retrieval hit rate of <strong>0.000 on n=3</strong> as its honesty exhibit. Both are now wrong. The tree has moved 171 commits, and <span class="mono">benchmarks/results/latest.md</span> has been replaced wholesale: the corpus went from 17 records to <strong>2,000</strong>, and the adversarial class is scored at <span class="mono">n=60</span> with real rates between <strong>0.167 and 0.767</strong>. Keeping the old number would have been the least honest option available, so it is replaced rather than carried.</p>
 
   <h2>Slides</h2>
   <div class="sub">13 slides - all reachable - each source-marked</div>
   <table>
     <thead><tr><th>#</th><th>Slide</th><th>Claim it makes</th><th>Source</th></tr></thead>
     <tbody>
-      <tr><td class="n">01</td><td><a href="slides/slide_01.html">Cover</a></td><td>7,975 files / 3.0.0 / 270-27 / $14,000, all pinned to one commit</td><td class="src">git ls-files / VERSION / verify_mcp.py:5 / docs/finance/inputs.json</td></tr>
-      <tr><td class="n">02</td><td><a href="slides/slide_02.html">The baseline, pinned</a></td><td>Eight facts re-read at 45445f48, which was main's head at the time of writing</td><td class="src">GITHUB_GET_A_BRANCH / roster section 1 / inputs.json</td></tr>
-      <tr><td class="n">03</td><td><a href="slides/slide_03.html">What mem20 is</a></td><td>Contamination 0.0 / simulated records [] / 41 diagnostics, all healthy</td><td class="src">benchmarks/results/latest.md</td></tr>
-      <tr><td class="n">04</td><td><a href="slides/slide_04.html">The tool surface</a></td><td>270 tools / 27 domains asserted in four independent places; 257/26 retired</td><td class="src">verify_mcp.py:5 / mcp-verify.yml:63 / README.md:161-242 / inputs.json</td></tr>
+      <tr><td class="n">01</td><td><a href="slides/slide_01.html">Cover</a></td><td>8,536 files / 3.1.0 / 270-27 / $14,000 / 0-0 PRs, all pinned to one commit</td><td class="src">git ls-files / VERSION / verify_mcp.py:5 / docs/finance/inputs.json / GH API</td></tr>
+      <tr><td class="n">02</td><td><a href="slides/slide_02.html">The rebuild - what moved</a></td><td>Nine facts re-read at 2ea44922; five unchanged, four drifted (files, PRs, corpus, aiohttp)</td><td class="src">rev-parse / git ls-files / VERSION / GH API / latest.json</td></tr>
+      <tr><td class="n">03</td><td><a href="slides/slide_03.html">What mem20 is</a></td><td>Contamination 0.0 / simulated records [] / 250 diagnostics, all healthy</td><td class="src">benchmarks/results/latest.md - Trustworthiness</td></tr>
+      <tr><td class="n">04</td><td><a href="slides/slide_04.html">The tool surface</a></td><td>270 tools / 27 domains asserted in four independent places; 28 groups - a2a = 27</td><td class="src">verify_mcp.py:5 / mcp-verify.yml:63 / README.md:161-242 / inputs.json</td></tr>
       <tr><td class="n">05</td><td><a href="slides/slide_05.html">Market sizing</a></td><td>TAM $1.28B / SAM $282M (22.03%) / SOM $1.68M (0.60%); SAM integer build is $12,000 short</td><td class="src">docs/finance/inputs.json / docs/finance/README.md:17-19, :80-82</td></tr>
       <tr><td class="n">06</td><td><a href="slides/slide_06.html">The SOM arithmetic</a></td><td>120 x $14,000 = $1,680,000, variance $0; churn 12%, NRR 1.15, $1,880 hosting</td><td class="src">docs/finance/inputs.json / docs/finance/README.md:133, :138</td></tr>
       <tr><td class="n">07</td><td><a href="slides/slide_07.html">Business model</a></td><td>$14,000 blend reconciles 44/44; tier ladder is an untested hypothesis</td><td class="src">docs/finance/inputs.json - tier_ladder</td></tr>
-      <tr><td class="n">08</td><td><a href="slides/slide_08.html">The adversarial row, shown</a></td><td>All nine retrieval rows verbatim; three adversarial rows at 0.000 on n=3</td><td class="src">benchmarks/results/latest.md - Retrieval quality</td></tr>
-      <tr><td class="n">09</td><td><a href="slides/slide_09.html">What 0.000 means</a></td><td>Fails closed not confidently; a small denominator; not comparable to 92.5/94.4/94.8</td><td class="src">benchmarks/results/latest.md - preamble, Notes</td></tr>
-      <tr><td class="n">10</td><td><a href="slides/slide_10.html">Trust surface</a></td><td>Six self-checks PASS; 14 facts / 3 simulated / 13 queries; rerank 101.4 vs 15.7 ms</td><td class="src">benchmarks/results/latest.md - Trustworthiness, Reranking</td></tr>
-      <tr><td class="n">11</td><td><a href="slides/slide_11.html">Our own audit findings</a></td><td>9,873 vs 7,975 tracked files; aiohttp missing; adversarial n=3</td><td class="src">inputs.json / a2a_tools.py:19 / server.py:87 / requirements*.txt</td></tr>
-      <tr><td class="n">12</td><td><a href="slides/slide_12.html">The ask</a></td><td>Four decisions, each tied to a number; no change to TAM/SAM/SOM</td><td class="src">inputs.json / README.md / latest.md / requirements.txt</td></tr>
+      <tr><td class="n">08</td><td><a href="slides/slide_08.html">The adversarial row, shown</a></td><td>Six modes at n=60: bm25 0.767 / vector 0.667 / rerank-off 0.650 / hybrid 0.167 / keyword 0.167 / constant 0.000</td><td class="src">benchmarks/results/latest.md - Retrieval quality, adversarial rows</td></tr>
+      <tr><td class="n">09</td><td><a href="slides/slide_09.html">The rerank inversion</a></td><td>Production hybrid 0.167 at 168.5ms vs rerank-off 0.650 at 25.6ms - a config bug, not a trade-off</td><td class="src">latest.md + latest.json - trust.rerank_off_note</td></tr>
+      <tr><td class="n">10</td><td><a href="slides/slide_10.html">Trust surface</a></td><td>Six self-checks PASS; 700 ledger / 1,400 indexed / 654-3,601 graph; no LoCoMo claimed</td><td class="src">benchmarks/results/latest.md - Trustworthiness, Notes</td></tr>
+      <tr><td class="n">11</td><td><a href="slides/slide_11.html">Our own audit findings</a></td><td>9,873 vs 8,536 tracked files; rerank inversion unowned; no unanswerable set - plus two now fixed</td><td class="src">inputs.json / latest.md / requirements.txt:13 / a2a_tools.py:19</td></tr>
+      <tr><td class="n">12</td><td><a href="slides/slide_12.html">The ask</a></td><td>Four decisions, each tied to a number; no change to TAM/SAM/SOM</td><td class="src">inputs.json / latest.md / latest.json</td></tr>
       <tr><td class="n">13</td><td><a href="slides/slide_13.html">Source register</a></td><td>Slide to claim to source, for all thirteen</td><td class="src">the register itself</td></tr>
     </tbody>
   </table>
@@ -65,35 +65,42 @@
   <h2>Verification</h2>
   <div class="sub">how each headline number was checked</div>
   <table>
-    <thead><tr><th>Fact</th><th>Value</th><th>How verified at 45445f48</th><th>Status</th></tr></thead>
+    <thead><tr><th>Fact</th><th>Value</th><th>How verified at 2ea44922</th><th>Status</th></tr></thead>
     <tbody>
-      <tr><td>Tracked files</td><td class="ok">7,975</td><td class="src">git ls-files | wc -l</td><td class="ok">verified</td></tr>
-      <tr><td>VERSION</td><td class="ok">3.0.0</td><td class="src">git show 45445f48:VERSION (not cat VERSION, which reads 3.1.0 today)</td><td class="ok">verified at baseline</td></tr>
+      <tr><td>Tracked files</td><td class="ok">8,536</td><td class="src">git ls-files | wc -l</td><td class="ok">verified</td></tr>
+      <tr><td>VERSION</td><td class="ok">3.1.0</td><td class="src">cat VERSION (reads 3.1.0 at the baseline itself)</td><td class="ok">verified at baseline</td></tr>
       <tr><td>Tool surface</td><td class="ok">270 / 27</td><td class="src">verify_mcp.py:5, mcp-verify.yml:63, README.md:161-242, inputs.json</td><td class="ok">verified 4x</td></tr>
+      <tr><td>Open PRs / issues</td><td class="ok">0 / 0</td><td class="src">GitHub API pulls?state=open + search/issues?is:issue+is:open</td><td class="ok">verified</td></tr>
       <tr><td>Blended ACV</td><td class="ok">$14,000</td><td class="src">docs/finance/inputs.json - blended_acv</td><td class="ok">verified</td></tr>
       <tr><td>TAM</td><td class="ok">$1.28B</td><td class="src">docs/finance/inputs.json (carried input)</td><td class="ok">quoted</td></tr>
       <tr><td>SAM</td><td class="ok">$282M</td><td class="src">docs/finance/inputs.json (carried input)</td><td class="warn">quoted; integer build $12k short</td></tr>
       <tr><td>SOM</td><td class="ok">$1.68M</td><td class="src">docs/finance/inputs.json - 120 x $14,000</td><td class="ok">exact, $0 variance</td></tr>
-      <tr><td>Adversarial hit rate</td><td class="warn">0.000</td><td class="src">benchmarks/results/latest.md, n=3 per mode</td><td class="warn">reported, small n</td></tr>
-      <tr><td>Repo snapshot in finance file</td><td class="warn">9,873</td><td class="src">inputs.json repo_state vs measured 7,975</td><td class="warn">stale by 1,898</td></tr>
+      <tr><td>Adversarial hit rate</td><td class="ok">0.167 - 0.767</td><td class="src">benchmarks/results/latest.md, n=60 per mode on a 2,000-record corpus</td><td class="ok">measured, real n</td></tr>
+      <tr><td>Repo snapshot in finance file</td><td class="warn">9,873</td><td class="src">inputs.json repo_state vs measured 8,536</td><td class="warn">stale by 1,337</td></tr>
+      <tr><td>aiohttp declared</td><td class="ok">yes</td><td class="src">requirements.txt:13</td><td class="ok">defect closed</td></tr>
     </tbody>
   </table>
 
   <div class="flag">
     <div class="t">TWO RULES THIS DECK IS BUILT AROUND</div>
-    <p><strong>1 - Show the weak row.</strong> Three adversarial rows at 0.000 hit rate are on slide 08, not in an appendix, and slide 09 explains what they cost without excusing them. <strong>2 - Mark every claim.</strong> Each slide carries its source in the slide footer and on slide 13's register; the permanent-URL record maps every slide to its live copy.</p>
+    <p><strong>1 - Show the weak row.</strong> The production retrieval path is the worst non-baseline mode on the hard query class, and it is on slide 08 in the table and slide 09 at full size. <strong>2 - Mark every claim.</strong> Each slide carries its source in the slide footer and on slide 13's register; the permanent-URL record maps every slide to its live copy.</p>
   </div>
 
   <div class="flag">
-    <div class="t">PINNED TO 45445f48 - NOT TO CURRENT MAIN</div>
-    <p>This deck was rebased onto <span class="mono">45445f4850377814cd95b7fa50c0a9153f76c163</span>, which was main's head at the time of writing, and every figure was re-read there. <strong>Main has since moved.</strong> A reviewer diffing against today's main will see drift, and <span class="mono">VERSION</span> now reads <strong>3.1.0</strong> at <span class="mono">27c1e5fb</span> rather than the 3.0.0 recorded here. The 3.0.0 readings are correct at the pinned commit and are not restated as current. The earlier cut at <span class="mono">1264076</span> is superseded and no longer cited.</p>
+    <div class="t">PINNED TO 2ea44922 - CURRENT MAIN AT TIME OF WRITING</div>
+    <p>This deck is pinned to <span class="mono">2ea4492209dfaae6afb22ca884132a0d1849bfcf</span>, main's head on 1 November 2026, and every figure was re-read there. It supersedes the <span class="mono">45445f48</span> cut of 27 October (171 commits behind, VERSION 3.0.0, 7,975 files) and the earlier <span class="mono">1264076</span> cut before that. <strong>The one figure that did not survive the rebase is the adversarial 0.000</strong> - the benchmark that produced it has been replaced, and the deck now reports what the current harness measures.</p>
+  </div>
+
+  <div class="flag">
+    <div class="t">KNOWN GAP - RECORDED, NOT SMOOTHED</div>
+    <p>The roster commit named in the assignment, <span class="mono">06fa1220e964f84aabac78127fc18463dfa6798d</span> (<span class="mono">docs/ops/owner-directive-2026-11-01.md</span>), <strong>does not exist in this repository.</strong> A full-history fetch returns "not a valid object name" and no <span class="mono">owner-directive</span> file is present on any ref. The deck was therefore built from the repository state at <span class="mono">2ea44922</span> directly. Flagged so the owner can reconcile the roster, rather than silently citing a SHA that resolves to nothing.</p>
   </div>
 
   <footer>
-    mem20 - INVESTOR &amp; BOARD DECK - 27 OCTOBER 2026<br>
-    source of truth: github.com/bythewayz66-glitch/mem20 @ 45445f4850377814cd95b7fa50c0a9153f76c163<br>
-    deck source: docs/app/deck/ - branch content/ws3-investor-deck - live copies recorded in PERMANENT_URL.md<br>
-    version currency: 3.0.0 at the pinned baseline; 3.1.0 on the shipped tree at 27c1e5fb
+    mem20 - INVESTOR &amp; BOARD DECK - 1 NOVEMBER 2026<br>
+    source of truth: github.com/bythewayz66-glitch/mem20 @ 2ea4492209dfaae6afb22ca884132a0d1849bfcf<br>
+    deck source: docs/app/deck/ - branch deck/ws3-rebuild-2026-11-01 - live copies recorded in PERMANENT_URL.md<br>
+    version currency: 3.1.0 at the pinned baseline, which is also the shipped tree
   </footer>
 </div>
 </body>

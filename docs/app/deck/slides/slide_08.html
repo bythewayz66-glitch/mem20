@@ -1,143 +1,114 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=1920, initial-scale=1.0">
-<title>mem20 - Investor &amp; Board Deck - Slide 8</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<style>
-  *{font-family:'Inter',-apple-system,sans-serif}
-  body{height:1080px;width:1920px;margin:0;padding:0}
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=1920, initial-scale=1.0">
+    <title>mem20 — Investor &amp; Board Deck - Slide 8</title>
+    <!-- Google Fonts - Inter for modern, clean typography -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        * {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+        }
+        body {
+            height: 1080px;
+            width: 1920px;
+            margin: 0;
+            padding: 0;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+        }
+    </style>
 </head>
 <body>
-<style>
+    <style>
 @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&family=Inter:wght@300;400;500;600&display=swap');
 </style>
 <div style="position:relative;width:1920px;height:1080px;background:#04181A;overflow:hidden;box-sizing:border-box;font-family:'Inter',sans-serif;color:#E8EFF7">
   <div style="position:absolute;width:1000px;height:700px;left:-260px;top:-340px;background:radial-gradient(circle,rgba(47,212,196,0.10) 0%,rgba(4,24,26,0) 66%)"></div>
 
-  <div style="position:absolute;left:140px;top:104px;font-family:'JetBrains Mono',monospace;font-size:15px;letter-spacing:0.22em;color:#F5B841">07 / RETRIEVAL &mdash; UNEDITED</div>
-  <div style="position:absolute;left:140px;top:142px;font-family:'Space Grotesk',sans-serif;font-size:58px;font-weight:600;letter-spacing:-0.02em;color:#F0F6FF">Every row, including the one that reads 0.000</div>
-  <div style="position:absolute;left:140px;top:228px;width:1560px;font-size:20px;line-height:1.55;color:#8296AC;font-weight:300">Corpus <span style="font-family:'JetBrains Mono',monospace;font-size:17px;color:#CFE5F2">mem20-agent-kb-v1</span> &mdash; 14 grounded facts, 3 simulated facts, 13 queries. Verbatim from the benchmark output; no row removed, no cell rounded.</div>
+  <div style="position:absolute;left:140px;top:96px;font-family:'JetBrains Mono',monospace;font-size:15px;letter-spacing:0.22em;color:#F5B841">07 / RETRIEVAL &mdash; ADVERSARIAL, UNEDITED</div>
+  <div style="position:absolute;left:140px;top:132px;font-family:'Space Grotesk',sans-serif;font-size:56px;font-weight:600;letter-spacing:-0.02em;color:#F0F6FF">Six modes, one hard query class</div>
+  <div style="position:absolute;left:140px;top:212px;width:1620px;font-size:20px;line-height:1.55;color:#8296AC;font-weight:300">Corpus <span style="font-family:'JetBrains Mono',monospace;font-size:17px;color:#CFE5F2">mem20-scale-corpus-v2</span> &mdash; 700 grounded facts, 1,300 simulated, 250 queries. Adversarial <span style="font-family:'JetBrains Mono',monospace;font-size:16px;color:#CFE5F2">n=60</span> per mode. Verbatim; no row removed, no cell rounded.</div>
 
-  <div style="position:absolute;left:140px;top:310px;width:1640px;background:rgba(13,36,41,0.60);border:1px solid rgba(47,212,196,0.18);border-radius:5px;box-sizing:border-box;padding:0 30px">
-    <div style="display:flex;align-items:center;height:54px;border-bottom:1px solid rgba(47,212,196,0.18)">
-      <div style="width:230px;font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:0.14em;color:#8FA8B8">MODE</div>
-      <div style="width:260px;font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:0.14em;color:#8FA8B8">QUERY KIND</div>
-      <div style="width:100px;font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:0.14em;color:#8FA8B8;text-align:right">n</div>
-      <div style="width:200px;font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:0.14em;color:#8FA8B8;text-align:right">HIT RATE</div>
+  <div style="position:absolute;left:140px;top:288px;width:1640px;background:rgba(13,36,41,0.60);border:1px solid rgba(47,212,196,0.18);border-radius:5px;box-sizing:border-box;padding:0 30px">
+    <div style="display:flex;align-items:center;height:52px;border-bottom:1px solid rgba(47,212,196,0.18)">
+      <div style="width:310px;font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:0.14em;color:#8FA8B8">MODE</div>
+      <div style="width:110px;font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:0.14em;color:#8FA8B8;text-align:right">n</div>
+      <div style="width:230px;font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:0.14em;color:#8FA8B8;text-align:right">HIT RATE</div>
       <div style="width:200px;font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:0.14em;color:#8FA8B8;text-align:right">MRR</div>
-      <div style="width:200px;font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:0.14em;color:#8FA8B8;text-align:right">LEAK</div>
-      <div style="width:170px;font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:0.14em;color:#8FA8B8;text-align:right">p50 ms</div>
+      <div style="width:190px;font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:0.14em;color:#8FA8B8;text-align:right">LEAK</div>
+      <div style="width:210px;font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:0.14em;color:#8FA8B8;text-align:right">p50 ms</div>
+      <div style="width:330px;font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:0.14em;color:#8FA8B8;text-align:right">READ</div>
     </div>
 
-    <div style="display:flex;align-items:center;height:40px;border-bottom:1px solid rgba(47,212,196,0.06)">
-      <div style="width:230px;font-family:'JetBrains Mono',monospace;font-size:19px;color:#4FE3D4">graph</div>
-      <div style="width:260px;font-size:19px;color:#B8C6D6">multi_hop</div>
-      <div style="width:100px;font-family:'JetBrains Mono',monospace;font-size:19px;color:#8FA8B8;text-align:right">2</div>
-      <div style="width:200px;font-family:'JetBrains Mono',monospace;font-size:19px;color:#F0F6FF;text-align:right">1.000</div>
-      <div style="width:200px;font-family:'JetBrains Mono',monospace;font-size:19px;color:#F0F6FF;text-align:right">1.000</div>
-      <div style="width:200px;font-family:'JetBrains Mono',monospace;font-size:19px;color:#8FA8B8;text-align:right">0.000</div>
-      <div style="width:170px;font-family:'JetBrains Mono',monospace;font-size:19px;color:#8FA8B8;text-align:right">0.6</div>
+    <div style="display:flex;align-items:center;height:74px;border-bottom:1px solid rgba(47,212,196,0.06)">
+      <div style="width:310px;font-family:'JetBrains Mono',monospace;font-size:21px;color:#4FE3D4">bm25</div>
+      <div style="width:110px;font-family:'JetBrains Mono',monospace;font-size:19px;color:#8FA8B8;text-align:right">60</div>
+      <div style="width:230px;font-family:'JetBrains Mono',monospace;font-size:23px;color:#F0F6FF;text-align:right">0.767</div>
+      <div style="width:200px;font-family:'JetBrains Mono',monospace;font-size:21px;color:#F0F6FF;text-align:right">0.592</div>
+      <div style="width:190px;font-family:'JetBrains Mono',monospace;font-size:21px;color:#8FA8B8;text-align:right">0.000</div>
+      <div style="width:210px;font-family:'JetBrains Mono',monospace;font-size:21px;color:#8FA8B8;text-align:right">5.2</div>
+      <div style="width:330px;font-size:16px;color:#6B7E92;text-align:right">best adversarial mode</div>
     </div>
 
-    <div style="display:flex;align-items:center;height:40px;background:rgba(245,184,65,0.13);border-left:3px solid #F5B841;margin-left:-33px;padding-left:30px;border-bottom:1px solid rgba(245,184,65,0.14)">
-      <div style="width:230px;font-family:'JetBrains Mono',monospace;font-size:19px;color:#F5B841">hybrid</div>
-      <div style="width:260px;font-size:19px;color:#F5B841;font-weight:500">adversarial</div>
-      <div style="width:100px;font-family:'JetBrains Mono',monospace;font-size:19px;color:#CFE5F2;text-align:right">3</div>
+    <div style="display:flex;align-items:center;height:74px;border-bottom:1px solid rgba(47,212,196,0.06)">
+      <div style="width:310px;font-family:'JetBrains Mono',monospace;font-size:21px;color:#4FE3D4">vector</div>
+      <div style="width:110px;font-family:'JetBrains Mono',monospace;font-size:19px;color:#8FA8B8;text-align:right">60</div>
+      <div style="width:230px;font-family:'JetBrains Mono',monospace;font-size:23px;color:#F0F6FF;text-align:right">0.667</div>
+      <div style="width:200px;font-family:'JetBrains Mono',monospace;font-size:21px;color:#F0F6FF;text-align:right">0.608</div>
+      <div style="width:190px;font-family:'JetBrains Mono',monospace;font-size:21px;color:#8FA8B8;text-align:right">0.000</div>
+      <div style="width:210px;font-family:'JetBrains Mono',monospace;font-size:21px;color:#8FA8B8;text-align:right">18.5</div>
+      <div style="width:330px;font-size:16px;color:#6B7E92;text-align:right">&mdash;</div>
+    </div>
+
+    <div style="display:flex;align-items:center;height:74px;background:rgba(47,212,196,0.10);border-left:3px solid #2FD4C4;margin-left:-33px;padding-left:30px;border-bottom:1px solid rgba(47,212,196,0.10)">
+      <div style="width:310px;font-family:'JetBrains Mono',monospace;font-size:21px;color:#4FE3D4">hybrid-rerank-off</div>
+      <div style="width:110px;font-family:'JetBrains Mono',monospace;font-size:19px;color:#8FA8B8;text-align:right">60</div>
+      <div style="width:230px;font-family:'JetBrains Mono',monospace;font-size:23px;color:#4FE3D4;text-align:right">0.650</div>
+      <div style="width:200px;font-family:'JetBrains Mono',monospace;font-size:21px;color:#F0F6FF;text-align:right">0.633</div>
+      <div style="width:190px;font-family:'JetBrains Mono',monospace;font-size:21px;color:#8FA8B8;text-align:right">0.000</div>
+      <div style="width:210px;font-family:'JetBrains Mono',monospace;font-size:21px;color:#8FA8B8;text-align:right">25.6</div>
+      <div style="width:330px;font-size:16px;color:#8FA8B8;text-align:right">best MRR of any mode</div>
+    </div>
+
+    <div style="display:flex;align-items:center;height:74px;background:rgba(245,184,65,0.13);border-left:3px solid #F5B841;margin-left:-33px;padding-left:30px;border-bottom:1px solid rgba(245,184,65,0.14)">
+      <div style="width:310px;font-family:'JetBrains Mono',monospace;font-size:21px;color:#F5B841">hybrid</div>
+      <div style="width:110px;font-family:'JetBrains Mono',monospace;font-size:19px;color:#CFE5F2;text-align:right">60</div>
+      <div style="width:230px;font-family:'JetBrains Mono',monospace;font-size:23px;font-weight:700;color:#F5B841;text-align:right">0.167</div>
+      <div style="width:200px;font-family:'JetBrains Mono',monospace;font-size:21px;font-weight:700;color:#F5B841;text-align:right">0.167</div>
+      <div style="width:190px;font-family:'JetBrains Mono',monospace;font-size:21px;color:#CFE5F2;text-align:right">0.000</div>
+      <div style="width:210px;font-family:'JetBrains Mono',monospace;font-size:21px;color:#CFE5F2;text-align:right">168.5</div>
+      <div style="width:330px;font-size:16px;color:#F5B841;text-align:right">worst non-baseline mode</div>
+    </div>
+
+    <div style="display:flex;align-items:center;height:74px;border-bottom:1px solid rgba(47,212,196,0.06)">
+      <div style="width:310px;font-family:'JetBrains Mono',monospace;font-size:21px;color:#4FE3D4">keyword</div>
+      <div style="width:110px;font-family:'JetBrains Mono',monospace;font-size:19px;color:#8FA8B8;text-align:right">60</div>
+      <div style="width:230px;font-family:'JetBrains Mono',monospace;font-size:23px;color:#F0F6FF;text-align:right">0.167</div>
+      <div style="width:200px;font-family:'JetBrains Mono',monospace;font-size:21px;color:#F0F6FF;text-align:right">0.167</div>
+      <div style="width:190px;font-family:'JetBrains Mono',monospace;font-size:21px;color:#8FA8B8;text-align:right">0.000</div>
+      <div style="width:210px;font-family:'JetBrains Mono',monospace;font-size:21px;color:#8FA8B8;text-align:right">173.5</div>
+      <div style="width:330px;font-size:16px;color:#6B7E92;text-align:right">tied, not defended</div>
+    </div>
+
+    <div style="display:flex;align-items:center;height:74px">
+      <div style="width:310px;font-family:'JetBrains Mono',monospace;font-size:21px;color:#7C8FA0">constant</div>
+      <div style="width:110px;font-family:'JetBrains Mono',monospace;font-size:19px;color:#8FA8B8;text-align:right">60</div>
+      <div style="width:230px;font-family:'JetBrains Mono',monospace;font-size:23px;font-weight:700;color:#F5B841;text-align:right">0.000</div>
       <div style="width:200px;font-family:'JetBrains Mono',monospace;font-size:21px;font-weight:700;color:#F5B841;text-align:right">0.000</div>
-      <div style="width:200px;font-family:'JetBrains Mono',monospace;font-size:21px;font-weight:700;color:#F5B841;text-align:right">0.000</div>
-      <div style="width:200px;font-family:'JetBrains Mono',monospace;font-size:19px;color:#CFE5F2;text-align:right">0.000</div>
-      <div style="width:170px;font-family:'JetBrains Mono',monospace;font-size:19px;color:#CFE5F2;text-align:right">102.0</div>
-    </div>
-
-    <div style="display:flex;align-items:center;height:40px;border-bottom:1px solid rgba(47,212,196,0.06)">
-      <div style="width:230px;font-family:'JetBrains Mono',monospace;font-size:19px;color:#4FE3D4">hybrid</div>
-      <div style="width:260px;font-size:19px;color:#B8C6D6">direct</div>
-      <div style="width:100px;font-family:'JetBrains Mono',monospace;font-size:19px;color:#8FA8B8;text-align:right">5</div>
-      <div style="width:200px;font-family:'JetBrains Mono',monospace;font-size:19px;color:#F0F6FF;text-align:right">1.000</div>
-      <div style="width:200px;font-family:'JetBrains Mono',monospace;font-size:19px;color:#F0F6FF;text-align:right">1.000</div>
-      <div style="width:200px;font-family:'JetBrains Mono',monospace;font-size:19px;color:#8FA8B8;text-align:right">0.000</div>
-      <div style="width:170px;font-family:'JetBrains Mono',monospace;font-size:19px;color:#8FA8B8;text-align:right">108.0</div>
-    </div>
-
-    <div style="display:flex;align-items:center;height:40px;border-bottom:1px solid rgba(47,212,196,0.06)">
-      <div style="width:230px;font-family:'JetBrains Mono',monospace;font-size:19px;color:#4FE3D4">hybrid</div>
-      <div style="width:260px;font-size:19px;color:#B8C6D6">multi_hop</div>
-      <div style="width:100px;font-family:'JetBrains Mono',monospace;font-size:19px;color:#8FA8B8;text-align:right">5</div>
-      <div style="width:200px;font-family:'JetBrains Mono',monospace;font-size:19px;color:#F0F6FF;text-align:right">0.800</div>
-      <div style="width:200px;font-family:'JetBrains Mono',monospace;font-size:19px;color:#F0F6FF;text-align:right">0.640</div>
-      <div style="width:200px;font-family:'JetBrains Mono',monospace;font-size:19px;color:#8FA8B8;text-align:right">0.000</div>
-      <div style="width:170px;font-family:'JetBrains Mono',monospace;font-size:19px;color:#8FA8B8;text-align:right">105.1</div>
-    </div>
-
-    <div style="display:flex;align-items:center;height:40px;background:rgba(245,184,65,0.13);border-left:3px solid #F5B841;margin-left:-33px;padding-left:30px;border-bottom:1px solid rgba(245,184,65,0.14)">
-      <div style="width:230px;font-family:'JetBrains Mono',monospace;font-size:19px;color:#F5B841">keyword</div>
-      <div style="width:260px;font-size:19px;color:#F5B841;font-weight:500">adversarial</div>
-      <div style="width:100px;font-family:'JetBrains Mono',monospace;font-size:19px;color:#CFE5F2;text-align:right">3</div>
-      <div style="width:200px;font-family:'JetBrains Mono',monospace;font-size:21px;font-weight:700;color:#F5B841;text-align:right">0.000</div>
-      <div style="width:200px;font-family:'JetBrains Mono',monospace;font-size:21px;font-weight:700;color:#F5B841;text-align:right">0.000</div>
-      <div style="width:200px;font-family:'JetBrains Mono',monospace;font-size:19px;color:#CFE5F2;text-align:right">0.000</div>
-      <div style="width:170px;font-family:'JetBrains Mono',monospace;font-size:19px;color:#CFE5F2;text-align:right">110.7</div>
-    </div>
-
-    <div style="display:flex;align-items:center;height:40px;border-bottom:1px solid rgba(47,212,196,0.06)">
-      <div style="width:230px;font-family:'JetBrains Mono',monospace;font-size:19px;color:#4FE3D4">keyword</div>
-      <div style="width:260px;font-size:19px;color:#B8C6D6">direct</div>
-      <div style="width:100px;font-family:'JetBrains Mono',monospace;font-size:19px;color:#8FA8B8;text-align:right">5</div>
-      <div style="width:200px;font-family:'JetBrains Mono',monospace;font-size:19px;color:#F0F6FF;text-align:right">1.000</div>
-      <div style="width:200px;font-family:'JetBrains Mono',monospace;font-size:19px;color:#F0F6FF;text-align:right">1.000</div>
-      <div style="width:200px;font-family:'JetBrains Mono',monospace;font-size:19px;color:#8FA8B8;text-align:right">0.000</div>
-      <div style="width:170px;font-family:'JetBrains Mono',monospace;font-size:19px;color:#8FA8B8;text-align:right">103.3</div>
-    </div>
-
-    <div style="display:flex;align-items:center;height:40px;border-bottom:1px solid rgba(47,212,196,0.06)">
-      <div style="width:230px;font-family:'JetBrains Mono',monospace;font-size:19px;color:#4FE3D4">keyword</div>
-      <div style="width:260px;font-size:19px;color:#B8C6D6">multi_hop</div>
-      <div style="width:100px;font-family:'JetBrains Mono',monospace;font-size:19px;color:#8FA8B8;text-align:right">5</div>
-      <div style="width:200px;font-family:'JetBrains Mono',monospace;font-size:19px;color:#F0F6FF;text-align:right">0.800</div>
-      <div style="width:200px;font-family:'JetBrains Mono',monospace;font-size:19px;color:#F0F6FF;text-align:right">0.640</div>
-      <div style="width:200px;font-family:'JetBrains Mono',monospace;font-size:19px;color:#8FA8B8;text-align:right">0.000</div>
-      <div style="width:170px;font-family:'JetBrains Mono',monospace;font-size:19px;color:#8FA8B8;text-align:right">104.4</div>
-    </div>
-
-    <div style="display:flex;align-items:center;height:40px;background:rgba(245,184,65,0.13);border-left:3px solid #F5B841;margin-left:-33px;padding-left:30px;border-bottom:1px solid rgba(245,184,65,0.14)">
-      <div style="width:230px;font-family:'JetBrains Mono',monospace;font-size:19px;color:#F5B841">semantic</div>
-      <div style="width:260px;font-size:19px;color:#F5B841;font-weight:500">adversarial</div>
-      <div style="width:100px;font-family:'JetBrains Mono',monospace;font-size:19px;color:#CFE5F2;text-align:right">3</div>
-      <div style="width:200px;font-family:'JetBrains Mono',monospace;font-size:21px;font-weight:700;color:#F5B841;text-align:right">0.000</div>
-      <div style="width:200px;font-family:'JetBrains Mono',monospace;font-size:21px;font-weight:700;color:#F5B841;text-align:right">0.000</div>
-      <div style="width:200px;font-family:'JetBrains Mono',monospace;font-size:19px;color:#CFE5F2;text-align:right">0.000</div>
-      <div style="width:170px;font-family:'JetBrains Mono',monospace;font-size:19px;color:#CFE5F2;text-align:right">12.3</div>
-    </div>
-
-    <div style="display:flex;align-items:center;height:40px;border-bottom:1px solid rgba(47,212,196,0.06)">
-      <div style="width:230px;font-family:'JetBrains Mono',monospace;font-size:19px;color:#4FE3D4">semantic</div>
-      <div style="width:260px;font-size:19px;color:#B8C6D6">direct</div>
-      <div style="width:100px;font-family:'JetBrains Mono',monospace;font-size:19px;color:#8FA8B8;text-align:right">5</div>
-      <div style="width:200px;font-family:'JetBrains Mono',monospace;font-size:19px;color:#F0F6FF;text-align:right">1.000</div>
-      <div style="width:200px;font-family:'JetBrains Mono',monospace;font-size:19px;color:#F0F6FF;text-align:right">0.900</div>
-      <div style="width:200px;font-family:'JetBrains Mono',monospace;font-size:19px;color:#8FA8B8;text-align:right">0.000</div>
-      <div style="width:170px;font-family:'JetBrains Mono',monospace;font-size:19px;color:#8FA8B8;text-align:right">12.2</div>
-    </div>
-
-    <div style="display:flex;align-items:center;height:40px">
-      <div style="width:230px;font-family:'JetBrains Mono',monospace;font-size:19px;color:#4FE3D4">semantic</div>
-      <div style="width:260px;font-size:19px;color:#B8C6D6">multi_hop</div>
-      <div style="width:100px;font-family:'JetBrains Mono',monospace;font-size:19px;color:#8FA8B8;text-align:right">5</div>
-      <div style="width:200px;font-family:'JetBrains Mono',monospace;font-size:19px;color:#F0F6FF;text-align:right">0.800</div>
-      <div style="width:200px;font-family:'JetBrains Mono',monospace;font-size:19px;color:#F0F6FF;text-align:right">0.800</div>
-      <div style="width:200px;font-family:'JetBrains Mono',monospace;font-size:19px;color:#8FA8B8;text-align:right">0.000</div>
-      <div style="width:170px;font-family:'JetBrains Mono',monospace;font-size:19px;color:#8FA8B8;text-align:right">11.6</div>
+      <div style="width:190px;font-family:'JetBrains Mono',monospace;font-size:21px;color:#8FA8B8;text-align:right">0.000</div>
+      <div style="width:210px;font-family:'JetBrains Mono',monospace;font-size:21px;color:#8FA8B8;text-align:right">0.0</div>
+      <div style="width:330px;font-size:16px;color:#6B7E92;text-align:right">the sanity floor</div>
     </div>
   </div>
 
-  <div style="position:absolute;left:140px;top:896px;width:1180px;font-family:'JetBrains Mono',monospace;font-size:14px;line-height:1.65;color:#4FE3D4">benchmarks/results/latest.md &mdash; &ldquo;Retrieval quality&rdquo;<br><span style="color:#7C8FA0">read at 45445f4850377814cd95b7fa50c0a9153f76c163</span></div>
+  <div style="position:absolute;left:140px;top:868px;width:1180px;font-family:'JetBrains Mono',monospace;font-size:14px;line-height:1.65;color:#4FE3D4">benchmarks/results/latest.md &mdash; &ldquo;Retrieval quality&rdquo;, adversarial rows<br><span style="color:#7C8FA0">read at 2ea4492209dfaae6afb22ca884132a0d1849bfcf &middot; graph not scored on this class</span></div>
 
-  <div style="position:absolute;left:1340px;top:892px;width:440px;background:rgba(245,184,65,0.10);border:1px solid rgba(245,184,65,0.32);border-radius:5px;padding:16px 22px;box-sizing:border-box">
-    <div style="font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:0.14em;color:#F5B841;margin-bottom:6px">3 ROWS AT 0.000</div>
-    <div style="font-size:16px;line-height:1.45;color:#CFE5F2;font-weight:300">Every retrieval mode fails the same class of query.</div>
+  <div style="position:absolute;left:1340px;top:864px;width:440px;background:rgba(245,184,65,0.10);border:1px solid rgba(245,184,65,0.32);border-radius:5px;padding:16px 22px;box-sizing:border-box">
+    <div style="font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:0.14em;color:#F5B841;margin-bottom:6px">THE 0.000 IS STILL HERE</div>
+    <div style="font-size:16px;line-height:1.45;color:#CFE5F2;font-weight:300">On n=60, not n=3 &mdash; and it is the baseline scoring zero, exactly as it should.</div>
   </div>
 
   <div style="position:absolute;left:140px;bottom:30px;font-family:'JetBrains Mono',monospace;font-size:14px;letter-spacing:0.08em;color:#4A5F6E">mem20 &middot; INVESTOR &amp; BOARD DECK</div>

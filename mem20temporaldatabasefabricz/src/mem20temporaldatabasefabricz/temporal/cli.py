@@ -11,6 +11,7 @@
     export    deterministic dump of the whole store
     verify    re-derive the event hash chain
     ingest    build intervals from mem20's memory ledger
+    doctor    probe every estate dependency
     selftest  prove the engine's core claims on a throwaway store
 
 Output is JSON so it composes; errors go to stderr and set a non-zero exit.
@@ -25,7 +26,7 @@ import sys
 import tempfile
 
 from .engine import BiTemporalEngine, InvariantError
-from .ledger_adapter import build_engine, derive_intervals
+from .ledger_adapter import build_engine, derive_intervals, ingest_ledger
 from .store import ChainError, TemporalStore
 
 DEFAULT_DB = os.environ.get(
@@ -42,24 +43,6 @@ def _emit(payload: dict, as_json: bool = True) -> None:
             print(f"{version['value_ref']:>24}  valid[{version['valid_from']} .. "
                   f"{version['valid_to'] or 'open'})  known[{version['known_from']} .. "
                   f"{version['known_to'] or 'open'})")
-
-
-def _load_ledger_rows(path: str) -> list[dict]:
-    if not os.path.exists(path):
-        raise FileNotFoundError(
-            f"ledger not found at {path}. Set MEM20_LEDGER_PATH, or run "
-            f"`mem20temporaldatabasefabricz ingest --ledger <path>`.")
-    rows = []
-    with open(path, encoding="utf-8") as handle:
-        for line in handle:
-            line = line.strip()
-            if not line:
-                continue
-            try:
-                rows.append(json.loads(line))
-            except json.JSONDecodeError:
-                continue
-    return rows
 
 
 def cmd_put(args, store):
@@ -134,15 +117,59 @@ def cmd_verify(args, store):
 
 
 def cmd_ingest(args, store):
-    rows = _load_ledger_rows(args.ledger)
-    engine = build_engine(store, rows)
+    """Ingest the memory ledger, verifying the authority it comes from first.
+
+    Goes through ``ledger_adapter.ingest_ledger`` rather than deriving directly,
+    so the CLI cannot bypass the integrity check, the ledger-owner read or the
+    wire-noise filter that path applies.
+    """
+    report = ingest_ledger(store, args.ledger, verify=not args.no_verify)
+    _emit(report)
+
+
+def cmd_doctor(args, store):
+    """Report whether this subsystem's estate is reachable, and how.
+
+    Each dependency is exercised, not just imported: the output names the
+    project, the symbol used, and what it answered. A partial checkout shows up
+    as one named gap instead of eight unrelated tracebacks.
+    """
+    from . import estate, estate_calls, estate_surface
+
+    checks: dict[str, dict] = {}
+
+    def probe(name: str, fn) -> None:
+        try:
+            checks[name] = {"ok": True, "result": fn()}
+        except Exception as exc:  # noqa: BLE001 - the report is the point
+            checks[name] = {"ok": False, "error": f"{type(exc).__name__}: {exc}"}
+
+    probe("memory_engine.validate_event_time",
+          lambda: estate_calls.validate_event_time("2026-01-01T00:00:00+00:00"))
+    probe("memory_engine._load_ledger", lambda: len(estate_calls.ledger_rows()))
+    probe("mem20verify.dataintegrity.check",
+          lambda: {k: v for k, v in estate_calls.verify_ledger_integrity().items()
+                   if k in ("ok", "checked", "roundtrip_ok", "error")})
+    probe("mem20ops.memchecks.identity_check",
+          lambda: {k: v for k, v in estate_calls.identity().items()
+                   if k in ("store_path", "pinned_block_count", "namespace_count")})
+    probe("mem20secretz.sweep.classify",
+          lambda: estate_calls.classify_secret("EXAMPLE_TOKEN", "not-a-real-secret"))
+    probe("mem20liez.gates.check_prohibited_uses",
+          lambda: estate_calls.check_belief_legality(["memory_search"]))
+    probe("mem20ircz.filter.classify", estate_surface.wire_noise)
+    probe("toolchest.catalog.load_inventory",
+          lambda: {k: estate_surface.tool_inventory()[k] for k in ("total", "source")})
+
+    wired = sum(1 for c in checks.values() if c["ok"])
     _emit({
-        "ledger": args.ledger,
-        "ledger_rows": len(rows),
-        "intervals_derived": len(derive_intervals(rows)),
-        "versions_in_store": engine.store.count(),
-        "chain": engine.store.verify_chain(),
+        "estate": estate.estate_status(),
+        "checks": checks,
+        "wired": wired,
+        "total": len(checks),
+        "ok": wired == len(checks),
     })
+    return 0 if wired == len(checks) else 1
 
 
 def cmd_selftest(args, store):
@@ -230,7 +257,7 @@ HANDLERS = {
     "expire": cmd_expire, "get": cmd_get, "slices": cmd_slices,
     "history": cmd_history, "explain": cmd_explain, "export": cmd_export,
     "verify": cmd_verify, "ingest": cmd_ingest, "selftest": cmd_selftest,
-    "serve": cmd_serve,
+    "serve": cmd_serve, "doctor": cmd_doctor,
 }
 
 
@@ -298,6 +325,11 @@ def build_parser() -> argparse.ArgumentParser:
 
     p = sub.add_parser("ingest", help="build intervals from mem20's memory ledger")
     p.add_argument("--ledger", default=LEDGER)
+    p.add_argument("--no-verify", dest="no_verify", action="store_true",
+                   help="skip the mem20verify round-trip check (inspection only)")
+
+    sub.add_parser("doctor",
+                   help="probe every estate dependency this subsystem uses")
 
     sub.add_parser("selftest", help="prove the core claims on a throwaway store")
 
@@ -317,7 +349,7 @@ def main(argv: list[str] | None = None) -> int:
         store = TemporalStore(args.db)
         return HANDLERS[args.command](args, store) or 0
     except (InvariantError, ChainError, ValueError, FileNotFoundError) as exc:
-        print(json.dumps({"error": type(exc).__name__, "detail": str(exc)}),
+        print(json.dumps({"error": type(exc).__name__, "message": str(exc)}),
               file=sys.stderr)
         return 2
     finally:

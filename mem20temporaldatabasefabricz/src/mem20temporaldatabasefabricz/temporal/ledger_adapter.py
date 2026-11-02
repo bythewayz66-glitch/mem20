@@ -21,12 +21,14 @@ from __future__ import annotations
 import hashlib
 from typing import Any, Iterable
 
+from .estate_calls import ledger_rows, verify_ledger_integrity
+from .estate_surface import is_noise_line
 from .engine import BiTemporalEngine
 from .interval import Interval
 from .store import TemporalStore
 
 __all__ = ["derive_intervals", "build_engine", "temporal_filter",
-           "content_hash", "TEMPORAL_DIAGNOSTICS"]
+           "content_hash", "ingest_ledger", "TEMPORAL_DIAGNOSTICS"]
 
 DEFAULT_SUBJECT = "topic"
 FACT_ATTRIBUTE = "fact"
@@ -153,6 +155,74 @@ def build_engine(store: TemporalStore, records: Iterable[dict],
         added += 1
     engine.last_sync_added = added
     return engine
+
+
+def ingest_ledger(store: TemporalStore, ledger_path: str | None = None,
+                  engine_dir: str | None = None, clock=None,
+                  verify: bool = True) -> dict:
+    """Ingest the memory ledger into a durable engine, verifying it first.
+
+    This is the real ingest path - the CLI, the HTTP service and the tests all
+    go through it. Three estate calls shape it, and each replaces a guess this
+    package used to make on its own:
+
+    * **where the ledger is** and **how its rows are shaped** comes from
+      ``memory_engine.memory`` (``ledger_rows``), not from a path constant
+      duplicated here.
+    * **whether that ledger is trustworthy** comes from
+      ``mem20verify.dataintegrity.check``. With ``verify=True`` (the default) an
+      engine that cannot round-trip a write refuses the ingest: deriving
+      intervals from a ledger that cannot round-trip produces plausible answers
+      about damaged data, which is worse than an error.
+    * **whether a row is wire noise** comes from ``mem20ircz.filter``. A ledger
+      that also carries transport chatter would otherwise turn join/part storms
+      into asserted beliefs.
+
+    Returns the ingest report, including the verification result, so a caller
+    can tell "ingested 374 versions" from "ingested 374 versions of damage".
+    """
+    report: dict[str, Any] = {
+        "ledger": ledger_path or "<memory_engine default>",
+        "verified": None,
+        "skipped_noise": 0,
+        "ledger_rows": 0,
+    }
+
+    if verify:
+        integrity = verify_ledger_integrity(engine_dir)
+        report["verified"] = integrity
+        if not integrity.get("ok"):
+            raise ValueError(
+                "refusing to ingest: mem20verify.dataintegrity reports the "
+                f"memory engine cannot round-trip a write "
+                f"(error={integrity.get('error')!r}, "
+                f"failures={len(integrity.get('failures') or [])}). Intervals "
+                "derived from a ledger that cannot round-trip are answers about "
+                "damaged data. Re-run with verify=False only to inspect it."
+            )
+
+    rows = ledger_rows(ledger_path)
+    report["ledger_rows"] = len(rows)
+
+    kept: list[dict] = []
+    for row in rows:
+        # Only content-bearing rows can be noise; supersede markers carry no
+        # text of their own and must survive for the correction chain.
+        if row.get("action") == "remember":
+            body = row.get("content") or ""
+            if body and is_noise_line(body):
+                report["skipped_noise"] += 1
+                continue
+        kept.append(row)
+
+    engine = build_engine(store, kept, clock=clock)
+    report["intervals_derived"] = len(derive_intervals(kept))
+    report["versions_in_store"] = engine.store.count()
+    report["added_this_run"] = engine.last_sync_added
+    report["chain"] = engine.store.verify_chain()
+    report["skipped_noise"] = report["skipped_noise"]
+    report["wire_classifier"] = "mem20ircz.filter.classify"
+    return report
 
 
 def temporal_filter(engine: BiTemporalEngine, ids: Iterable[str],

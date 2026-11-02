@@ -83,6 +83,7 @@ class Result:
     py_files: int = 0
     stub_hits: list = field(default_factory=list)
     cross_list: list = field(default_factory=list)
+    cross_detail: dict = field(default_factory=dict)
     failures: list = field(default_factory=list)
 
     @property
@@ -195,6 +196,204 @@ def rust_cross_modules(name: str, path: Path) -> set[str]:
     return used
 
 
+def _bound_names(tree: ast.AST) -> dict:
+    """Map each locally bound name to the top-level mem20 module it came from.
+
+    Covers the four shapes that actually appear in this estate:
+
+        import mem20core.core as core          -> core  -> mem20core
+        import mem20core.core                  -> mem20core -> mem20core
+        from mem20core.core import canonical   -> canonical -> mem20core
+        from mem20core.core import x as y      -> y -> mem20core
+
+    A name bound by ``from X import Y`` is what criterion 6 must see *called*;
+    binding it is not evidence, so the caller looks for a ``Call`` node.
+    """
+    bound: dict = {}
+    for node in ast.walk(tree):
+        if isinstance(node, ast.Import):
+            for alias in node.names:
+                top = alias.name.split(".")[0]
+                local = alias.asname or top
+                bound[local] = top
+        elif isinstance(node, ast.ImportFrom):
+            if node.level or not node.module:
+                continue
+            top = node.module.split(".")[0]
+            for alias in node.names:
+                if alias.name == "*":
+                    continue
+                bound[alias.asname or alias.name] = top
+    return bound
+
+
+def _call_sites(tree: ast.AST, bound: dict) -> list:
+    """Every ``Call`` whose callee resolves to a bound cross-module name.
+
+    Returns ``(top_module, lineno)`` pairs. Three call shapes count:
+
+        canonical(receipt)              -> Name(id="canonical")
+        mem20core_core.canonical(...)   -> Attribute(value=Name(id="mem20core_core"))
+        engine.validate_event_time(...) -> Attribute(value=Name(id="engine"))
+
+    The third shape is why aliases are resolved first: a module is very often
+    bound to a local name (``engine = _static(_memory_engine, ...)``) before it
+    is called, and a scan that only looks at the import name would miss the
+    real call and wrongly report the dependency as decorative.
+    """
+    # Local aliases: `x = <bound name>` and `x = _static(<bound name>, ...)`.
+    alias: dict = {}
+    for node in ast.walk(tree):
+        if not isinstance(node, ast.Assign) or len(node.targets) != 1:
+            continue
+        target = node.targets[0]
+        if not isinstance(target, ast.Name):
+            continue
+        value = node.value
+        src = None
+        if isinstance(value, ast.Name) and value.id in bound:
+            src = value.id
+        elif isinstance(value, ast.Attribute) and isinstance(value.value, ast.Name):
+            # `engine_cls = plans.Engine` — the attribute of a bound module is
+            # still that module's callable, so calling the alias is a real call.
+            # `plans` may itself be an alias (`plans = _static(_plans_engine, ...)`),
+            # so resolve through the alias map as well as the import map.
+            if value.value.id in bound:
+                src = value.value.id
+            elif value.value.id in alias:
+                alias[target.id] = alias[value.value.id]
+                continue
+        elif isinstance(value, ast.Call) and value.args:
+            first = value.args[0]
+            if isinstance(first, ast.Name) and first.id in bound:
+                src = first.id
+        if src is not None:
+            alias[target.id] = bound[src]
+
+    def resolve(name: str):
+        if name in bound:
+            return bound[name]
+        return alias.get(name)
+
+    sites = []
+    for node in ast.walk(tree):
+        if not isinstance(node, ast.Call):
+            continue
+        func = node.func
+        if isinstance(func, ast.Name):
+            top = resolve(func.id)
+            if top:
+                sites.append((top, node.lineno))
+        elif isinstance(func, ast.Attribute) and isinstance(func.value, ast.Name):
+            top = resolve(func.value.id)
+            if top:
+                sites.append((top, node.lineno))
+    return sites
+
+
+def _covered_lines(name: str, path: Path, root: Path) -> tuple:
+    """Executed line numbers per file for this subsystem's own test run.
+
+    Returns ``(covered, reason)``. ``covered`` maps absolute path -> set of
+    executed line numbers. ``reason`` is a non-empty string when coverage could
+    not be produced, and the caller must then FAIL criterion 6 rather than pass
+    it: an unverifiable claim is not evidence.
+    """
+    import json as _json
+    import subprocess
+    import tempfile
+
+    with tempfile.TemporaryDirectory() as tmp:
+        data_file = Path(tmp) / ".coverage"
+        json_file = Path(tmp) / "coverage.json"
+        env = dict(os.environ)
+        env["COVERAGE_FILE"] = str(data_file)
+        # Only the subsystem's own sources are measured; the estate's other
+        # modules are imported but are not this row's evidence.
+        cmd = [
+            sys.executable, "-m", "coverage", "run",
+            f"--source={path}",
+            "-m", "pytest", str(path), "-q", "--no-header", "-p", "no:cacheprovider",
+        ]
+        try:
+            proc = subprocess.run(
+                cmd, cwd=str(root), env=env, capture_output=True, text=True, timeout=900,
+            )
+        except FileNotFoundError:
+            return {}, "coverage module not installed (pip install coverage)"
+        except subprocess.TimeoutExpired:
+            return {}, "coverage run timed out after 900s"
+        # pytest exit 5 = no tests collected; that is a real "no evidence" case.
+        if proc.returncode not in (0, 1):
+            tail = (proc.stderr or proc.stdout or "").strip().splitlines()[-1:] or [""]
+            return {}, f"coverage run failed (exit {proc.returncode}): {tail[0][:160]}"
+        try:
+            subprocess.run(
+                [sys.executable, "-m", "coverage", "json", "-o", str(json_file), "-q"],
+                cwd=str(root), env=env, capture_output=True, text=True, timeout=300,
+            )
+            payload = _json.loads(json_file.read_text(encoding="utf-8"))
+        except Exception as exc:
+            return {}, f"coverage json unavailable: {type(exc).__name__}: {exc}"
+
+    covered: dict = {}
+    for fname, info in (payload.get("files") or {}).items():
+        executed = set(info.get("executed_lines") or [])
+        # coverage reports paths relative to the cwd it ran in (the repo root),
+        # so resolve against root rather than the gate's own cwd.
+        p = Path(fname)
+        if not p.is_absolute():
+            p = root / p
+        covered[str(p.resolve())] = executed
+    if not covered:
+        return {}, "coverage produced no measured files"
+    return covered, ""
+
+
+def python_cross_modules_covered(name: str, path: Path, src: list, root: Path) -> tuple:
+    """Cross-modules that are imported AND called on a line the tests execute.
+
+    This is the criterion-6 rule as an architecture check rather than an import
+    scan. A module counts only when a ``Call`` to a name bound from it sits on a
+    line that this subsystem's own test run actually executed. A bare import, a
+    ``# noqa: F401`` re-export, or a call on an untested path does not count.
+
+    Returns ``(modules, detail, reason)`` where ``reason`` is non-empty when the
+    check could not be performed and the caller must fail closed.
+    """
+    per_file = []
+    for p in src:
+        try:
+            tree = ast.parse(p.read_text(encoding="utf-8", errors="ignore"))
+        except (SyntaxError, OSError):
+            continue
+        bound = _bound_names(tree)
+        sites = _call_sites(tree, bound)
+        if sites:
+            per_file.append((p, sites))
+
+    if not per_file:
+        return set(), {}, ""
+
+    covered, reason = _covered_lines(name, path, root)
+    if reason:
+        return set(), {}, reason
+
+    real: set = set()
+    detail: dict = {}
+    for p, sites in per_file:
+        executed = covered.get(str(p.resolve()), set())
+        for top, lineno in sites:
+            if top == name:
+                continue
+            if not (top.startswith("mem20") or top in CORE_MODULES):
+                continue
+            if lineno in executed:
+                real.add(top)
+                detail.setdefault(top, []).append(f"{p.relative_to(root)}:{lineno}")
+    return real, detail, ""
+
+
 def check_subsystem(name: str, root: Path = REPO_ROOT) -> Result:
     path = root / name
     res = Result(subsystem=name)
@@ -269,32 +468,32 @@ def check_subsystem(name: str, root: Path = REPO_ROOT) -> Result:
         res.failures.append("README missing or has no fenced example")
 
     # 6. cross-module imports (>= 5 distinct other mem20 modules)
+    #
+    # An import is not evidence. For Python subsystems the module must be
+    # imported AND a call to a name bound from it must sit on a line this
+    # subsystem's own tests execute. If coverage cannot be produced the check
+    # FAILS CLOSED with a named reason — an unverifiable claim is not a pass.
     if rust_primary:
         imported = rust_cross_modules(name, path)
+        res.cross_detail = {}
     else:
-        imported = set()
-        for p in src:
-            try:
-                tree = ast.parse(p.read_text(encoding="utf-8", errors="ignore"))
-            except (SyntaxError, OSError):
-                continue
-            for node in ast.walk(tree):
-                mods = []
-                if isinstance(node, ast.Import):
-                    mods = [a.name for a in node.names]
-                elif isinstance(node, ast.ImportFrom) and node.module and node.level == 0:
-                    mods = [node.module]
-                for m in mods:
-                    top = m.split(".")[0]
-                    if top == name:
-                        continue
-                    if top.startswith("mem20") or top in CORE_MODULES:
-                        imported.add(top)
+        imported, detail, reason = python_cross_modules_covered(name, path, src, root)
+        res.cross_detail = detail
+        if reason:
+            res.cross_ok = False
+            res.cross_modules = 0
+            res.cross_list = []
+            res.failures.append(f"criterion 6 unverifiable: {reason}")
+            res.registered = check_registered(name, root)
+            return res
     res.cross_list = sorted(imported)
     res.cross_modules = len(imported)
     res.cross_ok = res.cross_modules >= 5
     if not res.cross_ok:
-        res.failures.append(f"only {res.cross_modules} cross-module import(s), need >= 5")
+        res.failures.append(
+            f"only {res.cross_modules} cross-module(s) imported AND called on a "
+            f"covered line, need >= 5"
+        )
 
     # 7. registered with MCP server / gateway
     res.registered = check_registered(name, root)
@@ -381,6 +580,10 @@ def main(argv=None) -> int:
         ]:
             print(f"{label:28s} {'PASS' if ok else 'FAIL'}")
         print(f"cross-modules ({r.cross_modules}): {', '.join(r.cross_list) or '-'}")
+        if r.cross_detail:
+            print("cross-module call sites (imported AND called on a covered line):")
+            for mod in sorted(r.cross_detail):
+                print(f"  - {mod}: {', '.join(r.cross_detail[mod])}")
         if r.failures:
             print("\nfailures:")
             for f in r.failures:

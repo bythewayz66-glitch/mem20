@@ -1,0 +1,52 @@
+name: Artifact Evidence Gate
+
+# 4.0 renovation rule: every PR must carry a committed artifact as evidence —
+# a 40-character SHA of a pushed branch (verified as a real commit object) or a
+# permanent URL (https://static.teamily.ai/sites/... or /files/...) committed
+# under docs/. Chat descriptions do not count as delivered.
+#
+# Diff-scoped: only files added/changed by the PR are inspected, so legacy debt
+# already on main cannot fail a clean PR (same contract as pr-gate.yml hygiene).
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+
+concurrency:
+  group: artifact-evidence-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  artifact-evidence:
+    name: artifact evidence
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Compute diff against the base
+        run: |
+          set -euo pipefail
+          if [ "${{ github.event_name }}" = "pull_request" ]; then
+            git fetch --no-tags origin "${{ github.base_ref }}" || true
+            RANGE="origin/${{ github.base_ref }}...HEAD"
+          else
+            BEFORE="${{ github.event.before }}"
+            if [ -z "$BEFORE" ] || [ "$BEFORE" = "0000000000000000000000000000000000000000" ]; then
+              RANGE="HEAD~1...HEAD"
+            else
+              RANGE="${BEFORE}...HEAD"
+            fi
+          fi
+          echo "RANGE=$RANGE" >> "$GITHUB_ENV"
+
+      - name: Run the artifact-evidence gate
+        run: |
+          set -euo pipefail
+          python3 scripts/check_artifact_evidence.py --range "$RANGE" --repo .

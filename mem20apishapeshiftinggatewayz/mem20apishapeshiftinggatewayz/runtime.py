@@ -5,6 +5,12 @@ from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 from urllib.parse import urlparse, parse_qs
 
+from . import governance
+
+#: Request keys that belong to admission control, not to the operation. Stripped
+#: before dispatch so an operation never treats a policy field as domain input.
+GOVERNANCE_KEYS = frozenset({"route", "version", "intended_uses", "mapping", "wire", "my_nicks", "at", "valid_from", "valid_to"})
+
 class ValidationError(ValueError): pass
 class QuotaError(RuntimeError): pass
 
@@ -79,6 +85,8 @@ class Engine:
         self.config=config
         self.store=Store(db_path or Path('state')/(config['id']+'.sqlite3'))
         self.metrics={'executions':0,'errors':0,'retries':0,'failovers':0}
+        self.admissions={}
+        self.provenance={}
     def validate(self,p):
         if not isinstance(p,dict): raise ValidationError('input must be JSON object')
         if len(json.dumps(p))>self.HARD_LIMITS['max_text']: raise QuotaError('payload too large')
@@ -168,6 +176,29 @@ class Engine:
         return {'count':len(vals),'mean':statistics.fmean(vals) if vals else None,'min':min(vals) if vals else None,'max':max(vals) if vals else None,'decision':d.choice,'confidence':d.confidence,'explanation':d.explanation}
     def execute(self,p,idem=None,retries=2,timeout_ms=None):
         self.validate(p); retries=max(0,min(int(retries),self.HARD_LIMITS['max_retries'])); timeout_ms=min(int(timeout_ms or self.HARD_LIMITS['max_runtime_ms']),self.HARD_LIMITS['max_runtime_ms'])
+        # Admission control runs before the payload is transformed. A gateway
+        # that rewrites payloads is where a field silently disappears, so the
+        # route, the declared purpose, the version window and the upstream noise
+        # are all settled first. A refusal raises and the payload is NOT
+        # transformed.
+        # The default route used to be the roadmap id ("RM-075"), which is not
+        # an estate address -- no upstream would match it. The estate-prefixed
+        # form is the address the rest of the estate actually resolves.
+        route=str(p.get('route') or f"mem20_{self.config['id'].lower()}")
+        admission, wire = governance.admit(
+            route, p, Path(__file__).resolve().parent,
+            version=str(p.get('version') or ''),
+            intended_uses=p.get('intended_uses'),
+            mapping=p.get('mapping'),
+            wire=p.get('wire'),
+            my_nicks=p.get('my_nicks') or (),
+            at=p.get('at'),
+            valid_from=p.get('valid_from'),
+            valid_to=p.get('valid_to'),
+        )
+        self.admissions[route]=admission
+        p={k:v for k,v in p.items() if k not in GOVERNANCE_KEYS}
+        if wire: p['wire']=[line.text for line in wire]
         idem=idem or hashlib.sha256(json.dumps(p,sort_keys=True).encode()).hexdigest(); old=self.store.job_by_idem(idem)
         if old and old['state']=='succeeded': return json.loads(old['output'])
         job={'id':old['id'] if old else str(uuid.uuid4()),'idem':idem,'state':'running','attempts':0,'input':p}; started=time.perf_counter(); last=None
@@ -177,12 +208,20 @@ class Engine:
                 if p.get('_inject_failure') and attempt < int(p.get('_fail_attempts',1)): raise RuntimeError('injected provider loss')
                 out=self.operate(p)
                 if (time.perf_counter()-started)*1000 > timeout_ms: raise TimeoutError('operation timeout')
-                job.update(state='succeeded',output=out,error=None); self.store.save_job(job); self.metrics['executions']+=1; self.store.put('output',job['id'],{'roadmap':self.config['id'],'result':out}); return out
+                job.update(state='succeeded',output=out,error=None); self.store.save_job(job); self.metrics['executions']+=1; self.store.put('output',job['id'],{'roadmap':self.config['id'],'result':out})
+                self.provenance[route]=governance.record_provenance(route,p,out)
+                return out
             except Exception as e:
                 last=e; self.metrics['errors']+=1
                 if attempt<retries: self.metrics['retries']+=1; continue
                 job.update(state='failed',error=str(e)); self.store.save_job(job); raise
         raise last
+    def admission_report(self):
+        """What admission control decided for the last translation of each route."""
+        return {route: adm.as_dict() for route, adm in self.admissions.items()}
+    def provenance_report(self):
+        """Where each translation was recorded, and whether it was committed."""
+        return dict(self.provenance)
     def feedback(self,score,payload=None): self.store.add_feedback(score,payload or {}); return {'accepted':True,'bias':self.store.feedback_bias()}
     def mesh_select(self,nodes,mode='hybrid'):
         live=[n for n in nodes if n.get('available',True)]
@@ -234,7 +273,7 @@ class Handler(BaseHTTPRequestHandler):
         if u.path=='/events': return self.sendj(200,self.engine.store.events(int(q.get('since',['0'])[0])))
         if u.path=='/objects': return self.sendj(200,self.engine.store.query(q.get('kind',[None])[0]))
         if u.path=='/':
-            title=f"{self.engine.config['id']} — {self.engine.config['title']}"
+            title=f"{self.engine.config['id']} \u2014 {self.engine.config['title']}"
             html=("<!doctype html><meta charset=utf-8><title>"+title+"</title><style>body{font:16px system-ui;max-width:1000px;margin:40px auto;padding:0 18px}textarea{width:100%;height:180px}pre{background:#111;color:#eee;padding:16px;overflow:auto}</style><h1>"+title+"</h1><p>"+self.engine.config['outcome']+"</p><p><b>Signature mode:</b> "+self.engine.config['breakthrough']+"</p><p><b>Roadmap surfaces:</b> "+', '.join(self.engine.config['surfaces'])+"</p><textarea id=p>{\"goal\":\""+self.engine.config['outcome'].replace('"','&quot;')+"\",\"candidates\":[{\"id\":\"local\",\"utility\":0.9},{\"id\":\"edge\",\"utility\":0.8}]}</textarea><button onclick=go()>Execute</button><pre id=o></pre><script>async function go(){let r=await fetch('/execute',{method:'POST',headers:{'content-type':'application/json'},body:p.value});o.textContent=JSON.stringify(await r.json(),null,2)}</script>").encode()
             self.send_response(200); self.send_header('Content-Type','text/html; charset=utf-8'); self.send_header('Content-Length',str(len(html))); self.end_headers(); return self.wfile.write(html)
         return self.sendj(404,{'error':'not found'})
@@ -256,10 +295,13 @@ def main(config_path=None):
     p=sub.add_parser('execute'); p.add_argument('json'); p.add_argument('--idem')
     p=sub.add_parser('serve'); p.add_argument('--host',default='127.0.0.1'); p.add_argument('--port',type=int,default=0)
     sub.add_parser('simulate'); sub.add_parser('benchmark'); sub.add_parser('metrics')
+    sub.add_parser('admission'); sub.add_parser('provenance')
     a=ap.parse_args(); cfg=load_config(a.config); eng=Engine(cfg)
     if a.cmd=='execute': print(json.dumps(eng.execute(json.loads(a.json),a.idem),indent=2,sort_keys=True))
     elif a.cmd=='simulate': print(json.dumps(eng.simulator(),indent=2,sort_keys=True))
     elif a.cmd=='benchmark': print(json.dumps(eng.benchmark(),indent=2,sort_keys=True))
     elif a.cmd=='metrics': print(json.dumps(eng.metrics_snapshot(),indent=2,sort_keys=True))
+    elif a.cmd=='admission': print(json.dumps(eng.admission_report(),indent=2,sort_keys=True))
+    elif a.cmd=='provenance': print(json.dumps(eng.provenance_report(),indent=2,sort_keys=True))
     elif a.cmd=='serve':
         Handler.engine=eng; srv=ThreadingHTTPServer((a.host,a.port),Handler); print(f'http://{a.host}:{srv.server_port}',flush=True); srv.serve_forever()

@@ -9,7 +9,7 @@ import pytest
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "src"))
 from toolchest import catalog  # noqa: E402
 
-MEM20_ROOT = Path("/opt/mem20")
+MEM20_ROOT = Path(__file__).resolve().parents[2]
 MCP_DIR = MEM20_ROOT / "mcp"
 
 

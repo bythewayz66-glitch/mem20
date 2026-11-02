@@ -15,6 +15,10 @@ import pytest
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
+_REPO_ROOT = os.path.dirname(
+    os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+)
+
 
 @pytest.fixture()
 def mem(tmp_path, monkeypatch):
@@ -100,7 +104,7 @@ class TestEventTimeValidation:
 
 class TestAdapterReadsTheBasis:
     def test_legacy_rows_without_the_field_count_as_assumed(self, mem):
-        sys.path.insert(0, "/opt/mem20/mem20temporaldatabasefabricz")
+        sys.path.insert(0, os.path.join(_REPO_ROOT, "mem20temporaldatabasefabricz"))
         from mem20temporaldatabasefabricz.temporal.ledger_adapter import derive_intervals
 
         intervals = derive_intervals([
@@ -110,7 +114,7 @@ class TestAdapterReadsTheBasis:
         assert intervals[0].provenance["event_time_basis"] == "assumed_ingestion"
 
     def test_declared_field_survives_into_provenance(self, mem):
-        sys.path.insert(0, "/opt/mem20/mem20temporaldatabasefabricz")
+        sys.path.insert(0, os.path.join(_REPO_ROOT, "mem20temporaldatabasefabricz"))
         from mem20temporaldatabasefabricz.temporal.ledger_adapter import derive_intervals
 
         intervals = derive_intervals([

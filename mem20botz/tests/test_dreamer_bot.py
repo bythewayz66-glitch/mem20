@@ -74,7 +74,7 @@ class TestHerChannel(unittest.TestCase):
         self.assertNotIn("dreamer", [b.nick for b in Crew().bots])
 
     def test_her_channel_exists_in_the_ircd_config(self):
-        conf = Path("/opt/mem20/mem20botz/ircd/ngircd.conf").read_text()
+        conf = (Path(__file__).resolve().parents[1] / "ircd" / "ngircd.conf").read_text()
         self.assertIn("#dreamz", conf)
         self.assertIn("#mem20", conf)
 

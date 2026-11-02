@@ -22,7 +22,7 @@ import pytest
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 sys.path.insert(0, str(Path(__file__).resolve().parent))
-sys.path.insert(0, "/opt/mem20")
+sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 
 from mem20dreamz import engine, panel, verdicts
 from mem20dreamz import verdicts as v
@@ -309,10 +309,11 @@ def test_the_panel_never_publishes_secrets_into_the_environment():
     import subprocess
     import sys as _sys
 
+    _root = str(Path(__file__).resolve().parents[2])
     code = (
         "import os, sys;"
         "before=set(os.environ);"
-        "sys.path.insert(0,'/opt/mem20');"
+        f"sys.path.insert(0,{_root!r});"
         "from mem20dreamz import panel;"
         "panel.panel();"
         "import json;print(json.dumps(sorted(set(os.environ)-before)))"

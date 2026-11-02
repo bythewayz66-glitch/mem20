@@ -29,7 +29,12 @@ import sys
 # `runner`/`worker` reach for it too. The substrate lives at the estate root
 # rather than in site-packages, so put it on the path before anything imports it.
 # Same convention the other mem20 packages use; a no-op if it is already there.
-_ESTATE_ROOT = os.environ.get("MEM20_ESTATE_ROOT", "/opt/mem20")
+_ESTATE_ROOT = os.environ.get(
+    "MEM20_ESTATE_ROOT",
+    os.path.dirname(
+        os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+    ),
+)
 if os.path.isdir(_ESTATE_ROOT) and _ESTATE_ROOT not in sys.path:
     sys.path.append(_ESTATE_ROOT)
 

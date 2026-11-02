@@ -16,7 +16,9 @@ import importlib.util
 import os
 import sys
 
-DEFAULT_CANONICAL_ROOT = "/opt/mem20/mcp"
+DEFAULT_CANONICAL_ROOT = os.path.join(
+    os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "mcp"
+)
 
 #: Set to "0" to skip the preflight. Only for a caller that has already run it
 #: and wants to avoid paying for it twice; the default is to check.

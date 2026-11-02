@@ -32,7 +32,7 @@ except ImportError as _exc:  # pragma: no cover - only without a canonical tree
         allow_module_level=True,
     )
 
-REAL_ROOT = Path("/opt/mem20/mcp")
+REAL_ROOT = Path(_forward.DEFAULT_CANONICAL_ROOT)
 
 
 @pytest.fixture
@@ -65,7 +65,9 @@ def _restore_modules():
 
 def test_default_canonical_root_is_the_real_tree():
     """The default must be the tree that is actually running."""
-    assert _forward.DEFAULT_CANONICAL_ROOT == "/opt/mem20/mcp"
+    default = Path(_forward.DEFAULT_CANONICAL_ROOT)
+    assert default.is_absolute(), "the default must be an absolute path"
+    assert default.name == "mcp", "the default must point at an mcp tree"
     if REAL_ROOT.is_dir():
         assert os.path.isfile(REAL_ROOT / "server.py")
         assert (REAL_ROOT / "tools").is_dir()

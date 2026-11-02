@@ -22,10 +22,11 @@ import os
 import subprocess
 import sys
 import textwrap
+from pathlib import Path
 
 import pytest
 
-BRIDGE_DIR = "/opt/mem20"
+BRIDGE_DIR = str(Path(__file__).resolve().parents[2])
 
 
 def _run(ledger_dir: str, body: str) -> tuple[int, str, str]:

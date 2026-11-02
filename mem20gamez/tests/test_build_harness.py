@@ -42,7 +42,7 @@ def test_v21_seam_actually_installs():
 
 def test_the_substrate_is_importable_for_the_seam():
     """v21 patches mem20's `llm`; the package must put the estate root on the path."""
-    assert "/opt/mem20" in sys.path or harness._ESTATE_ROOT in sys.path
+    assert harness._ESTATE_ROOT in sys.path
     import llm
 
     assert callable(llm.chat)

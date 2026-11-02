@@ -13,7 +13,9 @@ import re
 import subprocess
 from dataclasses import dataclass, field
 
-DEFAULT_ROOT = "/opt/mem20"
+DEFAULT_ROOT = os.path.dirname(
+    os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+)
 DEFAULT_PYTHON = "/usr/local/bin/python"
 
 _COUNT_RE = re.compile(r"(\d+)\s+(passed|failed|error|errors|skipped|xfailed|xpassed)")

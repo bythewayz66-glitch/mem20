@@ -2377,7 +2377,7 @@ class TestAcceptance(_Sealed):
         self.assertIn("mem20agentz", run.stdout)
 
     def test_full_repo_branding_sweep(self):
-        root = pathlib.Path("/opt/mem20/mem20agentz")
+        root = pathlib.Path(__file__).resolve().parents[1]
         hits = []
         for path in root.rglob("*"):
             if not path.is_file() or path.suffix not in (".py", ".md", ".toml"):

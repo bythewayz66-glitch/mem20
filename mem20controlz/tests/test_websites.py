@@ -74,6 +74,20 @@ def no_network_client(monkeypatch):
     )
 
 
+# A fleet declared for the drift tests. The shipped FLEET_SITES is empty (every
+# host it once held belonged to a retired zone), so the planned-vs-observed logic
+# is exercised against rows injected here rather than against shipped data.
+DECLARED_FLEET = [
+    {"host": "planned.example.com", "role": "test", "state": "planned"},
+    {"host": "retired.example.com", "role": "test", "state": "retired"},
+    {"host": "absent.example.com", "role": "test", "state": "planned"},
+]
+
+
+def declare_fleet(monkeypatch, sites):
+    monkeypatch.setattr(websites, "FLEET_SITES", [dict(s) for s in sites])
+
+
 def test_manifest_returns_the_documented_keys():
     result = websites.manifest()
     assert set(result) == {
@@ -92,6 +106,19 @@ def test_manifest_returns_the_documented_keys():
 def test_manifest_fleet_sites_are_well_formed():
     sites = websites.manifest()["fleet_sites"]
     assert sites == websites.FLEET_SITES
+    # The shipped fleet is empty: every host it once declared belonged to a
+    # retired zone, and a retired hostname must not survive in a live code path.
+    assert sites == []
+    for site in sites:
+        assert set(site) == {"host", "role", "state"}
+        assert site["state"] in {"planned", "live", "retired"}
+
+
+def test_a_declared_fleet_row_is_well_formed(monkeypatch):
+    # The shape contract still holds for a fleet declared in the future.
+    declare_fleet(monkeypatch, DECLARED_FLEET)
+    sites = websites.manifest()["fleet_sites"]
+    assert sites == DECLARED_FLEET
     for site in sites:
         assert set(site) == {"host", "role", "state"}
         assert site["state"] in {"planned", "live", "retired"}
@@ -522,16 +549,12 @@ def test_site_inventory_survives_a_client_that_cannot_be_built(monkeypatch):
 
 
 def test_site_inventory_marks_present_and_missing_hosts(monkeypatch):
-    # Every shipped FLEET_SITES row is "retired" now that jaysonai.online is gone,
-    # so the planned-vs-observed drift path is exercised with an injected row.
-    planned = "planned.example.com"
-    retired = websites.FLEET_SITES[1]["host"]
-    absent = websites.FLEET_SITES[2]["host"]
-    monkeypatch.setattr(
-        websites,
-        "FLEET_SITES",
-        [{"host": planned, "role": "test", "state": "planned"}, *websites.FLEET_SITES],
-    )
+    # The shipped FLEET_SITES is empty, so the planned-vs-observed drift path is
+    # exercised with an injected fleet.
+    declare_fleet(monkeypatch, DECLARED_FLEET)
+    planned = DECLARED_FLEET[0]["host"]
+    retired = DECLARED_FLEET[1]["host"]
+    absent = DECLARED_FLEET[2]["host"]
     client = FakeCloudflare(
         records=[
             record(planned),
@@ -559,7 +582,8 @@ def test_site_inventory_marks_present_and_missing_hosts(monkeypatch):
 
 
 def test_site_inventory_host_matching_is_case_insensitive(monkeypatch):
-    host = websites.FLEET_SITES[1]["host"]
+    declare_fleet(monkeypatch, DECLARED_FLEET)
+    host = DECLARED_FLEET[1]["host"]
     client = FakeCloudflare(records=[record(host.upper())])
     monkeypatch.setattr(websites, "build_client", lambda *a, **k: client)
 
@@ -569,7 +593,8 @@ def test_site_inventory_host_matching_is_case_insensitive(monkeypatch):
 
 
 def test_site_inventory_reads_are_non_mutating(monkeypatch):
-    client = FakeCloudflare(records=[record(websites.FLEET_SITES[1]["host"])])
+    declare_fleet(monkeypatch, DECLARED_FLEET)
+    client = FakeCloudflare(records=[record(DECLARED_FLEET[1]["host"])])
     monkeypatch.setattr(websites, "build_client", lambda *a, **k: client)
 
     websites.site_inventory()

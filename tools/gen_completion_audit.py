@@ -104,7 +104,9 @@ def services() -> dict:
 
 def endpoints() -> list[dict]:
     out = []
-    # jaysonai.online is retired; these endpoints no longer exist and are not probed.
+    # The former fleet endpoints are retired and no longer resolve, so nothing is
+    # probed here. The loop is kept so a live endpoint list can be restored
+    # without changing the report shape.
     for url in ():
         code = sh(f"curl -s -o /dev/null -w '%{{http_code}}' --max-time 25 {url}", timeout=40)
         out.append({"url": url, "code": code or "no response"})

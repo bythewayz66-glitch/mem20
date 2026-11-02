@@ -161,11 +161,11 @@ Run workflow* with `dry_run` left on (the default).
 
 ## Verification — reproduced results
 
-The results below were produced by running the suite and a live round-trip on the
-**Sidney** host (now retired; Kali Linux, Ruby 3.3.8) against the mem20 server at
-**v2.1.0rc2**. They
-are this SDK's actual measured results; the raw command output is reproduced in
-[`docs/EVIDENCE.md`](docs/EVIDENCE.md).
+The results below were produced by running the suite and a live round-trip against
+the mem20 server at **v2.1.0rc2** on a Kali Linux host with Ruby 3.3.8. That host
+has since been retired and no longer exists; the measurements stand as recorded.
+They are this SDK's actual measured results; the raw command output is reproduced
+in [`docs/EVIDENCE.md`](docs/EVIDENCE.md).
 
 | Check | Result |
 |---|---|

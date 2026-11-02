@@ -22,7 +22,11 @@ curl -s -o /dev/null -w '%{http_code}\n' \
 `docs/index.html`**, not a re-publish of an existing build. Anyone planning
 around a quick republish is planning around a file that is not there.
 
-## 2. Sidney (216.198.115.91) is dark — nobody may report the gateway as up
+## 2. The retired publish host (216.198.115.91) is dark — nobody may report the gateway as up
+
+> **Historical record, 2026-10-26.** The host was retired outright on 2026-10-31 and
+> no longer exists. This section is kept as the dated evidence for why no report may
+> claim it was reachable; it is not a live instruction to restore it.
 
 All four ports fail, from this sandbox, on 2026-10-26:
 
@@ -45,8 +49,9 @@ done
 ```
 
 **Consequence:** no status report may describe the gateway as reachable today,
-and no artifact may be delivered by pointing at Sidney. GitHub is the delivery
-surface until Sidney is back.
+and no artifact may be delivered by pointing at the retired host. GitHub is the
+delivery surface. (The host was subsequently retired outright on 2026-10-31; see
+`CHANGELOG.md` and `docs/releases/v3.1.0.md`.)
 
 ## 3. mem20 is not on PyPI — no doc may claim `pip install`
 

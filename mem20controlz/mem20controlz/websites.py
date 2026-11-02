@@ -15,25 +15,21 @@ from typing import Any
 from mem20ops import audit
 from mem20ops.cloudflare import CloudflareAPI, build_client, resolve_account_id
 
-# The fleet this manager was built against. Every host below belonged to the
-# jaysonai.online zone, which is RETIRED: the domain, the Sidney host
-# (216.198.115.91) and the gabe publish gate no longer exist. The rows are kept
-# so the panel can show what was intended next to what actually exists, but they
-# are all marked "retired" and none of them is a live deployment target.
-FLEET_SITES: list[dict[str, str]] = [
-    {"host": "control.jaysonai.online", "role": "control plane (retired)", "state": "retired"},
-    {"host": "shop.jaysonai.online", "role": "sales site (retired)", "state": "retired"},
-    {"host": "market.jaysonai.online", "role": "marketing command center (retired)", "state": "retired"},
-    {"host": "docs.jaysonai.online", "role": "documentation wiki (retired)", "state": "retired"},
-    {"host": "jaysonai.online", "role": "fleet landing, apex (retired)", "state": "retired"},
-    {"host": "www.jaysonai.online", "role": "apex alias (retired)", "state": "retired"},
-    {"host": "jnet1.jaysonai.online", "role": "box origin (retired)", "state": "retired"},
-    {"host": "mem20.jaysonai.online", "role": "mem20 pages site (retired)", "state": "retired"},
-]
+# The declared fleet. It is EMPTY: every host this manager was originally built
+# against belonged to a zone that has been retired, and the host and publish gate
+# behind it no longer exist. The rows were removed rather than kept as "retired"
+# placeholders so that no retired hostname survives in a live code path — a
+# placeholder is still a name the panel would render and a reader could act on.
+#
+# The inventory mechanism is unchanged: `site_inventory()` still compares a
+# declared row against what Cloudflare actually serves, so a future fleet is
+# declared here and the planned-vs-observed drift logic works as before.
+FLEET_SITES: list[dict[str, str]] = []
 
-# The jaysonai.online zone is retired, so there is no documented default zone.
-# Callers must supply one explicitly.
+# There is no documented default zone: the only zone this panel ever knew is
+# retired. Callers must supply one explicitly.
 DEFAULT_ZONE = ""
+
 # The units this fleet depends on, and which systemd manager owns each one.
 # Scope matters: the system manager cannot see a user unit and reports it as
 # inactive/dead, so asking the wrong manager invents a failure that never

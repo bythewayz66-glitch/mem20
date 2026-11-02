@@ -118,12 +118,21 @@ def _create_signer() -> str:
 
 
 def _load_or_create_signer() -> str:
-    """Materialize the persistent signer (create once on first use)."""
-    try:
-        import braid_python
-    except ImportError:
+    """Materialize the persistent signer (create once on first use).
+
+    Gate on :func:`available` rather than on ``import braid_python``. With the
+    repo root on ``sys.path`` the import resolves to the Rust *source* directory
+    as an empty namespace package: it succeeds, so an ``except ImportError``
+    guard never fires and the failure surfaces much later as a confusing
+    ``AttributeError: module 'braid_python' has no attribute 'PyBraidEngine'``
+    from deep inside signer creation. Checking the symbol up front turns that
+    into one honest BraidUnavailable at the boundary.
+    """
+    if not available():
         raise BraidUnavailable(
-            "braid_python is not installed. Run: /opt/mem20/.venv/bin/maturin develop --release"
+            "braid_python is not installed (or resolves to the Rust source "
+            "directory without the compiled extension). Run: "
+            "maturin develop --release"
         )
     return _resolve_signer(load=True)
 

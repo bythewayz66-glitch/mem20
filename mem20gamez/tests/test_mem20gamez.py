@@ -6,7 +6,11 @@ from pathlib import Path
 
 import numpy as np
 import pytest
-import torch
+
+# torch is an optional extra of mem20gamez (see mem20gamez/__init__.py). Declare
+# it here so collection succeeds cleanly on a machine without it and the reason
+# is explicit, instead of the whole module failing to import (issue #176).
+torch = pytest.importorskip("torch", reason="mem20gamez learning agents require the torch extra")
 
 import mem20gamez
 from mem20gamez.agent import AgentConfig, AgentType, RandomAgent, RuleBasedAgent, create_agent

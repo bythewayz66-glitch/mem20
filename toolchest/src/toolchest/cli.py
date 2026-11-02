@@ -136,8 +136,14 @@ def cmd_show(args: argparse.Namespace) -> int:
     if src and args.check_path:
         p = Path(src)
         candidates = [p]
-        # source may be repo-relative ("opt/mem20/mcp/server.py")
+        # `source` is repo-relative ("mcp/memory_tools.py"). Resolve it against
+        # the checkout this tool is running from, not a hardcoded /opt/mem20 -
+        # otherwise every path check reports False on any other checkout
+        # (issue #224). MEM20_ROOT is honoured first for non-standard layouts.
         if not p.is_absolute():
+            from .catalog import MEM20_ROOT
+
+            candidates.append(MEM20_ROOT / p)
             candidates.append(Path("/opt/mem20") / p)
             rel = str(p)
             if rel.startswith("opt/mem20/"):

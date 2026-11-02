@@ -35,7 +35,41 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Dict, List, Optional
 
-MEM20_ROOT = Path("/opt/mem20")
+def _resolve_mem20_root() -> Path:
+    """Locate the mem20 checkout this module is running from.
+
+    This used to be the hardcoded constant ``Path("/opt/mem20")``, which meant
+    every catalog refresh run from any other checkout silently discovered ZERO
+    subsystems - the glob matched nothing and the tool reported an empty estate
+    rather than an error. That is the worst failure shape: a wrong answer that
+    looks like a real one.
+
+    Resolution order:
+      1. ``MEM20_ROOT`` environment variable, if set and a directory. This is
+         the explicit override for CI, containers and non-standard layouts.
+      2. Walk up from this file looking for the repo marker - a directory that
+         contains both ``mcp/`` and at least one ``mem20*`` subsystem dir.
+      3. ``/opt/mem20`` as the historical default, so an installed (non-editable)
+         copy that cannot see the source tree keeps its old behaviour.
+    """
+    env = os.environ.get("MEM20_ROOT")
+    if env:
+        candidate = Path(env).expanduser()
+        if candidate.is_dir():
+            return candidate.resolve()
+
+    here = Path(__file__).resolve()
+    for parent in here.parents:
+        if (parent / "mcp").is_dir() and any(
+            p.is_dir() and p.name.startswith("mem20")
+            for p in parent.iterdir()
+        ):
+            return parent
+
+    return Path("/opt/mem20")
+
+
+MEM20_ROOT = _resolve_mem20_root()
 MCP_DIR = MEM20_ROOT / "mcp"
 ROOT_VENV = Path("/usr/local")
 CLI_DIRS = [ROOT_VENV / "bin", Path("/usr/local/bin")]
@@ -230,7 +264,12 @@ def discover_mcp_tools() -> Dict[str, Any]:
             "category": "mcp",
             "subcategory": sub,
             "description": desc,
-            "source": f"{MCP_DIR.relative_to('/')}/{mod}" if mod else str(MCP_DIR),
+            # Repo-relative, not root-relative. `MCP_DIR.relative_to('/')`
+            # produced "workspace/mem20/mcp/..." on any checkout that is not at
+            # /opt/mem20, and the CLI's path check then reported
+            # "path exists on disk: False" for a file that was right there
+            # (issue #224). Relative to MEM20_ROOT it resolves from any root.
+            "source": f"mcp/{mod}" if mod else "mcp",
             "runtime_status": "ok",
             "runtime_detail": f"registered by Mem20MCPServer._setup_tools in mcp/"
                               f"{mod if mod else 'server.py'}",

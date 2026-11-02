@@ -173,7 +173,14 @@ else:
 for _path in _ADDED_PATHS:
     while _path in sys.path:
         sys.path.remove(_path)
-del _path
+# `del _path` is only valid if the loop actually ran. When ensure_estate_path()
+# found every path already present it returns an empty list, the loop body never
+# executes, and the name is never bound - so the unconditional `del` raised
+# NameError at import time and made this module unimportable (issue #224).
+try:
+    del _path
+except NameError:
+    pass
 
 
 def _require(value: Any, name: str, error: str) -> Any:

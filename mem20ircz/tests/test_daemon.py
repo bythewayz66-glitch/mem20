@@ -17,7 +17,7 @@ import pytest
 
 from mem20ircz import daemon as daemon_mod
 from mem20ircz.ipc import HubError, HubServer
-from tests.test_ipc import StubHub
+from mem20ircz.tests.test_ipc import StubHub
 
 
 class TestHealthVerb:

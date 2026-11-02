@@ -8,11 +8,20 @@ No live substrate is touched here: the server is shared, so these run hermetic.
 
 from __future__ import annotations
 
+import pytest
+
 from mem20agentz import _substrate
 from mem20agentz.backup import Backup
 from mem20agentz.graphstore import GraphStore
-from mem20oreo.parser.nl_parser.semantic_parser import parse_nl
-from mem20oreo.parser.gir import NodeKind
+
+# mem20oreo is a declared OPTIONAL extra of mem20agentz
+# (`pip install "mem20agentz[oreo]"`, see pyproject.toml). Skip explicitly when
+# it is absent rather than failing collection for the whole module (issue #172).
+_oreo = pytest.importorskip(
+    "mem20oreo.parser.gir", reason="mem20oreo extra not installed"
+)
+from mem20oreo.parser.gir import NodeKind  # noqa: E402
+from mem20oreo.parser.nl_parser.semantic_parser import parse_nl  # noqa: E402
 
 
 def _sealed_backend() -> _substrate.Backend:

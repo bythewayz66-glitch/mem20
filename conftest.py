@@ -121,6 +121,56 @@ for _project in _project_roots():
         # to be pre-bound, and any that fail still import normally on demand.
         pass
 
+# 4b. Re-assert the path invariant at COLLECTION time (issue #224).
+#
+# Steps 1-4 above run when this conftest is imported, which is BEFORE pytest
+# starts walking. Under `--import-mode=importlib` pytest then inserts the
+# rootdir at sys.path[1] for each collected module, so the repo root is back on
+# the path by the time a test module is imported. The outer project directory
+# <root>/mem20ircz/ (no __init__.py) then matches `import mem20ircz` as a
+# namespace package and wins over the real package, producing
+#
+#     ImportError: cannot import name 'daemon' from 'mem20ircz' (unknown location)
+#
+# The import-time purge in step 3 cannot help: the bad entry is created after
+# this module has already been imported. Re-running the same invariant inside
+# pytest_collection - which fires after pytest has finished inserting paths and
+# before any test module is imported - is what actually holds.
+def _reassert_import_paths():
+    root = os.path.abspath(ROOT)
+    # Drop the root from wherever pytest put it, then re-append it LAST.
+    # Order is the whole fix: a real project root earlier in sys.path wins the
+    # `import mem20ircz` lookup, so the outer <root>/mem20ircz/ directory can
+    # never be selected as a namespace package. Keeping the root on the path at
+    # all is what lets repo-root modules (`llm`, `memory`, `procedural`) import
+    # from inside a test module - issue #175.
+    sys.path[:] = [
+        p for p in sys.path
+        if os.path.abspath(p or os.getcwd()) != root
+    ]
+    for _name, _module in list(sys.modules.items()):
+        if _name.startswith("mem20") and getattr(_module, "__file__", None) is None:
+            del sys.modules[_name]
+    for _project in _project_roots():
+        _found = _importable(_project)
+        if not _found:
+            continue
+        _mod, _parent = _found
+        if _parent not in sys.path:
+            sys.path.insert(0, _parent)
+    sys.path.append(root)
+
+
+def pytest_collection(session):
+    """Keep the repo root off sys.path once pytest has inserted it (#224)."""
+    _reassert_import_paths()
+
+
+def pytest_collectstart(collector):
+    """Re-assert before every module import: pytest re-inserts the root per module."""
+    _reassert_import_paths()
+
+
 # 5. Never let an import-time sys.exit() abort the whole collection session.
 #
 # Several modules under mcp/ used to respond to a missing optional dependency by

@@ -1,5 +1,6 @@
 """End-to-end CLI tests via subprocess `python -m toolchest`."""
 import json
+import os
 import subprocess
 import sys
 from pathlib import Path
@@ -8,12 +9,28 @@ import pytest
 
 REPO = Path(__file__).resolve().parent.parent
 
+# toolchest is a src-layout package that is not pip-installed in a plain
+# checkout. Without this, `import toolchest` resolves to the outer project
+# directory as an empty namespace package ("unknown location") and
+# `from toolchest import catalog` fails (issue #224).
+_SRC = str(REPO / "src")
+if _SRC not in sys.path:
+    sys.path.insert(0, _SRC)
+
 
 def run_cli(args, inventory=None, timeout=180):
     cmd = [sys.executable, "-m", "toolchest", "--inventory", str(inventory or JL),
            *args]
+    # `python -m toolchest` needs the package importable in the CHILD process.
+    # toolchest is a src-layout package that is not pip-installed in a plain
+    # checkout, so the subprocess could not import it at all and every CLI test
+    # failed with "No module named toolchest" (issue #224). Put this checkout's
+    # src/ on the child's PYTHONPATH instead of relying on an install.
+    env = dict(os.environ)
+    src = str(REPO / "src")
+    env["PYTHONPATH"] = src + (os.pathsep + env["PYTHONPATH"] if env.get("PYTHONPATH") else "")
     return subprocess.run(cmd, cwd=REPO, capture_output=True, text=True,
-                          timeout=timeout)
+                          timeout=timeout, env=env)
 
 
 @pytest.fixture(scope="module")
@@ -30,7 +47,10 @@ def inv_file_path(inv_file):
     return inv_file
 
 
-JL = Path("/opt/mem20/toolchest/inventory.json")
+# The committed inventory lives next to this package, not at a hardcoded
+# /opt/mem20 path - that constant made the test fail on every other checkout
+# (issue #224).
+JL = REPO / "inventory.json"
 
 
 def test_stats_command(inv_file_path):

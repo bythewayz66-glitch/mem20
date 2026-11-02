@@ -162,6 +162,7 @@
       <a href="#benchmarks">Benchmarks</a>
       <a href="#compare">Comparison</a>
       <a href="#limits">Limits</a>
+      <a href="#renovation">4.0 Renovation</a>
       <a href="#install">Install</a>
     </div>
     <a class="btn btn-primary btn-sm" href="https://github.com/bythewayz66-glitch/mem20" target="_blank" rel="noopener">GitHub</a>
@@ -176,7 +177,7 @@
         <span class="badge">MIT licensed</span>
         <span class="badge">Python</span>
         <span class="badge">JSON-RPC 2.0 over stdio</span>
-        <span class="badge">v3.1.0</span>
+        <span class="badge">v4.0.0</span>
       </div>
       <h1>Auditable agent memory — <span class="hl">the memory layer you can prove.</span></h1>
       <p class="lede">
@@ -200,7 +201,7 @@
     <div class="surface" id="surface">
       <div class="surface-top">
         <span class="surface-title">Live tool surface · counted, not claimed</span>
-        <span class="surface-verified">verified on main @ 2ea4492</span>
+        <span class="surface-verified">verified on main @ 48c241a</span>
       </div>
       <div class="surface-grid">
         <div class="sfig">
@@ -483,7 +484,7 @@
             </tr>
             <tr>
               <td><strong>Community signal</strong></td>
-              <td class="col-you">v3.1.0 — early</td>
+              <td class="col-you">v4.0.0 — early</td>
               <td>~59.9k stars · $24M Series A</td>
               <td>Managed platform</td>
               <td>~23.6k stars · $10M seed</td>
@@ -533,6 +534,82 @@
   </div>
 </section>
 
+<section id="renovation">
+  <div class="wrap">
+    <span class="eyebrow">The 4.0 renovation</span>
+    <h2>Not a rewrite. A wiring and hardening job — measured, not estimated.</h2>
+    <p class="sec-lede">
+      The 4.0 renovation plan (committed at <code>docs/renovation/4.0/RENOVATION_PLAN.md</code>,
+      baseline <code>48c241a</code> / v3.1.2) walks the whole tree and runs a conformance gate
+      against every subsystem. The inventory is measured: <strong>209 Python subsystems</strong>,
+      <strong>205,153 source LOC</strong>, plus the Rust <code>braid</code> and <code>gateway</code>
+      — 211 subsystems in scope. The honest starting point is that <strong>0 of 209</strong> pass
+      all seven acceptance criteria today.
+    </p>
+
+    <div class="props">
+      <div class="prop">
+        <span class="prop-num">01</span>
+        <h3>Domain logic is already there — 100%.</h3>
+        <p>All 209 subsystems pass criterion 1 (domain logic present). The renovation is not a
+          rewrite; it is wiring and hardening on top of code that exists.</p>
+      </div>
+      <div class="prop">
+        <span class="prop-num">02</span>
+        <h3>The real gap is wiring: 0/209.</h3>
+        <p>Criterion 6 (≥5 other mem20 modules imported and used) is 0/209 — the single largest
+          piece of work, and the one that turns 209 silos into one ecosystem.</p>
+      </div>
+      <div class="prop">
+        <span class="prop-num">03</span>
+        <h3>Only 5/209 are reachable from the server.</h3>
+        <p>Criterion 7 (MCP/gateway registration) is 5/209. 204 subsystems are unreachable by any
+          client today; the renovation lands them on the server surface.</p>
+      </div>
+    </div>
+
+    <div class="table-shell">
+      <div class="table-scroll">
+        <table>
+          <thead>
+            <tr>
+              <th>Criterion</th>
+              <th>Passing</th>
+              <th>Rate</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td><strong>1 · Domain logic present</strong></td><td class="num ok">209 / 209</td><td class="num ok">100%</td></tr>
+            <tr><td><strong>2 · No stubs</strong></td><td class="num ok">200 / 209</td><td class="num ok">95.7%</td></tr>
+            <tr><td><strong>3 · Tests present</strong></td><td class="num ok">200 / 209</td><td class="num ok">95.7%</td></tr>
+            <tr><td><strong>4 · CLI surface</strong></td><td class="num ok">192 / 209</td><td class="num ok">91.9%</td></tr>
+            <tr><td><strong>5 · README with runnable example</strong></td><td class="num">59 / 209</td><td class="num">28.2%</td></tr>
+            <tr><td><strong>6 · ≥5 other mem20 modules imported and used</strong></td><td class="num zero">0 / 209</td><td class="num zero">0.0%</td></tr>
+            <tr><td><strong>7 · Registered with MCP server / gateway</strong></td><td class="num zero">5 / 209</td><td class="num zero">2.4%</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <p class="mode-note">
+      Measured by <code>scripts/renovation/conformance.py</code> at baseline
+      <code>48c241a1edff1fdc9f0d0b38f51796c3c8b88b2b</code> (v3.1.2). A subsystem is DONE only
+      when the gate exits 0 — machine-checkable, not prose.
+    </p>
+
+    <div class="caveat">
+      <strong>Read this before you read the table</strong>
+      <p>
+        The renovation is a <strong>program, not a promise</strong>: 0/209 subsystems are fully
+        conformant at baseline, and the two criteria that matter most — cross-module wiring and
+        server registration — start at 0% and 2.4%. The plan sequences the work in three waves
+        (substrate → core product surface → long tail) and names an owner and branch per
+        subsystem. This page will track that progress as it lands.
+      </p>
+    </div>
+  </div>
+</section>
+
 <section id="install">
   <div class="wrap">
     <span class="eyebrow">Install</span>
@@ -571,7 +648,7 @@ MEM20_STORE_PATH=~/.mem20/store .venv/bin/python mcp/mcp_server.py</pre>
           <span class="badge">Python</span>
           <span class="badge">MCP server</span>
           <span class="badge">self-hosted</span>
-          <span class="badge">v3.1.0</span>
+          <span class="badge">v4.0.0</span>
         </div>
       </div>
     </div>
@@ -601,7 +678,7 @@ MEM20_STORE_PATH=~/.mem20/store .venv/bin/python mcp/mcp_server.py</pre>
       <a href="#limits">Limits</a>
     </div>
     <p class="foot-note">
-      Surface 270 tools / 27 domains · v3.1.0 · MIT<br>
+      Surface 270 tools / 27 domains · v4.0.0 · MIT<br>
       Benchmarks self-published on corpus mem20-agent-kb-v1 · adversarial 0.000 disclosed
     </p>
   </div>

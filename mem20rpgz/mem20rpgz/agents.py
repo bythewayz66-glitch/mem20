@@ -8,12 +8,34 @@ live LLM mode via the mem20 gateway.
 
 from __future__ import annotations
 
+from abc import ABCMeta, abstractmethod
 from dataclasses import dataclass, field
 from typing import Any, Dict, List
 
 from .rng import RpgRandom
 
 ELEMENTAL_TETRAD = ("mechanics", "story", "aesthetics", "technology")
+
+
+class AgentContractError(TypeError):
+    """Raised when an incomplete studio agent is used as if it were concrete.
+
+    A ``TypeError`` subclass: the failure is a programming error at the call
+    site (an unimplemented abstract agent), not a runtime condition.
+    """
+
+
+class _AgentMeta(ABCMeta):
+    """ABCMeta that reports a missing agent method set as ``AgentContractError``."""
+
+    def __call__(cls, *args: Any, **kwargs: Any) -> Any:
+        missing = getattr(cls, "__abstractmethods__", frozenset())
+        if missing:
+            raise AgentContractError(
+                f"{cls.__name__} is abstract and cannot be instantiated; "
+                f"subclass must implement: {', '.join(sorted(missing))}"
+            )
+        return super().__call__(*args, **kwargs)
 
 
 @dataclass
@@ -27,8 +49,14 @@ class AgentOutput:
         return {"agent": self.agent, "artifact": self.artifact}
 
 
-class BaseStudioAgent:
-    """Base for specialized agents; deterministic unless live_mode."""
+class BaseStudioAgent(metaclass=_AgentMeta):
+    """Abstract base for specialized agents; deterministic unless live_mode.
+
+    Subclasses must implement ``run`` (the deterministic path) and
+    ``_build_prompt`` (the live-LLM prompt). Instantiating an incomplete
+    subclass raises :class:`AgentContractError` at construction time rather
+    than deferring the failure to the first call.
+    """
 
     name = "base"
 
@@ -37,8 +65,9 @@ class BaseStudioAgent:
         self.live_mode = live_mode
         self.gateway_url = gateway_url
 
+    @abstractmethod
     def run(self, input_artifact: Dict[str, Any]) -> Dict[str, Any]:
-        raise NotImplementedError
+        """Consume one structured artifact and return the next structured one."""
 
     async def _llm(self, prompt: str) -> str:
         import aiohttp
@@ -54,8 +83,9 @@ class BaseStudioAgent:
             return {"raw": raw, "note": "live_llm_mode"}
         return self.run(input_artifact)
 
+    @abstractmethod
     def _build_prompt(self, input_artifact: Dict[str, Any]) -> str:
-        raise NotImplementedError
+        """Render the live-mode prompt for one input artifact."""
 
 
 class NarrativeAgent(BaseStudioAgent):

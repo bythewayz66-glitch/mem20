@@ -13,7 +13,7 @@ from mem20rpgz.quest import Quest, QuestLog, QuestObjective
 from mem20rpgz.world import Faction, NPC, Scene, World
 from mem20rpgz.agents import (
     RPGStudio, NarrativeAgent, SceneAgent, GameplayAgent, AestheticsAgent,
-    AgentOutput, ELEMENTAL_TETRAD, BaseStudioAgent,
+    AgentOutput, ELEMENTAL_TETRAD, BaseStudioAgent, AgentContractError,
 )
 
 
@@ -293,9 +293,38 @@ class TestAgents(unittest.TestCase):
         b = RPGStudio(seed=5).produce("zombie apocalypse")
         self.assertEqual(a, b)
 
-    def test_base_agent_requires_run(self):
-        with self.assertRaises(NotImplementedError):
-            BaseStudioAgent().run({})
+    def test_base_agent_is_abstract(self):
+        # The base is an abstract contract, not a stub: it cannot be
+        # instantiated until run/_build_prompt exist, and a subclass missing
+        # them fails at construction with AgentContractError.
+        self.assertEqual(
+            BaseStudioAgent.__abstractmethods__, frozenset({"run", "_build_prompt"})
+        )
+        with self.assertRaises(AgentContractError) as ctx:
+            BaseStudioAgent()
+        self.assertIn("_build_prompt", str(ctx.exception))
+        self.assertIn("run", str(ctx.exception))
+
+    def test_partial_subclass_fails_at_construction(self):
+        class Partial(BaseStudioAgent):
+            name = "partial"
+
+        with self.assertRaises(AgentContractError):
+            Partial()
+
+    def test_complete_subclass_is_concrete(self):
+        class Complete(BaseStudioAgent):
+            name = "complete"
+
+            def run(self, input_artifact):
+                return {"echo": input_artifact}
+
+            def _build_prompt(self, input_artifact):
+                return f"prompt: {input_artifact}"
+
+        agent = Complete(seed=3)
+        self.assertEqual(agent.run({"x": 1}), {"echo": {"x": 1}})
+        self.assertEqual(agent._build_prompt("hi"), "prompt: hi")
 
 
 if __name__ == "__main__":

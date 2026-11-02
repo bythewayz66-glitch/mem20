@@ -196,3 +196,23 @@ Two constraints they establish that later work must respect:
 - **The three honest placeholders are the research agenda, not defects to route around:**
   `roster pending` (`Teamily.tsx:42`), `live run pending` (`MemoryModel.tsx:130`), and the
   provenance chain that is promised but never fetched (`Dreams.tsx:132-145`).
+
+### 4.1 Surface gap register (2026-11-01)
+
+The personas and flows above were grounded at `06fa1220`. `main` has since moved 88 commits,
+so the gaps those flows route around are tracked separately, each with a kind, a severity and
+an acceptance criterion:
+
+| Doc | What it establishes |
+|---|---|
+| [surface-gap-register-2026-11-01.md](./surface-gap-register-2026-11-01.md) | Six gaps across five views at `main` @ `152d994`, classified as Placeholder / Defect / Latent, with the two high-severity rows (G-03 contamination audit has no route; G-04 provenance chain is promised but never fetched) and the one latent time bomb (G-06 tool list sliced at 400 while the pill reports the unsliced count) |
+
+Two things the register settles that this section previously left implicit:
+
+- **G-04 is a copy defect, not only a missing feature.** The empty state at
+  `Dreams.tsx:140-142` blames the control plane, but no chain request is ever made — `sel` is
+  declared at `:22` and never used to fetch. A reviewer with a healthy backend would debug the
+  wrong system.
+- **G-06 is latent, not live.** The catalog is 270 tools across 27 domains
+  (`web/src/data/tools.json`), below the 400 slice, so the count mismatch cannot be reached
+  today. It is recorded as latent rather than as a defect.

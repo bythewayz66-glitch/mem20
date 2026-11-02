@@ -18,6 +18,89 @@ GATEWAY_DIR = MEM20_DIR / "gateway"
 NAMES_FILE = GATEWAY_DIR / "agent_names.json"
 MESSAGES_FILE = GATEWAY_DIR / "messages.jsonl"
 
+# ---------------------------------------------------------------------------
+# Subsystem registry
+# ---------------------------------------------------------------------------
+# Which mem20 subsystems are reachable from the gateway surface, and what each
+# one is for. A subsystem that is not listed here is not callable by any client,
+# which is the state 204 of the 211 subsystems were in at the 4.0 baseline.
+#
+# This is a registry, not a wish list: an entry means the subsystem has a CLI
+# surface the gateway can shell out to, and the ``entry`` field names it. Adding
+# a row without a working entry point would make the gateway claim a capability
+# it cannot deliver, so the conformance gate checks the name is present and the
+# subsystem's own tests check the entry point runs.
+SUBSYSTEMS = {
+    "mem20shopz": {
+        "purpose": "Storefront: catalog, Stripe Checkout, verified webhooks, once-only provisioning",
+        "entry": "python -m mem20shopz --readiness",
+        "owner": "mem20-webdev",
+        "wave": 2,
+    },
+    "mem20sitemapz": {
+        "purpose": "Machine-readable sitemap of the estate, quiescence poller, source snapshotter",
+        "entry": "python -m mem20sitemapz build",
+        "owner": "mem20-webdev",
+        "wave": 2,
+    },
+    "mem20kanbanz": {
+        "purpose": "The one true kanban door: typed client, migration, read-only inspection",
+        "entry": "python -m mem20kanbanz health",
+        "owner": "mem20-webdev",
+        "wave": 2,
+    },
+    "mem20teamz": {
+        "purpose": "Rooms where humans and agents share a transcript; @mentions wake profiles",
+        "entry": "python -m mem20teamz rooms",
+        "owner": "mem20-webdev",
+        "wave": 2,
+    },
+    "mem20officez": {
+        "purpose": "Native 3D office, agent fleet, Phaser scenes, wellness, dashboard",
+        "entry": "python -m mem20officez doctor",
+        "owner": "mem20-webdev",
+        "wave": 2,
+    },
+    "mem20famz": {
+        "purpose": "Family registry: which family each mem20*z package belongs to, and why",
+        "entry": "python -m mem20famz stats",
+        "owner": "mem20-webdev",
+        "wave": 2,
+    },
+    "mem20boxz": {
+        "purpose": "Sandbox runtime grouping the sandbox family for joint integration",
+        "entry": "python -m mem20boxz --members",
+        "owner": "mem20-webdev",
+        "wave": 2,
+    },
+    "mem20biz": {
+        "purpose": "Autonomous company and revenue runtime grouping the revenue family",
+        "entry": "python -m mem20biz --members",
+        "owner": "mem20-webdev",
+        "wave": 2,
+    },
+    "mem20multiworldsandboxz": {
+        "purpose": "Multi-world sandbox: parallel worlds, branching, merging",
+        "entry": "python -m mem20multiworldsandboxz",
+        "owner": "mem20-webdev",
+        "wave": 2,
+    },
+}
+
+
+def registered_subsystems() -> dict:
+    """Return the subsystem registry, for the MCP server and for operators."""
+    return SUBSYSTEMS
+
+
+def subsystem_entry(name: str) -> dict:
+    """Look one subsystem up. Returns an explicit miss rather than None."""
+    record = SUBSYSTEMS.get(name)
+    if record is None:
+        return {"name": name, "registered": False}
+    return {"name": name, "registered": True, **record}
+
+
 def ensure_dirs():
     GATEWAY_DIR.mkdir(parents=True, exist_ok=True)
 

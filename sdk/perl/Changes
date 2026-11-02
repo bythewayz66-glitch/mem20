@@ -1,0 +1,16 @@
+Revision history for Mem20 (Perl SDK)
+
+0.2.0  2026-11-01
+    - Publishable CPAN distribution: added MANIFEST, MANIFEST.SKIP,
+      LICENSE and this Changes file. `make dist` previously failed with
+      "Problem opening MANIFEST: No such file or directory".
+    - Verified against mem20 server 3.0.0: 270 tools across 27 domain
+      modules (270 unique names, 37 first-underscore prefix buckets).
+    - t/05-surface.t guards the documented 270/27 surface against drift
+      and resolves the dist root from __FILE__ so it works under CI.
+    - Core-Perl only: no non-core runtime prerequisites (enforced by
+      t/00-load.t against Module::CoreList).
+
+0.1.0  2026-10-14
+    - First cut: JSON-RPC 2.0 over stdio, MCP handshake, tools/list,
+      tools/call, dynamic dispatch, job polling.

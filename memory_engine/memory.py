@@ -64,6 +64,17 @@ try:
 except ImportError:
     VECTOR_AVAILABLE = False
 
+# numpy is used by the BM25 half of recall_hybrid (np.argsort), not only by the
+# vector half. Importing it inside the vector try-block above meant that a store
+# with rank_bm25 installed but no sentence-transformers/faiss raised NameError
+# at np.argsort, which the bare `except Exception: pass` in recall_hybrid
+# swallowed -- so hybrid search returned zero hits while reporting itself as
+# working. Import it independently.
+try:
+    import numpy as np
+except ImportError:  # pragma: no cover - numpy is a hard dep of rank_bm25
+    np = None
+
 try:
     from rank_bm25 import BM25Okapi
     BM25_AVAILABLE = True
@@ -1220,6 +1231,17 @@ def _add_to_bm25_index(rec: dict) -> None:
     _save_bm25_corpus(corpus)
 
 
+def _bm25_tokens(text: str) -> list[str]:
+    """Tokenize for BM25: lowercase, punctuation stripped.
+
+    A plain ``text.lower().split()`` keeps the punctuation attached, so the
+    query token ``hydrogen?`` never matches the indexed token ``hydrogen`` and
+    every question-shaped probe misses its own record. Indexing and querying
+    must use the same tokenizer, so both call this.
+    """
+    return re.findall(r"[a-z0-9]+", text.lower())
+
+
 def rebuild_bm25() -> str:
     """Rebuild the BM25 index from all ledger entries."""
     if not BM25_AVAILABLE:
@@ -1242,7 +1264,7 @@ def rebuild_bm25() -> str:
         text = f"{rec['topic']}: {rec['content']}"
         if rec.get('tags'):
             text += " " + " ".join(rec['tags'])
-        tokens = text.lower().split()
+        tokens = _bm25_tokens(text)
         all_tokens.append(tokens)
         
         corpus.append({
@@ -3717,7 +3739,7 @@ def recall_hybrid(query: str, k: int = 5, topic: str | None = None,
             bm25 = _get_bm25_index()
             if bm25 is not None:
                 corpus = _load_bm25_corpus()
-                query_tokens = query.lower().split()
+                query_tokens = _bm25_tokens(query)
                 scores = bm25.get_scores(query_tokens)
 
                 # Get top candidates
@@ -3752,8 +3774,13 @@ def recall_hybrid(query: str, k: int = 5, topic: str | None = None,
                             "content": full_rec.get("content", "")[:500],
                             "_bm25_score": float(scores[idx]),
                         })
-        except Exception:
-            pass
+        except Exception as e:
+            # A bare `pass` here hid a NameError on np.argsort for months: the
+            # BM25 half died on every query and hybrid search returned [] while
+            # looking healthy. Record the failure so it is visible.
+            bm25_error = f"{type(e).__name__}: {e}"
+            print(f"Warning: BM25 half of hybrid recall failed: {bm25_error}",
+                  file=sys.stderr)
     
     # Reciprocal Rank Fusion (RRF)
     # Combine vector and BM25 results

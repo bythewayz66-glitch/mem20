@@ -1,0 +1,28 @@
+{
+  "status": "PASS",
+  "error_count": 0,
+  "warning_count": 0,
+  "errors": [],
+  "warnings": [],
+  "records": 122178,
+  "by_category": {
+    "grounded": 40726,
+    "ungrounded": 40726,
+    "false": 40726
+  },
+  "by_family": {
+    "element": 2324,
+    "country": 2680,
+    "mime": 7912,
+    "city": 26322,
+    "codepoint": 38932,
+    "countrymeta": 3282,
+    "fiction": 40726
+  },
+  "dup_keys": 0,
+  "dup_ids": 0,
+  "total_bytes": 101090449,
+  "bytes_per_record": 827.4,
+  "probes_checked": 500,
+  "control_probes": 100
+}

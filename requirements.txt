@@ -16,3 +16,12 @@ anyio>=4.14.2
 numpy>=1.24
 faiss-cpu>=1.7.4
 sentence-transformers>=2.2.0
+
+# Test-suite / integration deps imported at module scope by several subsystems.
+# Missing from this file until now, which made 20+ test modules uncollectable
+# on a clean clone (httpx: mem20agentz, mem20corez, mem20googlez, mem20gamez;
+# PyYAML: mem20crewz, mem20mktz, mem20owebz, mem20rpgz, mem20unitiz, mem20yetiz;
+# stripe: mem20shopz).
+httpx>=0.28
+PyYAML>=6.0
+stripe>=16.1

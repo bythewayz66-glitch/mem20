@@ -608,7 +608,7 @@ def test_flow_chain_a_to_b():
 
 
 @pytest.fixture
-def test_app():
+def test_app(tmp_path):
     agent = create_llm_agent(name="chat", instruction="Assistant.", model="fast")
     provider = FakeProvider(
         [
@@ -616,9 +616,19 @@ def test_app():
             _text_reply("remembered reply"),
         ]
     )
-    config = GoogleADKConfig()
+    config = GoogleADKConfig(
+        session_db_path=str(tmp_path / "sessions.db"),
+        memory_dir=str(tmp_path / "memory"),
+    )
     app = create_app(agents=[agent], config=config, provider=provider)
     return app, provider
+
+
+def test_default_state_lives_beside_the_checkout():
+    """A fresh clone must not need the deployed box's /opt/mem20 tree."""
+    config = GoogleADKConfig()
+    assert "/opt/mem20" not in config.session_db_path
+    assert "/opt/mem20" not in config.memory_dir
 
 
 async def test_serve_health(test_app):

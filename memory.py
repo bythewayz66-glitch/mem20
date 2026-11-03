@@ -1,17 +1,19 @@
 """Unified memory engine surface.
 
-Re-exports the full API from ``memory_engine.memory`` — the single source of
-truth for the Hermes tiered-memory system.  All runtime code (agentz substrate,
-MCP handlers, CLI tools) should ``import memory`` and get this surface.
+The repo-root ``memory`` name IS the engine module, not a hand-maintained copy
+of its API. ``import memory`` resolves to ``memory_engine.memory``:
+
+* a copy drifts silently - a missing underscore re-export broke
+  ``from memory import _detect_only``; and
+* a copy breaks isolation: callers point ``memory.LEDGER`` /
+  ``memory.VECTOR_INDEX`` at a temporary store, then the engine keeps writing
+  through its own globals because only the copy was patched.
 
 Data lives under ``MEM20_STORE_PATH`` (default ``~/.mem20/store``).
 """
 
-from memory_engine.memory import *  # noqa: F401,F403
-from memory_engine.memory import (  # noqa: F401
-    _load_ledger,
-    _append_ledger,
-    _scrub_secrets,
-    SUPERSEDED,
-    main as _engine_main,
-)
+import sys
+
+from memory_engine import memory as _engine
+
+sys.modules[__name__] = _engine

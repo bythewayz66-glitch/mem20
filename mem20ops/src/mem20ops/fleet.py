@@ -22,7 +22,15 @@ import subprocess
 import sys
 from typing import Any
 
-VENV_BIN = os.environ.get("MEM20_VENV_BIN", "/usr/local/bin")
+def _resolve_venv_bin() -> str:
+    """Where console scripts are installed for the running interpreter."""
+    env = os.environ.get("MEM20_VENV_BIN")
+    if env and os.path.isdir(env):
+        return env
+    return os.path.dirname(os.path.abspath(sys.executable))
+
+
+VENV_BIN = _resolve_venv_bin()
 FS_NAME_RE = re.compile(r"^fs-(?P<sub>.+)$")
 MEM20_NAME_RE = re.compile(r"^mem20(?P<sub>[a-z0-9][a-z0-9_-]*)$")
 MAX_LIST = 200

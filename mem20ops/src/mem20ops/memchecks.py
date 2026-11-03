@@ -151,7 +151,7 @@ def acl_probe(
 def lint_delta(
     path: str,
     revision: str = "HEAD",
-    python: str = "/usr/local/bin/python",
+    python: str = sys.executable,
     repo: str = REPO,
 ) -> dict[str, Any]:
     """Compare ruff findings for a file against a git revision, per rule code.
@@ -192,7 +192,7 @@ def lint_delta(
         # commonly "No module named ruff" — means we did not measure anything.
         # Returning an empty dict here would report a clean delta for a file that
         # was never linted, which is the worst possible failure for a gate.
-        if out.returncode not in (0, 1):
+        if out.returncode not in (0, 1) or "No module named" in out.stderr:
             raise RuntimeError(
                 f"ruff did not run (exit {out.returncode}): "
                 f"{(out.stderr or out.stdout).strip()[:300]}"

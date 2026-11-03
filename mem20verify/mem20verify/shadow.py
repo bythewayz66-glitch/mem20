@@ -24,6 +24,8 @@ no package code is executed and nothing on disk is written.
 
 from __future__ import annotations
 
+import sys
+
 import json
 import os
 import re
@@ -31,7 +33,7 @@ import subprocess
 from dataclasses import dataclass, field
 
 DEFAULT_ROOT = "/opt/mem20"
-DEFAULT_PYTHON = "/usr/local/bin/python"
+DEFAULT_PYTHON = sys.executable
 # A neutral cwd that cannot contain a package directory of the same name.
 CONTROL_ROOT = "/"
 

@@ -811,7 +811,17 @@ def _select(scored: list[dict[str, Any]], incumbent: str, seed: str) -> dict[str
 def _writer_of(candidate: dict[str, Any]) -> panel_mod.Panelist:
     """Recover the Panelist that produced a candidate, for judge exclusion."""
     model = str(candidate.get("writer", "")).split(" via ")[-1]
-    return next((m for m in panel_mod.panel() if m.model == model), panel_mod.panel()[0])
+    members = panel_mod.panel()
+    match = next((m for m in members if m.model == model), None)
+    if match is not None:
+        return match
+    if members:
+        return members[0]
+    # Offline selection (and tests) can run with no funded panel. Judging still
+    # needs a name, but an empty roster must not raise IndexError.
+    return panel_mod.Panelist(
+        role="unknown", provider="", model=model or "unknown", context=0, focus=""
+    )
 
 
 def _evolve_dreamer(

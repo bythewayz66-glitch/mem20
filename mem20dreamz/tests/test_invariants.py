@@ -286,14 +286,29 @@ def test_pairwise_parses_winner():
 # from nobody.
 
 
-def test_panel_finds_its_keys_without_anything_publishing_them():
+def test_panel_finds_its_keys_without_anything_publishing_them(monkeypatch):
+    """The lookup goes through llm's resolver, not a leaked os.environ.
+
+    This asserts the mechanism with a fixture rather than requiring real
+    provider keys, so the suite stays green on a machine with no secrets. A
+    live-key check would only prove the host is funded, not that the lookup is
+    correct; the unfunded counterpart below covers the negative case.
+    """
     from mem20dreamz import panel as panel_mod
 
-    keys = [panel_mod.KEY_ENV[m.provider] for m in panel_mod.PANEL if m.provider in panel_mod.KEY_ENV]
-    assert keys, "the roster should name provider key variables"
-    for provider in ("cohere", "groq"):
-        if provider in panel_mod.KEY_ENV:
-            assert panel_mod._key_for(provider), f"{provider} must resolve as funded"
+    env_to_provider = {env: provider for provider, env in panel_mod.KEY_ENV.items()}
+    assert env_to_provider, "the roster should name provider key variables"
+    seen = []
+
+    def fake_env_value(name, default=""):
+        seen.append(name)
+        return f"funded-{name}" if name in env_to_provider else default
+
+    monkeypatch.setattr(panel_mod.llm, "env_value", fake_env_value)
+    for provider, name in panel_mod.KEY_ENV.items():
+        assert panel_mod._key_for(provider) == f"funded-{name}"
+    assert seen, "the panel must ask llm for each key"
+    assert {m.provider for m in panel_mod.panel()} == set(panel_mod.KEY_ENV)
 
 
 def test_an_unfunded_provider_is_reported_as_unfunded(monkeypatch):

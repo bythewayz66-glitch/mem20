@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+import sys
+
 import os
 import re
 import subprocess
@@ -9,7 +11,7 @@ import time
 from datetime import UTC, datetime
 from typing import Any
 
-DEFAULT_PYTHON = "/usr/local/bin/python"
+DEFAULT_PYTHON = sys.executable
 
 
 def _iso(timestamp: float) -> str:

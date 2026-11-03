@@ -8,6 +8,8 @@ therefore run from each package root, or from that package's own venv.
 
 from __future__ import annotations
 
+import sys
+
 import os
 import re
 import subprocess
@@ -16,7 +18,7 @@ from dataclasses import dataclass, field
 DEFAULT_ROOT = os.path.dirname(
     os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 )
-DEFAULT_PYTHON = "/usr/local/bin/python"
+DEFAULT_PYTHON = sys.executable
 
 _COUNT_RE = re.compile(r"(\d+)\s+(passed|failed|error|errors|skipped|xfailed|xpassed)")
 _FAILED_RE = re.compile(r"^FAILED\s+(\S+)", re.MULTILINE)

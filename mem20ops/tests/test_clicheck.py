@@ -32,7 +32,7 @@ def test_installed_binaries_detects_fs_ops():
 
 
 def test_probe_help_on_known_good_binary():
-    result = clicheck.probe_help("fs-ops", "/usr/local/bin/fs-ops", timeout=30)
+    result = clicheck.probe_help("fs-ops", clicheck.installed_binaries()["fs-ops"]["path"], timeout=30)
     assert result["help_ok"] is True
     assert result["has_json"] is True
     assert "dns-audit" in result["verbs"]
@@ -78,7 +78,23 @@ def test_audit_shape_and_totals():
         assert "naming-not-fs" not in row["gaps"], row
 
 
-def test_install_counter_is_not_audited():
+def test_install_counter_is_not_audited(monkeypatch):
+    """Exclusion is a rule, not a property of the host's installed binaries."""
+    def fake_probe(name, path, timeout=20):
+        return {
+            "help_exit": 0,
+            "help_ok": True,
+            "timed_out": False,
+            "has_json": True,
+            "verbs": [],
+            "detail": "",
+        }
+
+    monkeypatch.setattr(clicheck, "installed_binaries", lambda: {
+        "mem20-metrics": {"path": "/bin/true", "is_symlink": False},
+        "fs-ops": {"path": "/bin/true", "is_symlink": False},
+    })
+    monkeypatch.setattr(clicheck, "probe_help", fake_probe)
     report = clicheck.audit(timeout=20)
     assert "mem20-metrics" in report["skipped_non_cli"]
     assert "mem20-metrics" not in {r["name"] for r in report["results"]}

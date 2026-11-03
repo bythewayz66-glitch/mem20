@@ -39,8 +39,9 @@ impl PyBraidEngine {
 
     #[staticmethod]
     fn generate_signer() -> PyResult<String> {
-        use rand::rngs::OsRng;
-        let signing_key = ed25519_dalek::SigningKey::generate(&mut OsRng);
+        // Mirror braid_core::crypto::new_signing_key: rand 0.10 exposes the
+        // thread RNG as rand::rng(); OsRng no longer lives under rand::rngs.
+        let signing_key = ed25519_dalek::SigningKey::generate(&mut rand::rng());
         Ok(pub_key_hex(&signing_key.verifying_key()))
     }
 

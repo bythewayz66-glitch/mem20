@@ -24,8 +24,27 @@ import json
 import os
 from typing import Any
 
-ESTATE_ROOT = os.environ.get("MEM20DREAM_ESTATE_ROOT", "/opt/mem20")
-BRAID_LOG = os.environ.get("MEM20DREAM_BRAID_LOG", "/opt/mem20/store/braid/mem20.braid")
+def _resolve_estate_root() -> str:
+    """The repository this package was checked out in, not a fixed host path.
+
+    ``/opt/mem20`` was the only layout this used to work in, so every test that
+    ran from a different checkout read the wrong estate or failed outright.
+    Prefer an explicit override, then the checkout this file actually lives in,
+    and only then the historical host path.
+    """
+    override = os.environ.get("MEM20DREAM_ESTATE_ROOT")
+    if override:
+        return override
+    here = os.path.dirname(os.path.abspath(__file__))
+    checkout = os.path.dirname(os.path.dirname(here))
+    if os.path.isfile(os.path.join(checkout, "llm.py")):
+        return checkout
+    return "/opt/mem20" if os.path.isdir("/opt/mem20") else checkout
+
+
+ESTATE_ROOT = _resolve_estate_root()
+BRAID_LOG = os.environ.get("MEM20DREAM_BRAID_LOG") or os.path.join(
+    ESTATE_ROOT, "store", "braid", "mem20.braid")
 
 #: The feed goes into a panelist's context, so it is capped. A truncated honest
 #: list beats a complete one that crowds out the actual brief.

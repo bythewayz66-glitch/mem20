@@ -21,7 +21,8 @@ from __future__ import annotations
 import sys
 from typing import Any
 
-sys.path.insert(0, "/opt/mem20")
+from .estate import ESTATE_ROOT
+sys.path.insert(0, ESTATE_ROOT)
 
 CAP = "agent:write:dream"
 

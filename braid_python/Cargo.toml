@@ -23,7 +23,10 @@ serde_json = { version = "1", features = ["float_roundtrip"] }
 tokio = { version = "1", features = ["full"] }
 anyhow = "1"
 thiserror = "1"
-rand = "0.8"
-ed25519-dalek = { version = "2", features = ["rand_core"] }
+rand = "0.10"
+# Must track the version the braid/ workspace resolves: a second major version
+# in the same graph makes braid_core's SigningKey/VerifyingKey a different type
+# from the one used here, and the binding stops compiling.
+ed25519-dalek = { version = "3", features = ["rand_core"] }
 chrono = { version = "0.4", features = ["serde"] }
 pythonize = "0.22"

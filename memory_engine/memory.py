@@ -53,16 +53,27 @@ import time
 import glob
 import re
 import hashlib
+import math
 from datetime import datetime, timezone, timedelta
 from dataclasses import dataclass
 
+# The vector half has two independent optional dependencies: a numerical index
+# (faiss) and a neural embedder (sentence-transformers). Treating them as a
+# single import meant a checkout with faiss installed but no torch/transformers
+# lost semantic retrieval entirely, even though a deterministic embedder can
+# serve the same interface. They are detected separately now, and the embedder
+# used is reported so a caller never mistakes the fallback for the neural model.
+try:
+    import faiss
+except ImportError:  # pragma: no cover - exercised by the no-faiss environment
+    faiss = None
+
 try:
     from sentence_transformers import SentenceTransformer
-    import faiss
-    import numpy as np
-    VECTOR_AVAILABLE = True
+    EMBEDDER_BACKEND = "sentence-transformers"
 except ImportError:
-    VECTOR_AVAILABLE = False
+    SentenceTransformer = None
+    EMBEDDER_BACKEND = "hashing-fallback"
 
 # numpy is used by the BM25 half of recall_hybrid (np.argsort), not only by the
 # vector half. Importing it inside the vector try-block above meant that a store
@@ -75,6 +86,10 @@ try:
 except ImportError:  # pragma: no cover - numpy is a hard dep of rank_bm25
     np = None
 
+# Semantic retrieval needs an index and a numeric stack. The embedder is optional
+# because _HashingEmbedder below is a real, deterministic implementation.
+VECTOR_AVAILABLE = np is not None and faiss is not None
+
 try:
     from rank_bm25 import BM25Okapi
     BM25_AVAILABLE = True
@@ -85,6 +100,7 @@ try:
     from sentence_transformers import CrossEncoder
     CROSS_ENCODER_AVAILABLE = True
 except ImportError:
+    CrossEncoder = None
     CROSS_ENCODER_AVAILABLE = False
 
 # Cross-encoder configuration
@@ -1002,15 +1018,72 @@ def ledger_view(k: int = 20, since: str | None = None) -> str:
 # Vector Embedding Functions (Step 1: Hybrid Retrieval)
 # =============================================================================
 
+class _HashingEmbedder:
+    """Deterministic offline embedder for checkouts without sentence-transformers.
+
+    This is NOT a neural encoder and does not pretend to be one: it matches
+    shared vocabulary (word unigrams/bigrams and character trigrams), so a query
+    that paraphrases with entirely different words will not match. It exists so
+    the vector half is genuinely functional and reproducible on a clean clone,
+    where downloading torch plus a model is not always possible, and every
+    caller can see which backend produced the ranking via `embedder_backend()`.
+
+    Implements the slice of the SentenceTransformer interface the engine uses:
+    ``encode(texts, convert_to_numpy=True)`` returning an ``(n, dim)`` float32
+    array of L2-normalised rows.
+    """
+
+    backend = "hashing-fallback"
+
+    def __init__(self, dim: int):
+        self.dim = int(dim)
+
+    @staticmethod
+    def _features(text: str):
+        """Yield (feature, weight) pairs; weights favour whole words."""
+        words = re.findall(r"[a-z0-9_]+", (text or "").lower())
+        for w in words:
+            yield w, 1.0
+            if len(w) > 4:
+                for i in range(len(w) - 2):
+                    yield "#" + w[i:i + 3], 0.35
+        for a, b in zip(words, words[1:]):
+            yield a + "_" + b, 0.5
+
+    def encode(self, texts, convert_to_numpy: bool = True,
+               batch_size: int = 32, show_progress_bar: bool = False):
+        if isinstance(texts, str):
+            texts = [texts]
+        out = np.zeros((len(texts), self.dim), dtype=np.float32)
+        for row, text in enumerate(texts):
+            for feature, weight in self._features(str(text)):
+                digest = hashlib.blake2b(feature.encode("utf-8"), digest_size=8).digest()
+                idx = int.from_bytes(digest[:4], "little") % self.dim
+                sign = 1.0 if digest[4] & 1 else -1.0
+                out[row, idx] += sign * weight
+        norms = np.linalg.norm(out, axis=1, keepdims=True)
+        norms[norms == 0] = 1.0
+        return out / norms
+
+
 _EMBEDDER = None
 
+
+def embedder_backend() -> str:
+    """Name of the embedder semantic recall will use in this process."""
+    return "sentence-transformers" if SentenceTransformer is not None else "hashing-fallback"
+
+
 def _get_embedder():
-    """Lazy-load the embedding model."""
+    """Lazy-load the embedding model, falling back to the offline hashed encoder."""
     global _EMBEDDER
     if not VECTOR_AVAILABLE:
-        raise RuntimeError("Vector dependencies not installed. Run: pip install sentence-transformers faiss-cpu")
+        raise RuntimeError("Vector dependencies not installed. Run: pip install faiss-cpu")
     if _EMBEDDER is None:
-        _EMBEDDER = SentenceTransformer(EMBEDDING_MODEL)
+        if SentenceTransformer is not None:
+            _EMBEDDER = SentenceTransformer(EMBEDDING_MODEL)
+        else:
+            _EMBEDDER = _HashingEmbedder(EMBEDDING_DIM)
     return _EMBEDDER
 
 
@@ -3817,23 +3890,51 @@ def recall_hybrid(query: str, k: int = 5, topic: str | None = None,
     # Sort by RRF score
     sorted_results = sorted(all_results.values(), key=lambda x: x["_rrf_score"], reverse=True)
     
-    # Optional cross-encoder reranking
+    # Optional cross-encoder reranking.
+    #
+    # Two properties are load-bearing here and were both missing before:
+    #
+    #   * EVERY candidate is reranked before the top-k cut. Blending only a
+    #     k*2 window left the rest on the raw RRF scale, so an unblended
+    #     candidate could outrank a blended one and the reranker could push the
+    #     best results out of the returned window.
+    #   * The raw logits are squashed with a sigmoid. ms-marco emits values
+    #     around -11..+3, which are not commensurate with RRF (~0.016): adding
+    #     them raw inverted the ordering. The squashed value lives in (0, 1) and
+    #     blends safely. The raw logit is kept as `_ce_logit` for diagnostics.
+    #
+    # A failure reverts atomically: no candidate is left half-scored, and the
+    # reason is reported on `_retrieval.cross_encoder_error`.
+    cross_encoder_error = None
+    cross_encoder_applied = False
     if USE_CROSS_ENCODER and sorted_results:
+        mutated = []
         try:
             cross_encoder = _get_cross_encoder()
-            # Prepare query-document pairs for cross-encoder
-            pairs = [(query, r["content"]) for r in sorted_results[:k * 2]]
-            ce_scores = cross_encoder.predict(pairs)
-            
-            # Update scores with cross-encoder scores (weighted combination)
-            for i, r in enumerate(sorted_results[:k * 2]):
-                r["_ce_score"] = float(ce_scores[i])
-                # Combine RRF score with cross-encoder score
-                r["_final_score"] = 0.5 * r["_rrf_score"] + 0.5 * r["_ce_score"]
-            
-            # Re-sort by final score
-            sorted_results = sorted(sorted_results, key=lambda x: x.get("_final_score", x["_rrf_score"]), reverse=True)
+            pairs = [(query, r["content"]) for r in sorted_results]
+            raw_scores = [float(x) for x in cross_encoder.predict(pairs)]
+            if len(raw_scores) != len(pairs):
+                raise ValueError(
+                    f"cross-encoder returned {len(raw_scores)} scores for "
+                    f"{len(pairs)} pairs")
+            for r, logit in zip(sorted_results, raw_scores):
+                squashed = 1.0 / (1.0 + math.exp(-max(-60.0, min(60.0, logit))))
+                mutated.append(r)
+                r["_ce_logit"] = round(logit, 6)
+                r["_ce_score"] = round(squashed, 6)
+                r["_final_score"] = 0.5 * r["_rrf_score"] + 0.5 * squashed
+            sorted_results = sorted(
+                sorted_results,
+                key=lambda x: x.get("_final_score", x["_rrf_score"]),
+                reverse=True,
+            )
+            cross_encoder_applied = True
         except Exception as e:
+            cross_encoder_error = f"{type(e).__name__}: {e}"
+            for r in mutated:
+                r.pop("_ce_score", None)
+                r.pop("_ce_logit", None)
+                r.pop("_final_score", None)
             print(f"Warning: cross-encoder reranking failed: {e}", file=sys.stderr)
     
     # Return top k
@@ -3880,8 +3981,11 @@ def recall_hybrid(query: str, k: int = 5, topic: str | None = None,
         "vector_available": VECTOR_AVAILABLE,
         "bm25_available": BM25_AVAILABLE,
         "degraded_to": degraded,
-        "cross_encoder": USE_CROSS_ENCODER and any(
-            r.get("_ce_score") is not None for r in results),
+        # Report what happened, not what was configured: a reranker that raised
+        # or returned the wrong number of scores did not rerank anything.
+        "cross_encoder": cross_encoder_applied,
+        "cross_encoder_error": cross_encoder_error,
+        "embedder_backend": embedder_backend(),
     }
     for r in results:
         r["_retrieval"] = retrieval

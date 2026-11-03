@@ -29,10 +29,21 @@ from typing import Any, Dict, List, Optional
 # Defaults
 # ---------------------------------------------------------------------------
 
-DEFAULT_LOG_DIR = os.environ.get(
-    "MEM20_BRAID_DIR",
-    os.environ.get("MEM20_STORE_PATH", "/opt/mem20/store/braid"),
-)
+def _default_log_dir() -> str:
+    """Env override first, then this checkout's store - never a fixed host path.
+
+    The literal /opt/mem20 default made every ledger write outside that layout
+    fail with PermissionError while creating the parent directory. Resolving
+    from the checkout keeps the production path identical (the repository is
+    /opt/mem20 there) and lets an isolated checkout work.
+    """
+    override = os.environ.get("MEM20_BRAID_DIR") or os.environ.get("MEM20_STORE_PATH")
+    if override:
+        return override
+    return os.path.join(os.path.dirname(os.path.abspath(__file__)), "store", "braid")
+
+
+DEFAULT_LOG_DIR = _default_log_dir()
 DEFAULT_LOG_PATH = os.path.join(DEFAULT_LOG_DIR, "mem20.braid")
 SIGNER_PATH = os.path.join(DEFAULT_LOG_DIR, "signer.hex")
 

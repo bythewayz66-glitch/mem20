@@ -33,3 +33,22 @@ _mod = sys.modules.get("mem20botz")
 if (_mod is not None and getattr(_mod, "__file__", None) is None
         and getattr(_mod, "__path__", None) is not None):
     del sys.modules["mem20botz"]
+
+# 4. Sibling packages this project imports are not pip-installed here either.
+#    mem20botz.kanban_bot imports mem20kanbanz, so a package-only pytest run
+#    (this file's own rootdir) must be able to resolve it from the repository.
+#    Lead with each sibling's project root, never the repository root, so no
+#    outer directory can shadow a real package.
+_ESTATE_DIR = os.path.dirname(_PROJECT_ROOT)
+if os.path.isdir(_ESTATE_DIR):
+    for _entry in sorted(os.listdir(_ESTATE_DIR)):
+        _sibling = os.path.join(_ESTATE_DIR, _entry)
+        if not os.path.isdir(_sibling):
+            continue
+        for _candidate in (os.path.join(_sibling, "src", _entry),
+                           os.path.join(_sibling, _entry)):
+            if os.path.isfile(os.path.join(_candidate, "__init__.py")):
+                _root = os.path.dirname(_candidate)
+                if _root not in sys.path:
+                    sys.path.insert(0, _root)
+                break

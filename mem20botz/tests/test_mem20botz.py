@@ -395,7 +395,7 @@ class TestSelfDescription(unittest.TestCase):
         self.assertIn("mem20crewz", CrewBot().source_of_truth)
 
     def test_relay_says_it_is_a_reader_only(self):
-        s = RelayBot(store=lambda **k: None).source_of_truth
+        s = RelayBot().source_of_truth
         self.assertIn("never speaks", s)
         self.assertIn("masked", s)
 
@@ -412,86 +412,126 @@ class TestSelfDescription(unittest.TestCase):
 
 
 class TestRelay(unittest.TestCase):
-    def test_records_a_message(self):
-        seen = []
-        r = RelayBot(store=lambda **kw: seen.append(
-            (kw.get("content"), kw.get("topic"), kw.get("tags"))))
+    """The relay is a scribe, not a fact store.
+
+    Chat lines are ephemeral, so they go to a dedicated append-only transcript
+    and never into grounded memory. These tests pin that contract, the masking
+    on the value being stored, and the never-raise rule. The previous suite
+    asserted a `memory.remember` path the relay no longer calls, which is why
+    it failed against the current implementation.
+    """
+
+    def setUp(self):
+        import os
+        import tempfile
+        from pathlib import Path
+        from unittest import mock
+
+        self._tmp = tempfile.TemporaryDirectory()
+        self.addCleanup(self._tmp.cleanup)
+        self._env = mock.patch.dict(
+            os.environ, {"MEM20_STORE_PATH": self._tmp.name})
+        self._env.start()
+        self.addCleanup(self._env.stop)
+        self.transcript = Path(self._tmp.name) / "irc_transcript.jsonl"
+
+    def _lines(self):
+        import json
+
+        if not self.transcript.exists():
+            return []
+        with self.transcript.open(encoding="utf-8") as handle:
+            return [json.loads(line) for line in handle if line.strip()]
+
+    def _break_transcript(self):
+        """Point the store inside a regular file so mkdir cannot succeed."""
+        import os
+        from pathlib import Path
+
+        blocker = Path(self._tmp.name) / "not-a-directory"
+        blocker.write_text("x", encoding="utf-8")
+        os.environ["MEM20_STORE_PATH"] = str(blocker / "nested")
+
+    def test_records_a_message_in_the_transcript(self):
+        r = RelayBot()
         self.assertTrue(r.record("bob", "hello crew"))
-        self.assertEqual(seen[0][0], "[#mem20] bob: hello crew")
+        rows = self._lines()
+        self.assertEqual(len(rows), 1)
+        self.assertEqual(rows[0]["channel"], "#mem20")
+        self.assertEqual(rows[0]["nick"], "bob")
+        self.assertEqual(rows[0]["text"], "hello crew")
+        self.assertIsInstance(rows[0]["ts"], float)
+        self.assertEqual(r.stored, 1)
 
     def test_masks_secrets_before_storing(self):
-        seen = []
-        r = RelayBot(store=lambda **kw: seen.append(kw.get("content", "")))
-        r.record("bob", "token sk-abcdefghijklmnopqrstuvwx")
-        self.assertNotIn("abcdefghijklmnopqrstuvwx", seen[0])
+        secret = "sk-abcdefghijklmnopqrstuvwx"
+        r = RelayBot()
+        self.assertTrue(r.record("bob", f"token {secret}"))
+        stored = self._lines()[0]["text"]
+        self.assertNotIn(secret, stored)
+        self.assertNotIn("abcdefghijklmnopqrstuvwx", stored)
+        self.assertIn("sk-a", stored)
         self.assertEqual(r.masked, 1)
 
     def test_truncates_a_long_message(self):
-        seen = []
-        r = RelayBot(store=lambda **kw: seen.append(kw.get("content", "")))
-        r.record("bob", "x" * 5000)
-        self.assertLessEqual(len(seen[0]), 450)
+        from mem20botz.relay import MAX_STORE_CHARS
+
+        r = RelayBot()
+        self.assertTrue(r.record("bob", "x" * 5000))
+        self.assertLessEqual(len(self._lines()[0]["text"]), MAX_STORE_CHARS)
 
     def test_empty_message_is_not_stored(self):
-        seen = []
-        r = RelayBot(store=lambda **kw: seen.append(kw.get("content", "")))
+        r = RelayBot()
         self.assertFalse(r.record("bob", "   "))
-        self.assertEqual(seen, [])
+        self.assertEqual(self._lines(), [])
+        self.assertEqual(r.stored, 0)
 
-    def test_a_failing_store_does_not_raise(self):
-        def boom(**kwargs):
-            raise RuntimeError("memory down")
-        r = RelayBot(store=boom)
+    def test_a_failing_transcript_does_not_raise(self):
+        self._break_transcript()
+        r = RelayBot()
         # The scribe failing must never take the channel down.
         self.assertFalse(r.record("bob", "hello"))
         self.assertEqual(r.failures, 1)
 
-    def test_warns_only_once_about_a_broken_store(self):
+    def test_warns_only_once_about_a_broken_transcript(self):
+        self._break_transcript()
         said = []
-        r = RelayBot(store=lambda **k: (_ for _ in ()).throw(
-            RuntimeError("down")))
+        r = RelayBot()
         r.say = lambda text, target="": said.append(text)
         for _ in range(5):
             r.record("bob", "hello")
         self.assertEqual(len(said), 1)
+        self.assertEqual(r.failures, 5)
 
-    def test_missing_store_is_reported_not_guessed(self):
+    def test_transcript_appends_rather_than_overwrites(self):
         r = RelayBot()
-        r._store = None
-        r._resolved = None
-        # With no memory available it must say so, not pretend to store.
-        self.assertIsNone(r._store_fn())
+        r.record("bob", "one")
+        r.record("alice", "two")
+        self.assertEqual([row["nick"] for row in self._lines()],
+                         ["bob", "alice"])
 
-    def test_records_through_the_real_memory_signature(self):
-        """The relay must call memory the way memory is actually called.
-
-        The first implementation guessed a `store(content=, category=)`
-        signature that does not exist, so every write failed and the bot
-        reported "memory UNREACHABLE" forever without anyone noticing. This
-        test pins the real `remember(topic=, content=, tags=)` shape.
-        """
-        calls = {}
-
-        def remember(**kwargs):
-            calls.update(kwargs)
-            return {"id": "x"}
-
-        r = RelayBot(store=remember)
-        self.assertTrue(r.record("bob", "hello crew"))
-        self.assertIn("topic", calls)
-        self.assertIn("content", calls)
-        self.assertIn("tags", calls)
-        self.assertEqual(calls["content"], "[#mem20] bob: hello crew")
-        self.assertIsInstance(calls["tags"], list)
-
-    def test_resolution_is_cached_not_repeated(self):
+    def test_status_reports_the_transcript_not_memory(self):
         r = RelayBot()
-        r._store = None
-        r._resolved = None
-        for _ in range(5):
-            self.assertIsNone(r._store_fn())
-        # Cached as a failure: a missing memory system must not re-import on
-        # every single message.
+        out = r.cmd_status(None, None, "")
+        self.assertIn("transcript OK", out)
+        self.assertIn("written 0", out)
+
+    def test_it_does_not_transcribe_itself(self):
+        from mem20botz.irc import parse_line
+
+        r = RelayBot()
+        r.client.registered = True
+        r.on_message(parse_line(
+            ":relay!~r@127.0.0.1 PRIVMSG #mem20 :echo echo"))
+        self.assertEqual(self._lines(), [])
+
+    def test_private_messages_are_not_scribed(self):
+        from mem20botz.irc import parse_line
+
+        r = RelayBot()
+        r.client.registered = True
+        r.on_message(parse_line(":bob!~b@127.0.0.1 PRIVMSG relay :dm"))
+        self.assertEqual(self._lines(), [])
 
 
 class TestKanbanBotCommands(unittest.TestCase):

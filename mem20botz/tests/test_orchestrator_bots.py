@@ -202,8 +202,16 @@ class TestAgainstTheRealRuntimes(unittest.TestCase):
         self.assertIn("agents", out.lower())
 
     def test_adk_health_answers_from_the_real_runtime(self):
+        """A health report is the answer, healthy or not.
+
+        ``mem20googlez health`` exits 1 when the endpoint is down, by design:
+        that status is the monitoring signal, not a crash. Requiring exit 0
+        would make this suite depend on a live model gateway, so assert the
+        real report's shape instead.
+        """
         out = recorded(built("adk"), "!adk health")
-        self.assertNotIn("exited", out)
+        self.assertIn('"healthy"', out)
+        self.assertIn('"provider"', out)
         self.assertTrue(out.strip())
 
 

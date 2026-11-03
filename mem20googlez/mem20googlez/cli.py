@@ -17,11 +17,16 @@ try:
 except ImportError as _exc:  # never fail silently: a hidden fallback looks like success
     import sys as _sys
 
+    # The `as` target is unbound when this block ends, so keep the reason in a
+    # name the closure can still read; otherwise the warning itself raises.
+    _MEM20CLIZ_IMPORT_ERROR = _exc
+
     def json_main(func):
         @functools.wraps(func)
         def _warn(*a, **k):
             _sys.stderr.write(
-                "warning: mem20cliz unavailable, --json disabled for this CLI (%s)\n" % _exc
+                "warning: mem20cliz unavailable, --json disabled for this CLI (%s)\n"
+                % _MEM20CLIZ_IMPORT_ERROR
             )
             return func(*a, **k)
 

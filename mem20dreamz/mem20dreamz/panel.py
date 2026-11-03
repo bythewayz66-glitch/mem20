@@ -40,7 +40,8 @@ import sys
 from dataclasses import dataclass
 from typing import Any
 
-sys.path.insert(0, "/opt/mem20")
+from .estate import ESTATE_ROOT
+sys.path.insert(0, ESTATE_ROOT)
 import llm
 
 COHERE = "https://api.cohere.com/compatibility/v1"

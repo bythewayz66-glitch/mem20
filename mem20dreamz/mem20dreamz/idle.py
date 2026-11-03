@@ -22,14 +22,16 @@ import sys
 import time
 from typing import Any
 
-sys.path.insert(0, "/opt/mem20")
+from .estate import ESTATE_ROOT
+sys.path.insert(0, ESTATE_ROOT)
 
 from llm import LLMError
 
 from . import engine, seeds
 from .lineage import Lineage, list_lineages
 
-LOCK = os.environ.get("MEM20DREAM_IDLE_LOCK", "/opt/mem20/store/dreams/.active-run.lock")
+LOCK = os.environ.get("MEM20DREAM_IDLE_LOCK") or os.path.join(
+    ESTATE_ROOT, "store", "dreams", ".active-run.lock")
 STATE = os.path.join(os.path.dirname(LOCK), ".idle-state.json")
 IDLE_KINDS = ("idle_prototype", "idle_proposal", "idle_idea")
 

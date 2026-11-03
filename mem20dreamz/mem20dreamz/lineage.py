@@ -27,7 +27,10 @@ import time
 from dataclasses import asdict, dataclass, field
 from typing import Any
 
-STORE = os.environ.get("MEM20DREAM_STORE", "/opt/mem20/store/dreams")
+from .estate import ESTATE_ROOT
+
+STORE = os.environ.get("MEM20DREAM_STORE") or os.path.join(
+    ESTATE_ROOT, "store", "dreams")
 
 MAX_ITERATIONS_KEPT = 500
 

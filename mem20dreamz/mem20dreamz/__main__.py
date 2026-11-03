@@ -6,7 +6,8 @@ import argparse
 import json
 import sys
 
-sys.path.insert(0, "/opt/mem20")
+from .estate import ESTATE_ROOT
+sys.path.insert(0, ESTATE_ROOT)
 from llm import LLMError
 
 from . import audit as audit_mod

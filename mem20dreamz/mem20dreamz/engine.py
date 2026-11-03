@@ -19,7 +19,8 @@ import uuid
 from concurrent.futures import ThreadPoolExecutor
 from typing import Any
 
-sys.path.insert(0, "/opt/mem20")
+from .estate import ESTATE_ROOT
+sys.path.insert(0, ESTATE_ROOT)
 from llm import LLMError, _load_dotenv, chat
 
 from . import estate, ledger

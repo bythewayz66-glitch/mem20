@@ -143,6 +143,9 @@ runtime count is **251** (270 − 8 world_model − 6 affective − 6 procedural
 placeholder = 251), which is consistent with the same registry rather than a
 second contradiction.
 
+The kill switch was retired on 2026-11-03: both registrars now always run,
+so `MEM20_FLAG_WORLDMODEL_20` no longer changes the exposed surface.
+
 ---
 
 ## Domain count: 28 groups, and why "27" is not a code-derived number

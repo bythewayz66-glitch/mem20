@@ -11,10 +11,6 @@ ProceduralMemory store (procedural_memory.json under MEM20_STORE_PATH):
 - procedural_learn
 - procedural_list_skills
 
-Phase 8.1 kill-switch: the same MEM20_FLAG_WORLDMODEL_20 flag that governs the
-world-model / self-model / affective toolset also gates these tools, so the
-8.1 surface stays consistent. Keep the flag check below in sync with
-tools/world_tools.py.
 """
 
 import os
@@ -34,22 +30,11 @@ except ImportError as _mcp_sdk_exc:  # pragma: no cover - only without the SDK
     MCP_SDK_AVAILABLE = False
     MCP_SDK_IMPORT_ERROR = _mcp_sdk_exc
 
-# Phase 8.1 kill-switch (mirror of tools/world_tools.py). When off, the
-# procedural MCP tools are NOT registered so 8.1 is not surfaceable.
-PROCEDURAL_ENABLED = (
-    os.environ.get("MEM20_FLAG_WORLDMODEL_20", "1").strip().lower()
-    not in ("0", "false", "no", "off", "")
-)
-
-
 class ProceduralToolsMixin:
     """Procedural skill tools for mem20."""
 
     def register_procedural_tools(self):
-        """Register all procedural skill tools (honors the 8.1 kill-switch)."""
-        self.procedural_enabled = PROCEDURAL_ENABLED
-        if not PROCEDURAL_ENABLED:
-            return
+        """Register all procedural skill tools."""
         self.tools["procedural_add_skill"] = mt.Tool(
             name="procedural_add_skill",
             title="Add Procedural Skill",

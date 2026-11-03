@@ -59,8 +59,7 @@ def test_mcp_runtime_matches_server(inventory):
 def test_mcp_registration_map_covers_known_specials(inventory):
     mcp_entries = [e for e in inventory["entries"] if e["kind"] == "mcp"]
     names = {e["name"] for e in mcp_entries}
-    # The kill-switch status tool only exists when the flag is off; the
-    # enabled registry is the default, so pin a real enabled tool instead.
+    # The kill-switch placeholder was retired; pin a real enabled tool.
     assert "world_model_add_variable" in names
     by_name = {e["name"]: e for e in mcp_entries}
     wm = by_name["world_model_add_variable"]

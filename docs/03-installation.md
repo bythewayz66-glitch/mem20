@@ -159,7 +159,6 @@ mem20-health   # probes /health
 | `MEM20_HEALTH_PORT` | `8080` | HTTP health endpoint port |
 | `MEM20_HEALTH_DISABLE` | — | Set to `1` to disable HTTP health endpoint |
 | `MEM20_LOG_LEVEL` | `INFO` | Logging level |
-| `MEM20_FLAG_WORLDMODEL_20` | `1` (ON) | Kill-switch for world-model / self-model / affective / procedural tools |
 | `MEM20_BLENDER_EXECUTABLE` | — | Path to Blender executable (optional) |
 | `MEM20_UNITY_EXECUTABLE` | — | Path to Unity Editor executable (optional) |
 

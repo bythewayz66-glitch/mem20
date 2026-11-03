@@ -17,6 +17,7 @@ on:
     branches: [main]
     paths:
       - 'docs/**'
+      - 'mem20agentz/web/**'
       - '.github/workflows/pages.yml'
   workflow_dispatch:
 
@@ -43,6 +44,23 @@ jobs:
           submodules: false
           persist-credentials: false
 
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      # The OREO editor (agentZ) is a Vite SPA, so it cannot be published as
+      # source. Rebuild it into docs/agentz/ on every deploy so the committed
+      # bundle can never drift from the source it claims to be.
+      - name: Build the OREO editor (agentZ)
+        working-directory: mem20agentz/web
+        run: |
+          set -euo pipefail
+          npm install --no-audit --no-fund
+          npm run typecheck
+          npm test
+          npx vite build --outDir ../../docs/agentz --emptyOutDir
+
       - name: Verify the published root
         run: |
           test -f docs/index.html || {
@@ -50,6 +68,18 @@ jobs:
             exit 1
           }
           echo "docs/index.html present ($(wc -c < docs/index.html) bytes)"
+          test -f docs/agentz/index.html || {
+            echo "::error::docs/agentz/index.html is missing; the editor did not build"
+            exit 1
+          }
+          echo "docs/agentz/index.html present ($(wc -c < docs/agentz/index.html) bytes)"
+          # The keyless LLM endpoint must be in the shipped bundle, or the
+          # deployed editor silently falls back to mock.
+          grep -q "text.pollinations.ai/openai" docs/agentz/assets/*.js || {
+            echo "::error::LLM endpoint missing from the built editor bundle"
+            exit 1
+          }
+          echo "LLM endpoint present in the editor bundle"
 
       - name: Configure Pages
         uses: actions/configure-pages@v5

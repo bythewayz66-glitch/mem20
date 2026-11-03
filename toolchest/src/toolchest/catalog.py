@@ -71,7 +71,7 @@ def _resolve_mem20_root() -> Path:
 
 MEM20_ROOT = _resolve_mem20_root()
 MCP_DIR = MEM20_ROOT / "mcp"
-ROOT_VENV = Path("/usr/local")
+ROOT_VENV = Path(sys.prefix)
 CLI_DIRS = [ROOT_VENV / "bin", Path("/usr/local/bin")]
 # Import probes must not run from a directory that is the parent of a
 # subsystem's source tree. From /opt/mem20, `mem20controlz` resolves to the
@@ -652,6 +652,27 @@ def discover_subsystems() -> Dict[str, Any]:
         pp = d / "pyproject.toml"
         if not pp.is_file():
             files = [f.name for f in sorted(d.iterdir())[:8]]
+            if name.startswith("mem20-sdk-"):
+                entries.append({
+                    "id": f"subsystem:{name}",
+                    "kind": "subsystem",
+                    "name": name,
+                    "category": _subsystem_category(name),
+                    "subcategory": "sdk",
+                    "description": ("non-Python SDK; packaging is language-native, "
+                                    f"top-level items: {', '.join(files)}"),
+                    "source": str(d),
+                    "runtime_status": "ok",
+                    "runtime_detail": "non-Python SDK directory; pyproject.toml not applicable",
+                    "checks": [
+                        {"check": "pyproject applies", "ok": True,
+                         "detail": "not a Python package"},
+                        {"check": "dir exists", "ok": True, "detail": str(d)},
+                    ],
+                    "meta": {"pyproject": None, "entry_points": [],
+                             "installed": None, "importable": []},
+                })
+                continue
             entries.append({
                 "id": f"subsystem:{name}",
                 "kind": "subsystem",
@@ -661,7 +682,7 @@ def discover_subsystems() -> Dict[str, Any]:
                 "description": f"no pyproject.toml; top-level items: {', '.join(files)}",
                 "source": str(d),
                 "runtime_status": "unpackaged",
-                "runtime_detail": "pyproject.toml not present under /opt/mem20",
+                                "runtime_detail": f"pyproject.toml not present under {MEM20_ROOT}",
                 "checks": [
                     {"check": "pyproject exists", "ok": False,
                      "detail": "not a PEP-621 package"},
@@ -782,9 +803,16 @@ def build_inventory(help_sampling: bool = True) -> Dict[str, Any]:
         sub for c in categories.values() for sub in c["subcategories"]
     }
 
+    unpackaged = sorted(e["name"] for e in subsys["entries"]
+                        if e["subcategory"] == "unpackaged")
+    sdks = sorted(e["name"] for e in subsys["entries"]
+                  if e["subcategory"] == "sdk")
     notes = [
         "mem20bjorkz: not present on disk (AGENTS.md: 'if present')",
-        "mem20_mcp and mem20-orchestration: no pyproject.toml — reported unpackaged (not hidden)",
+        ("unpackaged Python subsystems: " + ", ".join(unpackaged))
+        if unpackaged else "every Python subsystem carries a pyproject.toml",
+        ("non-Python SDK directories (packaging not applicable): " + ", ".join(sdks))
+        if sdks else "no non-Python SDK directories present",
         f"MCP registry read at runtime: {mcp.get('ok')} "
         f"({mcp.get('runtime_count', 0)} tools)",
     ]

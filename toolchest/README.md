@@ -3,7 +3,7 @@
 Runtime-checked tool inventory/registry for the mem20 agent fleet.
 
 `toolchest` walks the real box — the MCP server registry, every console script on
-PATH, and the mem20 native subsystems under `/opt/mem20` — and produces one
+PATH, and the mem20 native subsystems under the checkout root — and produces one
 machine-readable manifest: `inventory.json`.
 
 It is a **registry, not a guess**: MCP entries come from actually instantiating
@@ -78,7 +78,7 @@ Every entry has the required fields:
 | `kind`          | `mcp`, `cli`, or `subsystem`                                       |
 | `name`          | tool name                                                          |
 | `category`      | `mcp`, `cli`, `agent-platform`, `games-3d`, `infra-model-ui`, `other` |
-| `subcategory`   | domain (MCP), bin-type class (CLI), `native-subsystem`/`unpackaged` (subsystem) |
+| `subcategory`   | domain (MCP), bin-type class (CLI), `native-subsystem`/`unpackaged`/`sdk` (subsystem) |
 | `description`   | authoritative one-liner                                            |
 | `source`        | on-disk path (or repo-relative for MCP registration modules)       |
 | `runtime_status`| `ok`, `degraded`, `broken`, `missing`                              |
@@ -96,8 +96,10 @@ MCP entries additionally record the schema-prop count from `input_schema` in
   `/root/AGENTS.md:63`; there is no `/opt/mem20/AGENTS.md`).
 - `other/native-subsystem`: mem20* packages with a pyproject.toml not listed in
   that table.
-- `other/unpackaged`: mem20* directories without a pyproject.toml
-  (`mem20_mcp`, `mem20-orchestration`) — reported, not hidden.
+- `other/unpackaged`: Python mem20* directories without a pyproject.toml —
+  reported, not hidden.
+- `other/sdk`: non-Python `mem20-sdk-*` directories, where a pyproject.toml
+  does not apply.
 - `mem20bjorkz` is noted in `inventory.notes` when absent ("if present").
 
 ## Health notes (what it reports truthfully)
@@ -107,7 +109,8 @@ MCP entries additionally record the schema-prop count from `input_schema` in
   (import check runs in root venv → reports `importable=False` on root env; the
   local venv install is recorded in `meta.installed`).
 - mem20crewz: pyproject present but not pip-installed anywhere.
-- 23 subsystems carry a pyproject.toml; 2 do not.
+- Every Python subsystem carries a pyproject.toml; the three `mem20-sdk-*`
+  directories are language-native and classified as `sdk`.
 
 ## Tests
 

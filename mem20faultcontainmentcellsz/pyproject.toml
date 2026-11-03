@@ -1,0 +1,22 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "mem20faultcontainmentcellsz"
+version = "0.1.0"
+description = "Fault Containment Cells — isolate and contain runtime faults."
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = []
+
+[project.scripts]
+mem20faultcontainmentcellsz = "mem20faultcontainmentcellsz:main"
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["mem20faultcontainmentcellsz*"]
+
+[tool.ruff]
+target-version = "py311"
+line-length = 100

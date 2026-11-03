@@ -7,6 +7,9 @@ from typing import Any
 
 import yaml
 
+#: State sits beside this checkout, not under the deployed box's /opt/mem20.
+_STATE_HOME = Path(__file__).resolve().parents[1] / "state"
+
 
 @dataclass
 class GoogleADKConfig:
@@ -21,8 +24,8 @@ class GoogleADKConfig:
     request_timeout: float = 120.0
     enable_sessions: bool = True
     enable_memory: bool = True
-    session_db_path: str = "/opt/mem20/mem20googlez/state/sessions.db"
-    memory_dir: str = "/opt/mem20/mem20googlez/state/memory"
+    session_db_path: str = str(_STATE_HOME / "sessions.db")
+    memory_dir: str = str(_STATE_HOME / "memory")
 
     @classmethod
     def load(cls, path: str | None = None) -> GoogleADKConfig:

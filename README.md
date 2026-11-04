@@ -45,8 +45,8 @@ documentation. Where an older number was wrong, the correction is noted.
 | Source files | **8,497** | `.sitemap/sitemap.json` → `totals.files` |
 | Code lines | **384,249** | `.sitemap/sitemap.json` → `totals.code_lines` |
 | Total lines | **964,795** | `.sitemap/sitemap.json` → `totals.lines` |
-| Packaged subsystems | **288 of 297** | dirs with a `pyproject.toml` at depth 1 or 2 |
-| `pyproject.toml` files | **290** | `find . -name pyproject.toml` |
+| Packaged subsystems | **294 of 297** | dirs with a `pyproject.toml` at depth 1 |
+| `pyproject.toml` files | **296** | `find . -name pyproject.toml` |
 | Test files | **322** | `find . -name "test_*.py" -o -name "*_test.py"` |
 
 ### Corrections to previously published numbers
@@ -57,8 +57,8 @@ These were wrong in the old README and are corrected here:
 |---|---|---|
 | Corpus version | v1 | **v2** (and a v3 exists) |
 | Corpus entries | 14 | **2,000** (v2) / **122,178** (v3) |
-| Degraded tools | 101 | **169** |
-| Unpackaged tools | 142 | **141 in inventory, but only 9 directories actually lack a `pyproject.toml`** |
+| Degraded tools | 101 | **0** — every one of the 943 inventory entries resolves once the estate is installed |
+| Unpackaged tools | 142 | **0** — only 3 directories lack a `pyproject.toml`, and they are the non-Python SDKs |
 | Subsystems | 327 | **340** (sitemap) / **297** directories |
 | Source files | 8,969 | **8,497** |
 | Code lines | 468k | **384,249** |
@@ -232,19 +232,24 @@ mem20/
 
 | Status | Count | Meaning |
 |---|---|---|
-| `ok` | 2 | Installed and importable |
-| `degraded` | **169** | **Not pip-installed** in the root venv or a local `.venv` |
-| `unpackaged` | 141 | No `pyproject.toml` found at inventory time |
+| `ok` | 943 | 311 MCP + 335 CLI + 297 subsystem entries, all installed and importable |
+| `degraded` | 0 | Not pip-installed in the interpreter that ran `refresh` |
+| `unpackaged` | 0 | No `pyproject.toml` — only the three non-Python SDKs lack one |
 
-Two things worth knowing before trusting these numbers:
+`degraded` is an **install-state** verdict, not a code-quality one: it means the
+distribution is not visible to the interpreter that ran `refresh`. Install the
+estate into that interpreter so the registry and the environment agree, then
+rebuild the registry:
 
-1. **`degraded` is an install-state verdict, not a code-quality one.**
-   `toolchest/src/toolchest/catalog.py:682` sets `status = "ok" if install_status == "ok"
-   else "degraded"`. All 169 share one cause: not pip-installed. See issue #227.
-2. **The committed inventory is stale.** `catalog.py:38` hardcodes
-   `MEM20_ROOT = Path("/opt/mem20")`, so `toolchest refresh` finds 0 subsystems on any
-   other checkout. The 141 "unpackaged" figure predates most subsystems gaining a
-   `pyproject.toml` — only 9 directories actually lack one today. See issue #228.
+```bash
+make install-estate            # pip install -e --no-deps every mem20* project
+python3 -m toolchest refresh   # rebuild toolchest/inventory.json
+```
+
+The committed `toolchest/inventory.json` was regenerated in an interpreter that
+holds the whole estate (295 `mem20*` distributions), which is why every entry is
+`ok`. `refresh` honours `MEM20_ROOT` and otherwise discovers the checkout from
+the toolchest source location — it no longer hardcodes `/opt/mem20` (issue #228).
 
 Query the registry:
 

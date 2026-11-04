@@ -26,6 +26,12 @@ httpx>=0.28
 PyYAML>=6.0
 stripe>=16.1
 
+# The 4.0 conformance gate (scripts/renovation/conformance.py) verifies
+# criterion 6 by running each subsystem's suite under coverage and counting
+# only an import whose call sits on an executed line (issue #220). Without this
+# dependency the gate fails closed with "coverage module not installed".
+coverage>=7
+
 # FastAPI/Starlette compatibility pin (issue #179/#180).
 #
 # fastapi 0.115.12 calls `routing.APIRouter(on_startup=..., on_shutdown=...)`,

@@ -30,6 +30,11 @@ import sys
 from dataclasses import dataclass, field, asdict
 from pathlib import Path
 
+try:
+    import tomllib
+except ModuleNotFoundError:  # Python 3.10: no stdlib TOML parser
+    tomllib = None
+
 REPO_ROOT = Path(__file__).resolve().parents[2]
 
 # Directories that are not subsystems (docs, tooling, generated output).
@@ -394,6 +399,64 @@ def python_cross_modules_covered(name: str, path: Path, src: list, root: Path) -
     return real, detail, ""
 
 
+def declared_entry_points(path: Path) -> list[str]:
+    """Console-script targets declared in ``pyproject.toml`` and present on disk.
+
+    Criterion 4 used to be a filename check only (``cli.py`` / ``__main__.py`` /
+    ``main.py``). A subsystem can ship a working command through
+    ``[project.scripts]`` with none of those files, which made the gate report
+    "no CLI surface" for a runtime that starts fine (issue #218). Each declared
+    target is resolved against the tree, so a stale declaration does not count.
+
+    Returns the raw ``module:callable`` strings that resolve to a real module.
+    """
+    pyproject = path / "pyproject.toml"
+    if not pyproject.is_file():
+        return []
+    try:
+        text = pyproject.read_text(encoding="utf-8", errors="ignore")
+    except OSError:
+        return []
+
+    scripts: dict = {}
+    if tomllib is not None:
+        try:
+            project = tomllib.loads(text).get("project") or {}
+        except tomllib.TOMLDecodeError:
+            project = {}
+        scripts.update(project.get("scripts") or {})
+        entry_points = project.get("entry-points") or {}
+        console = entry_points.get("console_scripts") if isinstance(entry_points, dict) else None
+        if isinstance(console, dict):
+            scripts.update(console)
+    else:  # pragma: no cover - only on Python 3.10
+        section = None
+        for line in text.splitlines():
+            stripped = line.strip()
+            if stripped.startswith("[") and stripped.endswith("]"):
+                section = stripped.strip("[]")
+                continue
+            match = re.match(r'^([A-Za-z0-9_.-]+)\s*=\s*"([^"]+)"', stripped)
+            if match and section in ("project.scripts", 'project.entry-points."console_scripts"'):
+                scripts[match.group(1)] = match.group(2)
+
+    resolved = []
+    for target in scripts.values():
+        if not isinstance(target, str) or ":" not in target:
+            continue
+        module = target.split(":", 1)[0].strip()
+        relative = module.replace(".", "/")
+        candidates = (
+            path / f"{relative}.py",
+            path / "src" / f"{relative}.py",
+            path / relative / "__init__.py",
+            path / "src" / relative / "__init__.py",
+        )
+        if any(candidate.is_file() for candidate in candidates):
+            resolved.append(target)
+    return resolved
+
+
 def check_subsystem(name: str, root: Path = REPO_ROOT) -> Result:
     path = root / name
     res = Result(subsystem=name)
@@ -455,7 +518,11 @@ def check_subsystem(name: str, root: Path = REPO_ROOT) -> Result:
     if rust_primary:
         res.cli = any(p.name == "main.rs" for p in rss) or (path / "src" / "main.rs").is_file()
     else:
-        res.cli = any(p.name in cli_names for p in pys) or (path / "cli").is_dir()
+        res.cli = (
+            any(p.name in cli_names for p in pys)
+            or (path / "cli").is_dir()
+            or bool(declared_entry_points(path))
+        )
     if not res.cli:
         res.failures.append("no CLI surface")
 

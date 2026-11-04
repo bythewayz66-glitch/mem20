@@ -19,6 +19,17 @@ cd /opt/mem20/toolchest
 python3 -m pip install -e .
 ```
 
+A subsystem row with `runtime_status: degraded` means its distribution is not
+visible to the interpreter that ran `refresh` — not that its code is broken.
+Install the estate into that same interpreter so the registry and the
+environment agree:
+
+```bash
+python3 scripts/install_estate.py --dry-run   # list the projects
+python3 scripts/install_estate.py             # editable install, --no-deps
+make install-estate                           # same, via the repo Makefile
+```
+
 ## Usage
 
 ```

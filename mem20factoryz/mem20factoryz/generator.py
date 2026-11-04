@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+from abc import ABC, abstractmethod
 from dataclasses import dataclass
 from typing import Dict, List, Tuple
 
@@ -9,13 +10,14 @@ from .prng import DeterministicPRNG, ValueNoise, grid, in_bounds
 
 
 @dataclass(eq=False)
-class Generator:
-    """Base generator."""
+class Generator(ABC):
+    """Base generator; subclasses implement ``generate``."""
 
     name: str = "generator"
 
+    @abstractmethod
     def generate(self, config) -> object:
-        raise NotImplementedError
+        """Return the artifact produced for ``config``."""
 
 
 @dataclass(eq=False)

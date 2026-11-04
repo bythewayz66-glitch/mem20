@@ -227,3 +227,27 @@ cd /opt/mem20 && python3 -m pytest tests/test_mem20path.py -q   # 17
     a command, and would never return.
   - mem20path never overwrites a real file it did not create; it only manages
     its own symlinks.
+
+## 2026-11-04 - Agent session
+
+### Actions
+- Added Kilo Gateway and Pollinations providers to OpenCode config (`/root/.config/opencode/opencode.json`)
+- Cloned `bythewayz66-glitch/mem20` to `/opt/mem20`, installed dependencies (created venv, installed requirements, editable install)
+- Performed full doc scan of mem20 repo with subagents; reviewed key docs
+- Filed issue [#256](https://github.com/bythewayz66-glitch/mem20/issues/256) with key findings from AbsoluteTruth113.md scan
+- Pulled all open issues (46 open)
+- Created comprehensive `AGENTS.md` in `/opt/mem20` with rules: no fake code/placeholders/stubs, session protocol (es//, ns//), access rules (use tools/SDKs only), conformance rules, hygiene rules, contribution rules, anti-hallucination rules, persistence rules
+- Copied `AGENTS.md` to `TEAMILY_AGENTS.md`, `GAMUT_AGENTS.md`, `TEAMZ_AGENTZ.md`
+- Updated OpenCode config to load mem20 AGENTS.md on startup
+- Saved session context and self model to mem20 via memory tools
+- Committed and pushed changes to mem20 repo
+
+### Notes
+- All rules added to enforce conformance and prevent hallucination/fabrication/laziness
+- Self model supports emotion/affective state, name, experiences, capabilities, notes to self
+---
+## 2026-11-04 - Agent session
+- Added Kilo Gateway and Pollinations providers to OpenCode
+- Created comprehensive AGENTS.md with all rulesets
+- Filed issue #256, committed/pushed to mem20 repo
+- Saved context and self model to mem20 via tools

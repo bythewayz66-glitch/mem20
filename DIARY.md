@@ -251,3 +251,4 @@ cd /opt/mem20 && python3 -m pytest tests/test_mem20path.py -q   # 17
 - Created comprehensive AGENTS.md with all rulesets
 - Filed issue #256, committed/pushed to mem20 repo
 - Saved context and self model to mem20 via tools
+- 2026-11-04: Fixed docs counts (306 tools), version skew (3.1.2), architecture stub, specs placeholders; registered temporal tools

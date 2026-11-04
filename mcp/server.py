@@ -178,6 +178,7 @@ class Mem20MCPServer(MemoryToolsMixin, CognitiveToolsMixin, RoadmapToolsMixin,
         self.register_toolchest_tools()
         self.register_corez_tools()
         self.register_webhook_tools()
+        self.register_temporal_tools()
         self.register_kilnz_tools()
         self.register_dreamz_tools()
         self.register_crewz_tools()
@@ -282,6 +283,30 @@ class Mem20MCPServer(MemoryToolsMixin, CognitiveToolsMixin, RoadmapToolsMixin,
             async def _dispatch(arguments, _handler=handler):
                 # The handlers are synchronous and touch SQLite plus subprocess
                 # checks; running them on the loop would block every client.
+                return await asyncio.to_thread(lambda: _handler(**(arguments or {})))
+
+            setattr(self, f"_{name}", _dispatch)
+
+    def register_temporal_tools(self):
+        """Register the temporal tools (mem20temporaldatabasefabricz)."""
+        try:
+            from tools import temporal_tools  # noqa: PLC0415 - mcp/ is on sys.path at runtime
+        except ImportError:
+            sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), "tools"))
+            import temporal_tools  # noqa: PLC0415
+
+        self._temporal_tools = temporal_tools
+        for spec in temporal_tools.TOOLS:
+            name = spec["name"]
+            self.tools[name] = mt.Tool(
+                name=name,
+                title=name.replace("_", " ").title(),
+                description=spec["description"],
+                inputSchema=spec["inputSchema"],
+            )
+            handler = spec["handler"]
+
+            async def _dispatch(arguments, _handler=handler):
                 return await asyncio.to_thread(lambda: _handler(**(arguments or {})))
 
             setattr(self, f"_{name}", _dispatch)

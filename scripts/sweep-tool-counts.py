@@ -1,24 +1,36 @@
 #!/usr/bin/env python3
-"""Converge every mem20 frontend surface on the live tool surface: 270 tools / 27 domains.
+"""Converge every mem20 frontend surface on the live tool surface.
 
 # Canonical number
 
-270 distinct tools across 27 domains, reproduced two independent ways:
+The count is not hardcoded here. It is read from `docs/surface.json`, which is
+generated from the live JSON-RPC `tools/list` response by
+`scripts/surface_manifest.py` and cross-checked against the AST catalog in
+`web/src/data/tools.json`. Regenerate that file first if it is missing or stale:
 
-  1. `grep -o 'self\.tools\["[a-z0-9_]*"\]' mcp/**/*.py | sort -u | wc -l` -> 270
-     (272 raw registrations, 2 shadowed duplicates).
-  2. `python3 web/scripts/extract-tools.py` (AST, mt.Tool calls) -> 270 / 27.
+    python3 scripts/surface_manifest.py --write
 
-# Why 257/26 and 268/26 were wrong
+At v3.1.2 that file declares 311 tools across 39 domains.
 
-The old number undercounted in exactly two places:
-  * the `memory_*` row listed 49 and the surface registers 52  (+3)
-  * the 10 `lie_*` tools were absent from every table              (+10)
-257 + 3 + 10 = 270. Those 10 `lie_*` tools are the 27th domain.
+# Retired bands this sweep rewrites
+
+  257/26, 258-260/26, 265/26, 268/26  -> the pre-lie surface
+  270/27                              -> the pre-temporal surface
+  306/38, 306/39                      -> the pre-temporal count / mismatched pair
+
+The script refuses to invent a replacement: it fails if `docs/surface.json` is
+absent, so a stale constant can never be written over a current page.
+
+# Why the old numbers were wrong
+
+  * 257 undercounted `memory_*` by 3 and omitted the 10 `lie_*` tools.
+  * 268 counted `mcp/tools/` only, omitting the root-level tool modules.
+  * 306 was correct until the five `temporal_*` tools landed (311, 39 domains).
 
 # Pass 1 vs pass 2
 
-Pass 1 rewrites the phrasings ("257 tools", "~258-260 tools", "26 domains").
+Pass 1 rewrites the phrasings ("257 tools", "~258-260 tools", "26 domains",
+"270 tools", "306 tools", "38 domains").
 Pass 2 rewrites the *bare* KPI forms ("<div class=v>257</div>", "257-tool wall",
 "49 of 257") but only in PASS2_FILES, because a bare number is ambiguous in a
 page that also contains geometry (widths, z-indexes, chart bounds).
@@ -38,11 +50,25 @@ Run:  python3 scripts/sweep-tool-counts.py            # dry run
       python3 scripts/sweep-tool-counts.py --apply    # write
 """
 import argparse
+import json
 import pathlib
 import re
 
-TOOLS = "270"
-DOMAINS = "27"
+SURFACE_JSON = pathlib.Path(__file__).resolve().parents[1] / "docs" / "surface.json"
+
+
+def _live_surface() -> tuple[str, str]:
+    """Read the generated surface manifest; refuse to sweep against a guess."""
+    if not SURFACE_JSON.is_file():
+        raise SystemExit(
+            "%s is missing; run python3 scripts/surface_manifest.py --write first"
+            % SURFACE_JSON
+        )
+    data = json.loads(SURFACE_JSON.read_text(encoding="utf-8"))
+    return str(data["tools"]), str(data["domains"])
+
+
+TOOLS, DOMAINS = _live_surface()
 
 # ---------------------------------------------------------------- pass 1
 RULES = [
@@ -50,12 +76,14 @@ RULES = [
     (re.compile(r"~?258\s*[\u2013\u2014-]\s*260\s+tools", re.I), f"{TOOLS} tools"),
     (re.compile(r"~258\s+tools", re.I), f"{TOOLS} tools"),
     # combined phrases, assorted separators
-    (re.compile(r"\b(?:257|258|259|260|265|268)\s+tools\s+(?:across|in|/|\u00b7)\s+26\s+domains", re.I),
-     f"{TOOLS} tools across {DOMAINS} domains"),
+    (re.compile(
+        r"\b(?:257|258|259|260|265|268|270|306)\s+tools\s+(?:across|in|/|\u00b7)\s+(?:26|27|38|39)\s+domains",
+        re.I,
+    ), f"{TOOLS} tools across {DOMAINS} domains"),
     # bare tool counts
-    (re.compile(r"\b(?:257|258|259|260|265|268)\s+tools\b", re.I), f"{TOOLS} tools"),
+    (re.compile(r"\b(?:257|258|259|260|265|268|270|306)\s+tools\b", re.I), f"{TOOLS} tools"),
     # bare domain counts (incl. "26 documented domains", "26 domains")
-    (re.compile(r"\b26\s+domains\b", re.I), f"{DOMAINS} domains"),
+    (re.compile(r"\b(?:26|27|38)\s+domains\b", re.I), f"{DOMAINS} domains"),
 ]
 
 # Pages that explain the row-vs-domain discrepancy; adding the lie_* domain
@@ -91,20 +119,22 @@ PASS2_FILES = {
 }
 
 PASS2_RULES = [
-    # the retired band, e.g. "257-260" in a claim table
+    # the retired bands, e.g. "257-260" or "306-311" in a claim table
     (re.compile(r"\b(?:257|258|259|260)\s*[\u2013\u2014-]\s*260\b"), TOOLS),
+    (re.compile(r"\b306\s*[\u2013\u2014-]\s*311\b"), TOOLS),
     # per-domain average: 270 / 27 == 10.0 exactly
     (re.compile(r"<b>9\.88</b>\s*\(257\s*\u00f7\s*26\)"), f"<b>10.0</b> ({TOOLS} \u00f7 {DOMAINS})"),
     (re.compile(r"\b9\.88\b\s*\(257\s*\u00f7\s*26\)"), f"10.0 ({TOOLS} \u00f7 {DOMAINS})"),
     # 257 / 26 written as a ratio
-    (re.compile(r"/\s*26(?=</small>)"), f"/ {DOMAINS}"),
-    (re.compile(r"\b257\s*\u00f7\s*26\b"), f"{TOOLS} \u00f7 {DOMAINS}"),
-    # bare tool count
+    (re.compile(r"/\s*(?:26|27|38)(?=</small>)"), f"/ {DOMAINS}"),
+    (re.compile(r"\b(?:257|270|306)\s*\u00f7\s*(?:26|27|38|39)\b"), f"{TOOLS} \u00f7 {DOMAINS}"),
+    # bare tool count (only PASS2_FILES, which were verified to contain no
+    # geometry value of 257; 270/306 are handled in context by pass 1)
     (re.compile(r"\b257\b"), TOOLS),
     # domain count only where it is the domain count
-    (re.compile(r"domains\s*:\s*26\b"), f"domains:{DOMAINS}"),
-    (re.compile(r"\b26(?=\s*[-/]\s*(?:tool|domain))"), DOMAINS),
-    (re.compile(r"\b26-domain\b"), f"{DOMAINS}-domain"),
+    (re.compile(r"domains\s*:\s*(?:26|27|38)\b"), f"domains:{DOMAINS}"),
+    (re.compile(r"\b(?:26|27|38)(?=\s*[-/]\s*(?:tool|domain))"), DOMAINS),
+    (re.compile(r"\b(?:26|27|38)-domain\b"), f"{DOMAINS}-domain"),
 ]
 
 # The memory_* count moved 49 -> 52 in the same reconcile (two modules register it).
@@ -125,6 +155,10 @@ SKIP_FILES = {
     "bench/optionc/optionc.patch",
     # the shell says the count it stands behind out loud; CATALOG.count drives it
     "web/src/views/DocsFaq.tsx",
+    # This file's 270 reference is a historical note about commit 09ac980's
+    # generator output, not a live surface claim; rewriting it would falsify
+    # the explanation of why two catalog shapes exist.
+    "web/src/data/catalog.ts",
 }
 SKIP_PREFIXES = (
     "published/daily-reports/",

@@ -25,3 +25,18 @@
    NO further action.
 
 - 2026-11-04: Session completed successfully following all mem20 AGENTS.md rules. No failures encountered.
+- 2026-11-04: Godot headless test failed with `add_child()` during
+  `_ready()` — the client tried to parent its `HTTPRequest` helper inside a
+  node that was still entering the tree, so `health()`/`ready()` could never
+  complete. NEXT ACTION: done — the helper is created unparented and
+  `_http_get` waits for the scene tree root to be ready before parenting and
+  issuing the request; all 11 headless checks pass.
+- 2026-11-04: `surface_manifest.py --check` failed under system `python3`
+  (`tools/list returned no response`) because the server's dependencies live in
+  `.venv`, not the system interpreter. NEXT ACTION: done — added
+  `_server_python()` to prefer `.venv/bin/python` for the server subprocess, so
+  both interpreters now verify 311/39.
+- 2026-11-04: launch-gate check flagged the served page because `VERSION`
+  (3.1.2) was itself listed in `RETIRED_VERSIONS`. NEXT ACTION: done —
+  `retired_versions_for(current)` filters the live version; regression test
+  added.

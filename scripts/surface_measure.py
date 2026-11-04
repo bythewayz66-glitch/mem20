@@ -12,7 +12,10 @@ Usage:
     python3 scripts/surface_measure.py
     MEM20_REPO=/path/to/mem20 python3 scripts/surface_measure.py
 
-Expected at v3.1.0: RUNTIME_TOOLS 270 / REGISTRAR_METHODS 28 / PARTITION_CLEAN True.
+Expected at v3.1.2: RUNTIME_TOOLS 311 / REGISTRAR_METHODS 38 / PARTITION_CLEAN True.
+(The 39 domains in docs/surface.json are module-stem domains: rm052_tools.py and
+rm239_tools.py are separate modules, while their registrar group folds into
+versioncontrol. REGISTRAR_METHODS counts register_*_tools methods, not domains.)
 """
 import json
 import os

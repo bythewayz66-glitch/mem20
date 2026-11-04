@@ -7,12 +7,23 @@ func _ready() -> void:
 		"server_cwd": OS.get_environment("MEM20_ROOT"),
 		"timeout_sec": 60.0,
 	})
-	await client.start()
-	await client.memory_store({
+
+	var err := client.start()
+	if err != OK:
+		push_error(client.last_error())
+		return
+
+	var stored = client.memory_store({
 		"content": "NPC Mara will trade herbs for iron",
 		"category": "npc",
 		"tags": ["mara", "trade"],
+		"epistemic_status": "user_stated",
 	})
-	var hits = await client.memory_recall({"query": "who trades herbs", "limit": 3})
+	if typeof(stored) == TYPE_DICTIONARY and stored.has("error"):
+		push_error(str(stored["error"]))
+		client.close()
+		return
+
+	var hits = client.memory_recall({"query": "who trades herbs", "limit": 3})
 	print(Mem20Client.text(hits))
 	client.close()

@@ -245,6 +245,55 @@ cd /opt/mem20 && python3 -m pytest tests/test_mem20path.py -q   # 17
 ### Notes
 - All rules added to enforce conformance and prevent hallucination/fabrication/laziness
 - Self model supports emotion/affective state, name, experiences, capabilities, notes to self
+
+## 2026-11-04 — Godot SDK (#254), live surface counts (#248), launch gate
+
+### #254 — Godot SDK could not make a tool call
+- Cause: `mem20_client.gd` piped a *generated Python heredoc* into the server
+  and never read the JSON-RPC reply; `start()` only spawned a process, so every
+  call either timed out or returned nothing.
+- Fix: committed a real stdlib-only bridge at
+  `mem20-sdk-godot/addons/mem20/mem20_bridge.py`. It pipelines
+  `initialize` + `notifications/initialized` + the request in one
+  `subprocess.run`, honours `server_command`, `server_cwd`, `env` and
+  `timeout_sec`, and returns precise FileNotFound/Permission/Timeout errors.
+- `mem20_client.gd` (0.2.0) now performs a real handshake in `start()`,
+  validates `epistemic_status` on `memory_store`, and implements `health()` /
+  `ready()` as real `HTTPRequest` calls against a separately running server
+  (the one-shot bridge has exited by then). Dead `_pid` / `_stdio` /
+  `_stderr_tail` state removed.
+- Tests: `mem20-sdk-godot/tests/` — `test_bridge.py` (5 stdlib checks),
+  `health_fixture.py`, and a headless Godot round-trip (`run_headless.sh`).
+  All 11 headless checks pass, including a real store/recall against the server
+  and rejection of missing/imagined `epistemic_status`.
+
+### #248 — docs advertised a stale tool/domain count
+- Live `tools/list` is **311 tools / 39 domains**. Previous docs mixed 306/38
+  (pre-temporal) and 306/39 (mismatched pair).
+- Added `scripts/surface_manifest.py` as the single source of truth. It queries
+  the live server, then `--write`s `docs/surface.json`,
+  `docs/TOOL-DOMAINS.md` and `web/src/data/tools.json`; `--check` fails CI on
+  drift. It auto-selects `.venv` for the server subprocess when present.
+- Updated current-facing docs to 311/39: `README.md`, `docs/README.md`,
+  `docs/INDEX.md`, `docs/01-architecture.md`, `docs/02-tools-reference.md`,
+  `docs/05-complete-tools-reference.md`, `docs/troubleshooting-mcp-server-startup.md`,
+  `toolchest/README.md`, `verify_mcp.py`, `docs/finance/inputs.json` and the
+  finance model/workflow. Dated/archival docs keep their historical counts.
+- `scripts/sweep-tool-counts.py` now reads 311/39 from `docs/surface.json`
+  instead of hardcoding a canonical constant.
+
+### Launch gate version drift
+- `scripts/check_launch_gate.py` listed the *current* `VERSION` (3.1.2) as
+  retired, so a correct page failed. Added `retired_versions_for(current)` to
+  filter the live version out; `tests/test_launch_gate.py` covers it (5 pass).
+
+### Verification
+- `.venv/bin/python scripts/surface_manifest.py --check` → `OK: surface is
+  311 tools / 39 domains`; system `python3` also passes via the venv fallback.
+- `MEM20_EXPECTED_TOOLS=311 .venv/bin/python verify_mcp.py` → `RESULT: PASS`.
+- `python3 mem20-sdk-godot/tests/test_bridge.py` → 5 pass.
+- `.venv/bin/python -m pytest tests/test_launch_gate.py -q` → 5 pass.
+- `python3 docs/finance/compute_model.py --check` → passes, appends only once.
 ---
 ## 2026-11-04 - Agent session
 - Added Kilo Gateway and Pollinations providers to OpenCode

@@ -1,6 +1,6 @@
 # mem20 MCP Server Documentation
 
-> **Version:** 3.0.0
+> **Version:** 3.1.2
 > **License:** MIT
 > **Maintainer:** bythewayz66-glitch
 > **Repository:** https://github.com/bythewayz66-glitch/mem20
@@ -10,7 +10,7 @@
 | Document | Description |
 |----------|-------------|
 | [Architecture Overview](01-architecture.md) | System design, memory model, tool domains, deployment |
-| [Tools Reference](02-tools-reference.md) | Complete reference for the MCP tool surface (306 tools / 39 domains live) |
+| [Tools Reference](02-tools-reference.md) | Complete reference for the MCP tool surface (311 tools / 39 domains live) |
 | [Installation Guide](03-installation.md) | Install, configure, and connect MCP hosts |
 | [Usage Examples](04-usage-examples.md) | Practical examples for every tool domain |
 
@@ -37,42 +37,11 @@ MCP client --stdio--> Mem20MCPServer (mcp/mcp_server.py)
    (LLM-backed)    (store engine)   (JSON files)
 ```
 
-## 270 Tools Across 27 Domains
+## 311 Tools Across 39 Domains
 
-Counts obtained by instantiating `Mem20MCPServer` and counting `server.tools`.
-
-| Domain | Prefix | Count |
-|--------|--------|-------|
-| Core memory | `memory_*` | 52 |
-| Cognitive processing | `cog_*` / `tot_*` / substrate | 15 |
-| World forecasting | `world_model_*` | 9 |
-| Version control | `vcs_*` | 11 |
-| Cloud control planes | `cloud_*` | 10 |
-| Databases | `db_*` | 10 |
-| Productivity | `prod_*` | 10 |
-| Sandboxed filesystem | `fs_*` | 13 |
-| Content-addressed ledger | `braid_*` | 9 |
-| Messaging | `comm_*` | 9 |
-| Development | `dev_*` | 9 |
-| Marketing | `mkt_*` | 9 |
-| Web scraping | `scrape_*` | 8 |
-| Object storage | `cloudstorage_*` | 8 |
-| Design | `design_*` | 8 |
-| Finance | `fin_*` | 8 |
-| Imagination/Simulation | `imagination_*` | 8 |
-| Blender automation | `blender_*` | 7 |
-| Search | `search_*` | 7 |
-| Values/Emotions/Goals | `affective_*` | 6 |
-| Skill library | `procedural_*` | 6 |
-| Agent-to-agent | `a2a_*` | 5 |
-| Shared channel | `irc_*` | 5 |
-| Unity automation | `unity_*` | 5 |
-| Roadmap registry | `roadmap_*` | 4 |
-| Self-model | `self_model_*` | 3 |
-| Corrigibility/Shutdown | `corrigibility_*` | 2 |
-| Theory of mind | `theory_of_mind_*` | 2 |
-| Background jobs | `job_*` | 2 |
-| Behavioural signals | `lie_*` | 10 |
+The authoritative, generated mapping is [TOOL-DOMAINS.md](TOOL-DOMAINS.md); the
+machine-readable source is [surface.json](surface.json). Both are regenerated
+from the live `tools/list` response by `scripts/surface_manifest.py`.
 
 ## Quick Start
 

@@ -6,7 +6,7 @@
 
 ## What is mem20?
 
-mem20 is a trusted, auditable memory + world-model layer for agents. It provides persistent memory that survives sessions, records provenance and epistemic status, and can be audited after the fact. mem20 ships as an MCP server (JSON-RPC 2.0 over stdio) with 306 tools across 39 domains, plus a large estate of independently packaged subsystems.
+mem20 is a trusted, auditable memory + world-model layer for agents. It provides persistent memory that survives sessions, records provenance and epistemic status, and can be audited after the fact. mem20 ships as an MCP server (JSON-RPC 2.0 over stdio) with 311 tools across 39 domains, plus a large estate of independently packaged subsystems.
 
 ## Architecture Layers
 
@@ -28,7 +28,7 @@ mem20 is built in three dependency layers:
 
 ### MCP Interface
 - **Transport**: stdio (primary), HTTP health/metrics on port 8080
-- **Tools**: 306 tools across 39 domains, exposed via JSON-RPC 2.0
+- **Tools**: 311 tools across 39 domains, exposed via JSON-RPC 2.0
 - **Authentication/Access**: Controlled through the tool surface
 
 ### Epistemic Framework

@@ -42,8 +42,21 @@ VERSION_URL = "https://raw.githubusercontent.com/bythewayz66-glitch/mem20/main/V
 REPO_API = "https://api.github.com/repos/bythewayz66-glitch/mem20"
 ROBOTS = "https://mem20.com/robots.txt"
 
-#: Version strings that must never appear on a launch surface.
-RETIRED_VERSIONS = ("v3.0.0", "3.1.2")
+#: Version strings that must never appear on a launch surface. The current
+#: VERSION is filtered out at evaluation time (see retired_versions_for), so a
+#: version bump cannot make the gate fail on the string it is asking the site
+#: to serve.
+RETIRED_VERSIONS = ("v3.0.0", "3.0.0")
+
+
+def retired_versions_for(current: str) -> tuple:
+    """Retired strings to look for, excluding the version being served now."""
+    normalized = current.strip().lstrip("v")
+    return tuple(
+        version
+        for version in RETIRED_VERSIONS
+        if version.strip().lstrip("v") not in (normalized, "")
+    )
 
 #: Privacy-respecting analytics markers. Matched case-insensitively against served HTML.
 ANALYTICS_MARKERS = (
@@ -173,7 +186,11 @@ def gate_version(html: FetchResult, repo_version: Optional[str]) -> Dict[str, An
         }
 
     served_current = html.body.count(repo_version)
-    retired_hits = {v: html.body.count(v) for v in RETIRED_VERSIONS if html.body.count(v)}
+    retired_hits = {
+        v: html.body.count(v)
+        for v in retired_versions_for(repo_version)
+        if html.body.count(v)
+    }
 
     problems: List[str] = []
     if served_current == 0:

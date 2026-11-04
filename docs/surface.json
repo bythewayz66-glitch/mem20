@@ -1,0 +1,519 @@
+{
+  "cross_check": {
+    "ast_domains": 39,
+    "ast_tools": 311,
+    "only_ast": [],
+    "only_live": []
+  },
+  "domain_counts": {
+    "a2a": 5,
+    "agentz": 4,
+    "blender": 7,
+    "braid": 9,
+    "cloudservice": 10,
+    "cloudstorage": 8,
+    "cognitive": 19,
+    "communication": 9,
+    "corez": 4,
+    "crewz": 4,
+    "database": 10,
+    "design": 8,
+    "dev": 9,
+    "dreamz": 4,
+    "filesystem": 10,
+    "finance": 8,
+    "integration": 3,
+    "irc": 5,
+    "job": 2,
+    "kilnz": 4,
+    "lie": 10,
+    "marketing": 9,
+    "memory": 55,
+    "ops": 3,
+    "procedural": 6,
+    "productivity": 10,
+    "rm052": 1,
+    "rm239": 1,
+    "roadmap": 4,
+    "search": 7,
+    "temporal": 5,
+    "thought_process": 9,
+    "toolchest": 2,
+    "unity": 5,
+    "verify": 4,
+    "versioncontrol": 11,
+    "webhook": 5,
+    "webscraping": 8,
+    "world": 14
+  },
+  "domain_names": [
+    "a2a",
+    "agentz",
+    "blender",
+    "braid",
+    "cloudservice",
+    "cloudstorage",
+    "cognitive",
+    "communication",
+    "corez",
+    "crewz",
+    "database",
+    "design",
+    "dev",
+    "dreamz",
+    "filesystem",
+    "finance",
+    "integration",
+    "irc",
+    "job",
+    "kilnz",
+    "lie",
+    "marketing",
+    "memory",
+    "ops",
+    "procedural",
+    "productivity",
+    "rm052",
+    "rm239",
+    "roadmap",
+    "search",
+    "temporal",
+    "thought_process",
+    "toolchest",
+    "unity",
+    "verify",
+    "versioncontrol",
+    "webhook",
+    "webscraping",
+    "world"
+  ],
+  "domains": 39,
+  "domains_detail": [
+    {
+      "domain": "memory",
+      "modules": [
+        "mcp/memory_tools.py",
+        "mcp/tools/enhanced_memory_tools.py"
+      ],
+      "prefixes": [
+        "memory_*",
+        "self_*"
+      ],
+      "tools": 55
+    },
+    {
+      "domain": "cognitive",
+      "modules": [
+        "mcp/cognitive_tools.py"
+      ],
+      "prefixes": [
+        "cog_*",
+        "corrigibility_*",
+        "imagination_*",
+        "theory_*"
+      ],
+      "tools": 19
+    },
+    {
+      "domain": "world",
+      "modules": [
+        "mcp/tools/world_tools.py"
+      ],
+      "prefixes": [
+        "affective_*",
+        "world_*"
+      ],
+      "tools": 14
+    },
+    {
+      "domain": "versioncontrol",
+      "modules": [
+        "mcp/tools/versioncontrol_tools.py"
+      ],
+      "prefixes": [
+        "vcs_*"
+      ],
+      "tools": 11
+    },
+    {
+      "domain": "cloudservice",
+      "modules": [
+        "mcp/tools/cloudservice_tools.py"
+      ],
+      "prefixes": [
+        "cloud_*"
+      ],
+      "tools": 10
+    },
+    {
+      "domain": "database",
+      "modules": [
+        "mcp/tools/database_tools.py"
+      ],
+      "prefixes": [
+        "db_*"
+      ],
+      "tools": 10
+    },
+    {
+      "domain": "filesystem",
+      "modules": [
+        "mcp/tools/filesystem_tools.py"
+      ],
+      "prefixes": [
+        "fs_*"
+      ],
+      "tools": 10
+    },
+    {
+      "domain": "lie",
+      "modules": [
+        "mcp/tools/lie_tools.py"
+      ],
+      "prefixes": [
+        "lie_*"
+      ],
+      "tools": 10
+    },
+    {
+      "domain": "productivity",
+      "modules": [
+        "mcp/tools/productivity_tools.py"
+      ],
+      "prefixes": [
+        "prod_*"
+      ],
+      "tools": 10
+    },
+    {
+      "domain": "braid",
+      "modules": [
+        "mcp/tools/braid_tools.py"
+      ],
+      "prefixes": [
+        "braid_*"
+      ],
+      "tools": 9
+    },
+    {
+      "domain": "communication",
+      "modules": [
+        "mcp/tools/communication_tools.py"
+      ],
+      "prefixes": [
+        "comm_*"
+      ],
+      "tools": 9
+    },
+    {
+      "domain": "dev",
+      "modules": [
+        "mcp/tools/dev_tools.py"
+      ],
+      "prefixes": [
+        "dev_*"
+      ],
+      "tools": 9
+    },
+    {
+      "domain": "marketing",
+      "modules": [
+        "mcp/tools/marketing_tools.py"
+      ],
+      "prefixes": [
+        "mkt_*"
+      ],
+      "tools": 9
+    },
+    {
+      "domain": "thought_process",
+      "modules": [
+        "mcp/tools/thought_process.py"
+      ],
+      "prefixes": [
+        "beam_*",
+        "cognitive_*",
+        "get_*",
+        "least_*",
+        "react_*",
+        "reflexion",
+        "tot_*"
+      ],
+      "tools": 9
+    },
+    {
+      "domain": "cloudstorage",
+      "modules": [
+        "mcp/tools/cloudstorage_tools.py"
+      ],
+      "prefixes": [
+        "cloudstorage_*"
+      ],
+      "tools": 8
+    },
+    {
+      "domain": "design",
+      "modules": [
+        "mcp/tools/design_tools.py"
+      ],
+      "prefixes": [
+        "design_*"
+      ],
+      "tools": 8
+    },
+    {
+      "domain": "finance",
+      "modules": [
+        "mcp/tools/finance_tools.py"
+      ],
+      "prefixes": [
+        "fin_*"
+      ],
+      "tools": 8
+    },
+    {
+      "domain": "webscraping",
+      "modules": [
+        "mcp/tools/webscraping_tools.py"
+      ],
+      "prefixes": [
+        "scrape_*"
+      ],
+      "tools": 8
+    },
+    {
+      "domain": "blender",
+      "modules": [
+        "mcp/tools/blender_tools.py"
+      ],
+      "prefixes": [
+        "blender_*"
+      ],
+      "tools": 7
+    },
+    {
+      "domain": "search",
+      "modules": [
+        "mcp/tools/search_tools.py"
+      ],
+      "prefixes": [
+        "search_*"
+      ],
+      "tools": 7
+    },
+    {
+      "domain": "procedural",
+      "modules": [
+        "mcp/tools/procedural_tools.py"
+      ],
+      "prefixes": [
+        "procedural_*"
+      ],
+      "tools": 6
+    },
+    {
+      "domain": "a2a",
+      "modules": [
+        "mcp/tools/a2a_tools.py"
+      ],
+      "prefixes": [
+        "a2a_*"
+      ],
+      "tools": 5
+    },
+    {
+      "domain": "irc",
+      "modules": [
+        "mcp/tools/irc_tools.py"
+      ],
+      "prefixes": [
+        "irc_*"
+      ],
+      "tools": 5
+    },
+    {
+      "domain": "temporal",
+      "modules": [
+        "mcp/tools/temporal_tools.py"
+      ],
+      "prefixes": [
+        "temporal_*"
+      ],
+      "tools": 5
+    },
+    {
+      "domain": "unity",
+      "modules": [
+        "mcp/tools/unity_tools.py"
+      ],
+      "prefixes": [
+        "unity_*"
+      ],
+      "tools": 5
+    },
+    {
+      "domain": "webhook",
+      "modules": [
+        "mcp/tools/webhook_tools.py"
+      ],
+      "prefixes": [
+        "webhook_*"
+      ],
+      "tools": 5
+    },
+    {
+      "domain": "agentz",
+      "modules": [
+        "mcp/tools/agentz_tools.py"
+      ],
+      "prefixes": [
+        "agentz_*"
+      ],
+      "tools": 4
+    },
+    {
+      "domain": "corez",
+      "modules": [
+        "mcp/tools/corez_tools.py"
+      ],
+      "prefixes": [
+        "corez_*"
+      ],
+      "tools": 4
+    },
+    {
+      "domain": "crewz",
+      "modules": [
+        "mcp/tools/crewz_tools.py"
+      ],
+      "prefixes": [
+        "crewz_*"
+      ],
+      "tools": 4
+    },
+    {
+      "domain": "dreamz",
+      "modules": [
+        "mcp/tools/dreamz_tools.py"
+      ],
+      "prefixes": [
+        "dreamz_*"
+      ],
+      "tools": 4
+    },
+    {
+      "domain": "kilnz",
+      "modules": [
+        "mcp/tools/kilnz_tools.py"
+      ],
+      "prefixes": [
+        "kilnz_*"
+      ],
+      "tools": 4
+    },
+    {
+      "domain": "roadmap",
+      "modules": [
+        "mcp/roadmap_tools.py"
+      ],
+      "prefixes": [
+        "roadmap_*"
+      ],
+      "tools": 4
+    },
+    {
+      "domain": "verify",
+      "modules": [
+        "mcp/tools/verify_tools.py"
+      ],
+      "prefixes": [
+        "verify_*"
+      ],
+      "tools": 4
+    },
+    {
+      "domain": "integration",
+      "modules": [
+        "mcp/tools/integration_tools.py"
+      ],
+      "prefixes": [
+        "fs_*"
+      ],
+      "tools": 3
+    },
+    {
+      "domain": "ops",
+      "modules": [
+        "mcp/tools/ops_tools.py"
+      ],
+      "prefixes": [
+        "ops_*"
+      ],
+      "tools": 3
+    },
+    {
+      "domain": "job",
+      "modules": [
+        "mcp/server.py"
+      ],
+      "prefixes": [
+        "job_*"
+      ],
+      "tools": 2
+    },
+    {
+      "domain": "toolchest",
+      "modules": [
+        "mcp/tools/toolchest_tools.py"
+      ],
+      "prefixes": [
+        "toolchest_*"
+      ],
+      "tools": 2
+    },
+    {
+      "domain": "rm052",
+      "modules": [
+        "mcp/tools/rm052_tools.py"
+      ],
+      "prefixes": [
+        "graph_*"
+      ],
+      "tools": 1
+    },
+    {
+      "domain": "rm239",
+      "modules": [
+        "mcp/tools/rm239_tools.py"
+      ],
+      "prefixes": [
+        "vcs_*"
+      ],
+      "tools": 1
+    }
+  ],
+  "schema": 1,
+  "source": "tools/list via launcher.py; domains and modules from the AST catalog generated by web/scripts/extract-tools.py",
+  "tools": 311,
+  "unwired_tools": [
+    "gateway_admission",
+    "gateway_provenance",
+    "gateway_translate",
+    "lattice_emit",
+    "lattice_recall",
+    "lattice_report",
+    "lattice_search",
+    "lattice_verify",
+    "memory_engine_guard",
+    "memory_engine_health",
+    "memory_engine_namespace",
+    "memory_engine_recall",
+    "memory_engine_subsystem",
+    "memory_engine_veto",
+    "stream_publish",
+    "stream_recall",
+    "stream_report",
+    "stream_search",
+    "stream_verify"
+  ]
+}

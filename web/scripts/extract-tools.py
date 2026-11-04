@@ -56,6 +56,11 @@ def domain_for(path: pathlib.Path) -> str:
     return DOMAIN_OVERRIDES.get(stem, stem)
 
 
+def module_for(path: pathlib.Path, root: pathlib.Path) -> str:
+    """Repo-relative POSIX path of the module that declares a tool."""
+    return path.relative_to(root.parent).as_posix()
+
+
 def wired_mixins(root: pathlib.Path) -> set:
     """Base-class names of Mem20MCPServer, i.e. the mixins that actually run."""
     server = root / SERVER_MODULE
@@ -172,6 +177,7 @@ def main() -> int:
                 "t": lit("title") or "",
                 "d": lit("description") or "",
                 "x": domain_for(p),
+                "m": module_for(p, root),
                 "p": props,
             }
             if is_wired:
@@ -216,6 +222,7 @@ def main() -> int:
                     "t": entry.get("title") or "",
                     "d": entry.get("description") or "",
                     "x": domain_for(p),
+                    "m": module_for(p, root),
                     "p": props,
                 }
                 if is_wired:
@@ -238,7 +245,7 @@ def main() -> int:
     }
     out = pathlib.Path(a.out)
     out.parent.mkdir(parents=True, exist_ok=True)
-    out.write_text(json.dumps(payload, separators=(",", ":")))
+    out.write_text(json.dumps(payload, separators=(",", ":")) + "\n")
     print(f"{len(files)} files -> {len(tools)} tools across {len(domains)} domains -> {out}")
     if unwired:
         print(

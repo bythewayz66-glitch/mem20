@@ -2,7 +2,7 @@
 """MCP handshake verifier: initialize + tools/list, assert the tool count."""
 import json, os, subprocess, sys
 
-EXPECTED = int(os.environ.get("MEM20_EXPECTED_TOOLS", "270"))
+EXPECTED = int(os.environ.get("MEM20_EXPECTED_TOOLS", "311"))
 ROOT = os.path.dirname(os.path.abspath(__file__))
 
 p = subprocess.Popen(

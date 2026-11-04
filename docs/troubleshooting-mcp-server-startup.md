@@ -401,11 +401,11 @@ curl -s http://127.0.0.1:8080/health
 
 # Readiness — confirms the tool table is populated
 curl -s http://127.0.0.1:8080/ready
-# {"ready": true, "tools": 270}
+# {"ready": true, "tools": 311}
 
 # Metrics — counters, contamination rate, event taxonomy
 curl -s http://127.0.0.1:8080/metrics
-# {"service": "mem20-mcp", "uptime_seconds": 8.213, "tools_registered": 270,
+# {"service": "mem20-mcp", "uptime_seconds": 8.213, "tools_registered": 311,
 #  "request_count": 0, "request_errors": 0, "memory_system_available": true,
 #  "event_taxonomy": ["tool.call", "tool.success", ...]}
 
@@ -498,7 +498,7 @@ sys.exit(0 if count else 1)
 ```
 INIT: {"jsonrpc": "2.0", "id": 1, "result": {"capabilities": {"tools": {"listChanged": false}},
       "protocolVersion": "2025-06-18", "serverInfo": {"name": "mem20-mcp", "version": ""}}}
-TOOL_COUNT: 270
+TOOL_COUNT: 311
 FIRST_5: ['memory_store', 'memory_recall', 'memory_probe', 'memory_reason', 'memory_status']
 STDERR: 2026-10-23 00:41:51,154 INFO mem20.mcp health endpoint listening on :8080 (/health /ready /metrics)
 ```
@@ -509,14 +509,15 @@ STDERR: 2026-10-23 00:41:51,154 INFO mem20.mcp health endpoint listening on :808
 |---|---|
 | `serverInfo.name == "mem20-mcp"` | You reached mem20, not some other MCP server |
 | `protocolVersion: "2025-06-18"` | Negotiated with the installed SDK |
-| **`TOOL_COUNT: 270`** | Full tool table registered — the healthy target |
-| Count lower than 270 | A tool module failed to import; raise `MEM20_LOG_LEVEL=DEBUG` and check stderr |
+| **`TOOL_COUNT: 311`** | Full tool table registered — the healthy target |
+| Count lower than 311 | A tool module failed to import; raise `MEM20_LOG_LEVEL=DEBUG` and check stderr |
 | `TOOL_COUNT: 0` | Transport up but registration broken — almost always Symptom C |
-| Count of 257 | You are reading stale docs, not a broken server — see below |
+| Count below 311 | You are reading a stale doc or a partially imported server — see below |
 
-Note: `docs/README.md` advertises **257 tools across 26 domains**, while a live instance
-registers **270**. The handshake number is authoritative. If you are debugging a
-"missing tools" report, always quote the handshake count, not the README table.
+The generated [TOOL-DOMAINS.md](TOOL-DOMAINS.md) and [surface.json](surface.json) are
+authoritative; a live instance at this revision registers **311**. If a document
+disagrees, the handshake number wins. If you are debugging a "missing tools"
+report, always quote the handshake count, not a prose table.
 
 A functional smoke test on the same connection (after `tools/list`):
 
@@ -659,4 +660,4 @@ echo "All checks passed."
 | Health endpoint unreachable | Curled too early, port taken, or disabled | `MEM20_HEALTH_PORT=9090`; check the `WARNING … could not bind` line |
 | Server exits 0 immediately | stdin EOF under stdio transport | `mcp/stdio_guardian.py`, or `MEM20_TRANSPORT=http` |
 | `Error: No search dependencies installed` | `faiss`/`sentence-transformers` absent | `pip install faiss-cpu sentence-transformers` |
-| Fewer than 270 tools | A tool module failed to import | `MEM20_LOG_LEVEL=DEBUG python3 ./launcher.py` |
+| Fewer than 311 tools | A tool module failed to import | `MEM20_LOG_LEVEL=DEBUG python3 ./launcher.py` |

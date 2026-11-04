@@ -33,7 +33,7 @@ Part 2 of 6. Index: `claim-ledger.md`. Measured at `2ea44922`.
 | `main` @ `2ea44922` | **3.1.0** | **3.0.0** | both stale vs the highest tag; `v3.1.1..main` = **63** commits |
 
 **GTM says:** *"Version 3.1.0 — `VERSION` on `main` at `2ea44922`."* One command, true.
-**GTM never says:** "3.1.1", "3.0.0", or "the PyPI release is 3.1.0" (no PyPI release — D1). If asked about `pyproject.toml`: *"it still reads 3.0.0; the tag and `VERSION` are ahead of it. A packaging defect, filed, not a capability difference."*
+**GTM never says:** "3.1.1", "3.1.2", or "the PyPI release is 3.1.0" (no PyPI release — D1). If asked about `pyproject.toml`: *"it still reads 3.0.0; the tag and `VERSION` are ahead of it. A packaging defect, filed, not a capability difference."*
 **Consequence:** `pip install .` builds an artifact labelled **3.0.0** regardless of tag. Never ship an install path implying a 3.1.0 wheel.
 
 ### 1.2 The 270 / 27 figure — four agreeing measures

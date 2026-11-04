@@ -10,7 +10,7 @@ $ wc -c memory_engine/__init__.py
 0 memory_engine/__init__.py
 
 $ grep -c "^version" pyproject.toml; cat VERSION
-version = "3.0.0"  (pyproject.toml:7)
+version = "3.1.2"  (pyproject.toml:7)
 3.1.2  (VERSION)
 
 ## 2. New tests pass

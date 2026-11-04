@@ -385,7 +385,7 @@ Every number below resolves to a file at HEAD `1264076698a00878acc3adacf7bf1d51e
 |---|---|
 | Repo `bythewayz66-glitch/mem20`, public, MIT | `GITHUB_GET_A_REPOSITORY` → `private=false`, `license.spdx_id=MIT`, `default_branch=main` |
 | HEAD `1264076698a00878acc3adacf7bf1d51eea315cc` | baseline given in the roster; `git rev-parse HEAD` in a fresh clone matches |
-| Version 3.0.0 | `pyproject.toml` `version = "3.0.0"`; `VERSION` file |
+| Version 3.0.0 | `pyproject.toml` `version = "3.1.2"`; `VERSION` file |
 | Python >=3.10 | `pyproject.toml` `requires-python = ">=3.10"` |
 | **270 tools** | `docs/finance/inputs.json` `tool_surface.tools = 270`; `python3 verify_mcp.py` → `TOOL_COUNT: 270`; unique `self.tools["…"]` literals across `mcp/**` = **270** |
 | **27 domains** | 27 of the 28 `register_*_tools` mixins are domains (`register_job_tools` is the 28th and registers server-infra controls); `docs/finance/inputs.json` `tool_surface.domains = 27` |

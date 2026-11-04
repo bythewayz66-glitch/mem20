@@ -43,7 +43,7 @@ REPO_API = "https://api.github.com/repos/bythewayz66-glitch/mem20"
 ROBOTS = "https://mem20.com/robots.txt"
 
 #: Version strings that must never appear on a launch surface.
-RETIRED_VERSIONS = ("v3.0.0", "3.0.0")
+RETIRED_VERSIONS = ("v3.0.0", "3.1.2")
 
 #: Privacy-respecting analytics markers. Matched case-insensitively against served HTML.
 ANALYTICS_MARKERS = (

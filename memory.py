@@ -16,4 +16,10 @@ import sys
 
 from memory_engine import memory as _engine
 
+# Re-export commonly used symbols
+try:
+    from memory_engine.memory import _detect_only, _scrub_secrets, detect_secrets, redact_secrets, ledger_add, MemoryStore, Ledger, MemoryItem  # noqa
+except Exception:
+    pass
+
 sys.modules[__name__] = _engine

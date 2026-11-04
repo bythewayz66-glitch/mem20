@@ -25,3 +25,7 @@
    NO further action.
 
 - 2026-11-04: Session completed successfully following all mem20 AGENTS.md rules. No failures encountered.
+
+- 2026-11-04: #218's criterion-4 defect is fixed (97 shims + declared-entry-point detection), but the issue also names six subsystems that have no usable CLI at all: `mem20antiexploitationrewardshieldz`, `mem20capabilitymarketplacez`, `mem20connectormarketplacez`, `mem20demandforecastandcapacitybrainz`, `mem20faultcontainmentcellsz` have no entry point (and `mem20_mcp` only forwards to the canonical server tree). Building those CLIs is separate work, so #218 is fixed for the shim/CLI-detection cases and explicitly **not** claimed as fully closed. NEXT ACTION: follow-up issue for the six remaining CLI-less subsystems.
+- 2026-11-04: `mem20factoryz` still fails criterion 6 (0 cross-module calls on covered lines) and criterion 7 (not registered with the MCP gateway). #197's stated defects (the `NotImplementedError` stub and the empty README) are fixed; the two remaining criteria are the estate-wide wiring/registration work. NEXT ACTION: follow-up issue for factoryz wiring and registration.
+- 2026-11-04: The regenerated `toolchest/inventory.json` reflects this box, where 295 `mem20*` distributions are installed. On a fresh clone the same refresh reports `degraded` until `make install-estate` runs — that is the documented install-state semantics, not a regression. NEXT ACTION: none.

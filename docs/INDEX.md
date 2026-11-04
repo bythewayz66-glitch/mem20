@@ -9,7 +9,7 @@
 - **[Financial model (reconciled)](finance/README.md)** — canonical home of the model. House numbers
   (blended ACV $14,000 · TAM $1.28B · SAM $282M · SOM $1.68M) are treated as inputs and asserted, not re-derived.
   Regenerate with `python3 docs/finance/compute_model.py`; verify only with `--check`. Stated against the live
-  **270 tools / 27 domains** surface (257/26 is retired).
+  **306 tools / 39 domains** surface (257/26 is retired).
 
 ## Hygiene
 - [Spec authority paths](hygiene/spec-authority-paths.md) (#14 / #15)

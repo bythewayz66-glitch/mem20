@@ -1,6 +1,6 @@
 # The 27 MCP domains — authoritative mapping
 
-**270 tools across 27 domains.** This file is the ground truth for both numbers. It is
+**306 tools across 39 domains.** This file is the ground truth for both numbers. It is
 generated from the registry itself, not hand-counted, so it cannot drift silently.
 
 ## How the numbers are derived
@@ -26,7 +26,7 @@ So: **28 groups − 1 A2A layer = 27 domains**, holding **265 tools**, plus the
 
 > The one duplicate is a real defect, not a counting artefact: `lie_status` is
 > assigned at `mcp/tools/lie_tools.py:69` and again at `:77`. The second assignment
-> overwrites the first at runtime, so the server exposes 270 tools while the source
+> overwrites the first at runtime, so the server exposes 306 tools while the source
 > contains 271 assignments. It is left in place here because fixing a tool schema
 > is a behaviour change, not a docs change — it is tracked as a separate defect.
 

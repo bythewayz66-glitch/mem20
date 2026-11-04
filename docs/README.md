@@ -10,7 +10,7 @@
 | Document | Description |
 |----------|-------------|
 | [Architecture Overview](01-architecture.md) | System design, memory model, tool domains, deployment |
-| [Tools Reference](02-tools-reference.md) | Complete reference for the MCP tool surface (270 tools / 27 domains live) |
+| [Tools Reference](02-tools-reference.md) | Complete reference for the MCP tool surface (306 tools / 39 domains live) |
 | [Installation Guide](03-installation.md) | Install, configure, and connect MCP hosts |
 | [Usage Examples](04-usage-examples.md) | Practical examples for every tool domain |
 

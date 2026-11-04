@@ -38,7 +38,7 @@ documentation. Where an older number was wrong, the correction is noted.
 
 | Metric | Verified value | How measured |
 |---|---|---|
-| MCP tools | **256** | `grep -rho "Tool(" mcp/tools/*.py \| wc -l` |
+| MCP tools | **306** | `grep -rho "Tool(" mcp/tools/*.py \| wc -l` |
 | MCP tool modules | **44** | `ls mcp/tools/*.py \| wc -l` |
 | Subsystems (sitemap) | **340** | `.sitemap/sitemap.json` → `totals.subsystems` |
 | Subsystem directories | **297** | `ls -d mem20*/` |
@@ -209,7 +209,7 @@ mem20/
 ├── mcp/                  # MCP server — a SCRIPT DIR, not a package
 │   ├── mcp_server.py     # entry point (from server import main)
 │   ├── server.py         # JSON-RPC dispatch, health endpoint
-│   └── tools/            # 44 modules, 256 tools
+│   └── tools/            # 44 modules, 306 tools
 ├── mem20*/               # ~297 independently packaged subsystems
 ├── benchmarks/
 │   └── corpora/          # v2 (2,000 records) and v3 (122,178 records)

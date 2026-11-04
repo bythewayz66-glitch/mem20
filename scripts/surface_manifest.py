@@ -49,6 +49,8 @@ CURRENT_DOCS = (
     "docs/troubleshooting-mcp-server-startup.md",
     "toolchest/README.md",
     "SDKS.md",
+    "docs/index.html",
+    "docs/dashboard.html",
 )
 
 RETIRED = (
@@ -433,6 +435,19 @@ def check_versions() -> list[str]:
                 "%s states version %s, VERSION is %s"
                 % (relative, found.group(1).strip() if found else "missing", version)
             )
+
+    index_html = _read(REPO / "docs" / "index.html")
+    badges = re.findall(
+        r'<span class="badge">v?([0-9]+\.[0-9]+\.[0-9]+)</span>', index_html
+    )
+    if not badges:
+        problems.append("docs/index.html carries no version badge")
+    stale_badges = sorted({badge for badge in badges if badge != version})
+    if stale_badges:
+        problems.append(
+            "docs/index.html badge says %s, VERSION is %s"
+            % (", ".join("v" + badge for badge in stale_badges), version)
+        )
 
     spec = importlib.util.spec_from_file_location("mem20_launch_gate", LAUNCH_GATE)
     if spec is None or spec.loader is None:

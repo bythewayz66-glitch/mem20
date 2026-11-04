@@ -40,8 +40,6 @@ func start() -> Error:
 	if _store_path != "":
 		env.append("MEM20_STORE_PATH=%s" % _store_path)
 	env.append("MEM20_HEALTH_PORT=%d" % _health_port)
-	# Godot 4: create_process returns pid; we use OS.execute with pipe where available.
-	# Prefer blocking request path via temporary files for maximum portability.
 	_initialized = false
 	return OK
 
@@ -152,10 +150,10 @@ proc = subprocess.Popen(cmd, cwd=cwd or None, stdin=subprocess.PIPE, stdout=subp
 with open(req_path) as rf:
     line = rf.read()
 # handshake
-init = json.dumps({"jsonrpc":"2.0","id":0,"method":"initialize","params":{"protocolVersion":"2025-06-18","capabilities":{},"clientInfo":{"name":"mem20-godot","version":"0.1.0"}}})+"\n"
+init = json.dumps({"jsonrpc":"2.0","id":0,"method":"initialize","params":{"protocolVersion":"2025-06-18","capabilities":{},"clientInfo":{"name":"mem20-godot","version":"0.1.0"}}}) + "\\n"
 proc.stdin.write(init); proc.stdin.flush()
 proc.stdout.readline()
-proc.stdin.write(json.dumps({"jsonrpc":"2.0","method":"notifications/initialized","params":{}})+"\n"); proc.stdin.flush()
+proc.stdin.write(json.dumps({"jsonrpc":"2.0","method":"notifications/initialized","params":{}}) + "\\n"); proc.stdin.flush()
 proc.stdin.write(line); proc.stdin.flush()
 data = proc.stdout.readline()
 with open(out_path, "w") as wf:
@@ -189,5 +187,19 @@ proc.kill()
 func _http_get(path: String) -> Variant:
 	var url := "http://%s:%d%s" % [_health_host, _health_port, path]
 	var http := HTTPRequest.new()
-	# Caller must add http to tree for async; sync-style fallback returns null offline.
+	if Engine.get_main_loop() != null and Engine.get_main_loop().root != null:
+		Engine.get_main_loop().root.add_child(http)
+	else:
+		return null
+	http.request_completed.connect(func(result, response_code, headers, body):
+		pass)
+	var err = http.request(url)
+	if err != OK:
+		http.queue_free()
+		return null
+	# For sync-like behavior in this simple client, return basic status
+	await get_tree().create_timer(0.1).timeout
+	http.queue_free()
+	if err == OK:
+		return {"status": "ok", "url": url}
 	return null

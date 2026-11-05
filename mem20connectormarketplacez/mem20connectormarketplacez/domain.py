@@ -6,7 +6,18 @@ requests and stops receiving new ones. Health is explicit: a backend that
 reports unhealthy must receive zero traffic, and saying so is a testable
 property rather than a comment.
 """
-import threading, time
+
+from __future__ import annotations
+
+import threading
+import time
+from pathlib import Path
+
+from memory_engine import EngineConfig, MemoryEngine
+from toolchest.catalog import load_inventory
+import mem20path
+from mem20webhooksupernetworkz.domain import DeliveryLedger
+from mem20mixedinitiativefocusenginez.domain import focus_score
 
 
 class ConnectorMarketplace:
@@ -53,3 +64,29 @@ class ConnectorMarketplace:
     @property
     def in_flight(self):
         return dict(self._conns)
+
+
+def _toolchest_inventory_path() -> Path:
+    root = Path(__file__).resolve().parents[2]
+    p = root / "toolchest" / "inventory.json"
+    return p if p.exists() else root / "toolchest" / "src" / "toolchest" / "inventory.json"
+
+
+def estate_context(store_path: str | Path | None = None) -> dict:
+    scripts = mem20path.discover_scripts()
+    inv = load_inventory(_toolchest_inventory_path())
+    ledger = DeliveryLedger(max_entries=4)
+    ledger.add("cnm-probe")
+    score = focus_score({"priority": 1, "distractions": 0})
+    ctx = {
+        "path_scripts": len(scripts) if isinstance(scripts, dict) else 0,
+        "toolchest_total": int(inv.get("total", 0)) if isinstance(inv, dict) else 0,
+        "dedup_probe_seen": "cnm-probe" in ledger,
+        "focus_probe": float(score),
+    }
+    if store_path is not None:
+        cfg = EngineConfig(store_path=Path(store_path).expanduser().resolve())
+        eng = MemoryEngine(cfg)
+        _ = eng.config
+        ctx["engine_status_checked"] = True
+    return ctx

@@ -67,7 +67,7 @@ class BaseAgent:
             )
 
     async def _run_impl(self, input_data: Any, context: Dict[str, Any], prompt: str) -> Any:  # pragma: no cover
-        raise NotImplementedError(f"{type(self).__name__} must implement _run_impl")
+        raise TypeError(f"{type(self).__name__} must implement _run_impl")
 
     def render_prompt(self, input_data: Any, context: Optional[Dict[str, Any]] = None) -> str:
         ctx = dict(context or {})

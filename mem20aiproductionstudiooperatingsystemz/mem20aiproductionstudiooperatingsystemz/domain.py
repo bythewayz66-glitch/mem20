@@ -1,5 +1,15 @@
 """AI production studio OS: project scheduling, resource allocation, milestones."""
+
+from __future__ import annotations
+
 import math
+from pathlib import Path
+
+from memory_engine import EngineConfig, MemoryEngine
+from toolchest.catalog import load_inventory
+import mem20path
+from mem20webhooksupernetworkz.domain import DeliveryLedger
+from mem20mixedinitiativefocusenginez.domain import focus_score
 
 
 def schedule_projects(projects, capacity):
@@ -40,8 +50,8 @@ def milestone_progress(milestones, completed):
 
 def critical_path(tasks, deps):
     """Find critical path length (longest chain)."""
-    # deps: dict task_id -> list of prerequisite task_ids
     memo = {}
+
     def longest(t):
         if t in memo:
             return memo[t]
@@ -51,6 +61,7 @@ def critical_path(tasks, deps):
             return 1
         memo[t] = 1 + max(longest(p) for p in prereqs)
         return memo[t]
+
     return max((longest(t) for t in tasks), default=0)
 
 
@@ -59,3 +70,29 @@ def studio_health(projects, capacity):
     sched = schedule_projects(projects, capacity)
     utilization = sum(p.get("effort", 1) for p in projects if p.get("id") in {s["id"] for s in sched}) / max(1, capacity)
     return round(min(1.0, utilization), 4)
+
+
+def _toolchest_inventory_path() -> Path:
+    root = Path(__file__).resolve().parents[2]
+    p = root / "toolchest" / "inventory.json"
+    return p if p.exists() else root / "toolchest" / "src" / "toolchest" / "inventory.json"
+
+
+def estate_context(store_path: str | Path | None = None) -> dict:
+    scripts = mem20path.discover_scripts()
+    inv = load_inventory(_toolchest_inventory_path())
+    ledger = DeliveryLedger(max_entries=4)
+    ledger.add("aipso-probe")
+    score = focus_score({"priority": 1, "distractions": 0})
+    ctx = {
+        "path_scripts": len(scripts) if isinstance(scripts, dict) else 0,
+        "toolchest_total": int(inv.get("total", 0)) if isinstance(inv, dict) else 0,
+        "dedup_probe_seen": "aipso-probe" in ledger,
+        "focus_probe": float(score),
+    }
+    if store_path is not None:
+        cfg = EngineConfig(store_path=Path(store_path).expanduser().resolve())
+        eng = MemoryEngine(cfg)
+        _ = eng.config
+        ctx["engine_status_checked"] = True
+    return ctx

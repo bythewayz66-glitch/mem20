@@ -1,9 +1,30 @@
-# RM-215 — Living Agent Economy
+# mem20livingagenteconomyz — Living Agent Economy
 
-**Outcome:** Let agents discover work, form teams, exchange capabilities, and earn bounded resource budgets
+A lightweight agent economy (balances, earn/spend/trade, reputation) with mem20 estate integration.
 
-**Breakthrough:** The platform becomes a productive digital economy rather than a static assistant
+## Python API
 
-This package is the machine-executable local implementation derived from the supplied Off Record Lab roadmap. It includes versioned typed state, SQLite WAL persistence, event history/snapshots, SDK CRUD/subscription, resumable idempotent jobs, cancellation, retries/timeouts/quotas/backpressure, deterministic replica reconciliation, local/hybrid/cloud placement/failover, roadmap-specific `match` logic, decision confidence/explanations, feedback, CLI, HTTP console/API, safety guards, simulator, benchmark/metrics, and rollback-capable installer.
+```python
+import tempfile
+from mem20livingagenteconomyz.domain import create_economy, earn, trade, estate_context
 
-Named live product surfaces, real provider/device credentials, production traffic, and governed FreeStack deployment remain target-environment integration and are not claimed complete.
+econ = create_economy(["agent-a", "agent-b"])
+earn(econ, "agent-a", 50, "task")
+trade(econ, "agent-a", "agent-b", 10)
+print(econ["agents"]["agent-b"]["balance"])
+
+with tempfile.TemporaryDirectory() as d:
+    print(estate_context(d)["engine_status_checked"])
+```
+
+## CLI
+
+```bash
+python -m mem20livingagenteconomyz --help
+```
+
+## Tests
+
+```bash
+PYTHONPATH=/opt/mem20 python -m pytest mem20livingagenteconomyz/mem20livingagenteconomyz/tests -q
+```

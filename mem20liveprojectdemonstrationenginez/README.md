@@ -1,9 +1,31 @@
-# RM-235 — Live Project Demonstration Engine
+# mem20liveprojectdemonstrationenginez — Live Project Demonstration Engine
 
-**Outcome:** Turn a working project into an interactive sandbox, guided demo, benchmark, and shareable live experience
+Create and step through live project demonstrations (flows, steps, progress) with mem20 estate integration.
 
-**Breakthrough:** Products prove themselves through executable demonstrations instead of written portfolios
+## Python API
 
-This package is the machine-executable local implementation derived from the supplied Off Record Lab roadmap. It includes versioned typed state, SQLite WAL persistence, event history/snapshots, SDK CRUD/subscription, resumable idempotent jobs, cancellation, retries/timeouts/quotas/backpressure, deterministic replica reconciliation, local/hybrid/cloud placement/failover, roadmap-specific `simulate` logic, decision confidence/explanations, feedback, CLI, HTTP console/API, safety guards, simulator, benchmark/metrics, and rollback-capable installer.
+```python
+import tempfile
+from mem20liveprojectdemonstrationenginez.domain import create_demo, add_step, start, advance, progress, estate_context
 
-Named live product surfaces, real provider/device credentials, production traffic, and governed FreeStack deployment remain target-environment integration and are not claimed complete.
+demo = create_demo("my-project", steps=[{"title": "intro"}])
+add_step(demo, {"title": "deep-dive"})
+start(demo)
+print(advance(demo))
+print(progress(demo))
+
+with tempfile.TemporaryDirectory() as d:
+    print(estate_context(d)["engine_status_checked"])
+```
+
+## CLI
+
+```bash
+python -m mem20liveprojectdemonstrationenginez --help
+```
+
+## Tests
+
+```bash
+PYTHONPATH=/opt/mem20 python -m pytest mem20liveprojectdemonstrationenginez/mem20liveprojectdemonstrationenginez/tests -q
+```

@@ -1,10 +1,15 @@
 """Demand forecast with an honest prediction interval."""
 import importlib
+import tempfile
+
 import pytest
+
 MOD = "mem20demandforecastandcapacitybrainz"
+
 
 def _m():
     return importlib.import_module(MOD + ".domain")
+
 
 def test_no_observations_forecast_is_honest():
     f = _m().DemandForecastAndCapacityBrain().forecast()
@@ -13,7 +18,6 @@ def test_no_observations_forecast_is_honest():
 
 
 def test_invalid_parameters_refused():
-    import pytest
     with pytest.raises(ValueError):
         _m().DemandForecastAndCapacityBrain(alpha=0)
     with pytest.raises(ValueError):
@@ -47,7 +51,8 @@ def test_longer_horizon_widens_the_interval():
     b = _m().DemandForecastAndCapacityBrain()
     for v in [10, 14, 9, 13, 11, 15, 8, 12]:
         b.observe(v)
-    one = b.forecast(steps=1); four = b.forecast(steps=4)
+    one = b.forecast(steps=1)
+    four = b.forecast(steps=4)
     assert (four["high"] - four["low"]) > (one["high"] - one["low"])
 
 
@@ -55,5 +60,14 @@ def test_capacity_scales_with_service_level():
     b = _m().DemandForecastAndCapacityBrain()
     for v in [10, 12, 11, 13, 12, 14, 13, 15]:
         b.observe(v)
-    lo = b.capacity_for(0.90); hi = b.capacity_for(0.99)
+    lo = b.capacity_for(0.90)
+    hi = b.capacity_for(0.99)
     assert hi > lo
+
+
+def test_estate_context_real_integrations():
+    with tempfile.TemporaryDirectory() as d:
+        ctx = _m().estate_context(d)
+        assert ctx.get("engine_status_checked") is True
+        assert ctx.get("dedup_probe_seen") is True
+        assert "toolchest_total" in ctx

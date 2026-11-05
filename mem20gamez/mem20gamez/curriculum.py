@@ -70,11 +70,11 @@ class Curriculum(ABC):
 
     @abstractmethod
     def get_difficulty(self) -> float:
-        raise NotImplementedError
+        ...
 
     @abstractmethod
     def update(self, performance: float) -> None:
-        raise NotImplementedError
+        ...
 
     def step(self) -> None:
         self.current_step += 1

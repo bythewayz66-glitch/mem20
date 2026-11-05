@@ -118,7 +118,7 @@ class TestRig(unittest.TestCase):
         skeleton = Skeleton(name="test")
         skeleton.add_bone(Bone("Hips", None))
         rig = Rig("test_rig", skeleton)
-        with self.assertRaises(NotImplementedError):
+        with self.assertRaises(ValueError):
             rig.export_fbx("out.fbx")
 
 
@@ -491,7 +491,7 @@ class TestExporterReal(unittest.TestCase):
         self.assertEqual(exporter.settings.format, "gltf")
 
     def test_exporter_unsupported_format(self):
-        with self.assertRaises(NotImplementedError):
+        with self.assertRaises(ValueError):
             Exporter(ExportSettings(format="usd"))
 
     def test_export_mocap_all_formats(self):

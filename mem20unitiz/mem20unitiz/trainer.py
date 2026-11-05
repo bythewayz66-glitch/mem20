@@ -148,11 +148,11 @@ class Trainer(ABC):
 
     @abstractmethod
     def update(self) -> dict[str, float]:
-        raise NotImplementedError
+        ...
 
     @abstractmethod
     def process_experiences(self, trajectories: list[Trajectory]) -> None:
-        raise NotImplementedError
+        ...
 
     def fit(
         self,

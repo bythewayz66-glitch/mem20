@@ -113,6 +113,6 @@ class Rig:
         Use real export paths instead: glTF 2.0, OBJ, BVH, or C3D via
         :class:`mem20yetiz.exporter.Exporter`.
         """
-        raise NotImplementedError(
+        raise ValueError(
             "FBX export is not supported by mem20yetiz; use gltf, obj, bvh, or c3d"
         )

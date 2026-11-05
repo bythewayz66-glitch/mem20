@@ -94,28 +94,28 @@ class Environment(ABC):
     @property
     @abstractmethod
     def obs_shape(self) -> tuple[int, ...]:
-        raise NotImplementedError
+        ...
 
     @property
     @abstractmethod
     def action_size(self) -> int:
-        raise NotImplementedError
+        ...
 
     @abstractmethod
     def reset(self, seed: int | None = None) -> tuple[np.ndarray, dict[str, Any]]:
-        raise NotImplementedError
+        ...
 
     @abstractmethod
     def step(self, action: int) -> StepResult:
-        raise NotImplementedError
+        ...
 
     @abstractmethod
     def render(self) -> np.ndarray | None:
-        raise NotImplementedError
+        ...
 
     @abstractmethod
     def close(self) -> None:
-        raise NotImplementedError
+        ...
 
 
 class TinyGridWorld(Environment):

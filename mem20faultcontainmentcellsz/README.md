@@ -1,25 +1,29 @@
-# mem20faultcontainmentcellsz
+# mem20faultcontainmentcellsz — Fault Containment Cells
 
-Subsystem component of the mem20 ecosystem providing specialized functionality for mem20 agents.
+Circuit-breaker style fault containment (closed → open → half-open) with fail-fast behavior, plus mem20 estate integration.
 
-## Overview
-
-This package is part of the mem20 trusted, auditable memory + world-model layer for agents.
-
-## Installation
-
-```bash
-pip install -e .
-```
-
-## Usage
+## Python API
 
 ```python
-from mem20faultcontainmentcellsz import *
+import tempfile
+from mem20faultcontainmentcellsz.domain import FaultContainmentCells, estate_context
+
+cell = FaultContainmentCells(threshold=2, cool_down=10.0)
+print(cell.call(lambda: 42))
+print(cell.state)
+
+with tempfile.TemporaryDirectory() as d:
+    print(estate_context(d)["engine_status_checked"])
 ```
 
-## Features
+## CLI
 
-- Integrated with mem20 MCP server
-- Follows mem20 architecture and conventions
-- Supports mem20 memory and tool protocols
+```bash
+python -m mem20faultcontainmentcellsz --help
+```
+
+## Tests
+
+```bash
+PYTHONPATH=/opt/mem20 python -m pytest mem20faultcontainmentcellsz/mem20faultcontainmentcellsz/tests -q
+```

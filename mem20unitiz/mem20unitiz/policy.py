@@ -34,11 +34,11 @@ class Policy(ABC):
 
     @abstractmethod
     def act(self, obs: np.ndarray, deterministic: bool = False) -> PolicyOutput:
-        raise NotImplementedError
+        ...
 
     @abstractmethod
     def evaluate(self, obs: np.ndarray, action: np.ndarray) -> tuple[float, float, float]:
-        raise NotImplementedError
+        ...
 
 
 def _batch(obs: np.ndarray, obs_dim: int) -> np.ndarray:

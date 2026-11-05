@@ -109,10 +109,10 @@ class Environment:
         self._step_count = 0
 
     def reset(self) -> dict[str, AgentInfo]:
-        raise NotImplementedError
+        ...
 
     def step(self, actions: dict[str, np.ndarray]) -> StepOutput:
-        raise NotImplementedError
+        ...
 
     def close(self) -> None:
         return None

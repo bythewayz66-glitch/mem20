@@ -1,7 +1,39 @@
-# RM-023 — Memory Time Machine
+# mem20memorytimemachinez — Memory Time Machine
 
-Outcome: Reconstruct what the system knew, believed, and was doing at any prior moment
+Snapshot, rewind, replay, diff, and timeline utilities for memory/state evolution, integrated with mem20’s memory engine.
 
-Breakthrough: Users can replay decisions and branch from earlier context states
+## Features
+- Deterministic in-memory snapshots (`snapshot`, `checkpoint_series`)
+- `rewind`, `replay`, `diff`, `timeline`
+- Optional engine-backed snapshot metadata via `memory_engine` (`EngineConfig`, `MemoryEngine.index_health`)
+- `estate_context()` integrates real sibling modules (`mem20path`, `toolchest`, `mem20webhooksupernetworkz`, `mem20mixedinitiativefocusenginez`)
 
-Machine-executable local runtime includes versioned state, SQLite WAL persistence, events, SDK CRUD, resumable/idempotent jobs, retries/timeouts/quotas, recovery, `search` operation logic, decision explanations, feedback, CLI, HTTP console/API, mesh selection/failover, simulator, benchmark, metrics, and opt-in signature mode.
+## CLI
+
+```bash
+# Domain CLI (snapshot/context)
+python -m mem20memorytimemachinez.domain snapshot --label demo --state '{"counter": 1}'
+python -m mem20memorytimemachinez.domain context
+```
+
+## Python API
+
+```python
+import tempfile
+from mem20memorytimemachinez.domain import snapshot, checkpoint_series, diff, rewind, estate_context
+
+snaps = checkpoint_series({"x": 0}, [{"x": 1}, {"y": 2}])
+print(len(snaps), rewind(snaps, 0))
+print(diff({"a": 1}, {"a": 2}))
+
+with tempfile.TemporaryDirectory() as d:
+    s = snapshot({"k": "v"}, label="with-engine", store_path=d)
+    print("engine_health" in s)
+    print(estate_context(d)["engine_status_checked"])
+```
+
+## Tests
+
+```bash
+PYTHONPATH=/opt/mem20 python -m pytest mem20memorytimemachinez/mem20memorytimemachinez/tests -q
+```

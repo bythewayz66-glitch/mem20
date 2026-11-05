@@ -302,3 +302,9 @@ cd /opt/mem20 && python3 -m pytest tests/test_mem20path.py -q   # 17
 - Saved context and self model to mem20 via tools
 - 2026-11-04: Fixed docs counts (306 tools), version skew (3.1.2), architecture stub, specs placeholders; registered temporal tools
 - 2026-11-04: Fixed Godot SDK, registered temporal tools, closed issues 244-248, version updates
+
+### Session es// (full) - 2026-11-04
+- Followed full es// protocol. Committed and pushed all changes.
+- Installed/linked mem20 CLI tools via mem20path (290 tools linked), reinstalled mem20 editable.
+- Updated memory.py exports.
+- Saved mem20 context and summary.

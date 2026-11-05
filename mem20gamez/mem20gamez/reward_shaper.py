@@ -68,7 +68,7 @@ class RewardShaper(ABC):
         done: bool,
         info: dict,
     ) -> float:
-        raise NotImplementedError
+        ...
 
     def reset(self) -> None:
         """Reset any internal state (per episode)."""

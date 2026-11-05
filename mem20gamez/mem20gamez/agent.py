@@ -98,31 +98,31 @@ class GameAgent(ABC):
 
     @abstractmethod
     def act(self, obs: np.ndarray, training: bool = True) -> int:
-        raise NotImplementedError
+        ...
 
     @abstractmethod
     def learn(self, experiences: list | None = None) -> dict[str, float]:
-        raise NotImplementedError
+        ...
 
     @abstractmethod
     def replay(self) -> dict[str, float] | None:
-        raise NotImplementedError
+        ...
 
     @abstractmethod
     def remember(self, experience: Any) -> None:
-        raise NotImplementedError
+        ...
 
     @abstractmethod
     def end_episode(self) -> None:
-        raise NotImplementedError
+        ...
 
     @abstractmethod
     def save(self, path: str) -> bool:
-        raise NotImplementedError
+        ...
 
     @abstractmethod
     def load(self, path: str) -> bool:
-        raise NotImplementedError
+        ...
 
 
 class RandomAgent(GameAgent):
@@ -148,10 +148,10 @@ class RandomAgent(GameAgent):
         self.episode_count += 1
 
     def save(self, path: str) -> bool:
-        raise NotImplementedError("RandomAgent has no trainable checkpoint")
+        raise TypeError("RandomAgent has no trainable checkpoint")
 
     def load(self, path: str) -> bool:
-        raise NotImplementedError("RandomAgent has no trainable checkpoint")
+        raise TypeError("RandomAgent has no trainable checkpoint")
 
 
 class RuleBasedAgent(GameAgent):
@@ -208,10 +208,10 @@ class RuleBasedAgent(GameAgent):
         self.episode_count += 1
 
     def save(self, path: str) -> bool:
-        raise NotImplementedError("RuleBasedAgent has no trainable checkpoint")
+        raise TypeError("RuleBasedAgent has no trainable checkpoint")
 
     def load(self, path: str) -> bool:
-        raise NotImplementedError("RuleBasedAgent has no trainable checkpoint")
+        raise TypeError("RuleBasedAgent has no trainable checkpoint")
 
 
 def create_agent(config: AgentConfig) -> GameAgent:

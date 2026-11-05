@@ -10,6 +10,7 @@ Mirrors mem20 graph substrate.checkpoint.memory semantics at a minimal level.
 
 from __future__ import annotations
 
+import abc
 import copy
 import threading
 import time
@@ -35,26 +36,31 @@ class Checkpoint:
         }
 
 
-class BaseCheckpointSaver:
+class BaseCheckpointSaver(abc.ABC):
     """Storage contract used by the Pregel runtime."""
 
+    @abc.abstractmethod
     def put(self, thread_id: str, state: dict[str, Any], checkpoint_id: Optional[str] = None, interrupt: bool = False) -> str:
-        raise NotImplementedError
+        ...
 
+    @abc.abstractmethod
     def get(self, thread_id: str) -> Optional[dict[str, Any]]:
-        raise NotImplementedError
+        ...
 
+    @abc.abstractmethod
     def list(self, thread_id: str, limit: int = 50) -> list[dict[str, Any]]:
-        raise NotImplementedError
+        ...
 
+    @abc.abstractmethod
     def get_pending(self, thread_id: str) -> Optional[list[str]]:
-        raise NotImplementedError
+        ...
 
     def get_pending_writes(self, thread_id: str) -> Optional[list[Any]]:
         return None
 
+    @abc.abstractmethod
     def clear(self, thread_id: str) -> None:
-        raise NotImplementedError
+        ...
 
 
 class InMemorySaver(BaseCheckpointSaver):

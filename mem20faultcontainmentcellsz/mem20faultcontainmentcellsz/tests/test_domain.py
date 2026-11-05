@@ -1,9 +1,14 @@
 """Circuit breaker that stops hammering a failing dependency."""
+
 import importlib
+import tempfile
+
 MOD = "mem20faultcontainmentcellsz"
+
 
 def _m():
     return importlib.import_module(MOD + ".domain")
+
 
 def test_healthy_dependency_passes_through():
     c = _m().FaultContainmentCells()
@@ -13,8 +18,10 @@ def test_healthy_dependency_passes_through():
 
 def test_failures_open_the_circuit():
     c = _m().FaultContainmentCells(threshold=3)
+
     def boom():
         raise RuntimeError("down")
+
     for _ in range(3):
         try:
             c.call(boom)
@@ -26,8 +33,11 @@ def test_failures_open_the_circuit():
 def test_open_circuit_fails_fast_without_calling():
     c = _m().FaultContainmentCells(threshold=1)
     calls = []
+
     def boom():
-        calls.append(1); raise RuntimeError("x")
+        calls.append(1)
+        raise RuntimeError("x")
+
     try:
         c.call(boom)
     except RuntimeError:
@@ -66,5 +76,15 @@ def test_failed_probe_reopens():
 
 def test_threshold_must_be_positive():
     import pytest
+
     with pytest.raises(ValueError):
         _m().FaultContainmentCells(threshold=0)
+
+
+def test_estate_context_real_integrations():
+    with tempfile.TemporaryDirectory() as d:
+        ctx = _m().estate_context(d)
+        assert ctx.get("engine_status_checked") is True
+        assert ctx.get("dedup_probe_seen") is True
+        assert "toolchest_total" in ctx
+        assert "focus_probe" in ctx

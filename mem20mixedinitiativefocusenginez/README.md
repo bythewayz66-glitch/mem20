@@ -1,7 +1,33 @@
-# RM-035 — Mixed-Initiative Focus Engine
+# mem20mixedinitiativefocusenginez — Mixed-Initiative Focus Engine
 
-Outcome: Balance autonomous progress with moments that genuinely require human judgment
+Balances autonomous progress with moments requiring human judgment by scoring focus, ranking suggestions, and blending user/agent intent.
 
-Breakthrough: The system protects attention instead of constantly asking for approval
+## Features
+- `focus_score`, `focus_health`, `suggest`, `take_over`, `blend`
+- `estate_context()` performs real integrations with `memory_engine`, `toolchest`, `mem20path`, `mem20webhooksupernetworkz`, and `mem20memorytimemachinez`
 
-Machine-executable local runtime includes versioned state, SQLite WAL persistence, events, SDK CRUD, resumable/idempotent jobs, retries/timeouts/quotas, recovery, `analyze` operation logic, decision explanations, feedback, CLI, HTTP console/API, mesh selection/failover, simulator, benchmark, metrics, and opt-in signature mode.
+## CLI / Runtime
+
+```bash
+python -m mem20mixedinitiativefocusenginez --help
+```
+
+## Python API
+
+```python
+import tempfile
+from mem20mixedinitiativefocusenginez.domain import focus_score, suggest, blend, estate_context
+
+print(focus_score({"priority": 2, "distractions": 1}))
+print(suggest({"distractions": 0}, [{"name": "a", "priority": 1}, {"name": "b", "priority": 3}])[0]["name"])
+print(blend({"priority": 10}, {"priority": 0}, alpha=0.5))
+
+with tempfile.TemporaryDirectory() as d:
+    print(estate_context(d)["engine_status_checked"])
+```
+
+## Tests
+
+```bash
+PYTHONPATH=/opt/mem20 python -m pytest mem20mixedinitiativefocusenginez/mem20mixedinitiativefocusenginez/tests -q
+```

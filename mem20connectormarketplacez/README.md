@@ -1,25 +1,30 @@
-# mem20connectormarketplacez
+# mem20connectormarketplacez — Connector Marketplace
 
-Subsystem component of the mem20 ecosystem providing specialized functionality for mem20 agents.
+Least-connections load balancing with health withdrawal and sticky sessions, with mem20 estate integration.
 
-## Overview
-
-This package is part of the mem20 trusted, auditable memory + world-model layer for agents.
-
-## Installation
-
-```bash
-pip install -e .
-```
-
-## Usage
+## Python API
 
 ```python
-from mem20connectormarketplacez import *
+import tempfile
+from mem20connectormarketplacez.domain import ConnectorMarketplace, estate_context
+
+r = ConnectorMarketplace(["backend-a", "backend-b"])
+print(r.pick())
+print(r.pick(key="session-1"))
+print(r.in_flight)
+
+with tempfile.TemporaryDirectory() as d:
+    print(estate_context(d)["engine_status_checked"])
 ```
 
-## Features
+## CLI
 
-- Integrated with mem20 MCP server
-- Follows mem20 architecture and conventions
-- Supports mem20 memory and tool protocols
+```bash
+python -m mem20connectormarketplacez --help
+```
+
+## Tests
+
+```bash
+PYTHONPATH=/opt/mem20 python -m pytest mem20connectormarketplacez/mem20connectormarketplacez/tests -q
+```

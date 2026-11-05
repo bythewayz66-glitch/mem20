@@ -1,25 +1,31 @@
-# mem20capabilitymarketplacez
+# mem20capabilitymarketplacez — Capability Marketplace
 
-Subsystem component of the mem20 ecosystem providing specialized functionality for mem20 agents.
+Consistent-hashing capability routing with virtual nodes, with mem20 estate integration.
 
-## Overview
-
-This package is part of the mem20 trusted, auditable memory + world-model layer for agents.
-
-## Installation
-
-```bash
-pip install -e .
-```
-
-## Usage
+## Python API
 
 ```python
-from mem20capabilitymarketplacez import *
+import tempfile
+from mem20capabilitymarketplacez.domain import CapabilityMarketplace, estate_context
+
+m = CapabilityMarketplace(replicas=64)
+for c in ("alpha", "beta", "gamma"):
+    m.add(c)
+print(m.locate("my-key"))
+print(dict(m.distribution(500)))
+
+with tempfile.TemporaryDirectory() as d:
+    print(estate_context(d)["engine_status_checked"])
 ```
 
-## Features
+## CLI
 
-- Integrated with mem20 MCP server
-- Follows mem20 architecture and conventions
-- Supports mem20 memory and tool protocols
+```bash
+python -m mem20capabilitymarketplacez --help
+```
+
+## Tests
+
+```bash
+PYTHONPATH=/opt/mem20 python -m pytest mem20capabilitymarketplacez/mem20capabilitymarketplacez/tests -q
+```

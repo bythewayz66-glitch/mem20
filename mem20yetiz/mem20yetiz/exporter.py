@@ -3,7 +3,7 @@
 Dispatch table drives export by format; each format has a real, hermetic
 writer and (for glTF/OBJ/BVH/C3D) a matching reader used for roundtrip
 validation. C3D is limited to point-only Intel/little-endian IEEE files.
-Unsupported formats (FBX, USD) raise ``NotImplementedError`` explicitly.
+Unsupported formats (FBX, USD) raise ``ValueError`` explicitly.
 """
 
 from __future__ import annotations
@@ -44,7 +44,7 @@ class Exporter:
     def __init__(self, settings: Optional[ExportSettings] = None):
         self.settings = settings or ExportSettings()
         if self.settings.format not in ExportSettings.available_formats():
-            raise NotImplementedError(
+            raise ValueError(
                 f"export format {self.settings.format!r} is not supported; "
                 f"real formats are {ExportSettings.available_formats()}"
             )
@@ -61,7 +61,7 @@ class Exporter:
             raise ValueError("BVH export requires mocap motion data; use export_mocap on a BVH-loaded MocapData")
         if kind == "c3d":
             raise ValueError("C3D export requires marker data; use export_mocap on a MocapData")
-        raise NotImplementedError(f"export format {kind!r} is not implemented")
+        raise ValueError(f"export format {kind!r} is not implemented")
 
     def export_animation(self, clip: AnimationClip, path: str, settings: Optional[ExportSettings] = None) -> bool:
         """Export an animation clip (glTF embeds it; OBJ embeds a skeleton view)."""
@@ -94,7 +94,7 @@ class Exporter:
                 return obj.write_obj_from_positions(data.name, data.joint_positions, path, data.hierarchy)
             rig = data.to_rig()
             return obj.write_obj_rig(rig, None, path)
-        raise NotImplementedError(f"export format {kind!r} is not implemented")
+        raise ValueError(f"export format {kind!r} is not implemented")
 
     def export_batch(self, items: List[Any], output_dir: str, settings: Optional[ExportSettings] = None) -> Dict[str, bool]:
         """Export each item to ``output_dir/{name}.{format}``."""
@@ -145,7 +145,7 @@ class Exporter:
             if out_fmt == "gltf":
                 rig = _rig_from_markers(data)
                 return gltf.export_gltf(rig, None, output_path)
-            raise NotImplementedError(f"c3d -> {out_fmt} is not implemented")
+            raise ValueError(f"c3d -> {out_fmt} is not implemented")
         if in_fmt == "gltf":
             if out_fmt == "obj":
                 info = gltf.load_gltf(str(src))
@@ -159,8 +159,8 @@ class Exporter:
                     if info["node_parents"].get(name) is not None
                 }
                 return obj.write_obj_from_positions(info["root"], positions, output_path, parents)
-            raise NotImplementedError(f"gltf -> {out_fmt} is not implemented")
-        raise NotImplementedError(f"conversion from {in_fmt!r} is not implemented")
+            raise ValueError(f"gltf -> {out_fmt} is not implemented")
+        raise ValueError(f"conversion from {in_fmt!r} is not implemented")
 
     def validate_export(self, path: str) -> Dict[str, Any]:
         """Validate an exported file the real way: read it back and sanity-check."""
@@ -198,7 +198,7 @@ class Exporter:
             if not data.marker_names:
                 warnings.append("C3D declares no point labels")
             return {"valid": True, "format": "c3d", "file_size": p.stat().st_size, "warnings": warnings}
-        raise NotImplementedError(f"validation for {suffix!r} is not implemented")
+        raise ValueError(f"validation for {suffix!r} is not implemented")
 
 
 def _path_format(path: str, default: str) -> str:

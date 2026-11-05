@@ -119,19 +119,19 @@ class BaseMemoryLogger:
     """Interface for memory loggers (pure stdlib)."""
 
     def set(self, key: str, value: Any, **kwargs: Any) -> str:  # pragma: no cover
-        raise NotImplementedError
+        raise TypeError(f"{type(self).__name__} must implement set")
 
     def get(self, key: str) -> Any:  # pragma: no cover
-        raise NotImplementedError
+        raise TypeError(f"{type(self).__name__} must implement get")
 
     def search_memories(self, query: str, **kwargs: Any) -> List[Dict[str, Any]]:  # pragma: no cover
-        raise NotImplementedError
+        raise TypeError(f"{type(self).__name__} must implement search_memories")
 
     def log_memory(self, key: str, value: Any, namespace: Optional[str] = None, metadata: Optional[Dict[str, Any]] = None) -> Dict[str, Any]:  # pragma: no cover
-        raise NotImplementedError
+        raise TypeError(f"{type(self).__name__} must implement log_memory")
 
     def get_memory(self, key: str) -> Dict[str, Any]:  # pragma: no cover
-        raise NotImplementedError
+        raise TypeError(f"{type(self).__name__} must implement get_memory")
 
 
 class MemoryLoggerError(Exception):

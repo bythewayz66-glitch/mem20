@@ -1,9 +1,30 @@
-# RM-232 — AI Pipeline Cost Optimizer
+# mem20aipipelinecostoptimizerz — AI Pipeline Cost Optimizer
 
-**Outcome:** Route creative and engineering tasks across local, free, peer, and paid models by value
+Estimate stage/pipeline costs, detect bottlenecks, and optimize throughput under budget, with mem20 estate integration.
 
-**Breakthrough:** High-end production becomes affordable through intelligent compute choice
+## Python API
 
-This package is the machine-executable local implementation derived from the supplied Off Record Lab roadmap. It includes versioned typed state, SQLite WAL persistence, event history/snapshots, SDK CRUD/subscription, resumable idempotent jobs, cancellation, retries/timeouts/quotas/backpressure, deterministic replica reconciliation, local/hybrid/cloud placement/failover, roadmap-specific `optimize` logic, decision confidence/explanations, feedback, CLI, HTTP console/API, safety guards, simulator, benchmark/metrics, and rollback-capable installer.
+```python
+import tempfile
+from mem20aipipelinecostoptimizerz.domain import stage_cost, pipeline_cost, optimize_throughput, bottleneck, estate_context
 
-Named live product surfaces, real provider/device credentials, production traffic, and governed FreeStack deployment remain target-environment integration and are not claimed complete.
+stages = [{"id": "embed", "base_cost": 1.0, "cost_per_unit": 0.1}, {"id": "infer", "base_cost": 0.5, "cost_per_unit": 0.2}]
+print(pipeline_cost(stages, throughput=10))
+print(bottleneck(stages, {"embed": 5, "infer": 2}))
+print(optimize_throughput(stages, budget=10.0))
+
+with tempfile.TemporaryDirectory() as d:
+    print(estate_context(d)["engine_status_checked"])
+```
+
+## CLI
+
+```bash
+python -m mem20aipipelinecostoptimizerz --help
+```
+
+## Tests
+
+```bash
+PYTHONPATH=/opt/mem20 python -m pytest mem20aipipelinecostoptimizerz/mem20aipipelinecostoptimizerz/tests -q
+```

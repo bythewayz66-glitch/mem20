@@ -463,9 +463,9 @@ def test_policy_gradient_agents_perform_real_gradient_updates() -> None:
 def test_non_learning_agents_do_not_fake_checkpoint_io() -> None:
     config = AgentConfig(agent_type=AgentType.RANDOM)
     for agent in (RandomAgent(config), RuleBasedAgent(config)):
-        with pytest.raises(NotImplementedError):
+        with pytest.raises(TypeError):
             agent.save("unused")
-        with pytest.raises(NotImplementedError):
+        with pytest.raises(TypeError):
             agent.load("unused")
 
 

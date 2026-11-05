@@ -17,7 +17,7 @@ Real, hermetic; no mocks:
 * ``mocap_to_animation`` — real conversion of joint trajectories to an
   ``AnimationClip``.
 
-Unsupported binary formats (FBX) raise ``NotImplementedError`` explicitly
+Unsupported binary formats (FBX) raise ``ValueError`` explicitly
 instead of pretending to succeed.
 """
 
@@ -762,7 +762,7 @@ def load_c3d(path: str) -> MocapData:
     parameter_blocks = raw[parameter_start + 2]
     processor_type = raw[parameter_start + 3]
     if processor_type != 1:
-        raise NotImplementedError("only Intel/little-endian C3D files are supported")
+        raise ValueError("only Intel/little-endian C3D files are supported")
     section_end = parameter_start + parameter_blocks * 512
     if parameter_blocks < 1 or section_end > len(raw):
         raise ValueError("C3D parameter section is invalid")
@@ -772,7 +772,7 @@ def load_c3d(path: str) -> MocapData:
     first_frame = struct.unpack_from("<H", raw, 6)[0]
     data_start = struct.unpack_from("<H", raw, 16)[0]
     if analog_count:
-        raise NotImplementedError("analog C3D channels are not supported by this point reader")
+        raise ValueError("analog C3D channels are not supported by this point reader")
     if n_points == 0 or data_start == 0:
         raise ValueError("C3D header does not declare point data")
 
@@ -1319,7 +1319,7 @@ class MocapProcessor:
         return load_c3d(path)
 
     def load_fbx(self, path: str) -> MocapData:
-        raise NotImplementedError(
+        raise ValueError(
             "FBX mocap loading is not implemented; no real in-package FBX reader exists. "
             "Use the real BVH (load_bvh) or C3D (load_c3d) paths."
         )

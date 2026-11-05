@@ -1,9 +1,13 @@
 """Capability routing by consistent hashing."""
 import importlib
+import tempfile
+
 MOD = "mem20capabilitymarketplacez"
+
 
 def _m():
     return importlib.import_module(MOD + ".domain")
+
 
 def test_empty_ring_locate_is_none():
     m = _m().CapabilityMarketplace()
@@ -11,7 +15,8 @@ def test_empty_ring_locate_is_none():
 
 
 def test_single_capability_owns_everything():
-    m = _m().CapabilityMarketplace(); m.add("alpha")
+    m = _m().CapabilityMarketplace()
+    m.add("alpha")
     assert all(m.locate(k) == "alpha" for k in range(50))
 
 
@@ -34,7 +39,6 @@ def test_removing_one_node_moves_roughly_its_share():
     before = {k: m.locate(k) for k in keys}
     m.remove("c")
     moved = sum(1 for k in keys if m.locate(k) != before[k])
-    # only keys that hashed to 'c' should move
     assert 0 < moved < len(keys) * 0.40
 
 
@@ -53,3 +57,11 @@ def test_location_is_stable_for_a_stable_ring():
     first = m.locate("stable-key")
     for _ in range(10):
         assert m.locate("stable-key") == first
+
+
+def test_estate_context_real_integrations():
+    with tempfile.TemporaryDirectory() as d:
+        ctx = _m().estate_context(d)
+        assert ctx.get("engine_status_checked") is True
+        assert ctx.get("dedup_probe_seen") is True
+        assert "toolchest_total" in ctx

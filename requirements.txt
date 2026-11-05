@@ -38,7 +38,7 @@ stripe>=16.1
 # release that removed the argument; raise this only together with a fastapi
 # upgrade that stops passing it.
 fastapi>=0.115,<0.116
-starlette>=0.40,<0.42
+starlette>=1.7.0,<1.8
 
 # mem20autouez imports websockets at module scope (connection.py:12).
 websockets>=12

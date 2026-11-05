@@ -41,4 +41,4 @@ fastapi>=0.115,<0.116
 starlette>=0.40,<0.42
 
 # mem20autouez imports websockets at module scope (connection.py:12).
-websockets>=12
+websockets>=16.1.1

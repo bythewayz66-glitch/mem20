@@ -121,6 +121,18 @@ SUBSYSTEMS = {
         "owner": "mem20-webdev",
         "wave": 2,
     },
+    "mem20syntheticevaluatorarenaz": {
+        "purpose": "Generate adversarial tasks and continuously compare model behavior under real constraints",
+        "entry": "python -m mem20syntheticevaluatorarenaz simulate",
+        "owner": "mem20-webdev",
+        "wave": 2,
+    },
+    "mem20styleguideagentz": {
+        "purpose": "Enforce visual, audio, interaction, and narrative style across generated assets in real time",
+        "entry": "python -m mem20styleguideagentz simulate",
+        "owner": "mem20-webdev",
+        "wave": 2,
+    },
 }
 
 

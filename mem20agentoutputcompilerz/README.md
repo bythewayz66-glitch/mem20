@@ -1,9 +1,37 @@
-# RM-224 — Agent Output Compiler
+# mem20agentoutputcompilerz — Agent Output Compiler
 
-**Outcome:** Compile agent results into validated code, assets, data files, and engine imports
+Merge, deduplicate, compile, validate, and summarize multi-agent outputs, with mem20 estate integration.
 
-**Breakthrough:** AI output becomes directly executable rather than copy-and-paste text
+## Python API
 
-This package is the machine-executable local implementation derived from the supplied Off Record Lab roadmap. It includes versioned typed state, SQLite WAL persistence, event history/snapshots, SDK CRUD/subscription, resumable idempotent jobs, cancellation, retries/timeouts/quotas/backpressure, deterministic replica reconciliation, local/hybrid/cloud placement/failover, roadmap-specific `compose` logic, decision confidence/explanations, feedback, CLI, HTTP console/API, safety guards, simulator, benchmark/metrics, and rollback-capable installer.
+```python
+import tempfile
+from mem20agentoutputcompilerz.domain import (
+    merge_outputs, dedupe, compile_report, validate_output, summarize, estate_context,
+)
 
-Named live product surfaces, real provider/device credentials, production traffic, and governed FreeStack deployment remain target-environment integration and are not claimed complete.
+outputs = [
+    {"agent": "planner", "items": [{"id": 1, "task": "a"}]},
+    {"agent": "coder", "items": [{"id": 1, "task": "a"}, {"id": 2, "task": "b"}]},
+]
+print(merge_outputs(outputs)["sources"])
+print(dedupe([{"id": 1}, {"id": 1}, {"id": 2}]))
+print(compile_report(outputs))
+print(validate_output({"items": []}))
+print(summarize(outputs))
+
+with tempfile.TemporaryDirectory() as d:
+    print(estate_context(d)["engine_status_checked"])
+```
+
+## CLI
+
+```bash
+python -m mem20agentoutputcompilerz --help
+```
+
+## Tests
+
+```bash
+PYTHONPATH=/opt/mem20 python -m pytest mem20agentoutputcompilerz/mem20agentoutputcompilerz/tests -q
+```

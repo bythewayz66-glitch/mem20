@@ -1,9 +1,33 @@
-# RM-241 — 2D and 3D Art Production Optimization Pipeline
+# mem202dand3dartproductionoptimizationpipelinez — 2D/3D Art Production Optimization Pipeline
 
-**Outcome:** Move art from concept through generation, editing, LODs, materials, compression, and engine import
+Asset budgeting, LOD selection, texture memory estimation, batching, and pipeline optimization, with mem20 estate integration.
 
-**Breakthrough:** Visual production adapts automatically to each target platform
+## Python API
 
-This package is the machine-executable local implementation derived from the supplied Off Record Lab roadmap. It includes versioned typed state, SQLite WAL persistence, event history/snapshots, SDK CRUD/subscription, resumable idempotent jobs, cancellation, retries/timeouts/quotas/backpressure, deterministic replica reconciliation, local/hybrid/cloud placement/failover, roadmap-specific `optimize` logic, decision confidence/explanations, feedback, CLI, HTTP console/API, safety guards, simulator, benchmark/metrics, and rollback-capable installer.
+```python
+import tempfile
+from mem202dand3dartproductionoptimizationpipelinez.domain import (
+    lod_level, texture_memory, batch_efficiency, optimize_pipeline, frame_budget, estate_context,
+)
 
-Named live product surfaces, real provider/device credentials, production traffic, and governed FreeStack deployment remain target-environment integration and are not claimed complete.
+print(lod_level(poly_count=50000))
+print(texture_memory(1024, 1024))
+print(batch_efficiency(asset_count=100, batch_size=64))
+print(optimize_pipeline([{"id": "hero", "polys": 20000, "tex_w": 1024, "tex_h": 1024}]))
+print(frame_budget(60))
+
+with tempfile.TemporaryDirectory() as d:
+    print(estate_context(d)["engine_status_checked"])
+```
+
+## CLI
+
+```bash
+python -m mem202dand3dartproductionoptimizationpipelinez --help
+```
+
+## Tests
+
+```bash
+PYTHONPATH=/opt/mem20 python -m pytest mem202dand3dartproductionoptimizationpipelinez/mem202dand3dartproductionoptimizationpipelinez/tests -q
+```

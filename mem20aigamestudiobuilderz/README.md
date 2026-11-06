@@ -1,9 +1,34 @@
-# RM-222 — AI Game Studio Builder
+# mem20aigamestudiobuilderz — AI Game Studio Builder
 
-**Outcome:** Create configurable crews of design, code, art, audio, production, and QA agents
+Scaffold game projects, plan asset pipelines, generate build configs, estimate size, and validate projects, with mem20 estate integration.
 
-**Breakthrough:** A solo developer can operate a software-defined studio
+## Python API
 
-This package is the machine-executable local implementation derived from the supplied Off Record Lab roadmap. It includes versioned typed state, SQLite WAL persistence, event history/snapshots, SDK CRUD/subscription, resumable idempotent jobs, cancellation, retries/timeouts/quotas/backpressure, deterministic replica reconciliation, local/hybrid/cloud placement/failover, roadmap-specific `qa` logic, decision confidence/explanations, feedback, CLI, HTTP console/API, safety guards, simulator, benchmark/metrics, and rollback-capable installer.
+```python
+import tempfile
+from mem20aigamestudiobuilderz.domain import (
+    scaffold_project, asset_pipeline, build_config, estimate_size, validate_project, estate_context,
+)
 
-Named live product surfaces, real provider/device credentials, production traffic, and governed FreeStack deployment remain target-environment integration and are not claimed complete.
+proj = scaffold_project("my-game", genre="rpg", engine="unity")
+print(proj["folders"])
+print(asset_pipeline([{"id": "tex1", "type": "texture", "format": "png"}]))
+print(build_config(proj, platform="mobile"))
+print(estimate_size([{"size_mb": 10}, {"size_mb": 5}]))
+print(validate_project(proj))
+
+with tempfile.TemporaryDirectory() as d:
+    print(estate_context(d)["engine_status_checked"])
+```
+
+## CLI
+
+```bash
+python -m mem20aigamestudiobuilderz --help
+```
+
+## Tests
+
+```bash
+PYTHONPATH=/opt/mem20 python -m pytest mem20aigamestudiobuilderz/mem20aigamestudiobuilderz/tests -q
+```

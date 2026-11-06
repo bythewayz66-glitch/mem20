@@ -1,9 +1,35 @@
-# RM-240 — Asset Intake, Cataloging and Validation Pipeline
+# mem20assetintakecatalogingandvalidationpipelinez — Asset Intake, Cataloging & Validation Pipeline
 
-**Outcome:** Normalize, inspect, convert, license-check, deduplicate, and route incoming assets automatically
+Validate, catalog, intake, search, and deduplicate assets, with mem20 estate integration.
 
-**Breakthrough:** Every asset becomes engine-ready or is rejected before polluting the project
+## Python API
 
-This package is the machine-executable local implementation derived from the supplied Off Record Lab roadmap. It includes versioned typed state, SQLite WAL persistence, event history/snapshots, SDK CRUD/subscription, resumable idempotent jobs, cancellation, retries/timeouts/quotas/backpressure, deterministic replica reconciliation, local/hybrid/cloud placement/failover, roadmap-specific `qa` logic, decision confidence/explanations, feedback, CLI, HTTP console/API, safety guards, simulator, benchmark/metrics, and rollback-capable installer.
+```python
+import tempfile
+from mem20assetintakecatalogingandvalidationpipelinez.domain import (
+    validate_asset, catalog_asset, intake_pipeline, search_catalog, dedupe_assets, estate_context,
+)
 
-Named live product surfaces, real provider/device credentials, production traffic, and governed FreeStack deployment remain target-environment integration and are not claimed complete.
+asset = {"id": "hero", "type": "image", "format": "png", "size_bytes": 2048, "tags": ["ui"]}
+print(validate_asset(asset))
+print(catalog_asset(asset))
+report = intake_pipeline([asset])
+print(report["valid"])
+print(search_catalog([catalog_asset(asset)], "ui"))
+print(dedupe_assets([asset, asset]))
+
+with tempfile.TemporaryDirectory() as d:
+    print(estate_context(d)["engine_status_checked"])
+```
+
+## CLI
+
+```bash
+python -m mem20assetintakecatalogingandvalidationpipelinez --help
+```
+
+## Tests
+
+```bash
+PYTHONPATH=/opt/mem20 python -m pytest mem20assetintakecatalogingandvalidationpipelinez/mem20assetintakecatalogingandvalidationpipelinez/tests -q
+```

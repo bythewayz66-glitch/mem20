@@ -97,6 +97,30 @@ SUBSYSTEMS = {
         "owner": "mem20-webdev",
         "wave": 2,
     },
+    "mem20visualagentblackboardz": {
+        "purpose": "Expose agent perceptions, goals, memory, plans, messages, and live actions",
+        "entry": "python -m mem20visualagentblackboardz simulate",
+        "owner": "mem20-webdev",
+        "wave": 2,
+    },
+    "mem20universalintegrationcompilerz": {
+        "purpose": "Compile API descriptions, examples, and observed traffic into working typed connectors",
+        "entry": "python -m mem20universalintegrationcompilerz simulate",
+        "owner": "mem20-webdev",
+        "wave": 2,
+    },
+    "mem20universalhealthnervoussystemz": {
+        "purpose": "Aggregate deep health, dependency, saturation, and recovery signals in real time",
+        "entry": "python -m mem20universalhealthnervoussystemz simulate",
+        "owner": "mem20-webdev",
+        "wave": 2,
+    },
+    "mem20uniteconomicsautopilotz": {
+        "purpose": "Track contribution margins and recommend operational changes continuously",
+        "entry": "python -m mem20uniteconomicsautopilotz simulate",
+        "owner": "mem20-webdev",
+        "wave": 2,
+    },
 }
 
 

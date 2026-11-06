@@ -1,5 +1,16 @@
 """Adversarial QA crew: test generation, mutation, fuzzing, verdict."""
-import random, hashlib
+
+from __future__ import annotations
+
+import hashlib
+import random
+from pathlib import Path
+
+from memory_engine import EngineConfig, MemoryEngine
+from toolchest.catalog import load_inventory
+import mem20path
+from mem20webhooksupernetworkz.domain import DeliveryLedger
+from mem20mixedinitiativefocusenginez.domain import focus_score
 
 
 def generate_adversarial_cases(spec, count=10):
@@ -7,7 +18,6 @@ def generate_adversarial_cases(spec, count=10):
     cases = []
     for i in range(count):
         case = {"id": f"adv-{i}", "input": spec.get("base_input", {}), "mutation": None}
-        # boundary mutations
         if i % 3 == 0:
             case["mutation"] = "boundary"
             case["input"] = {**case["input"], "value": 0}
@@ -25,7 +35,8 @@ def mutation_score(original, mutated):
     """Score how much a mutation changed the output (0..1)."""
     if original == mutated:
         return 0.0
-    a = str(original); b = str(mutated)
+    a = str(original)
+    b = str(mutated)
     diff = sum(1 for x, y in zip(a, b) if x != y) + abs(len(a) - len(b))
     return round(min(1.0, diff / max(1, len(a))), 4)
 
@@ -56,3 +67,29 @@ def verdict(results):
 
 def hash_case(case):
     return hashlib.sha256(str(sorted(case.items())).encode()).hexdigest()[:12]
+
+
+def _toolchest_inventory_path() -> Path:
+    root = Path(__file__).resolve().parents[2]
+    p = root / "toolchest" / "inventory.json"
+    return p if p.exists() else root / "toolchest" / "src" / "toolchest" / "inventory.json"
+
+
+def estate_context(store_path: str | Path | None = None) -> dict:
+    scripts = mem20path.discover_scripts()
+    inv = load_inventory(_toolchest_inventory_path())
+    ledger = DeliveryLedger(max_entries=4)
+    ledger.add("aqa-probe")
+    score = focus_score({"priority": 1, "distractions": 0})
+    ctx = {
+        "path_scripts": len(scripts) if isinstance(scripts, dict) else 0,
+        "toolchest_total": int(inv.get("total", 0)) if isinstance(inv, dict) else 0,
+        "dedup_probe_seen": "aqa-probe" in ledger,
+        "focus_probe": float(score),
+    }
+    if store_path is not None:
+        cfg = EngineConfig(store_path=Path(store_path).expanduser().resolve())
+        eng = MemoryEngine(cfg)
+        _ = eng.config
+        ctx["engine_status_checked"] = True
+    return ctx

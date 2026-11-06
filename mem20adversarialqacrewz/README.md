@@ -1,9 +1,34 @@
-# RM-230 — Adversarial QA Crew
+# mem20adversarialqacrewz — Adversarial QA Crew
 
-**Outcome:** Coordinate autonomous testers that seek bugs, exploits, dead ends, and invalid states
+Generate adversarial test cases, score mutations, fuzz inputs, and produce release verdicts, with mem20 estate integration.
 
-**Breakthrough:** Every build is attacked by a tireless digital QA team
+## Python API
 
-This package is the machine-executable local implementation derived from the supplied Off Record Lab roadmap. It includes versioned typed state, SQLite WAL persistence, event history/snapshots, SDK CRUD/subscription, resumable idempotent jobs, cancellation, retries/timeouts/quotas/backpressure, deterministic replica reconciliation, local/hybrid/cloud placement/failover, roadmap-specific `qa` logic, decision confidence/explanations, feedback, CLI, HTTP console/API, safety guards, simulator, benchmark/metrics, and rollback-capable installer.
+```python
+import tempfile
+from mem20adversarialqacrewz.domain import (
+    generate_adversarial_cases, mutation_score, fuzz_input, verdict, hash_case, estate_context,
+)
 
-Named live product surfaces, real provider/device credentials, production traffic, and governed FreeStack deployment remain target-environment integration and are not claimed complete.
+cases = generate_adversarial_cases({"base_input": {"value": 5}}, count=6)
+print(len(cases), cases[0]["mutation"])
+print(mutation_score("abc", "axc"))
+print(fuzz_input({"x": 5, "s": "a"}, seed=1))
+print(verdict([{"pass": True}, {"pass": False}]))
+print(hash_case({"a": 1}))
+
+with tempfile.TemporaryDirectory() as d:
+    print(estate_context(d)["engine_status_checked"])
+```
+
+## CLI
+
+```bash
+python -m mem20adversarialqacrewz --help
+```
+
+## Tests
+
+```bash
+PYTHONPATH=/opt/mem20 python -m pytest mem20adversarialqacrewz/mem20adversarialqacrewz/tests -q
+```

@@ -6,3 +6,15 @@ def test_cac(): m=_m(); r=m.cac(100,5); assert r==20.0
 def test_pay(): m=_m(); r=m.payback_months(20,10); assert r==2.0
 def test_ratio(): m=_m(); r=m.ltv_cac_ratio(100,20); assert r==5.0
 def test_health(): m=_m(); r=m.economics_health({"ltv":100,"cac":20,"ratio":5}); assert "ratio" in r
+
+def test_estate_context_real_integrations(tmp_path):
+    import importlib
+    m = importlib.import_module("mem20uniteconomicsautopilotz.domain")
+    ctx = m.estate_context(tmp_path / "store")
+    assert ctx["engine_status_checked"] is True
+    assert ctx["work_recorded"] is True
+    assert ctx["path_scripts"] >= 0
+    assert "inventory_keys" in ctx
+    assert isinstance(ctx["focus_score"], float)
+    assert ctx["sitemap_skips_cache"] is True
+

@@ -308,3 +308,46 @@ cd /opt/mem20 && python3 -m pytest tests/test_mem20path.py -q   # 17
 - Installed/linked mem20 CLI tools via mem20path (290 tools linked), reinstalled mem20 editable.
 - Updated memory.py exports.
 - Saved mem20 context and summary.
+
+---
+## 2026-11-06 - Conformance sweep: 14 subsystems to 7/7
+
+Worked the GitHub conformance issues newest-to-oldest (a second agent worked the
+oldest end), one issue per commit, each verified with
+`scripts/renovation/conformance.py <subsystem>` (EXIT=0, 7/7) before pushing.
+
+Closed: #391 `mem20zerotouchnodeswarmz` (5b6bc1d3), #390
+`mem20visualdataflowcomposerz` (65dcc54e), #389 `mem20visualagentblackboardz`
+(d3f9da16), #388 `mem20universalintegrationcompilerz` (c6e3a377), #387
+`mem20universalhealthnervoussystemz` (fee82965), #386
+`mem20uniteconomicsautopilotz` (7cbbb6f6), #385 `mem20twinz` (1dcf4e97), #384
+`mem20syntheticevaluatorarenaz` (aa4d2b72), #383 `mem20styleguideagentz`
+(9bbc7e7a), #382 `mem20studioz` (2aa96517), #381
+`mem20speculativeworkflowenginez` (15977736), #380
+`mem20specialistmodelforgez` (87f4d4e5), #379 `mem20spatialcommanduniversez`
+(00e3deab), #378 `mem20skillmemorytransferz` (e6df0f6c).
+
+Each fix contains:
+- Criterion 5: a fenced, runnable README section (CLI help + real runtime
+  commands + the exact test command).
+- Criterion 6: a real `estate_context()` that calls six live estate modules on
+  covered lines: `memory_engine`, `toolchest`, `mem20path`, `mem20sitemapz`,
+  `mem20webhooksupernetworkz`, `mem20mixedinitiativefocusenginez`.
+- Criterion 7: a real entry in `gateway/mem20_gateway.py`'s `SUBSYSTEMS`
+  registry whose command actually runs.
+- A test that executes the integration path, in the subsystem's own suite.
+
+Findings:
+- Criterion 6 only counts a cross-module call when it is imported AND called on
+  a covered line. Calls embedded as arguments inside a multi-line dict literal
+  were not counted; each mem20 call must be its own statement.
+- Crew-runtime packages (`mem20twinz`, `mem20studioz`) had no package-level
+  `domain.py` or `tests/`; they got a real `domain.py` beside the existing
+  entry points, the integration test in the existing `tests/` directory, and a
+  `--members` CLI entry.
+- A full `conformance --all` run is too slow under load (coverage on
+  `mem20benchmarkz` ran for over an hour), so per-subsystem gates were run as
+  parallel background jobs.
+
+Verification: all 14 gate logs end with `EXIT=0` and seven PASS rows; all 14
+issues are CLOSED on GitHub after the pushes.

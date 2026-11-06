@@ -40,3 +40,19 @@
   (3.1.2) was itself listed in `RETIRED_VERSIONS`. NEXT ACTION: done —
   `retired_versions_for(current)` filters the live version; regression test
   added.
+- 2026-11-06: Conformance criterion 6 still failed after adding genuine
+  cross-module calls because the calls sat inside a multi-line dict literal and
+  coverage only marked the assignment line. NEXT ACTION: done — every mem20
+  call in `estate_context()` is now its own statement; the gate logs list each
+  call site and report 7/7.
+- 2026-11-06: Crew-runtime subsystems (`mem20twinz`, `mem20studioz`) had no
+  package-level `domain.py` and no package-level `tests/` directory, so the
+  generated-package fixer could not apply. NEXT ACTION: done — added a real
+  `domain.py`, put the integration test in the existing `tests/` directory, and
+  registered the real `--members` CLI entry.
+- 2026-11-06: Shared working tree race — staging only my files was not enough
+  because another agent had already staged its `mem20assistz` files, so
+  `git commit` swept them into 87f4d4e5. NEXT ACTION: done — use
+  `git commit --only <paths>` for every commit in a shared tree. The swept files
+  were byte-identical to the other agent's staged work, so no content was lost
+  or reverted.

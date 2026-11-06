@@ -5,3 +5,18 @@ Outcome: Extract reusable procedures from successful work and apply them to new 
 Breakthrough: The platform learns operational skills, not just facts
 
 Machine-executable local runtime includes versioned state, SQLite WAL persistence, events, SDK CRUD, resumable/idempotent jobs, retries/timeouts/quotas, recovery, `search` operation logic, decision explanations, feedback, CLI, HTTP console/API, mesh selection/failover, simulator, benchmark, metrics, and opt-in signature mode.
+
+## Run
+
+```bash
+# CLI help, then exercise the local runtime end to end
+python -m mem20skillmemorytransferz --help
+python -m mem20skillmemorytransferz simulate
+python -m mem20skillmemorytransferz benchmark
+```
+
+## Tests
+
+```bash
+PYTHONPATH=/opt/mem20 .venv/bin/python -m pytest mem20skillmemorytransferz/mem20skillmemorytransferz/tests -q
+```

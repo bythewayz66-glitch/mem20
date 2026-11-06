@@ -5,3 +5,15 @@ def test_linear(): m=_m(); r=m.linear_reward({"x":2,"y":3},{"x":1,"y":2}); asser
 def test_shaped(): m=_m(); r=m.shaped_reward(5,2); assert r==7
 def test_norm(): m=_m(); r=m.normalize([0,5,10]); assert r==[0.0,0.5,1.0]
 def test_health(): m=_m(); r=m.reward_health([1,2,3]); assert r["count"]==3
+
+def test_estate_context_real_integrations(tmp_path):
+    import importlib
+    m = importlib.import_module("mem20rewardforgez.domain")
+    ctx = m.estate_context(tmp_path / "store")
+    assert ctx["engine_status_checked"] is True
+    assert ctx["work_recorded"] is True
+    assert ctx["path_scripts"] >= 0
+    assert "inventory_keys" in ctx
+    assert isinstance(ctx["focus_score"], float)
+    assert ctx["sitemap_skips_cache"] is True
+

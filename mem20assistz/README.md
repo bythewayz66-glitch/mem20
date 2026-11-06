@@ -17,7 +17,29 @@ package-review rulings:
 - `mem20personalintelligencecompanionz`
 - `mem20universalcompaniondevicesdkz`
 
-## Status
+## Python API
 
-Skeleton slice: registry, CLI (`--version`, `--members`), hermetic
-tests. Member wiring arrives in the integration phase.
+```python
+import tempfile
+import mem20assistz
+from mem20assistz.domain import estate_context
+
+print(mem20assistz.__version__)
+print(len(mem20assistz.MEMBERS))
+
+with tempfile.TemporaryDirectory() as d:
+    print(estate_context(d)["engine_status_checked"])
+```
+
+## CLI
+
+```bash
+mem20assistz --version
+mem20assistz --members
+```
+
+## Tests
+
+```bash
+PYTHONPATH=/opt/mem20 python -m pytest mem20assistz/tests -q
+```

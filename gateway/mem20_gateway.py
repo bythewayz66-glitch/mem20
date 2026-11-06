@@ -133,6 +133,42 @@ SUBSYSTEMS = {
         "owner": "mem20-webdev",
         "wave": 2,
     },
+    "mem20twinz": {
+        "purpose": "mem20 digital twin runtime.",
+        "entry": "python -m mem20twinz --members",
+        "owner": "mem20-webdev",
+        "wave": 2,
+    },
+    "mem20studioz": {
+        "purpose": "mem20 studio runtime.",
+        "entry": "python -m mem20studioz --members",
+        "owner": "mem20-webdev",
+        "wave": 2,
+    },
+    "mem20speculativeworkflowenginez": {
+        "purpose": "Run low-cost branches ahead of time and commit the best valid path",
+        "entry": "python -m mem20speculativeworkflowenginez simulate",
+        "owner": "mem20-webdev",
+        "wave": 2,
+    },
+    "mem20specialistmodelforgez": {
+        "purpose": "Create small task-specific models and adapters from successful workflows",
+        "entry": "python -m mem20specialistmodelforgez simulate",
+        "owner": "mem20-webdev",
+        "wave": 2,
+    },
+    "mem20spatialcommanduniversez": {
+        "purpose": "Represent projects, runtimes, agents, data, and live operations as interactive spatial environments",
+        "entry": "python -m mem20spatialcommanduniversez simulate",
+        "owner": "mem20-webdev",
+        "wave": 2,
+    },
+    "mem20skillmemorytransferz": {
+        "purpose": "Extract reusable procedures from successful work and apply them to new tasks",
+        "entry": "python -m mem20skillmemorytransferz simulate",
+        "owner": "mem20-webdev",
+        "wave": 2,
+    },
 }
 
 

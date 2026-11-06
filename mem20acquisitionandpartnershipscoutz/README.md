@@ -1,7 +1,37 @@
-# RM-019 — Acquisition and Partnership Scout
+# mem20acquisitionandpartnershipscoutz — Acquisition & Partnerships Scout
 
-Outcome: Find complementary products, integration partners, and acquisition candidates
+Score and rank acquisition/partnership targets, estimate strategic fit and synergies, with mem20 estate integration.
 
-Breakthrough: JamTek discovers compounding partnerships before competitors notice them
+## Python API
 
-Machine-executable local runtime includes versioned state, SQLite WAL persistence, events, SDK CRUD, resumable/idempotent jobs, retries/timeouts/quotas, recovery, `analyze` operation logic, decision explanations, feedback, CLI, HTTP console/API, mesh selection/failover, simulator, benchmark, metrics, and opt-in signature mode.
+```python
+import tempfile
+from mem20acquisitionandpartnershipscoutz.domain import (
+    target_score, strategic_fit, rank_targets, outreach_priority, synergy_estimate, estate_context,
+)
+
+criteria = {"weights": {"revenue": 1.0}, "targets": {"revenue": 100}}
+target = {"revenue": 80, "markets": ["devtools"], "tech": ["ai"]}
+acquirer = {"revenue": 1000, "markets": ["devtools"], "tech": ["ai", "cloud"]}
+
+print(target_score(target, criteria))
+print(strategic_fit(acquirer, target))
+print(rank_targets([target, {"revenue": 20}], criteria))
+print(outreach_priority(target, criteria))
+print(synergy_estimate(acquirer, target))
+
+with tempfile.TemporaryDirectory() as d:
+    print(estate_context(d)["engine_status_checked"])
+```
+
+## CLI
+
+```bash
+python -m mem20acquisitionandpartnershipscoutz --help
+```
+
+## Tests
+
+```bash
+PYTHONPATH=/opt/mem20 python -m pytest mem20acquisitionandpartnershipscoutz/mem20acquisitionandpartnershipscoutz/tests -q
+```

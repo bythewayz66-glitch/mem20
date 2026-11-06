@@ -1,9 +1,33 @@
-# RM-243 — Audio, Voice and Music Pipeline
+# mem20audiovoiceandmusicpipelinez — Audio, Voice & Music Pipeline
 
-**Outcome:** Generate or ingest sound, clean it, spatialize it, mix it, subtitle it, and bind it to gameplay
+Mix tracks, normalize audio, sync to beats, export formats, and apply mastering chains, with mem20 estate integration.
 
-**Breakthrough:** Audio becomes a live programmable system instead of a folder of files
+## Python API
 
-This package is the machine-executable local implementation derived from the supplied Off Record Lab roadmap. It includes versioned typed state, SQLite WAL persistence, event history/snapshots, SDK CRUD/subscription, resumable idempotent jobs, cancellation, retries/timeouts/quotas/backpressure, deterministic replica reconciliation, local/hybrid/cloud placement/failover, roadmap-specific `ingest` logic, decision confidence/explanations, feedback, CLI, HTTP console/API, safety guards, simulator, benchmark/metrics, and rollback-capable installer.
+```python
+import tempfile
+from mem20audiovoiceandmusicpipelinez.domain import (
+    mix_tracks, normalize, sync_to_beat, export_format, mastering_chain, estate_context,
+)
 
-Named live product surfaces, real provider/device credentials, production traffic, and governed FreeStack deployment remain target-environment integration and are not claimed complete.
+print(mix_tracks([{"id": "vox", "samples": [0.1, 0.2]}], volumes=[0.8]))
+print(normalize([0.5, 1.0, -0.8], target_db=-3.0))
+print(sync_to_beat(audio_len_s=10.0, bpm=120))
+print(export_format([0] * 44100, fmt="wav", sample_rate=44100))
+print(mastering_chain(["limit"], [1.5, -1.2, 0.2]))
+
+with tempfile.TemporaryDirectory() as d:
+    print(estate_context(d)["engine_status_checked"])
+```
+
+## CLI
+
+```bash
+python -m mem20audiovoiceandmusicpipelinez --help
+```
+
+## Tests
+
+```bash
+PYTHONPATH=/opt/mem20 python -m pytest mem20audiovoiceandmusicpipelinez/mem20audiovoiceandmusicpipelinez/tests -q
+```

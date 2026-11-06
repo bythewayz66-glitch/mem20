@@ -91,6 +91,12 @@ SUBSYSTEMS = {
         "owner": "hsp2",
         "wave": 2,
     },
+    "mem20visualdataflowcomposerz": {
+        "purpose": "Visual dataflow composer: typed streams wired into debuggable pipelines",
+        "entry": "python -m mem20visualdataflowcomposerz simulate",
+        "owner": "mem20-webdev",
+        "wave": 2,
+    },
 }
 
 

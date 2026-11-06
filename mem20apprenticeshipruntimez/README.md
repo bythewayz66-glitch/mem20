@@ -1,7 +1,33 @@
-# RM-036 — Apprenticeship Runtime
+# mem20apprenticeshipruntimez — Apprenticeship Runtime
 
-Outcome: Teach humans through guided execution while agents learn from corrections
+Track skill levels, match mentors, evaluate tasks, plan progression, and estimate mentorship hours, with mem20 estate integration.
 
-Breakthrough: Every project simultaneously produces results and increases capability
+## Python API
 
-Machine-executable local runtime includes versioned state, SQLite WAL persistence, events, SDK CRUD, resumable/idempotent jobs, retries/timeouts/quotas, recovery, `analyze` operation logic, decision explanations, feedback, CLI, HTTP console/API, mesh selection/failover, simulator, benchmark, metrics, and opt-in signature mode.
+```python
+import tempfile
+from mem20apprenticeshipruntimez.domain import (
+    skill_level, mentor_match, evaluate_task, progression_plan, mentorship_hours, estate_context,
+)
+
+print(skill_level(1500))
+print(mentor_match({"skills": ["python"], "level": 1}, [{"skills": ["python"], "experience": 5, "level": 4}]))
+print(evaluate_task({"expected": {"x": 1}}, {"x": 1}))
+print(progression_plan(0, 3))
+print(mentorship_hours({"level": 5}, {"level": 1}, weeks=4))
+
+with tempfile.TemporaryDirectory() as d:
+    print(estate_context(d)["engine_status_checked"])
+```
+
+## CLI
+
+```bash
+python -m mem20apprenticeshipruntimez --help
+```
+
+## Tests
+
+```bash
+PYTHONPATH=/opt/mem20 python -m pytest mem20apprenticeshipruntimez/mem20apprenticeshipruntimez/tests -q
+```

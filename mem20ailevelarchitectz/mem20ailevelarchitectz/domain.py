@@ -1,5 +1,16 @@
 """AI level architect: layout generation, difficulty curve, pacing."""
-import math, random
+
+from __future__ import annotations
+
+import math
+import random
+from pathlib import Path
+
+from memory_engine import EngineConfig, MemoryEngine
+from toolchest.catalog import load_inventory
+import mem20path
+from mem20webhooksupernetworkz.domain import DeliveryLedger
+from mem20mixedinitiativefocusenginez.domain import focus_score
 
 
 def generate_layout(width, height, rooms=5, seed=0):
@@ -27,16 +38,18 @@ def place_enemies(layout, density=0.3, seed=0):
     for room in layout.get("rooms", []):
         area = room["w"] * room["h"]
         count = max(0, int(area * density))
-        for j in range(count):
-            placements.append({"room": room["id"], "x": rng.randint(room["x"], room["x"]+room["w"]-1),
-                               "y": rng.randint(room["y"], room["y"]+room["h"]-1)})
+        for _ in range(count):
+            placements.append({
+                "room": room["id"],
+                "x": rng.randint(room["x"], room["x"] + room["w"] - 1),
+                "y": rng.randint(room["y"], room["y"] + room["h"] - 1),
+            })
     return placements
 
 
 def pacing_profile(total_time, segments=4):
     """Split total time into pacing segments (intro, rise, climax, outro)."""
     weights = [0.15, 0.35, 0.35, 0.15]
-    # normalize
     s = sum(weights)
     weights = [w / s for w in weights]
     times = [round(total_time * w, 2) for w in weights]
@@ -51,3 +64,29 @@ def validate_level(layout):
     if layout["width"] <= 0 or layout["height"] <= 0:
         return {"valid": False, "reason": "invalid dimensions"}
     return {"valid": True, "room_count": len(layout["rooms"])}
+
+
+def _toolchest_inventory_path() -> Path:
+    root = Path(__file__).resolve().parents[2]
+    p = root / "toolchest" / "inventory.json"
+    return p if p.exists() else root / "toolchest" / "src" / "toolchest" / "inventory.json"
+
+
+def estate_context(store_path: str | Path | None = None) -> dict:
+    scripts = mem20path.discover_scripts()
+    inv = load_inventory(_toolchest_inventory_path())
+    ledger = DeliveryLedger(max_entries=4)
+    ledger.add("aila-probe")
+    score = focus_score({"priority": 1, "distractions": 0})
+    ctx = {
+        "path_scripts": len(scripts) if isinstance(scripts, dict) else 0,
+        "toolchest_total": int(inv.get("total", 0)) if isinstance(inv, dict) else 0,
+        "dedup_probe_seen": "aila-probe" in ledger,
+        "focus_probe": float(score),
+    }
+    if store_path is not None:
+        cfg = EngineConfig(store_path=Path(store_path).expanduser().resolve())
+        eng = MemoryEngine(cfg)
+        _ = eng.config
+        ctx["engine_status_checked"] = True
+    return ctx

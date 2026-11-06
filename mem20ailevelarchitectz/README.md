@@ -1,9 +1,34 @@
-# RM-227 — AI Level Architect
+# mem20ailevelarchitectz — AI Level Architect
 
-**Outcome:** Generate and test playable spaces under navigation, pacing, performance, and comfort constraints
+Generate room layouts, difficulty curves, enemy placements, and pacing profiles, with mem20 estate integration.
 
-**Breakthrough:** Level generation includes automatic playability repair
+## Python API
 
-This package is the machine-executable local implementation derived from the supplied Off Record Lab roadmap. It includes versioned typed state, SQLite WAL persistence, event history/snapshots, SDK CRUD/subscription, resumable idempotent jobs, cancellation, retries/timeouts/quotas/backpressure, deterministic replica reconciliation, local/hybrid/cloud placement/failover, roadmap-specific `pipeline` logic, decision confidence/explanations, feedback, CLI, HTTP console/API, safety guards, simulator, benchmark/metrics, and rollback-capable installer.
+```python
+import tempfile
+from mem20ailevelarchitectz.domain import (
+    generate_layout, difficulty_curve, place_enemies, pacing_profile, validate_level, estate_context,
+)
 
-Named live product surfaces, real provider/device credentials, production traffic, and governed FreeStack deployment remain target-environment integration and are not claimed complete.
+layout = generate_layout(width=30, height=20, rooms=5, seed=1)
+print(len(layout["rooms"]))
+print(difficulty_curve(levels=5))
+print(place_enemies(layout, density=0.2, seed=1)[:2])
+print(pacing_profile(total_time=120))
+print(validate_level(layout))
+
+with tempfile.TemporaryDirectory() as d:
+    print(estate_context(d)["engine_status_checked"])
+```
+
+## CLI
+
+```bash
+python -m mem20ailevelarchitectz --help
+```
+
+## Tests
+
+```bash
+PYTHONPATH=/opt/mem20 python -m pytest mem20ailevelarchitectz/mem20ailevelarchitectz/tests -q
+```

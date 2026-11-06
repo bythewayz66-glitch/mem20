@@ -85,6 +85,12 @@ SUBSYSTEMS = {
         "owner": "mem20-webdev",
         "wave": 2,
     },
+    "mem20zerotouchnodeswarmz": {
+        "purpose": "Zero-touch node swarm: discovery, joining, task distribution, healing",
+        "entry": "python -m mem20zerotouchnodeswarmz simulate",
+        "owner": "hsp2",
+        "wave": 2,
+    },
 }
 
 

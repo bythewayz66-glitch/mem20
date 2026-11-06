@@ -5,3 +5,15 @@ def test_xp(): m=_m(); r=m.gain_xp({"xp":0},100); assert r["xp"]==100
 def test_unlock(): m=_m(); r=m.gain_xp({"xp":0,"skills":[]},50); res=m.unlock_skill(r,"s1",30); assert res["ok"] is True
 def test_level(): m=_m(); r=m.gain_xp({"xp":0,"level":1},100); assert m.level(r)>=1
 def test_health(): m=_m(); r=m.gain_xp({"xp":0},10); assert "level" in m.progression_health(r)
+
+def test_estate_context_real_integrations(tmp_path):
+    import importlib
+    m = importlib.import_module("mem20skillbasedprogressionbrainz.domain")
+    ctx = m.estate_context(tmp_path / "store")
+    assert ctx["engine_status_checked"] is True
+    assert ctx["work_recorded"] is True
+    assert ctx["path_scripts"] >= 0
+    assert "inventory_keys" in ctx
+    assert isinstance(ctx["focus_score"], float)
+    assert ctx["sitemap_skips_cache"] is True
+

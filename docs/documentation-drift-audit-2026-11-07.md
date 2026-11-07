@@ -150,7 +150,8 @@ record and point to it; do not rewrite the old measurement.
   locally pinned 272 / 27 constants. The remaining SDK code/spec refresh is
   explicitly identified rather than disguised as a docs-only fix.
 - Added dated refresh warnings to the GTM launch-copy v4/v5, campaign plan,
-  sales one-pager, and launch-instrumentation snapshot. These warnings preserve
+  sales one-pager, launch-instrumentation snapshot, C++ SDK protocol guide, and
+  Perl SDK audit. These warnings preserve
   the original evidence while preventing old claims from being reused as
   current or launch-approved.
 - Updated `docs/handoff/STATE.md` with the owner's report that three agents

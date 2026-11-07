@@ -1,7 +1,33 @@
-# RM-060 — Autonomous Recovery Director
+# mem20autonomousrecoverydirectorz — Autonomous Recovery Director
 
-Outcome: Coordinate diagnosis, rerouting, repair, and service restoration across runtimes
+Triage incidents, plan rollbacks, remediate safely, estimate recovery time, and assess post-recovery health, with mem20 estate integration.
 
-Breakthrough: FreeStack recovers like an experienced operations team
+## Python API
 
-Machine-executable local runtime includes versioned state, SQLite WAL persistence, events, SDK CRUD, resumable/idempotent jobs, retries/timeouts/quotas, recovery, `route` operation logic, decision explanations, feedback, CLI, HTTP console/API, mesh selection/failover, simulator, benchmark, metrics, and opt-in signature mode.
+```python
+import tempfile
+from mem20autonomousrecoverydirectorz.domain import (
+    triage, rollback_plan, remediate, recovery_time, health_after, estate_context,
+)
+
+print(triage({"severity": "critical"}))
+print(rollback_plan({"version": 2}, {"version": 1}))
+print(remediate({}, [{"safe": True}, {"safe": False}]))
+print(recovery_time({"severity": "low"}))
+print(health_after({"success_rate": 0.8}))
+
+with tempfile.TemporaryDirectory() as d:
+    print(estate_context(d)["engine_status_checked"])
+```
+
+## CLI
+
+```bash
+python -m mem20autonomousrecoverydirectorz --help
+```
+
+## Tests
+
+```bash
+PYTHONPATH=/opt/mem20 python -m pytest mem20autonomousrecoverydirectorz/mem20autonomousrecoverydirectorz/tests -q
+```

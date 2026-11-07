@@ -1,0 +1,14 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/><title>Autonomous Deal Desk — estate monitor</title>
+<link rel="stylesheet" href="../../../mem20autonomousdealdeskz/mem20autonomousdealdeskz/web/style.css"/></head><body>
+<header class="topbar"><div class="brand"><span class="dot"></span><div><h1>Autonomous Deal Desk</h1><p class="sub">docs/app estate monitor · connects to runtime API</p></div></div>
+<div class="api-config"><label>API</label><input id="api-base" placeholder="http://127.0.0.1:8782"/><button id="api-save" class="ghost">Connect</button>
+<span class="pill"><a href="../README.md">docs/app</a> · <a href="../../../mem20autonomousdealdeskz/README.md">subsystem README</a></span></div></header>
+<main><section class="panel"><div class="panel-head"><h2>Run</h2></div><pre class="output">PYTHONPATH=/opt/mem20 /opt/mem20/.venv/bin/python -m mem20autonomousdealdeskz serve --port 8782</pre></section>
+<section class="stats" id="stats"></section>
+<div class="grid"><section class="panel"><div class="panel-head"><h2>Deal report</h2><button id="run-report" class="primary small">Run report</button></div><pre id="report" class="output"></pre></section>
+<section class="panel"><div class="panel-head"><h2>Peers & doctor</h2><button id="run-doctor" class="ghost small">Probe peers</button></div><div id="peers" class="list"></div><pre id="doctor" class="output" hidden></pre></section></div>
+<div class="grid"><section class="panel"><div class="panel-head"><h2>Price / Negotiate</h2></div>
+<form id="price-form" class="stack"><div class="row"><input name="price" type="number" value="1000"/><input name="volume" type="number" value="500"/></div><button type="submit">Price deal</button></form>
+<form id="neg-form" class="stack"><div class="row"><input name="current" type="number" value="1000"/><input name="counter" type="number" value="850"/><input name="rounds" type="number" value="2"/></div><button type="submit" class="ghost">Negotiate</button></form><pre id="ops" class="output"></pre></section>
+<section class="panel"><div class="panel-head"><h2>Simulator & events</h2><div class="row"><button id="run-sim" class="ghost small">Simulate</button><button id="refresh-events" class="ghost small">Events</button></div></div><pre id="sim" class="output"></pre><ol id="events" class="events"></ol></section></div>
+</main><div id="toast" class="toast" hidden></div><script src="../../../mem20autonomousdealdeskz/mem20autonomousdealdeskz/web/app.js" type="module"></script></body></html>

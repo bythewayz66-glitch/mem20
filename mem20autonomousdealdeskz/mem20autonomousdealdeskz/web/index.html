@@ -1,0 +1,18 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/><title>Autonomous Deal Desk — cockpit</title><link rel="stylesheet" href="./style.css"/></head>
+<body>
+<header class="topbar"><div class="brand"><span class="dot"></span><div><h1>Autonomous Deal Desk</h1><p class="sub">6 subsystem-specific peers · pricing/terms/approval/negotiation</p></div></div>
+<div class="api-config"><label>API</label><input id="api-base" placeholder="same origin"/><button id="api-save" class="ghost">Connect</button></div></header>
+<main>
+<section class="stats" id="stats"></section>
+<div class="grid">
+<section class="panel"><div class="panel-head"><h2>Deal report</h2><button id="run-report" class="primary small">Run report</button></div><pre id="report" class="output"></pre></section>
+<section class="panel"><div class="panel-head"><h2>Peers & doctor</h2><button id="run-doctor" class="ghost small">Probe peers</button></div><div id="peers" class="list"></div><pre id="doctor" class="output" hidden></pre></section>
+</div>
+<div class="grid">
+<section class="panel"><div class="panel-head"><h2>Price / Negotiate</h2></div>
+<form id="price-form" class="stack"><div class="row"><input name="price" type="number" value="1000"/><input name="volume" type="number" value="500"/></div><button type="submit">Price deal</button></form>
+<form id="neg-form" class="stack"><div class="row"><input name="current" type="number" value="1000"/><input name="counter" type="number" value="850"/><input name="rounds" type="number" value="2"/></div><button type="submit" class="ghost">Negotiate</button></form>
+<pre id="ops" class="output"></pre></section>
+<section class="panel"><div class="panel-head"><h2>Simulator & events</h2><div class="row"><button id="run-sim" class="ghost small">Simulate</button><button id="refresh-events" class="ghost small">Events</button></div></div><pre id="sim" class="output"></pre><ol id="events" class="events"></ol></section>
+</div>
+</main><div id="toast" class="toast" hidden></div><script src="./app.js" type="module"></script></body></html>

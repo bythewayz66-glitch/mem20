@@ -103,6 +103,12 @@ SUBSYSTEMS = {
         "owner": "mem20-renovation",
         "wave": 3,
     },
+    "mem20autonomousdealdeskz": {
+        "purpose": "Autonomous deal desk (pricing, terms, approval, negotiation) with 6 subsystem-specific peers, HTTP cockpit, MCP tools",
+        "entry": "python -m mem20autonomousdealdeskz status",
+        "owner": "mem20-renovation",
+        "wave": 3,
+    },
     "mem20edgefleetbrainz": {
         "purpose": "Coordinate heterogeneous computers, phones, servers and appliances as one capability-aware fleet",
         "entry": "python -m mem20edgefleetbrainz status",

@@ -462,3 +462,17 @@ Also fixed `mem20datalocalityoptimizerz.optimal_placement` dict-tie TypeError
 
 Verification: `pytest mem20energyawarecomputemigrationz/tests -q --no-header -p no:cacheprovider` → 8 passed;
 `simulate` 9/9, `doctor` 6/6; conformance **7/7**; register_subsystem PASS (MCP warn only).
+
+---
+## 2026-11-07 - mem20energyawarefoundationz (#304): depth-first rebuild
+
+Rebuilt as a first-class energy foundation (power monitoring, thresholds,
+budgets, optimization actions). Preserved legacy domain API (`power_reading`,
+`threshold_check`, `energy_budget`, `optimize_power`, `daily_energy`) and added
+policy evaluation with durable SQLite WAL state, service, CLI/JSON HTTP/cockpit.
+6 unique peers (different from #300-#303): `mem20selftuningresourcegovernorz`,
+`mem20realtimebusinesstwinz`, `mem20freestackambientcomputingfabricz`,
+`mem20gameplaysystemsdataandbalancepipelinez`,
+`mem20productionplanningandtaskorchestrationpipelinez`,
+`mem20autonomousworkcellsz`. Docs/app monitor, gateway/toolchest. Verification:
+4 tests pass (conformance-style flags), simulate/doctor 6/6, conformance 7/7.

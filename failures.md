@@ -85,3 +85,7 @@
   deterministic tie-break by node id; `mem20datalocalityoptimizerz` tests still
   pass (5/5). Ecosystem adapters also had Python nested-scope `UnboundLocalError`
   from assigning to parameter names; fixed by using local `_` names.
+
+- 2026-11-07: #304 (`mem20energyawarefoundationz`) HTTP runtime initially returned
+  no response for `/` because `if p=="/" or self._static(p): return` short-circuited
+  without calling `_static`/sending; fixed to call `_static("/")` and 404 on miss.

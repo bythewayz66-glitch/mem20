@@ -183,3 +183,4 @@ served by the fleet process itself at its root URL.
 - [Data Locality Optimizer monitor](datalocalityoptimizerz/index.html) — `PYTHONPATH=/opt/mem20 /opt/mem20/.venv/bin/python -m mem20datalocalityoptimizerz serve --port 8799`
 - [Deterministic Configuration Graph monitor](deterministicconfigurationgraphz/index.html) — `PYTHONPATH=/opt/mem20 /opt/mem20/.venv/bin/python -m mem20deterministicconfigurationgraphz serve --port 8800`
 - [Device Capability Compiler monitor](devicecapabilitycompilerz/index.html) — `PYTHONPATH=/opt/mem20 /opt/mem20/.venv/bin/python -m mem20devicecapabilitycompilerz serve --port 8801`
+- [Dynamic Narrative Engine monitor](dynamicnarrativeenginez/index.html) — `PYTHONPATH=/opt/mem20 /opt/mem20/.venv/bin/python -m mem20dynamicnarrativeenginez serve --port 8802`

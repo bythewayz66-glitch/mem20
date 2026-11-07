@@ -91,7 +91,13 @@ SUBSYSTEMS = {
         "owner": "mem20-webdev",
         "wave": 2,
     },
-        "mem20gameplaysystemsdataandbalancepipelinez": {
+        "mem20gameproductioncontrolcenterz": {
+        "purpose": "Game Production Control Center (RM-233, #317): sprints/milestones/risk/health composed with team,cost,release,forge,resilience,asset integrations; legacy domain preserved",
+        "entry": "python -m mem20gameproductioncontrolcenterz simulate",
+        "owner": "mem20-webdev",
+        "wave": 2,
+    },
+    "mem20gameplaysystemsdataandbalancepipelinez": {
         "purpose": "Gameplay Systems Data & Balance Pipeline (RM-245, #316): telemetry/analysis/tuning pipeline with 6 peer signals; legacy domain preserved",
         "entry": "python -m mem20gameplaysystemsdataandbalancepipelinez simulate",
         "owner": "mem20-webdev",

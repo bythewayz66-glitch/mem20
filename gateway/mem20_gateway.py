@@ -163,9 +163,21 @@ SUBSYSTEMS = {
         "owner": "mem20-renovation",
         "wave": 3,
     },
+    "mem20crossplatformmicrokernelz": {
+        "purpose": "Cross-Platform Microkernel with 6 peers, HTTP cockpit, MCP",
+        "entry": "python -m mem20crossplatformmicrokernelz status",
+        "owner": "mem20-renovation",
+        "wave": 3,
+    },
     "mem20counterfactualmemorysimulatorz": {
         "purpose": "Counterfactual Memory Simulator with 6 peers, HTTP cockpit, MCP",
         "entry": "python -m mem20counterfactualmemorysimulatorz status",
+        "owner": "mem20-renovation",
+        "wave": 3,
+    },
+    "mem20contextcompressionforgez": {
+        "purpose": "Context Compression Forge with 6 peers, HTTP cockpit, MCP",
+        "entry": "python -m mem20contextcompressionforgez status",
         "owner": "mem20-renovation",
         "wave": 3,
     },

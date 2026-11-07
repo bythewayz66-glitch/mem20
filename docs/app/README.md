@@ -231,3 +231,4 @@ served by the fleet process itself at its root URL.
 - [Production Planning and Task Orchestration Pipeline monitor](productionplanningandtaskorchestrationpipelinez/index.html) — `PYTHONPATH=/opt/mem20 /opt/mem20/.venv/bin/python -m mem20productionplanningandtaskorchestrationpipelinez serve --port 8807`
 - [Product-Led Growth Simulator monitor](productledgrowthsimulatorz/index.html) — `PYTHONPATH=/opt/mem20 /opt/mem20/.venv/bin/python -m mem20productledgrowthsimulatorz serve --port 8808`
 - [Protocol Auto-Discovery Engine monitor](protocolautodiscoveryenginez/index.html) — `PYTHONPATH=/opt/mem20 /opt/mem20/.venv/bin/python -m mem20protocolautodiscoveryenginez serve --port 8809`
+- [Reality-to-Software Compiler monitor](realitytosoftwarecompilerz/index.html) — `PYTHONPATH=/opt/mem20 /opt/mem20/.venv/bin/python -m mem20realitytosoftwarecompilerz serve --port 8810`

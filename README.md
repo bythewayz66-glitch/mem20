@@ -8,9 +8,12 @@ It ships as an MCP server (JSON-RPC 2.0 over stdio) plus a large estate of indep
 packaged subsystems.
 
 - **Version:** 3.1.2 (`VERSION`)
-- **License:** MIT
+- **License:** Apache-2.0
 - **Python:** >= 3.10
 - **Transport:** MCP over stdio, with an HTTP health/metrics endpoint on `:8080`
+
+**Core Edition:** the focused, installable memory substrate lives in
+[mem20-ce](https://github.com/bythewayz66-glitch/mem20-ce) (Apache-2.0, `pip install mem20-ce`).
 
 ---
 
@@ -290,4 +293,6 @@ model caches, or runtime state.
 
 ## License
 
-MIT — see `LICENSE`.
+Apache License 2.0 — see `LICENSE`.
+
+Core Edition (focused product): https://github.com/bythewayz66-glitch/mem20-ce

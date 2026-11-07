@@ -112,6 +112,7 @@ from tools.mem20audiovoiceandmusicpipelinez_tools import AudioVoiceMusicPipeline
 from tools.mem20autonomousdealdeskz_tools import AutonomousDealDeskToolsMixin
 from tools.mem20autonomousmicrosaasfoundryz_tools import AutonomousMicroSaaSFoundryToolsMixin
 from tools.mem20autonomousrecoverydirectorz_tools import AutonomousRecoveryDirectorToolsMixin
+from tools.mem20autonomoussaleslaboratoryz_tools import AutonomousSalesLaboratoryToolsMixin
 from tools.ops_tools import OpsToolsMixin
 from tools.verify_tools import VerifyToolsMixin
 from tools.toolchest_tools import ToolchestToolsMixin
@@ -129,7 +130,7 @@ class Mem20MCPServer(MemoryToolsMixin, CognitiveToolsMixin, RoadmapToolsMixin,
                      ProductivityToolsMixin, SearchToolsMixin,
                      VersionControlToolsMixin, WebScrapingToolsMixin,
                      BraidToolsMixin, IRCToolsMixin, LieToolsMixin,
-                     KilnzToolsMixin, DreamzToolsMixin, CrewzToolsMixin, AgentzToolsMixin, EdgeFleetToolsMixin, AudioVoiceMusicPipelineToolsMixin, AutonomousDealDeskToolsMixin, AutonomousMicroSaaSFoundryToolsMixin, AutonomousRecoveryDirectorToolsMixin, OpsToolsMixin, CorezToolsMixin, ToolchestToolsMixin, VerifyToolsMixin):
+                     KilnzToolsMixin, DreamzToolsMixin, CrewzToolsMixin, AgentzToolsMixin, EdgeFleetToolsMixin, AudioVoiceMusicPipelineToolsMixin, AutonomousDealDeskToolsMixin, AutonomousMicroSaaSFoundryToolsMixin, AutonomousRecoveryDirectorToolsMixin, AutonomousSalesLaboratoryToolsMixin, OpsToolsMixin, CorezToolsMixin, ToolchestToolsMixin, VerifyToolsMixin):
     def __init__(self):
         self.tools = {}
         self._start_time = time.time()
@@ -193,6 +194,7 @@ class Mem20MCPServer(MemoryToolsMixin, CognitiveToolsMixin, RoadmapToolsMixin,
         self.register_autonomousdealdeskz_tools()
         self.register_autonomousmicrosaasfoundryz_tools()
         self.register_autonomousrecoverydirectorz_tools()
+        self.register_autonomoussaleslaboratoryz_tools()
         self.register_job_tools()
     async def _handle_list_tools(self, context: ServerRequestContext, params: Optional[mt.PaginatedRequestParams]) -> mt.ListToolsResult:
         """Handle tools/list request."""

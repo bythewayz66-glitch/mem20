@@ -121,6 +121,12 @@ SUBSYSTEMS = {
         "owner": "mem20-renovation",
         "wave": 3,
     },
+    "mem20autonomoussaleslaboratoryz": {
+        "purpose": "Autonomous sales laboratory (leads/outreach/conversion experiments, anti-spam) with 6 sales-lab peers, HTTP cockpit, MCP",
+        "entry": "python -m mem20autonomoussaleslaboratoryz status",
+        "owner": "mem20-renovation",
+        "wave": 3,
+    },
     "mem20edgefleetbrainz": {
         "purpose": "Coordinate heterogeneous computers, phones, servers and appliances as one capability-aware fleet",
         "entry": "python -m mem20edgefleetbrainz status",

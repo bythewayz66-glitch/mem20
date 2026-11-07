@@ -76,3 +76,4 @@ served by the fleet process itself at its root URL.
 - [Autonomous Deal Desk monitor](autonomousdealdeskz/index.html) — `PYTHONPATH=/opt/mem20 /opt/mem20/.venv/bin/python -m mem20autonomousdealdeskz serve --port 8782`
 - [Autonomous Micro-SaaS Foundry monitor](autonomousmicrosaasfoundryz/index.html) — `PYTHONPATH=/opt/mem20 /opt/mem20/.venv/bin/python -m mem20autonomousmicrosaasfoundryz serve --port 8783`
 - [Autonomous Recovery Director monitor](autonomousrecoverydirectorz/index.html) — `PYTHONPATH=/opt/mem20 /opt/mem20/.venv/bin/python -m mem20autonomousrecoverydirectorz serve --port 8784`
+- [Autonomous Sales Laboratory monitor](autonomoussaleslaboratoryz/index.html) — `PYTHONPATH=/opt/mem20 /opt/mem20/.venv/bin/python -m mem20autonomoussaleslaboratoryz serve --port 8785`

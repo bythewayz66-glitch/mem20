@@ -1,17 +1,14 @@
 [build-system]
 requires=["setuptools>=68"]
 build-backend="setuptools.build_meta"
-
 [project]
 name="mem20autonomoussaleslaboratoryz"
 version="1.0.0"
-description="mem20autonomoussaleslaboratoryz first-class module"
+description="Autonomous sales laboratory with 6 subsystem-specific peers, HTTP cockpit, MCP"
 requires-python=">=3.11"
-
 [project.scripts]
 mem20autonomoussaleslaboratoryz="mem20autonomoussaleslaboratoryz.runtime:main"
-
 [tool.setuptools]
 packages=["mem20autonomoussaleslaboratoryz"]
 [tool.setuptools.package-data]
-mem20autonomoussaleslaboratoryz=["CAPABILITY.json","roadmap.json"]
+mem20autonomoussaleslaboratoryz=["CAPABILITY.json","ROADMAP.json","roadmap.json","web/*"]

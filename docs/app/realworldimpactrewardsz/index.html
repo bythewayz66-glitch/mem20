@@ -1,0 +1,7 @@
+<!doctype html><html><head><meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/><title>Real-World Impact Rewards monitor</title>
+<link rel="stylesheet" href="../../../mem20realworldimpactrewardsz/mem20realworldimpactrewardsz/web/style.css"/></head><body>
+<header class="topbar"><div><h1>Real-World Impact Rewards</h1><p>docs/app monitor</p></div><div><label>API</label><input id="api-base" placeholder="http://127.0.0.1:8814"/><button id="api-save" class="ghost">Connect</button> <a href="../README.md">docs/app</a></div></header>
+<main><section class="panel"><h2>Run</h2><pre class="output">PYTHONPATH=/opt/mem20 /opt/mem20/.venv/bin/python -m mem20realworldimpactrewardsz serve --port 8814</pre></section>
+<section class="stats" id="stats"></section><div class="grid"><section class="panel"><h2>Report</h2><button id="run-report" class="primary small">Run</button><pre id="report" class="output"></pre></section>
+<section class="panel"><h2>Peers</h2><button id="run-doctor" class="ghost small">Probe</button><div id="peers" class="list"></div><pre id="doctor" class="output" hidden></pre></section></div></main>
+<div id="toast" class="toast" hidden></div><script src="../../../mem20realworldimpactrewardsz/mem20realworldimpactrewardsz/web/app.js" type="module"></script></body></html>

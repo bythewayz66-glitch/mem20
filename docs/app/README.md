@@ -235,3 +235,4 @@ served by the fleet process itself at its root URL.
 - [Real-Time Business Twin monitor](realtimebusinesstwinz/index.html) — `PYTHONPATH=/opt/mem20 /opt/mem20/.venv/bin/python -m mem20realtimebusinesstwinz serve --port 8811`
 - [Real-Time Event Autopilot monitor](realtimeeventautopilotz/index.html) — `PYTHONPATH=/opt/mem20 /opt/mem20/.venv/bin/python -m mem20realtimeeventautopilotz serve --port 8812`
 - [Real-Time Team Presence monitor](realtimeteampresencez/index.html) — `PYTHONPATH=/opt/mem20 /opt/mem20/.venv/bin/python -m mem20realtimeteampresencez serve --port 8813`
+- [Real-World Impact Rewards monitor](realworldimpactrewardsz/index.html) — `PYTHONPATH=/opt/mem20 /opt/mem20/.venv/bin/python -m mem20realworldimpactrewardsz serve --port 8814`

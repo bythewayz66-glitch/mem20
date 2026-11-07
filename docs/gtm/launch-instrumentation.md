@@ -1,5 +1,8 @@
 # Launch Instrumentation — what is measurable today, and what is not
 
+> **Baseline snapshot — revalidate before executing.** This plan is pinned to main at `d99ab5d8e9c5c45a1fb3d02d3b65b2f9a96b5110` and contains measurements captured on 2026-11-01. Main has advanced since that capture. The analytics-loader, redirect, and attribution conclusions below are historical measurements, not a claim about the current live site. Re-run the documented probes before relying on them. See [documentation drift issue #392](https://github.com/bythewayz66-glitch/mem20/issues/392).
+
+
 **Status:** measurement plan, implementable with no third-party account.
 **Companion files:** `docs/gtm/utm-registry.csv` (the 12 tracked links), `scripts/check_gtm_claims.py` (the claim gate).
 **Baseline:** `main` at `d99ab5d8e9c5c45a1fb3d02d3b65b2f9a96b5110`.

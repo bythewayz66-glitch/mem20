@@ -1,6 +1,6 @@
 # App / product narrative — `docs/app/`
 
-Entry point for the `docs/app/` documentation set. **34 tracked file(s).**
+Entry point for the `docs/app/` documentation set. **35 tracked file(s).**
 
 ## Contents
 
@@ -16,6 +16,7 @@ Entry point for the `docs/app/` documentation set. **34 tracked file(s).**
 - [`concept-scope-pipeline/index.html`](concept-scope-pipeline/index.html)
 - [`execution-digital-twin/index.html`](execution-digital-twin/index.html)
 - [`fabricz/index.html`](fabricz/index.html)
+- [`facez/index.html`](facez/index.html)
 - [`ethical-incentive-simulator/index.html`](ethical-incentive-simulator/index.html)
 - [`energy-migration/index.html`](energy-migration/index.html)
 - [`transport/index.html`](transport/index.html)
@@ -60,6 +61,15 @@ PYTHONPATH=/opt/mem20 python3 -m mem20edgetocloudintelligencecontinuumz serve --
 
 
 
+
+
+## mem20facez monitor (`facez/`)
+
+[`facez/index.html`](facez/index.html) — static monitor for #312 (8-member interface/workspace runtime). Reads `/status`/`/doctor` (`?api=`).
+
+```bash
+PYTHONPATH=/opt/mem20 python3 -m mem20facez serve --port 8792
+```
 
 ## mem20fabricz Integration Fabric monitor (`fabricz/`)
 

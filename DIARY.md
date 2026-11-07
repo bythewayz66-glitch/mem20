@@ -579,3 +579,16 @@ integrations (different from #300–#310): `mem20apishapeshiftinggatewayz`,
 `mem20universalintegrationcompilerz`,`mem20episodicmemorygraphz`,`mem20realtimeeventautopilotz`,
 `mem20ambientteamradioz`,`mem20autonomousdealdeskz`. Verification: 7 tests pass (4 legacy + 3 new,
 6-peer coverage), conformance **7/7**.
+
+---
+## 2026-11-07 - mem20facez (#312): depth-first rebuild
+
+Rebuilt `mem20facez` (interface/workspace crew runtime, 8 members, fails 5,6,7) as first-class
+while preserving compatibility: 8 `MEMBERS`, `__version__`, `mem20facez.cli:main`,
+`--version`/`--members`, and legacy tests. Added member probing, composition planning, service,
+CLI+JSON HTTP+static cockpit (`status/doctor/compose/serve`), web cockpit, docs/PLAN, fenced
+runnable README, docs/app monitor, gateway/toolchest, and 6 unique peers (different from
+#300–#311): `mem20multimodaltaskcapturez`, `mem20visualdataflowcomposerz`,
+`mem20intenttomissioncompilerz`, `mem20personalautomationcanvasz`, `mem20multiworldsandboxz`,
+`mem20visualagentblackboardz`. Verification: 7 tests pass (4 legacy + 3 new, 6-peer coverage),
+conformance **7/7**.

@@ -1,0 +1,2 @@
+# mem20facez — Interface/Workspace crew runtime (#312)
+Preserve `__version__`, 8 `MEMBERS`, `mem20facez.cli:main`, `--version/--members`. Add member probing, composition planning, service, CLI+JSON HTTP+static cockpit, web cockpit, and 6 unique peers (different from #300–#311): `mem20multimodaltaskcapturez`, `mem20visualdataflowcomposerz`, `mem20intenttomissioncompilerz`, `mem20personalautomationcanvasz`, `mem20multiworldsandboxz`, `mem20visualagentblackboardz`. Fenced README, docs/app monitor, gateway/toolchest, 7/7.

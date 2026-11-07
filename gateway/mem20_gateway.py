@@ -91,7 +91,13 @@ SUBSYSTEMS = {
         "owner": "mem20-webdev",
         "wave": 2,
     },
-        "mem20fabricz": {
+        "mem20facez": {
+        "purpose": "Interface/Workspace crew runtime (#312): 8-member composition with 6-peer capture, dataflow, mission, canvas, sandbox, and blackboard signals",
+        "entry": "python -m mem20facez doctor",
+        "owner": "mem20-webdev",
+        "wave": 2,
+    },
+    "mem20fabricz": {
         "purpose": "Integration Fabric crew runtime (#311): 23-member registry/probing/dispatch with 6-peer API/integration/episode/event/radio/deal signals",
         "entry": "python -m mem20fabricz doctor",
         "owner": "mem20-webdev",

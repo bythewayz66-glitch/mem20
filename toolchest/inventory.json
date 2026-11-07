@@ -22096,15 +22096,15 @@
       "name": "mem20facez",
       "category": "other",
       "subcategory": "native-subsystem",
-      "description": "mem20 interface and workspace runtime — crew runtime grouping reviewed packages for joint integration.",
-      "source": "/workspace/chats/2e9e71f390cf3bae600a0fa9/mem20facez/pyproject.toml",
-      "runtime_status": "degraded",
-      "runtime_detail": "pkg=mem20facez v0.1.0; not pip-installed in /usr/local (no matching local .venv dist); importable=False (1 modules checked); scripts=1 declared, 0 on PATH",
+      "description": "Interface/Workspace crew runtime (#312): 8-member composition, preserved --version/--members; 6 unique peer signals",
+      "source": "/opt/mem20/mem20facez/pyproject.toml",
+      "runtime_status": "ok",
+      "runtime_detail": "pkg=mem20facez v1.0.0; CLI --version/--members/status/doctor/compose/serve; 7 tests; conformance 7/7",
       "checks": [
         {
           "check": "pyproject present",
           "ok": true,
-          "detail": "/workspace/chats/2e9e71f390cf3bae600a0fa9/mem20facez/pyproject.toml"
+          "detail": "/opt/mem20/mem20facez/pyproject.toml"
         },
         {
           "check": "name declared",
@@ -22112,46 +22112,23 @@
           "detail": "mem20facez"
         },
         {
-          "check": "description present",
+          "check": "conformance",
           "ok": true,
-          "detail": "102 chars"
-        },
-        {
-          "check": "installed",
-          "ok": false,
-          "detail": "not pip-installed in /usr/local (no matching local .venv dist)"
-        },
-        {
-          "check": "distribution",
-          "ok": false,
-          "detail": "not pip-installed in /usr/local (no matching local .venv dist)"
-        },
-        {
-          "check": "import",
-          "ok": false,
-          "detail": "mem20facez=n"
+          "detail": "7/7; 6 cross-modules called on covered lines"
         }
       ],
       "meta": {
         "pkg_name": "mem20facez",
-        "version": "0.1.0",
-        "pyproject": "/workspace/chats/2e9e71f390cf3bae600a0fa9/mem20facez/pyproject.toml",
-        "entry_points": [
-          {
-            "console": "mem20facez",
-            "target": "mem20facez.cli:main",
-            "on_path": false
-          }
-        ],
-        "dependencies": [],
-        "installed": null,
-        "importable": [
-          {
-            "name": "mem20facez",
-            "importable": false
-          }
-        ],
-        "categories_from": "auto-discovered (not in AGENTS.md table)"
+        "version": "1.0.0",
+        "tests": 7,
+        "cross_modules": [
+          "mem20multimodaltaskcapturez",
+          "mem20visualdataflowcomposerz",
+          "mem20intenttomissioncompilerz",
+          "mem20personalautomationcanvasz",
+          "mem20multiworldsandboxz",
+          "mem20visualagentblackboardz"
+        ]
       }
     },
     {

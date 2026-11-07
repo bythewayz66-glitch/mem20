@@ -4,8 +4,8 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "mem20facez"
-version = "0.1.0"
-description = "mem20 interface and workspace runtime — crew runtime grouping reviewed packages for joint integration."
+version = "1.0.0"
+description = "mem20 interface/workspace crew runtime: 8-member registry/composition with 6-peer capture, dataflow, mission, canvas, sandbox, and blackboard signals."
 readme = "README.md"
 requires-python = ">=3.11"
 license = { text = "MIT" }
@@ -20,3 +20,6 @@ packages = ["mem20facez"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
+
+[tool.setuptools.package-data]
+mem20facez = ["web/*"]

@@ -145,6 +145,12 @@ SUBSYSTEMS = {
         "owner": "mem20-renovation",
         "wave": 3,
     },
+    "mem20communitychallengeenginez": {
+        "purpose": "Community challenge engine (challenges/leaderboards/rewards) with 6 peers, HTTP cockpit, MCP",
+        "entry": "python -m mem20communitychallengeenginez status",
+        "owner": "mem20-renovation",
+        "wave": 3,
+    },
     "mem20collectivemodelintelligencez": {
         "purpose": "Collective model intelligence (ensemble/voting/diversity) with 6 peers, HTTP cockpit, MCP",
         "entry": "python -m mem20collectivemodelintelligencez status",

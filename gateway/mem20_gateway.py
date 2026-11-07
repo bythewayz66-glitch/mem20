@@ -91,6 +91,12 @@ SUBSYSTEMS = {
         "owner": "hsp2",
         "wave": 2,
     },
+    "mem20audiovoiceandmusicpipelinez": {
+        "purpose": "Audio/voice/music pipeline (mix, normalize, sync, export, mastering) with 6 subsystem-specific peer integrations, HTTP cockpit, and MCP tools",
+        "entry": "python -m mem20audiovoiceandmusicpipelinez status",
+        "owner": "mem20-renovation",
+        "wave": 3,
+    },
     "mem20edgefleetbrainz": {
         "purpose": "Coordinate heterogeneous computers, phones, servers and appliances as one capability-aware fleet",
         "entry": "python -m mem20edgefleetbrainz status",

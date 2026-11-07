@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="theme-color" content="#0b1020"/>
+  <title>Audio/Voice/Music Pipeline — cockpit</title>
+  <link rel="stylesheet" href="./style.css"/>
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">
+      <span class="dot"></span>
+      <div>
+        <h1>Audio · Voice · Music Pipeline</h1>
+        <p class="sub">mem20audiovoiceandmusicpipelinez · 6 subsystem-specific peers</p>
+      </div>
+    </div>
+    <div class="api-config">
+      <label for="api-base">API</label>
+      <input id="api-base" placeholder="same origin"/>
+      <button id="api-save" class="ghost">Connect</button>
+    </div>
+  </header>
+  <main>
+    <section class="stats" id="stats"></section>
+    <div class="grid">
+      <section class="panel">
+        <div class="panel-head"><h2>Pipeline report</h2><button id="run-report" class="primary small">Run report</button></div>
+        <form id="report-form" class="stack">
+          <div class="row"><input name="prompt" placeholder="bind/subtitle prompt" value="bind subtitle"/><input name="bpm" type="number" value="120" placeholder="bpm"/></div>
+        </form>
+        <pre id="report" class="output"></pre>
+      </section>
+      <section class="panel">
+        <div class="panel-head"><h2>Peers & doctor</h2><button id="run-doctor" class="ghost small">Probe peers</button></div>
+        <div id="peers" class="list"></div>
+        <pre id="doctor" class="output" hidden></pre>
+      </section>
+    </div>
+    <div class="grid">
+      <section class="panel">
+        <div class="panel-head"><h2>Mix / Master</h2></div>
+        <form id="mix-form" class="stack">
+          <label>Tracks JSON</label>
+          <textarea name="tracks" rows="4">[{"id":"vox","samples":[0.1,0.2,-0.1]},{"id":"bed","samples":[0.05,0.05,0.05]}]</textarea>
+          <div class="row"><button type="submit">Mix</button></div>
+        </form>
+        <form id="master-form" class="stack">
+          <label>Stages & samples</label>
+          <div class="row"><input name="stages" value="eq,compress,limit"/><input name="samples" value="0.5,1.2,-0.8"/></div>
+          <div class="row"><button type="submit" class="ghost">Master</button></div>
+        </form>
+        <pre id="ops" class="output"></pre>
+      </section>
+      <section class="panel">
+        <div class="panel-head"><h2>Simulator & events</h2><div class="row"><button id="run-sim" class="ghost small">Simulate</button><button id="refresh-events" class="ghost small">Events</button></div></div>
+        <pre id="sim" class="output"></pre>
+        <ol id="events" class="events"></ol>
+      </section>
+    </div>
+  </main>
+  <div id="toast" class="toast" hidden></div>
+  <script src="./app.js" type="module"></script>
+</body>
+</html>

@@ -58,3 +58,5 @@ served by the fleet process itself at its root URL.
   historical numbers in them; correct the live docs instead.
 - Tool/domain counts in this tree must match the live surface. Derive, never hand-count:
   `python3 web/scripts/extract-tools.py --root . --out /tmp/tools.json`
+
+- [Audio/Voice/Music Pipeline monitor](audiovoiceandmusicpipelinez/index.html) — run `PYTHONPATH=/opt/mem20 /opt/mem20/.venv/bin/python -m mem20audiovoiceandmusicpipelinez serve --port 8781` and connect the estate monitor to its API.

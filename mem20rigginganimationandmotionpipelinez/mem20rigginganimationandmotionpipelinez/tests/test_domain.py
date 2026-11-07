@@ -6,3 +6,15 @@ def test_pose(): m=_m(); r=m.create_rig(["bone1"]); m.set_pose(r,"bone1",(1,2,3)
 def test_anim(): m=_m(); r=m.create_rig(["bone1"]); res=m.animate(r,[{"pose":{"bone1":(5,0,0)}}]); assert len(res)==1
 def test_blend(): m=_m(); r=m.motion_blend({"b1":(0,0,0)},{"b1":(10,0,0)},0.5); assert r["b1"][0]==5.0
 def test_health(): m=_m(); r=m.create_rig(["bone1"]); assert m.rig_health(r)["bones"]==1
+
+def test_estate_context_real_integrations(tmp_path):
+    import importlib
+    m = importlib.import_module("mem20rigginganimationandmotionpipelinez.domain")
+    ctx = m.estate_context(tmp_path / "store")
+    assert ctx["engine_status_checked"] is True
+    assert ctx["work_recorded"] is True
+    assert ctx["path_scripts"] >= 0
+    assert "inventory_keys" in ctx
+    assert isinstance(ctx["focus_score"], float)
+    assert ctx["sitemap_skips_cache"] is True
+

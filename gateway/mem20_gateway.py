@@ -115,6 +115,12 @@ SUBSYSTEMS = {
         "owner": "mem20-renovation",
         "wave": 3,
     },
+    "mem20autonomousrecoverydirectorz": {
+        "purpose": "Autonomous recovery director (triage/rollback/remediation) with 6 recovery-specific peers, HTTP cockpit, MCP",
+        "entry": "python -m mem20autonomousrecoverydirectorz status",
+        "owner": "mem20-renovation",
+        "wave": 3,
+    },
     "mem20edgefleetbrainz": {
         "purpose": "Coordinate heterogeneous computers, phones, servers and appliances as one capability-aware fleet",
         "entry": "python -m mem20edgefleetbrainz status",

@@ -91,7 +91,13 @@ SUBSYSTEMS = {
         "owner": "mem20-webdev",
         "wave": 2,
     },
-        "mem20executabledesignstresslabz": {
+        "mem20executablegameconceptandscopepipelinez": {
+        "purpose": "Executable Game Concept & Scope Pipeline (RM-237): concept scoring, scope/feasibility/risk/stage with 6 production/growth/foundry peer signals",
+        "entry": "python -m mem20executablegameconceptandscopepipelinez simulate",
+        "owner": "mem20-webdev",
+        "wave": 2,
+    },
+    "mem20executabledesignstresslabz": {
         "purpose": "Executable Design Stress Lab (RM-221): simulated design/production/technical stress tests with resilience, adversarial QA, and experiment peer signals",
         "entry": "python -m mem20executabledesignstresslabz simulate",
         "owner": "mem20-webdev",
@@ -169,6 +175,7 @@ SUBSYSTEMS = {
         "owner": "mem20-renovation",
         "wave": 3,
     },
+    "mem20deterministicconfigurationgraphz": {"purpose": "Deterministic Configuration Graph with 6 peers, HTTP cockpit, MCP","entry":"python -m mem20deterministicconfigurationgraphz status","owner":"mem20-renovation","wave":3},
     "mem20datalocalityoptimizerz": {"purpose": "Data Locality Optimizer with 6 peers, HTTP cockpit, MCP","entry":"python -m mem20datalocalityoptimizerz status","owner":"mem20-renovation","wave":3},
     "mem20customerlifecycleenginez": {"purpose": "Customer Lifecycle Engine with 6 peers, HTTP cockpit, MCP","entry":"python -m mem20customerlifecycleenginez status","owner":"mem20-renovation","wave":3},
     "mem20customerdigitaltwinlabz": {"purpose": "Customer Digital Twin Lab with 6 peers, HTTP cockpit, MCP","entry":"python -m mem20customerdigitaltwinlabz status","owner":"mem20-renovation","wave":3},

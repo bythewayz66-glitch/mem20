@@ -1,6 +1,6 @@
 # App / product narrative — `docs/app/`
 
-Entry point for the `docs/app/` documentation set. **31 tracked file(s).**
+Entry point for the `docs/app/` documentation set. **32 tracked file(s).**
 
 ## Contents
 
@@ -13,6 +13,7 @@ Entry point for the `docs/app/` documentation set. **31 tracked file(s).**
 - [`engine-runtime/index.html`](engine-runtime/index.html)
 - [`episodic-memory-graph/index.html`](episodic-memory-graph/index.html)
 - [`design-stress-lab/index.html`](design-stress-lab/index.html)
+- [`concept-scope-pipeline/index.html`](concept-scope-pipeline/index.html)
 - [`ethical-incentive-simulator/index.html`](ethical-incentive-simulator/index.html)
 - [`energy-migration/index.html`](energy-migration/index.html)
 - [`transport/index.html`](transport/index.html)
@@ -54,6 +55,15 @@ PYTHONPATH=/opt/mem20 python3 -m mem20edgetocloudintelligencecontinuumz serve --
 
 
 
+
+
+## Concept & Scope Pipeline monitor (`concept-scope-pipeline/`)
+
+[`concept-scope-pipeline/index.html`](concept-scope-pipeline/index.html) — static monitor for RM-237 (#309). Reads `/spec`/`/metrics`/`/doctor` (`?api=`).
+
+```bash
+PYTHONPATH=/opt/mem20 python3 -m mem20executablegameconceptandscopepipelinez serve --port 8789
+```
 
 ## Design Stress Lab monitor (`design-stress-lab/`)
 
@@ -171,3 +181,4 @@ served by the fleet process itself at its root URL.
 - [Customer Digital Twin Lab monitor](customerdigitaltwinlabz/index.html) — `PYTHONPATH=/opt/mem20 /opt/mem20/.venv/bin/python -m mem20customerdigitaltwinlabz serve --port 8797`
 - [Customer Lifecycle Engine monitor](customerlifecycleenginez/index.html) — `PYTHONPATH=/opt/mem20 /opt/mem20/.venv/bin/python -m mem20customerlifecycleenginez serve --port 8798`
 - [Data Locality Optimizer monitor](datalocalityoptimizerz/index.html) — `PYTHONPATH=/opt/mem20 /opt/mem20/.venv/bin/python -m mem20datalocalityoptimizerz serve --port 8799`
+- [Deterministic Configuration Graph monitor](deterministicconfigurationgraphz/index.html) — `PYTHONPATH=/opt/mem20 /opt/mem20/.venv/bin/python -m mem20deterministicconfigurationgraphz serve --port 8800`

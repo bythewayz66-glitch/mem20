@@ -1,0 +1,6 @@
+<!doctype html><html><head><meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/><title>Deterministic Configuration Graph</title><link rel="stylesheet" href="./style.css"/></head><body>
+<header class="topbar"><div><h1>Deterministic Configuration Graph</h1><p>nodes/edges/resolve/validate · 6 peers</p></div><div><label>API</label><input id="api-base"/><button id="api-save" class="ghost">Connect</button></div></header>
+<main><section class="stats" id="stats"></section><div class="grid"><section class="panel"><h2>Report</h2><button id="run-report" class="primary small">Run</button><pre id="report" class="output"></pre></section>
+<section class="panel"><h2>Peers</h2><button id="run-doctor" class="ghost small">Probe</button><div id="peers" class="list"></div><pre id="doctor" class="output" hidden></pre></section></div>
+<section class="panel"><h2>Events</h2><button id="run-sim" class="ghost small">Sim</button><button id="refresh-events" class="ghost small">Events</button><pre id="sim" class="output"></pre><ol id="events" class="events"></ol></section></main>
+<div id="toast" class="toast" hidden></div><script src="./app.js" type="module"></script></body></html>

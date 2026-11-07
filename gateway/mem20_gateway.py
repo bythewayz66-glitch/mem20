@@ -175,6 +175,7 @@ SUBSYSTEMS = {
         "owner": "mem20-renovation",
         "wave": 3,
     },
+    "mem20dynamicquestrewardcomposerz": {"purpose": "Dynamic Quest Reward Composer with 6 peers, HTTP cockpit, MCP","entry":"python -m mem20dynamicquestrewardcomposerz status","owner":"mem20-renovation","wave":3},
     "mem20dynamicnarrativeenginez": {"purpose": "Dynamic Narrative Engine with 6 peers, HTTP cockpit, MCP","entry":"python -m mem20dynamicnarrativeenginez status","owner":"mem20-renovation","wave":3},
     "mem20devicecapabilitycompilerz": {"purpose": "Device Capability Compiler with 6 peers, HTTP cockpit, MCP","entry":"python -m mem20devicecapabilitycompilerz status","owner":"mem20-renovation","wave":3},
     "mem20deterministicconfigurationgraphz": {"purpose": "Deterministic Configuration Graph with 6 peers, HTTP cockpit, MCP","entry":"python -m mem20deterministicconfigurationgraphz status","owner":"mem20-renovation","wave":3},

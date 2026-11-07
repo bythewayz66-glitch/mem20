@@ -175,6 +175,7 @@ SUBSYSTEMS = {
         "owner": "mem20-renovation",
         "wave": 3,
     },
+    "mem20devicecapabilitycompilerz": {"purpose": "Device Capability Compiler with 6 peers, HTTP cockpit, MCP","entry":"python -m mem20devicecapabilitycompilerz status","owner":"mem20-renovation","wave":3},
     "mem20deterministicconfigurationgraphz": {"purpose": "Deterministic Configuration Graph with 6 peers, HTTP cockpit, MCP","entry":"python -m mem20deterministicconfigurationgraphz status","owner":"mem20-renovation","wave":3},
     "mem20datalocalityoptimizerz": {"purpose": "Data Locality Optimizer with 6 peers, HTTP cockpit, MCP","entry":"python -m mem20datalocalityoptimizerz status","owner":"mem20-renovation","wave":3},
     "mem20customerlifecycleenginez": {"purpose": "Customer Lifecycle Engine with 6 peers, HTTP cockpit, MCP","entry":"python -m mem20customerlifecycleenginez status","owner":"mem20-renovation","wave":3},

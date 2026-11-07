@@ -1,5 +1,8 @@
 # Perl SDK surface audit — mem20 3.0.0 @ 7c0b3e8 (2026-10-26)
 
+> **Historical SDK audit — not the current repository surface.** This audit and the Perl SDK constants/tests describe a 270-tools / 27-domains baseline. Current repository `main` is **3.1.2 / 311 tools / 39 domains** as of 2026-11-07. The Perl SDK surface constants and live-server guard need a coordinated code/test refresh; do not use this file's 270 / 27 figure as the current server count. See [issue #392](https://github.com/bythewayz66-glitch/mem20/issues/392).
+
+
 Scope: `sdk/perl/` only. Target surface **270 tools across 27 domains**.
 
 Everything below was observed by running the server, not by reading its docs.

@@ -631,3 +631,15 @@ analysis and 6 unique peer signals (different from #300–#314): `mem20skillbase
 `mem20skillmemorytransferz`,`mem20realworldimpactrewardsz`. Added `/doctor`, web cockpit, root
 shims, fenced runnable README, docs/PLAN, docs/app monitor, gateway/toolchest. Verification:
 10 tests pass (5 legacy + 5 new), conformance **7/7**.
+
+---
+## 2026-11-07 - mem20gameplaysystemsdataandbalancepipelinez (#316): depth-first rebuild
+
+Rebuilt RM-245 (Gameplay Systems Data & Balance Pipeline, fails 5,6,7, operation_kind=progression)
+as first-class while preserving legacy domain API (`collect_telemetry,aggregate_metrics,balance_tuning,
+funnel_analysis,pipeline_report`) and CAPABILITY Engine/CLI/10-scenario simulator. Enriched
+progression (gated) with pipeline analysis and 6 unique peer signals (different from #300–#315):
+`mem20sensorymemoryingestz`,`mem20selfoptimizingkernelz`,`mem20realitytosoftwarecompilerz`,
+`mem20dynamicnarrativeenginez`,`mem20businessmodelsimulatorz`,`mem20goapagentdesignerz`. Added
+`/doctor`, web cockpit, root shims, fenced runnable README, docs/PLAN, docs/app monitor,
+gateway/toolchest. Verification: 10 tests pass, conformance **7/7**.

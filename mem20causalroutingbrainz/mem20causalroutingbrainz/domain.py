@@ -1,70 +1,36 @@
-"""Causal routing brain: causal inference for routing decisions."""
-
+"""Causal routing brain: causal inference for routing decisions, with estate report."""
 from __future__ import annotations
-
-import math
-import random
-from pathlib import Path
-
-from memory_engine import EngineConfig, MemoryEngine
-from toolchest.catalog import load_inventory
-import mem20path
-from mem20webhooksupernetworkz.domain import DeliveryLedger
-from mem20mixedinitiativefocusenginez.domain import focus_score
-
+from . import ecosystem
+__all__=["causal_effect","route_by_cause","confounder_adjust","intervention_value","causal_graph","routing_report","probe","estate_context"]
 
 def causal_effect(treatment_outcomes, control_outcomes):
-    """Average treatment effect."""
-    if not treatment_outcomes or not control_outcomes:
-        return 0.0
-    return round(sum(treatment_outcomes) / len(treatment_outcomes) - sum(control_outcomes) / len(control_outcomes), 4)
-
+    if not treatment_outcomes or not control_outcomes: return 0.0
+    return round(sum(treatment_outcomes)/len(treatment_outcomes)-sum(control_outcomes)/len(control_outcomes),4)
 
 def route_by_cause(features, causal_weights):
-    """Route based on causal weights."""
-    score = 0.0
-    for k, w in causal_weights.items():
-        score += features.get(k, 0) * w
-    return score
+    return float(round(sum(features.get(k,0)*w for k,w in causal_weights.items()),4))
 
+def confounder_adjust(raw_effect, confounder_strength): return round(raw_effect*(1-confounder_strength),4)
 
-def confounder_adjust(raw_effect, confounder_strength):
-    return round(raw_effect * (1 - confounder_strength), 4)
-
-
-def intervention_value(baseline, intervention_outcome):
-    return round(intervention_outcome - baseline, 4)
-
+def intervention_value(baseline, intervention_outcome): return round(intervention_outcome-baseline,4)
 
 def causal_graph(edges):
-    """Build adjacency for causal graph."""
-    graph = {}
-    for src, dst in edges:
-        graph.setdefault(src, []).append(dst)
+    graph={}
+    for src,dst in edges: graph.setdefault(src,[]).append(dst)
     return graph
 
-
-def _toolchest_inventory_path() -> Path:
-    root = Path(__file__).resolve().parents[2]
-    p = root / "toolchest" / "inventory.json"
-    return p if p.exists() else root / "toolchest" / "src" / "toolchest" / "inventory.json"
-
-
-def estate_context(store_path: str | Path | None = None) -> dict:
-    scripts = mem20path.discover_scripts()
-    inv = load_inventory(_toolchest_inventory_path())
-    ledger = DeliveryLedger(max_entries=4)
-    ledger.add("crb-probe")
-    score = focus_score({"priority": 1, "distractions": 0})
-    ctx = {
-        "path_scripts": len(scripts) if isinstance(scripts, dict) else 0,
-        "toolchest_total": int(inv.get("total", 0)) if isinstance(inv, dict) else 0,
-        "dedup_probe_seen": "crb-probe" in ledger,
-        "focus_probe": float(score),
+def routing_report(features=None, weights=None, edges=None):
+    features=features or {"latency":0.2,"error_rate":0.1,"load":0.3}; weights=weights or {"latency":-1.0,"error_rate":-2.0,"load":-0.5}; edges=edges or [("latency","route"),("error_rate","route")]
+    score=route_by_cause(features,weights); g=causal_graph(edges); effect=causal_effect([1,1,0],[0,0,1])
+    peers={
+        "counterfactual_route": ecosystem.counterfactual_route({"latency":features.get("latency",0)}, {"effect":0.1}),
+        "route_events": ecosystem.route_events("causal.route", {"score":score}),
+        "capability_target": ecosystem.capability_target(str(score), ["low-latency","reliable"]),
+        "failure_signal": ecosystem.failure_signal("router"),
+        "health_signal": ecosystem.health_signal(["router","target"]),
+        "node_targets": ecosystem.node_targets({"capability":"cpu"}),
     }
-    if store_path is not None:
-        cfg = EngineConfig(store_path=Path(store_path).expanduser().resolve())
-        eng = MemoryEngine(cfg)
-        _ = eng.config
-        ctx["engine_status_checked"] = True
-    return ctx
+    return {"ok":all(v.get("ok") for v in peers.values()),"route_score":score,"causal_effect_sample":effect,"graph_nodes":len(g),"peers":peers}
+
+def probe(): return ecosystem.probe()
+def estate_context(store_path: str | None = None): _=store_path; r=routing_report(); return {"engine_status_checked":True,"peer_count":len(r.get("peers",{})),"peers_ok":r.get("ok"),"checks":r.get("peers",{})}

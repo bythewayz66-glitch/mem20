@@ -139,6 +139,12 @@ SUBSYSTEMS = {
         "owner": "mem20-renovation",
         "wave": 3,
     },
+    "mem20causalroutingbrainz": {
+        "purpose": "Causal routing brain with 6 causal-routing peers, HTTP cockpit, MCP",
+        "entry": "python -m mem20causalroutingbrainz status",
+        "owner": "mem20-renovation",
+        "wave": 3,
+    },
     "mem20businessmodelsimulatorz": {
         "purpose": "Business model simulator (revenue/cost/margin/scenarios) with 6 estate peers, HTTP cockpit, MCP",
         "entry": "python -m mem20businessmodelsimulatorz status",

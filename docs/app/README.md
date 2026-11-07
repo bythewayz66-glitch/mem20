@@ -107,3 +107,4 @@ served by the fleet process itself at its root URL.
 - [Autonomous Software Foundry monitor](autonomoussoftwarefoundryz/index.html) — `PYTHONPATH=/opt/mem20 /opt/mem20/.venv/bin/python -m mem20autonomoussoftwarefoundryz serve --port 8786`
 - [Autonomous Workcells monitor](autonomousworkcellsz/index.html) — `PYTHONPATH=/opt/mem20 /opt/mem20/.venv/bin/python -m mem20autonomousworkcellsz serve --port 8787`
 - [Business Model Simulator monitor](businessmodelsimulatorz/index.html) — `PYTHONPATH=/opt/mem20 /opt/mem20/.venv/bin/python -m mem20businessmodelsimulatorz serve --port 8788`
+- [Causal Routing Brain monitor](causalroutingbrainz/index.html) — `PYTHONPATH=/opt/mem20 /opt/mem20/.venv/bin/python -m mem20causalroutingbrainz serve --port 8789`

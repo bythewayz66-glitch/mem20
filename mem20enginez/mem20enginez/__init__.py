@@ -1,45 +1,30 @@
-"""mem20 engine runtime.
+"""mem20enginez: first-class crew runtime for 30 engine members (RM/#305).
 
-Crew runtime grouping reviewed packages for joint integration under the
-package-review rulings. Member systems live in their own directories;
-this runtime provides the registry, CLI surface, and shared surface.
+Real member registry, probing, compatibility checks, dispatch planning,
+durable state, service/CLI/HTTP API, and 6 unique cross-subsystem peers.
 """
-
 from __future__ import annotations
 
-__version__ = "0.1.0"
+import importlib
 
-MEMBERS = (
-    "mem20adaptiveachievementenginez",
-    "mem20adaptivedispatchenginez",
-    "mem20adaptiveforgettingenginez",
-    "mem20adaptivepersonalityruntimez",
-    "mem20apprenticeshipruntimez",
-    "mem20chaosnativeapplicationruntimez",
-    "mem20communitychallengeenginez",
-    "mem20communitypulseenginez",
-    "mem20completionconfidenceenginez",
-    "mem20crdtcollaborationenginez",
-    "mem20crosslanguagerefactorenginez",
-    "mem20customerlifecycleenginez",
-    "mem20dynamicnarrativeenginez",
-    "mem20featuredependencygraphenginez",
-    "mem20generativebrandworldenginez",
-    "mem20liveprojectdemonstrationenginez",
-    "mem20liveschemamorphingenginez",
-    "mem20mixedinitiativefocusenginez",
-    "mem20mobileedgeagentruntimez",
-    "mem20multilingualliveconversationenginez",
-    "mem20offergenomeenginez",
-    "mem20outcomeverificationruntimez",
-    "mem20peertopeerappruntimez",
-    "mem20predictiverecallenginez",
-    "mem20privatelocalreasoningenginez",
-    "mem20protocolautodiscoveryenginez",
-    "mem20runtimebugpredictionenginez",
-    "mem20runtimecompatibilityenginez",
-    "mem20servicebundlingenginez",
-    "mem20speculativeworkflowenginez",
+from .domain import (
+    MEMBERS, EngineMember, MemberStatus, RuntimePlan, RuntimeReport,
+    check_member, compatibility, dispatch_plan, member_registry, summarize,
 )
 
-__all__ = ["__version__", "MEMBERS"]
+__version__ = "1.0.0"
+
+__all__ = [
+    "MEMBERS", "EngineMember", "MemberStatus", "RuntimePlan", "RuntimeReport",
+    "EngineRuntimeService", "ValidationError",
+    "check_member", "compatibility", "dispatch_plan", "member_registry", "summarize",
+    "ecosystem", "__version__",
+]
+
+
+def __getattr__(name):
+    if name in ("EngineRuntimeService", "ValidationError"):
+        return getattr(importlib.import_module(".service", __name__), name)
+    if name == "ecosystem":
+        return importlib.import_module(".ecosystem", __name__)
+    raise AttributeError(name)

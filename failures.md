@@ -89,3 +89,13 @@
 - 2026-11-07: #304 (`mem20energyawarefoundationz`) HTTP runtime initially returned
   no response for `/` because `if p=="/" or self._static(p): return` short-circuited
   without calling `_static`/sending; fixed to call `_static("/")` and 404 on miss.
+
+- 2026-11-07: #305 (`mem20enginez`) import/path issue in estate-root context:
+  `import mem20enginez` found `/opt/mem20/mem20enginez/` (project dir, no root
+  `__init__`) as a namespace package, so `MEMBERS`/`__version__` were missing and
+  `python -m mem20enginez` failed. Fixed by adding a root `__init__.py`/`__main__.py`
+  shim re-exporting `mem20enginez.mem20enginez` (real implementation) and making
+  CLI `--version` use `store_true` (argparse `action=version` exits via
+  SystemExit). `mem20customerlifecycleenginez.transition()` returns a stage string
+  (not a customer dict); ecosystem adapter adjusted. 17/30 members have no local
+  domain/runtime; probing reports this truthfully.

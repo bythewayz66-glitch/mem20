@@ -476,3 +476,25 @@ policy evaluation with durable SQLite WAL state, service, CLI/JSON HTTP/cockpit.
 `mem20productionplanningandtaskorchestrationpipelinez`,
 `mem20autonomousworkcellsz`. Docs/app monitor, gateway/toolchest. Verification:
 4 tests pass (conformance-style flags), simulate/doctor 6/6, conformance 7/7.
+
+---
+## 2026-11-07 - mem20enginez (#305): depth-first crew runtime rebuild
+
+Rebuilt #305 (fails criterion 5,6,7) as a real first-class crew runtime for the
+30 engine members. Fixed the estate-root namespace/import issue (`python -m
+mem20enginez` / `MEMBERS` import) with root shims while keeping the inner
+`mem20enginez.mem20enginez` implementation; preserved legacy `--version`/`--members`.
+
+Delivered: `domain` (30-member registry, filesystem+import probing, compatibility,
+capability-matched dispatch plans, truthful present/healthy reporting), SQLite WAL
+`store` (objects/events/plans/runs/snapshots), 6 **unique** peers (different from
+#300-#304): `mem20runtimecompatibilityenginez`, `mem20protocolautodiscoveryenginez`,
+`mem20speculativeworkflowenginez`, `mem20servicebundlingenginez`,
+`mem20predictiverecallenginez`, `mem20customerlifecycleenginez`; `service` (members/
+status/doctor/plan/simulate/benchmark with peer signals), `runtime` CLI+JSON HTTP+
+cockpit, `web/`, `docs/PLAN.md`, README fenced runnable example, `docs/app/engine-runtime/`
+monitor, gateway/toolchest registrations.
+
+Verification: `pytest mem20enginez/tests -q --no-header -p no:cacheprovider` → 8 passed;
+`simulate` 9/9, `doctor` 6/6 peers; `conformance.py mem20enginez` **7/7 PASS**;
+`register_subsystem.py` package/gateway/toolchest/sitemapz PASS (MCP warn only).

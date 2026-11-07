@@ -91,7 +91,13 @@ SUBSYSTEMS = {
         "owner": "mem20-webdev",
         "wave": 2,
     },
-        "mem20energyawarefoundationz": {
+        "mem20enginez": {
+        "purpose": "Crew runtime for 30 engine members: registry/probing, compatibility and dispatch planning, durable state, CLI/HTTP cockpit",
+        "entry": "python -m mem20enginez status",
+        "owner": "mem20-webdev",
+        "wave": 2,
+    },
+    "mem20energyawarefoundationz": {
         "purpose": "Energy-aware foundation: power monitoring, thresholds, budgets, optimization actions with durable state",
         "entry": "python -m mem20energyawarefoundationz status",
         "owner": "mem20-webdev",
@@ -142,6 +148,12 @@ SUBSYSTEMS = {
     "mem20autonomoussaleslaboratoryz": {
         "purpose": "Autonomous sales laboratory (leads/outreach/conversion experiments, anti-spam) with 6 sales-lab peers, HTTP cockpit, MCP",
         "entry": "python -m mem20autonomoussaleslaboratoryz status",
+        "owner": "mem20-renovation",
+        "wave": 3,
+    },
+    "mem20contextcompressionforgez": {
+        "purpose": "Context Compression Forge with 6 peers, HTTP cockpit, MCP",
+        "entry": "python -m mem20contextcompressionforgez status",
         "owner": "mem20-renovation",
         "wave": 3,
     },

@@ -1,0 +1,18 @@
+<!doctype html>
+<html><head><meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>mem20enginez crew runtime</title><link rel="stylesheet" href="/style.css"/></head>
+<body>
+<header><h1>mem20enginez <small>crew runtime</small></h1>
+<div><button id="refresh">Refresh</button> <button id="doctor">Doctor</button> <button id="members">Members</button> <button id="simulate">Simulate</button></div></header>
+<main>
+<section class="panel"><h2>Status</h2><pre id="status">loading…</pre></section>
+<div class="grid">
+  <section class="panel"><h2>Dispatch plan</h2>
+    <label>Intent <input id="intent" value="protocol compatibility dispatch" /></label>
+    <button id="plan">Plan</button></section>
+  <section class="panel"><h2>Members summary</h2><pre id="membersOut"></pre></section>
+</div>
+<section class="panel"><h2>Result</h2><pre id="out">ready</pre></section>
+</main>
+<script src="/app.js"></script>
+</body></html>

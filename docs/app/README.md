@@ -1,6 +1,6 @@
 # App / product narrative — `docs/app/`
 
-Entry point for the `docs/app/` documentation set. **27 tracked file(s).**
+Entry point for the `docs/app/` documentation set. **28 tracked file(s).**
 
 ## Contents
 
@@ -10,6 +10,7 @@ Entry point for the `docs/app/` documentation set. **27 tracked file(s).**
 - [`continuum/index.html`](continuum/index.html)
 - [`deck/PERMANENT_URL.md`](deck/PERMANENT_URL.md)
 - [`energy-foundation/index.html`](energy-foundation/index.html)
+- [`engine-runtime/index.html`](engine-runtime/index.html)
 - [`energy-migration/index.html`](energy-migration/index.html)
 - [`transport/index.html`](transport/index.html)
 - [`deck/index.html`](deck/index.html)
@@ -46,6 +47,18 @@ PYTHONPATH=/opt/mem20 python3 -m mem20edgetocloudintelligencecontinuumz serve --
 
 
 
+
+
+## Engine runtime monitor (`engine-runtime/`)
+
+[`engine-runtime/index.html`](engine-runtime/index.html) — static estate monitor for
+`mem20enginez` crew runtime (#305). Shows member/status summary and doctor/peer probe
+via the subsystem JSON API (`?api=http://host:port`). No estate state is owned.
+
+```bash
+PYTHONPATH=/opt/mem20 python3 -m mem20enginez serve --port 8785
+# -> http://127.0.0.1:8000/engine-runtime/?api=http://127.0.0.1:8785
+```
 
 ## Energy foundation monitor (`energy-foundation/`)
 
@@ -121,3 +134,4 @@ served by the fleet process itself at its root URL.
 - [Collective Model Intelligence monitor](collectivemodelintelligencez/index.html) — `PYTHONPATH=/opt/mem20 /opt/mem20/.venv/bin/python -m mem20collectivemodelintelligencez serve --port 8790`
 - [Community Challenge Engine monitor](communitychallengeenginez/index.html) — `PYTHONPATH=/opt/mem20 /opt/mem20/.venv/bin/python -m mem20communitychallengeenginez serve --port 8791`
 - [Compounding Product Ecosystem monitor](compoundingproductecosystemz/index.html) — `PYTHONPATH=/opt/mem20 /opt/mem20/.venv/bin/python -m mem20compoundingproductecosystemz serve --port 8792`
+- [Context Compression Forge monitor](contextcompressionforgez/index.html) — `PYTHONPATH=/opt/mem20 /opt/mem20/.venv/bin/python -m mem20contextcompressionforgez serve --port 8793`

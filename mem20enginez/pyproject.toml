@@ -1,22 +1,25 @@
 [build-system]
-requires = ["setuptools>=61"]
+requires = ["setuptools>=68"]
 build-backend = "setuptools.build_meta"
 
 [project]
 name = "mem20enginez"
-version = "0.1.0"
-description = "mem20 engine runtime — crew runtime grouping reviewed packages for joint integration."
+version = "1.0.0"
+description = "mem20 crew runtime: member registry, probing, compatibility/dispatch planning, durable state, CLI/HTTP API for 30 engine members"
 readme = "README.md"
 requires-python = ">=3.11"
 license = { text = "MIT" }
-keywords = ["mem20", "crew", "runtime", "integration"]
+keywords = ["mem20", "crew", "runtime", "engine", "integration"]
 dependencies = []
 
 [project.scripts]
-mem20enginez = "mem20enginez.cli:main"
+mem20enginez = "mem20enginez.runtime:main"
 
 [tool.setuptools]
-packages = ["mem20enginez"]
+packages = ["mem20enginez", "mem20enginez.mem20enginez"]
+
+[tool.setuptools.package-data]
+"mem20enginez.mem20enginez" = ["web/*"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]

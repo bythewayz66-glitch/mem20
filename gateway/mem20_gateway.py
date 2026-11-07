@@ -187,6 +187,7 @@ SUBSYSTEMS = {
         "owner": "mem20-renovation",
         "wave": 3,
     },
+    "mem20predictiverecallenginez": {"purpose": "Predictive Recall Engine with 6 peers, HTTP cockpit, MCP","entry":"python -m mem20predictiverecallenginez status","owner":"mem20-renovation","wave":4},
     "mem20playermotivationtwinz": {"purpose": "Player Motivation Twin with 6 peers, HTTP cockpit, MCP","entry":"python -m mem20playermotivationtwinz status","owner":"mem20-renovation","wave":4},
     "mem20dynamicskillgraphz": {"purpose": "Dynamic Skill Graph with 6 peers, HTTP cockpit, MCP","entry":"python -m mem20dynamicskillgraphz status","owner":"mem20-renovation","wave":3},
     "mem20dynamicquestrewardcomposerz": {"purpose": "Dynamic Quest Reward Composer with 6 peers, HTTP cockpit, MCP","entry":"python -m mem20dynamicquestrewardcomposerz status","owner":"mem20-renovation","wave":3},

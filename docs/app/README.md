@@ -207,3 +207,4 @@ served by the fleet process itself at its root URL.
 - [Dynamic Quest Reward Composer monitor](dynamicquestrewardcomposerz/index.html) — `PYTHONPATH=/opt/mem20 /opt/mem20/.venv/bin/python -m mem20dynamicquestrewardcomposerz serve --port 8803`
 - [Dynamic Skill Graph monitor](dynamicskillgraphz/index.html) — `PYTHONPATH=/opt/mem20 /opt/mem20/.venv/bin/python -m mem20dynamicskillgraphz serve --port 8804`
 - [Player Motivation Twin monitor](playermotivationtwinz/index.html) — `PYTHONPATH=/opt/mem20 /opt/mem20/.venv/bin/python -m mem20playermotivationtwinz serve --port 8805`
+- [Predictive Recall Engine monitor](predictiverecallenginez/index.html) — `PYTHONPATH=/opt/mem20 /opt/mem20/.venv/bin/python -m mem20predictiverecallenginez serve --port 8806`

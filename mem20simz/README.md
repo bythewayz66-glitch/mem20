@@ -20,3 +20,17 @@ package-review rulings:
 
 Skeleton slice: registry, CLI (`--version`, `--members`), hermetic
 tests. Member wiring arrives in the integration phase.
+
+## Run
+
+```bash
+# CLI help, then exercise the local runtime end to end
+python -m mem20simz --help
+python -m mem20simz --members
+```
+
+## Tests
+
+```bash
+PYTHONPATH=/opt/mem20 .venv/bin/python -m pytest mem20simz/tests -q
+```

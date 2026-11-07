@@ -91,7 +91,13 @@ SUBSYSTEMS = {
         "owner": "mem20-webdev",
         "wave": 2,
     },
-        "mem20edgetransportfabricz": {
+        "mem20energyawarecomputemigrationz": {
+        "purpose": "Energy-aware compute migration: battery/thermal/price/renewable-aware placement and migration planning with durable state",
+        "entry": "python -m mem20energyawarecomputemigrationz status",
+        "owner": "mem20-webdev",
+        "wave": 2,
+    },
+    "mem20edgetransportfabricz": {
         "purpose": "Edge transport fabric: bounded data/command routing, QoS, bandwidth admission/reservation, and resilient reroute across intermittently connected nodes",
         "entry": "python -m mem20edgetransportfabricz status",
         "owner": "mem20-webdev",

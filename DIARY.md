@@ -438,3 +438,27 @@ Verification:
 - `scripts/renovation/conformance.py mem20edgetransportfabricz` → **7/7 PASS**.
 - `register_subsystem.py` → package/gateway/toolchest/sitemapz PASS (MCP warn
   only; criterion 7 satisfied via gateway). Legacy continuum caller API preserved.
+
+---
+## 2026-11-07 - mem20energyawarecomputemigrationz (#303): depth-first rebuild
+
+Rebuilt RM-047 (Energy-Aware Compute Migration, fails criterion 5,7) as a real
+first-class subsystem. Preserved legacy domain API for `mem20edgefleetbrainz`
+(`energy_cost`, `migrate_decision`, `carbon_footprint`, `greenest_node` with
+deterministic tie-break by node id, `migration_plan`) and extended with
+`ComputeNode`/`Workload`, feasibility, battery/thermal/renewable-aware scoring,
+`plan_migrations`, `fleet_energy_summary`.
+
+Delivered: SQLite WAL `store`, `ecosystem` with 6 **unique** peers (different
+from #300/#301/#302) — `mem20batteryawareagentschedulerz`,
+`mem20energyawarefoundationz`, `mem20datalocalityoptimizerz`,
+`mem20demandforecastandcapacitybrainz`, `mem20goaleconomyschedulerz`,
+`mem20planetarybatchfabricz`; `service` (plan/migrate/status/doctor with peer
+signals), `runtime` CLI+JSON HTTP+cockpit, `web/`, project `tests/`, `docs/PLAN.md`,
+comprehensive README, `docs/app/energy-migration/` monitor, gateway/toolchest.
+
+Also fixed `mem20datalocalityoptimizerz.optimal_placement` dict-tie TypeError
+(node-id tie-break); peer tests 5/5.
+
+Verification: `pytest mem20energyawarecomputemigrationz/tests -q --no-header -p no:cacheprovider` → 8 passed;
+`simulate` 9/9, `doctor` 6/6; conformance **7/7**; register_subsystem PASS (MCP warn only).

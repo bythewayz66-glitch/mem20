@@ -78,3 +78,10 @@
   cannot carry required demand. Legacy `route_path`/`qos_class`/
   `allocate_bandwidth`/`transport_health` behavior preserved for existing callers
   (e.g. `mem20edgetocloudintelligencecontinuumz`).
+
+- 2026-11-07: #303 (`mem20energyawarecomputemigrationz`) integration exposed
+  `mem20datalocalityoptimizerz.optimal_placement` sorting `(score, node_dict)`
+  tuples and comparing dicts on tied scores (`TypeError`). Fixed with a
+  deterministic tie-break by node id; `mem20datalocalityoptimizerz` tests still
+  pass (5/5). Ecosystem adapters also had Python nested-scope `UnboundLocalError`
+  from assigning to parameter names; fixed by using local `_` names.

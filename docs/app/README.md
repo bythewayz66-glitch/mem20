@@ -1,6 +1,6 @@
 # App / product narrative — `docs/app/`
 
-Entry point for the `docs/app/` documentation set. **25 tracked file(s).**
+Entry point for the `docs/app/` documentation set. **26 tracked file(s).**
 
 ## Contents
 
@@ -9,6 +9,7 @@ Entry point for the `docs/app/` documentation set. **25 tracked file(s).**
 - [`assets/index-DCqPYDUE.js`](assets/index-DCqPYDUE.js)
 - [`continuum/index.html`](continuum/index.html)
 - [`deck/PERMANENT_URL.md`](deck/PERMANENT_URL.md)
+- [`energy-migration/index.html`](energy-migration/index.html)
 - [`transport/index.html`](transport/index.html)
 - [`deck/index.html`](deck/index.html)
 - [`deck/slides/README.md`](deck/slides/README.md)
@@ -42,6 +43,18 @@ PYTHONPATH=/opt/mem20 python3 -m mem20edgetocloudintelligencecontinuumz serve --
 # -> http://127.0.0.1:8000/continuum/?api=http://127.0.0.1:8791
 ```
 
+
+
+## Energy-aware migration monitor (`energy-migration/`)
+
+[`energy-migration/index.html`](energy-migration/index.html) is the estate-shell view of
+Energy-Aware Compute Migration (RM-047). Static page, reads the subsystem JSON API
+(`?api=http://host:port`), shows status/nodes/workloads and can run `doctor`.
+
+```bash
+PYTHONPATH=/opt/mem20 python3 -m mem20energyawarecomputemigrationz serve --port 8783
+# -> http://127.0.0.1:8000/energy-migration/?api=http://127.0.0.1:8783
+```
 
 ## Transport fabric monitor (`transport/`)
 

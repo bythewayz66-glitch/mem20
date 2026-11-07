@@ -18,7 +18,7 @@ def optimal_placement(data, nodes):
     scored = [s for s in scored if s[0] >= 0]
     if not scored:
         return None
-    scored.sort(reverse=True)
+    scored.sort(key=lambda item: (-item[0], str((item[1] or {}).get("id", ""))))
     return scored[0][1]
 
 

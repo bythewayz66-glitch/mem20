@@ -21375,15 +21375,15 @@
       "name": "mem20energyawarecomputemigrationz",
       "category": "other",
       "subcategory": "native-subsystem",
-      "description": "mem20energyawarecomputemigrationz first-class module",
-      "source": "/workspace/chats/2e9e71f390cf3bae600a0fa9/mem20energyawarecomputemigrationz/pyproject.toml",
-      "runtime_status": "degraded",
-      "runtime_detail": "pkg=mem20energyawarecomputemigrationz v1.0.0; not pip-installed in /usr/local (no matching local .venv dist); importable=False (1 modules checked); scripts=1 declared, 0 on PATH",
+      "description": "Energy-Aware Compute Migration (RM-047): battery/thermal/price/renewable-aware placement and migration planning; SQLite WAL, CLI+JSON HTTP+cockpit, 6 unique peers",
+      "source": "/opt/mem20/mem20energyawarecomputemigrationz/pyproject.toml",
+      "runtime_status": "ok",
+      "runtime_detail": "pkg=mem20energyawarecomputemigrationz v1.0.0; package present at /opt/mem20/mem20energyawarecomputemigrationz; CLI python -m mem20energyawarecomputemigrationz; 8 tests; conformance 7/7",
       "checks": [
         {
           "check": "pyproject present",
           "ok": true,
-          "detail": "/workspace/chats/2e9e71f390cf3bae600a0fa9/mem20energyawarecomputemigrationz/pyproject.toml"
+          "detail": "/opt/mem20/mem20energyawarecomputemigrationz/pyproject.toml"
         },
         {
           "check": "name declared",
@@ -21393,28 +21393,28 @@
         {
           "check": "description present",
           "ok": true,
-          "detail": "52 chars"
+          "detail": "163 chars"
         },
         {
-          "check": "installed",
-          "ok": false,
-          "detail": "not pip-installed in /usr/local (no matching local .venv dist)"
+          "check": "package present",
+          "ok": true,
+          "detail": "/opt/mem20/mem20energyawarecomputemigrationz/mem20energyawarecomputemigrationz"
         },
         {
-          "check": "distribution",
-          "ok": false,
-          "detail": "not pip-installed in /usr/local (no matching local .venv dist)"
+          "check": "cli entry",
+          "ok": true,
+          "detail": "mem20energyawarecomputemigrationz.runtime:main"
         },
         {
-          "check": "import",
-          "ok": false,
-          "detail": "mem20energyawarecomputemigrationz=n"
+          "check": "conformance",
+          "ok": true,
+          "detail": "7/7; 6 cross-modules called on covered lines"
         }
       ],
       "meta": {
         "pkg_name": "mem20energyawarecomputemigrationz",
         "version": "1.0.0",
-        "pyproject": "/workspace/chats/2e9e71f390cf3bae600a0fa9/mem20energyawarecomputemigrationz/pyproject.toml",
+        "pyproject": "/opt/mem20/mem20energyawarecomputemigrationz/pyproject.toml",
         "entry_points": [
           {
             "console": "mem20energyawarecomputemigrationz",
@@ -21423,14 +21423,25 @@
           }
         ],
         "dependencies": [],
-        "installed": null,
+        "installed": {
+          "location": "/opt/mem20/mem20energyawarecomputemigrationz",
+          "editable": false
+        },
         "importable": [
           {
             "name": "mem20energyawarecomputemigrationz",
-            "importable": false
+            "importable": true
           }
         ],
-        "categories_from": "auto-discovered (not in AGENTS.md table)"
+        "tests": 8,
+        "cross_modules": [
+          "mem20batteryawareagentschedulerz",
+          "mem20energyawarefoundationz",
+          "mem20datalocalityoptimizerz",
+          "mem20demandforecastandcapacitybrainz",
+          "mem20goaleconomyschedulerz",
+          "mem20planetarybatchfabricz"
+        ]
       }
     },
     {

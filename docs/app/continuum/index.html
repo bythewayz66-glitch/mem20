@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>mem20 continuum monitor</title>
+  <style>
+    body{font:14px/1.4 system-ui,sans-serif;margin:0;background:#0b1020;color:#e8eefc}
+    header{padding:14px 18px;border-bottom:1px solid #26304a;display:flex;gap:12px;align-items:center;flex-wrap:wrap}
+    input,button{background:#131a2a;color:#e8eefc;border:1px solid #26304a;border-radius:8px;padding:7px 10px}
+    button{cursor:pointer} main{padding:16px 18px;display:grid;gap:12px}
+    .cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px}
+    .card,.panel{background:#131a2a;border:1px solid #26304a;border-radius:10px;padding:10px}
+    .k{color:#9fb0d0;font-size:12px}.v{font-size:20px;font-weight:700}
+    pre{margin:0;white-space:pre-wrap;word-break:break-word;background:#09101f;border:1px solid #26304a;border-radius:8px;padding:10px;max-height:320px;overflow:auto}
+    table{width:100%;border-collapse:collapse;font-size:12px}th,td{padding:6px;border-bottom:1px solid #26304a;text-align:left}
+    a{color:#67d4ff}
+  </style>
+</head>
+<body>
+<header>
+  <strong>Edge-to-Cloud Continuum monitor</strong>
+  <label>API <input id="base" size="34" value="http://127.0.0.1:8791"/></label>
+  <button id="load">Load</button>
+  <button id="doctor">Doctor</button>
+  <span id="msg" style="color:#9fb0d0"></span>
+</header>
+<main>
+  <div class="cards" id="cards"></div>
+  <div class="panel"><h3 style="margin:0 0 8px">Targets</h3><div id="targets"></div></div>
+  <div class="panel"><h3 style="margin:0 0 8px">Workloads</h3><div id="workloads"></div></div>
+  <div class="panel"><h3 style="margin:0 0 8px">Result</h3><pre id="out">Set the continuum API base URL, then Load. Start the subsystem with:
+python -m mem20edgetocloudintelligencecontinuumz serve --port 8791</pre></div>
+</main>
+<script>
+const $=id=>document.getElementById(id);
+const base=()=>{const u=new URL(location.href); return u.searchParams.get('api')||$('base').value.replace(/\/$/,'')};
+$('base').value=base();
+async function get(p){const r=await fetch(base()+p); const t=await r.text(); if(!r.ok) throw new Error(t); return JSON.parse(t)}
+function tbl(rows, cols){ if(!rows.length) return '<em style="color:#9fb0d0">none</em>'; return '<table><thead><tr>'+cols.map(c=>`<th>${c}</th>`).join('')+'</tr></thead><tbody>'+rows.map(r=>'<tr>'+cols.map(c=>`<td>${String(r[c]??'')}</td>`).join('')+'</tr>').join('')+'</tbody></table>'}
+async function load(){
+  $('msg').textContent='loading...';
+  try{
+    const [st,tg,wl]=await Promise.all([get('/api/status'),get('/api/targets'),get('/api/workloads')]);
+    const h=st.health||{};
+    $('cards').innerHTML=[['Health',h.health],['Targets',`${h.online||0}/${h.targets||0}`],['Queued',h.queued],['Running',h.running],['Migrating',h.migrating]].map(([k,v])=>`<div class="card"><div class="k">${k}</div><div class="v">${v??''}</div></div>`).join('');
+    $('targets').innerHTML=tbl(tg.targets||[],['target_id','tier','status','latency_ms','cost_per_cpu_hour']);
+    $('workloads').innerHTML=tbl(wl.workloads||[],['workload_id','state','assigned_target','priority','resilience']);
+    $('out').textContent=JSON.stringify({transport_ok:!!(st.transport&&st.transport.ok),tiers:h.tiers,metrics:st.metrics},null,2);
+    $('msg').textContent='ok';
+  }catch(e){$('msg').textContent='error'; $('out').textContent=String(e)}
+}
+$('load').onclick=load; $('doctor').onclick=async()=>{try{$('out').textContent=JSON.stringify(await get('/api/doctor'),null,2);$('msg').textContent='doctor ok'}catch(e){$('msg').textContent='error';$('out').textContent=String(e)}};
+</script>
+</body>
+</html>

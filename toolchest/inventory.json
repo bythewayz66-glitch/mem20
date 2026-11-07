@@ -21159,15 +21159,15 @@
       "name": "mem20edgetocloudintelligencecontinuumz",
       "category": "other",
       "subcategory": "native-subsystem",
-      "description": "mem20edgetocloudintelligencecontinuumz first-class module",
-      "source": "/workspace/chats/2e9e71f390cf3bae600a0fa9/mem20edgetocloudintelligencecontinuumz/pyproject.toml",
-      "runtime_status": "degraded",
-      "runtime_detail": "pkg=mem20edgetocloudintelligencecontinuumz v1.0.0; not pip-installed in /usr/local (no matching local .venv dist); importable=False (1 modules checked); scripts=1 declared, 0 on PATH",
+      "description": "Edge-to-Cloud Intelligence Continuum (RM-214): invisible, resilient, cost-aware workload placement across local/edge/private/peer/cloud; SQLite WAL state plane, placement/dispatch/failover, CLI+JSON HTTP+cockpit, six continuum-specific peer integrations",
+      "source": "/opt/mem20/mem20edgetocloudintelligencecontinuumz/pyproject.toml",
+      "runtime_status": "ok",
+      "runtime_detail": "pkg=mem20edgetocloudintelligencecontinuumz v1.0.0; package present at /opt/mem20/mem20edgetocloudintelligencecontinuumz; CLI python -m mem20edgetocloudintelligencecontinuumz; HTTP cockpit via serve; 27 tests; conformance 7/7",
       "checks": [
         {
           "check": "pyproject present",
           "ok": true,
-          "detail": "/workspace/chats/2e9e71f390cf3bae600a0fa9/mem20edgetocloudintelligencecontinuumz/pyproject.toml"
+          "detail": "/opt/mem20/mem20edgetocloudintelligencecontinuumz/pyproject.toml"
         },
         {
           "check": "name declared",
@@ -21177,28 +21177,28 @@
         {
           "check": "description present",
           "ok": true,
-          "detail": "57 chars"
+          "detail": "251 chars"
         },
         {
-          "check": "installed",
-          "ok": false,
-          "detail": "not pip-installed in /usr/local (no matching local .venv dist)"
+          "check": "package present",
+          "ok": true,
+          "detail": "/opt/mem20/mem20edgetocloudintelligencecontinuumz/mem20edgetocloudintelligencecontinuumz"
         },
         {
-          "check": "distribution",
-          "ok": false,
-          "detail": "not pip-installed in /usr/local (no matching local .venv dist)"
+          "check": "cli entry",
+          "ok": true,
+          "detail": "mem20edgetocloudintelligencecontinuumz.runtime:main (python -m mem20edgetocloudintelligencecontinuumz)"
         },
         {
-          "check": "import",
-          "ok": false,
-          "detail": "mem20edgetocloudintelligencecontinuumz=n"
+          "check": "conformance",
+          "ok": true,
+          "detail": "7/7; 6 cross-modules called on covered lines"
         }
       ],
       "meta": {
         "pkg_name": "mem20edgetocloudintelligencecontinuumz",
         "version": "1.0.0",
-        "pyproject": "/workspace/chats/2e9e71f390cf3bae600a0fa9/mem20edgetocloudintelligencecontinuumz/pyproject.toml",
+        "pyproject": "/opt/mem20/mem20edgetocloudintelligencecontinuumz/pyproject.toml",
         "entry_points": [
           {
             "console": "mem20edgetocloudintelligencecontinuumz",
@@ -21207,14 +21207,26 @@
           }
         ],
         "dependencies": [],
-        "installed": null,
+        "installed": {
+          "location": "/opt/mem20/mem20edgetocloudintelligencecontinuumz",
+          "editable": false
+        },
         "importable": [
           {
             "name": "mem20edgetocloudintelligencecontinuumz",
-            "importable": false
+            "importable": true
           }
         ],
-        "categories_from": "auto-discovered (not in AGENTS.md table)"
+        "categories_from": "edge-to-cloud continuum placement (RM-214)",
+        "tests": 27,
+        "cross_modules": [
+          "mem20federatedresearchgridz",
+          "mem20aipipelinecostoptimizerz",
+          "mem20edgetransportfabricz",
+          "mem20zerodowntimemigrationbrainz",
+          "mem20globalcapabilitymarketplacez",
+          "mem20resourceexchangemarketz"
+        ]
       }
     },
     {

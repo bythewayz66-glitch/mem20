@@ -5,7 +5,7 @@ build-backend="setuptools.build_meta"
 [project]
 name="mem20edgetocloudintelligencecontinuumz"
 version="1.0.0"
-description="mem20edgetocloudintelligencecontinuumz first-class module"
+description="Edge-to-Cloud Intelligence Continuum: invisible, resilient, cost-aware workload placement across local, private, peer and cloud tiers"
 requires-python=">=3.11"
 
 [project.scripts]
@@ -13,5 +13,10 @@ mem20edgetocloudintelligencecontinuumz="mem20edgetocloudintelligencecontinuumz.r
 
 [tool.setuptools]
 packages=["mem20edgetocloudintelligencecontinuumz"]
+
 [tool.setuptools.package-data]
-mem20edgetocloudintelligencecontinuumz=["CAPABILITY.json","roadmap.json"]
+mem20edgetocloudintelligencecontinuumz=["web/*"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "--import-mode=importlib"

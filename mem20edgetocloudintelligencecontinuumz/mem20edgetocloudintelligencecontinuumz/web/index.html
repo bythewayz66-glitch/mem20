@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>Edge-to-Cloud Intelligence Continuum</title>
+  <link rel="stylesheet" href="/style.css"/>
+</head>
+<body>
+  <header>
+    <div>
+      <h1>Edge-to-Cloud Intelligence Continuum <span class="tag">RM-214</span></h1>
+      <p class="sub">Invisible, resilient, cost-aware placement across local · edge · private · peer · cloud</p>
+    </div>
+    <div class="actions">
+      <button id="refresh">Refresh</button>
+      <button id="runSim">Simulate</button>
+      <button id="runDoctor">Doctor</button>
+    </div>
+  </header>
+  <main>
+    <section class="cards" id="healthCards"></section>
+    <section class="grid">
+      <div class="panel">
+        <h2>Register target</h2>
+        <form id="targetForm" class="form">
+          <label>ID <input name="target_id" placeholder="edge-1"/></label>
+          <label>Tier
+            <select name="tier"><option>local</option><option selected>edge</option><option>private</option><option>peer</option><option>cloud</option></select>
+          </label>
+          <label>CPU <input name="cpu" type="number" step="0.5" value="4"/></label>
+          <label>Memory GB <input name="memory_gb" type="number" step="0.5" value="8"/></label>
+          <label>Latency ms <input name="latency_ms" type="number" step="1" value="20"/></label>
+          <label>Cost/CPU·h <input name="cost_per_cpu_hour" type="number" step="0.01" value="0.05"/></label>
+          <label>Capabilities <input name="capabilities" value="compute"/></label>
+          <label>Privacy zones <input name="privacy_zones" value="public"/></label>
+          <label>Reliability <input name="reliability" type="number" step="0.01" min="0" max="1" value="0.99"/></label>
+          <button type="submit">Register</button>
+        </form>
+      </div>
+      <div class="panel">
+        <h2>Submit workload</h2>
+        <form id="workloadForm" class="form">
+          <label>ID <input name="workload_id" placeholder="job-1"/></label>
+          <label>CPU <input name="cpu" type="number" step="0.5" value="1"/></label>
+          <label>Memory GB <input name="memory_gb" type="number" step="0.5" value="1"/></label>
+          <label>Duration s <input name="duration_s" type="number" step="1" value="60"/></label>
+          <label>Max latency ms <input name="max_latency_ms" type="number" step="1" placeholder="optional"/></label>
+          <label>Max cost <input name="max_cost" type="number" step="0.01" placeholder="optional"/></label>
+          <label>Privacy zone <input name="privacy_zone" value="public"/></label>
+          <label>Capabilities <input name="capabilities" value="compute"/></label>
+          <label>Resilience <select name="resilience"><option>standard</option><option>high</option><option>critical</option></select></label>
+          <label>Priority <input name="priority" type="number" min="0" max="100" value="50"/></label>
+          <label>Idempotency key <input name="idempotency_key" placeholder="optional"/></label>
+          <button type="submit">Submit</button>
+        </form>
+      </div>
+    </section>
+    <section class="grid">
+      <div class="panel">
+        <h2>Targets</h2>
+        <div id="targets" class="tableWrap"></div>
+      </div>
+      <div class="panel">
+        <h2>Workloads</h2>
+        <div class="row"><button id="dispatchAll">Dispatch queued</button></div>
+        <div id="workloads" class="tableWrap"></div>
+      </div>
+    </section>
+    <section class="panel">
+      <h2>Events / decisions</h2>
+      <pre id="events" class="log"></pre>
+    </section>
+    <section class="panel">
+      <h2>Output</h2>
+      <pre id="output" class="log">Ready.</pre>
+    </section>
+  </main>
+  <script src="/app.js"></script>
+</body>
+</html>

@@ -1,12 +1,13 @@
 # App / product narrative — `docs/app/`
 
-Entry point for the `docs/app/` documentation set. **23 tracked file(s).**
+Entry point for the `docs/app/` documentation set. **24 tracked file(s).**
 
 ## Contents
 
 - [`.nojekyll`](.nojekyll)
 - [`assets/index-BMgU54DU.css`](assets/index-BMgU54DU.css)
 - [`assets/index-DCqPYDUE.js`](assets/index-DCqPYDUE.js)
+- [`continuum/index.html`](continuum/index.html)
 - [`deck/PERMANENT_URL.md`](deck/PERMANENT_URL.md)
 - [`deck/index.html`](deck/index.html)
 - [`deck/slides/README.md`](deck/slides/README.md)
@@ -27,6 +28,18 @@ Entry point for the `docs/app/` documentation set. **23 tracked file(s).**
 - [`fleet/index.html`](fleet/index.html)
 - [`index.html`](index.html)
 - [`narrative/serial-2026-10-27.md`](narrative/serial-2026-10-27.md)
+
+## Continuum monitor (`continuum/`)
+
+[`continuum/index.html`](continuum/index.html) is the estate-shell view of the
+Edge-to-Cloud Intelligence Continuum (RM-214). Static page, reads the
+subsystem's JSON API (`?api=http://host:port`), shows health/targets/workloads
+and can run `doctor`. It owns no state.
+
+```bash
+PYTHONPATH=/opt/mem20 python3 -m mem20edgetocloudintelligencecontinuumz serve --port 8791
+# -> http://127.0.0.1:8000/continuum/?api=http://127.0.0.1:8791
+```
 
 ## Fleet monitor (`fleet/`)
 

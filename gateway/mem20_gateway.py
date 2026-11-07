@@ -85,6 +85,12 @@ SUBSYSTEMS = {
         "owner": "mem20-webdev",
         "wave": 2,
     },
+    "mem20edgetocloudintelligencecontinuumz": {
+        "purpose": "Edge-to-cloud continuum: invisible, resilient, cost-aware workload placement across local/edge/private/peer/cloud",
+        "entry": "python -m mem20edgetocloudintelligencecontinuumz status",
+        "owner": "mem20-webdev",
+        "wave": 2,
+    },
     "mem20zerotouchnodeswarmz": {
         "purpose": "Zero-touch node swarm: discovery, joining, task distribution, healing",
         "entry": "python -m mem20zerotouchnodeswarmz simulate",

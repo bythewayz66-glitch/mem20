@@ -1,5 +1,8 @@
 # mem20 — Sales One-Pager (v3)
 
+> **Historical sales snapshot — refresh before external use.** This v3 one-pager was prepared 2026-10-26 against version 3.0.0 and 270 tools / 27 domains. Current main is **3.1.2 with 311 tools / 39 domains** (2026-11-07). Product, distribution, benchmark, and commercial claims must be revalidated before this copy is sent to prospects. See [documentation drift issue #392](https://github.com/bythewayz66-glitch/mem20/issues/392).
+
+
 **Seat:** VP of Sales · **Artifact:** one-pager + pilot-to-paid motion + capacity model
 **Canonical repo:** https://github.com/bythewayz66-glitch/mem20 · **Public site:** https://bythewayz66-glitch.github.io/mem20/
 **Version 3.0.0 · MIT · Python 3.10+ · 270 tools / 27 domains · JSON-RPC 2.0 over stdio**

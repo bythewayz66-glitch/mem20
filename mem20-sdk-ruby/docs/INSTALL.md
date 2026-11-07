@@ -126,19 +126,27 @@ Mem20.configure { |c| c.cwd = "/opt/mem20/mem20" }
 client = Mem20.client
 
 puts client.transport.initialize_session.protocol_version  # "2025-06-18"
-puts client.tool_names.size                                 # 272
-puts client.tools.dig("tools").size                        # 272
-puts Mem20::Surface.summary                                 # 272 tools across 27 domains
+puts client.tool_names.size                                 # 311 on current main (live tools/list)
+puts client.tools.dig("tools").size                        # 311 on current main
+puts Mem20::Surface.summary                                 # 272 tools across 27 domains (SDK-pinned snapshot; not live)
 puts client.healthy?                                       # true when :8080/health answers 200
 
 client.close
 ```
 
-The live surface is **272 tools across 27 domains**: 270 tools registered by the 27
-domain mixins (`mcp/tools/*.py` plus `mcp/memory_tools.py`, `cognitive_tools.py` and
-`roadmap_tools.py`), plus the 2 job tools `job_status` / `job_wait` that
-`mcp/server.py` registers itself. `Mem20::Surface` encodes that decomposition and
-`rake surface:check` re-derives it from the Python sources.
+The current `main` server surface is **311 tools across 39 domains** (2026-11-07).
+Verify it from the repository root with `python3 verify_mcp.py` (expected
+`TOOL_COUNT: 311`) and `docs/surface.json`.
+
+`client.tool_names` and `client.tools` are populated from the connected server's
+live `tools/list` response, so they reflect the server you actually launched.
+The gem's `Mem20::Surface` constants remain pinned to an older **272 tools / 27
+domains** SDK baseline (270 domain tools plus two infrastructure tools). That
+constant is not a live measurement of the current server. The
+`rake surface:check` task compares the pinned constants with current source;
+expect it to report drift against current `main` until the Ruby SDK constants
+and their tests are refreshed. Do not use `Mem20::Surface.summary` as the
+current repository server count. See [issue #392](https://github.com/bythewayz66-glitch/mem20/issues/392).
 
 Or from the shell:
 

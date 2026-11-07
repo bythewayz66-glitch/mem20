@@ -5,6 +5,9 @@ from dataclasses import dataclass
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 from urllib.parse import urlparse, parse_qs
+import mimetypes
+
+WEB_DIR = Path(__file__).with_name("web")
 
 class ValidationError(ValueError): pass
 class QuotaError(RuntimeError): pass
@@ -165,7 +168,29 @@ class Engine:
             nodes=p.get('nodes') or [];edges=p.get('edges') or [];deg={str(n.get('id',n) if isinstance(n,dict) else n):0 for n in nodes}
             for e in edges:
                 if isinstance(e,dict):a=str(e.get('from'));b=str(e.get('to'));deg[a]=deg.get(a,0)+1;deg[b]=deg.get(b,0)+1
-            return {'nodes':len(deg),'edges':len(edges),'degree':deg,'hubs':sorted(deg,key=deg.get,reverse=True)[:5]}
+            out={'nodes':len(deg),'edges':len(edges),'degree':deg,'hubs':sorted(deg,key=deg.get,reverse=True)[:5]}
+            # Real concept/scope pipeline analysis; run 6 peer signals only for explicit scope requests
+            # (keeps Engine 5s simulator/timeout budgets compatible with generic payloads).
+            wants_scope = bool(p.get('concept') or p.get('features') or p.get('budget_weeks') or p.get('scope_pipeline') or p.get('enrich_signals'))
+            if wants_scope or nodes or edges:
+                try:
+                    from . import domain as _dom
+                    concept=p.get('concept') or {'name':p.get('name',p.get('goal','concept')),'innovation':float(p.get('innovation',6)),'market_fit':float(p.get('market_fit',6)),'feasibility':float(p.get('feasibility',6)),'features':p.get('features') or ['core'],'complexity':p.get('complexity','medium'),'budget_weeks':int(p.get('budget_weeks',24))}
+                    budget=max(1,int(p.get('budget_weeks', concept.get('budget_weeks',24)))); risks=_dom.risk_assessment(concept)
+                    out.update({'concept':concept,'concept_score':_dom.concept_score(concept),'scope':_dom.scope_estimate(concept),'feasibility':_dom.feasibility_check(concept,budget),'risk_assessment':risks,'pipeline_stage':_dom.pipeline_stage(concept)})
+                    if wants_scope:
+                        from . import ecosystem as _eco
+                        out['signals']={
+                            'production_control':_eco.production_control(concept),
+                            'studio_ops':_eco.studio_ops(concept),
+                            'growth_feasibility':_eco.growth_feasibility(concept),
+                            'software_foundry':_eco.software_foundry(concept),
+                            'game_studio':_eco.game_studio(concept),
+                            'microsaas_foundry':_eco.microsaas_foundry(concept),
+                        }
+                except Exception as e:
+                    out['scope_pipeline_error']=f"{type(e).__name__}: {e}"
+            return out
         if k=='reward':
             value=float(p.get('value',1));rarity=max(.01,float(p.get('rarity',1)));elig=bool(p.get('eligible',True));timing=max(.1,float(p.get('timing_multiplier',1)));return {'eligible':elig,'reward_value':round(value*rarity*timing,4) if elig else 0,'rules_applied':['value','rarity','eligibility','timing']}
         if k=='progression':
@@ -273,15 +298,32 @@ class Handler(BaseHTTPRequestHandler):
         body=json.dumps(obj,indent=2,sort_keys=True).encode();self.send_response(code);self.send_header('Content-Type',ctype);self.send_header('Content-Length',str(len(body)));self.end_headers();self.wfile.write(body)
     def body(self):
         n=int(self.headers.get('Content-Length','0'));return json.loads(self.rfile.read(n) or b'{}')
+    def _static(self,path):
+        try:
+            rel='index.html' if path in ('/','') else path.lstrip('/')
+            f=(WEB_DIR/rel).resolve(); f.relative_to(WEB_DIR.resolve())
+            if not f.is_file(): return False
+            ct=mimetypes.guess_type(str(f))[0] or 'application/octet-stream'
+            if ct.startswith('text/') or ct=='application/javascript': ct+='; charset=utf-8'
+            b=f.read_bytes(); self.send_response(200); self.send_header('Content-Type',ct); self.send_header('Content-Length',str(len(b))); self.send_header('Access-Control-Allow-Origin','*'); self.end_headers(); self.wfile.write(b); return True
+        except Exception: return False
     def do_GET(self):
         u=urlparse(self.path);q=parse_qs(u.query)
+        if u.path in ('/style.css','/app.js') or (u.path.startswith('/') and '.' in u.path.rsplit('/',1)[-1]):
+            if self._static(u.path): return
         if u.path=='/health':return self.sendj(200,{'ok':True,'roadmap':self.engine.config['id']})
         if u.path=='/spec':return self.sendj(200,self.engine.config)
         if u.path=='/metrics':return self.sendj(200,self.engine.metrics_snapshot())
         if u.path=='/events':return self.sendj(200,self.engine.store.events(int(q.get('since',['0'])[0])))
         if u.path=='/objects':return self.sendj(200,self.engine.store.query(q.get('kind',[None])[0]))
+        if u.path in ('/doctor','/api/doctor'):
+            try:
+                from . import ecosystem as _eco
+                return self.sendj(200,{'ok':True,'probe':_eco.probe(),'roadmap':self.engine.config['id']})
+            except Exception as e: return self.sendj(200,{'ok':False,'error':str(e)})
         if u.path=='/':
-            title=f"{self.engine.config['id']} — {self.engine.config['title']}";html=("<!doctype html><meta charset=utf-8><title>"+title+"</title><style>body{font:16px system-ui;max-width:1000px;margin:40px auto;padding:0 18px}textarea{width:100%;height:180px}pre{background:#111;color:#eee;padding:16px;overflow:auto}</style><h1>"+title+"</h1><p>"+self.engine.config['outcome']+"</p><p><b>Breakthrough:</b> "+self.engine.config['breakthrough']+"</p><textarea id=p>{\"goal\":\""+self.engine.config['outcome'].replace('"','&quot;')+"\",\"candidates\":[{\"id\":\"local\",\"utility\":0.9},{\"id\":\"edge\",\"utility\":0.8}]}</textarea><button onclick=go()>Execute</button><pre id=o></pre><script>async function go(){let r=await fetch('/execute',{method:'POST',headers:{'content-type':'application/json'},body:p.value});o.textContent=JSON.stringify(await r.json(),null,2)}</script>").encode();self.send_response(200);self.send_header('Content-Type','text/html; charset=utf-8');self.send_header('Content-Length',str(len(html)));self.end_headers();return self.wfile.write(html)
+            if self._static('/'): return
+            title=f"{self.engine.config['id']} — {self.engine.config['title']}";html=("<!doctype html><meta charset=utf-8><title>"+title+"</title><style>body{font:16px system-ui;max-width:1000px;margin:40px auto;padding:0 18px}textarea{width:100%;height:180px}pre{background:#111;color:#eee;padding:16px;overflow:auto}</style><h1>"+title+"</h1><p>"+self.engine.config['outcome']+"</p><p><b>Breakthrough:</b> "+self.engine.config['breakthrough']+"</p><textarea id=p>{\"concept\":{\"name\":\"demo\",\"innovation\":7,\"market_fit\":6,\"feasibility\":6,\"features\":[\"core\",\"ui\"],\"complexity\":\"medium\"},\"budget_weeks\":24}</textarea><button onclick=go()>Execute</button><pre id=o></pre><script>async function go(){let r=await fetch('/execute',{method:'POST',headers:{'content-type':'application/json'},body:p.value});o.textContent=JSON.stringify(await r.json(),null,2)}</script>").encode();self.send_response(200);self.send_header('Content-Type','text/html; charset=utf-8');self.send_header('Content-Length',str(len(html)));self.end_headers();return self.wfile.write(html)
         return self.sendj(404,{'error':'not found'})
     def do_POST(self):
         try:

@@ -1,0 +1,2 @@
+from mem20executablegameconceptandscopepipelinez.mem20executablegameconceptandscopepipelinez.runtime import main
+raise SystemExit(main())

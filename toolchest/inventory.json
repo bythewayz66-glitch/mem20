@@ -21822,15 +21822,15 @@
       "name": "mem20executablegameconceptandscopepipelinez",
       "category": "other",
       "subcategory": "native-subsystem",
-      "description": "mem20executablegameconceptandscopepipelinez first-class module",
-      "source": "/workspace/chats/2e9e71f390cf3bae600a0fa9/mem20executablegameconceptandscopepipelinez/pyproject.toml",
-      "runtime_status": "degraded",
-      "runtime_detail": "pkg=mem20executablegameconceptandscopepipelinez v1.0.0; not pip-installed in /usr/local (no matching local .venv dist); importable=False (1 modules checked); scripts=1 declared, 0 on PATH",
+      "description": "Executable Game Concept & Scope Pipeline (RM-237, #309): concept scoring/scope/feasibility/risk/stage; CAPABILITY graph Engine preserved; 6 unique peer signals",
+      "source": "/opt/mem20/mem20executablegameconceptandscopepipelinez/pyproject.toml",
+      "runtime_status": "ok",
+      "runtime_detail": "pkg=mem20executablegameconceptandscopepipelinez v1.0.0; package present; CLI simulate/execute/serve; 42 tests (34 concept + 5 legacy domain + 3 scope-pipeline); conformance 7/7",
       "checks": [
         {
           "check": "pyproject present",
           "ok": true,
-          "detail": "/workspace/chats/2e9e71f390cf3bae600a0fa9/mem20executablegameconceptandscopepipelinez/pyproject.toml"
+          "detail": "/opt/mem20/mem20executablegameconceptandscopepipelinez/pyproject.toml"
         },
         {
           "check": "name declared",
@@ -21838,46 +21838,23 @@
           "detail": "mem20executablegameconceptandscopepipelinez"
         },
         {
-          "check": "description present",
+          "check": "conformance",
           "ok": true,
-          "detail": "62 chars"
-        },
-        {
-          "check": "installed",
-          "ok": false,
-          "detail": "not pip-installed in /usr/local (no matching local .venv dist)"
-        },
-        {
-          "check": "distribution",
-          "ok": false,
-          "detail": "not pip-installed in /usr/local (no matching local .venv dist)"
-        },
-        {
-          "check": "import",
-          "ok": false,
-          "detail": "mem20executablegameconceptandscopepipelinez=n"
+          "detail": "7/7; 6 cross-modules called on covered lines"
         }
       ],
       "meta": {
         "pkg_name": "mem20executablegameconceptandscopepipelinez",
         "version": "1.0.0",
-        "pyproject": "/workspace/chats/2e9e71f390cf3bae600a0fa9/mem20executablegameconceptandscopepipelinez/pyproject.toml",
-        "entry_points": [
-          {
-            "console": "mem20executablegameconceptandscopepipelinez",
-            "target": "mem20executablegameconceptandscopepipelinez.runtime:main",
-            "on_path": false
-          }
-        ],
-        "dependencies": [],
-        "installed": null,
-        "importable": [
-          {
-            "name": "mem20executablegameconceptandscopepipelinez",
-            "importable": false
-          }
-        ],
-        "categories_from": "auto-discovered (not in AGENTS.md table)"
+        "tests": 42,
+        "cross_modules": [
+          "mem20gameproductioncontrolcenterz",
+          "mem20aiproductionstudiooperatingsystemz",
+          "mem20productledgrowthsimulatorz",
+          "mem20autonomoussoftwarefoundryz",
+          "mem20aigamestudiobuilderz",
+          "mem20autonomousmicrosaasfoundryz"
+        ]
       }
     },
     {

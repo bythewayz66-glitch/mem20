@@ -536,3 +536,19 @@ while preserving legacy domain API and CAPABILITY Engine/CLI/10-scenario simulat
 `mem20intentcompilerz`. Added `/doctor`, web cockpit, root shim, README fenced runnable example,
 docs/PLAN, docs/app monitor, gateway/toolchest. Verification: 8 tests pass (legacy + compat),
 conformance **7/7**.
+
+---
+## 2026-11-07 - mem20executablegameconceptandscopepipelinez (#309): depth-first rebuild
+
+Rebuilt RM-237 (Executable Game Concept & Scope Pipeline, fails 5,6,7, operation_kind=graph) as
+first-class while preserving legacy domain API (`concept_score`,`scope_estimate`,`feasibility_check`,
+`risk_assessment`,`pipeline_stage`) — used as a peer by #307 — and preserving CAPABILITY
+Engine/CLI/10-scenario simulator. Enriched `graph` with real concept/scope analysis and 6 unique
+peer signals (different from #300-#308) for explicit scope requests: `mem20gameproductioncontrolcenterz`,
+`mem20aiproductionstudiooperatingsystemz`,`mem20productledgrowthsimulatorz`,`mem20autonomoussoftwarefoundryz`,
+`mem20aigamestudiobuilderz`,`mem20autonomousmicrosaasfoundryz`. Legacy graph fields
+`nodes/edges/degree/hubs` preserved; peer enrichment gated to avoid 5s Engine timeout on generic
+simulator payloads. Added `/doctor`, web cockpit, compat/root shims, README fenced runnable example,
+docs/PLAN, docs/app monitor, gateway/toolchest. Safe peer fix: `mem20autonomousmicrosaasfoundryz.idea_ranking`
+deterministic tie-break. Verification: 9 scoped tests pass (4 new + 5 legacy nested domain) plus
+34 `test_concept.py` pass with `--noconftest`; conformance **7/7**.

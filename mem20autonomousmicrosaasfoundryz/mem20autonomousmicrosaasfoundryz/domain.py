@@ -20,7 +20,7 @@ def revenue_projection(users, price, churn=0.05):
     return {"mrr":mrr,"arr":round(annual,2)}
 
 def idea_ranking(ideas):
-    scored=[(score_idea(i),i) for i in ideas]; scored.sort(reverse=True); return scored
+    scored=[(score_idea(i),str((i or {}).get('name',(i or {}).get('id',''))),i) for i in ideas]; scored.sort(key=lambda x:(-x[0],x[1])); return [(sc,it) for sc,_n,it in scored]
 
 def foundry_report(idea=None):
     idea = idea or {"name":"tool","market_size":800,"competition":2,"effort":3,"features":["auth","core","billing"],"price":9}

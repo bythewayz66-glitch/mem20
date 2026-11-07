@@ -1,6 +1,6 @@
 # App / product narrative — `docs/app/`
 
-Entry point for the `docs/app/` documentation set. **39 tracked file(s).**
+Entry point for the `docs/app/` documentation set. **40 tracked file(s).**
 
 ## Contents
 
@@ -21,6 +21,7 @@ Entry point for the `docs/app/` documentation set. **39 tracked file(s).**
 - [`ambient-computing-fabric/index.html`](ambient-computing-fabric/index.html)
 - [`game-balance-simulator/index.html`](game-balance-simulator/index.html)
 - [`gameplay-systems-data-balance-pipeline/index.html`](gameplay-systems-data-balance-pipeline/index.html)
+- [`game-production-control-center/index.html`](game-production-control-center/index.html)
 - [`ethical-incentive-simulator/index.html`](ethical-incentive-simulator/index.html)
 - [`energy-migration/index.html`](energy-migration/index.html)
 - [`transport/index.html`](transport/index.html)
@@ -70,6 +71,15 @@ PYTHONPATH=/opt/mem20 python3 -m mem20edgetocloudintelligencecontinuumz serve --
 
 
 
+
+
+## Game Production Control Center monitor (`game-production-control-center/`)
+
+[`game-production-control-center/index.html`](game-production-control-center/index.html) — static monitor for RM-233 (#317). Reads `/spec`/`/metrics`/`/doctor` (`?api=`).
+
+```bash
+PYTHONPATH=/opt/mem20 python3 -m mem20gameproductioncontrolcenterz serve --port 8797
+```
 
 ## Gameplay Systems Data & Balance Pipeline monitor (`gameplay-systems-data-balance-pipeline/`)
 
@@ -279,3 +289,4 @@ served by the fleet process itself at its root URL.
 - [Self-Healing Plans monitor](selfhealingplansz/index.html) — `PYTHONPATH=/opt/mem20 /opt/mem20/.venv/bin/python -m mem20selfhealingplansz serve --port 8825`
 - [Self-Optimizing Kernel monitor](selfoptimizingkernelz/index.html) — `PYTHONPATH=/opt/mem20 /opt/mem20/.venv/bin/python -m mem20selfoptimizingkernelz serve --port 8826`
 - [Self-Tuning Resource Governor monitor](selftuningresourcegovernorz/index.html) — `PYTHONPATH=/opt/mem20 /opt/mem20/.venv/bin/python -m mem20selftuningresourcegovernorz serve --port 8827`
+- [Selfz monitor](selfz/index.html) — `PYTHONPATH=/opt/mem20 /opt/mem20/.venv/bin/python -m mem20selfz serve --port 8828`

@@ -22567,15 +22567,15 @@
       "name": "mem20gameproductioncontrolcenterz",
       "category": "other",
       "subcategory": "native-subsystem",
-      "description": "mem20gameproductioncontrolcenterz first-class module",
-      "source": "/workspace/chats/2e9e71f390cf3bae600a0fa9/mem20gameproductioncontrolcenterz/pyproject.toml",
-      "runtime_status": "degraded",
-      "runtime_detail": "pkg=mem20gameproductioncontrolcenterz v1.0.0; not pip-installed in /usr/local (no matching local .venv dist); importable=False (1 modules checked); scripts=1 declared, 0 on PATH",
+      "description": "Game Production Control Center (RM-233, #317): meaningful production-control composition (sprint/burndown/milestones/risk/health) with 6 unique peer integrations; legacy domain preserved",
+      "source": "/opt/mem20/mem20gameproductioncontrolcenterz/pyproject.toml",
+      "runtime_status": "ok",
+      "runtime_detail": "pkg=mem20gameproductioncontrolcenterz v1.0.0; CLI simulate/execute/serve; 10 tests; conformance 7/7",
       "checks": [
         {
           "check": "pyproject present",
           "ok": true,
-          "detail": "/workspace/chats/2e9e71f390cf3bae600a0fa9/mem20gameproductioncontrolcenterz/pyproject.toml"
+          "detail": "/opt/mem20/mem20gameproductioncontrolcenterz/pyproject.toml"
         },
         {
           "check": "name declared",
@@ -22583,46 +22583,23 @@
           "detail": "mem20gameproductioncontrolcenterz"
         },
         {
-          "check": "description present",
+          "check": "conformance",
           "ok": true,
-          "detail": "52 chars"
-        },
-        {
-          "check": "installed",
-          "ok": false,
-          "detail": "not pip-installed in /usr/local (no matching local .venv dist)"
-        },
-        {
-          "check": "distribution",
-          "ok": false,
-          "detail": "not pip-installed in /usr/local (no matching local .venv dist)"
-        },
-        {
-          "check": "import",
-          "ok": false,
-          "detail": "mem20gameproductioncontrolcenterz=n"
+          "detail": "7/7; 6 cross-modules called on covered lines"
         }
       ],
       "meta": {
         "pkg_name": "mem20gameproductioncontrolcenterz",
         "version": "1.0.0",
-        "pyproject": "/workspace/chats/2e9e71f390cf3bae600a0fa9/mem20gameproductioncontrolcenterz/pyproject.toml",
-        "entry_points": [
-          {
-            "console": "mem20gameproductioncontrolcenterz",
-            "target": "mem20gameproductioncontrolcenterz.runtime:main",
-            "on_path": false
-          }
-        ],
-        "dependencies": [],
-        "installed": null,
-        "importable": [
-          {
-            "name": "mem20gameproductioncontrolcenterz",
-            "importable": false
-          }
-        ],
-        "categories_from": "auto-discovered (not in AGENTS.md table)"
+        "tests": 10,
+        "cross_modules": [
+          "mem20realtimeteampresencez",
+          "mem20uniteconomicsautopilotz",
+          "mem20hotswappableservicefoundationz",
+          "mem20specialistmodelforgez",
+          "mem20executabledesignstresslabz",
+          "mem20rigginganimationandmotionpipelinez"
+        ]
       }
     },
     {

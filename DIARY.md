@@ -643,3 +643,20 @@ progression (gated) with pipeline analysis and 6 unique peer signals (different 
 `mem20dynamicnarrativeenginez`,`mem20businessmodelsimulatorz`,`mem20goapagentdesignerz`. Added
 `/doctor`, web cockpit, root shims, fenced runnable README, docs/PLAN, docs/app monitor,
 gateway/toolchest. Verification: 10 tests pass, conformance **7/7**.
+
+---
+## 2026-11-07 - mem20gameproductioncontrolcenterz (#317): meaningful depth-first rebuild
+
+Per user feedback ("stop using shared patterns, use real meaningful implementations"), rebuilt
+RM-233 (Game Production Control Center, fails 5,6,7, operation_kind=simulate) as first-class with
+**meaningful** domain composition, preserving legacy domain API (`sprint_plan,burndown,
+milestone_status,risk_score,production_health`) and CAPABILITY Engine/CLI/simulator. `simulate`
+returns backward-compatible `scenarios` plus, when production context is provided, a composed
+`production_control` report: sprint/burndown/milestones/risk/health from domain logic with
+real peer-derived inputs (effective capacity from team presence; unit-economics cost projection;
+hot-swappable release readiness; specialist forge status; resilience-adjusted risk via design
+stress lab; rigging/animation asset-pipeline status). 6 unique peers (#300–#316 unused):
+`mem20realtimeteampresencez`,`mem20uniteconomicsautopilotz`,`mem20hotswappableservicefoundationz`,
+`mem20specialistmodelforgez`,`mem20executabledesignstresslabz`,`mem20rigginganimationandmotionpipelinez`.
+Added `/doctor`, web cockpit, root shims, fenced runnable README, docs/PLAN, docs/app monitor,
+gateway/toolchest. Verification: 10 tests pass, conformance **7/7**.

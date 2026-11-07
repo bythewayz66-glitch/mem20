@@ -1,9 +1,33 @@
-# RM-219 — Collective Model Intelligence
+# mem20collectivemodelintelligencez — Collective Model Intelligence
 
-**Outcome:** Combine private, local, open, specialist, and commercial models into one adaptive collective
+Combine model predictions via ensembles/voting, measure diversity, distill knowledge, and aggregate confidence, with mem20 estate integration.
 
-**Breakthrough:** Users receive better intelligence than any single provider can offer
+## Python API
 
-This package is the machine-executable local implementation derived from the supplied Off Record Lab roadmap. It includes versioned typed state, SQLite WAL persistence, event history/snapshots, SDK CRUD/subscription, resumable idempotent jobs, cancellation, retries/timeouts/quotas/backpressure, deterministic replica reconciliation, local/hybrid/cloud placement/failover, roadmap-specific `model` logic, decision confidence/explanations, feedback, CLI, HTTP console/API, safety guards, simulator, benchmark/metrics, and rollback-capable installer.
+```python
+import tempfile
+from mem20collectivemodelintelligencez.domain import (
+    ensemble_predict, diversity_score, knowledge_distill, aggregate_confidence, estate_context,
+)
 
-Named live product surfaces, real provider/device credentials, production traffic, and governed FreeStack deployment remain target-environment integration and are not claimed complete.
+print(ensemble_predict([1.0, 2.0, 3.0]))
+print(ensemble_predict(["a", "b", "a"]))
+print(diversity_score(["a", "b", "a"]))
+print(knowledge_distill([1.0, 2.0], [1.1, 1.9]))
+print(aggregate_confidence([0.8, 0.9]))
+
+with tempfile.TemporaryDirectory() as d:
+    print(estate_context(d)["engine_status_checked"])
+```
+
+## CLI
+
+```bash
+python -m mem20collectivemodelintelligencez --help
+```
+
+## Tests
+
+```bash
+PYTHONPATH=/opt/mem20 python -m pytest mem20collectivemodelintelligencez/mem20collectivemodelintelligencez/tests -q
+```

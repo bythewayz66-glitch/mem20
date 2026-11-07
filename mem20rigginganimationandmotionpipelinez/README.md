@@ -1,24 +1,37 @@
-# RM-242 — Rigging, Animation and Motion Pipeline
+# mem20rigginganimationandmotionpipelinez — Rigging, Animation and Motion Pipeline
 
-**Outcome:** Automate skeleton mapping, retargeting, clip validation, IK, compression, and state integration
+First-class mem20 subsystem for rigging, animation and motion pipeline (rig creation, posing, animation frames, motion blending) with **6 peers**, SQLite WAL runtime, CLI, JSON HTTP API, served web cockpit, docs/app monitor, and real MCP tools. Core API preserved.
 
-**Breakthrough:** Characters can share motion safely across tools and engines
+## Peers (6)
+`mem20devicecapabilitycompilerz`, `mem20datalocalityoptimizerz`, `mem20eventstreamsuperhighwayz`, `mem20faultcontainmentcellsz`, `mem20capabilitymarketplacez`, `mem20deterministicconfigurationgraphz`.
 
-This package is the machine-executable local implementation derived from the supplied Off Record Lab roadmap. It includes versioned typed state, SQLite WAL persistence, event history/snapshots, SDK CRUD/subscription, resumable idempotent jobs, cancellation, retries/timeouts/quotas/backpressure, deterministic replica reconciliation, local/hybrid/cloud placement/failover, roadmap-specific `qa` logic, decision confidence/explanations, feedback, CLI, HTTP console/API, safety guards, simulator, benchmark/metrics, and rollback-capable installer.
-
-Named live product surfaces, real provider/device credentials, production traffic, and governed FreeStack deployment remain target-environment integration and are not claimed complete.
-
-## Run
-
-```bash
-# CLI help, then exercise the local runtime end to end
-python -m mem20rigginganimationandmotionpipelinez --help
-python -m mem20rigginganimationandmotionpipelinez simulate
-python -m mem20rigginganimationandmotionpipelinez benchmark
+## Python API (runnable)
+```python
+from mem20rigginganimationandmotionpipelinez.domain import create_rig, set_pose, animate, motion_blend, rig_report, probe
+r=create_rig(["arm"]); set_pose(r,"arm",(1,0,0)); print(r["pose"]["arm"])  # (1, 0, 0)
+print(motion_blend({"a":(10,0,0)},{"a":(0,0,0)},0.5)["a"][0])  # 5.0
+rep=rig_report(); print(rep["ok"], len(rep["peers"]))  # True 6
+print(probe()["ok"])  # True
 ```
 
-## Tests
-
+## CLI (runnable)
 ```bash
-PYTHONPATH=/opt/mem20 .venv/bin/python -m pytest mem20rigginganimationandmotionpipelinez/mem20rigginganimationandmotionpipelinez/tests -q
+cd /opt/mem20
+PYTHONPATH=/opt/mem20 /opt/mem20/.venv/bin/python -m mem20rigginganimationandmotionpipelinez --help
+PYTHONPATH=/opt/mem20 /opt/mem20/.venv/bin/python -m mem20rigginganimationandmotionpipelinez status
+PYTHONPATH=/opt/mem20 /opt/mem20/.venv/bin/python -m mem20rigginganimationandmotionpipelinez doctor
+PYTHONPATH=/opt/mem20 /opt/mem20/.venv/bin/python -m mem20rigginganimationandmotionpipelinez serve --port 8819
 ```
+
+## HTTP API & web/docs
+`GET/POST /api/status`, `/api/doctor`, `POST /api/simulate`, `GET /api/events|health`. Cockpit `/`. docs/app `docs/app/rigginganimationandmotionpipelinez/index.html` (no Vite edits).
+
+## MCP & registration
+`RiggingAnimationAndMotionPipelineToolsMixin` in `mcp/server.py`; gateway `SUBSYSTEMS`.
+
+## Tests & conformance
+```bash
+PYTHONPATH=/opt/mem20 /opt/mem20/.venv/bin/python -m pytest mem20rigginganimationandmotionpipelinez/mem20rigginganimationandmotionpipelinez/tests -q --noconftest -p no:cacheprovider
+PYTHONPATH=/opt/mem20 /opt/mem20/.venv/bin/python scripts/renovation/conformance.py mem20rigginganimationandmotionpipelinez
+```
+Target **7/7**.

@@ -1,6 +1,6 @@
 # App / product narrative — `docs/app/`
 
-Entry point for the `docs/app/` documentation set. **38 tracked file(s).**
+Entry point for the `docs/app/` documentation set. **39 tracked file(s).**
 
 ## Contents
 
@@ -20,6 +20,7 @@ Entry point for the `docs/app/` documentation set. **38 tracked file(s).**
 - [`federated-research-grid/index.html`](federated-research-grid/index.html)
 - [`ambient-computing-fabric/index.html`](ambient-computing-fabric/index.html)
 - [`game-balance-simulator/index.html`](game-balance-simulator/index.html)
+- [`gameplay-systems-data-balance-pipeline/index.html`](gameplay-systems-data-balance-pipeline/index.html)
 - [`ethical-incentive-simulator/index.html`](ethical-incentive-simulator/index.html)
 - [`energy-migration/index.html`](energy-migration/index.html)
 - [`transport/index.html`](transport/index.html)
@@ -68,6 +69,15 @@ PYTHONPATH=/opt/mem20 python3 -m mem20edgetocloudintelligencecontinuumz serve --
 
 
 
+
+
+## Gameplay Systems Data & Balance Pipeline monitor (`gameplay-systems-data-balance-pipeline/`)
+
+[`gameplay-systems-data-balance-pipeline/index.html`](gameplay-systems-data-balance-pipeline/index.html) — static monitor for RM-245 (#316). Reads `/spec`/`/metrics`/`/doctor` (`?api=`).
+
+```bash
+PYTHONPATH=/opt/mem20 python3 -m mem20gameplaysystemsdataandbalancepipelinez serve --port 8796
+```
 
 ## Game Balance Simulator monitor (`game-balance-simulator/`)
 
@@ -266,3 +276,4 @@ served by the fleet process itself at its root URL.
 - [Runtime Prompt Optimizer monitor](runtimepromptoptimizerz/index.html) — `PYTHONPATH=/opt/mem20 /opt/mem20/.venv/bin/python -m mem20runtimepromptoptimizerz serve --port 8822`
 - [Secrets-less Workload Identity monitor](secretslessworkloadidentityz/index.html) — `PYTHONPATH=/opt/mem20 /opt/mem20/.venv/bin/python -m mem20secretslessworkloadidentityz serve --port 8823`
 - [Secure Compute Capsules monitor](securecomputecapsulesz/index.html) — `PYTHONPATH=/opt/mem20 /opt/mem20/.venv/bin/python -m mem20securecomputecapsulesz serve --port 8824`
+- [Self-Healing Plans monitor](selfhealingplansz/index.html) — `PYTHONPATH=/opt/mem20 /opt/mem20/.venv/bin/python -m mem20selfhealingplansz serve --port 8825`

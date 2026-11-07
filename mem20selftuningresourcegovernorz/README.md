@@ -1,22 +1,37 @@
-# RM-099 — Self-Tuning Resource Governor
+# mem20selftuningresourcegovernorz — Self-Tuning Resource Governor
 
-Outcome: Continuously adjust CPU, memory, I/O, and queue budgets by observed value and demand
+First-class mem20 subsystem for self-tuning resource governance (govern/adjust_quota/governor_health) with **6 peers**, SQLite WAL runtime, CLI, JSON HTTP API, served web cockpit, docs/app monitor, and real MCP tools. Core API preserved.
 
-Breakthrough: The platform stays responsive under changing workloads
+## Peers (6)
+`mem20demandforecastandcapacitybrainz`, `mem20causalroutingbrainz`, `mem20faultcontainmentcellsz`, `mem20eventstreamsuperhighwayz`, `mem20capabilitymarketplacez`, `mem20autonomousrecoverydirectorz`.
 
-Machine-executable local runtime includes versioned state, SQLite WAL persistence, events, SDK CRUD, resumable/idempotent jobs, retries/timeouts/quotas, recovery, `search` operation logic, decision explanations, feedback, CLI, HTTP console/API, mesh selection/failover, simulator, benchmark, metrics, and opt-in signature mode.
-
-## Run
-
-```bash
-# CLI help, then exercise the local runtime end to end
-python -m mem20selftuningresourcegovernorz --help
-python -m mem20selftuningresourcegovernorz simulate
-python -m mem20selftuningresourcegovernorz benchmark
+## Python API (runnable)
+```python
+from mem20selftuningresourcegovernorz.domain import govern, adjust_quota, governor_report, probe
+print(govern({"c":100},{"c":90},{"c":0.8})[0]["action"])  # throttle
+print(adjust_quota("c",100,0.9))  # 120.0
+r=governor_report(); print(r["ok"], len(r["peers"]))  # True 6
+print(probe()["ok"])  # True
 ```
 
-## Tests
-
+## CLI (runnable)
 ```bash
-PYTHONPATH=/opt/mem20 .venv/bin/python -m pytest mem20selftuningresourcegovernorz/mem20selftuningresourcegovernorz/tests -q
+cd /opt/mem20
+PYTHONPATH=/opt/mem20 /opt/mem20/.venv/bin/python -m mem20selftuningresourcegovernorz --help
+PYTHONPATH=/opt/mem20 /opt/mem20/.venv/bin/python -m mem20selftuningresourcegovernorz status
+PYTHONPATH=/opt/mem20 /opt/mem20/.venv/bin/python -m mem20selftuningresourcegovernorz doctor
+PYTHONPATH=/opt/mem20 /opt/mem20/.venv/bin/python -m mem20selftuningresourcegovernorz serve --port 8827
 ```
+
+## HTTP API & web/docs
+`GET/POST /api/status`, `/api/doctor`, `POST /api/simulate`, `GET /api/events|health`. Cockpit `/`. docs/app `docs/app/selftuningresourcegovernorz/index.html` (no Vite edits).
+
+## MCP & registration
+`SelfTuningResourceGovernorToolsMixin` in `mcp/server.py`; gateway `SUBSYSTEMS`.
+
+## Tests & conformance
+```bash
+PYTHONPATH=/opt/mem20 /opt/mem20/.venv/bin/python -m pytest mem20selftuningresourcegovernorz/mem20selftuningresourcegovernorz/tests -q --noconftest -p no:cacheprovider
+PYTHONPATH=/opt/mem20 /opt/mem20/.venv/bin/python scripts/renovation/conformance.py mem20selftuningresourcegovernorz
+```
+Target **7/7**.

@@ -278,3 +278,4 @@ served by the fleet process itself at its root URL.
 - [Secure Compute Capsules monitor](securecomputecapsulesz/index.html) — `PYTHONPATH=/opt/mem20 /opt/mem20/.venv/bin/python -m mem20securecomputecapsulesz serve --port 8824`
 - [Self-Healing Plans monitor](selfhealingplansz/index.html) — `PYTHONPATH=/opt/mem20 /opt/mem20/.venv/bin/python -m mem20selfhealingplansz serve --port 8825`
 - [Self-Optimizing Kernel monitor](selfoptimizingkernelz/index.html) — `PYTHONPATH=/opt/mem20 /opt/mem20/.venv/bin/python -m mem20selfoptimizingkernelz serve --port 8826`
+- [Self-Tuning Resource Governor monitor](selftuningresourcegovernorz/index.html) — `PYTHONPATH=/opt/mem20 /opt/mem20/.venv/bin/python -m mem20selftuningresourcegovernorz serve --port 8827`

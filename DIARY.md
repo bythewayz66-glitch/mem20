@@ -618,3 +618,16 @@ simulator. Enriched default/analyze path with ambient fabric analysis and 6 uniq
 `mem20secretslessworkloadidentityz`,`mem20ambientdevicecompanionz`. Added `/doctor`, web cockpit,
 root shims, fenced runnable README, docs/PLAN, docs/app monitor, gateway/toolchest. Verification:
 9 tests pass (5 legacy + 4 new), conformance **7/7**.
+
+---
+## 2026-11-07 - mem20gamebalancesimulatorz (#315): depth-first rebuild
+
+Rebuilt RM-231 (Game Balance Simulator, fails 5,6,7, operation_kind=progression) as first-class
+while preserving legacy domain API (`dps,ttk,economy_balance,difficulty_curve,balance_check,win_rate`)
+used by #307 and preserving CAPABILITY Engine/CLI/10-scenario simulator. Enriched progression
+operation (gated by explicit balance/simulation flags) with combat/economy/progression balance
+analysis and 6 unique peer signals (different from #300–#314): `mem20skillbasedprogressionbrainz`,
+`mem20playermotivationtwinz`,`mem20ailevelarchitectz`,`mem20communitychallengeenginez`,
+`mem20skillmemorytransferz`,`mem20realworldimpactrewardsz`. Added `/doctor`, web cockpit, root
+shims, fenced runnable README, docs/PLAN, docs/app monitor, gateway/toolchest. Verification:
+10 tests pass (5 legacy + 5 new), conformance **7/7**.

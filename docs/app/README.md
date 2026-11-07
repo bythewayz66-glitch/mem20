@@ -1,6 +1,6 @@
 # App / product narrative — `docs/app/`
 
-Entry point for the `docs/app/` documentation set. **37 tracked file(s).**
+Entry point for the `docs/app/` documentation set. **38 tracked file(s).**
 
 ## Contents
 
@@ -19,6 +19,7 @@ Entry point for the `docs/app/` documentation set. **37 tracked file(s).**
 - [`facez/index.html`](facez/index.html)
 - [`federated-research-grid/index.html`](federated-research-grid/index.html)
 - [`ambient-computing-fabric/index.html`](ambient-computing-fabric/index.html)
+- [`game-balance-simulator/index.html`](game-balance-simulator/index.html)
 - [`ethical-incentive-simulator/index.html`](ethical-incentive-simulator/index.html)
 - [`energy-migration/index.html`](energy-migration/index.html)
 - [`transport/index.html`](transport/index.html)
@@ -66,6 +67,15 @@ PYTHONPATH=/opt/mem20 python3 -m mem20edgetocloudintelligencecontinuumz serve --
 
 
 
+
+
+## Game Balance Simulator monitor (`game-balance-simulator/`)
+
+[`game-balance-simulator/index.html`](game-balance-simulator/index.html) — static monitor for RM-231 (#315). Reads `/spec`/`/metrics`/`/doctor` (`?api=`).
+
+```bash
+PYTHONPATH=/opt/mem20 python3 -m mem20gamebalancesimulatorz serve --port 8795
+```
 
 ## Ambient Computing Fabric monitor (`ambient-computing-fabric/`)
 

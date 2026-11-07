@@ -91,7 +91,13 @@ SUBSYSTEMS = {
         "owner": "mem20-webdev",
         "wave": 2,
     },
-        "mem20freestackambientcomputingfabricz": {
+        "mem20gamebalancesimulatorz": {
+        "purpose": "Game Balance Simulator (RM-231, #315): combat/progression/economy simulation with 6 peer signals; legacy domain preserved (#307)",
+        "entry": "python -m mem20gamebalancesimulatorz simulate",
+        "owner": "mem20-webdev",
+        "wave": 2,
+    },
+    "mem20freestackambientcomputingfabricz": {
         "purpose": "FreeStack Ambient Computing Fabric (RM-211, #314): ambient pooling/discovery/allocation with 6 peer fabric/inference/capability/microkernel/identity/companion signals",
         "entry": "python -m mem20freestackambientcomputingfabricz simulate",
         "owner": "mem20-webdev",

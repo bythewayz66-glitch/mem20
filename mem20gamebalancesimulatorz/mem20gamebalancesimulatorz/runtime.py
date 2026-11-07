@@ -5,6 +5,9 @@ from dataclasses import dataclass
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 from urllib.parse import urlparse, parse_qs
+import mimetypes
+
+WEB_DIR = Path(__file__).with_name("web")
 
 class ValidationError(ValueError): pass
 class QuotaError(RuntimeError): pass
@@ -169,7 +172,35 @@ class Engine:
         if k=='reward':
             value=float(p.get('value',1));rarity=max(.01,float(p.get('rarity',1)));elig=bool(p.get('eligible',True));timing=max(.1,float(p.get('timing_multiplier',1)));return {'eligible':elig,'reward_value':round(value*rarity*timing,4) if elig else 0,'rules_applied':['value','rarity','eligibility','timing']}
         if k=='progression':
-            xp=max(0,float(p.get('xp',0))); thresholds=p.get('thresholds') or [100,250,500,1000]; level=sum(xp>=float(t) for t in thresholds);return {'xp':xp,'level':level,'next_threshold':thresholds[level] if level<len(thresholds) else None}
+            xp=max(0,float(p.get('xp',0))); thresholds=p.get('thresholds') or [100,250,500,1000]; level=sum(xp>=float(t) for t in thresholds)
+            out={'xp':xp,'level':level,'next_threshold':thresholds[level] if level<len(thresholds) else None}
+            wants_balance = bool(p.get('balance') or p.get('combat') or p.get('economy') or p.get('scenarios') or p.get('signals') or p.get('enrich') or p.get('peers') or p.get('win_rate') is not None or p.get('dps') is not None or p.get('ttk') is not None)
+            if wants_balance:
+                try:
+                    from . import domain as _dom, ecosystem as _eco
+                    combat = {}
+                    if 'damage' in p and 'attack_speed' in p:
+                        dv = _dom.dps(float(p.get('damage',0)), float(p.get('attack_speed',1)))
+                        combat['dps'] = dv
+                        if 'health' in p: combat['ttk'] = _dom.ttk(float(p.get('health',100)), dv)
+                    if 'income' in p or 'expenses' in p:
+                        combat['economy_balance'] = _dom.economy_balance(float(p.get('income',0)), float(p.get('expenses',0)))
+                    if isinstance(p.get('simulations'), list):
+                        combat['win_rate'] = _dom.win_rate(p.get('simulations') or [])
+                    if isinstance(p.get('stats'), dict) and isinstance(p.get('targets'), dict):
+                        combat['balance_check'] = _dom.balance_check(p['stats'], p['targets'])
+                    combat['difficulty_curve'] = _dom.difficulty_curve(int(p.get('levels', 5)))
+                    out.update({'balance': combat, 'signals': {
+                        'skill_progression': _eco.skill_progression(p),
+                        'player_motivation': _eco.player_motivation(p),
+                        'level_architecture': _eco.level_architecture(p),
+                        'community_challenge': _eco.community_challenge(p),
+                        'skill_transfer': _eco.skill_transfer(p),
+                        'impact_rewards': _eco.impact_rewards(p),
+                    }})
+                except Exception as e:
+                    out['balance_error'] = f"{type(e).__name__}: {e}"
+            return out
         if k=='qa':
             tests=p.get('tests') or [];failed=[t for t in tests if isinstance(t,dict) and not t.get('pass',False)];return {'total':len(tests),'failed':len(failed),'release_blocked':bool(failed),'failures':failed[:20]}
         if k=='pipeline':
@@ -273,15 +304,36 @@ class Handler(BaseHTTPRequestHandler):
         body=json.dumps(obj,indent=2,sort_keys=True).encode();self.send_response(code);self.send_header('Content-Type',ctype);self.send_header('Content-Length',str(len(body)));self.end_headers();self.wfile.write(body)
     def body(self):
         n=int(self.headers.get('Content-Length','0'));return json.loads(self.rfile.read(n) or b'{}')
+    def _static(self, path):
+        try:
+            rel = 'index.html' if path in ('/', '') else path.lstrip('/')
+            f = (WEB_DIR / rel).resolve()
+            f.relative_to(WEB_DIR.resolve())
+            if not f.is_file(): return False
+            ct = mimetypes.guess_type(str(f))[0] or 'application/octet-stream'
+            if ct.startswith('text/') or ct == 'application/javascript': ct += '; charset=utf-8'
+            b = f.read_bytes()
+            self.send_response(200); self.send_header('Content-Type', ct); self.send_header('Content-Length', str(len(b))); self.send_header('Access-Control-Allow-Origin', '*'); self.end_headers(); self.wfile.write(b); return True
+        except Exception:
+            return False
     def do_GET(self):
         u=urlparse(self.path);q=parse_qs(u.query)
+        if u.path in ('/style.css','/app.js') or (u.path.startswith('/') and '.' in u.path.rsplit('/',1)[-1]):
+            if self._static(u.path): return
         if u.path=='/health':return self.sendj(200,{'ok':True,'roadmap':self.engine.config['id']})
         if u.path=='/spec':return self.sendj(200,self.engine.config)
         if u.path=='/metrics':return self.sendj(200,self.engine.metrics_snapshot())
         if u.path=='/events':return self.sendj(200,self.engine.store.events(int(q.get('since',['0'])[0])))
         if u.path=='/objects':return self.sendj(200,self.engine.store.query(q.get('kind',[None])[0]))
+        if u.path in ('/doctor','/api/doctor'):
+            try:
+                from . import ecosystem as _eco
+                return self.sendj(200,{'ok':True,'probe':_eco.probe(),'roadmap':self.engine.config['id']})
+            except Exception as e:
+                return self.sendj(200,{'ok':False,'error':str(e)})
         if u.path=='/':
-            title=f"{self.engine.config['id']} — {self.engine.config['title']}";html=("<!doctype html><meta charset=utf-8><title>"+title+"</title><style>body{font:16px system-ui;max-width:1000px;margin:40px auto;padding:0 18px}textarea{width:100%;height:180px}pre{background:#111;color:#eee;padding:16px;overflow:auto}</style><h1>"+title+"</h1><p>"+self.engine.config['outcome']+"</p><p><b>Breakthrough:</b> "+self.engine.config['breakthrough']+"</p><textarea id=p>{\"goal\":\""+self.engine.config['outcome'].replace('"','&quot;')+"\",\"candidates\":[{\"id\":\"local\",\"utility\":0.9},{\"id\":\"edge\",\"utility\":0.8}]}</textarea><button onclick=go()>Execute</button><pre id=o></pre><script>async function go(){let r=await fetch('/execute',{method:'POST',headers:{'content-type':'application/json'},body:p.value});o.textContent=JSON.stringify(await r.json(),null,2)}</script>").encode();self.send_response(200);self.send_header('Content-Type','text/html; charset=utf-8');self.send_header('Content-Length',str(len(html)));self.end_headers();return self.wfile.write(html)
+            if self._static('/'): return
+            title=f"{self.engine.config['id']} — {self.engine.config['title']}";html=("<!doctype html><meta charset=utf-8><title>"+title+"</title><style>body{font:16px system-ui;max-width:1000px;margin:40px auto;padding:0 18px}textarea{width:100%;height:180px}pre{background:#111;color:#eee;padding:16px;overflow:auto}</style><h1>"+title+"</h1><p>"+self.engine.config['outcome']+"</p><p><b>Breakthrough:</b> "+self.engine.config['breakthrough']+"</p><textarea id=p>{\"xp\":120,\"damage\":10,\"attack_speed\":2,\"health\":100,\"income\":100,\"expenses\":40,\"levels\":5,\"balance\":true,\"scenarios\":[{\"name\":\"baseline\"}]}</textarea><button onclick=go()>Execute</button><pre id=o></pre><script>async function go(){let r=await fetch('/execute',{method:'POST',headers:{'content-type':'application/json'},body:p.value});o.textContent=JSON.stringify(await r.json(),null,2)}</script>").encode();self.send_response(200);self.send_header('Content-Type','text/html; charset=utf-8');self.send_header('Content-Length',str(len(html)));self.end_headers();return self.wfile.write(html)
         return self.sendj(404,{'error':'not found'})
     def do_POST(self):
         try:

@@ -91,7 +91,13 @@ SUBSYSTEMS = {
         "owner": "mem20-webdev",
         "wave": 2,
     },
-        "mem20executablegameconceptandscopepipelinez": {
+        "mem20executiondigitaltwinz": {
+        "purpose": "Execution Digital Twin (RM-059): predictive workflow twin forecast with sync/simulate/drift and peer time-machine/counterfactual/event signals",
+        "entry": "python -m mem20executiondigitaltwinz simulate",
+        "owner": "mem20-webdev",
+        "wave": 2,
+    },
+    "mem20executablegameconceptandscopepipelinez": {
         "purpose": "Executable Game Concept & Scope Pipeline (RM-237): concept scoring, scope/feasibility/risk/stage with 6 production/growth/foundry peer signals",
         "entry": "python -m mem20executablegameconceptandscopepipelinez simulate",
         "owner": "mem20-webdev",

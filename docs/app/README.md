@@ -1,6 +1,6 @@
 # App / product narrative — `docs/app/`
 
-Entry point for the `docs/app/` documentation set. **32 tracked file(s).**
+Entry point for the `docs/app/` documentation set. **33 tracked file(s).**
 
 ## Contents
 
@@ -14,6 +14,7 @@ Entry point for the `docs/app/` documentation set. **32 tracked file(s).**
 - [`episodic-memory-graph/index.html`](episodic-memory-graph/index.html)
 - [`design-stress-lab/index.html`](design-stress-lab/index.html)
 - [`concept-scope-pipeline/index.html`](concept-scope-pipeline/index.html)
+- [`execution-digital-twin/index.html`](execution-digital-twin/index.html)
 - [`ethical-incentive-simulator/index.html`](ethical-incentive-simulator/index.html)
 - [`energy-migration/index.html`](energy-migration/index.html)
 - [`transport/index.html`](transport/index.html)
@@ -56,6 +57,15 @@ PYTHONPATH=/opt/mem20 python3 -m mem20edgetocloudintelligencecontinuumz serve --
 
 
 
+
+
+## Execution Digital Twin monitor (`execution-digital-twin/`)
+
+[`execution-digital-twin/index.html`](execution-digital-twin/index.html) — static monitor for RM-059 (#310). Reads `/spec`/`/metrics`/`/doctor` (`?api=`).
+
+```bash
+PYTHONPATH=/opt/mem20 python3 -m mem20executiondigitaltwinz serve --port 8790
+```
 
 ## Concept & Scope Pipeline monitor (`concept-scope-pipeline/`)
 

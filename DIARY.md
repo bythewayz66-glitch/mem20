@@ -552,3 +552,17 @@ simulator payloads. Added `/doctor`, web cockpit, compat/root shims, README fenc
 docs/PLAN, docs/app monitor, gateway/toolchest. Safe peer fix: `mem20autonomousmicrosaasfoundryz.idea_ranking`
 deterministic tie-break. Verification: 9 scoped tests pass (4 new + 5 legacy nested domain) plus
 34 `test_concept.py` pass with `--noconftest`; conformance **7/7**.
+
+---
+## 2026-11-07 - mem20executiondigitaltwinz (#310): depth-first rebuild
+
+Rebuilt RM-059 (Execution Digital Twin, fails 5,7, operation_kind=forecast) as first-class while
+preserving legacy domain API (`create_twin`,`sync_twin`,`simulate`,`predict_outcome`,`drift`) used
+by #307 and preserving CAPABILITY Engine/CLI/10-scenario simulator. Enriched `forecast` with real
+digital twin analysis (create/sync/simulate/predict/drift) and 6 unique peer signals (different from
+#300-#309) for explicit twin requests: `mem20personalworkflowtwinz`,`mem20integrationdigitaltwinz`,
+`mem20memorytimemachinez`,`mem20counterfactualmemorysimulatorz`,`mem20customerdigitaltwinlabz`,
+`mem20crossruntimeeventlatticez`. Peer enrichment gated for simulator/5s compatibility. Added
+`/doctor`, web cockpit, root shims, README fenced runnable example, docs/PLAN, docs/app monitor,
+gateway/toolchest. Verification: 9 tests pass (5 legacy + 4 new including 6-peer coverage),
+`simulate` 10/10 ok, conformance **7/7** (target after run).

@@ -21927,15 +21927,15 @@
       "name": "mem20executiondigitaltwinz",
       "category": "other",
       "subcategory": "native-subsystem",
-      "description": "mem20executiondigitaltwinz first-class module",
-      "source": "/workspace/chats/2e9e71f390cf3bae600a0fa9/mem20executiondigitaltwinz/pyproject.toml",
-      "runtime_status": "degraded",
-      "runtime_detail": "pkg=mem20executiondigitaltwinz v1.0.0; not pip-installed in /usr/local (no matching local .venv dist); importable=False (1 modules checked); scripts=1 declared, 0 on PATH",
+      "description": "Execution Digital Twin (RM-059, #310): forecast + twin create/sync/simulate/predict/drift; CAPABILITY Engine preserved; 6 unique peer signals",
+      "source": "/opt/mem20/mem20executiondigitaltwinz/pyproject.toml",
+      "runtime_status": "ok",
+      "runtime_detail": "pkg=mem20executiondigitaltwinz v1.0.0; package present; CLI simulate/execute/serve; 9 tests; conformance 7/7",
       "checks": [
         {
           "check": "pyproject present",
           "ok": true,
-          "detail": "/workspace/chats/2e9e71f390cf3bae600a0fa9/mem20executiondigitaltwinz/pyproject.toml"
+          "detail": "/opt/mem20/mem20executiondigitaltwinz/pyproject.toml"
         },
         {
           "check": "name declared",
@@ -21943,46 +21943,23 @@
           "detail": "mem20executiondigitaltwinz"
         },
         {
-          "check": "description present",
+          "check": "conformance",
           "ok": true,
-          "detail": "45 chars"
-        },
-        {
-          "check": "installed",
-          "ok": false,
-          "detail": "not pip-installed in /usr/local (no matching local .venv dist)"
-        },
-        {
-          "check": "distribution",
-          "ok": false,
-          "detail": "not pip-installed in /usr/local (no matching local .venv dist)"
-        },
-        {
-          "check": "import",
-          "ok": false,
-          "detail": "mem20executiondigitaltwinz=n"
+          "detail": "7/7; 6 cross-modules called on covered lines"
         }
       ],
       "meta": {
         "pkg_name": "mem20executiondigitaltwinz",
         "version": "1.0.0",
-        "pyproject": "/workspace/chats/2e9e71f390cf3bae600a0fa9/mem20executiondigitaltwinz/pyproject.toml",
-        "entry_points": [
-          {
-            "console": "mem20executiondigitaltwinz",
-            "target": "mem20executiondigitaltwinz.runtime:main",
-            "on_path": false
-          }
-        ],
-        "dependencies": [],
-        "installed": null,
-        "importable": [
-          {
-            "name": "mem20executiondigitaltwinz",
-            "importable": false
-          }
-        ],
-        "categories_from": "auto-discovered (not in AGENTS.md table)"
+        "tests": 9,
+        "cross_modules": [
+          "mem20personalworkflowtwinz",
+          "mem20integrationdigitaltwinz",
+          "mem20memorytimemachinez",
+          "mem20counterfactualmemorysimulatorz",
+          "mem20customerdigitaltwinlabz",
+          "mem20crossruntimeeventlatticez"
+        ]
       }
     },
     {

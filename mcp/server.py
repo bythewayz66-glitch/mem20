@@ -1,3 +1,4 @@
+from tools.mem20productionplanningandtaskorchestrationpipelinez_tools import ProductionPlanningAndTaskOrchestrationPipelineToolsMixin
 from tools.mem20predictiverecallenginez_tools import PredictiveRecallEngineToolsMixin
 from tools.mem20playermotivationtwinz_tools import PlayerMotivationTwinToolsMixin
 from tools.mem20dynamicskillgraphz_tools import DynamicSkillGraphToolsMixin
@@ -134,7 +135,7 @@ from tools.mem20contextcompressionforgez_tools import ContextCompressionForgeToo
 from tools.mem20counterfactualmemorysimulatorz_tools import CounterfactualMemorySimulatorToolsMixin
 from tools.mem20crossplatformmicrokernelz_tools import CrossPlatformMicrokernelToolsMixin
 from tools.mem20crossproductloyaltygraphz_tools import CrossProductLoyaltyGraphToolsMixin
-from tools.ops_tools import DataLocalityOptimizerToolsMixin, DeterministicConfigurationGraphToolsMixin, DeviceCapabilityCompilerToolsMixin, DynamicNarrativeEngineToolsMixin, DynamicQuestRewardComposerToolsMixin, DynamicSkillGraphToolsMixin, PlayerMotivationTwinToolsMixin, PredictiveRecallEngineToolsMixin, OpsToolsMixin
+from tools.ops_tools import DataLocalityOptimizerToolsMixin, DeterministicConfigurationGraphToolsMixin, DeviceCapabilityCompilerToolsMixin, DynamicNarrativeEngineToolsMixin, DynamicQuestRewardComposerToolsMixin, DynamicSkillGraphToolsMixin, PlayerMotivationTwinToolsMixin, PredictiveRecallEngineToolsMixin, ProductionPlanningAndTaskOrchestrationPipelineToolsMixin, OpsToolsMixin
 from tools.verify_tools import VerifyToolsMixin
 from tools.toolchest_tools import ToolchestToolsMixin
 from tools.corez_tools import CorezToolsMixin
@@ -151,7 +152,7 @@ class Mem20MCPServer(MemoryToolsMixin, CognitiveToolsMixin, RoadmapToolsMixin,
                      ProductivityToolsMixin, SearchToolsMixin,
                      VersionControlToolsMixin, WebScrapingToolsMixin,
                      BraidToolsMixin, IRCToolsMixin, LieToolsMixin,
-                     KilnzToolsMixin, DreamzToolsMixin, CrewzToolsMixin, AgentzToolsMixin, EdgeFleetToolsMixin, AudioVoiceMusicPipelineToolsMixin, AutonomousDealDeskToolsMixin, AutonomousMicroSaaSFoundryToolsMixin, AutonomousRecoveryDirectorToolsMixin, AutonomousSalesLaboratoryToolsMixin, AutonomousSoftwareFoundryToolsMixin, AutonomousWorkcellsToolsMixin, BusinessModelSimulatorToolsMixin, CausalRoutingBrainToolsMixin, CollectiveModelIntelligenceToolsMixin, CrossPlatformMicrokernelToolsMixin, CounterfactualMemorySimulatorToolsMixin, ContextCompressionForgeToolsMixin, CompoundingProductEcosystemToolsMixin, CommunityChallengeEngineToolsMixin, CustomerDigitalTwinLabToolsMixin, CustomerLifecycleEngineToolsMixin, DataLocalityOptimizerToolsMixin, DeterministicConfigurationGraphToolsMixin, DeviceCapabilityCompilerToolsMixin, DynamicNarrativeEngineToolsMixin, DynamicQuestRewardComposerToolsMixin, DynamicSkillGraphToolsMixin, PlayerMotivationTwinToolsMixin, PredictiveRecallEngineToolsMixin, OpsToolsMixin, CorezToolsMixin, ToolchestToolsMixin, VerifyToolsMixin):
+                     KilnzToolsMixin, DreamzToolsMixin, CrewzToolsMixin, AgentzToolsMixin, EdgeFleetToolsMixin, AudioVoiceMusicPipelineToolsMixin, AutonomousDealDeskToolsMixin, AutonomousMicroSaaSFoundryToolsMixin, AutonomousRecoveryDirectorToolsMixin, AutonomousSalesLaboratoryToolsMixin, AutonomousSoftwareFoundryToolsMixin, AutonomousWorkcellsToolsMixin, BusinessModelSimulatorToolsMixin, CausalRoutingBrainToolsMixin, CollectiveModelIntelligenceToolsMixin, CrossPlatformMicrokernelToolsMixin, CounterfactualMemorySimulatorToolsMixin, ContextCompressionForgeToolsMixin, CompoundingProductEcosystemToolsMixin, CommunityChallengeEngineToolsMixin, CustomerDigitalTwinLabToolsMixin, CustomerLifecycleEngineToolsMixin, DataLocalityOptimizerToolsMixin, DeterministicConfigurationGraphToolsMixin, DeviceCapabilityCompilerToolsMixin, DynamicNarrativeEngineToolsMixin, DynamicQuestRewardComposerToolsMixin, DynamicSkillGraphToolsMixin, PlayerMotivationTwinToolsMixin, PredictiveRecallEngineToolsMixin, ProductionPlanningAndTaskOrchestrationPipelineToolsMixin, OpsToolsMixin, CorezToolsMixin, ToolchestToolsMixin, VerifyToolsMixin):
     def __init__(self):
         self.tools = {}
         self._start_time = time.time()
@@ -217,6 +218,7 @@ class Mem20MCPServer(MemoryToolsMixin, CognitiveToolsMixin, RoadmapToolsMixin,
         self.register_autonomousrecoverydirectorz_tools()
         self.register_autonomoussaleslaboratoryz_tools()
         self.register_autonomoussoftwarefoundryz_tools()
+        self.register_productionplanningandtaskorchestrationpipelinez_tools()
         self.register_predictiverecallenginez_tools()
         self.register_playermotivationtwinz_tools()
         self.register_dynamicskillgraphz_tools()
@@ -757,7 +759,7 @@ class Mem20MCPServer(MemoryToolsMixin, CognitiveToolsMixin, RoadmapToolsMixin,
         elif tool_name == "scrape_submit_form":
             return await self._scrape_submit_form(arguments)
         
-        # mem20ops operator console tools (registered by CustomerDigitalTwinLabToolsMixin, CustomerLifecycleEngineToolsMixin, DataLocalityOptimizerToolsMixin, DeterministicConfigurationGraphToolsMixin, DeviceCapabilityCompilerToolsMixin, DynamicNarrativeEngineToolsMixin, DynamicQuestRewardComposerToolsMixin, DynamicSkillGraphToolsMixin, PlayerMotivationTwinToolsMixin, PredictiveRecallEngineToolsMixin, OpsToolsMixin)
+        # mem20ops operator console tools (registered by CustomerDigitalTwinLabToolsMixin, CustomerLifecycleEngineToolsMixin, DataLocalityOptimizerToolsMixin, DeterministicConfigurationGraphToolsMixin, DeviceCapabilityCompilerToolsMixin, DynamicNarrativeEngineToolsMixin, DynamicQuestRewardComposerToolsMixin, DynamicSkillGraphToolsMixin, PlayerMotivationTwinToolsMixin, PredictiveRecallEngineToolsMixin, ProductionPlanningAndTaskOrchestrationPipelineToolsMixin, OpsToolsMixin)
         elif tool_name == "ops_registry":
             return await self._ops_registry(arguments)
         elif tool_name == "ops_cli_audit":

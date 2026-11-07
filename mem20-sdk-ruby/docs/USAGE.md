@@ -37,7 +37,7 @@ puts Mem20::Client.text(recall)
 `tags:` accepts an `Array` (the SDK joins it into the comma-separated form the server
 expects) or a pre-formatted `String`.
 
-## Call any of the 272 tools
+## Call any tool advertised by the connected server
 
 ```ruby
 # By name — works for every registered tool, even ones with no binding yet.
@@ -52,8 +52,15 @@ client.memory_probe
 `client.tool_names` returns the cached list:
 
 ```ruby
-puts client.tool_names.size   # 272
+puts client.tool_names.size   # 311 on current main (live tools/list)
 ```
+
+`client.tool_names` is fetched from the connected server at runtime; 311 is the
+current `main` server count as of 2026-11-07. The gem's `Mem20::Surface`
+constant remains pinned to the older 272 / 27 SDK baseline and is not the live
+server count. Use the dynamic `client.tool_names` / `client.tools` result when
+describing the connected server. The SDK constant and its surface check need a
+separate code-and-test refresh; see [issue #392](https://github.com/bythewayz66-glitch/mem20/issues/392).
 
 ## Inspect the schemas
 

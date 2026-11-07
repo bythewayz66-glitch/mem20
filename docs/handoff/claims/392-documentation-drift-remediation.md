@@ -10,6 +10,8 @@ files:
   - docs/INDEX.md
   - mem20-sdk-ruby/docs/INSTALL.md
   - mem20-sdk-ruby/docs/USAGE.md
+  - docs/sdk/cpp/protocol.md
+  - sdk/perl/AUDIT.md
 depends_on: []
 ---
 

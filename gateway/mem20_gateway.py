@@ -145,6 +145,12 @@ SUBSYSTEMS = {
         "owner": "mem20-renovation",
         "wave": 3,
     },
+    "mem20compoundingproductecosystemz": {
+        "purpose": "Compounding Product Ecosystem with 6 peers, HTTP cockpit, MCP",
+        "entry": "python -m mem20compoundingproductecosystemz status",
+        "owner": "mem20-renovation",
+        "wave": 3,
+    },
     "mem20communitychallengeenginez": {
         "purpose": "Community challenge engine (challenges/leaderboards/rewards) with 6 peers, HTTP cockpit, MCP",
         "entry": "python -m mem20communitychallengeenginez status",

@@ -120,3 +120,4 @@ served by the fleet process itself at its root URL.
 - [Causal Routing Brain monitor](causalroutingbrainz/index.html) — `PYTHONPATH=/opt/mem20 /opt/mem20/.venv/bin/python -m mem20causalroutingbrainz serve --port 8789`
 - [Collective Model Intelligence monitor](collectivemodelintelligencez/index.html) — `PYTHONPATH=/opt/mem20 /opt/mem20/.venv/bin/python -m mem20collectivemodelintelligencez serve --port 8790`
 - [Community Challenge Engine monitor](communitychallengeenginez/index.html) — `PYTHONPATH=/opt/mem20 /opt/mem20/.venv/bin/python -m mem20communitychallengeenginez serve --port 8791`
+- [Compounding Product Ecosystem monitor](compoundingproductecosystemz/index.html) — `PYTHONPATH=/opt/mem20 /opt/mem20/.venv/bin/python -m mem20compoundingproductecosystemz serve --port 8792`

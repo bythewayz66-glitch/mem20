@@ -1,5 +1,8 @@
 # mem20 C++ SDK — Protocol
 
+> **Historical SDK baseline — refresh before treating as current.** This protocol guide is pinned to the C++ SDK's 3.0.0 / 270-tools / 27-domain source snapshot. Current repository `main` is **3.1.2 / 311 tools / 39 domains** as of 2026-11-07. The JSON-RPC / MCP wire descriptions remain useful, but the tool-count example and linked domain-table reference are historical. The C++ SDK baseline, headers, tests, and source ledger need a coordinated refresh before release. See [issue #392](https://github.com/bythewayz66-glitch/mem20/issues/392).
+
+
 Wire contract the SDK speaks to a mem20 server.
 **Server baseline:** `mem20` **3.0.0** (`pyproject.toml` / `VERSION`) · **Repo:** https://github.com/bythewayz66-glitch/mem20 (`main`)
 

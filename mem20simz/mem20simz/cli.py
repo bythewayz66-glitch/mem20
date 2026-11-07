@@ -1,35 +1,9 @@
-"""Crew runtime CLI (skeleton slice)."""
-
+"""Crew runtime CLI, with status/doctor/simulate/serve depth commands."""
 from __future__ import annotations
-
-import argparse
 import sys
 from typing import Optional, Sequence
-
-from . import MEMBERS, __version__
-
-
-def build_parser() -> argparse.ArgumentParser:
-    parser = argparse.ArgumentParser(
-        prog="mem20simz",
-        description="mem20 simulator runtime.",
-    )
-    parser.add_argument("--version", action="store_true",
-                        help="Print the version and exit.")
-    parser.add_argument("--members", action="store_true",
-                        help="List member systems and exit.")
-    return parser
-
-
+from .runtime import main as runtime_main
 def main(argv: Optional[Sequence[str]] = None) -> int:
-    args = build_parser().parse_args(argv)
-    if args.version:
-        print(f"mem20simz {__version__}")
-    if args.members:
-        for member in MEMBERS:
-            print(member)
-    return 0
-
-
+    return runtime_main(argv)
 if __name__ == "__main__":
     sys.exit(main())

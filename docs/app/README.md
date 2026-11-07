@@ -290,3 +290,4 @@ served by the fleet process itself at its root URL.
 - [Self-Optimizing Kernel monitor](selfoptimizingkernelz/index.html) — `PYTHONPATH=/opt/mem20 /opt/mem20/.venv/bin/python -m mem20selfoptimizingkernelz serve --port 8826`
 - [Self-Tuning Resource Governor monitor](selftuningresourcegovernorz/index.html) — `PYTHONPATH=/opt/mem20 /opt/mem20/.venv/bin/python -m mem20selftuningresourcegovernorz serve --port 8827`
 - [Selfz monitor](selfz/index.html) — `PYTHONPATH=/opt/mem20 /opt/mem20/.venv/bin/python -m mem20selfz serve --port 8828`
+- [Sensory Memory Ingest monitor](sensorymemoryingestz/index.html) — `PYTHONPATH=/opt/mem20 /opt/mem20/.venv/bin/python -m mem20sensorymemoryingestz serve --port 8829`

@@ -1,22 +1,36 @@
-# RM-024 — Sensory Memory Ingest
+# mem20sensorymemoryingestz — Sensory Memory Ingest
 
-Outcome: Turn images, audio, screens, files, and device signals into searchable episodes
+First-class mem20 subsystem for sensory memory ingest (ingest/filter_by_modality/recent/ingest_health) with **6 peers**, SQLite WAL runtime, CLI, JSON HTTP API, served web cockpit, docs/app monitor, and real MCP tools. Core API preserved.
 
-Breakthrough: Personal memory extends beyond typed conversations
+## Peers (6)
+`mem20episodicmemorygraphz`, `mem20eventstreamsuperhighwayz`, `mem20contextcompressionforgez`, `mem20capabilitymarketplacez`, `mem20universalhealthnervoussystemz`, `mem20faultcontainmentcellsz`.
 
-Machine-executable local runtime includes versioned state, SQLite WAL persistence, events, SDK CRUD, resumable/idempotent jobs, retries/timeouts/quotas, recovery, `search` operation logic, decision explanations, feedback, CLI, HTTP console/API, mesh selection/failover, simulator, benchmark, metrics, and opt-in signature mode.
-
-## Run
-
-```bash
-# CLI help, then exercise the local runtime end to end
-python -m mem20sensorymemoryingestz --help
-python -m mem20sensorymemoryingestz simulate
-python -m mem20sensorymemoryingestz benchmark
+## Python API (runnable)
+```python
+from mem20sensorymemoryingestz.domain import ingest, filter_by_modality, recent, ingest_health, ingest_report, probe
+s={"entries":[]}; ingest(s,"hi","text"); print(ingest_health(s)["entries"])  # 1
+r=ingest_report(); print(r["ok"], len(r["peers"]))  # True 6
+print(probe()["ok"])  # True
 ```
 
-## Tests
-
+## CLI (runnable)
 ```bash
-PYTHONPATH=/opt/mem20 .venv/bin/python -m pytest mem20sensorymemoryingestz/mem20sensorymemoryingestz/tests -q
+cd /opt/mem20
+PYTHONPATH=/opt/mem20 /opt/mem20/.venv/bin/python -m mem20sensorymemoryingestz --help
+PYTHONPATH=/opt/mem20 /opt/mem20/.venv/bin/python -m mem20sensorymemoryingestz status
+PYTHONPATH=/opt/mem20 /opt/mem20/.venv/bin/python -m mem20sensorymemoryingestz doctor
+PYTHONPATH=/opt/mem20 /opt/mem20/.venv/bin/python -m mem20sensorymemoryingestz serve --port 8829
 ```
+
+## HTTP API & web/docs
+`GET/POST /api/status`, `/api/doctor`, `POST /api/simulate`, `GET /api/events|health`. Cockpit `/`. docs/app `docs/app/sensorymemoryingestz/index.html` (no Vite edits).
+
+## MCP & registration
+`SensoryMemoryIngestToolsMixin` in `mcp/server.py`; gateway `SUBSYSTEMS`.
+
+## Tests & conformance
+```bash
+PYTHONPATH=/opt/mem20 /opt/mem20/.venv/bin/python -m pytest mem20sensorymemoryingestz/mem20sensorymemoryingestz/tests -q --noconftest -p no:cacheprovider
+PYTHONPATH=/opt/mem20 /opt/mem20/.venv/bin/python scripts/renovation/conformance.py mem20sensorymemoryingestz
+```
+Target **7/7**.

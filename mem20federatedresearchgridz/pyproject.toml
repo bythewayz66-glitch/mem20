@@ -5,7 +5,7 @@ build-backend="setuptools.build_meta"
 [project]
 name="mem20federatedresearchgridz"
 version="1.0.0"
-description="mem20federatedresearchgridz first-class module"
+description="Federated Research Grid (RM-043): distributed node search/aggregation with collective intelligence, CRDT merge, and priority/connector peer signals"
 requires-python=">=3.11"
 
 [project.scripts]
@@ -14,4 +14,4 @@ mem20federatedresearchgridz="mem20federatedresearchgridz.runtime:main"
 [tool.setuptools]
 packages=["mem20federatedresearchgridz"]
 [tool.setuptools.package-data]
-mem20federatedresearchgridz=["CAPABILITY.json","roadmap.json"]
+mem20federatedresearchgridz=["CAPABILITY.json","roadmap.json","web/*"]

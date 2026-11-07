@@ -592,3 +592,16 @@ runnable README, docs/app monitor, gateway/toolchest, and 6 unique peers (differ
 `mem20intenttomissioncompilerz`, `mem20personalautomationcanvasz`, `mem20multiworldsandboxz`,
 `mem20visualagentblackboardz`. Verification: 7 tests pass (4 legacy + 3 new, 6-peer coverage),
 conformance **7/7**.
+
+---
+## 2026-11-07 - mem20federatedresearchgridz (#313): depth-first rebuild
+
+Rebuilt RM-043 (Federated Research Grid, fails 5,6,7, operation_kind=search) as first-class while
+preserving legacy domain API (`register_node`,`distribute_task`,`aggregate_results`,`grid_health`,
+`federated_round`) used by #301 and preserving CAPABILITY Engine/CLI/10-scenario simulator. Enriched
+`search` with federated grid analysis and 6 unique peer signals (different from #300–#312) for
+explicit grid requests: `mem20collectivemodelintelligencez`,`mem20personalcognitivesearchz`,
+`mem20alternativedatabaseplaygroundz`,`mem20crdtcollaborationenginez`,`mem20prioritycollisionresolverz`,
+`mem20connectormarketplacez`. Added `/doctor`, web cockpit, root shims, fenced runnable README,
+docs/PLAN, docs/app monitor, gateway/toolchest. Verification: 9 tests pass (5 legacy + 4 new),
+conformance **7/7**.

@@ -1,0 +1,2 @@
+# Federated Research Grid (RM-043, #313)
+Preserve legacy domain API (used by #301) and CAPABILITY/Engine/CLI/simulator. Enrich `search` with federated grid analysis (register/distribute/aggregate/health/round) and 6 unique peer signals (different from #300–#312) for explicit grid requests: `mem20collectivemodelintelligencez`, `mem20personalcognitivesearchz`, `mem20alternativedatabaseplaygroundz`, `mem20crdtcollaborationenginez`, `mem20prioritycollisionresolverz`, `mem20connectormarketplacez`. `/doctor`, web, fenced README, docs/app, gateway/toolchest, 7/7.

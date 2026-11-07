@@ -26,7 +26,10 @@ def carbon_footprint(node, workload_size):
 
 def greenest_node(nodes, workload):
     scored = [(energy_cost(n, workload.get("size", 1)) + carbon_footprint(n, workload.get("size", 1)) * 0.001, n) for n in nodes]
-    scored.sort()
+    # Ties are broken by node id, not by comparing the node mappings: two
+    # identical machines have equal cost, and ``sort()`` on the raw tuple then
+    # raises ``TypeError`` because dicts are not orderable.
+    scored.sort(key=lambda item: (item[0], str(item[1].get("id", ""))))
     return scored[0][1] if scored else None
 
 

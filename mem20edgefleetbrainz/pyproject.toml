@@ -5,7 +5,7 @@ build-backend="setuptools.build_meta"
 [project]
 name="mem20edgefleetbrainz"
 version="1.0.0"
-description="mem20edgefleetbrainz first-class module"
+description="Edge Fleet Brain: one capability-aware fleet over heterogeneous hardware"
 requires-python=">=3.11"
 
 [project.scripts]
@@ -13,5 +13,10 @@ mem20edgefleetbrainz="mem20edgefleetbrainz.runtime:main"
 
 [tool.setuptools]
 packages=["mem20edgefleetbrainz"]
+
 [tool.setuptools.package-data]
-mem20edgefleetbrainz=["CAPABILITY.json","roadmap.json"]
+mem20edgefleetbrainz=["web/*"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "--import-mode=importlib"

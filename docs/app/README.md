@@ -1,12 +1,12 @@
 # App / product narrative — `docs/app/`
 
-Entry point for the `docs/app/` documentation set. **22 tracked file(s).**
+Entry point for the `docs/app/` documentation set. **23 tracked file(s).**
 
 ## Contents
 
 - [`.nojekyll`](.nojekyll)
 - [`assets/index-BMgU54DU.css`](assets/index-BMgU54DU.css)
-- [`assets/index-BS9Fg-qc.js`](assets/index-BS9Fg-qc.js)
+- [`assets/index-DCqPYDUE.js`](assets/index-DCqPYDUE.js)
 - [`deck/PERMANENT_URL.md`](deck/PERMANENT_URL.md)
 - [`deck/index.html`](deck/index.html)
 - [`deck/slides/README.md`](deck/slides/README.md)
@@ -24,8 +24,32 @@ Entry point for the `docs/app/` documentation set. **22 tracked file(s).**
 - [`deck/slides/slide_12.html`](deck/slides/slide_12.html)
 - [`deck/slides/slide_13.html`](deck/slides/slide_13.html)
 - [`desktop-packaging.md`](desktop-packaging.md)
+- [`fleet/index.html`](fleet/index.html)
 - [`index.html`](index.html)
 - [`narrative/serial-2026-10-27.md`](narrative/serial-2026-10-27.md)
+
+## Fleet monitor (`fleet/`)
+
+[`fleet/index.html`](fleet/index.html) is the estate-shell view of the Edge Fleet
+Brain (RM-041). It is a static page: it owns no state and reads the subsystem's
+own JSON API, so the operator cockpit served by the fleet process and this page
+cannot drift apart.
+
+```bash
+# start the subsystem that owns the state plane
+PYTHONPATH=/opt/mem20 python3 -m mem20edgefleetbrainz --store /tmp/fleet.db serve --port 8771
+
+# open the monitor against it (also accepts ?api=http://host:port)
+python3 -m http.server 8000 --directory docs/app
+# -> http://127.0.0.1:8000/fleet/?api=http://127.0.0.1:8771
+```
+
+The page shows fleet health, node load, the workload queue, the fault forecast,
+the 24 h energy projection and the live event stream, and it can run the six
+scenario simulator, probe all six ecosystem peers and plan a rebalance. The
+`API` field persists in `localStorage`; `?api=` overrides it for the session.
+The full operator cockpit (node registration, dispatch, drain/evacuate) is
+served by the fleet process itself at its root URL.
 
 ## Conventions
 

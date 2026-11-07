@@ -91,6 +91,12 @@ SUBSYSTEMS = {
         "owner": "hsp2",
         "wave": 2,
     },
+    "mem20edgefleetbrainz": {
+        "purpose": "Coordinate heterogeneous computers, phones, servers and appliances as one capability-aware fleet",
+        "entry": "python -m mem20edgefleetbrainz status",
+        "owner": "hsp2",
+        "wave": 2,
+    },
     "mem20visualdataflowcomposerz": {
         "purpose": "Visual dataflow composer: typed streams wired into debuggable pipelines",
         "entry": "python -m mem20visualdataflowcomposerz simulate",

@@ -1,0 +1,590 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#08111f" />
+    <meta
+      name="description"
+      content="Edge Fleet Brain — monitor and probe the capability-aware fleet from the mem20 estate shell."
+    />
+    <title>Edge Fleet Brain — estate monitor</title>
+    <style>
+      :root {
+        --bg: #08111f;
+        --panel: #0f1d31;
+        --panel-2: #142640;
+        --line: #1f3a5c;
+        --text: #e8f0fb;
+        --muted: #8aa3c2;
+        --accent: #4fd1c5;
+        --accent-2: #6aa9ff;
+        --warn: #f6c85f;
+        --bad: #ff7b8a;
+        --good: #5ee2a0;
+        --mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+        --sans: Inter, system-ui, -apple-system, "Segoe UI", sans-serif;
+      }
+      * { box-sizing: border-box; }
+      body {
+        margin: 0;
+        background:
+          radial-gradient(1200px 600px at 15% -10%, #12304f 0%, transparent 55%),
+          radial-gradient(900px 500px at 95% 0%, #0c2751 0%, transparent 50%),
+          var(--bg);
+        color: var(--text);
+        font-family: var(--sans);
+        min-height: 100vh;
+      }
+      a { color: var(--accent-2); }
+      header.topbar {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 16px;
+        align-items: center;
+        justify-content: space-between;
+        padding: 20px 28px;
+        border-bottom: 1px solid var(--line);
+        position: sticky;
+        top: 0;
+        background: rgba(8, 17, 31, 0.92);
+        backdrop-filter: blur(8px);
+        z-index: 5;
+      }
+      .brand { display: flex; gap: 14px; align-items: center; }
+      .dot {
+        width: 12px; height: 12px; border-radius: 50%;
+        background: var(--good);
+        box-shadow: 0 0 0 6px rgba(94, 226, 160, 0.12);
+      }
+      .brand h1 { margin: 0; font-size: 20px; letter-spacing: 0.2px; }
+      .brand p { margin: 2px 0 0; color: var(--muted); font-size: 12px; }
+      .api-config { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+      .api-config label { color: var(--muted); font-size: 12px; text-transform: uppercase; letter-spacing: 0.08em; }
+      .api-config input {
+        width: min(340px, 60vw);
+        padding: 8px 10px;
+        border-radius: 8px;
+        border: 1px solid var(--line);
+        background: #0a1728;
+        color: var(--text);
+        font-family: var(--mono);
+        font-size: 12px;
+      }
+      button {
+        cursor: pointer;
+        border-radius: 8px;
+        border: 1px solid var(--line);
+        background: var(--panel-2);
+        color: var(--text);
+        padding: 8px 14px;
+        font-family: inherit;
+        font-size: 12px;
+        font-weight: 600;
+        transition: border-color 120ms ease, transform 120ms ease;
+      }
+      button:hover { border-color: var(--accent); }
+      button:active { transform: translateY(1px); }
+      button.primary { background: var(--accent); border-color: var(--accent); color: #06231f; }
+      button.ghost { background: transparent; }
+      .pill {
+        font-family: var(--mono);
+        font-size: 11px;
+        padding: 4px 10px;
+        border-radius: 999px;
+        border: 1px solid var(--line);
+        color: var(--muted);
+      }
+      .pill.live { color: var(--good); border-color: rgba(94, 226, 160, 0.5); }
+      .pill.offline { color: var(--bad); border-color: rgba(255, 123, 138, 0.5); }
+      main { padding: 24px 28px 60px; max-width: 1320px; margin: 0 auto; }
+      .banner {
+        margin-bottom: 18px;
+        padding: 12px 16px;
+        border-radius: 10px;
+        border: 1px solid rgba(255, 123, 138, 0.4);
+        background: rgba(255, 123, 138, 0.08);
+        color: #ffd7dc;
+        font-size: 13px;
+        display: flex;
+        justify-content: space-between;
+        gap: 12px;
+        align-items: center;
+      }
+      .banner[hidden] { display: none; }
+      .stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 12px; margin-bottom: 20px; }
+      .stat {
+        background: linear-gradient(180deg, var(--panel-2), var(--panel));
+        border: 1px solid var(--line);
+        border-radius: 12px;
+        padding: 14px 16px;
+      }
+      .stat .k { color: var(--muted); font-size: 11px; text-transform: uppercase; letter-spacing: 0.08em; }
+      .stat .v { font-family: var(--mono); font-size: 26px; margin-top: 6px; }
+      .stat .v small { font-size: 13px; color: var(--muted); }
+      .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(420px, 1fr)); gap: 16px; margin-bottom: 16px; }
+      .panel {
+        background: var(--panel);
+        border: 1px solid var(--line);
+        border-radius: 12px;
+        padding: 16px 18px 18px;
+        min-width: 0;
+      }
+      .panel-head { display: flex; justify-content: space-between; align-items: center; gap: 10px; margin-bottom: 12px; flex-wrap: wrap; }
+      .panel-head h2 { margin: 0; font-size: 14px; letter-spacing: 0.04em; text-transform: uppercase; color: #cfe0f5; }
+      .hint { color: var(--muted); font-size: 11px; font-family: var(--mono); }
+      .row-actions { display: flex; gap: 8px; flex-wrap: wrap; }
+      table { width: 100%; border-collapse: collapse; font-size: 12px; }
+      th, td { text-align: left; padding: 7px 8px; border-bottom: 1px solid rgba(31, 58, 92, 0.6); }
+      th { color: var(--muted); font-weight: 600; font-size: 10px; text-transform: uppercase; letter-spacing: 0.08em; }
+      td { font-family: var(--mono); color: #d7e6f8; }
+      tr:last-child td { border-bottom: none; }
+      .empty { color: var(--muted); font-size: 12px; padding: 10px 2px; }
+      .tag { font-size: 10px; padding: 2px 8px; border-radius: 999px; border: 1px solid var(--line); color: var(--muted); }
+      .tag.online, .tag.completed, .tag.running { color: var(--good); border-color: rgba(94, 226, 160, 0.45); }
+      .tag.draining, .tag.sleeping, .tag.queued { color: var(--warn); border-color: rgba(246, 200, 95, 0.45); }
+      .tag.offline, .tag.failed { color: var(--bad); border-color: rgba(255, 123, 138, 0.45); }
+      .meter { height: 5px; border-radius: 999px; background: #0a1728; overflow: hidden; margin-top: 6px; }
+      .meter > span { display: block; height: 100%; background: var(--accent); }
+      .events { list-style: none; margin: 0; padding: 0; max-height: 320px; overflow: auto; }
+      .events li {
+        display: grid;
+        grid-template-columns: 90px 150px 1fr;
+        gap: 10px;
+        padding: 7px 4px;
+        border-bottom: 1px solid rgba(31, 58, 92, 0.45);
+        font-family: var(--mono);
+        font-size: 11px;
+      }
+      .events .time { color: var(--muted); }
+      .events .kind { color: var(--accent-2); }
+      .events .payload { color: #c6d7ea; overflow-wrap: anywhere; }
+      pre.output {
+        background: #071322;
+        border: 1px solid var(--line);
+        border-radius: 10px;
+        padding: 12px 14px;
+        font-family: var(--mono);
+        font-size: 11px;
+        color: #cfe0f5;
+        max-height: 320px;
+        overflow: auto;
+        white-space: pre-wrap;
+        overflow-wrap: anywhere;
+        margin: 12px 0 0;
+      }
+      pre.output[hidden] { display: none; }
+      footer { margin-top: 24px; color: var(--muted); font-size: 12px; display: flex; flex-wrap: wrap; gap: 8px 20px; justify-content: space-between; }
+      @media (max-width: 640px) {
+        header.topbar, main { padding-left: 16px; padding-right: 16px; }
+        .grid { grid-template-columns: 1fr; }
+        .events li { grid-template-columns: 70px 120px 1fr; }
+      }
+    </style>
+  </head>
+  <body>
+    <header class="topbar">
+      <div class="brand">
+        <span class="dot" id="health-dot"></span>
+        <div>
+          <h1>Edge Fleet Brain</h1>
+          <p>RM-041 · estate monitor for the capability-aware fleet</p>
+        </div>
+      </div>
+      <div class="api-config">
+        <span id="pill" class="pill">disconnected</span>
+        <label for="api-base">API</label>
+        <input id="api-base" spellcheck="false" placeholder="http://127.0.0.1:8771" />
+        <button id="connect" class="primary">Connect</button>
+        <a id="cockpit" class="hint" href="#" target="_blank" rel="noopener">open cockpit ↗</a>
+      </div>
+    </header>
+
+    <main>
+      <div id="banner" class="banner" hidden>
+        <span id="banner-text"></span>
+        <button id="banner-close" class="ghost">Dismiss</button>
+      </div>
+
+      <section class="stats" aria-live="polite">
+        <div class="stat"><div class="k">health</div><div class="v" id="s-health">—</div></div>
+        <div class="stat"><div class="k">nodes usable</div><div class="v" id="s-nodes">—</div></div>
+        <div class="stat"><div class="k">cpu used</div><div class="v" id="s-cpu">—</div></div>
+        <div class="stat"><div class="k">memory used</div><div class="v" id="s-mem">—</div></div>
+        <div class="stat"><div class="k">queue / running</div><div class="v" id="s-queue">—</div></div>
+        <div class="stat"><div class="k">energy · 24 h</div><div class="v" id="s-energy">—</div></div>
+        <div class="stat"><div class="k">at risk</div><div class="v" id="s-risk">—</div></div>
+      </section>
+
+      <div class="grid">
+        <section class="panel">
+          <div class="panel-head">
+            <h2>Nodes</h2>
+            <span class="hint" id="nodes-hint">—</span>
+          </div>
+          <div id="nodes"></div>
+        </section>
+
+        <section class="panel">
+          <div class="panel-head">
+            <h2>Workloads</h2>
+            <span class="hint" id="workloads-hint">—</span>
+          </div>
+          <div id="workloads"></div>
+        </section>
+      </div>
+
+      <div class="grid">
+        <section class="panel">
+          <div class="panel-head">
+            <h2>Fault forecast</h2>
+            <span class="hint">next hour</span>
+          </div>
+          <div id="faults"></div>
+        </section>
+
+        <section class="panel">
+          <div class="panel-head">
+            <h2>Energy</h2>
+            <span class="hint" id="energy-hint">24 h held load</span>
+          </div>
+          <div id="energy"></div>
+        </section>
+      </div>
+
+      <section class="panel">
+        <div class="panel-head">
+          <h2>Live events</h2>
+          <div class="row-actions">
+            <button id="run-rebalance" class="ghost">Plan rebalance</button>
+            <button id="run-doctor" class="ghost">Probe ecosystem</button>
+            <button id="run-simulate" class="ghost">Run simulator</button>
+            <button id="refresh" class="ghost">Refresh</button>
+          </div>
+        </div>
+        <ol id="events" class="events"></ol>
+        <pre id="output" class="output" hidden></pre>
+      </section>
+
+      <footer>
+        <span>Static estate page — it reads the fleet's own JSON API and does not own state.</span>
+        <span><a href="../README.md">docs/app</a> · <a href="../../../mem20edgefleetbrainz/README.md">subsystem README</a></span>
+      </footer>
+    </main>
+
+    <script type="module">
+      const DEFAULT_API = "http://127.0.0.1:8771";
+      const POLL_MS = 5000;
+
+      const el = (id) => document.getElementById(id);
+      const input = el("api-base");
+      const pill = el("pill");
+      const banner = el("banner");
+      const bannerText = el("banner-text");
+      const output = el("output");
+      const cockpit = el("cockpit");
+      const state = { api: "", timer: null, online: false };
+
+      function normalize(raw) {
+        let value = String(raw || "").trim();
+        if (!value) return DEFAULT_API;
+        if (!/^[a-z]+:\/\//i.test(value)) value = `http://${value}`;
+        return value.replace(/\/+$/, "");
+      }
+
+      // Static pages may be opened from file:// or a sandboxed iframe where
+      // storage and history access throw. The monitor must still run.
+      function storedApi() {
+        try { return localStorage.getItem("fleet.api"); } catch { return null; }
+      }
+
+      function storeApi(value) {
+        try { localStorage.setItem("fleet.api", value); } catch { /* storage unavailable */ }
+      }
+
+      function showBanner(message) {
+        bannerText.textContent = message;
+        banner.hidden = false;
+      }
+
+      function clearBanner() {
+        banner.hidden = true;
+        bannerText.textContent = "";
+      }
+
+      function setPill(text, mode) {
+        pill.textContent = text;
+        pill.className = `pill${mode ? ` ${mode}` : ""}`;
+        el("health-dot").style.background =
+          mode === "live" ? "var(--good)" : mode === "offline" ? "var(--bad)" : "var(--muted)";
+        el("health-dot").style.boxShadow =
+          mode === "live" ? "0 0 0 6px rgba(94,226,160,0.12)" : "0 0 0 6px rgba(255,123,138,0.10)";
+      }
+
+      async function api(path, init = {}) {
+        const controller = new AbortController();
+        const timer = setTimeout(() => controller.abort(), 10000);
+        try {
+          const response = await fetch(`${state.api}${path}`, {
+            cache: "no-store",
+            headers: { "Content-Type": "application/json" },
+            signal: controller.signal,
+            ...init,
+          });
+          const text = await response.text();
+          let payload = null;
+          if (text) {
+            try { payload = JSON.parse(text); } catch { payload = { raw: text }; }
+          }
+          if (!response.ok) {
+            const detail = payload && (payload.error || payload.kind);
+            throw new Error(`${response.status} ${response.statusText}${detail ? ` — ${detail}` : ""}`);
+          }
+          return payload;
+        } finally {
+          clearTimeout(timer);
+        }
+      }
+
+      function fmtPct(value) {
+        return `${(Number(value || 0) * 100).toFixed(0)}%`;
+      }
+
+      function fmtNum(value, digits = 0) {
+        const number = Number(value || 0);
+        return number.toFixed(digits);
+      }
+
+      function el2(tag, text, className) {
+        const node = document.createElement(tag);
+        if (text !== undefined && text !== null) node.textContent = String(text);
+        if (className) node.className = className;
+        return node;
+      }
+
+      function table(columns, rows, render) {
+        if (!rows.length) return el2("div", "Nothing to show yet.", "empty");
+        const table = document.createElement("table");
+        const thead = document.createElement("thead");
+        const headRow = document.createElement("tr");
+        for (const column of columns) headRow.append(el2("th", column));
+        thead.append(headRow);
+        table.append(thead);
+        const tbody = document.createElement("tbody");
+        for (const row of rows) {
+          const tr = document.createElement("tr");
+          for (const cell of render(row)) tr.append(cell);
+          tbody.append(tr);
+        }
+        table.append(tbody);
+        return table;
+      }
+
+      function tag(text) {
+        return el2("span", text, `tag ${String(text).toLowerCase()}`);
+      }
+
+      function renderStats(status) {
+        const health = status.health || {};
+        el("s-health").textContent = fmtPct(health.health);
+        el("s-nodes").textContent = `${health.usable ?? 0}/${health.nodes ?? 0}`;
+        el("s-cpu").textContent = `${fmtNum(health.cpu_used, 1)}/${health.cpu_capacity ?? 0}`;
+        el("s-cpu").append(el2("small", ` ${fmtPct(health.cpu_utilisation)}`));
+        el("s-mem").textContent = `${fmtNum(health.memory_used_gb, 1)}/${fmtNum(health.memory_capacity_gb, 1)} GB`;
+        el("s-mem").append(el2("small", ` ${fmtPct(health.memory_utilisation)}`));
+        el("s-queue").textContent = `${health.queued ?? 0} / ${health.running ?? 0}`;
+        const energy = status.energy || { hours: 24, total_kwh: 0 };
+        el("s-energy").textContent = `${fmtNum(energy.total_kwh, 2)} kWh`;
+        el("energy-hint").textContent = `${energy.hours} h held load`;
+        const risky = (status.faults || []).filter((f) => Number(f.risk) >= 0.3);
+        el("s-risk").textContent = risky.length ? String(risky.length) : "0";
+        el("s-risk").style.color = risky.length ? "var(--bad)" : "var(--text)";
+      }
+
+      function renderNodes(payload) {
+        const nodes = payload.nodes || [];
+        el("nodes-hint").textContent = `${nodes.length} registered`;
+        el("nodes").replaceChildren(table(
+          ["node", "kind", "status", "cpu", "mem GB", "reliability", "$/h"],
+          nodes,
+          (node) => [
+            el2("td", node.node_id),
+            el2("td", node.kind),
+            (() => { const td = document.createElement("td"); td.append(tag(node.status)); return td; })(),
+            el2("td", `${fmtNum(node.current_cpu, 1)}/${node.cpu_cores}`),
+            el2("td", `${fmtNum(node.current_memory_gb, 1)}/${fmtNum(node.memory_gb, 1)}`),
+            el2("td", fmtNum(node.reliability, 2)),
+            el2("td", fmtNum(node.price_per_hour, 2)),
+          ],
+        ));
+      }
+
+      function renderWorkloads(payload) {
+        const workloads = payload.workloads || [];
+        el("workloads-hint").textContent = `${workloads.length} tracked`;
+        el("workloads").replaceChildren(table(
+          ["workload", "state", "node", "cpu", "priority"],
+          workloads,
+          (workload) => [
+            el2("td", workload.workload_id),
+            (() => { const td = document.createElement("td"); td.append(tag(workload.state)); return td; })(),
+            el2("td", workload.assigned_node || "—"),
+            el2("td", fmtNum(workload.cpu, 1)),
+            el2("td", workload.priority),
+          ],
+        ));
+      }
+
+      function renderFaults(status) {
+        const faults = status.faults || [];
+        el("faults").replaceChildren(table(
+          ["node", "risk", "action", "drivers"],
+          faults,
+          (forecast) => [
+            el2("td", forecast.node_id),
+            el2("td", fmtPct(forecast.risk)),
+            (() => { const td = document.createElement("td"); td.append(tag(forecast.recommendation)); return td; })(),
+            el2("td", (forecast.drivers || []).join(", ") || "nominal"),
+          ],
+        ));
+      }
+
+      function renderEnergy(status) {
+        const energy = status.energy || { nodes: [] };
+        const rows = energy.nodes || [];
+        el("energy").replaceChildren(table(
+          ["node", "load", "watts", "wh", "cost"],
+          rows,
+          (row) => [
+            el2("td", row.node_id),
+            el2("td", fmtPct(row.load)),
+            el2("td", fmtNum(row.watts, 1)),
+            el2("td", fmtNum(row.wh, 1)),
+            el2("td", fmtNum(row.cost, 4)),
+          ],
+        ));
+      }
+
+      function renderEvents(payload) {
+        const events = (payload.events || []).slice().reverse();
+        const list = el("events");
+        list.replaceChildren();
+        if (!events.length) {
+          list.append(el2("li", "No events yet — register a node to start the stream.", "empty"));
+          return;
+        }
+        for (const event of events) {
+          const item = document.createElement("li");
+          const stamp = new Date(Number(event.ts) * 1000);
+          item.append(
+            el2("span", Number.isNaN(stamp.getTime()) ? "—" : stamp.toLocaleTimeString(), "time"),
+            el2("span", event.kind, "kind"),
+            el2("span", JSON.stringify(event.payload), "payload"),
+          );
+          list.append(item);
+        }
+      }
+
+      async function refresh() {
+        const [status, nodes, workloads, events] = await Promise.all([
+          api("/api/status"),
+          api("/api/nodes"),
+          api("/api/workloads"),
+          api("/api/events?since=0&limit=100"),
+        ]);
+        renderStats(status);
+        renderNodes(nodes);
+        renderWorkloads(workloads);
+        renderFaults(status);
+        renderEnergy(status);
+        renderEvents(events);
+        clearBanner();
+        setPill("live", "live");
+        state.online = true;
+      }
+
+      async function guarded(label, action) {
+        try {
+          const result = await action();
+          output.hidden = false;
+          output.textContent = `${label}\n${JSON.stringify(result, null, 2)}`;
+          clearBanner();
+          return result;
+        } catch (error) {
+          showBanner(`${label} failed: ${error.message}`);
+          output.hidden = false;
+          output.textContent = `${label} failed: ${error.message}`;
+          return null;
+        }
+      }
+
+      async function connect() {
+        stopPolling();
+        state.api = normalize(input.value);
+        input.value = state.api;
+        storeApi(state.api);
+        try {
+          const url = new URL(location.href);
+          url.searchParams.set("api", state.api);
+          history.replaceState(null, "", url);
+        } catch { /* history unavailable in this embedding */ }
+        cockpit.href = `${state.api}/`;
+        try {
+          await api("/api/healthz");
+          await refresh();
+          state.timer = setInterval(() => {
+            refresh().catch((error) => {
+              state.online = false;
+              setPill("offline", "offline");
+              showBanner(`refresh failed: ${error.message}`);
+            });
+          }, POLL_MS);
+        } catch (error) {
+          state.online = false;
+          setPill("offline", "offline");
+          showBanner(`cannot reach ${state.api}: ${error.message}`);
+        }
+      }
+
+      function stopPolling() {
+        if (state.timer) clearInterval(state.timer);
+        state.timer = null;
+      }
+
+      el("connect").addEventListener("click", connect);
+      input.addEventListener("keydown", (event) => {
+        if (event.key === "Enter") connect();
+      });
+      el("banner-close").addEventListener("click", clearBanner);
+      el("refresh").addEventListener("click", () => {
+        refresh().catch((error) => showBanner(`refresh failed: ${error.message}`));
+      });
+
+      el("run-simulate").addEventListener("click", async () => {
+        const result = await guarded("simulator", () =>
+          api("/api/simulate", { method: "POST", body: "{}" }));
+        if (result) {
+          output.textContent =
+            `simulator: ${result.passed}/${result.total} scenarios passed\n` +
+            JSON.stringify(result.scenarios, null, 2);
+        }
+      });
+
+      el("run-doctor").addEventListener("click", async () => {
+        await guarded("ecosystem probe", () => api("/api/doctor"));
+      });
+
+      el("run-rebalance").addEventListener("click", async () => {
+        await guarded("rebalance plan", () =>
+          api("/api/rebalance", { method: "POST", body: JSON.stringify({ apply: false }) }));
+      });
+
+      const initial = new URLSearchParams(location.search).get("api")
+        || storedApi()
+        || DEFAULT_API;
+      input.value = normalize(initial);
+      cockpit.href = `${normalize(initial)}/`;
+      connect();
+    </script>
+  </body>
+</html>

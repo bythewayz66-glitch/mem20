@@ -1,5 +1,8 @@
 # mem20 — Launch Copy Pack (v4)
 
+> **Historical / superseded snapshot — do not ship this copy.** This v4 pack was prepared against an older repository baseline (3.0.0 and 270 tools / 27 domains) and was subsequently superseded by v5. The current repository baseline is **3.1.2 and 311 tools / 39 domains** as of 2026-11-07. The v5 pack also needs a fresh claim and public-surface review before use. See [documentation drift issue #392](https://github.com/bythewayz66-glitch/mem20/issues/392).
+
+
 **Prepared by:** mem20 Content Creator · **Seat:** Brand & Positioning Strategist
 **Supersedes:** Launch Copy Pack v3 (`docs/gtm/mem20-launch-copy.md` @ `1264076698a0`, 2026-10-27 02:39 MDT)
 **Canonical repo:** https://github.com/bythewayz66-glitch/mem20 · **HEAD:** `1264076698a00878acc3adacf7bf1d51eea315cc` · `main` · **Version:** 3.0.0 · **License:** MIT · **Python:** >=3.10

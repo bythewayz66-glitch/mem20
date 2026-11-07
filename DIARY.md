@@ -511,3 +511,16 @@ with root shim. 6 unique peers (different from #300-#305): `mem20dynamicskillgra
 `mem20spatialcommanduniversez`, `mem20crossproductloyaltygraphz`,
 `mem20deterministicconfigurationgraphz`. Verification: 3 tests pass, simulate 6/6,
 doctor 6/6, conformance **7/7**, register_subsystem PASS (MCP warn only).
+
+---
+## 2026-11-07 - mem20ethicalincentivesimulatorz (#307): depth-first rebuild
+
+Rebuilt RM-203 (Ethical Incentive Simulator, fails 5,6,7) as first-class while preserving
+legacy domain API and existing CAPABILITY-driven Engine/Store/SDK/CLI/HTTP behavior (10-scenario
+`simulate` still passes). Enriched `progression` with real ethical incentive simulation
+(fairness, harm/manipulation violations, aligned rewards, risk vs hard-safety threshold) and
+6 unique peers (different from #300-#306): `mem20outcomesimulationlabz`, `mem20gamebalancesimulatorz`,
+`mem20executiondigitaltwinz`, `mem20dynamicquestrewardcomposerz`, `mem20rewardforgez`,
+`mem20executablegameconceptandscopepipelinez`. Added `/doctor` peer probe, web cockpit, root shim,
+README fenced runnable example, docs/PLAN, docs/app monitor, gateway/toolchest. Verification:
+8 tests pass (incl. 5 legacy + Engine simulator compatibility), conformance **7/7**.

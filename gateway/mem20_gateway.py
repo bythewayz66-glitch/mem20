@@ -91,7 +91,13 @@ SUBSYSTEMS = {
         "owner": "mem20-webdev",
         "wave": 2,
     },
-        "mem20episodicmemorygraphz": {
+        "mem20ethicalincentivesimulatorz": {
+        "purpose": "Ethical Incentive Simulator (RM-203): incentive/fairness simulation with harm-manipulation safeguards and outcome/risk peer signals",
+        "entry": "python -m mem20ethicalincentivesimulatorz simulate",
+        "owner": "mem20-webdev",
+        "wave": 2,
+    },
+    "mem20episodicmemorygraphz": {
         "purpose": "Episodic Memory Graph (RM-021): linked experiences/people/places/goals/actions/outcomes/time, recall and graph queries, durable state",
         "entry": "python -m mem20episodicmemorygraphz status",
         "owner": "mem20-webdev",
@@ -160,12 +166,6 @@ SUBSYSTEMS = {
     "mem20counterfactualmemorysimulatorz": {
         "purpose": "Counterfactual Memory Simulator with 6 peers, HTTP cockpit, MCP",
         "entry": "python -m mem20counterfactualmemorysimulatorz status",
-        "owner": "mem20-renovation",
-        "wave": 3,
-    },
-    "mem20contextcompressionforgez": {
-        "purpose": "Context Compression Forge with 6 peers, HTTP cockpit, MCP",
-        "entry": "python -m mem20contextcompressionforgez status",
         "owner": "mem20-renovation",
         "wave": 3,
     },

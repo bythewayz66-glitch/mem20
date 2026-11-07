@@ -1,0 +1,6 @@
+<!doctype html><html><head><meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Ethical Incentive Simulator (RM-203)</title><link rel="stylesheet" href="/style.css"/></head>
+<body><header><h1>Ethical Incentive Simulator <small>RM-203</small></h1>
+<div><button id="spec">Spec</button> <button id="met">Metrics</button> <button id="sim">Simulate</button></div></header>
+<main><div class="panel"><h2>Run</h2><label>Payload JSON</label><textarea id="p">{"xp":50,"agents":[{"id":"a","value":5,"effort":3,"ethical_score":0.8},{"id":"b","value":4,"effort":4,"harm":0}],"rounds":5,"actions":[{"reward":10,"ethical_score":0.9}]}</textarea><button id="go">Execute</button></div>
+<div class="panel"><h2>Result</h2><pre id="o">ready</pre></div></main><script src="/app.js"></script></body></html>

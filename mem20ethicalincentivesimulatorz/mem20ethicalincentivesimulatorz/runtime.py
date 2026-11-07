@@ -6,6 +6,9 @@ from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 from urllib.parse import urlparse, parse_qs
 
+WEB_DIR = Path(__file__).with_name("web")
+import mimetypes
+
 class ValidationError(ValueError): pass
 class QuotaError(RuntimeError): pass
 class PolicyError(RuntimeError): pass
@@ -169,7 +172,31 @@ class Engine:
         if k=='reward':
             value=float(p.get('value',1));rarity=max(.01,float(p.get('rarity',1)));elig=bool(p.get('eligible',True));timing=max(.1,float(p.get('timing_multiplier',1)));return {'eligible':elig,'reward_value':round(value*rarity*timing,4) if elig else 0,'rules_applied':['value','rarity','eligibility','timing']}
         if k=='progression':
-            xp=max(0,float(p.get('xp',0))); thresholds=p.get('thresholds') or [100,250,500,1000]; level=sum(xp>=float(t) for t in thresholds);return {'xp':xp,'level':level,'next_threshold':thresholds[level] if level<len(thresholds) else None}
+            xp=max(0,float(p.get('xp',0))); thresholds=p.get('thresholds') or [100,250,500,1000]; level=sum(xp>=float(t) for t in thresholds)
+            out={'xp':xp,'level':level,'next_threshold':thresholds[level] if level<len(thresholds) else None}
+            # Real ethical incentive simulation (RM-203) + 6 unique peer signals
+            try:
+                from . import domain as _dom, ecosystem as _eco
+                agents=p.get('agents') or [{'value':1,'effort':1,'id':'a'}]
+                rounds=max(1,min(200,int(p.get('rounds',10))))
+                sim=_dom.simulate_incentives([dict(a) for a in agents], rounds)
+                dist=[float(a.get('cumulative',0)) for a in agents]
+                fairness=_dom.fairness_score(dist)
+                violations=[{'index':i,'action':a} for i,a in enumerate(p.get('actions') or agents) if _dom.ethical_violation(a if isinstance(a,dict) else {})]
+                aligned=[{'index':i,'reward':_dom.align_reward(a if isinstance(a,dict) else {}, float(a.get('ethical_score',0.5) if isinstance(a,dict) else 0.5))} for i,a in enumerate(p.get('actions') or agents[:5])]
+                risk=max(0.0,min(1.0,1.0-fairness + (0.3 if violations else 0.0)))
+                hard=max(0.0,min(1.0,float((self.config.get('hard_safety') or {}).get('risk_threshold',0.75))))
+                out.update({'simulation':sim,'fairness':fairness,'ethical_violations':violations,'aligned_rewards':aligned,'risk':round(risk,4),'hard_safety_threshold':hard,'blocked':bool(risk>=hard and violations),'signals':{
+                    'outcome_simulation':_eco.outcome_simulation({'base':max(0.1,sum(dist) or 1),'std':0.2,'loss_threshold':0}),
+                    'balance_dynamics':_eco.balance_dynamics({'damage':fairness*10+1,'attack_speed':1.2,'health':100,'income':max(1,sum(dist) or 10),'expenses':max(1,(sum(dist) or 10)*0.7)}),
+                    'incentive_twin':_eco.incentive_twin({'id':'ethical','state':{'fairness':fairness,'risk':risk}},{'type':'simulate','rounds':rounds}),
+                    'reward_composition':_eco.reward_composition(level=max(1,level)),
+                    'reward_forge':_eco.reward_forge({'fairness':fairness,'harm_risk':1.0-fairness}, dist or [0.5]),
+                    'risk_feasibility':_eco.risk_feasibility({'name':'ethical-incentive','complexity':2+len(agents),'harm_risk':risk,'manipulation_risk':min(1.0,len(violations)*0.2)}),
+                }})
+            except Exception as e:
+                out['ethical_analysis_error']=f"{type(e).__name__}: {e}"
+            return out
         if k=='qa':
             tests=p.get('tests') or [];failed=[t for t in tests if isinstance(t,dict) and not t.get('pass',False)];return {'total':len(tests),'failed':len(failed),'release_blocked':bool(failed),'failures':failed[:20]}
         if k=='pipeline':
@@ -273,15 +300,34 @@ class Handler(BaseHTTPRequestHandler):
         body=json.dumps(obj,indent=2,sort_keys=True).encode();self.send_response(code);self.send_header('Content-Type',ctype);self.send_header('Content-Length',str(len(body)));self.end_headers();self.wfile.write(body)
     def body(self):
         n=int(self.headers.get('Content-Length','0'));return json.loads(self.rfile.read(n) or b'{}')
+    def _static(self, path):
+        try:
+            rel = 'index.html' if path in ('/','') else path.lstrip('/')
+            f = (WEB_DIR / rel).resolve()
+            f.relative_to(WEB_DIR.resolve())
+            if not f.is_file(): return False
+            ct = mimetypes.guess_type(str(f))[0] or 'application/octet-stream'
+            if ct.startswith('text/') or ct=='application/javascript': ct += '; charset=utf-8'
+            b = f.read_bytes(); self.send_response(200); self.send_header('Content-Type',ct); self.send_header('Content-Length',str(len(b))); self.send_header('Access-Control-Allow-Origin','*'); self.end_headers(); self.wfile.write(b); return True
+        except Exception: return False
     def do_GET(self):
         u=urlparse(self.path);q=parse_qs(u.query)
+        if u.path in ('/style.css','/app.js') or (u.path.startswith('/') and '.' in u.path.rsplit('/',1)[-1]):
+            if self._static(u.path): return
         if u.path=='/health':return self.sendj(200,{'ok':True,'roadmap':self.engine.config['id']})
         if u.path=='/spec':return self.sendj(200,self.engine.config)
         if u.path=='/metrics':return self.sendj(200,self.engine.metrics_snapshot())
         if u.path=='/events':return self.sendj(200,self.engine.store.events(int(q.get('since',['0'])[0])))
         if u.path=='/objects':return self.sendj(200,self.engine.store.query(q.get('kind',[None])[0]))
+        if u.path in ('/doctor','/api/doctor'):
+            try:
+                from . import ecosystem as _eco
+                return self.sendj(200,{'ok':True,'probe':_eco.probe(),'roadmap':self.engine.config['id']})
+            except Exception as e:
+                return self.sendj(200,{'ok':False,'error':str(e)})
         if u.path=='/':
-            title=f"{self.engine.config['id']} — {self.engine.config['title']}";html=("<!doctype html><meta charset=utf-8><title>"+title+"</title><style>body{font:16px system-ui;max-width:1000px;margin:40px auto;padding:0 18px}textarea{width:100%;height:180px}pre{background:#111;color:#eee;padding:16px;overflow:auto}</style><h1>"+title+"</h1><p>"+self.engine.config['outcome']+"</p><p><b>Breakthrough:</b> "+self.engine.config['breakthrough']+"</p><textarea id=p>{\"goal\":\""+self.engine.config['outcome'].replace('"','&quot;')+"\",\"candidates\":[{\"id\":\"local\",\"utility\":0.9},{\"id\":\"edge\",\"utility\":0.8}]}</textarea><button onclick=go()>Execute</button><pre id=o></pre><script>async function go(){let r=await fetch('/execute',{method:'POST',headers:{'content-type':'application/json'},body:p.value});o.textContent=JSON.stringify(await r.json(),null,2)}</script>").encode();self.send_response(200);self.send_header('Content-Type','text/html; charset=utf-8');self.send_header('Content-Length',str(len(html)));self.end_headers();return self.wfile.write(html)
+            if self._static('/'): return
+            title=f"{self.engine.config['id']} — {self.engine.config['title']}";html=("<!doctype html><meta charset=utf-8><title>"+title+"</title><style>body{font:16px system-ui;max-width:1000px;margin:40px auto;padding:0 18px}textarea{width:100%;height:180px}pre{background:#111;color:#eee;padding:16px;overflow:auto}</style><h1>"+title+"</h1><p>"+self.engine.config['outcome']+"</p><p><b>Breakthrough:</b> "+self.engine.config['breakthrough']+"</p><textarea id=p>{\"xp\":10,\"agents\":[{\"value\":5,\"effort\":3,\"ethical_score\":0.8}],\"rounds\":5}</textarea><button onclick=go()>Execute</button><pre id=o></pre><script>async function go(){let r=await fetch('/execute',{method:'POST',headers:{'content-type':'application/json'},body:p.value});o.textContent=JSON.stringify(await r.json(),null,2)}</script>").encode();self.send_response(200);self.send_header('Content-Type','text/html; charset=utf-8');self.send_header('Content-Length',str(len(html)));self.end_headers();return self.wfile.write(html)
         return self.sendj(404,{'error':'not found'})
     def do_POST(self):
         try:

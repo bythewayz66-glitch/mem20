@@ -5,7 +5,7 @@ build-backend="setuptools.build_meta"
 [project]
 name="mem20ethicalincentivesimulatorz"
 version="1.0.0"
-description="mem20ethicalincentivesimulatorz first-class module"
+description="Ethical Incentive Simulator (RM-203): behavior/incentive simulation with fairness, harm/manipulation safeguards, and peer outcome/risk analysis"
 requires-python=">=3.11"
 
 [project.scripts]
@@ -14,4 +14,4 @@ mem20ethicalincentivesimulatorz="mem20ethicalincentivesimulatorz.runtime:main"
 [tool.setuptools]
 packages=["mem20ethicalincentivesimulatorz"]
 [tool.setuptools.package-data]
-mem20ethicalincentivesimulatorz=["CAPABILITY.json","roadmap.json"]
+mem20ethicalincentivesimulatorz=["CAPABILITY.json","roadmap.json","web/*"]

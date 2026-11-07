@@ -106,3 +106,5 @@
   bounds as `[(min,max), ...]` per dimension and `spatial_health(regions_list)`;
   adapter adjusted. `mem20mixedinitiativefocusenginez`/`mem20deterministicconfigurationgraphz`
   have heavy top-level imports in some contexts but domain calls used here succeeded.
+
+- 2026-11-07: #307 (`mem20ethicalincentivesimulatorz`) preserved existing CAPABILITY/Engine/Store/SDK/CLI semantics and the 10-scenario `Engine.simulator()` while enriching `progression` with real domain ethical analysis + 6 peer signals (backward-compatible superset). Four candidate peer adapters initially mismatched real APIs (`scenario_compare` needs `params`, `difficulty_curve` takes level count int, `completion_rate` takes counts, `shaped_reward` takes numeric shaping, `win_rate` checks `winner=='player'`) - fixed after inspecting domains. Estate-root `python -m` shim added.

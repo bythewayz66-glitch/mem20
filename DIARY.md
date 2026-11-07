@@ -673,3 +673,16 @@ enriched by 6 unique peer integrations: `mem20offerassemblyfabricz`,`mem20offerg
 `mem20assetremixstudioz`. Transaction marked `trial_ready` when trial synthesis + secure capsule
 checks pass. Added `/doctor`, web cockpit, root shims, fenced runnable README, docs/PLAN, docs/app
 monitor, gateway/toolchest. Verification: 9 tests pass, conformance **7/7**.
+
+---
+## 2026-11-07 - mem20goaleconomyschedulerz (#319): meaningful depth-first rebuild
+
+Rebuilt RM-056 (Goal Economy Scheduler, fails 5,6,7, operation_kind=schedule) as first-class with
+meaningful composition. Preserved legacy domain (`schedule_goals,goal_value,rebalance,progress,
+priority_queue`) and Engine/CLI/simulator. `schedule` returns goal-economy report for goals/budget
+(local allocation/rebalance/progress + plan health, opportunity value/rank, budget-leak risk,
+milestone forecast, attention/execution capacity, interface composition) and preserves generic
+node-placement fallback. 6 unique peers: `mem20selfhealingplansz`,`mem20opportunityradarz`,
+`mem20revenueleakhunterz`,`mem20milestoneriskpredictorz`,`mem20humancapabilitysuperplatformz`,
+`mem20facez`. Added `/doctor`, web, root shims, fenced README, docs/PLAN, docs/app, gateway/
+toolchest. 9 tests pass, conformance **7/7**.

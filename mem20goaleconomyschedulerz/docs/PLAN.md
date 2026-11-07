@@ -1,0 +1,2 @@
+# Goal Economy Scheduler (RM-056, #319)
+Preserve legacy domain (`schedule_goals,goal_value,rebalance,progress,priority_queue`) and Engine/CLI/simulator. `schedule` returns meaningful goal-economy report when goals/budget provided (local allocation + plan health, opportunity scoring, budget-leak risk, milestone forecast, attention capacity, interface composition) and preserves generic node placement fallback. 6 unique peers: `mem20selfhealingplansz,mem20opportunityradarz,mem20revenueleakhunterz,mem20milestoneriskpredictorz,mem20humancapabilitysuperplatformz,mem20facez`. 7/7.

@@ -4,6 +4,9 @@ from dataclasses import dataclass
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 from urllib.parse import urlparse, parse_qs
+import mimetypes
+
+WEB_DIR = Path(__file__).with_name("web")
 
 class ValidationError(ValueError): pass
 class QuotaError(RuntimeError): pass
@@ -149,10 +152,17 @@ class Engine:
                 body=json.dumps(x,sort_keys=True) if isinstance(x,(dict,list)) else str(x); out.append({'id':hashlib.sha256(body.encode()).hexdigest()[:16],'index':i,'text':body,'tokens':sorted(self.tokens(body))})
             return {'ingested':out,'count':len(out)}
         if k=='schedule':
+            # meaningful goal-economy scheduling when goals/budget context provided
+            if p.get('goals') is not None or p.get('budget') is not None or p.get('goal_economy'):
+                try:
+                    from . import ecosystem as _eco
+                    return _eco.goal_economy_report(p)
+                except Exception as e:
+                    return {'error': f"{type(e).__name__}: {e}"}
+            # generic node placement (backward compat)
             nodes=p.get('nodes') or p.get('candidates') or []; scored=[]
             for n in nodes:
-                if not isinstance(n,dict): n={'id':str(n)}
-                score=float(n.get('capacity',1))*float(n.get('availability',1))-float(n.get('cost',0))-.001*float(n.get('latency_ms',0))-.05*float(n.get('energy',0)); scored.append((score,n))
+                if isinstance(n,dict): score=float(n.get('capacity',1))*float(n.get('availability',1))-float(n.get('cost',0))-.001*float(n.get('latency_ms',0))-.05*float(n.get('energy',0)); scored.append((score,n))
             scored.sort(key=lambda x:x[0],reverse=True)
             return {'placement':scored[0][1] if scored else {'id':'local'},'score':scored[0][0] if scored else 1.0,'fallbacks':[n for _,n in scored[1:4]]}
         if k=='model':
@@ -226,17 +236,30 @@ class Handler(BaseHTTPRequestHandler):
         body=json.dumps(obj,indent=2,sort_keys=True).encode(); self.send_response(code); self.send_header('Content-Type',ctype); self.send_header('Content-Length',str(len(body))); self.end_headers(); self.wfile.write(body)
     def body(self):
         n=int(self.headers.get('Content-Length','0')); return json.loads(self.rfile.read(n) or b'{}')
+    def _static(self,path):
+        try:
+            rel='index.html' if path in ('/','') else path.lstrip('/'); f=(WEB_DIR/rel).resolve(); f.relative_to(WEB_DIR.resolve())
+            if not f.is_file(): return False
+            ct=mimetypes.guess_type(str(f))[0] or 'application/octet-stream'
+            if ct.startswith('text/') or ct=='application/javascript': ct+='; charset=utf-8'
+            b=f.read_bytes(); self.send_response(200); self.send_header('Content-Type',ct); self.send_header('Content-Length',str(len(b))); self.send_header('Access-Control-Allow-Origin','*'); self.end_headers(); self.wfile.write(b); return True
+        except Exception: return False
     def do_GET(self):
-        u=urlparse(self.path); q=parse_qs(u.query)
-        if u.path=='/health': return self.sendj(200,{'ok':True,'roadmap':self.engine.config['id']})
-        if u.path=='/spec': return self.sendj(200,self.engine.config)
-        if u.path=='/metrics': return self.sendj(200,self.engine.metrics_snapshot())
-        if u.path=='/events': return self.sendj(200,self.engine.store.events(int(q.get('since',['0'])[0])))
-        if u.path=='/objects': return self.sendj(200,self.engine.store.query(q.get('kind',[None])[0]))
+        u=urlparse(self.path);q=parse_qs(u.query)
+        if u.path in ('/style.css','/app.js') or (u.path.startswith('/') and '.' in u.path.rsplit('/',1)[-1]):
+            if self._static(u.path): return
+        if u.path=='/health':return self.sendj(200,{'ok':True,'roadmap':self.engine.config['id']})
+        if u.path=='/spec':return self.sendj(200,self.engine.config)
+        if u.path=='/metrics':return self.sendj(200,self.engine.metrics_snapshot())
+        if u.path=='/events':return self.sendj(200,self.engine.store.events(int(q.get('since',['0'])[0])))
+        if u.path=='/objects':return self.sendj(200,self.engine.store.query(q.get('kind',[None])[0]))
+        if u.path in ('/doctor','/api/doctor'):
+            try:
+                from . import ecosystem as _eco; return self.sendj(200,{'ok':True,'probe':_eco.probe(),'roadmap':self.engine.config['id']})
+            except Exception as e: return self.sendj(200,{'ok':False,'error':str(e)})
         if u.path=='/':
-            title=f"{self.engine.config['id']} — {self.engine.config['title']}"
-            html=("<!doctype html><meta charset=utf-8><title>"+title+"</title><style>body{font:16px system-ui;max-width:1000px;margin:40px auto;padding:0 18px}textarea{width:100%;height:180px}pre{background:#111;color:#eee;padding:16px;overflow:auto}</style><h1>"+title+"</h1><p>"+self.engine.config['outcome']+"</p><p><b>Signature mode:</b> "+self.engine.config['breakthrough']+"</p><p><b>Roadmap surfaces:</b> "+', '.join(self.engine.config['surfaces'])+"</p><textarea id=p>{\"goal\":\""+self.engine.config['outcome'].replace('"','&quot;')+"\",\"candidates\":[{\"id\":\"local\",\"utility\":0.9},{\"id\":\"edge\",\"utility\":0.8}]}</textarea><button onclick=go()>Execute</button><pre id=o></pre><script>async function go(){let r=await fetch('/execute',{method:'POST',headers:{'content-type':'application/json'},body:p.value});o.textContent=JSON.stringify(await r.json(),null,2)}</script>").encode()
-            self.send_response(200); self.send_header('Content-Type','text/html; charset=utf-8'); self.send_header('Content-Length',str(len(html))); self.end_headers(); return self.wfile.write(html)
+            if self._static('/'): return
+            title=f"{self.engine.config['id']} — {self.engine.config['title']}";html=("<!doctype html><meta charset=utf-8><title>"+title+"</title><style>body{font:16px system-ui;max-width:1000px;margin:40px auto;padding:0 18px}textarea{width:100%;height:180px}pre{background:#111;color:#eee;padding:16px;overflow:auto}</style><h1>"+title+"</h1><p>"+self.engine.config['outcome']+"</p><textarea id=p>{\"goals\":[{\"id\":\"g1\",\"value\":10,\"cost\":3},{\"id\":\"g2\",\"value\":8,\"cost\":2}],\"budget\":4}</textarea><button onclick=go()>Execute</button><pre id=o></pre><script>async function go(){let r=await fetch('/execute',{method:'POST',headers:{'content-type':'application/json'},body:p.value});o.textContent=JSON.stringify(await r.json(),null,2)}</script>").encode();self.send_response(200);self.send_header('Content-Type','text/html; charset=utf-8');self.send_header('Content-Length',str(len(html)));self.end_headers();return self.wfile.write(html)
         return self.sendj(404,{'error':'not found'})
     def do_POST(self):
         try:

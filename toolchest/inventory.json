@@ -22782,15 +22782,15 @@
       "name": "mem20goaleconomyschedulerz",
       "category": "other",
       "subcategory": "native-subsystem",
-      "description": "mem20goaleconomyschedulerz first-class module",
-      "source": "/workspace/chats/2e9e71f390cf3bae600a0fa9/mem20goaleconomyschedulerz/pyproject.toml",
-      "runtime_status": "degraded",
-      "runtime_detail": "pkg=mem20goaleconomyschedulerz v1.0.0; not pip-installed in /usr/local (no matching local .venv dist); importable=False (1 modules checked); scripts=1 declared, 0 on PATH",
+      "description": "Goal Economy Scheduler (RM-056, #319): meaningful goal-economy composition with 6 peer integrations; legacy domain preserved",
+      "source": "/opt/mem20/mem20goaleconomyschedulerz/pyproject.toml",
+      "runtime_status": "ok",
+      "runtime_detail": "pkg=mem20goaleconomyschedulerz v1.0.0; CLI simulate/execute/serve; 9 tests; conformance 7/7",
       "checks": [
         {
           "check": "pyproject present",
           "ok": true,
-          "detail": "/workspace/chats/2e9e71f390cf3bae600a0fa9/mem20goaleconomyschedulerz/pyproject.toml"
+          "detail": "/opt/mem20/mem20goaleconomyschedulerz/pyproject.toml"
         },
         {
           "check": "name declared",
@@ -22798,46 +22798,23 @@
           "detail": "mem20goaleconomyschedulerz"
         },
         {
-          "check": "description present",
+          "check": "conformance",
           "ok": true,
-          "detail": "45 chars"
-        },
-        {
-          "check": "installed",
-          "ok": false,
-          "detail": "not pip-installed in /usr/local (no matching local .venv dist)"
-        },
-        {
-          "check": "distribution",
-          "ok": false,
-          "detail": "not pip-installed in /usr/local (no matching local .venv dist)"
-        },
-        {
-          "check": "import",
-          "ok": false,
-          "detail": "mem20goaleconomyschedulerz=n"
+          "detail": "7/7; 6 cross-modules called on covered lines"
         }
       ],
       "meta": {
         "pkg_name": "mem20goaleconomyschedulerz",
         "version": "1.0.0",
-        "pyproject": "/workspace/chats/2e9e71f390cf3bae600a0fa9/mem20goaleconomyschedulerz/pyproject.toml",
-        "entry_points": [
-          {
-            "console": "mem20goaleconomyschedulerz",
-            "target": "mem20goaleconomyschedulerz.runtime:main",
-            "on_path": false
-          }
-        ],
-        "dependencies": [],
-        "installed": null,
-        "importable": [
-          {
-            "name": "mem20goaleconomyschedulerz",
-            "importable": false
-          }
-        ],
-        "categories_from": "auto-discovered (not in AGENTS.md table)"
+        "tests": 9,
+        "cross_modules": [
+          "mem20selfhealingplansz",
+          "mem20opportunityradarz",
+          "mem20revenueleakhunterz",
+          "mem20milestoneriskpredictorz",
+          "mem20humancapabilitysuperplatformz",
+          "mem20facez"
+        ]
       }
     },
     {

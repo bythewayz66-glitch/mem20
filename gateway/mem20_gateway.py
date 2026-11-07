@@ -199,6 +199,7 @@ SUBSYSTEMS = {
         "owner": "mem20-renovation",
         "wave": 3,
     },
+    "mem20realtimeeventautopilotz": {"purpose": "Real-Time Event Autopilot with 6 peers, HTTP cockpit, MCP","entry":"python -m mem20realtimeeventautopilotz status","owner":"mem20-renovation","wave":4},
     "mem20realtimebusinesstwinz": {"purpose": "Real-Time Business Twin with 6 peers, HTTP cockpit, MCP","entry":"python -m mem20realtimebusinesstwinz status","owner":"mem20-renovation","wave":4},
     "mem20realitytosoftwarecompilerz": {"purpose": "Reality-to-Software Compiler with 6 peers, HTTP cockpit, MCP","entry":"python -m mem20realitytosoftwarecompilerz status","owner":"mem20-renovation","wave":4},
     "mem20protocolautodiscoveryenginez": {"purpose": "Protocol Auto-Discovery Engine with 6 peers, HTTP cockpit, MCP","entry":"python -m mem20protocolautodiscoveryenginez status","owner":"mem20-renovation","wave":4},

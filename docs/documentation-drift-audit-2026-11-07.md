@@ -139,3 +139,37 @@ record and point to it; do not rewrite the old measurement.
    subsystem source and tests as the authority.
 5. Run the repository's documentation, surface, and subsystem conformance
    checks; attach their outputs to the PR.
+
+
+## 6. Changes made in the first pass
+
+- Added this audit and linked it from `docs/INDEX.md`.
+- Updated `mem20-sdk-ruby/docs/INSTALL.md` and
+  `mem20-sdk-ruby/docs/USAGE.md`: examples now distinguish the current
+  server's dynamic 311-tool `tools/list` result from the Ruby SDK's stale,
+  locally pinned 272 / 27 constants. The remaining SDK code/spec refresh is
+  explicitly identified rather than disguised as a docs-only fix.
+- Added dated refresh warnings to the GTM launch-copy v4/v5, campaign plan,
+  sales one-pager, and launch-instrumentation snapshot. These warnings preserve
+  the original evidence while preventing old claims from being reused as
+  current or launch-approved.
+- Updated `docs/handoff/STATE.md` with the owner's report that three agents
+  are active. It explicitly says the board's blank issue/branch table is not
+  proof of inactivity; agent identities and ownership remain unverified.
+- No subsystem README, generated manifest, runtime code, or historical audit
+  body was rewritten.
+
+## 7. Verification performed
+
+- Re-fetched the changed files from the working branch after each write.
+- Compared `main` to the working branch: the branch is ahead and not behind
+  the current main baseline; the changed-file list is limited to the audit,
+  index, handoff claim/state, two Ruby SDK guides, and five GTM documents.
+- Static checks in this pass: the documented current server count agrees with
+  `VERSION`, `verify_mcp.py`, and `docs/surface.json`; the Ruby client's
+  `tool_names` implementation is sourced from the server's live
+  `tools/list` response.
+- Repository test suites and the Ruby `surface:check` were not executed in
+  this session. The Ruby constant mismatch is disclosed as unresolved and
+  must be addressed with the SDK code/tests before that SDK is advertised as
+  fully current.

@@ -1,6 +1,6 @@
 # App / product narrative — `docs/app/`
 
-Entry point for the `docs/app/` documentation set. **24 tracked file(s).**
+Entry point for the `docs/app/` documentation set. **25 tracked file(s).**
 
 ## Contents
 
@@ -9,6 +9,7 @@ Entry point for the `docs/app/` documentation set. **24 tracked file(s).**
 - [`assets/index-DCqPYDUE.js`](assets/index-DCqPYDUE.js)
 - [`continuum/index.html`](continuum/index.html)
 - [`deck/PERMANENT_URL.md`](deck/PERMANENT_URL.md)
+- [`transport/index.html`](transport/index.html)
 - [`deck/index.html`](deck/index.html)
 - [`deck/slides/README.md`](deck/slides/README.md)
 - [`deck/slides/slide_01.html`](deck/slides/slide_01.html)
@@ -39,6 +40,19 @@ and can run `doctor`. It owns no state.
 ```bash
 PYTHONPATH=/opt/mem20 python3 -m mem20edgetocloudintelligencecontinuumz serve --port 8791
 # -> http://127.0.0.1:8000/continuum/?api=http://127.0.0.1:8791
+```
+
+
+## Transport fabric monitor (`transport/`)
+
+[`transport/index.html`](transport/index.html) is the estate-shell view of the
+Edge Transport Fabric (RM-077). Static page, reads the subsystem JSON API
+(`?api=http://host:port`), shows fabric health/nodes/links/flows and can run
+`doctor`. It owns no state.
+
+```bash
+PYTHONPATH=/opt/mem20 python3 -m mem20edgetransportfabricz serve --port 8782
+# -> http://127.0.0.1:8000/transport/?api=http://127.0.0.1:8782
 ```
 
 ## Fleet monitor (`fleet/`)
@@ -77,3 +91,4 @@ served by the fleet process itself at its root URL.
 - [Autonomous Micro-SaaS Foundry monitor](autonomousmicrosaasfoundryz/index.html) — `PYTHONPATH=/opt/mem20 /opt/mem20/.venv/bin/python -m mem20autonomousmicrosaasfoundryz serve --port 8783`
 - [Autonomous Recovery Director monitor](autonomousrecoverydirectorz/index.html) — `PYTHONPATH=/opt/mem20 /opt/mem20/.venv/bin/python -m mem20autonomousrecoverydirectorz serve --port 8784`
 - [Autonomous Sales Laboratory monitor](autonomoussaleslaboratoryz/index.html) — `PYTHONPATH=/opt/mem20 /opt/mem20/.venv/bin/python -m mem20autonomoussaleslaboratoryz serve --port 8785`
+- [Autonomous Software Foundry monitor](autonomoussoftwarefoundryz/index.html) — `PYTHONPATH=/opt/mem20 /opt/mem20/.venv/bin/python -m mem20autonomoussoftwarefoundryz serve --port 8786`

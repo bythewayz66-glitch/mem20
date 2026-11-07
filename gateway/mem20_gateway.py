@@ -91,6 +91,12 @@ SUBSYSTEMS = {
         "owner": "mem20-webdev",
         "wave": 2,
     },
+        "mem20edgetransportfabricz": {
+        "purpose": "Edge transport fabric: bounded data/command routing, QoS, bandwidth admission/reservation, and resilient reroute across intermittently connected nodes",
+        "entry": "python -m mem20edgetransportfabricz status",
+        "owner": "mem20-webdev",
+        "wave": 2,
+    },
     "mem20zerotouchnodeswarmz": {
         "purpose": "Zero-touch node swarm: discovery, joining, task distribution, healing",
         "entry": "python -m mem20zerotouchnodeswarmz simulate",
@@ -124,6 +130,12 @@ SUBSYSTEMS = {
     "mem20autonomoussaleslaboratoryz": {
         "purpose": "Autonomous sales laboratory (leads/outreach/conversion experiments, anti-spam) with 6 sales-lab peers, HTTP cockpit, MCP",
         "entry": "python -m mem20autonomoussaleslaboratoryz status",
+        "owner": "mem20-renovation",
+        "wave": 3,
+    },
+    "mem20autonomoussoftwarefoundryz": {
+        "purpose": "Autonomous software foundry (spec→build→deploy) with 6 software-foundry peers, HTTP cockpit, MCP",
+        "entry": "python -m mem20autonomoussoftwarefoundryz status",
         "owner": "mem20-renovation",
         "wave": 3,
     },

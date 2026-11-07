@@ -1,6 +1,6 @@
 # App / product narrative — `docs/app/`
 
-Entry point for the `docs/app/` documentation set. **35 tracked file(s).**
+Entry point for the `docs/app/` documentation set. **36 tracked file(s).**
 
 ## Contents
 
@@ -17,6 +17,7 @@ Entry point for the `docs/app/` documentation set. **35 tracked file(s).**
 - [`execution-digital-twin/index.html`](execution-digital-twin/index.html)
 - [`fabricz/index.html`](fabricz/index.html)
 - [`facez/index.html`](facez/index.html)
+- [`federated-research-grid/index.html`](federated-research-grid/index.html)
 - [`ethical-incentive-simulator/index.html`](ethical-incentive-simulator/index.html)
 - [`energy-migration/index.html`](energy-migration/index.html)
 - [`transport/index.html`](transport/index.html)
@@ -62,6 +63,15 @@ PYTHONPATH=/opt/mem20 python3 -m mem20edgetocloudintelligencecontinuumz serve --
 
 
 
+
+
+## Federated Research Grid monitor (`federated-research-grid/`)
+
+[`federated-research-grid/index.html`](federated-research-grid/index.html) — static monitor for RM-043 (#313). Reads `/spec`/`/metrics`/`/doctor` (`?api=`).
+
+```bash
+PYTHONPATH=/opt/mem20 python3 -m mem20federatedresearchgridz serve --port 8793
+```
 
 ## mem20facez monitor (`facez/`)
 
@@ -220,3 +230,4 @@ served by the fleet process itself at its root URL.
 - [Predictive Recall Engine monitor](predictiverecallenginez/index.html) — `PYTHONPATH=/opt/mem20 /opt/mem20/.venv/bin/python -m mem20predictiverecallenginez serve --port 8806`
 - [Production Planning and Task Orchestration Pipeline monitor](productionplanningandtaskorchestrationpipelinez/index.html) — `PYTHONPATH=/opt/mem20 /opt/mem20/.venv/bin/python -m mem20productionplanningandtaskorchestrationpipelinez serve --port 8807`
 - [Product-Led Growth Simulator monitor](productledgrowthsimulatorz/index.html) — `PYTHONPATH=/opt/mem20 /opt/mem20/.venv/bin/python -m mem20productledgrowthsimulatorz serve --port 8808`
+- [Protocol Auto-Discovery Engine monitor](protocolautodiscoveryenginez/index.html) — `PYTHONPATH=/opt/mem20 /opt/mem20/.venv/bin/python -m mem20protocolautodiscoveryenginez serve --port 8809`

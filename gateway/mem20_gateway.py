@@ -91,7 +91,13 @@ SUBSYSTEMS = {
         "owner": "mem20-webdev",
         "wave": 2,
     },
-        "mem20facez": {
+        "mem20federatedresearchgridz": {
+        "purpose": "Federated Research Grid (RM-043, #313): distributed node search/aggregation with 6 peer intelligence/search/CRDT/priority/connector signals",
+        "entry": "python -m mem20federatedresearchgridz simulate",
+        "owner": "mem20-webdev",
+        "wave": 2,
+    },
+    "mem20facez": {
         "purpose": "Interface/Workspace crew runtime (#312): 8-member composition with 6-peer capture, dataflow, mission, canvas, sandbox, and blackboard signals",
         "entry": "python -m mem20facez doctor",
         "owner": "mem20-webdev",
@@ -193,6 +199,7 @@ SUBSYSTEMS = {
         "owner": "mem20-renovation",
         "wave": 3,
     },
+    "mem20protocolautodiscoveryenginez": {"purpose": "Protocol Auto-Discovery Engine with 6 peers, HTTP cockpit, MCP","entry":"python -m mem20protocolautodiscoveryenginez status","owner":"mem20-renovation","wave":4},
     "mem20productledgrowthsimulatorz": {"purpose": "Product-Led Growth Simulator with 6 peers, HTTP cockpit, MCP","entry":"python -m mem20productledgrowthsimulatorz status","owner":"mem20-renovation","wave":4},
     "mem20productionplanningandtaskorchestrationpipelinez": {"purpose": "Production Planning and Task Orchestration Pipeline with 6 peers, HTTP cockpit, MCP","entry":"python -m mem20productionplanningandtaskorchestrationpipelinez status","owner":"mem20-renovation","wave":4},
     "mem20predictiverecallenginez": {"purpose": "Predictive Recall Engine with 6 peers, HTTP cockpit, MCP","entry":"python -m mem20predictiverecallenginez status","owner":"mem20-renovation","wave":4},

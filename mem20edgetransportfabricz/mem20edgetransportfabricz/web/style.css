@@ -1,0 +1,11 @@
+*{box-sizing:border-box} body{font:14px/1.45 system-ui,sans-serif;margin:0;background:#0b1020;color:#dbe7ff}
+header{display:flex;justify-content:space-between;align-items:center;padding:14px 18px;background:#121a33;border-bottom:1px solid #243055}
+h1{margin:0;font-size:18px} h1 small{color:#8fb3ff;font-weight:500}
+main{padding:14px;max-width:1400px;margin:0 auto}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:12px;margin:12px 0}
+.panel{background:#121a33;border:1px solid #243055;border-radius:10px;padding:12px}
+h2{margin:0 0 8px;font-size:14px;color:#8fb3ff}
+pre{margin:0;white-space:pre-wrap;word-break:break-word;background:#08101f;padding:10px;border-radius:8px;max-height:260px;overflow:auto;font-size:12px}
+label{display:block;margin:6px 0;color:#b8c7ef} input,select{width:100%;padding:6px;border-radius:6px;border:1px solid #355;color:#eaf;background:#08101f}
+button{background:#2b57ff;color:#fff;border:0;border-radius:7px;padding:7px 11px;cursor:pointer;margin:4px 4px 0 0}
+button:hover{filter:brightness(1.1)} .actions button{margin:0 0 0 8px}

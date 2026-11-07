@@ -56,3 +56,25 @@
   `git commit --only <paths>` for every commit in a shared tree. The swept files
   were byte-identical to the other agent's staged work, so no content was lost
   or reverted.
+
+- 2026-11-07: Building #300 (`mem20edgefleetbrainz`) exposed a real defect in
+  `mem20energyawarecomputemigrationz.greenest_node`: it built `(cost, node)`
+  tuples and called `sort()`, so two identical machines with equal cost tried to
+  compare the node dicts and raised `TypeError: '<' not supported between
+  instances of 'dict' and 'dict'`. The fleet's rebalance path surfaced it as
+  `{"ok": false, "error": "..."}` instead of a green plan. NEXT ACTION: done —
+  `scored.sort(key=lambda item: (item[0], str(item[1].get("id", ""))))` breaks
+  ties deterministically by node id; the peer's own suite still passes (5/5)
+  and the fleet ecosystem/service suites now exercise the equal-cost case.
+
+- 2026-11-07: Building #302 (`mem20edgetransportfabricz`) exposed two integration issues.
+  (1) `mem20edgetransportfabricz.__init__` lazy `__getattr__` used
+  `from . import ecosystem`, which recursed under root-conftest/pytest collection
+  in this estate; fixed by `importlib.import_module(".ecosystem", __name__)`.
+  (2) The `mem20meshz` peer import path resolves as
+  `mem20meshz.mem20meshz.meshes.selfhealing.domain` in this layout; the ecosystem
+  adapter now tries the nested path and falls back. Domain routing was also made
+  bandwidth-aware so admission finds feasible paths when the shortest-latency path
+  cannot carry required demand. Legacy `route_path`/`qos_class`/
+  `allocate_bandwidth`/`transport_health` behavior preserved for existing callers
+  (e.g. `mem20edgetocloudintelligencecontinuumz`).

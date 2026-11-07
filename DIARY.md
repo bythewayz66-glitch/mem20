@@ -351,3 +351,90 @@ Findings:
 
 Verification: all 14 gate logs end with `EXIT=0` and seven PASS rows; all 14
 issues are CLOSED on GitHub after the pushes.
+
+---
+## 2026-11-07 - mem20edgefleetbrainz (#300): depth-first rebuild
+
+Replaced the shallow template fix for RM-041 with a real subsystem. The
+template approach (fenced README block, one smoke test, `estate_context()`,
+gateway row) was reverted across all 61 pending edits; this is the first
+subsystem rebuilt from the ground up instead, and #301 has not been started.
+
+What the subsystem now owns:
+
+- `domain.py`: typed `Node`/`Workload`/`PlacementDecision`/`FaultForecast`,
+  `DeviceKind`/`NodeStatus`/`WorkloadState`, capability gate, marginal-energy
+  accounting, fault-risk forecasting, weighted placement scoring, rebalance and
+  evacuation plans, fleet health and energy profiles.
+- `store.py`: SQLite WAL state plane with versioned nodes/workloads, an
+  append-only placement journal, a resumable event stream, whole-fleet
+  snapshots, idempotency keys and metrics.
+- `ecosystem.py`: six fleet-specific peers called on the normal request path —
+  `mem20zerotouchnodeswarmz`, `mem20energyawarecomputemigrationz`,
+  `mem20devicecapabilitycompilerz`, `mem20hardwaremarketplacez`,
+  `mem20roamingworkloadschedulerz`, `mem20modelsleepandwakesystemz`. This set
+  is unique to this subsystem, not the common memory/focus/catalog template.
+- `service.py`: submit -> place -> reserve -> dispatch -> complete/fail with
+  bounded retries, drain/evacuate with stranded-work reporting, rebalance,
+  sleep policy with starvation guardrails, `simulate` (6 scenarios),
+  `benchmark`, `doctor`.
+- `runtime.py` + `web/`: CLI subcommands, JSON HTTP API with real status-code
+  mapping and CORS, served operator cockpit.
+- `docs/app/fleet/index.html`: static estate monitor reading the same API,
+  linked from `docs/app/README.md`; compiled Vite assets untouched.
+
+Real bugs found by smoke testing and fixed: rebalance passing the wrong types
+to the energy adapter; `simulate` using the wrong capability key and never
+dispatching before the disconnection check; domain `ValueError`s escaping as
+500 instead of 400; the sleep policy hibernating the last awake node; and
+`mem20energyawarecomputemigrationz.greenest_node` raising `TypeError` when two
+identical machines tied on cost because `list.sort()` compared the node dicts.
+The peer now breaks ties by node id.
+
+Verification (this commit, 31e09731):
+- `pytest mem20edgefleetbrainz -q` -> 77 passed.
+- `simulate` -> 6/6 scenarios; `doctor` -> all six peers reachable.
+- `benchmark --iterations 20` over 12 nodes -> 5,098 ops/sec, p50 0.196 ms.
+- `scripts/renovation/conformance.py mem20edgefleetbrainz` -> 7/7, six
+  cross-modules imported and called on covered lines.
+
+Stopped here for owner evaluation of #300 before starting #301.
+
+---
+## 2026-11-07 - mem20edgetransportfabricz (#302): depth-first rebuild
+
+Rebuilt RM-077 (Edge Transport Fabric, `conformance: mem20edgetransportfabricz
+fails criterion 5,7`) into a real, first-class subsystem — not a gate shim.
+Preserved legacy-compatible domain primitives used by existing callers
+(`route_path` neighbor-map API, `qos_class`, `allocate_bandwidth`,
+`transport_health`, including `mem20edgetocloudintelligencecontinuumz`).
+
+What the subsystem now owns:
+- `domain.py`: legacy-compatible primitives plus advanced fabric model
+  (`FabricNode`/`FabricLink`/`FlowDemand`/`PathDecision`), bandwidth-aware
+  shortest path, QoS/SLA classification, admission, reservation/release,
+  congestion/fabric health, reroute planning, intermittent-connectivity handling.
+- `store.py`: SQLite WAL state plane (versioned nodes/links/flows, events,
+  placement journal, idempotency, snapshots/restore).
+- `ecosystem.py`: six **unique** transport-relevant peers (different set from
+  #300 and #301), all called on covered lines: `mem20meshz.meshes.selfhealing`
+  (`SelfHealingConnectorMesh`), `mem20autonomoustrafficcontrollerz`
+  (`TokenBucket`/`LeakyBucket`), `mem20faultcontainmentcellsz`
+  (`FaultContainmentCells`), `mem20causalroutingbrainz` (causal route/effect/
+  confounder/intervention), `mem20autonomousrecoverydirectorz`
+  (triage/rollback/remediate/recovery/health), `mem20eventstreamsuperhighwayz`
+  (create/publish/subscribe/consume/throughput/lag telemetry).
+- `service.py`: topology CRUD, admit/route/reserve/release/reroute, status,
+  doctor, events/placements, snapshots/restore, simulate, benchmark; peer
+  signals attached to real operations.
+- `runtime.py` + `web/`: CLI, JSON HTTP API, static cockpit, CORS, 400/404/409
+  mapping, legacy `execute`.
+- `docs/app/transport/index.html` + `docs/app/README.md` link; `docs/PLAN.md`;
+  comprehensive README with fenced runnable example.
+
+Verification:
+- `pytest mem20edgetransportfabricz -q --no-header -p no:cacheprovider` → 17 passed.
+- `simulate` → 9/9 scenarios ok; `doctor` → 6/6 peers reachable.
+- `scripts/renovation/conformance.py mem20edgetransportfabricz` → **7/7 PASS**.
+- `register_subsystem.py` → package/gateway/toolchest/sitemapz PASS (MCP warn
+  only; criterion 7 satisfied via gateway). Legacy continuum caller API preserved.

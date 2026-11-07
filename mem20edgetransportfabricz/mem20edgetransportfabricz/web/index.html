@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>Edge Transport Fabric (RM-077)</title>
+  <link rel="stylesheet" href="/style.css"/>
+</head>
+<body>
+<header>
+  <h1>Edge Transport Fabric <small>RM-077</small></h1>
+  <div class="actions">
+    <button id="refresh">Refresh</button>
+    <button id="doctor">Doctor</button>
+    <button id="simulate">Simulate</button>
+  </div>
+</header>
+<main>
+  <section class="panel">
+    <h2>Fabric health</h2>
+    <pre id="health">loading…</pre>
+  </section>
+  <section class="grid">
+    <div class="panel">
+      <h2>Add node</h2>
+      <label>ID <input id="nodeId" value="edge-a"/></label>
+      <label>Kind <input id="nodeKind" value="edge"/></label>
+      <label>Capacity Mbps <input id="nodeCap" type="number" value="1000"/></label>
+      <button id="addNode">Add node</button>
+    </div>
+    <div class="panel">
+      <h2>Add link</h2>
+      <label>Src <input id="linkSrc" value="edge-a"/></label>
+      <label>Dst <input id="linkDst" value="edge-b"/></label>
+      <label>Bandwidth <input id="linkBw" type="number" value="100"/></label>
+      <label>Latency ms <input id="linkLat" type="number" value="10"/></label>
+      <label>Status <select id="linkStatus"><option>up</option><option>degraded</option><option>intermittent</option><option>down</option></select></label>
+      <button id="addLink">Add link</button>
+    </div>
+    <div class="panel">
+      <h2>Admit flow</h2>
+      <label>Flow ID <input id="flowId" value="flow-1"/></label>
+      <label>Src <input id="flowSrc" value="edge-a"/></label>
+      <label>Dst <input id="flowDst" value="edge-b"/></label>
+      <label>Demand Mbps <input id="flowDemand" type="number" value="5"/></label>
+      <label>Priority <input id="flowPri" type="number" value="2"/></label>
+      <label>Max latency <input id="flowLat" type="number" value="100"/></label>
+      <button id="admitFlow">Admit</button>
+      <button id="routeFlow">Route only</button>
+    </div>
+  </section>
+  <section class="grid">
+    <div class="panel"><h2>Nodes</h2><pre id="nodes"></pre></div>
+    <div class="panel"><h2>Links</h2><pre id="links"></pre></div>
+    <div class="panel"><h2>Flows</h2><pre id="flows"></pre></div>
+  </section>
+  <section class="panel">
+    <h2>Result</h2>
+    <pre id="out">ready</pre>
+  </section>
+  <section class="panel">
+    <h2>Events (tail)</h2>
+    <pre id="events"></pre>
+  </section>
+</main>
+<script src="/app.js"></script>
+</body>
+</html>

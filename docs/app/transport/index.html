@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>mem20 edge transport fabric monitor</title>
+  <style>
+    body{font:14px system-ui,sans-serif;margin:0;background:#0b1020;color:#dbe7ff}
+    header{padding:14px 18px;background:#121a33;border-bottom:1px solid #243055}
+    main{padding:14px;max-width:1200px;margin:0 auto}
+    .panel{background:#121a33;border:1px solid #243055;border-radius:10px;padding:12px;margin:12px 0}
+    label,input,button{font:inherit} input{width:360px;max-width:100%;padding:6px;border-radius:6px;border:1px solid #355;background:#08101f;color:#eaf}
+    button{background:#2b57ff;color:#fff;border:0;border-radius:7px;padding:7px 11px;cursor:pointer;margin-left:6px}
+    pre{white-space:pre-wrap;word-break:break-word;background:#08101f;padding:10px;border-radius:8px;max-height:320px;overflow:auto}
+    .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:12px}
+    a{color:#8fb3ff}
+  </style>
+</head>
+<body>
+<header>
+  <h1>Edge Transport Fabric monitor <small>(RM-077)</small></h1>
+  <p>Static estate monitor. Start: <code>python -m mem20edgetransportfabricz serve --port 8782</code></p>
+</header>
+<main>
+  <div class="panel">
+    <label>API base <input id="api" value="http://127.0.0.1:8782"/></label>
+    <button id="save">Save</button>
+    <button id="load">Load</button>
+    <button id="doctor">Doctor</button>
+  </div>
+  <div class="grid">
+    <div class="panel"><h2>Status / health</h2><pre id="status">not loaded</pre></div>
+    <div class="panel"><h2>Doctor / peers</h2><pre id="doctorOut"></pre></div>
+  </div>
+  <div class="grid">
+    <div class="panel"><h2>Nodes</h2><pre id="nodes"></pre></div>
+    <div class="panel"><h2>Links</h2><pre id="links"></pre></div>
+    <div class="panel"><h2>Flows</h2><pre id="flows"></pre></div>
+  </div>
+</main>
+<script>
+const apiInput = document.getElementById('api');
+const qs = new URLSearchParams(location.search);
+apiInput.value = qs.get('api') || localStorage.getItem('etf_api') || apiInput.value;
+function base(){ return apiInput.value.replace(/\/$/,''); }
+async function get(p){ const r = await fetch(base()+p); return r.json(); }
+async function load(){
+  localStorage.setItem('etf_api', apiInput.value);
+  try {
+    const [s,n,l,f] = await Promise.all([get('/api/status'),get('/api/nodes'),get('/api/links'),get('/api/flows')]);
+    document.getElementById('status').textContent = JSON.stringify(s.health || s, null, 2);
+    document.getElementById('nodes').textContent = JSON.stringify(n.nodes || n, null, 2);
+    document.getElementById('links').textContent = JSON.stringify(l.links || l, null, 2);
+    document.getElementById('flows').textContent = JSON.stringify(f.flows || f, null, 2);
+  } catch(e) { document.getElementById('status').textContent = String(e); }
+}
+document.getElementById('save').onclick = load;
+document.getElementById('load').onclick = load;
+document.getElementById('doctor').onclick = async () => { try { document.getElementById('doctorOut').textContent = JSON.stringify(await get('/api/doctor'), null, 2); } catch(e){ document.getElementById('doctorOut').textContent = String(e); } };
+if (qs.get('api')) load();
+</script>
+</body>
+</html>

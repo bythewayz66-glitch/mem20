@@ -1,19 +1,18 @@
 import importlib
 MOD="mem20resourceexchangemarketz"
 def _m(): return importlib.import_module(MOD+".domain")
-def test_list(): m=_m(); r=m.list_resource("s","cpu",10,5); assert r["available"] is True
-def test_buy(): m=_m(); r=m.list_resource("s","cpu",10,5); res=m.buy(r,"b",3); assert res["ok"] is True
-def test_price(): m=_m(); r=m.list_resource("s","cpu",10,5); m.buy(r,"b",3); assert r["amount"]==7
-def test_health(): m=_m(); r=m.market_health([m.list_resource("s","cpu",10,5)]); assert r["listings"]==1
-
-def test_estate_context_real_integrations(tmp_path):
-    import importlib
-    m = importlib.import_module("mem20resourceexchangemarketz.domain")
-    ctx = m.estate_context(tmp_path / "store")
-    assert ctx["engine_status_checked"] is True
-    assert ctx["work_recorded"] is True
-    assert ctx["path_scripts"] >= 0
-    assert "inventory_keys" in ctx
-    assert isinstance(ctx["focus_score"], float)
-    assert ctx["sitemap_skips_cache"] is True
-
+def _eco(): return importlib.import_module(MOD+".ecosystem")
+def test_list(): l=_m().list_resource("s","r",5,1); assert l["available"]
+def test_buy(): l=_m().list_resource("s","r",5,2); r=_m().buy(l,"b",2); assert r["ok"] and r["cost"]==4
+def test_buy_insufficient(): l=_m().list_resource("s","r",1,1); assert not _m().buy(l,"b",5)["ok"]
+def test_health(): h=_m().market_health([{"available":True},{"available":False}]); assert h["available"]==1
+def test_eco_route(): r=_eco().market_routing("k",["t"]); assert r["ok"] and r["subsystem"]=="mem20capabilitymarketplacez"
+def test_eco_events(): r=_eco().trade_events("t",{}); assert r["ok"] and r["subsystem"]=="mem20eventstreamsuperhighwayz"
+def test_eco_contain(): r=_eco().trade_containment("t"); assert r["ok"] and r["subsystem"]=="mem20faultcontainmentcellsz"
+def test_eco_price(): r=_eco().demand_pricing([1,2]); assert r["ok"] and r["subsystem"]=="mem20demandforecastandcapacitybrainz"
+def test_eco_econ(): r=_eco().trade_economics(10,4); assert r["ok"] and r["subsystem"]=="mem20businessmodelsimulatorz"
+def test_eco_loyalty(): r=_eco().participant_loyalty(["a","b"]); assert r["ok"] and r["subsystem"]=="mem20crossproductloyaltygraphz"
+def test_report_and_probe():
+    m=_m(); rep=m.market_report(); assert rep["trade_cost"]==6.0 and len(rep["peers"])==6
+    for k,v in rep["peers"].items(): assert v["ok"] is True,(k,v.get("error"))
+    assert m.probe()["ok"] and m.estate_context()["peer_count"]==6

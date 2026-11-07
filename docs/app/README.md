@@ -247,3 +247,4 @@ served by the fleet process itself at its root URL.
 - [Real-Time Team Presence monitor](realtimeteampresencez/index.html) — `PYTHONPATH=/opt/mem20 /opt/mem20/.venv/bin/python -m mem20realtimeteampresencez serve --port 8813`
 - [Real-World Impact Rewards monitor](realworldimpactrewardsz/index.html) — `PYTHONPATH=/opt/mem20 /opt/mem20/.venv/bin/python -m mem20realworldimpactrewardsz serve --port 8814`
 - [Remote Experiment Lab monitor](remoteexperimentlabz/index.html) — `PYTHONPATH=/opt/mem20 /opt/mem20/.venv/bin/python -m mem20remoteexperimentlabz serve --port 8815`
+- [Resource Exchange Market monitor](resourceexchangemarketz/index.html) — `PYTHONPATH=/opt/mem20 /opt/mem20/.venv/bin/python -m mem20resourceexchangemarketz serve --port 8816`

@@ -170,3 +170,4 @@ served by the fleet process itself at its root URL.
 - [Cross-Product Loyalty Graph monitor](crossproductloyaltygraphz/index.html) — `PYTHONPATH=/opt/mem20 /opt/mem20/.venv/bin/python -m mem20crossproductloyaltygraphz serve --port 8796`
 - [Customer Digital Twin Lab monitor](customerdigitaltwinlabz/index.html) — `PYTHONPATH=/opt/mem20 /opt/mem20/.venv/bin/python -m mem20customerdigitaltwinlabz serve --port 8797`
 - [Customer Lifecycle Engine monitor](customerlifecycleenginez/index.html) — `PYTHONPATH=/opt/mem20 /opt/mem20/.venv/bin/python -m mem20customerlifecycleenginez serve --port 8798`
+- [Data Locality Optimizer monitor](datalocalityoptimizerz/index.html) — `PYTHONPATH=/opt/mem20 /opt/mem20/.venv/bin/python -m mem20datalocalityoptimizerz serve --port 8799`

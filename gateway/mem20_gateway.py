@@ -109,6 +109,12 @@ SUBSYSTEMS = {
         "owner": "mem20-renovation",
         "wave": 3,
     },
+    "mem20autonomousmicrosaasfoundryz": {
+        "purpose": "Autonomous micro-SaaS foundry (idea/MVP/launch/revenue) with 6 subsystem-specific peers, HTTP cockpit, MCP tools",
+        "entry": "python -m mem20autonomousmicrosaasfoundryz status",
+        "owner": "mem20-renovation",
+        "wave": 3,
+    },
     "mem20edgefleetbrainz": {
         "purpose": "Coordinate heterogeneous computers, phones, servers and appliances as one capability-aware fleet",
         "entry": "python -m mem20edgefleetbrainz status",

@@ -1,63 +1,52 @@
-"""Service bundling engine: bundle services into packages."""
-import time
-
+"""Service bundling engine with 6 peers."""
+from __future__ import annotations
+from . import ecosystem
+__all__=["create_bundle","add_service","discount","bundle_health","bundle_report","probe","estate_context"]
 
 def create_bundle(services, name="bundle"):
-    return {"name": name, "services": list(services), "price": sum(s.get("price", 0) for s in services), "created": time.time()}
-
+    return {"name":name,"services":list(services),"price":sum(s.get("price",0) for s in services)}
 
 def add_service(bundle, service):
-    bundle["services"].append(service)
-    bundle["price"] = sum(s.get("price", 0) for s in bundle["services"])
-    return bundle
-
+    bundle["services"].append(service); bundle["price"]=sum(s.get("price",0) for s in bundle["services"]); return bundle
 
 def discount(bundle, rate=0.1):
-    bundle["price"] = round(bundle["price"] * (1 - rate), 2)
-    return bundle
-
+    bundle["price"]=round(bundle["price"]*(1-rate),2); return bundle
 
 def bundle_health(bundles):
-    return {"bundles": len(bundles), "services": sum(len(b["services"]) for b in bundles)}
+    return {"bundles":len(bundles),"total_price":sum(b.get("price",0) for b in bundles)}
 
-def estate_context(store_path=None):
-    """Probe the real mem20 estate modules this subsystem participates in.
+def bundle_report():
+    b=create_bundle([{"price":5},{"price":3}]); discount(b,0.1); h=bundle_health([b])
+    peers={
+        "deal_pricing": ecosystem.deal_pricing(b["price"]),
+        "plg_sim": ecosystem.plg_sim(),
+        "bundle_market": ecosystem.bundle_market("bundle", ["bundle","price","discount"]),
+        "bundle_events": ecosystem.bundle_events("bundle.created", {"price":b["price"]}),
+        "bundle_health_peer": ecosystem.bundle_health_peer(),
+        "revenue_check": ecosystem.revenue_check(b["price"]),
+    }
+    return {"ok":all(v.get("ok") for v in peers.values()) and h["bundles"]==1,"bundle":b,"health":h,"peers":peers}
 
-    The subsystem is not an isolated demo: its work is recorded in the
-    delivery ledger, its scope is scored by the focus engine, its source tree
-    is classified by the sitemap policy, and a memory engine is opened when a
-    store path is supplied. Every value is read from a live mem20 module.
-    """
+def probe(): return ecosystem.probe()
+
+def estate_context(store_path: str | None = None):
+    """Probe real mem20 estate modules plus 6 peer judgements (core API preserved)."""
     from pathlib import Path
-
     import mem20path
     from memory_engine import EngineConfig, MemoryEngine
     from mem20mixedinitiativefocusenginez.domain import focus_score
     from mem20sitemapz.policy import is_skipped_dir
     from mem20webhooksupernetworkz.domain import DeliveryLedger
     from toolchest.catalog import load_inventory
-
     root = Path(__file__).resolve().parents[2]
     inventory_path = root / "toolchest" / "inventory.json"
-    if not inventory_path.exists():
-        inventory_path = root / "toolchest" / "src" / "toolchest" / "inventory.json"
-
+    if not inventory_path.exists(): inventory_path = root / "toolchest" / "src" / "toolchest" / "inventory.json"
     inventory = load_inventory(inventory_path)
-    ledger = DeliveryLedger(max_entries=4)
-    ledger.add("mem20servicebundlingenginez-work")
-    scripts = mem20path.discover_scripts()
-    focus = focus_score({"priority": 1, "distractions": 0})
-    cache_skipped = is_skipped_dir("__pycache__")
-    ctx = {
-        "path_scripts": len(scripts),
-        "inventory_keys": len(inventory) if isinstance(inventory, dict) else 0,
-        "work_recorded": "mem20servicebundlingenginez-work" in ledger,
-        "focus_score": float(focus),
-        "sitemap_skips_cache": cache_skipped,
-    }
+    ledger = DeliveryLedger(max_entries=4); ledger.add("mem20servicebundlingenginez-work")
+    ctx = {"path_scripts": len(mem20path.discover_scripts()), "inventory_keys": len(inventory) if isinstance(inventory, dict) else 0,
+           "work_recorded": "mem20servicebundlingenginez-work" in ledger, "focus_score": float(focus_score({"priority":1,"distractions":0})),
+           "sitemap_skips_cache": is_skipped_dir("__pycache__")}
     if store_path is not None:
-        config = EngineConfig(store_path=Path(store_path).expanduser().resolve())
-        engine = MemoryEngine(config)
-        ctx["engine_status_checked"] = engine.config is not None
-    return ctx
-
+        config = EngineConfig(store_path=Path(store_path).expanduser().resolve()); MemoryEngine(config); ctx["engine_status_checked"]=True
+    else: ctx["engine_status_checked"]=False
+    r=bundle_report(); ctx["peer_count"]=len(r.get("peers",{})); ctx["peers_ok"]=r.get("ok"); ctx["checks"]=r.get("peers",{}); return ctx

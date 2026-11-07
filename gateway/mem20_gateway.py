@@ -91,7 +91,13 @@ SUBSYSTEMS = {
         "owner": "mem20-webdev",
         "wave": 2,
     },
-        "mem20gameproductioncontrolcenterz": {
+        "mem20globalcapabilitymarketplacez": {
+        "purpose": "Global Capability Marketplace (RM-218, #318): listings/match/transactions with offer, trial, secure-capsule, query, remix integrations; legacy domain preserved",
+        "entry": "python -m mem20globalcapabilitymarketplacez simulate",
+        "owner": "mem20-webdev",
+        "wave": 2,
+    },
+    "mem20gameproductioncontrolcenterz": {
         "purpose": "Game Production Control Center (RM-233, #317): sprints/milestones/risk/health composed with team,cost,release,forge,resilience,asset integrations; legacy domain preserved",
         "entry": "python -m mem20gameproductioncontrolcenterz simulate",
         "owner": "mem20-webdev",

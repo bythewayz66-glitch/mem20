@@ -1,17 +1,14 @@
 [build-system]
 requires=["setuptools>=68"]
 build-backend="setuptools.build_meta"
-
 [project]
 name="mem20servicebundlingenginez"
 version="1.0.0"
-description="mem20servicebundlingenginez first-class module"
+description="Service Bundling Engine with 6 peers, HTTP cockpit, MCP"
 requires-python=">=3.11"
-
 [project.scripts]
 mem20servicebundlingenginez="mem20servicebundlingenginez.runtime:main"
-
 [tool.setuptools]
 packages=["mem20servicebundlingenginez"]
 [tool.setuptools.package-data]
-mem20servicebundlingenginez=["CAPABILITY.json","roadmap.json"]
+mem20servicebundlingenginez=["CAPABILITY.json","ROADMAP.json","roadmap.json","web/*"]

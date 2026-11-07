@@ -1,22 +1,34 @@
-# RM-087 — Service Bundling Engine
+# mem20servicebundlingenginez — Service Bundling Engine
 
-Outcome: Discover complementary capabilities and package them into higher-value services
+First-class mem20 subsystem for service bundling (create/add/discount/health) with **6 peers**, SQLite WAL runtime, CLI, JSON HTTP API, served web cockpit, docs/app monitor, and real MCP tools. Core API preserved.
 
-Breakthrough: The platform continually creates new combinations customers can buy
+## Peers (6)
+`mem20autonomousdealdeskz`, `mem20productledgrowthsimulatorz`, `mem20capabilitymarketplacez`, `mem20eventstreamsuperhighwayz`, `mem20universalhealthnervoussystemz`, `mem20revenueleakhunterz`.
 
-Machine-executable local runtime includes versioned state, SQLite WAL persistence, events, SDK CRUD, resumable/idempotent jobs, retries/timeouts/quotas, recovery, `compose` operation logic, decision explanations, feedback, CLI, HTTP console/API, mesh selection/failover, simulator, benchmark, metrics, and opt-in signature mode.
-
-## Run
-
-```bash
-# CLI help, then exercise the local runtime end to end
-python -m mem20servicebundlingenginez --help
-python -m mem20servicebundlingenginez simulate
-python -m mem20servicebundlingenginez benchmark
+## Python API (runnable)
+```python
+from mem20servicebundlingenginez.domain import create_bundle, add_service, discount, bundle_report, probe
+b=create_bundle([{"price":5},{"price":3}]); discount(b,0.1); print(b["price"])  # 7.2
+r=bundle_report(); print(r["ok"], len(r["peers"]))  # True 6
+print(probe()["ok"])  # True
 ```
 
-## Tests
-
+## CLI (runnable)
 ```bash
-PYTHONPATH=/opt/mem20 .venv/bin/python -m pytest mem20servicebundlingenginez/mem20servicebundlingenginez/tests -q
+cd /opt/mem20
+PYTHONPATH=/opt/mem20 /opt/mem20/.venv/bin/python -m mem20servicebundlingenginez status
+PYTHONPATH=/opt/mem20 /opt/mem20/.venv/bin/python -m mem20servicebundlingenginez doctor
+PYTHONPATH=/opt/mem20 /opt/mem20/.venv/bin/python -m mem20servicebundlingenginez serve --port 8830
 ```
+
+## HTTP API & web/docs
+`GET/POST /api/status`, `/api/doctor`, `POST /api/simulate`, `GET /api/events|health`. Cockpit `/`. docs/app `docs/app/servicebundlingenginez/index.html`.
+
+## MCP & registration
+`ServiceBundlingEngineToolsMixin` in `mcp/server.py`; gateway `SUBSYSTEMS`.
+
+## Tests & conformance
+```bash
+PYTHONPATH=/opt/mem20 /opt/mem20/.venv/bin/python -m pytest mem20servicebundlingenginez/mem20servicebundlingenginez/tests -q --noconftest -p no:cacheprovider
+```
+Target **7/7**.

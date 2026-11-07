@@ -1,6 +1,6 @@
 # App / product narrative — `docs/app/`
 
-Entry point for the `docs/app/` documentation set. **26 tracked file(s).**
+Entry point for the `docs/app/` documentation set. **27 tracked file(s).**
 
 ## Contents
 
@@ -9,6 +9,7 @@ Entry point for the `docs/app/` documentation set. **26 tracked file(s).**
 - [`assets/index-DCqPYDUE.js`](assets/index-DCqPYDUE.js)
 - [`continuum/index.html`](continuum/index.html)
 - [`deck/PERMANENT_URL.md`](deck/PERMANENT_URL.md)
+- [`energy-foundation/index.html`](energy-foundation/index.html)
 - [`energy-migration/index.html`](energy-migration/index.html)
 - [`transport/index.html`](transport/index.html)
 - [`deck/index.html`](deck/index.html)
@@ -44,6 +45,15 @@ PYTHONPATH=/opt/mem20 python3 -m mem20edgetocloudintelligencecontinuumz serve --
 ```
 
 
+
+
+## Energy foundation monitor (`energy-foundation/`)
+
+[`energy-foundation/index.html`](energy-foundation/index.html) — static estate monitor for Energy-Aware Foundation (power thresholds/budgets/actions). Reads subsystem API (`?api=`).
+
+```bash
+PYTHONPATH=/opt/mem20 python3 -m mem20energyawarefoundationz serve --port 8784
+```
 
 ## Energy-aware migration monitor (`energy-migration/`)
 
@@ -108,3 +118,4 @@ served by the fleet process itself at its root URL.
 - [Autonomous Workcells monitor](autonomousworkcellsz/index.html) — `PYTHONPATH=/opt/mem20 /opt/mem20/.venv/bin/python -m mem20autonomousworkcellsz serve --port 8787`
 - [Business Model Simulator monitor](businessmodelsimulatorz/index.html) — `PYTHONPATH=/opt/mem20 /opt/mem20/.venv/bin/python -m mem20businessmodelsimulatorz serve --port 8788`
 - [Causal Routing Brain monitor](causalroutingbrainz/index.html) — `PYTHONPATH=/opt/mem20 /opt/mem20/.venv/bin/python -m mem20causalroutingbrainz serve --port 8789`
+- [Collective Model Intelligence monitor](collectivemodelintelligencez/index.html) — `PYTHONPATH=/opt/mem20 /opt/mem20/.venv/bin/python -m mem20collectivemodelintelligencez serve --port 8790`

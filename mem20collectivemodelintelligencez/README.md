@@ -1,33 +1,42 @@
 # mem20collectivemodelintelligencez — Collective Model Intelligence
 
-Combine model predictions via ensembles/voting, measure diversity, distill knowledge, and aggregate confidence, with mem20 estate integration.
+First-class mem20 subsystem for collective model intelligence: weighted ensemble prediction, voting, diversity measurement, knowledge distillation loss, and confidence aggregation — with **6 collective-model-specific peers** (unique set), SQLite WAL runtime, CLI, JSON HTTP API, served cockpit, docs/app integration, and real MCP tools.
 
-## Python API
+## Peers (6)
+`mem20livemodelfusionz` (fuse/weight/select/best/vote), `mem20loreragcontentgeneratorz` (generation quality), `mem20capabilitymarketplacez` (model routing), `mem20eventstreamsuperhighwayz` (ensemble events), `mem20universalhealthnervoussystemz` (model health), `mem20causalroutingbrainz` (causal route scoring). Failures reported, not fatal.
 
+## Python API (runnable)
 ```python
-import tempfile
-from mem20collectivemodelintelligencez.domain import (
-    ensemble_predict, diversity_score, knowledge_distill, aggregate_confidence, estate_context,
-)
-
-print(ensemble_predict([1.0, 2.0, 3.0]))
-print(ensemble_predict(["a", "b", "a"]))
-print(diversity_score(["a", "b", "a"]))
-print(knowledge_distill([1.0, 2.0], [1.1, 1.9]))
-print(aggregate_confidence([0.8, 0.9]))
-
-with tempfile.TemporaryDirectory() as d:
-    print(estate_context(d)["engine_status_checked"])
+from mem20collectivemodelintelligencez.domain import ensemble_predict, diversity_score, knowledge_distill, aggregate_confidence, collective_report, probe, estate_context
+print(ensemble_predict([1,2,3]))           # 2.0
+print(ensemble_predict(["a","a","b"]))     # a
+print(diversity_score([1,1,2]))            # 0.3333
+print(knowledge_distill([1,0],[0.9,0.1]))  # ~0.01
+print(aggregate_confidence([0.8,0.6]))     # 0.7
+r = collective_report(); print(r["ok"], len(r["peers"]))  # True 6
+print(probe()["ok"], estate_context()["peer_count"])      # True 6
 ```
 
-## CLI
-
+## CLI (runnable)
 ```bash
-python -m mem20collectivemodelintelligencez --help
+cd /opt/mem20
+PYTHONPATH=/opt/mem20 /opt/mem20/.venv/bin/python -m mem20collectivemodelintelligencez --help
+PYTHONPATH=/opt/mem20 /opt/mem20/.venv/bin/python -m mem20collectivemodelintelligencez status
+PYTHONPATH=/opt/mem20 /opt/mem20/.venv/bin/python -m mem20collectivemodelintelligencez doctor
+PYTHONPATH=/opt/mem20 /opt/mem20/.venv/bin/python -m mem20collectivemodelintelligencez simulate
+PYTHONPATH=/opt/mem20 /opt/mem20/.venv/bin/python -m mem20collectivemodelintelligencez serve --port 8790
 ```
 
-## Tests
+## HTTP API & web/docs
+`GET/POST /api/status`, `/api/doctor`, `POST /api/simulate`, `GET /api/events|health`. Cockpit at `/`. State `~/.mem20/collectivemodelintelligencez/state.sqlite3` (WAL). docs/app: `docs/app/collectivemodelintelligencez/index.html` (no Vite edits).
 
+## MCP & registration
+`CollectiveModelIntelligenceToolsMixin` in `mcp/server.py`. Gateway `SUBSYSTEMS` entry.
+
+## Tests & conformance
 ```bash
-PYTHONPATH=/opt/mem20 python -m pytest mem20collectivemodelintelligencez/mem20collectivemodelintelligencez/tests -q
+cd /opt/mem20
+PYTHONPATH=/opt/mem20 /opt/mem20/.venv/bin/python -m pytest mem20collectivemodelintelligencez/mem20collectivemodelintelligencez/tests -q --noconftest -p no:cacheprovider
+PYTHONPATH=/opt/mem20 /opt/mem20/.venv/bin/python scripts/renovation/conformance.py mem20collectivemodelintelligencez
 ```
+Target **7/7**.

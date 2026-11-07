@@ -91,7 +91,13 @@ SUBSYSTEMS = {
         "owner": "mem20-webdev",
         "wave": 2,
     },
-        "mem20energyawarecomputemigrationz": {
+        "mem20energyawarefoundationz": {
+        "purpose": "Energy-aware foundation: power monitoring, thresholds, budgets, optimization actions with durable state",
+        "entry": "python -m mem20energyawarefoundationz status",
+        "owner": "mem20-webdev",
+        "wave": 2,
+    },
+    "mem20energyawarecomputemigrationz": {
         "purpose": "Energy-aware compute migration: battery/thermal/price/renewable-aware placement and migration planning with durable state",
         "entry": "python -m mem20energyawarecomputemigrationz status",
         "owner": "mem20-webdev",
@@ -136,6 +142,12 @@ SUBSYSTEMS = {
     "mem20autonomoussaleslaboratoryz": {
         "purpose": "Autonomous sales laboratory (leads/outreach/conversion experiments, anti-spam) with 6 sales-lab peers, HTTP cockpit, MCP",
         "entry": "python -m mem20autonomoussaleslaboratoryz status",
+        "owner": "mem20-renovation",
+        "wave": 3,
+    },
+    "mem20collectivemodelintelligencez": {
+        "purpose": "Collective model intelligence (ensemble/voting/diversity) with 6 peers, HTTP cockpit, MCP",
+        "entry": "python -m mem20collectivemodelintelligencez status",
         "owner": "mem20-renovation",
         "wave": 3,
     },

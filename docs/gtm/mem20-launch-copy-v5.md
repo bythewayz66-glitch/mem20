@@ -1,5 +1,8 @@
 # mem20 — Launch Copy Pack (v5)
 
+> **Refresh required before launch.** This 2026-11-01 pack correctly records its historical baseline, but its 272-tool / 27-domain surface claim is no longer current. The repository now measures **311 tools / 39 domains** at version **3.1.2** (2026-11-07). Benchmark, public-page, pricing, and distribution claims in this pack have not all been re-measured in this pass; do not ship it unchanged. See [documentation drift issue #392](https://github.com/bythewayz66-glitch/mem20/issues/392).
+
+
 **Prepared by:** Mem20 Content Creator · **Seat:** Brand & Positioning Strategist
 **Supersedes:** Launch Copy Pack v4 (`docs/gtm/mem20-launch-copy.md`, retained in place as the retired reference)
 **Canonical repo:** https://github.com/bythewayz66-glitch/mem20 · **Branch read:** `main` · **HEAD:** `d99ab5d8e9c5c45a1fb3d02d3b65b2f9a96b5110`

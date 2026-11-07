@@ -1,5 +1,8 @@
 # mem20 Launch — Campaign Plan & Tracking Scheme (v3)
 
+> **Historical plan — not approved for execution without refresh.** This v3 plan was updated 2026-10-26 against version 3.0.0 and a 270-tool / 27-domain surface. Current main is **3.1.2 with 311 tools / 39 domains** (2026-11-07). The public URL, redirect chain, analytics state, install/distribution claims, and linked collateral must be re-measured before this plan is used. See [documentation drift issue #392](https://github.com/bythewayz66-glitch/mem20/issues/392).
+
+
 **Owner:** mem20 GTM Team Lead · **Seat:** Head of Marketing & Demand Generation / Data & Revenue Analytics Lead
 **Supersedes:** Campaign Plan v2 (`published/sites/66161135-…/documents/mem20-gtm-v2/mem20-campaign-plan-v2.md`, 2026-10-14)
 **Campaign code:** `mem20_launch_2026q4`

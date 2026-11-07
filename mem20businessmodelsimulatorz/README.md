@@ -1,7 +1,34 @@
-# RM-090 — Business Model Simulator
+# mem20businessmodelsimulatorz — Business Model Simulator
 
-Outcome: Compare subscription, usage, marketplace, licensing, and service models under realistic scenarios
+Simulate revenue, costs, profit, margins, break-even, scenarios, and sensitivity, with mem20 estate integration.
 
-Breakthrough: New monetization models can be evaluated before expensive implementation
+## Python API
 
-Machine-executable local runtime includes versioned state, SQLite WAL persistence, events, SDK CRUD, resumable/idempotent jobs, retries/timeouts/quotas, recovery, `match` operation logic, decision explanations, feedback, CLI, HTTP console/API, mesh selection/failover, simulator, benchmark, metrics, and opt-in signature mode.
+```python
+import tempfile
+from mem20businessmodelsimulatorz.domain import (
+    revenue, cost, profit, margin, break_even, scenario_sim, sensitivity, estate_context,
+)
+
+r = revenue(100, 10)
+c = cost(500, 2, 100)
+print(r, c, profit(r, c), margin(r, c))
+print(break_even(1000, 10, 4))
+print(scenario_sim(100, 10, 500, 2, growth=0.1, periods=3))
+print(sensitivity(10, 100, 500, 2))
+
+with tempfile.TemporaryDirectory() as d:
+    print(estate_context(d)["engine_status_checked"])
+```
+
+## CLI
+
+```bash
+python -m mem20businessmodelsimulatorz --help
+```
+
+## Tests
+
+```bash
+PYTHONPATH=/opt/mem20 python -m pytest mem20businessmodelsimulatorz/mem20businessmodelsimulatorz/tests -q
+```

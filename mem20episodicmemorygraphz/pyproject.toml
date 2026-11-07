@@ -5,7 +5,7 @@ build-backend="setuptools.build_meta"
 [project]
 name="mem20episodicmemorygraphz"
 version="1.0.0"
-description="mem20episodicmemorygraphz first-class module"
+description="Episodic Memory Graph (RM-021): experiences as linked people/places/goals/actions/outcomes/time with recall, graph queries, durable state"
 requires-python=">=3.11"
 
 [project.scripts]
@@ -14,4 +14,4 @@ mem20episodicmemorygraphz="mem20episodicmemorygraphz.runtime:main"
 [tool.setuptools]
 packages=["mem20episodicmemorygraphz"]
 [tool.setuptools.package-data]
-mem20episodicmemorygraphz=["CAPABILITY.json","roadmap.json"]
+mem20episodicmemorygraphz=["web/*","CAPABILITY.json"]

@@ -99,3 +99,10 @@
   SystemExit). `mem20customerlifecycleenginez.transition()` returns a stage string
   (not a customer dict); ecosystem adapter adjusted. 17/30 members have no local
   domain/runtime; probing reports this truthfully.
+
+- 2026-11-07: #306 (`mem20episodicmemorygraphz`) had the same estate-root namespace
+  import issue (`python -m` / `__version__` import) as #305; fixed with root shim
+  and robust `__version__` in runtime. `mem20spatialcommanduniversez` API expects
+  bounds as `[(min,max), ...]` per dimension and `spatial_health(regions_list)`;
+  adapter adjusted. `mem20mixedinitiativefocusenginez`/`mem20deterministicconfigurationgraphz`
+  have heavy top-level imports in some contexts but domain calls used here succeeded.

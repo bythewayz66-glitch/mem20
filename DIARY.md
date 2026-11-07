@@ -498,3 +498,16 @@ monitor, gateway/toolchest registrations.
 Verification: `pytest mem20enginez/tests -q --no-header -p no:cacheprovider` → 8 passed;
 `simulate` 9/9, `doctor` 6/6 peers; `conformance.py mem20enginez` **7/7 PASS**;
 `register_subsystem.py` package/gateway/toolchest/sitemapz PASS (MCP warn only).
+
+---
+## 2026-11-07 - mem20episodicmemorygraphz (#306): depth-first rebuild
+
+Rebuilt RM-021 (Episodic Memory Graph, fails 5,6,7) as first-class: preserved legacy
+`create_episode/add_event/link_episodes/recall/episode_graph/forget`, added
+neighbors/timeline/entity index/query/context diff, SQLite WAL store, service/CLI+
+JSON HTTP+cockpit, docs/app monitor. Fixed estate-root `__version__`/module import
+with root shim. 6 unique peers (different from #300-#305): `mem20dynamicskillgraphz`,
+`mem20reversibleexecutiongraphz`, `mem20mixedinitiativefocusenginez`,
+`mem20spatialcommanduniversez`, `mem20crossproductloyaltygraphz`,
+`mem20deterministicconfigurationgraphz`. Verification: 3 tests pass, simulate 6/6,
+doctor 6/6, conformance **7/7**, register_subsystem PASS (MCP warn only).

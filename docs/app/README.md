@@ -1,6 +1,6 @@
 # App / product narrative — `docs/app/`
 
-Entry point for the `docs/app/` documentation set. **28 tracked file(s).**
+Entry point for the `docs/app/` documentation set. **29 tracked file(s).**
 
 ## Contents
 
@@ -11,6 +11,7 @@ Entry point for the `docs/app/` documentation set. **28 tracked file(s).**
 - [`deck/PERMANENT_URL.md`](deck/PERMANENT_URL.md)
 - [`energy-foundation/index.html`](energy-foundation/index.html)
 - [`engine-runtime/index.html`](engine-runtime/index.html)
+- [`episodic-memory-graph/index.html`](episodic-memory-graph/index.html)
 - [`energy-migration/index.html`](energy-migration/index.html)
 - [`transport/index.html`](transport/index.html)
 - [`deck/index.html`](deck/index.html)
@@ -48,6 +49,16 @@ PYTHONPATH=/opt/mem20 python3 -m mem20edgetocloudintelligencecontinuumz serve --
 
 
 
+
+
+## Episodic Memory Graph monitor (`episodic-memory-graph/`)
+
+[`episodic-memory-graph/index.html`](episodic-memory-graph/index.html) — static estate monitor for
+Episodic Memory Graph (RM-021, #306). Reads subsystem JSON API (`?api=`), shows status/doctor.
+
+```bash
+PYTHONPATH=/opt/mem20 python3 -m mem20episodicmemorygraphz serve --port 8786
+```
 
 ## Engine runtime monitor (`engine-runtime/`)
 
@@ -134,4 +145,3 @@ served by the fleet process itself at its root URL.
 - [Collective Model Intelligence monitor](collectivemodelintelligencez/index.html) — `PYTHONPATH=/opt/mem20 /opt/mem20/.venv/bin/python -m mem20collectivemodelintelligencez serve --port 8790`
 - [Community Challenge Engine monitor](communitychallengeenginez/index.html) — `PYTHONPATH=/opt/mem20 /opt/mem20/.venv/bin/python -m mem20communitychallengeenginez serve --port 8791`
 - [Compounding Product Ecosystem monitor](compoundingproductecosystemz/index.html) — `PYTHONPATH=/opt/mem20 /opt/mem20/.venv/bin/python -m mem20compoundingproductecosystemz serve --port 8792`
-- [Context Compression Forge monitor](contextcompressionforgez/index.html) — `PYTHONPATH=/opt/mem20 /opt/mem20/.venv/bin/python -m mem20contextcompressionforgez serve --port 8793`

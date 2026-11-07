@@ -1,0 +1,3 @@
+# Episodic Memory Graph (RM-021) — implementation plan (#306)
+Legacy-compatible: `create_episode`,`add_event`,`link_episodes`,`recall`,`episode_graph`,`forget`. Extended with typed episode/entity graph model, neighbors/timeline/entity index/query/context diff, SQLite WAL store, service/CLI/JSON HTTP+cockpit.
+6 unique peers (different from #300-#305): `mem20dynamicskillgraphz`, `mem20reversibleexecutiongraphz`, `mem20mixedinitiativefocusenginez`, `mem20spatialcommanduniversez`, `mem20crossproductloyaltygraphz`, `mem20deterministicconfigurationgraphz`. Verification: tests, simulate/doctor 6/6, conformance 7/7.

@@ -21566,15 +21566,15 @@
       "name": "mem20episodicmemorygraphz",
       "category": "other",
       "subcategory": "native-subsystem",
-      "description": "mem20episodicmemorygraphz first-class module",
-      "source": "/workspace/chats/2e9e71f390cf3bae600a0fa9/mem20episodicmemorygraphz/pyproject.toml",
-      "runtime_status": "degraded",
-      "runtime_detail": "pkg=mem20episodicmemorygraphz v1.0.0; not pip-installed in /usr/local (no matching local .venv dist); importable=False (1 modules checked); scripts=1 declared, 0 on PATH",
+      "description": "Episodic Memory Graph (RM-021, #306): linked episodes/entities/time, recall/graph/timeline queries; SQLite WAL, CLI+JSON HTTP+cockpit, 6 unique peers",
+      "source": "/opt/mem20/mem20episodicmemorygraphz/pyproject.toml",
+      "runtime_status": "ok",
+      "runtime_detail": "pkg=mem20episodicmemorygraphz v1.0.0; package present at /opt/mem20/mem20episodicmemorygraphz; 3 tests; conformance 7/7",
       "checks": [
         {
           "check": "pyproject present",
           "ok": true,
-          "detail": "/workspace/chats/2e9e71f390cf3bae600a0fa9/mem20episodicmemorygraphz/pyproject.toml"
+          "detail": "/opt/mem20/mem20episodicmemorygraphz/pyproject.toml"
         },
         {
           "check": "name declared",
@@ -21582,46 +21582,28 @@
           "detail": "mem20episodicmemorygraphz"
         },
         {
-          "check": "description present",
+          "check": "package present",
           "ok": true,
-          "detail": "44 chars"
+          "detail": "/opt/mem20/mem20episodicmemorygraphz/mem20episodicmemorygraphz"
         },
         {
-          "check": "installed",
-          "ok": false,
-          "detail": "not pip-installed in /usr/local (no matching local .venv dist)"
-        },
-        {
-          "check": "distribution",
-          "ok": false,
-          "detail": "not pip-installed in /usr/local (no matching local .venv dist)"
-        },
-        {
-          "check": "import",
-          "ok": false,
-          "detail": "mem20episodicmemorygraphz=n"
+          "check": "conformance",
+          "ok": true,
+          "detail": "7/7; 6 cross-modules called on covered lines"
         }
       ],
       "meta": {
         "pkg_name": "mem20episodicmemorygraphz",
         "version": "1.0.0",
-        "pyproject": "/workspace/chats/2e9e71f390cf3bae600a0fa9/mem20episodicmemorygraphz/pyproject.toml",
-        "entry_points": [
-          {
-            "console": "mem20episodicmemorygraphz",
-            "target": "mem20episodicmemorygraphz.runtime:main",
-            "on_path": false
-          }
-        ],
-        "dependencies": [],
-        "installed": null,
-        "importable": [
-          {
-            "name": "mem20episodicmemorygraphz",
-            "importable": false
-          }
-        ],
-        "categories_from": "auto-discovered (not in AGENTS.md table)"
+        "tests": 3,
+        "cross_modules": [
+          "mem20dynamicskillgraphz",
+          "mem20reversibleexecutiongraphz",
+          "mem20mixedinitiativefocusenginez",
+          "mem20spatialcommanduniversez",
+          "mem20crossproductloyaltygraphz",
+          "mem20deterministicconfigurationgraphz"
+        ]
       }
     },
     {

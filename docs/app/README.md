@@ -252,3 +252,4 @@ served by the fleet process itself at its root URL.
 - [Reward Forge monitor](rewardforgez/index.html) — `PYTHONPATH=/opt/mem20 /opt/mem20/.venv/bin/python -m mem20rewardforgez serve --port 8818`
 - [Rigging, Animation and Motion Pipeline monitor](rigginganimationandmotionpipelinez/index.html) — `PYTHONPATH=/opt/mem20 /opt/mem20/.venv/bin/python -m mem20rigginganimationandmotionpipelinez serve --port 8819`
 - [Roaming Workload Scheduler monitor](roamingworkloadschedulerz/index.html) — `PYTHONPATH=/opt/mem20 /opt/mem20/.venv/bin/python -m mem20roamingworkloadschedulerz serve --port 8820`
+- [Runtime Compatibility Engine monitor](runtimecompatibilityenginez/index.html) — `PYTHONPATH=/opt/mem20 /opt/mem20/.venv/bin/python -m mem20runtimecompatibilityenginez serve --port 8821`

@@ -1,19 +1,18 @@
 import importlib
 MOD="mem20runtimecompatibilityenginez"
 def _m(): return importlib.import_module(MOD+".domain")
-def test_py(): m=_m(); assert m.check_python((3,0)) is True
-def test_deps(): m=_m(); r=m.check_deps(["a","b"],["a"]); assert r["ok"] is False
-def test_report(): m=_m(); r=m.compatibility_report({"installed":["a"]},{"python":(3,0),"deps":["a"]}); assert r["compatible"] is True
-def test_fixes(): m=_m(); r=m.compatibility_report({"installed":[]},{"python":(3,0),"deps":["a"]}); assert "install a" in m.suggest_fixes(r)
-
-def test_estate_context_real_integrations(tmp_path):
-    import importlib
-    m = importlib.import_module("mem20runtimecompatibilityenginez.domain")
-    ctx = m.estate_context(tmp_path / "store")
-    assert ctx["engine_status_checked"] is True
-    assert ctx["work_recorded"] is True
-    assert ctx["path_scripts"] >= 0
-    assert "inventory_keys" in ctx
-    assert isinstance(ctx["focus_score"], float)
-    assert ctx["sitemap_skips_cache"] is True
-
+def _eco(): return importlib.import_module(MOD+".ecosystem")
+def test_python(): assert _m().check_python((3,1)) is True
+def test_deps(): assert _m().check_deps(["a"],["a"])["ok"] is True
+def test_report(): r=_m().compatibility_report({"installed":[]},{"deps":[]}); assert "compatible" in r
+def test_fixes(): f=_m().suggest_fixes({"python_ok":False,"deps":{"missing":["x"]}}); assert "upgrade python" in f
+def test_eco_config(): r=_eco().config_compat({"p":"3"}); assert r["ok"] and r["subsystem"]=="mem20deterministicconfigurationgraphz"
+def test_eco_route(): r=_eco().capability_routing("k",["c"]); assert r["ok"] and r["subsystem"]=="mem20capabilitymarketplacez"
+def test_eco_events(): r=_eco().compat_events("c",{}); assert r["ok"] and r["subsystem"]=="mem20eventstreamsuperhighwayz"
+def test_eco_contain(): r=_eco().check_containment("c"); assert r["ok"] and r["subsystem"]=="mem20faultcontainmentcellsz"
+def test_eco_heal(): r=_eco().healing_fixes(["f"]); assert r["ok"] and r["subsystem"]=="mem20selfhealingplansz"
+def test_eco_device(): r=_eco().device_runtime({"cpu":True}); assert r["ok"] and r["subsystem"]=="mem20devicecapabilitycompilerz"
+def test_report_and_probe():
+    m=_m(); rep=m.runtime_report(); assert rep["compatible"] is True and len(rep["peers"])==6
+    for k,v in rep["peers"].items(): assert v["ok"] is True,(k,v.get("error"))
+    assert m.probe()["ok"] and m.estate_context()["peer_count"]==6

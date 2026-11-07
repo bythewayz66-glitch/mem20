@@ -5,7 +5,7 @@ build-backend="setuptools.build_meta"
 [project]
 name="mem20customerlifecycleenginez"
 version="1.0.0"
-description="mem20customerlifecycleenginez first-class module"
+description="Customer Lifecycle Engine with 6 peers, HTTP cockpit, MCP"
 requires-python=">=3.11"
 
 [project.scripts]
@@ -13,5 +13,6 @@ mem20customerlifecycleenginez="mem20customerlifecycleenginez.runtime:main"
 
 [tool.setuptools]
 packages=["mem20customerlifecycleenginez"]
+
 [tool.setuptools.package-data]
-mem20customerlifecycleenginez=["CAPABILITY.json","roadmap.json"]
+mem20customerlifecycleenginez=["CAPABILITY.json","ROADMAP.json","roadmap.json","web/*"]

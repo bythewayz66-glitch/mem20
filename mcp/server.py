@@ -123,6 +123,7 @@ from tools.mem20compoundingproductecosystemz_tools import CompoundingProductEcos
 from tools.mem20contextcompressionforgez_tools import ContextCompressionForgeToolsMixin
 from tools.mem20counterfactualmemorysimulatorz_tools import CounterfactualMemorySimulatorToolsMixin
 from tools.mem20crossplatformmicrokernelz_tools import CrossPlatformMicrokernelToolsMixin
+from tools.mem20crossproductloyaltygraphz_tools import CrossProductLoyaltyGraphToolsMixin
 from tools.ops_tools import OpsToolsMixin
 from tools.verify_tools import VerifyToolsMixin
 from tools.toolchest_tools import ToolchestToolsMixin
@@ -206,6 +207,7 @@ class Mem20MCPServer(MemoryToolsMixin, CognitiveToolsMixin, RoadmapToolsMixin,
         self.register_autonomousrecoverydirectorz_tools()
         self.register_autonomoussaleslaboratoryz_tools()
         self.register_autonomoussoftwarefoundryz_tools()
+        self.register_crossproductloyaltygraphz_tools()
         self.register_autonomousworkcellsz_tools()
         self.register_businessmodelsimulatorz_tools()
         self.register_causalroutingbrainz_tools()

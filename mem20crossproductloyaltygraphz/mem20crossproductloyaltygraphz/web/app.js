@@ -1,0 +1,12 @@
+const $=(s)=>document.querySelector(s); const state={base:localStorage.getItem('lg_api_base')||''}; $('#api-base').value=state.base; const base=()=>state.base.trim().replace(/\/$/,'');
+async function api(path,opts={}){const r=await fetch(base()+path,{headers:{'Content-Type':'application/json'},...opts}); const d=await r.json().catch(()=>({raw:true})); if(!r.ok) throw new Error(d.error||r.statusText); return d;}
+function toast(m){const t=$('#toast'); t.textContent=m; t.hidden=false; setTimeout(()=>t.hidden=true,2200);}
+function stat(k,v){return `<div class="stat"><div class="k">${k}</div><div class="v">${v}</div></div>`;}
+function renderPeers(peers){const el=$('#peers'); el.innerHTML=''; Object.entries(peers||{}).forEach(([k,p])=>{const ok=p&&p.ok; el.innerHTML+=`<div class="card"><h3>${k} <span class="${ok?'ok':'bad'}">${ok?'ok':'err'}</span></h3><p>${JSON.stringify(p,null,2)}</p></div>`;});}
+async function runReport(){try{const d=await api('/api/status',{method:'POST',body:'{}'}); $('#report').textContent=JSON.stringify(d,null,2); renderPeers(d.peers); const ok=Object.values(d.peers||{}).filter(p=>p&&p.ok).length; $('#stats').innerHTML=stat('ok',d.ok)+stat('peers',`${ok}/6`)+stat('score',d.loyalty_score);}catch(e){toast(String(e));}}
+async function runDoctor(){try{const d=await api('/api/doctor'); $('#doctor').hidden=false; $('#doctor').textContent=JSON.stringify(d,null,2);}catch(e){toast(String(e));}}
+async function runSim(){try{$('#sim').textContent=JSON.stringify(await api('/api/simulate',{method:'POST'}),null,2);}catch(e){toast(String(e));}}
+async function loadEvents(){try{const d=await api('/api/events'); $('#events').innerHTML=(d.events||[]).slice().reverse().map(e=>`<li>${JSON.stringify(e)}</li>`).join('');}catch(e){}}
+$('#api-save').onclick=()=>{state.base=$('#api-base').value.trim(); localStorage.setItem('lg_api_base',state.base); runReport();};
+$('#run-report').onclick=runReport; $('#run-doctor').onclick=runDoctor; $('#run-sim').onclick=runSim; $('#refresh-events').onclick=loadEvents;
+runReport(); loadEvents();

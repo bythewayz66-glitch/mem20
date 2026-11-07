@@ -163,6 +163,7 @@ SUBSYSTEMS = {
         "owner": "mem20-renovation",
         "wave": 3,
     },
+    "mem20crossproductloyaltygraphz": {"purpose": "Cross-Product Loyalty Graph with 6 peers, HTTP cockpit, MCP","entry":"python -m mem20crossproductloyaltygraphz status","owner":"mem20-renovation","wave":3},
     "mem20crossplatformmicrokernelz": {
         "purpose": "Cross-Platform Microkernel with 6 peers, HTTP cockpit, MCP",
         "entry": "python -m mem20crossplatformmicrokernelz status",

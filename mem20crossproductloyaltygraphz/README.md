@@ -1,9 +1,39 @@
-# RM-205 — Cross-Product Loyalty Graph
+# mem20crossproductloyaltygraphz — Cross-Product Loyalty Graph
 
-**Outcome:** Recognize meaningful participation across multiple products and communities
+First-class mem20 subsystem for cross-product loyalty graphs (edges, degree, centrality, recommendations, loyalty score) with **6 peers**, SQLite WAL runtime, CLI, JSON HTTP API, served cockpit, docs/app, and real MCP tools. Core API preserved.
 
-**Breakthrough:** The wider ecosystem creates compounding user value
+## Peers (6)
+`mem20customerlifecycleenginez`, `mem20businessmodelsimulatorz`, `mem20autonomoussaleslaboratoryz`, `mem20communitychallengeenginez`, `mem20eventstreamsuperhighwayz`, `mem20capabilitymarketplacez`.
 
-This package is the machine-executable local implementation derived from the supplied Off Record Lab roadmap. It includes versioned typed state, SQLite WAL persistence, event history/snapshots, SDK CRUD/subscription, resumable idempotent jobs, cancellation, retries/timeouts/quotas/backpressure, deterministic replica reconciliation, local/hybrid/cloud placement/failover, roadmap-specific `reward` logic, decision confidence/explanations, feedback, CLI, HTTP console/API, safety guards, simulator, benchmark/metrics, and rollback-capable installer.
+## Python API (runnable)
+```python
+from mem20crossproductloyaltygraphz.domain import add_edge, degree, centrality, recommend_products, loyalty_score, loyalty_report, probe
+g={}; add_edge(g,"a","b",1); print(degree(g,"a"))  # 1
+add_edge(g,"a","c"); print(centrality(g)["a"])     # 1.0
+print(recommend_products(g,["a"],1)[0]["product"]) # b or c
+print(loyalty_score(["a"],g) > 0)                   # True
+r=loyalty_report(); print(r["ok"], len(r["peers"])) # True 6
+print(probe()["ok"])                                # True
+```
 
-Named live product surfaces, real provider/device credentials, production traffic, and governed FreeStack deployment remain target-environment integration and are not claimed complete.
+## CLI (runnable)
+```bash
+cd /opt/mem20
+PYTHONPATH=/opt/mem20 /opt/mem20/.venv/bin/python -m mem20crossproductloyaltygraphz --help
+PYTHONPATH=/opt/mem20 /opt/mem20/.venv/bin/python -m mem20crossproductloyaltygraphz status
+PYTHONPATH=/opt/mem20 /opt/mem20/.venv/bin/python -m mem20crossproductloyaltygraphz doctor
+PYTHONPATH=/opt/mem20 /opt/mem20/.venv/bin/python -m mem20crossproductloyaltygraphz serve --port 8796
+```
+
+## HTTP API & web/docs
+`GET/POST /api/status`, `/api/doctor`, `POST /api/simulate`, `GET /api/events|health`. Cockpit `/`. docs/app `docs/app/crossproductloyaltygraphz/index.html` (no Vite edits).
+
+## MCP & registration
+`CrossProductLoyaltyGraphToolsMixin` in `mcp/server.py`; gateway `SUBSYSTEMS`.
+
+## Tests & conformance
+```bash
+PYTHONPATH=/opt/mem20 /opt/mem20/.venv/bin/python -m pytest mem20crossproductloyaltygraphz/mem20crossproductloyaltygraphz/tests -q --noconftest -p no:cacheprovider
+PYTHONPATH=/opt/mem20 /opt/mem20/.venv/bin/python scripts/renovation/conformance.py mem20crossproductloyaltygraphz
+```
+Target **7/7**.

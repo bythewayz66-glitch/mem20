@@ -158,3 +158,4 @@ served by the fleet process itself at its root URL.
 - [Context Compression Forge monitor](contextcompressionforgez/index.html) — `PYTHONPATH=/opt/mem20 /opt/mem20/.venv/bin/python -m mem20contextcompressionforgez serve --port 8793`
 - [Counterfactual Memory Simulator monitor](counterfactualmemorysimulatorz/index.html) — `PYTHONPATH=/opt/mem20 /opt/mem20/.venv/bin/python -m mem20counterfactualmemorysimulatorz serve --port 8794`
 - [Cross-Platform Microkernel monitor](crossplatformmicrokernelz/index.html) — `PYTHONPATH=/opt/mem20 /opt/mem20/.venv/bin/python -m mem20crossplatformmicrokernelz serve --port 8795`
+- [Cross-Product Loyalty Graph monitor](crossproductloyaltygraphz/index.html) — `PYTHONPATH=/opt/mem20 /opt/mem20/.venv/bin/python -m mem20crossproductloyaltygraphz serve --port 8796`

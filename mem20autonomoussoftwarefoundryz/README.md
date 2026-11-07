@@ -1,9 +1,33 @@
-# RM-213 — Autonomous Software Foundry
+# mem20autonomoussoftwarefoundryz — Autonomous Software Foundry
 
-**Outcome:** Take ideas through simulation, implementation, testing, deployment, and improvement using coordinated runtimes
+Turn specs into tasks, assess code quality, decide deploys, estimate effort, and build artifacts, with mem20 estate integration.
 
-**Breakthrough:** FreeStack becomes a factory that repeatedly ships usable software
+## Python API
 
-This package is the machine-executable local implementation derived from the supplied Off Record Lab roadmap. It includes versioned typed state, SQLite WAL persistence, event history/snapshots, SDK CRUD/subscription, resumable idempotent jobs, cancellation, retries/timeouts/quotas/backpressure, deterministic replica reconciliation, local/hybrid/cloud placement/failover, roadmap-specific `simulate` logic, decision confidence/explanations, feedback, CLI, HTTP console/API, safety guards, simulator, benchmark/metrics, and rollback-capable installer.
+```python
+import tempfile
+from mem20autonomoussoftwarefoundryz.domain import (
+    spec_to_tasks, code_quality, deploy_decision, estimate_effort, build_artifact, estate_context,
+)
 
-Named live product surfaces, real provider/device credentials, production traffic, and governed FreeStack deployment remain target-environment integration and are not claimed complete.
+print(spec_to_tasks({"features": ["auth", "api"]}))
+print(code_quality({"tests_pass": True, "coverage": 0.9, "lint_clean": True}))
+print(deploy_decision(0.8))
+print(estimate_effort({"features": ["a", "b", "c"]}))
+print(build_artifact({"name": "app"}, "print('hi')\n"))
+
+with tempfile.TemporaryDirectory() as d:
+    print(estate_context(d)["engine_status_checked"])
+```
+
+## CLI
+
+```bash
+python -m mem20autonomoussoftwarefoundryz --help
+```
+
+## Tests
+
+```bash
+PYTHONPATH=/opt/mem20 python -m pytest mem20autonomoussoftwarefoundryz/mem20autonomoussoftwarefoundryz/tests -q
+```

@@ -183,12 +183,6 @@ SUBSYSTEMS = {
         "owner": "mem20-renovation",
         "wave": 3,
     },
-    "mem20contextcompressionforgez": {
-        "purpose": "Context Compression Forge with 6 peers, HTTP cockpit, MCP",
-        "entry": "python -m mem20contextcompressionforgez status",
-        "owner": "mem20-renovation",
-        "wave": 3,
-    },
     "mem20compoundingproductecosystemz": {
         "purpose": "Compounding Product Ecosystem with 6 peers, HTTP cockpit, MCP",
         "entry": "python -m mem20compoundingproductecosystemz status",

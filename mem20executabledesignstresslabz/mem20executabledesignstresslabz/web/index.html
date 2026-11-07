@@ -1,0 +1,5 @@
+<!doctype html><html><head><meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Executable Design Stress Lab (RM-221)</title><link rel="stylesheet" href="/style.css"/></head>
+<body><header><h1>Executable Design Stress Lab <small>RM-221</small></h1><div><button id="spec">Spec</button> <button id="doc">Doctor</button> <button id="run">Run</button></div></header>
+<main><div class="panel"><h2>Payload</h2><textarea id="p">{"system":{"base_load":100,"capacity":200,"redundancy":2,"components":[{"id":"api","load":60},{"id":"db","load":90}]},"load_multiplier":2,"duration_s":30,"tests":[{"name":"smoke","pass":true}]}</textarea></div>
+<div class="panel"><h2>Result</h2><pre id="o">ready</pre></div></main><script src="/app.js"></script></body></html>

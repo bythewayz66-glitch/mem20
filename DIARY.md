@@ -524,3 +524,15 @@ legacy domain API and existing CAPABILITY-driven Engine/Store/SDK/CLI/HTTP behav
 `mem20executablegameconceptandscopepipelinez`. Added `/doctor` peer probe, web cockpit, root shim,
 README fenced runnable example, docs/PLAN, docs/app monitor, gateway/toolchest. Verification:
 8 tests pass (incl. 5 legacy + Engine simulator compatibility), conformance **7/7**.
+
+---
+## 2026-11-07 - mem20executabledesignstresslabz (#308): depth-first rebuild
+
+Rebuilt RM-221 (Executable Design Stress Lab, fails 5,6,7, operation_kind=qa) as first-class
+while preserving legacy domain API and CAPABILITY Engine/CLI/10-scenario simulator. Enriched
+`qa` with real stress/resilience/bottleneck/recovery/design verdict and 6 unique peers
+(different from #300-#307): `mem20architecturesimulationsandboxz`, `mem20adversarialqacrewz`,
+`mem20universalhealthnervoussystemz`, `mem20syntheticevaluatorarenaz`, `mem20remoteexperimentlabz`,
+`mem20intentcompilerz`. Added `/doctor`, web cockpit, root shim, README fenced runnable example,
+docs/PLAN, docs/app monitor, gateway/toolchest. Verification: 8 tests pass (legacy + compat),
+conformance **7/7**.

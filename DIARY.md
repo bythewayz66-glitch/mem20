@@ -660,3 +660,16 @@ stress lab; rigging/animation asset-pipeline status). 6 unique peers (#300–#31
 `mem20specialistmodelforgez`,`mem20executabledesignstresslabz`,`mem20rigginganimationandmotionpipelinez`.
 Added `/doctor`, web cockpit, root shims, fenced runnable README, docs/PLAN, docs/app monitor,
 gateway/toolchest. Verification: 10 tests pass, conformance **7/7**.
+
+---
+## 2026-11-07 - mem20globalcapabilitymarketplacez (#318): meaningful depth-first rebuild
+
+Rebuilt RM-218 (Global Capability Marketplace, fails 5,6,7, operation_kind=match) as first-class
+with meaningful composition. Preserved legacy domain API (`list_capability,search_marketplace,match,
+transaction,marketplace_health`) and Engine/CLI/simulator. `match` remains backward-compatible for
+generic demand/supply; marketplace payloads produce composed results (health/search/match/transaction)
+enriched by 6 unique peer integrations: `mem20offerassemblyfabricz`,`mem20offergenomeenginez`,
+`mem20instantappsynthesisz`,`mem20securecomputecapsulesz`,`mem20runtimepromptoptimizerz`,
+`mem20assetremixstudioz`. Transaction marked `trial_ready` when trial synthesis + secure capsule
+checks pass. Added `/doctor`, web cockpit, root shims, fenced runnable README, docs/PLAN, docs/app
+monitor, gateway/toolchest. Verification: 9 tests pass, conformance **7/7**.

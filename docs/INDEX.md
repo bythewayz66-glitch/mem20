@@ -17,6 +17,9 @@
 - [core.py duplication](hygiene/core-py-duplication.md) (#17)
 - [test/ scratch](hygiene/test-scratch.md) (#18)
 
+## Documentation freshness
+- **[Repository-wide documentation drift audit (2026-11-07)](documentation-drift-audit-2026-11-07.md)** — current baseline, confirmed stale paths, historical-record preservation rules, and deferred README work. Tracked in [issue #392](https://github.com/bythewayz66-glitch/mem20/issues/392).
+
 ## Security
 GitHub **secret scanning** and push protection are enabled in repository settings
 (Settings → Code security). Agents cannot flip org/repo toggles from code; owners

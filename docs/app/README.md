@@ -1,6 +1,6 @@
 # App / product narrative — `docs/app/`
 
-Entry point for the `docs/app/` documentation set. **36 tracked file(s).**
+Entry point for the `docs/app/` documentation set. **37 tracked file(s).**
 
 ## Contents
 
@@ -18,6 +18,7 @@ Entry point for the `docs/app/` documentation set. **36 tracked file(s).**
 - [`fabricz/index.html`](fabricz/index.html)
 - [`facez/index.html`](facez/index.html)
 - [`federated-research-grid/index.html`](federated-research-grid/index.html)
+- [`ambient-computing-fabric/index.html`](ambient-computing-fabric/index.html)
 - [`ethical-incentive-simulator/index.html`](ethical-incentive-simulator/index.html)
 - [`energy-migration/index.html`](energy-migration/index.html)
 - [`transport/index.html`](transport/index.html)
@@ -64,6 +65,15 @@ PYTHONPATH=/opt/mem20 python3 -m mem20edgetocloudintelligencecontinuumz serve --
 
 
 
+
+
+## Ambient Computing Fabric monitor (`ambient-computing-fabric/`)
+
+[`ambient-computing-fabric/index.html`](ambient-computing-fabric/index.html) — static monitor for RM-211 (#314). Reads `/spec`/`/metrics`/`/doctor` (`?api=`).
+
+```bash
+PYTHONPATH=/opt/mem20 python3 -m mem20freestackambientcomputingfabricz serve --port 8794
+```
 
 ## Federated Research Grid monitor (`federated-research-grid/`)
 
@@ -236,3 +246,4 @@ served by the fleet process itself at its root URL.
 - [Real-Time Event Autopilot monitor](realtimeeventautopilotz/index.html) — `PYTHONPATH=/opt/mem20 /opt/mem20/.venv/bin/python -m mem20realtimeeventautopilotz serve --port 8812`
 - [Real-Time Team Presence monitor](realtimeteampresencez/index.html) — `PYTHONPATH=/opt/mem20 /opt/mem20/.venv/bin/python -m mem20realtimeteampresencez serve --port 8813`
 - [Real-World Impact Rewards monitor](realworldimpactrewardsz/index.html) — `PYTHONPATH=/opt/mem20 /opt/mem20/.venv/bin/python -m mem20realworldimpactrewardsz serve --port 8814`
+- [Remote Experiment Lab monitor](remoteexperimentlabz/index.html) — `PYTHONPATH=/opt/mem20 /opt/mem20/.venv/bin/python -m mem20remoteexperimentlabz serve --port 8815`

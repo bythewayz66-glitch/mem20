@@ -91,7 +91,13 @@ SUBSYSTEMS = {
         "owner": "mem20-webdev",
         "wave": 2,
     },
-        "mem20federatedresearchgridz": {
+        "mem20freestackambientcomputingfabricz": {
+        "purpose": "FreeStack Ambient Computing Fabric (RM-211, #314): ambient pooling/discovery/allocation with 6 peer fabric/inference/capability/microkernel/identity/companion signals",
+        "entry": "python -m mem20freestackambientcomputingfabricz simulate",
+        "owner": "mem20-webdev",
+        "wave": 2,
+    },
+    "mem20federatedresearchgridz": {
         "purpose": "Federated Research Grid (RM-043, #313): distributed node search/aggregation with 6 peer intelligence/search/CRDT/priority/connector signals",
         "entry": "python -m mem20federatedresearchgridz simulate",
         "owner": "mem20-webdev",

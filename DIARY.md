@@ -605,3 +605,16 @@ explicit grid requests: `mem20collectivemodelintelligencez`,`mem20personalcognit
 `mem20connectormarketplacez`. Added `/doctor`, web cockpit, root shims, fenced runnable README,
 docs/PLAN, docs/app monitor, gateway/toolchest. Verification: 9 tests pass (5 legacy + 4 new),
 conformance **7/7**.
+
+---
+## 2026-11-07 - mem20freestackambientcomputingfabricz (#314): depth-first rebuild
+
+Rebuilt RM-211 (FreeStack Ambient Computing Fabric, fails 5,6,7, operation_kind=analyze) as
+first-class while preserving legacy domain API (`pool_resources`,`discover_services`,`allocate`,
+`fabric_health`,`ambient_score`) used by #304 and preserving CAPABILITY Engine/CLI/10-scenario
+simulator. Enriched default/analyze path with ambient fabric analysis and 6 unique peer signals
+(different from #300–#313) for explicit fabric requests: `mem20fabricz`,
+`mem20hardwareawareinferencecompilerz`,`mem20capabilitymarketplacez`,`mem20crossplatformmicrokernelz`,
+`mem20secretslessworkloadidentityz`,`mem20ambientdevicecompanionz`. Added `/doctor`, web cockpit,
+root shims, fenced runnable README, docs/PLAN, docs/app monitor, gateway/toolchest. Verification:
+9 tests pass (5 legacy + 4 new), conformance **7/7**.

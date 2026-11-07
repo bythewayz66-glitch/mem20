@@ -1,0 +1,2 @@
+from mem20freestackambientcomputingfabricz.mem20freestackambientcomputingfabricz.runtime import main
+raise SystemExit(main())

@@ -5,6 +5,9 @@ from dataclasses import dataclass
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 from urllib.parse import urlparse, parse_qs
+import mimetypes
+
+WEB_DIR = Path(__file__).with_name("web")
 
 class ValidationError(ValueError): pass
 class QuotaError(RuntimeError): pass
@@ -179,7 +182,26 @@ class Engine:
                 if o.get('blocked'):blocked.append(o)
                 else:done.append(o.get('id',o.get('name','stage')))
             return {'completed':done,'blocked':blocked,'progress':round(len(done)/max(1,len(stages)),4)}
-        vals=[float(x) for x in p.get('values',[]) if isinstance(x,(int,float))];return {'count':len(vals),'mean':statistics.fmean(vals) if vals else None,'min':min(vals) if vals else None,'max':max(vals) if vals else None,'decision':d.choice,'confidence':d.confidence,'explanation':d.explanation}
+        vals=[float(x) for x in p.get('values',[]) if isinstance(x,(int,float))]; out={'count':len(vals),'mean':statistics.fmean(vals) if vals else None,'min':min(vals) if vals else None,'max':max(vals) if vals else None,'decision':d.choice,'confidence':d.confidence,'explanation':d.explanation}
+        wants_fabric = bool(p.get('fabric') or p.get('nodes') or p.get('services') or p.get('request') or p.get('enrich_signals'))
+        if wants_fabric:
+            try:
+                from . import domain as _dom, ecosystem as _eco
+                fabric=p.get('fabric') or {'nodes':p.get('nodes') or [{'cpu':4,'memory':8,'status':'online'}], 'services':p.get('services') or [], 'pool':p.get('pool') or {}, 'total_cpu':p.get('total_cpu',4)}
+                if not fabric.get('pool'): fabric['pool']=_dom.pool_resources(fabric.get('nodes') or [])
+                disc=_dom.discover_services(fabric, str(p.get('capability','compute')))
+                alloc=_dom.allocate({'pool':dict(fabric.get('pool') or {})}, p.get('request') or {'cpu':1,'memory':1})
+                out.update({'fabric_health':_dom.fabric_health(fabric),'ambient_score':_dom.ambient_score(fabric),'discover':disc,'allocation':alloc,'signals':{
+                    'fabric_dispatch':_eco.fabric_dispatch(str(p.get('intent','ambient')),p),
+                    'inference_compile':_eco.inference_compile(p),
+                    'capability_market':_eco.capability_market(str(p.get('capability','compute'))),
+                    'microkernel':_eco.microkernel(p),
+                    'workload_identity':_eco.workload_identity(p),
+                    'ambient_companion':_eco.ambient_companion(p.get('context') or {}),
+                }})
+            except Exception as e:
+                out['fabric_error']=f"{type(e).__name__}: {e}"
+        return out
     def _cache_get(self,key):
         with self._cache_lock:
             if key not in self._cache:return None
@@ -273,15 +295,30 @@ class Handler(BaseHTTPRequestHandler):
         body=json.dumps(obj,indent=2,sort_keys=True).encode();self.send_response(code);self.send_header('Content-Type',ctype);self.send_header('Content-Length',str(len(body)));self.end_headers();self.wfile.write(body)
     def body(self):
         n=int(self.headers.get('Content-Length','0'));return json.loads(self.rfile.read(n) or b'{}')
+    def _static(self,path):
+        try:
+            rel='index.html' if path in ('/','') else path.lstrip('/'); f=(WEB_DIR/rel).resolve(); f.relative_to(WEB_DIR.resolve())
+            if not f.is_file(): return False
+            ct=mimetypes.guess_type(str(f))[0] or 'application/octet-stream'
+            if ct.startswith('text/') or ct=='application/javascript': ct+='; charset=utf-8'
+            b=f.read_bytes(); self.send_response(200); self.send_header('Content-Type',ct); self.send_header('Content-Length',str(len(b))); self.send_header('Access-Control-Allow-Origin','*'); self.end_headers(); self.wfile.write(b); return True
+        except Exception: return False
     def do_GET(self):
         u=urlparse(self.path);q=parse_qs(u.query)
+        if u.path in ('/style.css','/app.js') or (u.path.startswith('/') and '.' in u.path.rsplit('/',1)[-1]):
+            if self._static(u.path): return
         if u.path=='/health':return self.sendj(200,{'ok':True,'roadmap':self.engine.config['id']})
         if u.path=='/spec':return self.sendj(200,self.engine.config)
         if u.path=='/metrics':return self.sendj(200,self.engine.metrics_snapshot())
         if u.path=='/events':return self.sendj(200,self.engine.store.events(int(q.get('since',['0'])[0])))
         if u.path=='/objects':return self.sendj(200,self.engine.store.query(q.get('kind',[None])[0]))
+        if u.path in ('/doctor','/api/doctor'):
+            try:
+                from . import ecosystem as _eco; return self.sendj(200,{'ok':True,'probe':_eco.probe(),'roadmap':self.engine.config['id']})
+            except Exception as e: return self.sendj(200,{'ok':False,'error':str(e)})
         if u.path=='/':
-            title=f"{self.engine.config['id']} — {self.engine.config['title']}";html=("<!doctype html><meta charset=utf-8><title>"+title+"</title><style>body{font:16px system-ui;max-width:1000px;margin:40px auto;padding:0 18px}textarea{width:100%;height:180px}pre{background:#111;color:#eee;padding:16px;overflow:auto}</style><h1>"+title+"</h1><p>"+self.engine.config['outcome']+"</p><p><b>Breakthrough:</b> "+self.engine.config['breakthrough']+"</p><textarea id=p>{\"goal\":\""+self.engine.config['outcome'].replace('"','&quot;')+"\",\"candidates\":[{\"id\":\"local\",\"utility\":0.9},{\"id\":\"edge\",\"utility\":0.8}]}</textarea><button onclick=go()>Execute</button><pre id=o></pre><script>async function go(){let r=await fetch('/execute',{method:'POST',headers:{'content-type':'application/json'},body:p.value});o.textContent=JSON.stringify(await r.json(),null,2)}</script>").encode();self.send_response(200);self.send_header('Content-Type','text/html; charset=utf-8');self.send_header('Content-Length',str(len(html)));self.end_headers();return self.wfile.write(html)
+            if self._static('/'): return
+            title=f"{self.engine.config['id']} — {self.engine.config['title']}";html=("<!doctype html><meta charset=utf-8><title>"+title+"</title><style>body{font:16px system-ui;max-width:1000px;margin:40px auto;padding:0 18px}textarea{width:100%;height:180px}pre{background:#111;color:#eee;padding:16px;overflow:auto}</style><h1>"+title+"</h1><p>"+self.engine.config['outcome']+"</p><textarea id=p>{\"nodes\":[{\"cpu\":4,\"memory\":8,\"status\":\"online\"}],\"capability\":\"compute\",\"request\":{\"cpu\":1,\"memory\":1}}</textarea><button onclick=go()>Execute</button><pre id=o></pre><script>async function go(){let r=await fetch('/execute',{method:'POST',headers:{'content-type':'application/json'},body:p.value});o.textContent=JSON.stringify(await r.json(),null,2)}</script>").encode();self.send_response(200);self.send_header('Content-Type','text/html; charset=utf-8');self.send_header('Content-Length',str(len(html)));self.end_headers();return self.wfile.write(html)
         return self.sendj(404,{'error':'not found'})
     def do_POST(self):
         try:

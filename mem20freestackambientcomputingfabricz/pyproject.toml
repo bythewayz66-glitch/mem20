@@ -5,7 +5,7 @@ build-backend="setuptools.build_meta"
 [project]
 name="mem20freestackambientcomputingfabricz"
 version="1.0.0"
-description="mem20freestackambientcomputingfabricz first-class module"
+description="FreeStack Ambient Computing Fabric (RM-211): ambient resource pooling/discovery/allocation with fabric, inference, microkernel, identity, and companion peer signals"
 requires-python=">=3.11"
 
 [project.scripts]
@@ -14,4 +14,4 @@ mem20freestackambientcomputingfabricz="mem20freestackambientcomputingfabricz.run
 [tool.setuptools]
 packages=["mem20freestackambientcomputingfabricz"]
 [tool.setuptools.package-data]
-mem20freestackambientcomputingfabricz=["CAPABILITY.json","roadmap.json"]
+mem20freestackambientcomputingfabricz=["CAPABILITY.json","roadmap.json","web/*"]

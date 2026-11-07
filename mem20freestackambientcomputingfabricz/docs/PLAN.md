@@ -1,0 +1,2 @@
+# FreeStack Ambient Computing Fabric (RM-211, #314)
+Preserve legacy domain API (#304 peer) and CAPABILITY/Engine/simulator. Enrich default/analyze path with fabric analysis (pool/discover/allocate/health/ambient) and 6 unique peer signals (different from #300–#313) for explicit fabric requests: `mem20fabricz`, `mem20hardwareawareinferencecompilerz`, `mem20capabilitymarketplacez`, `mem20crossplatformmicrokernelz`, `mem20secretslessworkloadidentityz`, `mem20ambientdevicecompanionz`. `/doctor`, web, fenced README, docs/app, gateway/toolchest, 7/7.

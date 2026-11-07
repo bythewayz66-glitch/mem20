@@ -249,3 +249,4 @@ served by the fleet process itself at its root URL.
 - [Remote Experiment Lab monitor](remoteexperimentlabz/index.html) — `PYTHONPATH=/opt/mem20 /opt/mem20/.venv/bin/python -m mem20remoteexperimentlabz serve --port 8815`
 - [Resource Exchange Market monitor](resourceexchangemarketz/index.html) — `PYTHONPATH=/opt/mem20 /opt/mem20/.venv/bin/python -m mem20resourceexchangemarketz serve --port 8816`
 - [Revenue Leak Hunter monitor](revenueleakhunterz/index.html) — `PYTHONPATH=/opt/mem20 /opt/mem20/.venv/bin/python -m mem20revenueleakhunterz serve --port 8817`
+- [Reward Forge monitor](rewardforgez/index.html) — `PYTHONPATH=/opt/mem20 /opt/mem20/.venv/bin/python -m mem20rewardforgez serve --port 8818`

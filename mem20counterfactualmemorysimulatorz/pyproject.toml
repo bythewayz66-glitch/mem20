@@ -1,17 +1,14 @@
 [build-system]
 requires=["setuptools>=68"]
 build-backend="setuptools.build_meta"
-
 [project]
 name="mem20counterfactualmemorysimulatorz"
 version="1.0.0"
-description="mem20counterfactualmemorysimulatorz first-class module"
+description="Counterfactual Memory Simulator with 6 peers, HTTP cockpit, MCP"
 requires-python=">=3.11"
-
 [project.scripts]
 mem20counterfactualmemorysimulatorz="mem20counterfactualmemorysimulatorz.runtime:main"
-
 [tool.setuptools]
 packages=["mem20counterfactualmemorysimulatorz"]
 [tool.setuptools.package-data]
-mem20counterfactualmemorysimulatorz=["CAPABILITY.json","roadmap.json"]
+mem20counterfactualmemorysimulatorz=["CAPABILITY.json","ROADMAP.json","roadmap.json","web/*"]

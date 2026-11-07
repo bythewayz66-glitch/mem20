@@ -121,6 +121,7 @@ from tools.mem20collectivemodelintelligencez_tools import CollectiveModelIntelli
 from tools.mem20communitychallengeenginez_tools import CommunityChallengeEngineToolsMixin
 from tools.mem20compoundingproductecosystemz_tools import CompoundingProductEcosystemToolsMixin
 from tools.mem20contextcompressionforgez_tools import ContextCompressionForgeToolsMixin
+from tools.mem20counterfactualmemorysimulatorz_tools import CounterfactualMemorySimulatorToolsMixin
 from tools.ops_tools import OpsToolsMixin
 from tools.verify_tools import VerifyToolsMixin
 from tools.toolchest_tools import ToolchestToolsMixin
@@ -138,7 +139,7 @@ class Mem20MCPServer(MemoryToolsMixin, CognitiveToolsMixin, RoadmapToolsMixin,
                      ProductivityToolsMixin, SearchToolsMixin,
                      VersionControlToolsMixin, WebScrapingToolsMixin,
                      BraidToolsMixin, IRCToolsMixin, LieToolsMixin,
-                     KilnzToolsMixin, DreamzToolsMixin, CrewzToolsMixin, AgentzToolsMixin, EdgeFleetToolsMixin, AudioVoiceMusicPipelineToolsMixin, AutonomousDealDeskToolsMixin, AutonomousMicroSaaSFoundryToolsMixin, AutonomousRecoveryDirectorToolsMixin, AutonomousSalesLaboratoryToolsMixin, AutonomousSoftwareFoundryToolsMixin, AutonomousWorkcellsToolsMixin, BusinessModelSimulatorToolsMixin, CausalRoutingBrainToolsMixin, CollectiveModelIntelligenceToolsMixin, ContextCompressionForgeToolsMixin, CompoundingProductEcosystemToolsMixin, CommunityChallengeEngineToolsMixin, OpsToolsMixin, CorezToolsMixin, ToolchestToolsMixin, VerifyToolsMixin):
+                     KilnzToolsMixin, DreamzToolsMixin, CrewzToolsMixin, AgentzToolsMixin, EdgeFleetToolsMixin, AudioVoiceMusicPipelineToolsMixin, AutonomousDealDeskToolsMixin, AutonomousMicroSaaSFoundryToolsMixin, AutonomousRecoveryDirectorToolsMixin, AutonomousSalesLaboratoryToolsMixin, AutonomousSoftwareFoundryToolsMixin, AutonomousWorkcellsToolsMixin, BusinessModelSimulatorToolsMixin, CausalRoutingBrainToolsMixin, CollectiveModelIntelligenceToolsMixin, CounterfactualMemorySimulatorToolsMixin, ContextCompressionForgeToolsMixin, CompoundingProductEcosystemToolsMixin, CommunityChallengeEngineToolsMixin, OpsToolsMixin, CorezToolsMixin, ToolchestToolsMixin, VerifyToolsMixin):
     def __init__(self):
         self.tools = {}
         self._start_time = time.time()
@@ -208,6 +209,7 @@ class Mem20MCPServer(MemoryToolsMixin, CognitiveToolsMixin, RoadmapToolsMixin,
         self.register_businessmodelsimulatorz_tools()
         self.register_causalroutingbrainz_tools()
         self.register_collectivemodelintelligencez_tools()
+        self.register_counterfactualmemorysimulatorz_tools()
         self.register_contextcompressionforgez_tools()
         self.register_compoundingproductecosystemz_tools()
         self.register_communitychallengeenginez_tools()

@@ -1,22 +1,26 @@
-# RM-028 — Skill Memory Transfer
+# mem20skillmemorytransferz — Skill Memory Transfer
 
-Outcome: Extract reusable procedures from successful work and apply them to new tasks
+First-class mem20 subsystem for skill memory transfer (extract/transfer/merge_skills/transfer_health) with **6 peers**, SQLite WAL runtime, CLI, JSON HTTP API, served web cockpit, docs/app monitor, and real MCP tools. Core API preserved.
 
-Breakthrough: The platform learns operational skills, not just facts
+## Peers (6)
+`mem20dynamicskillgraphz`, `mem20episodicmemorygraphz`, `mem20memorytimemachinez`, `mem20eventstreamsuperhighwayz`, `mem20capabilitymarketplacez`, `mem20faultcontainmentcellsz`.
 
-Machine-executable local runtime includes versioned state, SQLite WAL persistence, events, SDK CRUD, resumable/idempotent jobs, retries/timeouts/quotas, recovery, `search` operation logic, decision explanations, feedback, CLI, HTTP console/API, mesh selection/failover, simulator, benchmark, metrics, and opt-in signature mode.
-
-## Run
-
-```bash
-# CLI help, then exercise the local runtime end to end
-python -m mem20skillmemorytransferz --help
-python -m mem20skillmemorytransferz simulate
-python -m mem20skillmemorytransferz benchmark
+## Python API (runnable)
+```python
+from mem20skillmemorytransferz.domain import transfer, transfer_report, probe
+src={"skills":{"s1":{"w":1}}}; dst={}; print(transfer(src,dst,"s1")["ok"])  # True
+r=transfer_report(); print(r["ok"], len(r["peers"]))  # True 6
 ```
 
-## Tests
-
+## CLI (runnable)
 ```bash
-PYTHONPATH=/opt/mem20 .venv/bin/python -m pytest mem20skillmemorytransferz/mem20skillmemorytransferz/tests -q
+cd /opt/mem20
+PYTHONPATH=/opt/mem20 /opt/mem20/.venv/bin/python -m mem20skillmemorytransferz status
+PYTHONPATH=/opt/mem20 /opt/mem20/.venv/bin/python -m mem20skillmemorytransferz doctor
+PYTHONPATH=/opt/mem20 /opt/mem20/.venv/bin/python -m mem20skillmemorytransferz serve --port 8833
+```
+
+## Tests & conformance
+```bash
+PYTHONPATH=/opt/mem20 /opt/mem20/.venv/bin/python -m pytest mem20skillmemorytransferz/mem20skillmemorytransferz/tests -q --noconftest -p no:cacheprovider
 ```

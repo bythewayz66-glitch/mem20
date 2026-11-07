@@ -133,6 +133,12 @@ SUBSYSTEMS = {
         "owner": "mem20-renovation",
         "wave": 3,
     },
+    "mem20autonomousworkcellsz": {
+        "purpose": "Autonomous work cells (queues/workers/throughput) with 6 workcell-specific peers, HTTP cockpit, MCP",
+        "entry": "python -m mem20autonomousworkcellsz status",
+        "owner": "mem20-renovation",
+        "wave": 3,
+    },
     "mem20autonomoussoftwarefoundryz": {
         "purpose": "Autonomous software foundry (spec→build→deploy) with 6 software-foundry peers, HTTP cockpit, MCP",
         "entry": "python -m mem20autonomoussoftwarefoundryz status",

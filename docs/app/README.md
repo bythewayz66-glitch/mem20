@@ -1,6 +1,6 @@
 # App / product narrative — `docs/app/`
 
-Entry point for the `docs/app/` documentation set. **30 tracked file(s).**
+Entry point for the `docs/app/` documentation set. **31 tracked file(s).**
 
 ## Contents
 
@@ -12,6 +12,7 @@ Entry point for the `docs/app/` documentation set. **30 tracked file(s).**
 - [`energy-foundation/index.html`](energy-foundation/index.html)
 - [`engine-runtime/index.html`](engine-runtime/index.html)
 - [`episodic-memory-graph/index.html`](episodic-memory-graph/index.html)
+- [`design-stress-lab/index.html`](design-stress-lab/index.html)
 - [`ethical-incentive-simulator/index.html`](ethical-incentive-simulator/index.html)
 - [`energy-migration/index.html`](energy-migration/index.html)
 - [`transport/index.html`](transport/index.html)
@@ -52,6 +53,15 @@ PYTHONPATH=/opt/mem20 python3 -m mem20edgetocloudintelligencecontinuumz serve --
 
 
 
+
+
+## Design Stress Lab monitor (`design-stress-lab/`)
+
+[`design-stress-lab/index.html`](design-stress-lab/index.html) — static monitor for RM-221 (#308). Reads `/spec`/`/metrics`/`/doctor` (`?api=`).
+
+```bash
+PYTHONPATH=/opt/mem20 python3 -m mem20executabledesignstresslabz serve --port 8788
+```
 
 ## Ethical Incentive Simulator monitor (`ethical-incentive-simulator/`)
 
@@ -159,3 +169,4 @@ served by the fleet process itself at its root URL.
 - [Counterfactual Memory Simulator monitor](counterfactualmemorysimulatorz/index.html) — `PYTHONPATH=/opt/mem20 /opt/mem20/.venv/bin/python -m mem20counterfactualmemorysimulatorz serve --port 8794`
 - [Cross-Platform Microkernel monitor](crossplatformmicrokernelz/index.html) — `PYTHONPATH=/opt/mem20 /opt/mem20/.venv/bin/python -m mem20crossplatformmicrokernelz serve --port 8795`
 - [Cross-Product Loyalty Graph monitor](crossproductloyaltygraphz/index.html) — `PYTHONPATH=/opt/mem20 /opt/mem20/.venv/bin/python -m mem20crossproductloyaltygraphz serve --port 8796`
+- [Customer Digital Twin Lab monitor](customerdigitaltwinlabz/index.html) — `PYTHONPATH=/opt/mem20 /opt/mem20/.venv/bin/python -m mem20customerdigitaltwinlabz serve --port 8797`

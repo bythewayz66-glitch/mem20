@@ -91,7 +91,13 @@ SUBSYSTEMS = {
         "owner": "mem20-webdev",
         "wave": 2,
     },
-        "mem20ethicalincentivesimulatorz": {
+        "mem20executabledesignstresslabz": {
+        "purpose": "Executable Design Stress Lab (RM-221): simulated design/production/technical stress tests with resilience, adversarial QA, and experiment peer signals",
+        "entry": "python -m mem20executabledesignstresslabz simulate",
+        "owner": "mem20-webdev",
+        "wave": 2,
+    },
+    "mem20ethicalincentivesimulatorz": {
         "purpose": "Ethical Incentive Simulator (RM-203): incentive/fairness simulation with harm-manipulation safeguards and outcome/risk peer signals",
         "entry": "python -m mem20ethicalincentivesimulatorz simulate",
         "owner": "mem20-webdev",
@@ -163,6 +169,7 @@ SUBSYSTEMS = {
         "owner": "mem20-renovation",
         "wave": 3,
     },
+    "mem20customerdigitaltwinlabz": {"purpose": "Customer Digital Twin Lab with 6 peers, HTTP cockpit, MCP","entry":"python -m mem20customerdigitaltwinlabz status","owner":"mem20-renovation","wave":3},
     "mem20crossproductloyaltygraphz": {"purpose": "Cross-Product Loyalty Graph with 6 peers, HTTP cockpit, MCP","entry":"python -m mem20crossproductloyaltygraphz status","owner":"mem20-renovation","wave":3},
     "mem20crossplatformmicrokernelz": {
         "purpose": "Cross-Platform Microkernel with 6 peers, HTTP cockpit, MCP",

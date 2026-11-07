@@ -91,7 +91,13 @@ SUBSYSTEMS = {
         "owner": "mem20-webdev",
         "wave": 2,
     },
-        "mem20globalcapabilitymarketplacez": {
+        "mem20goaleconomyschedulerz": {
+        "purpose": "Goal Economy Scheduler (RM-056, #319): goal allocation with plan, opportunity, leak, milestone, capacity, interface integrations; legacy domain preserved",
+        "entry": "python -m mem20goaleconomyschedulerz simulate",
+        "owner": "mem20-webdev",
+        "wave": 2,
+    },
+    "mem20globalcapabilitymarketplacez": {
         "purpose": "Global Capability Marketplace (RM-218, #318): listings/match/transactions with offer, trial, secure-capsule, query, remix integrations; legacy domain preserved",
         "entry": "python -m mem20globalcapabilitymarketplacez simulate",
         "owner": "mem20-webdev",

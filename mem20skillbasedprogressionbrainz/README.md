@@ -1,24 +1,26 @@
-# RM-208 — Skill-Based Progression Brain
+# mem20skillbasedprogressionbrainz — Skill-Based Progression Brain
 
-**Outcome:** Advance users according to demonstrated capability rather than time spent
+First-class mem20 subsystem for skill-based progression (gain_xp/unlock_skill/level/progression_health) with **6 peers**, SQLite WAL runtime, CLI, JSON HTTP API, served web cockpit, docs/app monitor, and real MCP tools. Core API preserved.
 
-**Breakthrough:** Progression reflects real growth
+## Peers (6)
+`mem20dynamicskillgraphz`, `mem20playermotivationtwinz`, `mem20rewardforgez`, `mem20eventstreamsuperhighwayz`, `mem20capabilitymarketplacez`, `mem20universalhealthnervoussystemz`.
 
-This package is the machine-executable local implementation derived from the supplied Off Record Lab roadmap. It includes versioned typed state, SQLite WAL persistence, event history/snapshots, SDK CRUD/subscription, resumable idempotent jobs, cancellation, retries/timeouts/quotas/backpressure, deterministic replica reconciliation, local/hybrid/cloud placement/failover, roadmap-specific `progression` logic, decision confidence/explanations, feedback, CLI, HTTP console/API, safety guards, simulator, benchmark/metrics, and rollback-capable installer.
-
-Named live product surfaces, real provider/device credentials, production traffic, and governed FreeStack deployment remain target-environment integration and are not claimed complete.
-
-## Run
-
-```bash
-# CLI help, then exercise the local runtime end to end
-python -m mem20skillbasedprogressionbrainz --help
-python -m mem20skillbasedprogressionbrainz simulate
-python -m mem20skillbasedprogressionbrainz benchmark
+## Python API (runnable)
+```python
+from mem20skillbasedprogressionbrainz.domain import gain_xp, unlock_skill, progression_report, probe
+p=gain_xp({"xp":0},120); print(unlock_skill(p,"s1",20)["ok"])  # True
+r=progression_report(); print(r["ok"], len(r["peers"]))  # True 6
 ```
 
-## Tests
-
+## CLI (runnable)
 ```bash
-PYTHONPATH=/opt/mem20 .venv/bin/python -m pytest mem20skillbasedprogressionbrainz/mem20skillbasedprogressionbrainz/tests -q
+cd /opt/mem20
+PYTHONPATH=/opt/mem20 /opt/mem20/.venv/bin/python -m mem20skillbasedprogressionbrainz status
+PYTHONPATH=/opt/mem20 /opt/mem20/.venv/bin/python -m mem20skillbasedprogressionbrainz doctor
+PYTHONPATH=/opt/mem20 /opt/mem20/.venv/bin/python -m mem20skillbasedprogressionbrainz serve --port 8832
+```
+
+## Tests & conformance
+```bash
+PYTHONPATH=/opt/mem20 /opt/mem20/.venv/bin/python -m pytest mem20skillbasedprogressionbrainz/mem20skillbasedprogressionbrainz/tests -q --noconftest -p no:cacheprovider
 ```

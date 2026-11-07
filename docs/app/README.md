@@ -1,6 +1,6 @@
 # App / product narrative — `docs/app/`
 
-Entry point for the `docs/app/` documentation set. **41 tracked file(s).**
+Entry point for the `docs/app/` documentation set. **42 tracked file(s).**
 
 ## Contents
 
@@ -23,6 +23,7 @@ Entry point for the `docs/app/` documentation set. **41 tracked file(s).**
 - [`gameplay-systems-data-balance-pipeline/index.html`](gameplay-systems-data-balance-pipeline/index.html)
 - [`game-production-control-center/index.html`](game-production-control-center/index.html)
 - [`global-capability-marketplace/index.html`](global-capability-marketplace/index.html)
+- [`goal-economy-scheduler/index.html`](goal-economy-scheduler/index.html)
 - [`ethical-incentive-simulator/index.html`](ethical-incentive-simulator/index.html)
 - [`energy-migration/index.html`](energy-migration/index.html)
 - [`transport/index.html`](transport/index.html)
@@ -74,6 +75,15 @@ PYTHONPATH=/opt/mem20 python3 -m mem20edgetocloudintelligencecontinuumz serve --
 
 
 
+
+
+## Goal Economy Scheduler monitor (`goal-economy-scheduler/`)
+
+[`goal-economy-scheduler/index.html`](goal-economy-scheduler/index.html) — static monitor for RM-056 (#319). Reads `/spec`/`/metrics`/`/doctor` (`?api=`).
+
+```bash
+PYTHONPATH=/opt/mem20 python3 -m mem20goaleconomyschedulerz serve --port 8799
+```
 
 ## Global Capability Marketplace monitor (`global-capability-marketplace/`)
 
@@ -303,3 +313,4 @@ served by the fleet process itself at its root URL.
 - [Sensory Memory Ingest monitor](sensorymemoryingestz/index.html) — `PYTHONPATH=/opt/mem20 /opt/mem20/.venv/bin/python -m mem20sensorymemoryingestz serve --port 8829`
 - [Service Bundling Engine monitor](servicebundlingenginez/index.html) — `PYTHONPATH=/opt/mem20 /opt/mem20/.venv/bin/python -m mem20servicebundlingenginez serve --port 8830`
 - [Simz monitor](simz/index.html) — `PYTHONPATH=/opt/mem20 /opt/mem20/.venv/bin/python -m mem20simz serve --port 8831`
+- [Skill-Based Progression Brain monitor](skillbasedprogressionbrainz/index.html) — `PYTHONPATH=/opt/mem20 /opt/mem20/.venv/bin/python -m mem20skillbasedprogressionbrainz serve --port 8832`

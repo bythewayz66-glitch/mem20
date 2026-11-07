@@ -1,17 +1,14 @@
 [build-system]
 requires=["setuptools>=68"]
 build-backend="setuptools.build_meta"
-
 [project]
 name="mem20businessmodelsimulatorz"
 version="1.0.0"
-description="mem20businessmodelsimulatorz first-class module"
+description="Business model simulator with 6 estate peers, HTTP cockpit, MCP"
 requires-python=">=3.11"
-
 [project.scripts]
 mem20businessmodelsimulatorz="mem20businessmodelsimulatorz.runtime:main"
-
 [tool.setuptools]
 packages=["mem20businessmodelsimulatorz"]
 [tool.setuptools.package-data]
-mem20businessmodelsimulatorz=["CAPABILITY.json","roadmap.json"]
+mem20businessmodelsimulatorz=["CAPABILITY.json","ROADMAP.json","roadmap.json","web/*"]

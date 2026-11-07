@@ -133,6 +133,12 @@ SUBSYSTEMS = {
         "owner": "mem20-renovation",
         "wave": 3,
     },
+    "mem20businessmodelsimulatorz": {
+        "purpose": "Business model simulator (revenue/cost/margin/scenarios) with 6 estate peers, HTTP cockpit, MCP",
+        "entry": "python -m mem20businessmodelsimulatorz status",
+        "owner": "mem20-renovation",
+        "wave": 3,
+    },
     "mem20autonomousworkcellsz": {
         "purpose": "Autonomous work cells (queues/workers/throughput) with 6 workcell-specific peers, HTTP cockpit, MCP",
         "entry": "python -m mem20autonomousworkcellsz status",

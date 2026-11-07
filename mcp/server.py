@@ -115,6 +115,7 @@ from tools.mem20autonomousrecoverydirectorz_tools import AutonomousRecoveryDirec
 from tools.mem20autonomoussaleslaboratoryz_tools import AutonomousSalesLaboratoryToolsMixin
 from tools.mem20autonomoussoftwarefoundryz_tools import AutonomousSoftwareFoundryToolsMixin
 from tools.mem20autonomousworkcellsz_tools import AutonomousWorkcellsToolsMixin
+from tools.mem20businessmodelsimulatorz_tools import BusinessModelSimulatorToolsMixin
 from tools.ops_tools import OpsToolsMixin
 from tools.verify_tools import VerifyToolsMixin
 from tools.toolchest_tools import ToolchestToolsMixin
@@ -132,7 +133,7 @@ class Mem20MCPServer(MemoryToolsMixin, CognitiveToolsMixin, RoadmapToolsMixin,
                      ProductivityToolsMixin, SearchToolsMixin,
                      VersionControlToolsMixin, WebScrapingToolsMixin,
                      BraidToolsMixin, IRCToolsMixin, LieToolsMixin,
-                     KilnzToolsMixin, DreamzToolsMixin, CrewzToolsMixin, AgentzToolsMixin, EdgeFleetToolsMixin, AudioVoiceMusicPipelineToolsMixin, AutonomousDealDeskToolsMixin, AutonomousMicroSaaSFoundryToolsMixin, AutonomousRecoveryDirectorToolsMixin, AutonomousSalesLaboratoryToolsMixin, AutonomousSoftwareFoundryToolsMixin, AutonomousWorkcellsToolsMixin, OpsToolsMixin, CorezToolsMixin, ToolchestToolsMixin, VerifyToolsMixin):
+                     KilnzToolsMixin, DreamzToolsMixin, CrewzToolsMixin, AgentzToolsMixin, EdgeFleetToolsMixin, AudioVoiceMusicPipelineToolsMixin, AutonomousDealDeskToolsMixin, AutonomousMicroSaaSFoundryToolsMixin, AutonomousRecoveryDirectorToolsMixin, AutonomousSalesLaboratoryToolsMixin, AutonomousSoftwareFoundryToolsMixin, AutonomousWorkcellsToolsMixin, BusinessModelSimulatorToolsMixin, OpsToolsMixin, CorezToolsMixin, ToolchestToolsMixin, VerifyToolsMixin):
     def __init__(self):
         self.tools = {}
         self._start_time = time.time()
@@ -199,6 +200,7 @@ class Mem20MCPServer(MemoryToolsMixin, CognitiveToolsMixin, RoadmapToolsMixin,
         self.register_autonomoussaleslaboratoryz_tools()
         self.register_autonomoussoftwarefoundryz_tools()
         self.register_autonomousworkcellsz_tools()
+        self.register_businessmodelsimulatorz_tools()
         self.register_job_tools()
     async def _handle_list_tools(self, context: ServerRequestContext, params: Optional[mt.PaginatedRequestParams]) -> mt.ListToolsResult:
         """Handle tools/list request."""

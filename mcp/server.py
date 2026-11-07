@@ -108,6 +108,7 @@ from tools.dreamz_tools import DreamzToolsMixin
 from tools.crewz_tools import CrewzToolsMixin
 from tools.agentz_tools import AgentzToolsMixin
 from tools.edgefleet_tools import EdgeFleetToolsMixin
+from tools.mem20audiovoiceandmusicpipelinez_tools import AudioVoiceMusicPipelineToolsMixin
 from tools.ops_tools import OpsToolsMixin
 from tools.verify_tools import VerifyToolsMixin
 from tools.toolchest_tools import ToolchestToolsMixin
@@ -125,7 +126,7 @@ class Mem20MCPServer(MemoryToolsMixin, CognitiveToolsMixin, RoadmapToolsMixin,
                      ProductivityToolsMixin, SearchToolsMixin,
                      VersionControlToolsMixin, WebScrapingToolsMixin,
                      BraidToolsMixin, IRCToolsMixin, LieToolsMixin,
-                     KilnzToolsMixin, DreamzToolsMixin, CrewzToolsMixin, AgentzToolsMixin, EdgeFleetToolsMixin, OpsToolsMixin, CorezToolsMixin, ToolchestToolsMixin, VerifyToolsMixin):
+                     KilnzToolsMixin, DreamzToolsMixin, CrewzToolsMixin, AgentzToolsMixin, EdgeFleetToolsMixin, AudioVoiceMusicPipelineToolsMixin, OpsToolsMixin, CorezToolsMixin, ToolchestToolsMixin, VerifyToolsMixin):
     def __init__(self):
         self.tools = {}
         self._start_time = time.time()
@@ -185,6 +186,7 @@ class Mem20MCPServer(MemoryToolsMixin, CognitiveToolsMixin, RoadmapToolsMixin,
         self.register_crewz_tools()
         self.register_agentz_tools()
         self.register_edgefleet_tools()
+        self.register_audiovoiceandmusicpipelinez_tools()
         self.register_job_tools()
     async def _handle_list_tools(self, context: ServerRequestContext, params: Optional[mt.PaginatedRequestParams]) -> mt.ListToolsResult:
         """Handle tools/list request."""

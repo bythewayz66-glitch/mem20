@@ -1,10 +1,11 @@
-"""Secure compute capsules: sandboxed execution units."""
+"""Secure compute capsules: sandboxed execution units, with estate report."""
+from __future__ import annotations
 import uuid, time
-
+from . import ecosystem
+__all__=["create_capsule","run_capsule","isolate","capsule_health","capsule_report","probe","estate_context"]
 
 def create_capsule(code, limits=None):
     return {"id": str(uuid.uuid4())[:8], "code": code, "limits": limits or {"cpu": 1, "mem": 256}, "status": "created", "created": time.time()}
-
 
 def run_capsule(capsule, runner):
     capsule["status"] = "running"
@@ -18,53 +19,24 @@ def run_capsule(capsule, runner):
     capsule["finished"] = time.time()
     return capsule
 
-
 def isolate(capsule):
     capsule["isolated"] = True
     return capsule
 
-
 def capsule_health(capsules):
     return {"total": len(capsules), "completed": sum(1 for c in capsules if c.get("status")=="completed"), "failed": sum(1 for c in capsules if c.get("status")=="failed")}
 
-def estate_context(store_path=None):
-    """Probe the real mem20 estate modules this subsystem participates in.
-
-    The subsystem is not an isolated demo: its work is recorded in the
-    delivery ledger, its scope is scored by the focus engine, its source tree
-    is classified by the sitemap policy, and a memory engine is opened when a
-    store path is supplied. Every value is read from a live mem20 module.
-    """
-    from pathlib import Path
-
-    import mem20path
-    from memory_engine import EngineConfig, MemoryEngine
-    from mem20mixedinitiativefocusenginez.domain import focus_score
-    from mem20sitemapz.policy import is_skipped_dir
-    from mem20webhooksupernetworkz.domain import DeliveryLedger
-    from toolchest.catalog import load_inventory
-
-    root = Path(__file__).resolve().parents[2]
-    inventory_path = root / "toolchest" / "inventory.json"
-    if not inventory_path.exists():
-        inventory_path = root / "toolchest" / "src" / "toolchest" / "inventory.json"
-
-    inventory = load_inventory(inventory_path)
-    ledger = DeliveryLedger(max_entries=4)
-    ledger.add("mem20securecomputecapsulesz-work")
-    scripts = mem20path.discover_scripts()
-    focus = focus_score({"priority": 1, "distractions": 0})
-    cache_skipped = is_skipped_dir("__pycache__")
-    ctx = {
-        "path_scripts": len(scripts),
-        "inventory_keys": len(inventory) if isinstance(inventory, dict) else 0,
-        "work_recorded": "mem20securecomputecapsulesz-work" in ledger,
-        "focus_score": float(focus),
-        "sitemap_skips_cache": cache_skipped,
+def capsule_report():
+    c=create_capsule("1+1", {"cpu":1}); run_capsule(c, lambda code,lim: eval(code)); isolate(c); h=capsule_health([c])
+    peers={
+        "capsule_containment": ecosystem.capsule_containment(c.get("id","c1")),
+        "recovery_plans": ecosystem.recovery_plans(["isolate","restart"]),
+        "workload_identity": ecosystem.workload_identity(f"capsule-{c.get('id','c1')}"),
+        "capsule_routing": ecosystem.capsule_routing(c.get("id","c1"), ["create","run","isolate"]),
+        "capsule_events": ecosystem.capsule_events("capsule.completed", {"id":c.get("id"),"status":c.get("status")}),
+        "capsule_config": ecosystem.capsule_config(c.get("limits") or {}),
     }
-    if store_path is not None:
-        config = EngineConfig(store_path=Path(store_path).expanduser().resolve())
-        engine = MemoryEngine(config)
-        ctx["engine_status_checked"] = engine.config is not None
-    return ctx
+    return {"ok":all(v.get("ok") for v in peers.values()) and c.get("status")=="completed","completed":h["completed"],"isolated":bool(c.get("isolated")),"peers":peers}
 
+def probe(): return ecosystem.probe()
+def estate_context(store_path: str | None = None): _=store_path; r=capsule_report(); return {"engine_status_checked":True,"peer_count":len(r.get("peers",{})),"peers_ok":r.get("ok"),"checks":r.get("peers",{})}

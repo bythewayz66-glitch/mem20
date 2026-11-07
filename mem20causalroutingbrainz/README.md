@@ -1,7 +1,33 @@
-# RM-054 — Causal Routing Brain
+# mem20causalroutingbrainz — Causal Routing Brain
 
-Outcome: Choose routes based on predicted consequences rather than static priorities
+Estimate causal effects, route by causal weights, adjust for confounders, score interventions, and build causal graphs, with mem20 estate integration.
 
-Breakthrough: The router optimizes outcomes, not merely throughput
+## Python API
 
-Machine-executable local runtime includes versioned state, SQLite WAL persistence, events, SDK CRUD, resumable/idempotent jobs, retries/timeouts/quotas, recovery, `route` operation logic, decision explanations, feedback, CLI, HTTP console/API, mesh selection/failover, simulator, benchmark, metrics, and opt-in signature mode.
+```python
+import tempfile
+from mem20causalroutingbrainz.domain import (
+    causal_effect, route_by_cause, confounder_adjust, intervention_value, causal_graph, estate_context,
+)
+
+print(causal_effect([10, 12], [5, 6]))
+print(route_by_cause({"x": 1, "y": 2}, {"x": 0.5, "y": 1.0}))
+print(confounder_adjust(1.0, 0.2))
+print(intervention_value(5, 8))
+print(causal_graph([("a", "b"), ("b", "c")]))
+
+with tempfile.TemporaryDirectory() as d:
+    print(estate_context(d)["engine_status_checked"])
+```
+
+## CLI
+
+```bash
+python -m mem20causalroutingbrainz --help
+```
+
+## Tests
+
+```bash
+PYTHONPATH=/opt/mem20 python -m pytest mem20causalroutingbrainz/mem20causalroutingbrainz/tests -q
+```

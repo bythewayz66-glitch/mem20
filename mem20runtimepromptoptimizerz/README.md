@@ -1,24 +1,37 @@
-# RM-234 — Runtime Prompt Optimizer
+# mem20runtimepromptoptimizerz — Runtime Prompt Optimizer
 
-**Outcome:** Continuously compress, test, mutate, and route instructions according to measured task performance
+First-class mem20 subsystem for runtime prompt optimization (tokenize, compress, score, optimize, prompt health) with **6 peers**, SQLite WAL runtime, CLI, JSON HTTP API, served web cockpit, docs/app monitor, and real MCP tools. Core API preserved.
 
-**Breakthrough:** Agent behavior improves while token use and latency fall
+## Peers (6)
+`mem20contextcompressionforgez`, `mem20causalroutingbrainz`, `mem20capabilitymarketplacez`, `mem20eventstreamsuperhighwayz`, `mem20faultcontainmentcellsz`, `mem20demandforecastandcapacitybrainz`.
 
-This package is the machine-executable local implementation derived from the supplied Off Record Lab roadmap. It includes versioned typed state, SQLite WAL persistence, event history/snapshots, SDK CRUD/subscription, resumable idempotent jobs, cancellation, retries/timeouts/quotas/backpressure, deterministic replica reconciliation, local/hybrid/cloud placement/failover, roadmap-specific `search` logic, decision confidence/explanations, feedback, CLI, HTTP console/API, safety guards, simulator, benchmark/metrics, and rollback-capable installer.
-
-Named live product surfaces, real provider/device credentials, production traffic, and governed FreeStack deployment remain target-environment integration and are not claimed complete.
-
-## Run
-
-```bash
-# CLI help, then exercise the local runtime end to end
-python -m mem20runtimepromptoptimizerz --help
-python -m mem20runtimepromptoptimizerz simulate
-python -m mem20runtimepromptoptimizerz benchmark
+## Python API (runnable)
+```python
+from mem20runtimepromptoptimizerz.domain import tokenize, compress, score_prompt, optimize, prompt_report, probe
+print(tokenize("a b"))  # ['a', 'b']
+print(score_prompt("hello world",{"hello":1}))  # 1.0
+r=prompt_report(); print(r["ok"], len(r["peers"]))  # True 6
+print(probe()["ok"])  # True
 ```
 
-## Tests
-
+## CLI (runnable)
 ```bash
-PYTHONPATH=/opt/mem20 .venv/bin/python -m pytest mem20runtimepromptoptimizerz/mem20runtimepromptoptimizerz/tests -q
+cd /opt/mem20
+PYTHONPATH=/opt/mem20 /opt/mem20/.venv/bin/python -m mem20runtimepromptoptimizerz --help
+PYTHONPATH=/opt/mem20 /opt/mem20/.venv/bin/python -m mem20runtimepromptoptimizerz status
+PYTHONPATH=/opt/mem20 /opt/mem20/.venv/bin/python -m mem20runtimepromptoptimizerz doctor
+PYTHONPATH=/opt/mem20 /opt/mem20/.venv/bin/python -m mem20runtimepromptoptimizerz serve --port 8822
 ```
+
+## HTTP API & web/docs
+`GET/POST /api/status`, `/api/doctor`, `POST /api/simulate`, `GET /api/events|health`. Cockpit `/`. docs/app `docs/app/runtimepromptoptimizerz/index.html` (no Vite edits).
+
+## MCP & registration
+`RuntimePromptOptimizerToolsMixin` in `mcp/server.py`; gateway `SUBSYSTEMS`.
+
+## Tests & conformance
+```bash
+PYTHONPATH=/opt/mem20 /opt/mem20/.venv/bin/python -m pytest mem20runtimepromptoptimizerz/mem20runtimepromptoptimizerz/tests -q --noconftest -p no:cacheprovider
+PYTHONPATH=/opt/mem20 /opt/mem20/.venv/bin/python scripts/renovation/conformance.py mem20runtimepromptoptimizerz
+```
+Target **7/7**.

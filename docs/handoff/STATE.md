@@ -3,7 +3,14 @@
 > Living board. One row per in-flight item. Update it when your claim changes
 > state. Keep it to the current week; move finished rows to `archive/`.
 >
-> **Last updated:** 2026-10-30 by grok (corpus-v2 + drift sweep).
+> **Last updated:** 2026-11-07 by ChatGPT (documentation drift reconciliation).
+
+> **Owner-reported active work (2026-11-07):** three agents are currently active
+> in the repository. Their exact issue/branch ownership has not yet been
+> independently reconciled into this board. Therefore, an empty table below is
+> **not** evidence that no work is in progress. Check live claims, issue activity,
+> and branch heads before touching subsystem files or README content.
+> Tracking documentation reconciliation: [issue #392](https://github.com/bythewayz66-glitch/mem20/issues/392).
 
 ## In progress
 

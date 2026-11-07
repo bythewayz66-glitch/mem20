@@ -1,0 +1,3 @@
+# mem20fabricz — Integration Fabric crew runtime (#311)
+
+Depth-first rebuild to 7/7 preserving compatibility (`__version__`, 23 `MEMBERS`, `mem20fabricz.cli:main`, `--version/--members`). Real member registry/probing, dispatch planning, service orchestration, CLI+JSON HTTP+static cockpit, and 6 unique peer integrations (different from #300–#310): `mem20apishapeshiftinggatewayz`, `mem20universalintegrationcompilerz`, `mem20episodicmemorygraphz`, `mem20realtimeeventautopilotz`, `mem20ambientteamradioz`, `mem20autonomousdealdeskz`. Fenced runnable README, docs/app monitor, gateway/toolchest registration.

@@ -566,3 +566,16 @@ digital twin analysis (create/sync/simulate/predict/drift) and 6 unique peer sig
 `/doctor`, web cockpit, root shims, README fenced runnable example, docs/PLAN, docs/app monitor,
 gateway/toolchest. Verification: 9 tests pass (5 legacy + 4 new including 6-peer coverage),
 `simulate` 10/10 ok, conformance **7/7** (target after run).
+
+---
+## 2026-11-07 - mem20fabricz (#311): depth-first rebuild
+
+Rebuilt `mem20fabricz` (integration fabric crew runtime, 23 members, fails 5,6,7) from skeleton to
+first-class while preserving compatibility: 23 `MEMBERS`, `__version__`, `mem20fabricz.cli:main`,
+`--version`/`--members`, and legacy tests. Added real domain (member probing/dispatch planning),
+service, runtime CLI+JSON HTTP+static cockpit (`status/doctor/dispatch/probe/serve`), web cockpit,
+docs/PLAN, fenced runnable README, docs/app monitor, gateway/toolchest, and 6 unique peer
+integrations (different from #300–#310): `mem20apishapeshiftinggatewayz`,
+`mem20universalintegrationcompilerz`,`mem20episodicmemorygraphz`,`mem20realtimeeventautopilotz`,
+`mem20ambientteamradioz`,`mem20autonomousdealdeskz`. Verification: 7 tests pass (4 legacy + 3 new,
+6-peer coverage), conformance **7/7**.

@@ -161,9 +161,12 @@ submit -> place -> reserve -> dispatch -> complete / fail -> retry | failed
 ## Cross-subsystem wiring (`ecosystem.py`)
 
 The fleet-specific peer set is deliberately *not* the common
-memory/focus/catalog/webhook set. Each peer owns a distinct part of the
-physical-device problem, and each adapter is called on the normal
-register/submit/dispatch path.
+memory/focus/catalog/webhook set. **The six peers wired to this subsystem are
+different from the six wired to every other subsystem** — this is a standing
+rule for depth-first fixes, so wiring is never a copied template. Each peer
+below was chosen because it owns a distinct part of the physical-device
+problem, and each adapter is called on the normal register/submit/dispatch
+path.
 
 | subsystem | functions actually called | what the fleet asks it |
 |---|---|---|
@@ -179,6 +182,13 @@ roaming scheduler disagree, both answers are in the report. A peer that is
 missing or raises becomes `{"ok": false, "error": ...}` and never aborts a
 schedule; the service reports the unavailable judgement so an operator can see
 which part of the decision was blind.
+
+**Wiring rule:** every mem20 subsystem's ≥5 cross-module integrations must use
+a different set of peers (a combination suited to that subsystem's own job).
+Reusing the same memory/focus/catalog/webhook template across subsystems is a
+conformance shim, not integration. RM-041's six peers are all physical-fleet
+concerns: membership, energy/carbon, device fitness, hardware market, roaming
+load, and sleep/wake.
 
 `doctor()` probes all six and returns the reachable set. `simulate()` runs six
 real scenarios end to end on a throwaway store: success, malformed input,

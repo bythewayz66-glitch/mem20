@@ -94,7 +94,11 @@ database or a sibling subsystem.
 ### 2.3 Ecosystem decisions
 
 The peer set was chosen to cover the physical problem, not to reuse a standard
-template. Each peer owns something the fleet cannot compute about itself:
+template. **Wiring rule (applies to every subsystem fixed depth-first): the ≥5
+cross-module peers must be a different set on each subsystem, chosen for that
+subsystem's job — never the same memory/focus/catalog/webhook template copied
+across issues.** Each peer below owns something the fleet cannot compute about
+itself:
 
 | peer | why the fleet needs it |
 |---|---|

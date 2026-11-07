@@ -185,3 +185,4 @@ served by the fleet process itself at its root URL.
 - [Device Capability Compiler monitor](devicecapabilitycompilerz/index.html) — `PYTHONPATH=/opt/mem20 /opt/mem20/.venv/bin/python -m mem20devicecapabilitycompilerz serve --port 8801`
 - [Dynamic Narrative Engine monitor](dynamicnarrativeenginez/index.html) — `PYTHONPATH=/opt/mem20 /opt/mem20/.venv/bin/python -m mem20dynamicnarrativeenginez serve --port 8802`
 - [Dynamic Quest Reward Composer monitor](dynamicquestrewardcomposerz/index.html) — `PYTHONPATH=/opt/mem20 /opt/mem20/.venv/bin/python -m mem20dynamicquestrewardcomposerz serve --port 8803`
+- [Dynamic Skill Graph monitor](dynamicskillgraphz/index.html) — `PYTHONPATH=/opt/mem20 /opt/mem20/.venv/bin/python -m mem20dynamicskillgraphz serve --port 8804`

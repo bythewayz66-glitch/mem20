@@ -1,22 +1,37 @@
-# RM-094 — Secretsless Workload Identity
+# mem20secretslessworkloadidentityz — Secrets-less Workload Identity
 
-Outcome: Use short-lived cryptographic workload identities instead of long-lived application secrets
+First-class mem20 subsystem for secrets-less workload identity (issue/verify/rotate identities, health) with **6 peers**, SQLite WAL runtime, CLI, JSON HTTP API, served web cockpit, docs/app monitor, and real MCP tools. Core API preserved.
 
-Breakthrough: Services authenticate safely without secret sprawl
+## Peers (6)
+`mem20eventstreamsuperhighwayz`, `mem20capabilitymarketplacez`, `mem20universalhealthnervoussystemz`, `mem20faultcontainmentcellsz`, `mem20selfhealingplansz`, `mem20deterministicconfigurationgraphz`.
 
-Machine-executable local runtime includes versioned state, SQLite WAL persistence, events, SDK CRUD, resumable/idempotent jobs, retries/timeouts/quotas, recovery, `graph` operation logic, decision explanations, feedback, CLI, HTTP console/API, mesh selection/failover, simulator, benchmark, metrics, and opt-in signature mode.
-
-## Run
-
-```bash
-# CLI help, then exercise the local runtime end to end
-python -m mem20secretslessworkloadidentityz --help
-python -m mem20secretslessworkloadidentityz simulate
-python -m mem20secretslessworkloadidentityz benchmark
+## Python API (runnable)
+```python
+from mem20secretslessworkloadidentityz.domain import issue_identity, verify, rotate, identity_report, probe
+i=issue_identity("svc"); print(verify(i)["valid"])  # True
+print(rotate(i)["workload"])  # svc
+r=identity_report(); print(r["ok"], len(r["peers"]))  # True 6
+print(probe()["ok"])  # True
 ```
 
-## Tests
-
+## CLI (runnable)
 ```bash
-PYTHONPATH=/opt/mem20 .venv/bin/python -m pytest mem20secretslessworkloadidentityz/mem20secretslessworkloadidentityz/tests -q
+cd /opt/mem20
+PYTHONPATH=/opt/mem20 /opt/mem20/.venv/bin/python -m mem20secretslessworkloadidentityz --help
+PYTHONPATH=/opt/mem20 /opt/mem20/.venv/bin/python -m mem20secretslessworkloadidentityz status
+PYTHONPATH=/opt/mem20 /opt/mem20/.venv/bin/python -m mem20secretslessworkloadidentityz doctor
+PYTHONPATH=/opt/mem20 /opt/mem20/.venv/bin/python -m mem20secretslessworkloadidentityz serve --port 8823
 ```
+
+## HTTP API & web/docs
+`GET/POST /api/status`, `/api/doctor`, `POST /api/simulate`, `GET /api/events|health`. Cockpit `/`. docs/app `docs/app/secretslessworkloadidentityz/index.html` (no Vite edits).
+
+## MCP & registration
+`SecretslessWorkloadIdentityToolsMixin` in `mcp/server.py`; gateway `SUBSYSTEMS`.
+
+## Tests & conformance
+```bash
+PYTHONPATH=/opt/mem20 /opt/mem20/.venv/bin/python -m pytest mem20secretslessworkloadidentityz/mem20secretslessworkloadidentityz/tests -q --noconftest -p no:cacheprovider
+PYTHONPATH=/opt/mem20 /opt/mem20/.venv/bin/python scripts/renovation/conformance.py mem20secretslessworkloadidentityz
+```
+Target **7/7**.

@@ -1,7 +1,34 @@
-# RM-034 — Autonomous Work Cells
+# mem20autonomousworkcellsz — Autonomous Work Cells
 
-Outcome: Spawn temporary multi-agent teams around outcomes and dissolve them when complete
+Create work cells, enqueue tasks, assign workers, process work, and measure throughput/health, with mem20 estate integration.
 
-Breakthrough: The workforce reorganizes itself for each mission
+## Python API
 
-Machine-executable local runtime includes versioned state, SQLite WAL persistence, events, SDK CRUD, resumable/idempotent jobs, retries/timeouts/quotas, recovery, `analyze` operation logic, decision explanations, feedback, CLI, HTTP console/API, mesh selection/failover, simulator, benchmark, metrics, and opt-in signature mode.
+```python
+import tempfile
+from mem20autonomousworkcellsz.domain import (
+    create_cell, enqueue, assign_workers, process_next, throughput, cell_health, estate_context,
+)
+
+cell = create_cell("build", capacity=2)
+enqueue(cell, {"id": "t1"})
+assign_workers(cell, ["w1", "w2"])
+print(process_next(cell))
+print(throughput(cell))
+print(cell_health(cell))
+
+with tempfile.TemporaryDirectory() as d:
+    print(estate_context(d)["engine_status_checked"])
+```
+
+## CLI
+
+```bash
+python -m mem20autonomousworkcellsz --help
+```
+
+## Tests
+
+```bash
+PYTHONPATH=/opt/mem20 python -m pytest mem20autonomousworkcellsz/mem20autonomousworkcellsz/tests -q
+```

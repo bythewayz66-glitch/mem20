@@ -91,7 +91,13 @@ SUBSYSTEMS = {
         "owner": "mem20-webdev",
         "wave": 2,
     },
-        "mem20executiondigitaltwinz": {
+        "mem20fabricz": {
+        "purpose": "Integration Fabric crew runtime (#311): 23-member registry/probing/dispatch with 6-peer API/integration/episode/event/radio/deal signals",
+        "entry": "python -m mem20fabricz doctor",
+        "owner": "mem20-webdev",
+        "wave": 2,
+    },
+    "mem20executiondigitaltwinz": {
         "purpose": "Execution Digital Twin (RM-059): predictive workflow twin forecast with sync/simulate/drift and peer time-machine/counterfactual/event signals",
         "entry": "python -m mem20executiondigitaltwinz simulate",
         "owner": "mem20-webdev",
@@ -181,6 +187,7 @@ SUBSYSTEMS = {
         "owner": "mem20-renovation",
         "wave": 3,
     },
+    "mem20playermotivationtwinz": {"purpose": "Player Motivation Twin with 6 peers, HTTP cockpit, MCP","entry":"python -m mem20playermotivationtwinz status","owner":"mem20-renovation","wave":4},
     "mem20dynamicskillgraphz": {"purpose": "Dynamic Skill Graph with 6 peers, HTTP cockpit, MCP","entry":"python -m mem20dynamicskillgraphz status","owner":"mem20-renovation","wave":3},
     "mem20dynamicquestrewardcomposerz": {"purpose": "Dynamic Quest Reward Composer with 6 peers, HTTP cockpit, MCP","entry":"python -m mem20dynamicquestrewardcomposerz status","owner":"mem20-renovation","wave":3},
     "mem20dynamicnarrativeenginez": {"purpose": "Dynamic Narrative Engine with 6 peers, HTTP cockpit, MCP","entry":"python -m mem20dynamicnarrativeenginez status","owner":"mem20-renovation","wave":3},

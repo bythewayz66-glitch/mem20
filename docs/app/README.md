@@ -1,6 +1,6 @@
 # App / product narrative — `docs/app/`
 
-Entry point for the `docs/app/` documentation set. **33 tracked file(s).**
+Entry point for the `docs/app/` documentation set. **34 tracked file(s).**
 
 ## Contents
 
@@ -15,6 +15,7 @@ Entry point for the `docs/app/` documentation set. **33 tracked file(s).**
 - [`design-stress-lab/index.html`](design-stress-lab/index.html)
 - [`concept-scope-pipeline/index.html`](concept-scope-pipeline/index.html)
 - [`execution-digital-twin/index.html`](execution-digital-twin/index.html)
+- [`fabricz/index.html`](fabricz/index.html)
 - [`ethical-incentive-simulator/index.html`](ethical-incentive-simulator/index.html)
 - [`energy-migration/index.html`](energy-migration/index.html)
 - [`transport/index.html`](transport/index.html)
@@ -58,6 +59,15 @@ PYTHONPATH=/opt/mem20 python3 -m mem20edgetocloudintelligencecontinuumz serve --
 
 
 
+
+
+## mem20fabricz Integration Fabric monitor (`fabricz/`)
+
+[`fabricz/index.html`](fabricz/index.html) — static monitor for #311 (23-member crew runtime). Reads `/status`/`/doctor` (`?api=`).
+
+```bash
+PYTHONPATH=/opt/mem20 python3 -m mem20fabricz serve --port 8791
+```
 
 ## Execution Digital Twin monitor (`execution-digital-twin/`)
 
@@ -196,3 +206,4 @@ served by the fleet process itself at its root URL.
 - [Dynamic Narrative Engine monitor](dynamicnarrativeenginez/index.html) — `PYTHONPATH=/opt/mem20 /opt/mem20/.venv/bin/python -m mem20dynamicnarrativeenginez serve --port 8802`
 - [Dynamic Quest Reward Composer monitor](dynamicquestrewardcomposerz/index.html) — `PYTHONPATH=/opt/mem20 /opt/mem20/.venv/bin/python -m mem20dynamicquestrewardcomposerz serve --port 8803`
 - [Dynamic Skill Graph monitor](dynamicskillgraphz/index.html) — `PYTHONPATH=/opt/mem20 /opt/mem20/.venv/bin/python -m mem20dynamicskillgraphz serve --port 8804`
+- [Player Motivation Twin monitor](playermotivationtwinz/index.html) — `PYTHONPATH=/opt/mem20 /opt/mem20/.venv/bin/python -m mem20playermotivationtwinz serve --port 8805`

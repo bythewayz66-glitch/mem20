@@ -1,22 +1,14 @@
-# RM-067 — Synthetic Evaluator Arena
+# mem20syntheticevaluatorarenaz — Synthetic Evaluator Arena
 
-Outcome: Generate adversarial tasks and continuously compare model behavior under real constraints
+First-class mem20 subsystem for synthetic evaluation arena (create_arena/evaluate/leaderboard/arena_health) with **6 peers**, SQLite WAL runtime, CLI, JSON HTTP API, served web cockpit, docs/app monitor, and real MCP tools. Core API preserved.
 
-Breakthrough: Model selection improves through live competition rather than marketing claims
+## Peers (6)
+`mem20collectivemodelintelligencez`, `mem20counterfactualmemorysimulatorz`, `mem20agentoutputcompilerz`, `mem20eventstreamsuperhighwayz`, `mem20capabilitymarketplacez`, `mem20faultcontainmentcellsz`.
 
-Machine-executable local runtime includes versioned state, SQLite WAL persistence, events, SDK CRUD, resumable/idempotent jobs, retries/timeouts/quotas, recovery, `analyze` operation logic, decision explanations, feedback, CLI, HTTP console/API, mesh selection/failover, simulator, benchmark, metrics, and opt-in signature mode.
-
-## Run
-
+## CLI (runnable)
 ```bash
-# CLI help, then exercise the local runtime end to end
-python -m mem20syntheticevaluatorarenaz --help
-python -m mem20syntheticevaluatorarenaz simulate
-python -m mem20syntheticevaluatorarenaz benchmark
-```
-
-## Tests
-
-```bash
-PYTHONPATH=/opt/mem20 .venv/bin/python -m pytest mem20syntheticevaluatorarenaz/mem20syntheticevaluatorarenaz/tests -q
+cd /opt/mem20
+PYTHONPATH=/opt/mem20 /opt/mem20/.venv/bin/python -m mem20syntheticevaluatorarenaz status
+PYTHONPATH=/opt/mem20 /opt/mem20/.venv/bin/python -m mem20syntheticevaluatorarenaz doctor
+PYTHONPATH=/opt/mem20 /opt/mem20/.venv/bin/python -m mem20syntheticevaluatorarenaz serve --port 8839
 ```

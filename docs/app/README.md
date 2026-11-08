@@ -330,3 +330,4 @@ served by the fleet process itself at its root URL.
 - [Speculative Workflow Engine monitor](speculativeworkflowenginez/index.html) — `PYTHONPATH=/opt/mem20 /opt/mem20/.venv/bin/python -m mem20speculativeworkflowenginez serve --port 8836`
 - [Studioz monitor](studioz/index.html) — `PYTHONPATH=/opt/mem20 /opt/mem20/.venv/bin/python -m mem20studioz serve --port 8837`
 - [Style Guide Agent monitor](styleguideagentz/index.html) — `PYTHONPATH=/opt/mem20 /opt/mem20/.venv/bin/python -m mem20styleguideagentz serve --port 8838`
+- [Synthetic Evaluator Arena monitor](syntheticevaluatorarenaz/index.html) — `PYTHONPATH=/opt/mem20 /opt/mem20/.venv/bin/python -m mem20syntheticevaluatorarenaz serve --port 8839`

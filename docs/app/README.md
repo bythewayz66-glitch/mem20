@@ -316,3 +316,4 @@ served by the fleet process itself at its root URL.
 - [Skill-Based Progression Brain monitor](skillbasedprogressionbrainz/index.html) — `PYTHONPATH=/opt/mem20 /opt/mem20/.venv/bin/python -m mem20skillbasedprogressionbrainz serve --port 8832`
 - [Skill Memory Transfer monitor](skillmemorytransferz/index.html) — `PYTHONPATH=/opt/mem20 /opt/mem20/.venv/bin/python -m mem20skillmemorytransferz serve --port 8833`
 - [Spatial Command Universe monitor](spatialcommanduniversez/index.html) — `PYTHONPATH=/opt/mem20 /opt/mem20/.venv/bin/python -m mem20spatialcommanduniversez serve --port 8834`
+- [Specialist Model Forge monitor](specialistmodelforgez/index.html) — `PYTHONPATH=/opt/mem20 /opt/mem20/.venv/bin/python -m mem20specialistmodelforgez serve --port 8835`

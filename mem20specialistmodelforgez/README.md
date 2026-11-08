@@ -1,22 +1,21 @@
-# RM-063 — Specialist Model Forge
+# mem20specialistmodelforgez — Specialist Model Forge
 
-Outcome: Create small task-specific models and adapters from successful workflows
+First-class mem20 subsystem for specialist model forging (forge/evaluate/merge_specialists/forge_health) with **6 peers**, SQLite WAL runtime, CLI, JSON HTTP API, served web cockpit, docs/app monitor, and real MCP tools. Core API preserved.
 
-Breakthrough: The system converts repeated cloud work into cheap local expertise
+## Peers (6)
+`mem20collectivemodelintelligencez`, `mem20causalroutingbrainz`, `mem20eventstreamsuperhighwayz`, `mem20capabilitymarketplacez`, `mem20faultcontainmentcellsz`, `mem20autonomoussoftwarefoundryz`.
 
-Machine-executable local runtime includes versioned state, SQLite WAL persistence, events, SDK CRUD, resumable/idempotent jobs, retries/timeouts/quotas, recovery, `compose` operation logic, decision explanations, feedback, CLI, HTTP console/API, mesh selection/failover, simulator, benchmark, metrics, and opt-in signature mode.
-
-## Run
-
-```bash
-# CLI help, then exercise the local runtime end to end
-python -m mem20specialistmodelforgez --help
-python -m mem20specialistmodelforgez simulate
-python -m mem20specialistmodelforgez benchmark
+## Python API (runnable)
+```python
+from mem20specialistmodelforgez.domain import forge, evaluate, merge_specialists, forge_report, probe
+m=forge("base","code",["d1"],seed=1); print(0<=evaluate(m,["t"])<=1)  # True
+r=forge_report(); print(r["ok"], len(r["peers"]))  # True 6
 ```
 
-## Tests
-
+## CLI (runnable)
 ```bash
-PYTHONPATH=/opt/mem20 .venv/bin/python -m pytest mem20specialistmodelforgez/mem20specialistmodelforgez/tests -q
+cd /opt/mem20
+PYTHONPATH=/opt/mem20 /opt/mem20/.venv/bin/python -m mem20specialistmodelforgez status
+PYTHONPATH=/opt/mem20 /opt/mem20/.venv/bin/python -m mem20specialistmodelforgez doctor
+PYTHONPATH=/opt/mem20 /opt/mem20/.venv/bin/python -m mem20specialistmodelforgez serve --port 8835
 ```

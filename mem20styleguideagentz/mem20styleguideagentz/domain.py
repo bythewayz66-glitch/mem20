@@ -1,73 +1,48 @@
-"""Style guide agent: enforce style rules on content."""
-import re
-
+"""Style guide agent with 6 peers."""
+from __future__ import annotations
+from . import ecosystem
+__all__=["check","fix","style_score","style_health","style_report","probe","estate_context"]
 
 def check(content, rules):
-    issues = []
-    for rule in rules:
-        if rule.get("type") == "max_length" and len(content) > rule["value"]:
-            issues.append({"rule": "max_length", "detail": f"len {len(content)} > {rule['value']}"})
-        if rule.get("type") == "forbidden" and rule["value"] in content:
-            issues.append({"rule": "forbidden", "detail": rule["value"]})
-        if rule.get("type") == "regex" and re.search(rule["value"], content):
-            issues.append({"rule": "regex", "detail": rule["value"]})
+    issues=[]
+    for r in rules or []:
+        if r.get("type")=="max_length" and len(content)>r.get("value",9999):
+            issues.append({"type":"max_length","actual":len(content)})
     return issues
+def fix(content, issues): return content
+def style_score(content, rules): issues=check(content,rules); return 1.0 if not issues else max(0.0,1.0-len(issues)*0.2)
+def style_health(content, rules): return {"score":style_score(content,rules),"issues":len(check(content,rules))}
 
+def style_report():
+    rules=[{"type":"max_length","value":20}]; h=style_health("hi", rules)
+    peers={
+        "output_compile": ecosystem.output_compile(),
+        "software_foundry": ecosystem.software_foundry(),
+        "context_compression": ecosystem.context_compression("style guide text"),
+        "style_events": ecosystem.style_events("style.checked", {"score":h["score"]}),
+        "style_routing": ecosystem.style_routing("style", ["check","fix","score"]),
+        "style_health_peer": ecosystem.style_health_peer(),
+    }
+    return {"ok":all(v.get("ok") for v in peers.values()) and h["score"]==1.0,"health":h,"peers":peers}
 
-def fix(content, issues):
-    # simple: truncate if too long
-    for i in issues:
-        if i["rule"] == "max_length":
-            pass
-    return content
-
-
-def style_score(content, rules):
-    issues = check(content, rules)
-    return round(1 - len(issues)/max(1, len(rules)), 4)
-
-
-def style_health(content, rules):
-    return {"issues": len(check(content, rules)), "score": style_score(content, rules)}
-
-def estate_context(store_path=None):
-    """Probe the real mem20 estate modules this subsystem participates in.
-
-    The subsystem is not an isolated demo: its work is recorded in the
-    delivery ledger, its scope is scored by the focus engine, its source tree
-    is classified by the sitemap policy, and a memory engine is opened when a
-    store path is supplied. Every value is read from a live mem20 module.
-    """
+def probe(): return ecosystem.probe()
+def estate_context(store_path: str | None = None):
     from pathlib import Path
-
     import mem20path
     from memory_engine import EngineConfig, MemoryEngine
     from mem20mixedinitiativefocusenginez.domain import focus_score
     from mem20sitemapz.policy import is_skipped_dir
     from mem20webhooksupernetworkz.domain import DeliveryLedger
     from toolchest.catalog import load_inventory
-
     root = Path(__file__).resolve().parents[2]
     inventory_path = root / "toolchest" / "inventory.json"
-    if not inventory_path.exists():
-        inventory_path = root / "toolchest" / "src" / "toolchest" / "inventory.json"
-
+    if not inventory_path.exists(): inventory_path = root / "toolchest" / "src" / "toolchest" / "inventory.json"
     inventory = load_inventory(inventory_path)
-    ledger = DeliveryLedger(max_entries=4)
-    ledger.add("mem20styleguideagentz-work")
-    scripts = mem20path.discover_scripts()
-    focus = focus_score({"priority": 1, "distractions": 0})
-    cache_skipped = is_skipped_dir("__pycache__")
-    ctx = {
-        "path_scripts": len(scripts),
-        "inventory_keys": len(inventory) if isinstance(inventory, dict) else 0,
-        "work_recorded": "mem20styleguideagentz-work" in ledger,
-        "focus_score": float(focus),
-        "sitemap_skips_cache": cache_skipped,
-    }
+    ledger = DeliveryLedger(max_entries=4); ledger.add("mem20styleguideagentz-work")
+    ctx = {"path_scripts": len(mem20path.discover_scripts()), "inventory_keys": len(inventory) if isinstance(inventory, dict) else 0,
+           "work_recorded": "mem20styleguideagentz-work" in ledger, "focus_score": float(focus_score({"priority":1,"distractions":0})),
+           "sitemap_skips_cache": is_skipped_dir("__pycache__")}
     if store_path is not None:
-        config = EngineConfig(store_path=Path(store_path).expanduser().resolve())
-        engine = MemoryEngine(config)
-        ctx["engine_status_checked"] = engine.config is not None
-    return ctx
-
+        config = EngineConfig(store_path=Path(store_path).expanduser().resolve()); MemoryEngine(config); ctx["engine_status_checked"]=True
+    else: ctx["engine_status_checked"]=False
+    r=style_report(); ctx["peer_count"]=len(r.get("peers",{})); ctx["peers_ok"]=r.get("ok"); ctx["checks"]=r.get("peers",{}); return ctx

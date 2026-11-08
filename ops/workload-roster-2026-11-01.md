@@ -1,6 +1,6 @@
 # mem20 workload roster — 2026-11-01 (owner directive, wave 2)
 
-**Issued by:** Mem20-admin · **Group:** sidney (3388661668)
+**Issued by:** Mem20-admin · **Group:** mem20 (3388661668)
 **Baseline `main`:** `2ea4492209dfaae6afb22ca884132a0d1849bfcf` (2026-11-01 06:20:25 -0700, `docs(bench): land four-mode retrieval benchmark results for 2026-10-31`)
 **Tracked files:** 8,536 · **VERSION:** 3.1.0 · **Open PRs:** 0 · **Open issues:** 0
 **At-risk commits (sum of branch `ahead`):** 1 — `docs/ws1-owner-directive-2026-11-01` only; all other 13 refs are `ahead=0` (already merged, deletable)
@@ -79,7 +79,7 @@ Both live at `/sites/b5d558be-…`, verified by fetching back and re-grepping th
 
 ## 5. Standing corrections carried forward
 
-- **House numbers:** 270 tools / 27 domains (257/26 and 268/26 are retired). TAM $1.28B / SAM $282M / SOM $1.68M; blended ACV $14,000.
-- **Directly measured this run:** `mcp/`-scoped `self.tools["…"]` = **270**; repo-wide = **271** (one registration outside the server tree); `mcp/tools/*.py` = **27**. The scoped count is authoritative.
-- **`mem20.jaysonai.online`** is NXDOMAIN on Cloudflare **and** Google DoH (Status 3) with the zone's own SOA in Authority while the apex returns Status 0 — a **missing record, not propagation**. Record to create: **CNAME `mem20` → `bythewayz66-glitch.github.io`, proxy OFF, TTL Auto.**
-- **Sidney `216.198.115.91`** is unreachable: errno 113 on 2222/9900, timeout on 22/80/443. Hermes gateway does not answer. Unreachable from this sandbox ≠ powered off.
+- **House numbers:** 311 tools / 39 domains (257/26, 268/26 and 270/27 are retired). TAM $1.28B / SAM $282M / SOM $1.68M; blended ACV $14,000.
+- **Directly measured this run:** the live JSON-RPC `tools/list` surface is **311** tools across **39** domains, cross-checked against the AST catalog with 0 symmetric difference (`docs/surface.json`, `docs/TOOL-DOMAINS.md`). The live surface is authoritative.
+- **The retired `jaysonai.online` zone** is NXDOMAIN on Cloudflare **and** Google DoH (Status 3) with the zone's own SOA in Authority while the apex returns Status 0 — a **missing record, not propagation**. The zone is retired; no record is to be created.
+- **The retired publish host** is unreachable: errno 113 on 2222/9900, timeout on 22/80/443. The publish gate does not answer. Unreachable from this sandbox ≠ powered off.

@@ -12,7 +12,8 @@ full register.
 The pinned baseline is where these numbers were read, and it is not where the
 tree stands now. `VERSION` at `45445f48` was **3.0.0**; the shipped tree is
 **3.1.0** at `27c1e5fb`. The surface figure needs no such note - it was
-270 tools across 27 domains at the baseline and is still 270/27 - but any
+270 tools across 27 domains at the baseline and is **311 tools across 39
+domains** as of 2026-11-07 (`docs/surface.json`, live `tools/list`) - but any
 asset that reads a slide's version line aloud must say which commit it came
 from, or it is quoting a past release as the present one.
 
@@ -21,10 +22,13 @@ from, or it is quoting a past release as the present one.
 | slide_01.html | Cover: the four verified numbers | git ls-files / VERSION / verify_mcp.py:5 / docs/finance/inputs.json |
 | slide_02.html | The baseline, pinned + disclosed drift | GITHUB_GET_A_BRANCH / roster §1 |
 | slide_03.html | What mem20 is (trust axis) | benchmarks/results/latest.md |
-| slide_04.html | 270 tools / 27 domains, four assertions | verify_mcp.py:5, mcp-verify.yml:63, README.md, inputs.json |
+| slide_04.html | 311 tools / 39 domains, four assertions | docs/surface.json, docs/TOOL-DOMAINS.md, verify_mcp.py:5, inputs.json |
 | slide_05.html | TAM/SAM/SOM funnel | docs/finance/inputs.json, README.md:17-19/:80-82 |
 | slide_06.html | SOM arithmetic, ramp, model inputs | docs/finance/inputs.json, README.md:133/:138 |
 | slide_07.html | $14,000 blend + untested tier ladder | docs/finance/inputs.json -> tier_ladder |
-| slide_08.html | Full retrieval table, adversarial 0.000 kept | benchmarks/results/latest.md |
-| slide_09.html | What the 0.000 row means and costs | benchmarks/results/latest.md |
+| slide_08.html | Full retrieval table, adversarial n=60 shown | benchmarks/results/latest.md |
+| slide_09.html | What the rerank inversion means and costs | benchmarks/results/latest.md |
 | slide_10.html | Six self-checks, corpus scale, rerank cost | benchmarks/results/latest.md |
+| slide_11.html | Our own audit findings, two fixed and three open | inputs.json / latest.md / requirements.txt:13 |
+| slide_12.html | The ask: four decisions, each tied to a number | inputs.json / latest.md / latest.json |
+| slide_13.html | Source register: slide to claim to source | the register itself |

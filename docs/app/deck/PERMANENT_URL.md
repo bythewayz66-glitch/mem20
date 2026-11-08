@@ -1,5 +1,14 @@
 # Permanent URL Record — mem20 Investor & Board Deck
 
+> **Correction — 2026-11-07.** The tool-surface figure in this record and on
+> slides 01, 02, 04 and 13 was **270 tools / 27 domains**. That was the live
+> surface at the `2ea44922` cut; it is now **311 tools / 39 domains**, read from
+> `docs/surface.json` (generated from the live JSON-RPC `tools/list` response)
+> and cross-checked against the AST catalog with 0 symmetric difference. The
+> slides and the deck index have been corrected in place; the dated tables
+> below are left as written on 2026-11-01 so the record of what was published
+> then is not falsified. `docs/TOOL-DOMAINS.md` is the authoritative mapping.
+
 **Recorded:** 2026-11-01
 **Baseline commit:** `2ea4492209dfaae6afb22ca884132a0d1849bfcf` (main head, 2026-11-01T13:20:25Z)
 **Deck source (this directory):** `docs/app/deck/`

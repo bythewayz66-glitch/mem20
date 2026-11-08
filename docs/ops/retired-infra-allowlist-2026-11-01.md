@@ -43,16 +43,23 @@ Live docs — served or read as current guidance:
 
 ## 3. Allowlist — the only places the tokens may remain
 
-`git grep -ciE 'sidney|gabe'` on this branch returns **88 files / 660 hits**, and every one of them
-is accounted for below: **76 files** are the `published/` archive (A1) and **12 files** are the
-named entries A2–A13. There are **0** hits outside this allowlist.
+`git grep -ciE 'sidney|gabe'` on this branch returns **94 files / 758 hits**, and every one of them
+is accounted for below: **78 files** are the `published/` archive (A1) and **16 files** are the
+named entries A2–A16. There are **0** hits outside this allowlist.
+
+> **Amended 2026-11-07.** A14–A16 were added when the G8 gate was found failing on five
+> non-allowlisted files. Two of them (`serial-2026-11-01.md`, `serial-2026-11-01b.md`) are the
+> chronicle's own account of the retirement and cannot be rewritten without falsifying the
+> measurement they publish; the recon inventory and its generator must be able to name the
+> pattern they detect; and `reference/v3/cities15000.txt` is a GeoNames gazetteer whose `Sidney`
+> and `Gabela` hits are place names. The gate now reports **0 non-allowlisted files**.
 
 Each entry is a *reason the token cannot be removed without destroying evidence or breaking a real
 path*, not a convenience exemption.
 
 | # | Path | Category | Why it must stay |
 |---|---|---|---|
-| A1 | `published/**` (76 files) | **immutable archive** | `published/` is the GitHub-side permanent copy of every delivered artifact, integrity-pinned by `published/MANIFEST.tsv` (per-file sha-256). Editing a preserved file breaks the manifest and destroys the record of what was actually shipped. `published/README.md` rule 3: *"never edit a preserved file in place."* Many of these files *are* the deploy scripts and publish reports that named the retired host — rewriting them would falsify the delivery record. |
+| A1 | `published/**` (78 files) | **immutable archive** | `published/` is the GitHub-side permanent copy of every delivered artifact, integrity-pinned by `published/MANIFEST.tsv` (per-file sha-256). Editing a preserved file breaks the manifest and destroys the record of what was actually shipped. `published/README.md` rule 3: *"never edit a preserved file in place."* Many of these files *are* the deploy scripts and publish reports that named the retired host — rewriting them would falsify the delivery record. |
 | A2 | `.sitemap/sitemap.json` (2) | **generated snapshot** | a point-in-time index (`root: /opt/mem20`, `generated_at: 2026-10-28T23:54:00-0600`) of README text, including `published/README.md` verbatim. `sitemap build` regenerates it wholesale; hand-editing would desynchronise the index from the tree it describes and would not survive the next build. |
 | A3 | `docs/ops/branch-inventory-2026-10-31.md` (8) | **dated audit record** | names the git branch `chore/retire-jaysonai-sidney-gabe`. A branch name is a git ref, not infrastructure; rewriting it would falsify the inventory. This document is also what *records* G8. |
 | A4 | `docs/ops/branch-disposition-2026-10-31.md` (10) | **dated audit record** | same branch name, plus the dated retirement finding. |
@@ -65,6 +72,9 @@ path*, not a convenience exemption.
 | A11 | `scripts/sweep-tool-counts.py` (2) | **real on-disk path** | its `ROWS_PAGES` / `PASS2_FILES` sets must name the file they rewrite; that file lives under `gabe-bundle/`. Removing the entry would silently stop the sweep from correcting that page. |
 | A12 | `docs/ops/retired-infra-allowlist-2026-11-01.md` | **this document** | it must be able to name what it allows. |
 | A13 | `scripts/verify-retired-infra-purge.sh` | **the gate** | it must be able to name the pattern it enforces. |
+| A14 | `docs/app/narrative/serial-2026-11-01.md`, `docs/app/narrative/serial-2026-11-01b.md` | **dated chronicle** | these two instalments are the serial's own account of the retirement. `serial-2026-11-01b.md` §7 is titled *"Sidney and gabe: retired, and still on `main`"* and its evidence block is a set of `git grep` commands whose **output** is the retired tokens. The tokens are the subject of the record, not a live reference; rewriting them would falsify the measurement the post exists to publish. |
+| A15 | `docs/recon/README.md`, `docs/recon/stale-file-inventory-2026-11-07.json`, `scripts/stale-file-inventory.py` | **the inventory and its generator** | the reconnaissance inventory records *which files carry the retired tokens*; its `stale_pattern` column and the generator's `RETIRED` regexes must be able to name the pattern they detect. Removing the tokens would make the inventory claim zero findings while the gate still fails. |
+| A16 | `reference/v3/cities15000.txt` | **false positive — data file** | a GeoNames gazetteer (34,195 rows). Its `Sidney` hits are an alias of **Sydney, AU** (`2147714`) and its `Gabe`/`Gabela` hits are **Gabela, AO** (`3348613`) and `Gabrovo`/`Mangabeira` place names. These are unrelated proper nouns, not the retired host or publish gate. The file is reference data and must not be edited. |
 
 **Not allowlisted, and therefore purged:** every other tracked file. In particular the previously
 offending `docs/dashboard.html` (3 hits), `CANONICAL.md` (4), `CHANGELOG.md` (2),
@@ -119,6 +129,17 @@ Measured on the final commit, from a **clean clone of the remote branch**:
 ```
 BRANCH_SHA=5b8c636fbb4585fd55586e8bbb67d9a7cf4800bd
 == files with a hit: 88   hits: 660
+== non-allowlisted files: 0   non-allowlisted hits: 0
+GATE PASSED: every remaining reference is allowlisted.
+== mem20controlz suite
+33 passed
+```
+
+Re-measured 2026-11-07 on `fix/stale-refs-2026-11-07` after A14–A16 were added:
+
+```
+BRANCH_SHA=54435ef580d97d4f3968218cd87e514e5ae58b19
+== files with a hit: 94   hits: 758
 == non-allowlisted files: 0   non-allowlisted hits: 0
 GATE PASSED: every remaining reference is allowlisted.
 == mem20controlz suite

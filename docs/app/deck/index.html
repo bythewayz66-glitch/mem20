@@ -46,10 +46,10 @@
   <table>
     <thead><tr><th>#</th><th>Slide</th><th>Claim it makes</th><th>Source</th></tr></thead>
     <tbody>
-      <tr><td class="n">01</td><td><a href="slides/slide_01.html">Cover</a></td><td>8,536 files / 3.1.0 / 270-27 / $14,000 / 0-0 PRs, all pinned to one commit</td><td class="src">git ls-files / VERSION / verify_mcp.py:5 / docs/finance/inputs.json / GH API</td></tr>
+      <tr><td class="n">01</td><td><a href="slides/slide_01.html">Cover</a></td><td>8,536 files / 3.1.0 / 311-39 / $14,000 / 0-0 PRs, all pinned to one commit</td><td class="src">git ls-files / VERSION / verify_mcp.py:5 / docs/finance/inputs.json / GH API</td></tr>
       <tr><td class="n">02</td><td><a href="slides/slide_02.html">The rebuild - what moved</a></td><td>Nine facts re-read at 2ea44922; five unchanged, four drifted (files, PRs, corpus, aiohttp)</td><td class="src">rev-parse / git ls-files / VERSION / GH API / latest.json</td></tr>
       <tr><td class="n">03</td><td><a href="slides/slide_03.html">What mem20 is</a></td><td>Contamination 0.0 / simulated records [] / 250 diagnostics, all healthy</td><td class="src">benchmarks/results/latest.md - Trustworthiness</td></tr>
-      <tr><td class="n">04</td><td><a href="slides/slide_04.html">The tool surface</a></td><td>270 tools / 27 domains asserted in four independent places; 28 groups - a2a = 27</td><td class="src">verify_mcp.py:5 / mcp-verify.yml:63 / README.md:161-242 / inputs.json</td></tr>
+      <tr><td class="n">04</td><td><a href="slides/slide_04.html">The tool surface</a></td><td>311 tools across 39 domains asserted in four independent places; live tools/list = AST catalog</td><td class="src">docs/surface.json / docs/TOOL-DOMAINS.md / verify_mcp.py:5 / inputs.json</td></tr>
       <tr><td class="n">05</td><td><a href="slides/slide_05.html">Market sizing</a></td><td>TAM $1.28B / SAM $282M (22.03%) / SOM $1.68M (0.60%); SAM integer build is $12,000 short</td><td class="src">docs/finance/inputs.json / docs/finance/README.md:17-19, :80-82</td></tr>
       <tr><td class="n">06</td><td><a href="slides/slide_06.html">The SOM arithmetic</a></td><td>120 x $14,000 = $1,680,000, variance $0; churn 12%, NRR 1.15, $1,880 hosting</td><td class="src">docs/finance/inputs.json / docs/finance/README.md:133, :138</td></tr>
       <tr><td class="n">07</td><td><a href="slides/slide_07.html">Business model</a></td><td>$14,000 blend reconciles 44/44; tier ladder is an untested hypothesis</td><td class="src">docs/finance/inputs.json - tier_ladder</td></tr>
@@ -69,7 +69,7 @@
     <tbody>
       <tr><td>Tracked files</td><td class="ok">8,536</td><td class="src">git ls-files | wc -l</td><td class="ok">verified</td></tr>
       <tr><td>VERSION</td><td class="ok">3.1.0</td><td class="src">cat VERSION (reads 3.1.0 at the baseline itself)</td><td class="ok">verified at baseline</td></tr>
-      <tr><td>Tool surface</td><td class="ok">270 / 27</td><td class="src">verify_mcp.py:5, mcp-verify.yml:63, README.md:161-242, inputs.json</td><td class="ok">verified 4x</td></tr>
+      <tr><td>Tool surface</td><td class="ok">311 / 39</td><td class="src">docs/surface.json (live tools/list), docs/TOOL-DOMAINS.md</td><td class="ok">verified 2026-11-07</td></tr>
       <tr><td>Open PRs / issues</td><td class="ok">0 / 0</td><td class="src">GitHub API pulls?state=open + search/issues?is:issue+is:open</td><td class="ok">verified</td></tr>
       <tr><td>Blended ACV</td><td class="ok">$14,000</td><td class="src">docs/finance/inputs.json - blended_acv</td><td class="ok">verified</td></tr>
       <tr><td>TAM</td><td class="ok">$1.28B</td><td class="src">docs/finance/inputs.json (carried input)</td><td class="ok">quoted</td></tr>

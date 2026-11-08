@@ -3,7 +3,7 @@
 **Owner:** mem20 GTM Team Lead · **Seat:** Head of Marketing & Demand Generation / Data & Revenue Analytics Lead
 **Supersedes:** Campaign Plan v2 (`published/sites/66161135-…/documents/mem20-gtm-v2/mem20-campaign-plan-v2.md`, 2026-10-14)
 **Campaign code:** `mem20_launch_2026q4`
-**Updated:** 2026-10-26 — base URL repointed off the 403 CDN, tool surface to 270/27, install line to source-only, benchmark section reinstated under its own caveat
+**Updated:** 2026-11-07 — base URL repointed off the 403 CDN, tool surface to **311/39**, install line to source-only, benchmark section reinstated under its own caveat
 **Status:** Ready for execution — one owner action outstanding (§8)
 
 ---
@@ -12,7 +12,7 @@
 
 | Input | Reference |
 |---|---|
-| **Public base URL (the only one)** | **https://bythewayz66-glitch.github.io/mem20/** — HTTP 200, byte-identical to `docs/index.html` at HEAD `7c0b3e8` |
+| **Public base URL (the only one)** | **https://mem20.com/** — HTTP 200, anonymous-reachable. The `github.io/mem20/` URL 301s to `http://mem20.com/` (a plaintext hop), so it is not used as the base. |
 | Launch copy pack (v3) | `docs/gtm/mem20-launch-copy.md` (this directory) |
 | **Claim ledger (v3)** | `docs/gtm/claim-ledger.md` (this directory) |
 | Sales one-pager (v3) | `docs/gtm/mem20-sales-one-pager.md` (this directory) |
@@ -25,8 +25,8 @@ The category answer is **"they optimize retrieval; nobody leads with auditabilit
 
 ### Three corrections from v2 that change every tracked link
 
-1. **The base URL was wrong in a way that broke the campaign.** v2's base page was a `static.teamily.ai/sites/…` URL. Every `/sites/` path returns **403 to an anonymous request** — re-verified today on v2's own launch page and on the orchestrator status page. A campaign pointed at a 403 logs zero referral sessions and reads as a dead product. **Base URL is now the GitHub Pages site.** No `/sites/` URL appears anywhere in this plan.
-2. **The tool surface is 270 / 27, not 268 / 26.** The live handshake returns 270 and 27 mixins register. Every asset, directory listing and ad line changes.
+1. **The base URL was wrong in a way that broke the campaign.** v2's base page was a `static.teamily.ai/sites/…` URL. Every `/sites/` path returns **403 to an anonymous request** — re-verified today on v2's own launch page and on the orchestrator status page. A campaign pointed at a 403 logs zero referral sessions and reads as a dead product. **Base URL is now `https://mem20.com/`.** No `/sites/` URL appears anywhere in this plan.
+2. **The tool surface is 311 tools across 39 domains.** Read from `docs/surface.json` (live `tools/list`, AST cross-checked); CI pin `MEM20_EXPECTED_TOOLS: "311"`. Every earlier count is retired. Every asset, directory listing and ad line changes.
 3. **The benchmark table is back — restricted.** v2 said the repo shipped no benchmark. At this HEAD `benchmarks/results/latest.md` ships on `main`. It may be cited **only** with its own "not comparable to competitor benchmarks" warning and with the adversarial 0.000 row visible.
 
 ---
@@ -69,25 +69,25 @@ The category answer is **"they optimize retrieval; nobody leads with auditabilit
 **Convention:** `utm_source` (platform) · `utm_medium` (channel type) · `utm_campaign` (constant) · `utm_content` (placement/variant)
 
 - `utm_campaign` = **`mem20_launch_2026q4`** (constant across every link)
-- **Base page URL:** `https://bythewayz66-glitch.github.io/mem20/`
+- **Base page URL:** `https://mem20.com/`
 - **Outbound repo link (every channel):** `https://github.com/bythewayz66-glitch/mem20`
 
 ### Per-channel link table (copy-paste ready)
 
 | # | Channel | Placement | Full tracked URL |
 |---|---|---|---|
-| 1 | Hacker News | Show HN post | `https://bythewayz66-glitch.github.io/mem20/?utm_source=hn&utm_medium=community&utm_campaign=mem20_launch_2026q4&utm_content=show_hn` |
-| 2 | GitHub | Repo homepage / README | `https://bythewayz66-glitch.github.io/mem20/?utm_source=github&utm_medium=oss&utm_campaign=mem20_launch_2026q4&utm_content=readme` |
-| 3 | MCP directories | Listing | `https://bythewayz66-glitch.github.io/mem20/?utm_source=mcp_directory&utm_medium=directory&utm_campaign=mem20_launch_2026q4&utm_content=listing` |
-| 4 | Product Hunt | Launch post | `https://bythewayz66-glitch.github.io/mem20/?utm_source=producthunt&utm_medium=launch_platform&utm_campaign=mem20_launch_2026q4&utm_content=ph_launch` |
-| 5 | Reddit | r/LocalLLaMA | `https://bythewayz66-glitch.github.io/mem20/?utm_source=reddit&utm_medium=community&utm_campaign=mem20_launch_2026q4&utm_content=localllama` |
-| 6 | Reddit | r/MachineLearning | `https://bythewayz66-glitch.github.io/mem20/?utm_source=reddit&utm_medium=community&utm_campaign=mem20_launch_2026q4&utm_content=machinelearning` |
-| 7 | Reddit | r/LangChain | `https://bythewayz66-glitch.github.io/mem20/?utm_source=reddit&utm_medium=community&utm_campaign=mem20_launch_2026q4&utm_content=langchain` |
-| 8 | dev.to | Technical deep-dive | `https://bythewayz66-glitch.github.io/mem20/?utm_source=devto&utm_medium=blog&utm_campaign=mem20_launch_2026q4&utm_content=deep_dive` |
-| 9 | Medium | Technical deep-dive | `https://bythewayz66-glitch.github.io/mem20/?utm_source=medium&utm_medium=blog&utm_campaign=mem20_launch_2026q4&utm_content=deep_dive` |
-| 10 | Discord/Slack | LangChain & MCP communities | `https://bythewayz66-glitch.github.io/mem20/?utm_source=discord&utm_medium=community&utm_campaign=mem20_launch_2026q4&utm_content=langchain_mcp` |
-| 11 | LinkedIn | Enterprise / regulated angle | `https://bythewayz66-glitch.github.io/mem20/?utm_source=linkedin&utm_medium=social&utm_campaign=mem20_launch_2026q4&utm_content=enterprise_angle` |
-| 12 | X / Twitter | Launch thread | `https://bythewayz66-glitch.github.io/mem20/?utm_source=x&utm_medium=social&utm_campaign=mem20_launch_2026q4&utm_content=thread` |
+| 1 | Hacker News | Show HN post | `https://mem20.com/?utm_source=hn&utm_medium=community&utm_campaign=mem20_launch_2026q4&utm_content=show_hn` |
+| 2 | GitHub | Repo homepage / README | `https://mem20.com/?utm_source=github&utm_medium=oss&utm_campaign=mem20_launch_2026q4&utm_content=readme` |
+| 3 | MCP directories | Listing | `https://mem20.com/?utm_source=mcp_directory&utm_medium=directory&utm_campaign=mem20_launch_2026q4&utm_content=listing` |
+| 4 | Product Hunt | Launch post | `https://mem20.com/?utm_source=producthunt&utm_medium=launch_platform&utm_campaign=mem20_launch_2026q4&utm_content=ph_launch` |
+| 5 | Reddit | r/LocalLLaMA | `https://mem20.com/?utm_source=reddit&utm_medium=community&utm_campaign=mem20_launch_2026q4&utm_content=localllama` |
+| 6 | Reddit | r/MachineLearning | `https://mem20.com/?utm_source=reddit&utm_medium=community&utm_campaign=mem20_launch_2026q4&utm_content=machinelearning` |
+| 7 | Reddit | r/LangChain | `https://mem20.com/?utm_source=reddit&utm_medium=community&utm_campaign=mem20_launch_2026q4&utm_content=langchain` |
+| 8 | dev.to | Technical deep-dive | `https://mem20.com/?utm_source=devto&utm_medium=blog&utm_campaign=mem20_launch_2026q4&utm_content=deep_dive` |
+| 9 | Medium | Technical deep-dive | `https://mem20.com/?utm_source=medium&utm_medium=blog&utm_campaign=mem20_launch_2026q4&utm_content=deep_dive` |
+| 10 | Discord/Slack | LangChain & MCP communities | `https://mem20.com/?utm_source=discord&utm_medium=community&utm_campaign=mem20_launch_2026q4&utm_content=langchain_mcp` |
+| 11 | LinkedIn | Enterprise / regulated angle | `https://mem20.com/?utm_source=linkedin&utm_medium=social&utm_campaign=mem20_launch_2026q4&utm_content=enterprise_angle` |
+| 12 | X / Twitter | Launch thread | `https://mem20.com/?utm_source=x&utm_medium=social&utm_campaign=mem20_launch_2026q4&utm_content=thread` |
 
 ### Analytics constraint — read this before promising event data
 
@@ -154,9 +154,9 @@ The Pages site is **static HTML with no analytics snippet**, and GitHub Pages gi
 
 ## 6. Guardrails Compliance Checklist (binding on ALL campaign copy)
 
-- [ ] **Tool surface is 270 tools / 27 domains.** No 257, 258 or 268 anywhere.
+- [ ] **Tool surface is 311 tools / 39 domains.** No 257, 258, 268, 270 or 272 as current.
 - [ ] **No PyPI implication** — no `pip install mem20`, no PyPI badge, no "coming soon". Install is `git clone` + `pip install -r requirements.txt`.
-- [ ] **No `/sites/` URL in any tracked link, ad, post, bio or listing.** Base URL is `https://bythewayz66-glitch.github.io/mem20/`.
+- [ ] **No `/sites/` URL in any tracked link, ad, post, bio or listing.** Base URL is `https://mem20.com/`.
 - [ ] **Benchmark numbers carry the "not comparable to competitor benchmarks" warning** and keep the adversarial 0.000 row visible.
 - [ ] **No cross-vendor comparison** — never set mem20 numbers against Mem0 LoCoMo 92.5 / LongMemEval 94.4 or Zep DMR 94.8% (vendor self-reported, different corpora).
 - [ ] **Promotion gate described with its residual free-text path** — never "tamper-proof", "unfakeable" or "airtight".
@@ -184,7 +184,7 @@ The Pages site is **static HTML with no analytics snippet**, and GitHub Pages gi
 
 ## 8. Outstanding owner actions (not GTM-runnable)
 
-1. **Repo `homepage` field is a 403.** GitHub API returns `homepage: "https://static.teamily.ai/sites/ca954f26-…/webpages/mem20-site/index.html"` — an anonymous request to it returns **403**. One-field fix: point it at `https://bythewayz66-glitch.github.io/mem20/?utm_source=github&utm_medium=oss&utm_campaign=mem20_launch_2026q4&utm_content=readme`. Whoever holds repo admin does this; it is the highest-leverage single change in this plan.
+1. **Repo `homepage` field is a 403.** GitHub API returns `homepage: "https://static.teamily.ai/sites/ca954f26-…/webpages/mem20-site/index.html"` — an anonymous request to it returns **403**. One-field fix: point it at `https://mem20.com/?utm_source=github&utm_medium=oss&utm_campaign=mem20_launch_2026q4&utm_content=readme`. Whoever holds repo admin does this; it is the highest-leverage single change in this plan.
 2. **`docs/CNAME` — RESOLVED 2026-10-31.** It names `mem20.com`, which resolves and returns 200. The old legacy-zone hostname is retired and must not be cited; the CNAME branch (creating a DNS record for it) is obsolete.
 3. ~~**`docs/index.html` still says 268 / 26 domains.**~~ **Closed.** Re-measured at `27c1e5fb`: **0** occurrences of `268`, **10** of `270`. Campaign copy and the public page now agree.
-4. **One in-tree doc still disagrees with the live surface:** `docs/02-tools-reference.md` says 268/26. `toolchest/inventory.json` was regenerated 2026-10-29 and now reports `counts.mcp: 0`, so it no longer contradicts the surface — it simply no longer counts it. Same P1 owner, same retirement.
+4. **In-tree docs now agree with the live surface.** `docs/02-tools-reference.md` and `docs/05-complete-tools-reference.md` have both been swept to **311/39**. `toolchest/inventory.json` was regenerated 2026-10-29 and reports `counts.mcp: 0`, so it no longer contradicts the surface — it simply no longer counts it.

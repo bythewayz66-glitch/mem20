@@ -2,9 +2,9 @@
 
 RSpec.describe Mem20::Surface do
   it "states the surface the server actually exposes" do
-    expect(described_class::TOOL_COUNT).to eq(272)
-    expect(described_class::DOMAIN_COUNT).to eq(27)
-    expect(described_class::DOMAIN_TOOLS).to eq(270)
+    expect(described_class::TOOL_COUNT).to eq(311)
+    expect(described_class::DOMAIN_COUNT).to eq(39)
+    expect(described_class::DOMAIN_TOOLS).to eq(311)
   end
 
   it "accounts for the total as domain tools plus the infra job tools" do
@@ -12,18 +12,19 @@ RSpec.describe Mem20::Surface do
       .to eq(described_class::DOMAIN_TOOLS + described_class::INFRA_TOOLS.size)
   end
 
-  it "names the two infra tools registered outside any domain" do
-    expect(described_class::INFRA_TOOLS).to eq(["job_status", "job_wait"])
+  it "counts the job tools as a domain, not as infra" do
+    # `job_status` / `job_wait` used to be transport "infra" outside any domain;
+    # in the current taxonomy `job` is one of the 39 domains, so nothing is
+    # registered outside a domain.
+    expect(described_class::INFRA_TOOLS).to eq([])
   end
 
   it "reports an internally consistent surface" do
     expect(described_class.consistent?).to be(true)
   end
 
-  it "summarises both halves so a reader cannot mistake 268 for the total" do
-    expect(described_class.summary)
-      .to eq("272 tools across 27 domains (270 domain tools + " \
-             "2 infra tools: job_status, job_wait)")
+  it "summarises the surface so a reader cannot mistake a subtotal for the total" do
+    expect(described_class.summary).to eq("311 tools across 39 domains")
   end
 
   # The regression this guards: the README, docs/USAGE.md, docs/EVIDENCE.md and
@@ -60,10 +61,10 @@ RSpec.describe Mem20::Surface do
       # the exact string "270 tools across 27 domains", so a doc reverted to
       # "## Call any of the 270 tools" slipped through.
       #
-      # A bare "N tools" is ambiguous: the README legitimately says "270 tools
-      # from the 27 domain mixins", which is the DOMAIN_TOOLS subtotal, not the
-      # total. So a number is accepted when it is TOOL_COUNT, or when it is
-      # DOMAIN_TOOLS *and* the sentence qualifies it as the domain half.
+      # A bare "N tools" is ambiguous: a doc may legitimately quote the
+      # DOMAIN_TOOLS subtotal, but only when the sentence qualifies it as the
+      # domain half. So a number is accepted when it is TOOL_COUNT, or when it
+      # is DOMAIN_TOOLS *and* the sentence says "domain".
       # CHANGELOG.md is not in `documented` because it quotes old values as
       # history, which is correct.
       body.to_enum(:scan, /\b(\d{2,4})[ -]tools?\b/).each do

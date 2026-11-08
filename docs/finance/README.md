@@ -56,11 +56,16 @@ The tier ladder is **72% / 12% / 12% / 4% on $6K / $18K / $36K / $80K**:
 ```
 
 The shares sum to exactly 1.0. This reconciles to the house figure with **zero** residual.
-Note this is *not* the 22/41/26/11 mix recorded in some earlier working notes — that mix
-lands at $14,001 and belongs to a different ladder. The ladder actually committed in the
-repo is the 72/12/12/4 above, and it is the one that reconciles exactly.
 
-### 2.2 Tool surface — **drift found and fixed** (257/26 → 270/27)
+**On the 22/41/26/11 mix.** Earlier working notes recorded a 22/41/26/11 mix and stated it
+"lands at $14,001". That figure is **not reproducible from any ladder in this tree** and is
+withdrawn here rather than carried. On the same four tier prices the mix evaluates to
+0.22×6,000 + 0.41×18,000 + 0.26×36,000 + 0.11×80,000 = **$26,860** (shares sum to 1.0), so it
+is not a near-variant of the committed ladder at all — it is a different ladder, and the
+$14,001 claim was arithmetic that never closed. The ladder actually committed in the repo is
+the 72/12/12/4 above, and it is the only one that reconciles to $14,000 exactly.
+
+### 2.2 Tool surface — **drift found and fixed** (257/26 → 311/39)
 
 The legacy model (`published/sites/…/mem20-finance-pricing-publish/compute_model.py`)
 declares the repo state as `tools: 257, domains: 26`, and its corrections register
@@ -70,18 +75,18 @@ That is stale against the live surface:
 
 | Surface | Value |
 |---|---|
-| `verify_mcp.py` `MEM20_EXPECTED_TOOLS` default | **270** |
-| `.github/workflows/mcp-verify.yml` pinned expectation | **270** |
-| `CHANGELOG.md` [Unreleased] | **270 tools / 27 domains** |
-| `docs/README.md` | **270 / 27** |
-| domain modules under `mcp/tools/` | **27** |
+| `docs/surface.json` (live `tools/list`, AST cross-checked) | **311 / 39** |
+| `.github/workflows/mcp-verify.yml` pinned expectation | **311** |
+| `CHANGELOG.md` [Unreleased] | **311 tools / 39 domains** |
+| `docs/README.md` | **311 / 39** |
 | legacy finance model (superseded) | ~~257 / 26~~ |
+| intermediate surfaces (superseded) | ~~268 / 26~~, ~~270 / 27~~, ~~272 / 27~~ |
 
-**Fixed here:** `inputs.json → tool_surface` now declares **270 tools / 27 domains**, sourced
-from the repo's own runtime verifier rather than a doc claim. The model also no longer lets
-the tool count influence any revenue figure — it is carried as context only, so a future
-count migration cannot silently move the market model. The P1 owner of the 257→270
-migration elsewhere in the repo is the Webpage Developer.
+**Fixed here:** `inputs.json → tool_surface` now declares **311 tools / 39 domains**, read
+from `docs/surface.json` (the live `tools/list` manifest) rather than a doc claim. The model
+also no longer lets the tool count influence any revenue figure — it is carried as context
+only, so a future count migration cannot silently move the market model. The P1 owner of the
+257→311 migration elsewhere in the repo is the Webpage Developer.
 
 ### 2.3 Market layer arithmetic — no drift, residuals disclosed
 
@@ -156,7 +161,7 @@ constraint in the model.
 
 | Path | What |
 |---|---|
-| `inputs.json` | every declared assumption, including the house numbers and the 270/27 surface |
+| `inputs.json` | every declared assumption, including the house numbers and the 311/39 surface |
 | `compute_model.py` | deterministic, offline, self-asserting model; generates everything below |
 | `model_output.json` | full output: market, ACV, unit economics, SOM book, ramp, reconciliation |
 | `unit_economics.csv` | cost stack, ACV tier ladder, acquisition and LTV metrics, ramp |
@@ -171,7 +176,11 @@ same commit, and the assertion that pins it is updated in the same diff. A figur
 without an updated directive is drift; the model is designed to fail loudly on it rather than
 publish a quietly different number.
 
-## 7. Re-run of 2026-10-27 — 270/27 re-confirmed, ledger made append-only
+## 7. Re-run of 2026-10-27 — retired 270/27 re-confirmed, ledger made append-only
+
+> **Dated record.** This section narrates the 2026-10-27 run, when the live surface was
+> 270/27. The surface has since moved to **311/39** (§8.3); the 270/27 figures below are
+> the historical record of that run, not the current surface.
 
 This run was dispatched on the premise that this directory *still models the retired
 257/26 surface*. **That premise was checked and does not hold.** `inputs.json`
@@ -209,14 +218,14 @@ byte-idempotent and the drift check — regenerate, then `git diff --quiet` — 
 | SOM ARR from the ramp (terminal accounts × ACV) | $1,680,000 | $1,680,000 | $0.00 | **EXACT** |
 | SOM ARR as a share of SAM | 0.595745% | 0.596% | −0.000255 | RECONCILED |
 | SOM ARR as a share of TAM | 0.131250% | 0.131% | +0.000250 | RECONCILED |
-| Model re-run against the live tool surface | 270 / 27 | 270 / 27 | 0 | **RECONFIRMED** |
+| Model re-run against the live tool surface | 270 / 27 (retired) | 270 / 27 | 0 | **RECONFIRMED** |
 
 **SOM = 120 accounts × $14,000 ACV = $1,680,000**, and it now holds on two
 independent routes: the house pair (120 × $14,000) and the ramp's terminal rung
 (40 → 80 → **120** accounts, × $14,000). The ACV itself is proven term by term —
 4,320 + 2,160 + 4,320 + 3,200 = **14,000** on shares summing to exactly 1.0.
 
-### 7.3 What the 270/27 migration does and does not move
+### 7.3 What the retired 270/27 migration does and does not move
 
 Nothing downstream of the tool count moves, because **no revenue, market or unit-economics
 figure in this model reads it**. It is carried as context and re-asserted on every run
@@ -263,9 +272,22 @@ three places so it cannot be restated without being recomputed:
 | `derivation_trace.csv` | row `SOM ARR (written out)` |
 | `model_output.json` | `market.som_equation` |
 
-And it now holds on **three** independent routes: the house pair (120 × $14,000), the ramp's
-terminal rung (40 → 80 → **120** × $14,000), and the term-by-term ACV ladder
-(4,320 + 2,160 + 4,320 + 3,200 = 14,000 on shares summing to exactly 1.0).
+And it holds on **two** independent routes, not three: the house pair (120 × $14,000) and the
+ramp's terminal rung (40 → 80 → **120** × $14,000). Those are the same identity — the ramp's
+terminal rung *is* 120 accounts — so they corroborate the account count, not the product. The
+term-by-term ACV ladder (4,320 + 2,160 + 4,320 + 3,200 = 14,000 on shares summing to exactly
+1.0) is a **third, separate** proof, but it proves the *blended ACV*, not $1,680,000. Counting
+it as a route to the SOM would be double-counting a different quantity; §7.2's "two routes"
+is the correct count and this section now matches it.
+
+**The qualifier that must travel with "exact".** $1,680,000 is exact as `120 × $14,000`. It is
+**not** the sum of the declared 72/12/12/4 mix over whole accounts: 72% × 120 = 86.4,
+12% × 120 = 14.4, 12% × 120 = 14.4, 4% × 120 = 4.8 — none integral. Brute force over all
+302,621 integer mixes summing to 120 finds only 45 that hit $1,680,000 exactly (0.0149%); the
+nearest reachable mix, 86/15/14/5, lands at **$1,690,000 (+$10,000, +0.60%)**, while
+86/18/10/6 lands at $1,680,000. So $1.68M is a **rounded blend at a nominal mix**, not
+`sum(tier price × integer accounts)` — the disclosure `docs/pricing/tier-sensitivity.md` §180
+requires, and it is stated here rather than left to that file.
 
 ### 8.2 TAM and SAM are carried, with their source
 
@@ -276,10 +298,11 @@ accounts, never accounts → dollars) is written into the model instead of impli
 
 ### 8.3 Tool surface
 
-Still **270 tools / 27 domains**, asserted on every run — the model fails rather than emit
+Still **311 tools / 39 domains**, asserted on every run — the model fails rather than emit
 anything on a different surface. `257 / 26` survives only as `previous_tools` /
-`previous_domains` (retired provenance). No revenue, market or unit-economics figure reads
-the tool count, so the migration moves nothing downstream of it.
+`previous_domains` (retired provenance), and `270 / 27` survives only in the dated run
+narratives of §7 and §8. No revenue, market or unit-economics figure reads the tool count,
+so the migration moves nothing downstream of it.
 
 ### 8.4 Ledger at the end of run 3
 
@@ -290,4 +313,4 @@ which is exactly what the CI drift step asserts (`git diff --quiet`).
 `finance-model-drift.yml` was extended to enforce the new invariants: the ledger floor is
 now 13 rows with all nine historical row-keys required present, the SOM equation must
 appear verbatim in the ledger and the trace, and a dedicated step asserts the live surface
-is 270/27 with 257/26 present only as retired provenance.
+is 311/39 with 257/26 present only as retired provenance.

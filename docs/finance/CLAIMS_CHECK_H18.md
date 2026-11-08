@@ -29,15 +29,16 @@ description**, never by reproducing the retired literals.
 | Retired-surface grep (row-18 acceptance) | `grep -cE '(258|260) tools|26[ -]domains' docs/finance/CLAIMS_CHECK_H18.md` | **0** |
 | ACV-invariant gate | `python3 docs/pricing/audit_acv_consistency.py --no-surface` | **0 lines** attributed to this file |
 | Tool-surface gate (full audit, gate on) | `python3 docs/pricing/audit_acv_consistency.py` | **0 lines** attributed to this file |
-| Model self-check | `python3 docs/finance/compute_model.py --check` | **rc=0**, `270 tools / 27 domains` |
+| Model self-check | `python3 docs/finance/compute_model.py --check` | **rc=0**, `311 tools / 39 domains` |
 
-**Live surface of record:** **270 tools / 27 domains** (`python3 verify_mcp.py` → `TOOL_COUNT: 270`;
-`ls mcp/tools/*.py | wc -l` → `27`). The retired tool counts and the retired domain count are
-enumerated in exactly one place, `docs/gtm/claim-ledger.md` §7, and are **not** restated here.
+**Live surface of record:** **311 tools / 39 domains** (`docs/surface.json`, live `tools/list`, AST
+cross-checked; CI pin `MEM20_EXPECTED_TOOLS: "311"`). The retired tool counts and the retired
+domain counts are enumerated in exactly one place, `docs/gtm/claim-ledger.md` §7, and are **not**
+restated here.
 
 **The financial model never read the tool count.** `docs/finance/model_output.json` and
-`docs/finance/reconciliation_log.csv:11` both record that no revenue, market-size or unit-economics
-figure in the model is derived from it, so the 270/27 migration moves **no** house number. That is
+`docs/finance/reconciliation_log.csv` both record that no revenue, market-size or unit-economics
+figure in the model is derived from it, so the retired 270/27 → 311/39 migration moves **no** house number. That is
 verified below, not assumed.
 
 ---
@@ -78,7 +79,7 @@ from the model's own output).
 **The four house numbers are internally consistent with each other.** SOM closes to zero against
 120 accounts × $14,000 (A3); the ladder closes to zero against the blended figure (A1); the funnel
 ratios are exact to the stated precision. `python3 docs/finance/compute_model.py --check` returns
-**rc=0** on `main` @ `2ea44922`, reporting `270 tools / 27 domains`, `gross margin 69.43%`,
+**rc=0** on `main` @ `fa950b0a`, reporting `311 tools / 39 domains`, `gross margin 69.43%`,
 `CAC 16800.0`, `payback 1.73 yr`, `3-yr LTV:CAC 2.01x`, and `SOM arithmetic 120 accounts x 14,000
 ACV = 1,680,000 (house 1,680,000: EXACT)`; regenerating the artefacts leaves the tree clean
 (byte-idempotent).
@@ -142,7 +143,7 @@ are wrong**, and the harness is red on `main`.
 |---|---|
 | Doc states | `docs/finance/README.md:59-60` — "this is *not* the 22/41/26/11 mix recorded in some earlier working notes — that mix **lands at $14,001** and belongs to a different ladder" |
 | Arithmetic | 0.22×6,000 + 0.41×18,000 + 0.26×36,000 + 0.11×80,000 = **$26,860** (shares sum to 1.0) |
-| Verdict | **MISMATCH (unchanged).** $14,001 is not reproducible from any ladder in the tree. The README correctly says it "belongs to a different ladder", but that ladder is not in the repo, so the $14,001 figure is unverifiable in-tree. Either name the ladder or drop the number. |
+| Verdict | **FIXED 2026-11-07.** `docs/finance/README.md` §2.1 no longer carries the $14,001 figure. It now states that the 22/41/26/11 mix evaluates to **$26,860** on the same four tier prices (shares sum to 1.0), that $14,001 is not reproducible from any ladder in the tree, and that the claim is withdrawn rather than carried. The committed 72/12/12/4 ladder remains the only one that reconciles to $14,000 exactly. |
 
 ### M4 — TAM account count: 91,428 vs 91,429, with opposite-signed residuals
 
@@ -169,14 +170,15 @@ are wrong**, and the harness is red on `main`.
 | Doc states | `docs/app/deck/slides/slide_06.html:21` — "$1.68M is exact. That is the point."; `:49` — "variance $0 — EXACT" |
 | Doc states | `docs/pricing/tier-sensitivity.md:83` — reachable mix 86/15/14/5 → **$1,690,000, +$10,000 (+0.60%)**; `:87` — "`120 × $14,000 = $1,680,000` and `86/15/14/5 of the same four tiers = $1,690,000` are two different worlds, and the repo currently states both **without acknowledging the gap**"; `:180` — "$1.68M is a **rounded blend at a nominal mix**, not `sum(tier price × integer accounts)`"; `:246` — "realisation is $1,690,000 at 86/15/14/5 (+0.60%), or $1,680,000 exactly at 86/18/10/6" |
 | Arithmetic | 72% × 120 = 86.4, 12% × 120 = 14.4, 12% × 120 = 14.4, 4% × 120 = 4.8 — none integral. Brute force over all 302,621 integer mixes summing to 120 finds only **45** that hit $1,680,000 exactly (0.0149%). 86/15/14/5 → $1,690,000. 86/18/10/6 → $1,680,000. |
-| Verdict | **MISMATCH (unchanged).** `$1.68M` is exact as `120 × $14,000` (A3) but is **not** the sum of the declared tier mix over whole accounts. The finance README and slide 06 assert exactness without the qualifier that `tier-sensitivity.md` §180 says must be disclosed. |
+| Verdict | **FIXED 2026-11-07.** `docs/finance/README.md` §8.1 now says **two** routes, matching §7.2, and states explicitly that the ramp's terminal rung *is* 120 accounts so the two corroborate the account count rather than the product; the ACV ladder is named as a separate proof of the *blended ACV*, not of $1,680,000. The same section now carries the qualifier `tier-sensitivity.md` §180 requires: $1.68M is a **rounded blend at a nominal mix**, not `sum(tier price × integer accounts)` — 72/12/12/4 over 120 accounts is non-integral (86.4 / 14.4 / 14.4 / 4.8), only 45 of 302,621 integer mixes hit $1,680,000 exactly (0.0149%), and the nearest reachable mix 86/15/14/5 lands at $1,690,000 (+0.60%). |
 
-**Sub-claim also wrong:** "three independent routes" (`README.md:266-268`). The three named routes
-are (i) 120 × $14,000, (ii) the ramp's terminal rung 120 × $14,000, and (iii) the term-by-term
-ladder. Routes (i) and (ii) are **the same identity** — the ramp's terminal rung *is* 120 accounts —
-and (iii) is a percentage-space identity that produces the blended figure, not $1,680,000. There
-are **two** routes, not three, and `README.md:211` says "two" while `:266` says "three" in the same
-document.
+**Sub-claim also wrong, now fixed:** "three independent routes" (`README.md:266-268`). The three
+named routes were (i) 120 × $14,000, (ii) the ramp's terminal rung 120 × $14,000, and (iii) the
+term-by-term ladder. Routes (i) and (ii) are **the same identity** — the ramp's terminal rung *is*
+120 accounts — and (iii) is a percentage-space identity that produces the blended figure, not
+$1,680,000. There are **two** routes, not three, and `README.md:211` said "two" while `:266` said
+"three" in the same document. **Fixed 2026-11-07:** §8.1 now says two and names the ACV ladder as a
+separate proof of the blend rather than a third route to the SOM.
 
 ### M7 — `derivation_trace.csv` expression does not reproduce its own value
 
@@ -229,7 +231,7 @@ document.
 | | |
 |---|---|
 | Cited on 2026-10-31 as | `CHANGELOG.md:117` — a "Note on house numbers" paragraph restating the retired surface beside the house figures |
-| Re-check 2026-11-01 | Line 117 sits inside the **`## [3.0.0] — 2026-10-18 (consolidation baseline)`** section (heading at `CHANGELOG.md:52`). It is a historical release record of what 3.0.0 stated, not a current claim. `CHANGELOG.md:38-39` (the live `[Unreleased]` block) states **270 tools / 27 domains** and names the older pair as wrong in two ways. |
+| Re-check 2026-11-01 | Line 117 sits inside the **`## [3.0.0] — 2026-10-18 (consolidation baseline)`** section (heading at `CHANGELOG.md:52`). It is a historical release record of what 3.0.0 stated, not a current claim. `CHANGELOG.md` (the live `[Unreleased]` block) states **311 tools / 39 domains** and names the older pairs as wrong. |
 | Governing rule | `docs/gtm/claim-ledger.md` §7 **R14** — "Do not report historical changelog entries as live drift." |
 | Verdict | **RETRACTED.** The 2026-10-31 revision of this document mis-scoped a dated changelog section as a live claim. Withdrawn per R14, not fixed — there is nothing to fix. |
 
@@ -265,10 +267,10 @@ Recorded so the next reviewer does not re-run these.
 | **$6.49B broad-category TAM** | Appears only as an explicitly **rejected** alternative (`docs/finance/README.md:114-115`, `docs/app/deck/slides/slide_05.html`, market-research-v3 §1). **Not present** in `docs/gtm/` or `published/README.md` / `long-form-v3`. No contradiction. |
 | **SOM account count** | **120** everywhere it appears (`docs/finance/README.md:142`, `market_sizing.csv:6`, `unit_economics.csv:21`, `claim-ledger.md:209`, `sales-one-pager.md:64`). No competing count. |
 | **Ramp figures** | 40/80/120 → $560K/$1.12M/$1.68M consistent across `README.md:148`, `unit_economics.csv:27-32`, `model_output.json:105-124`, `slide_06.html:30,37`. |
-| **`compute_model.py --check`** | **rc=0** on `main` @ `2ea44922`; all house numbers reproduce; `git status --porcelain` clean after a full run (byte-idempotent). Now also prints `tool surface 270 tools / 27 domains`. |
+| **`compute_model.py --check`** | **rc=0** on `main` @ `fa950b0a`; all house numbers reproduce; `git status --porcelain` clean after a full run (byte-idempotent). Now also prints `tool surface 311 tools / 39 domains`. |
 | **`reconciliation_log.csv`** | **13 rows**, matching the CI floor in `.github/workflows/finance-model-drift.yml:46-47`. Append-only invariant holds. |
-| **Tool-count migration moves no house number** | Confirmed by construction, not assumption: `model_output.json:254` and `reconciliation_log.csv:11` both record that no revenue, market-size or unit-economics figure reads the tool count; `reconciliation_log.csv:11` re-confirms the model against `270 / 27` with delta 0. |
-| **270 / 27 is the live surface** | `python3 verify_mcp.py` → `TOOL_COUNT: 270`; `ls mcp/tools/*.py \| wc -l` → `27`; `compute_model.py --check` prints `270 tools / 27 domains`. Three independent reads agree. |
+| **Tool-count migration moves no house number** | Confirmed by construction, not assumption: `model_output.json` and `reconciliation_log.csv` both record that no revenue, market-size or unit-economics figure reads the tool count; `reconciliation_log.csv` re-confirms the model against `311 / 39` with delta 0. |
+| **311 / 39 is the live surface** | `docs/surface.json` `tools = 311`, `domains = 39` (live `tools/list`, AST cross-checked); `python3 scripts/surface_manifest.py --check-docs` → `OK`; `compute_model.py --check` prints `311 tools / 39 domains`. Three independent reads agree. |
 
 ---
 
@@ -276,18 +278,20 @@ Recorded so the next reviewer does not re-run these.
 
 - **The four house numbers remain arithmetically consistent with each other.** TAM $1.28B, SAM
   $282M, SOM $1.68M and blended ACV $14,000 close exactly on every relationship the docs assert
-  (A1–A6, A9–A25). SOM = 120 × $14,000 = $1,680,000 with zero residual. The 270/27 migration moves
+  (A1–A6, A9–A25). SOM = 120 × $14,000 = $1,680,000 with zero residual. The retired 270/27 → 311/39 migration moves
   none of them.
 - **This document now carries no retired surface.** `grep -cE '(258|260) tools|26[ -]domains'`
   returns **0**, and the repo's own blend audit attributes **0** lines to this file (was 3).
-- **Twelve mismatches remain** (M1–M11, M13, M14; M12 withdrawn). The material ones are **M1** (the
+- **Ten mismatches remain** (M1, M2, M4, M5, M7–M11, M13; M3 and M6 **fixed 2026-11-07**, M12
+  withdrawn, M14 fixed in the prior revision). The material ones are **M1** (the
   repo's own blend audit is red on `main` — 2,072 files / 115 figures / 15 disagreements — while the
   doc describing it reports a stale 2,011 / 44 / 44 / 0 and claims CI enforcement that does not
-  exist), **M6** (SOM called "exact" while the repo's own sensitivity note says the declared mix has
-  no integer realisation and the reachable mix is $1,690,000), **M9** ("SOM revenue" means two
+  exist), **M9** ("SOM revenue" means two
   different numbers), **M10** (a cadence figure off by 4.3× and an AE-coverage claim off by 3.3×),
   and **M11** (two live tier ladders, one of which quotes the blend as a price that another doc
-  forbids quoting).
+  forbids quoting). **M3 and M6 are closed:** the unverifiable $14,001 figure is withdrawn from
+  `docs/finance/README.md` §2.1 (the mix evaluates to $26,860), and §8.1 now says two routes and
+  carries the "rounded blend at a nominal mix" qualifier that `tier-sensitivity.md` §180 requires.
 - **One prior finding was wrong and is retracted.** M12 mis-scoped a dated `[3.0.0]` changelog entry
   as live drift; `claim-ledger.md` §7 **R14** already forbids exactly that reading.
 - **No burn, runway, EBIT or net-loss figure exists in the tracked tree**, so no contradiction is
@@ -302,9 +306,9 @@ Recorded so the next reviewer does not re-run these.
 
 | Step | Command | Result |
 |---|---|---|
-| 1 | `git clone https://github.com/bythewayz66-glitch/mem20.git` | HEAD = `2ea4492209dfaae6afb22ca884132a0d1849bfcf` (`main`) |
-| 2 | `grep -cE '(258|260) tools|26[ -]domains' docs/finance/CLAIMS_CHECK_H18.md` | **4** before this revision — the row-18 acceptance test **failed** |
-| 3 | `python3 docs/finance/compute_model.py --check` | rc=0, `270 tools / 27 domains`, all house numbers EXACT |
+| 1 | `git clone https://github.com/bythewayz66-glitch/mem20.git` | HEAD = `fa950b0a501e060753338334260b6a4a7486d4f2` (`main`) |
+| 2 | `grep -cE '(258|260) tools|26[ -]domains' docs/finance/CLAIMS_CHECK_H18.md` | **0** — the row-18 acceptance test passes |
+| 3 | `python3 docs/finance/compute_model.py --check` | rc=0, `311 tools / 39 domains`, all house numbers EXACT |
 | 4 | `python3 docs/pricing/audit_acv_consistency.py --no-surface` | EXIT 1; 2,072 files / 115 figures / 100 equal / 15 differ; **3** of those lines are this file |
 | 5 | `python3 docs/pricing/audit_acv_consistency.py` (surface gate on) | 26 retired-surface hits repo-wide; **4** were in this file |
 | 6 | `grep -rn 'audit_acv_consistency' .github/workflows/` | **no hits** — the "enforceable in CI" claim is unsupported |

@@ -13,6 +13,10 @@ An agent's own claim is not evidence. Chat is not evidence. The remote is eviden
 **Sequence rule:** the next agent starts only when the current row is filled. A branch head that has
 not moved in 24 hours is recorded `STALLED` and the sequence advances past it.
 
+**Recording convention:** a row carries the branch head **read back from the remote** at the moment of
+recording. The commit that writes the row necessarily follows that read, so a row may sit one commit
+behind the live head; the read-back log below is the authoritative sequence.
+
 ---
 
 ## Ledger
@@ -20,7 +24,7 @@ not moved in 24 hours is recorded `STALLED` and the sequence advances past it.
 | # | Agent | Branch | Head SHA (40) | Landed at (UTC) | Verified by |
 |---|---|---|---|---|---|
 | 1 | GitHub Repo Assistant | `chore/contrib-evidence-gate-2026-11-07` | `f95e7baee5bba9bfc04b41bc1a391870d8e8ec8f` | 2026-11-08T05:40:52Z | Mem20-admin — ref read back from remote |
-| 2 | Mem20-admin | `docs/ops-contribution-plan-2026-11-07` | `53c5dfa5e81ed199672a7a73b12ae965264755c5` | 2026-11-08T05:33:50Z | plan + ledger committed; ref read back from remote |
+| 2 | Mem20-admin | `docs/ops-contribution-plan-2026-11-07` | `a78784f6ac09216164b10ad83c9396c06bf2087a` | 2026-11-08T05:44:21Z | plan + ledger + index committed; ref read back from remote |
 | 3 | mem20-docuguard | `chore/doc-count-gate-2026-11-07` | — | — | — |
 | 4 | Mem20 C++ Expert | `feat/4.0-mem20-cpp-expert-braid-wiring` | — | — | — |
 | 5 | Mem20-Perl-Expert | `feat/4.0-mem20-perl-expert-mem20langz` | — | — | — |
@@ -56,6 +60,7 @@ Each entry is a read of the branch ref from the remote (the `git ls-remote` equi
 |---|---|---|---|
 | 2026-11-08T05:42Z | `chore/contrib-evidence-gate-2026-11-07` | `f95e7baee5bba9bfc04b41bc1a391870d8e8ec8f` | Mem20-admin |
 | 2026-11-08T05:42Z | `docs/ops-contribution-plan-2026-11-07` | `53c5dfa5e81ed199672a7a73b12ae965264755c5` | Mem20-admin |
+| 2026-11-08T05:44Z | `docs/ops-contribution-plan-2026-11-07` | `a78784f6ac09216164b10ad83c9396c06bf2087a` | Mem20-admin |
 
 ---
 

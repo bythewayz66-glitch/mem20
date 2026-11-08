@@ -21,21 +21,20 @@ module Mem20
   # tool belongs to exactly one of the 39 domains and there is no separate
   # infra layer.
   module Surface
-    # Distinct owning domain modules the server registers.
+    # Number of domain mixin modules that register at least one tool.
     DOMAIN_COUNT = 39
 
-    # Tools contributed by those domain modules. Every tool belongs to a
-    # domain, so this is the whole surface.
+    # Tools contributed by those domain modules.
     DOMAIN_TOOLS = 311
 
-    # Tools registered outside any domain module. Empty in the current
-    # taxonomy: `job_status` / `job_wait` are the `job` domain.
+    # Tools registered by the server itself, outside any domain module.
     INFRA_TOOLS = [].freeze
 
     # Every tool the server registers: the domain half plus the infra tools.
     TOOL_COUNT = DOMAIN_TOOLS + INFRA_TOOLS.size
 
-    # The identity the specs pin.
+    # The infra tools are excluded from {DOMAIN_COUNT} on purpose, so this
+    # identity is the invariant the specs pin.
     def self.consistent?
       TOOL_COUNT == 311 && DOMAIN_TOOLS == 311 && DOMAIN_COUNT == 39
     end

@@ -160,9 +160,11 @@ matches                   = true
   statement.
 - It does not imply comparability with Mem0 LoCoMo 92.5, LongMemEval 94.4 or Zep DMR 94.8. Those run
   on different corpora with different metrics. Nothing here refutes or reproduces them.
-- It does not claim the per-query rows are committed. `latest.json` says 1,530 per-query rows live in
-  `per-query.jsonl.gz` next to it; that file is **not** in the tree at this baseline, so the aggregate
-  rows above are the finest granularity actually available.
+- It does not claim the per-query rows are committed. `latest.json` says 1,530 per-query rows are
+  produced by `benchmarks/merge_mode_slices.py` into `benchmarks/results/per-query.jsonl`, which the
+  repo gitignores (`*.jsonl`), so the aggregate rows above are the finest granularity actually
+  available in the tree. (1,530 is the per-query *row* count — 250 probes × 6 text modes + 30 graph —
+  not a query count; the run scored 250 queries.)
 
 ---
 **Experiment Tracker** · 2026-11-01T10:40:00-07:00 · statistical confidence: not applicable — this is a registry of measurement coverage, not a measurement.

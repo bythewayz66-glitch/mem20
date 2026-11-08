@@ -309,40 +309,38 @@ doc-to-model check.
 
 ---
 
-## 9. Tool surface — 272 / 27, and what the gate catches
+## 9. Tool surface — 311 / 39, and what the gate catches
 
-The live surface is **272 tools / 27 domains**, derived from the MCP server that registers
-it rather than quoted from a doc:
+The live surface is **311 tools / 39 domains**, read from `docs/surface.json` — the
+manifest generated from the live JSON-RPC `tools/list` response and cross-checked against
+the AST catalog:
 
 | Measurement | Value |
 |---|---:|
-| `register_*_tools` groups wired in `mcp/server.py` | 28 |
-| Domains (28 − 1 A2A transport) | **27** |
-| Registration sites (`self.tools["…"]`, incl. installer-injected) | 274 |
-| Distinct tool names | **272** |
-| Installer-injected tools (RM-239, RM-052) | 2 |
+| Tools (`docs/surface.json` `tools`, live `tools/list`) | **311** |
+| Domains (`docs/surface.json` `domains`; `domain_counts` sums to 311) | **39** |
+| AST cross-check (`only_ast` / `only_live` both empty) | **311 / 39** |
+| CI pin (`MEM20_EXPECTED_TOOLS`) | **311** |
 
-The 274 → 272 gap is the duplicate `lie_status` assignment
-(`mcp/tools/lie_tools.py:69` and `:77`). `257/26` and `268/26` are both retired.
-
-Two counting corrections move the number up from the earlier 270: four modules define a
-`register_*_tools` method that `_setup_tools()` never calls (so they add nothing to
-`tools/list`), and RM-239/RM-052 attach by wrapping `register_versioncontrol_tools` from
-`mcp/tools/__init__.py` rather than appearing as a call site in `server.py`. The result
-agrees with the `MEM20_EXPECTED_TOOLS: "272"` gate in `.github/workflows/mcp-verify.yml`.
+`257/26`, `268/26`, `270/27` and `272/27` are all retired. The earlier version of this
+section derived 272/27 from a regex over `mcp/`; that heuristic double-counted installer
+wrappers and duplicate assignments and drifted to 409/92 on the current tree while the
+server actually exposed 311/39. The model now reads the one manifest CI pins.
 
 `audit_acv_consistency.py` enforces the surface invariant over the canonical `docs/` tree
 only, with a retirement-marker escape hatch, so it fires on drift and not on history. It
-catches `268/26` (the intermediate surface nobody remembers is retired) as well as
-`257/26`, and it catches the bare `26 domains` phrasing that survives when someone updates
-the tool count and forgets the domain count.
+catches `268/26`, `270/27` and `272/27` as well as `257/26`, and it catches the bare
+retired `26 domains` / `27 domains` phrasing that survives when someone updates the tool
+count and forgets the domain count.
 
-Measured on this base: **258** retired-surface mentions on disk, of which **82** carry a
-retirement marker and **176** are present tense and unmarked. The canonical `docs/` tree
-accounts for **23** of the unmarked ones; the rest are `published/` archive, where a
-retired number is a record rather than drift. Those 23 belong to their own workstreams and
-are not fixed here — what this branch buys is that the next author cannot add a
-twenty-fourth without CI saying so.
+The retired-surface mention count is a **moving measurement** — it changes on every edit to
+the corpus — so it is reported by the model (`tier_price_derivation.py` §D5) rather than
+frozen here. At the time of writing the model reports a few hundred retired-surface mentions
+on disk, of which roughly a third carry a retirement marker and the rest are present tense
+and unmarked; the canonical `docs/` tree accounts for a small minority of the unmarked ones,
+with the remainder in the `published/` archive, where a retired number is a record rather
+than drift. Those canonical-tree mentions belong to their own workstreams and are not fixed
+here — what this branch buys is that the next author cannot add another without CI saying so.
 
 ---
 
@@ -350,11 +348,11 @@ twenty-fourth without CI saying so.
 
 | File | Change |
 |---|---|
-| `docs/pricing/tier-sensitivity.md` | **Rewritten.** §3 corrected: largest remainder is non-unique, the target is inside the band, and the nearest exact mix is 89/13/12/6. §9 reconciled to 270/27 with measured counts. |
+| `docs/pricing/tier-sensitivity.md` | **Rewritten.** §3 corrected: largest remainder is non-unique, the target is inside the band, and the nearest exact mix is 89/13/12/6. §9 reconciled to 311/39 with measured counts. |
 | `docs/pricing/tier_price_derivation.py` | **New.** The derivation model; every figure above is printed by it. |
 | `docs/pricing/tier-price-derivation.csv` | **New.** Model output. |
 | `docs/pricing/audit_pricing_docs.py` | **New.** Doc-to-model figure audit plus the surface gate. |
-| `docs/pricing/RECONCILIATION_NOTE.md` | **Rewritten.** Arithmetic shown; §4 corrected; §7 reconciled to 270/27. |
+| `docs/pricing/RECONCILIATION_NOTE.md` | **Rewritten.** Arithmetic shown; §4 corrected; §7 reconciled to 311/39. |
 
 No number outside `docs/pricing/` was modified. The $14,000 / $1.68M / TAM / SAM house
 figures are carried verbatim.
@@ -362,4 +360,4 @@ figures are carried verbatim.
 ---
 
 **Carried verbatim:** blended ACV $14,000 · TAM $1.28B / SAM $282M / SOM $1.68M ·
-tool surface **272/27** (257/26 and 268/26 retired) · COGS $4,280/account.
+tool surface **311/39** (257/26, 268/26, 270/27 and 272/27 retired) · COGS $4,280/account.

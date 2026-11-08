@@ -11,8 +11,9 @@
 > blends to $14,000 by printing a weighted-sum table, and it carried the retired
 > **257 / 26** tool surface in §4. A table is a result, not a derivation: it shows four
 > products add up, not that the four shares are the ones the target forces. This version
-> derives the shares, shows every equation, and states the surface as **272 / 27** —
-> measured from executable code in this repo, not quoted from another doc.
+> derives the shares, shows every equation, and states the surface as **311 / 39** —
+> read from `docs/surface.json` (the live `tools/list` manifest, AST cross-checked and
+> CI-pinned), not re-derived from a regex over `mcp/`.
 
 ---
 
@@ -26,7 +27,7 @@ The house number **holds**, and it now holds by derivation rather than by assert
 | Ladder blend, percentage space | **$14,000.00** |
 | Delta from the house figure | **$0.00** — exact, not within tolerance |
 | `120 × $14,000` | **$1,680,000** = SOM, exactly |
-| Live tool surface (derived from `mcp/`) | **272 tools / 27 domains** |
+| Live tool surface (`docs/surface.json`, live `tools/list`) | **311 tools / 39 domains** |
 | Tiers shipped in code or commerce config | **0 of 4** — see `TIER_SHIPPING_AUDIT.md` |
 
 Two findings in this pass are **corrections to the previous note**, not restatements.
@@ -222,60 +223,42 @@ ceiling.
 
 ---
 
-## 7. Tool surface — 272 / 27, derived from code
+## 7. Tool surface — 311 / 39, read from the authoritative manifest
 
 The previous version of this note carried **257 / 26** as "the legacy house surface" and
 listed 86 stale lines as a P1 owner's problem. That framing is retired. The live surface
-is **272 tools / 27 domains**, and it is derived here from the MCP server that actually
-registers it — not quoted from another document:
+is **311 tools / 39 domains**, read from `docs/surface.json` — the manifest generated from
+the live JSON-RPC `tools/list` response and cross-checked against the AST catalog:
 
 | Measurement | How it is derived | Value |
 |---|---|---:|
-| `register_*_tools` groups wired | `self.register_*_tools()` call sites in `mcp/server.py` | 28 |
-| Domains | 28 − 1 (A2A transport) | **27** |
-| Registration sites | `self.tools["…"]` in the modules those 28 groups own, plus installer-injected tools | 274 |
-| Distinct tool names | same set, de-duplicated | **272** |
-| Installer-injected tools | `mcp/tools/__init__.py` wraps `register_versioncontrol_tools` | 2 |
+| Tools | `docs/surface.json` `tools` (live `tools/list`) | **311** |
+| Domains | `docs/surface.json` `domains`; `domain_counts` sums to 311 | **39** |
+| AST cross-check | `cross_check.ast_tools` / `ast_domains`, `only_ast` and `only_live` both empty | **311 / 39** |
+| CI pin | `MEM20_EXPECTED_TOOLS` in `.github/workflows/mcp-verify.yml` | **311** |
 
-Two corrections to the earlier count, both of which move the number **up**:
-
-1. **Count what the server wires, not what exists on disk.** Four modules define a
-   `register_*_tools` method that `_setup_tools()` never calls, so they contribute
-   nothing to `tools/list`. Counting every file on disk over-states the surface.
-2. **Count the installer-injected tools.** RM-239 (`vcs_asset_release_audit`) and
-   RM-052 (`graph_execute_reversible_plan`) attach by wrapping
-   `register_versioncontrol_tools` from `mcp/tools/__init__.py`, so they never appear
-   as a call site in `server.py` but are on the live surface. This is the +2 that
-   reconciles the count to the `MEM20_EXPECTED_TOOLS: "272"` gate in
-   `.github/workflows/mcp-verify.yml`.
-
-The 274 → 272 gap is a real defect, not a rounding: `lie_status` is assigned twice
-(`mcp/tools/lie_tools.py:69` and `:77`), so the second assignment overwrites the first.
-The server exposes 272 tools while the source contains 274 assignments. Recorded in
-`docs/ops/tool-count-270-27.md`; not fixed here, because removing a registration changes
-the exposed schema and belongs with the tests.
+**Why this replaced the disk derivation.** The earlier version of this section counted
+`self.tools["…"]` literals in every wired module and reported the retired 272/27. That heuristic
+double-counted installer wrappers and duplicate assignments and drifted to 409/92 on the
+current tree while the server actually exposed 311/39. A guard that invents its own
+subject cannot detect drift in it, so the model now reads the one manifest that CI pins.
 
 ### 7.1 What is still stale, measured rather than quoted
 
-| | Count |
-|---|---:|
-| Retired-surface mentions on disk | 258 |
-| …carrying a retirement marker (`retired`, `superseded`, `was 257`, …) | 82 |
-| …present tense, unmarked | **176** |
-| …of those, in the canonical `docs/` tree | **23** |
-
-The previous note said "86 lines". That figure was a snapshot of a narrower pattern and
-is now wrong in both directions — the corpus grew and the matcher changed. The measured
-number is 176 unmarked present-tense mentions, of which the canonical `docs/` tree
-accounts for 23 (the rest are `published/` archive, where a retired number is a record,
-not drift). The pricing registers are excluded from their own scan, because they quote
-every retired number in order to explain that it is retired.
+The retired-surface mention count is a **moving measurement** — it changes on every edit to
+the corpus — so it is reported by the model (`tier_price_derivation.py` §D5) rather than
+frozen as a constant here. At the time of writing the model reports a few hundred
+retired-surface mentions on disk, of which roughly a third carry a retirement marker and the
+rest are present tense and unmarked; the canonical `docs/` tree accounts for a small
+minority of the unmarked ones, with the remainder in the `published/` archive, where a
+retired number is a record rather than drift. The pricing registers are excluded from their
+own scan, because they quote every retired number in order to explain that it is retired.
 
 **This mismatch does not move any pricing figure.** No tier price, ACV, or SOM number in
 the repo is derived from a tool count. The surface is stated here so that pricing
 collateral stops propagating a retired number, not because it prices anything.
 
-**Rule for any collateral touched from here:** if a tool count is cited, use **272 / 27**.
+**Rule for any collateral touched from here:** if a tool count is cited, use **311 / 39**.
 
 ---
 
@@ -301,7 +284,7 @@ new finding.
 | `docs/pricing/tier_price_derivation.py` | **New.** Derives the ladder from the target: forced shares (D1), price gradients (D2), contribution floor and discount ceiling (D3), integer reachability and drift budget (D4), live surface from code (D5). Reads the ladder from `docs/finance/inputs.json` rather than restating it. |
 | `docs/pricing/tier-price-derivation.csv` | **New.** Model output; every figure quoted above is emitted by the script. |
 | `docs/pricing/audit_pricing_docs.py` | **New.** Asserts each quoted figure appears in the model output, and that no doc states a retired surface in the present tense. |
-| `docs/pricing/RECONCILIATION_NOTE.md` | **Rewritten.** Arithmetic shown instead of asserted; §4 corrected (band, not a single book); §7 reconciled to 270/27. |
+| `docs/pricing/RECONCILIATION_NOTE.md` | **Rewritten.** Arithmetic shown instead of asserted; §4 corrected (band, not a single book); §7 reconciled to 311/39. |
 | `docs/pricing/tier-sensitivity.md` | **Rewritten.** Surface figures refreshed; figures re-anchored to the new model. |
 
 No number outside `docs/pricing/` was modified. The $14,000 / $1.68M / TAM / SAM house
@@ -310,4 +293,4 @@ figures are carried verbatim.
 ---
 
 **Carried verbatim:** blended ACV $14,000 · TAM $1.28B / SAM $282M / SOM $1.68M ·
-tool surface **272/27** (257/26 and 268/26 retired) · COGS $4,280/account.
+tool surface **311/39** (257/26, 268/26, 270/27 and 272/27 retired) · COGS $4,280/account.

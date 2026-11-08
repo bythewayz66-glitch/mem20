@@ -344,3 +344,4 @@ served by the fleet process itself at its root URL.
 - [Universal Health Nervous System monitor](universalhealthnervoussystemz/index.html) — `PYTHONPATH=/opt/mem20 /opt/mem20/.venv/bin/python -m mem20universalhealthnervoussystemz serve --port 8842`
 - [Universal Integration Compiler monitor](universalintegrationcompilerz/index.html) — `PYTHONPATH=/opt/mem20 /opt/mem20/.venv/bin/python -m mem20universalintegrationcompilerz serve --port 8843`
 - [Visual Agent Blackboard monitor](visualagentblackboardz/index.html) — `PYTHONPATH=/opt/mem20 /opt/mem20/.venv/bin/python -m mem20visualagentblackboardz serve --port 8844`
+- [Visual Dataflow Composer monitor](visualdataflowcomposerz/index.html) — `PYTHONPATH=/opt/mem20 /opt/mem20/.venv/bin/python -m mem20visualdataflowcomposerz serve --port 8845`

@@ -1,37 +1,14 @@
-# RM-079 — Visual Dataflow Composer
+# mem20visualdataflowcomposerz — Visual Dataflow Composer
 
-Outcome: Build integrations by wiring live typed streams and transformations
+First-class mem20 subsystem for visual dataflow composition (create_pipeline/add_node/connect/execute/pipeline_health) with **6 peers**, SQLite WAL runtime, CLI, JSON HTTP API, served web cockpit, docs/app monitor, and real MCP tools. Core API preserved.
 
-Breakthrough: Complex automation becomes understandable and debuggable visually
+## Peers (6)
+`mem20visualagentblackboardz`, `mem20autonomousworkcellsz`, `mem20agentoutputcompilerz`, `mem20eventstreamsuperhighwayz`, `mem20capabilitymarketplacez`, `mem20causalroutingbrainz`.
 
-Machine-executable local runtime includes versioned state, SQLite WAL persistence, events, SDK CRUD, resumable/idempotent jobs, retries/timeouts/quotas, recovery, `compose` operation logic, decision explanations, feedback, CLI, HTTP console/API, mesh selection/failover, simulator, benchmark, metrics, and opt-in signature mode.
-
-## Run
-
+## CLI (runnable)
 ```bash
-# CLI help, then exercise the local runtime end to end
-python -m mem20visualdataflowcomposerz --help
-python -m mem20visualdataflowcomposerz simulate
-python -m mem20visualdataflowcomposerz benchmark
-```
-
-## Python API
-
-```python
-from mem20visualdataflowcomposerz.domain import (
-    create_pipeline, add_node, connect, execute, pipeline_health,
-)
-
-pipeline = create_pipeline("etl")
-source = add_node(pipeline, "source", {"url": "feed"})
-transform = add_node(pipeline, "transform", {"expr": "x * 2"})
-connect(pipeline, source["id"], transform["id"])
-print(pipeline_health(pipeline))
-print(execute(pipeline, [1, 2, 3], lambda node, data: {"node": node["type"], "rows": len(data)}))
-```
-
-## Tests
-
-```bash
-PYTHONPATH=/opt/mem20 .venv/bin/python -m pytest mem20visualdataflowcomposerz/mem20visualdataflowcomposerz/tests -q
+cd /opt/mem20
+PYTHONPATH=/opt/mem20 /opt/mem20/.venv/bin/python -m mem20visualdataflowcomposerz status
+PYTHONPATH=/opt/mem20 /opt/mem20/.venv/bin/python -m mem20visualdataflowcomposerz doctor
+PYTHONPATH=/opt/mem20 /opt/mem20/.venv/bin/python -m mem20visualdataflowcomposerz serve --port 8845
 ```

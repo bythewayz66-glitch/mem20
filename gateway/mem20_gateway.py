@@ -31,6 +31,12 @@ MESSAGES_FILE = GATEWAY_DIR / "messages.jsonl"
 # it cannot deliver, so the conformance gate checks the name is present and the
 # subsystem's own tests check the entry point runs.
 SUBSYSTEMS = {
+    "mem20instantappsynthesisz": {
+        "purpose": "Instant App Synthesis (RM-010, #327): compile objectives into capability compositions with 6 peer integrations; legacy domain preserved (#318)",
+        "entry": "python -m mem20instantappsynthesisz simulate",
+        "owner": "mem20-webdev",
+        "wave": 2,
+    },
     "mem20humancapabilitysuperplatformz": {
         "purpose": "Human Capability Super-Platform (RM-220, #326): capability search/assessment/growth with 6 peer integrations; legacy domain preserved (#319)",
         "entry": "python -m mem20humancapabilitysuperplatformz simulate",

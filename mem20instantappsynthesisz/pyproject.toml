@@ -5,7 +5,7 @@ build-backend="setuptools.build_meta"
 [project]
 name="mem20instantappsynthesisz"
 version="1.0.0"
-description="mem20instantappsynthesisz first-class module"
+description="Instant App Synthesis (RM-010): compile objectives into capability compositions with 6 peer integrations; legacy domain preserved (#318)"
 requires-python=">=3.11"
 
 [project.scripts]
@@ -14,4 +14,4 @@ mem20instantappsynthesisz="mem20instantappsynthesisz.runtime:main"
 [tool.setuptools]
 packages=["mem20instantappsynthesisz"]
 [tool.setuptools.package-data]
-mem20instantappsynthesisz=["CAPABILITY.json","roadmap.json"]
+mem20instantappsynthesisz=["CAPABILITY.json","roadmap.json","web/*"]

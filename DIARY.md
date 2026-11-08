@@ -757,3 +757,14 @@ peers: `mem20dynamicskillgraphz, mem20capabilitygapmapperz, mem20relationshipcon
 mem20semanticobjectgraphz, mem20versioncontrollargeassetandrecoverypipelinez,
 mem20deterministicconfigurationgraphz`. `/doctor`, web, root shims, fenced README, docs/PLAN,
 docs/app monitor, gateway/toolchest. 9 tests pass, conformance **7/7**.
+
+---
+## 2026-11-08 - mem20instantappsynthesisz (#327): meaningful rebuild (compat for #318)
+
+Rebuilt RM-010 (Instant App Synthesis, fails 5,6,7, operation_kind=compose) preserving legacy
+domain (**#318 compat**). `compose` provides meaningful app synthesis for spec/objective payloads
+and preserves generic composition. 6 peers: `mem20deterministicconfigurationgraphz,
+mem20semanticobjectgraphz,mem20versioncontrollargeassetandrecoverypipelinez,
+mem20dynamicskillgraphz,mem20relationshipcontextgraphz,mem20capabilitygapmapperz`. `/doctor`,
+web, root shims, fenced README, docs/PLAN, docs/app monitor, gateway/toolchest. 9 tests pass,
+conformance **7/7**.

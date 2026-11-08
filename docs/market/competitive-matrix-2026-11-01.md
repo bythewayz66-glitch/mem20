@@ -282,7 +282,7 @@ lane does not own.
 | 1 | **Two cells have no published source.** ServiceNow AI Control Tower "six figures" and LangMem "$39/seat" (which is LangSmith Plus). | Marked `UNVERIFIED` in the matrix. Not replaced with a different guess. |
 | 2 | **`lie_status` is registered twice** — `mcp/tools/lie_tools.py`, second assignment overwrites the first. 272 assignment sites vs 270 distinct keys. | Recorded. Removing a registration changes the exposed schema; that is a behaviour change and belongs with tests, not a docs refresh. |
 | 3 | **`published/sites/54ed398d-…` still serves the v3 surface** (retired 257/26, pinned `8e2f803`). | Out of scope for this lane — see §8. |
-| 4 | **`published/sites/…/mem20-market-research-v3/gabe-bundle/` retains a retired hostname in its path.** | Known: the `chore(infra)` purge deliberately excluded `published/sites/**`. Content is clean; the path is not. |
+| 4 | **`published/sites/…/mem20-market-research-v3/` retains a retired publish-gate name in one bundle subdirectory's path.** | Known: the `chore(infra)` purge deliberately excluded `published/sites/**` (the immutable archive, integrity-pinned by `published/MANIFEST.tsv`). Content is clean; the archived path is not, and rewriting it would break the manifest. |
 
 ---
 

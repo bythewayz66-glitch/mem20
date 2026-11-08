@@ -5,7 +5,7 @@ build-backend="setuptools.build_meta"
 [project]
 name="mem20intentcompilerz"
 version="1.0.0"
-description="mem20intentcompilerz first-class module"
+description="Intent Compiler (RM-051): translate goals into typed executable graphs with resources/constraints/success conditions; 6 peer integrations; legacy domain preserved"
 requires-python=">=3.11"
 
 [project.scripts]
@@ -14,4 +14,4 @@ mem20intentcompilerz="mem20intentcompilerz.runtime:main"
 [tool.setuptools]
 packages=["mem20intentcompilerz"]
 [tool.setuptools.package-data]
-mem20intentcompilerz=["CAPABILITY.json","roadmap.json"]
+mem20intentcompilerz=["CAPABILITY.json","roadmap.json","web/*"]

@@ -26,6 +26,9 @@ from, or it is quoting a past release as the present one.
 | slide_05.html | TAM/SAM/SOM funnel | docs/finance/inputs.json, README.md:17-19/:80-82 |
 | slide_06.html | SOM arithmetic, ramp, model inputs | docs/finance/inputs.json, README.md:133/:138 |
 | slide_07.html | $14,000 blend + untested tier ladder | docs/finance/inputs.json -> tier_ladder |
-| slide_08.html | Full retrieval table, adversarial 0.000 kept | benchmarks/results/latest.md |
-| slide_09.html | What the 0.000 row means and costs | benchmarks/results/latest.md |
+| slide_08.html | Full retrieval table, adversarial n=60 shown | benchmarks/results/latest.md |
+| slide_09.html | What the rerank inversion means and costs | benchmarks/results/latest.md |
 | slide_10.html | Six self-checks, corpus scale, rerank cost | benchmarks/results/latest.md |
+| slide_11.html | Our own audit findings, two fixed and three open | inputs.json / latest.md / requirements.txt:13 |
+| slide_12.html | The ask: four decisions, each tied to a number | inputs.json / latest.md / latest.json |
+| slide_13.html | Source register: slide to claim to source | the register itself |

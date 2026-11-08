@@ -1,7 +1,14 @@
-# RM-050 — Planetary Batch Fabric
+# mem20planetarybatchfabricz — Planetary Batch Fabric
 
-Outcome: Coordinate very large delay-tolerant workloads across many intermittently available nodes
+First-class mem20 subsystem for planetary batch fabric (submit_job/schedule/job_status/fabric_health/retry) with **6 peers**, SQLite WAL runtime, CLI, JSON HTTP API, served web cockpit, docs/app monitor, and real MCP tools. Core API preserved.
 
-Breakthrough: FreeStack gains a path to massive low-cost distributed computation
+## Peers (6)
+`mem20roamingworkloadschedulerz`, `mem20autonomousworkcellsz`, `mem20eventstreamsuperhighwayz`, `mem20capabilitymarketplacez`, `mem20autonomousrecoverydirectorz`, `mem20agentoutputcompilerz`.
 
-Machine-executable local runtime includes versioned state, SQLite WAL persistence, events, SDK CRUD, resumable/idempotent jobs, retries/timeouts/quotas, recovery, `simulate` operation logic, decision explanations, feedback, CLI, HTTP console/API, mesh selection/failover, simulator, benchmark, metrics, and opt-in signature mode.
+## CLI (runnable)
+```bash
+cd /opt/mem20
+PYTHONPATH=/opt/mem20 /opt/mem20/.venv/bin/python -m mem20planetarybatchfabricz status
+PYTHONPATH=/opt/mem20 /opt/mem20/.venv/bin/python -m mem20planetarybatchfabricz doctor
+PYTHONPATH=/opt/mem20 /opt/mem20/.venv/bin/python -m mem20planetarybatchfabricz serve --port 8856
+```

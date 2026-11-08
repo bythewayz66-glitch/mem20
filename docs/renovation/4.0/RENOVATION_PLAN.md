@@ -216,8 +216,8 @@ These are live facts as of the baseline commit and will bite agents who assume o
 | Blocker | Status | Impact on 4.0 |
 |---|---|---|
 | `mem20` not on PyPI (`mem20`, `mem20-ai`, `mem20oreo` all 404) | open | install stays source-only: `git clone` + `pip install -r requirements.txt`. No README may claim `pip install mem20`. |
-| Sidney host `216.198.115.91` | ports 2222/9900 errno 113, 22/80 timeout | `gabe` publish path unavailable; all 4.0 evidence must be GitHub SHAs, not Sidney URLs. |
-| `mem20.jaysonai.online` | NXDOMAIN on Cloudflare + Google DoH | hostname is being retired; do not wire it into any subsystem. |
+| Retired publish host | unreachable: ports 2222/9900 errno 113, 22/80 timeout | the publish gate is gone; all 4.0 evidence must be GitHub SHAs, not host URLs. |
+| Retired `jaysonai.online` zone | NXDOMAIN on Cloudflare + Google DoH | the zone is retired; do not wire it into any subsystem. |
 | `mem20.org` / `.store` / `.info` | 404 (GitHub Pages allows one custom domain; `docs/CNAME` = `mem20.com`) | only `mem20.com` serves. |
 | Tag `v3.0.0` | 93+ commits behind main | superseded by `v3.1.2`; 4.0 will cut its own tag. |
 | Benchmark coverage | only 2 of 7 retrieval modes scored; adversarial hit-rate 0.000 | Benchmark Builder owns closing this in wave 2. |
@@ -258,16 +258,18 @@ mem20 4.0 ships when **all** of the following hold, each backed by a check run a
 3. Every subsystem's branch merged to `main` via PR; zero unmerged 4.0 branches.
 4. `VERSION` = `4.0.0`, `CHANGELOG.md` has a 4.0.0 section, tag `v4.0.0` cut at the release commit.
 5. `docs/renovation/4.0/SUBSTRATE.md` public APIs still match what subsystems import (no drift).
-6. Root `README.md` tool count reconciled to the measured value (house number 257/26 is stale;
-   measured 270/27 as of 2026-10-31 — Server Builder owns the reconciliation).
+6. Root `README.md` tool count reconciled to the measured value (house number is **311 tools / 39 domains**
+   as of 2026-11-07, read from `docs/surface.json`; the retired 257/26 and 270/27 bands must not
+   reappear — Server Builder owns the reconciliation).
 
 ---
 
 ## 9. House numbers (carried, for consistency in all 4.0 copy)
 
-- **257 tools across 26 domains** — house number. Measured value is **270 tools / 27 domains**; the
-  discrepancy is a known open item owned by Server Builder. Do not silently change one without the
-  other.
+- **311 tools across 39 domains** — house number as of 2026-11-07, read from `docs/surface.json`
+  (generated from the live JSON-RPC `tools/list` response) and cross-checked against the AST
+  catalog with 0 symmetric difference. The retired bands (257/26, 268/26, 270/27, 306/38) must not
+  reappear in 4.0 copy; `docs/TOOL-DOMAINS.md` is the authoritative mapping.
 - **TAM $1.28B / SAM $282M / SOM $1.68M**
 - **Blended ACV $14,000**
 

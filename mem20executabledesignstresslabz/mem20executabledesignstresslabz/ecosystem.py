@@ -1,10 +1,22 @@
 """Six unique peers for Executable Design Stress Lab (#308), different from #300-#307."""
 from __future__ import annotations
-from typing import Any, Dict, Mapping, Sequence
 
-def _safe(name, fn):
-    try: return {"ok": True, "subsystem": name, **(fn() or {})}
-    except Exception as e: return {"ok": False, "subsystem": name, "error": f"{type(e).__name__}: {e}"}
+import concurrent.futures
+from typing import Any, Callable, Dict, Mapping, Sequence
+
+_PEER_TIMEOUT_S = 0.75
+_EXEC = concurrent.futures.ThreadPoolExecutor(max_workers=6, thread_name_prefix="dsl-peer")
+
+
+def _safe(name: str, fn: Callable[[], Dict[str, Any]]):
+    try:
+        fut = _EXEC.submit(fn)
+        return {"ok": True, "subsystem": name, **(fut.result(timeout=_PEER_TIMEOUT_S) or {})}
+    except concurrent.futures.TimeoutError:
+        fut.cancel()
+        return {"ok": False, "subsystem": name, "error": f"TimeoutError: peer call timed out after {_PEER_TIMEOUT_S}s"}
+    except Exception as e:
+        return {"ok": False, "subsystem": name, "error": f"{type(e).__name__}: {e}"}
 
 # 1) mem20architecturesimulationsandboxz - load/chaos/bottleneck simulation
 def architecture_sim(topology: Mapping[str,Any]=None, rps: float=50) -> Dict[str,Any]:

@@ -174,32 +174,43 @@ class Engine:
         if k=='progression':
             xp=max(0,float(p.get('xp',0))); thresholds=p.get('thresholds') or [100,250,500,1000]; level=sum(xp>=float(t) for t in thresholds)
             out={'xp':xp,'level':level,'next_threshold':thresholds[level] if level<len(thresholds) else None}
-            wants_balance = bool(p.get('balance') or p.get('combat') or p.get('economy') or p.get('scenarios') or p.get('signals') or p.get('enrich') or p.get('peers') or p.get('win_rate') is not None or p.get('dps') is not None or p.get('ttk') is not None)
+            wants_balance = bool(p.get('balance') or p.get('combat') or p.get('economy') or p.get('scenarios') or p.get('signals') or p.get('enrich') or p.get('peers') or p.get('monte_carlo') or p.get('runs') or p.get('win_rate') is not None or p.get('dps') is not None or p.get('ttk') is not None)
             if wants_balance:
                 try:
                     from . import domain as _dom, ecosystem as _eco
-                    combat = {}
-                    if 'damage' in p and 'attack_speed' in p:
-                        dv = _dom.dps(float(p.get('damage',0)), float(p.get('attack_speed',1)))
-                        combat['dps'] = dv
-                        if 'health' in p: combat['ttk'] = _dom.ttk(float(p.get('health',100)), dv)
-                    if 'income' in p or 'expenses' in p:
-                        combat['economy_balance'] = _dom.economy_balance(float(p.get('income',0)), float(p.get('expenses',0)))
-                    if isinstance(p.get('simulations'), list):
-                        combat['win_rate'] = _dom.win_rate(p.get('simulations') or [])
-                    if isinstance(p.get('stats'), dict) and isinstance(p.get('targets'), dict):
-                        combat['balance_check'] = _dom.balance_check(p['stats'], p['targets'])
-                    combat['difficulty_curve'] = _dom.difficulty_curve(int(p.get('levels', 5)))
-                    out.update({'balance': combat, 'signals': {
-                        'skill_progression': _eco.skill_progression(p),
-                        'player_motivation': _eco.player_motivation(p),
-                        'level_architecture': _eco.level_architecture(p),
-                        'community_challenge': _eco.community_challenge(p),
-                        'skill_transfer': _eco.skill_transfer(p),
-                        'impact_rewards': _eco.impact_rewards(p),
-                    }})
+                    combat = {
+                        'dps': _dom.dps(float(p.get('damage',10)), float(p.get('attack_speed',1))),
+                        'ttk': _dom.ttk(float(p.get('health',100)), _dom.dps(float(p.get('damage',10)), float(p.get('attack_speed',1)))),
+                        'economy': _dom.economy_balance(float(p.get('income',0)), float(p.get('expenses',0))),
+                        'difficulty_curve': _dom.difficulty_curve(int(p.get('levels',3)), float(p.get('curve_base',1.0)), float(p.get('curve_growth',1.12))),
+                        'balance_check': _dom.balance_check(p.get('stats') or {'xp':xp,'level':level}, p.get('targets') or {'xp':xp,'level':level}),
+                        'win_rate': _dom.win_rate(p.get('simulations') or []),
+                    }
+                    if p.get('monte_carlo') or p.get('runs') or p.get('strategies'):
+                        combat['monte_carlo'] = _dom.monte_carlo_balance(p.get('config'), p.get('strategies'), runs=int(p.get('runs') or 100), seed=int(p.get('seed') or 0))
+                    import concurrent.futures as _cf
+                    _pool=_cf.ThreadPoolExecutor(max_workers=6,thread_name_prefix='gbs')
+                    try:
+                        _futs={
+                            'skill_progression': _pool.submit(_eco.skill_progression, p),
+                            'player_motivation': _pool.submit(_eco.player_motivation, p),
+                            'level_architecture': _pool.submit(_eco.level_architecture, p),
+                            'community_challenge': _pool.submit(_eco.community_challenge, p),
+                            'skill_transfer': _pool.submit(_eco.skill_transfer, p),
+                            'impact_rewards': _pool.submit(_eco.impact_rewards, p),
+                        }
+                        _done,_=_cf.wait(_futs.values(),timeout=2.0)
+                        _signals={}
+                        for _k,_f in _futs.items():
+                            if _f in _done:
+                                try: _signals[_k]=_f.result()
+                                except Exception as _e: _signals[_k]={'ok':False,'subsystem':_k,'error':f"{type(_e).__name__}: {_e}"}
+                            else: _signals[_k]={'ok':False,'subsystem':_k,'error':'TimeoutError: signal budget exceeded'}
+                    finally:
+                        _pool.shutdown(wait=False,cancel_futures=True)
+                    out.update({'balance': combat, 'signals': _signals})
                 except Exception as e:
-                    out['balance_error'] = f"{type(e).__name__}: {e}"
+                    out['balance_error']=f"{type(e).__name__}: {e}"
             return out
         if k=='qa':
             tests=p.get('tests') or [];failed=[t for t in tests if isinstance(t,dict) and not t.get('pass',False)];return {'total':len(tests),'failed':len(failed),'release_blocked':bool(failed),'failures':failed[:20]}

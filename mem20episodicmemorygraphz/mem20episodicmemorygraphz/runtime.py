@@ -52,10 +52,10 @@ class H(BaseHTTPRequestHandler):
     def do_POST(self):
         try:
             p=urlparse(self.path).path.rstrip("/"); b=self._body() if int(self.headers.get("Content-Length","0") or 0) else {}
-            if p=="/api/episodes": return self._send(200,self.svc.create_episode(str(b.get("title") or ""), b.get("events"), b.get("entities"), b.get("metadata")))
-            if p=="/api/events/add" or p=="/api/episode/event": return self._send(200,self.svc.add_event(str(b.get("episode_id") or b.get("id") or ""), dict(b.get("event") or b)))
+            if p=="/api/episodes": return self._send(200,self.svc.create_episode(str(b.get("title") or ""), b.get("events"), b.get("entities"), b.get("metadata"), episode_id=b.get("episode_id") or b.get("id"), idempotency_key=b.get("idempotency_key")))
+            if p=="/api/events/add" or p=="/api/episode/event": return self._send(200,self.svc.add_event(str(b.get("episode_id") or b.get("id") or ""), dict(b.get("event") or b), expected_version=b.get("expected_version")))
             if p=="/api/link": return self._send(200,self.svc.link(str(b.get("src") or ""), str(b.get("dst") or ""), str(b.get("relation") or "follows")))
-            if p in ("/api/recall","/recall"): return self._send(200,self.svc.recall(str(b.get("query") or b.get("q") or ""), int(b.get("limit") or 50)))
+            if p in ("/api/recall","/recall"): return self._send(200,self.svc.recall(str(b.get("query") or b.get("q") or ""), int(b.get("limit") or 50), since=b.get("since"), until=b.get("until"), entity=b.get("entity"), expand_graph=bool(b.get("expand_graph"))))
             if p in ("/api/query","/query"): return self._send(200,self.svc.query(b))
             if p=="/api/forget": return self._send(200,self.svc.forget(float(b.get("older_than") or b.get("seconds") or 0)))
             if p=="/api/snapshot": return self._send(200,self.svc.snapshot(str(b.get("label") or "")))

@@ -122,25 +122,52 @@ class Engine:
             steps=max(1,min(100,int(p.get('steps',3)))); pred=[ym+slope*((n+i)-xm) for i in range(steps)]
             out={'slope':slope,'forecast':pred,'confidence':max(.2,min(.95,1/(1+(statistics.pstdev(series) if n>1 else 0))))}
             # Real digital twin analysis + 6 peer signals for explicit twin requests (keeps 5s simulator budget).
-            wants_twin = bool(p.get('process') or p.get('twin') or p.get('digital_twin') or p.get('real_state') or p.get('actions') or p.get('enrich_signals'))
+            wants_twin = bool(p.get('process') or p.get('twin') or p.get('digital_twin') or p.get('real_state') or p.get('actions') or p.get('enrich_signals') or p.get('telemetry') or p.get('observations') or p.get('twin_id'))
             if wants_twin:
                 try:
                     from . import domain as _dom, ecosystem as _eco
-                    proc=p.get('process') or {'id':p.get('id','workflow'),'state':p.get('state') or {},'metrics':p.get('metrics') or {'success_rate':out['confidence']}}
+                    proc=p.get('process') or {'id':p.get('twin_id') or p.get('id','workflow'),'state':p.get('state') or {},'metrics':p.get('metrics') or {'success_rate':out['confidence']}}
                     twin=_dom.create_twin(proc)
                     if p.get('real_state'): twin=_dom.sync_twin(twin, dict(p.get('real_state') or {}))
                     actions=p.get('actions') or [{'name':'advance','effect':{'progress':1},'impact':0.05}]
                     sim=_dom.simulate(twin, actions)
                     prediction=_dom.predict_outcome(twin, actions[0] if actions else {'impact':0})
                     dr=_dom.drift(twin, dict(p.get('real_state') or twin.get('state') or {}))
-                    out.update({'twin':{'id':twin.get('id'),'state':twin.get('state')},'simulation':sim,'predicted_outcome':prediction,'drift':dr,'signals':{
-                        'workflow_twin':_eco.workflow_twin({'id':proc.get('id','u1')}),
-                        'integration_twin':_eco.integration_twin({'id':proc.get('id','sys'),'state':twin.get('state')}, p.get('real_state') or twin.get('state') or {}),
-                        'time_machine':_eco.time_machine(twin.get('state') or {}),
-                        'counterfactual_sim':_eco.counterfactual_sim({'state':twin.get('state') or {},'history':[]}),
-                        'customer_twin':_eco.customer_twin({'id':str(proc.get('id','c1')),'usage':len(actions)}),
-                        'event_lattice':_eco.event_lattice([{'type':'twin.sync','id':proc.get('id')}]),
-                    }})
+                    durable = None
+                    if hasattr(_dom, 'DurableTelemetryTwin') and (p.get('persist_twin') or p.get('telemetry') or p.get('observations') or p.get('twin_id') or p.get('durable')):
+                        twin_db = str(p.get('twin_db') or Path(self.store.path).with_suffix('.twins.sqlite3'))
+                        mgr = _dom.DurableTelemetryTwin(twin_db)
+                        tid = str(p.get('twin_id') or proc.get('id') or 'workflow')
+                        mgr.register(proc, twin_id=tid)
+                        if p.get('real_state'):
+                            mgr.ingest(tid, {'observation_id': p.get('observation_id') or f"sync-{idem}", 'event_ts': float(p.get('event_ts') or time.time()), 'source_seq': p.get('source_seq', -1), 'kind': 'sync', 'state': dict(p.get('real_state') or {})}, stale_after_s=p.get('stale_after_s'))
+                        for i, obs in enumerate((p.get('telemetry') or p.get('observations') or [])):
+                            if isinstance(obs, dict):
+                                mgr.ingest(tid, obs, stale_after_s=p.get('stale_after_s'))
+                        mgr.predict(tid, actions=actions, action=actions[0] if actions else None)
+                        durable = {'db': twin_db, **mgr.status(tid), 'drift': mgr.drift_report(tid), 'replay_tail': mgr.replay(tid, since_ts=float(p.get('replay_since_ts') or 0))}
+                    import concurrent.futures as _cf
+                    _pool = _cf.ThreadPoolExecutor(max_workers=6, thread_name_prefix="edt-fc")
+                    try:
+                        _futs = {
+                            'workflow_twin': _pool.submit(_eco.workflow_twin, {'id':proc.get('id','u1')}),
+                            'integration_twin': _pool.submit(_eco.integration_twin, {'id':proc.get('id','sys'),'state':twin.get('state')}, p.get('real_state') or twin.get('state') or {}),
+                            'time_machine': _pool.submit(_eco.time_machine, twin.get('state') or {}),
+                            'counterfactual_sim': _pool.submit(_eco.counterfactual_sim, {'state':twin.get('state') or {},'history':[]}),
+                            'customer_twin': _pool.submit(_eco.customer_twin, {'id':str(proc.get('id','c1')),'usage':len(actions)}),
+                            'event_lattice': _pool.submit(_eco.event_lattice, [{'type':'twin.sync','id':proc.get('id')}]),
+                        }
+                        _done, _ = _cf.wait(_futs.values(), timeout=2.0)
+                        _signals = {}
+                        for _k, _f in _futs.items():
+                            if _f in _done:
+                                try: _signals[_k] = _f.result()
+                                except Exception as _e: _signals[_k] = {'ok': False, 'subsystem': _k, 'error': f"{type(_e).__name__}: {_e}"}
+                            else:
+                                _signals[_k] = {'ok': False, 'subsystem': _k, 'error': 'TimeoutError: signal budget exceeded'}
+                    finally:
+                        _pool.shutdown(wait=False, cancel_futures=True)
+                    out.update({'twin':{'id':twin.get('id'),'state':twin.get('state'),'version':twin.get('version')},'simulation':sim,'predicted_outcome':prediction,'drift':dr,'durable_twin':durable,'signals':_signals})
                 except Exception as e:
                     out['twin_analysis_error']=f"{type(e).__name__}: {e}"
             return out

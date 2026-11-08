@@ -1,64 +1,95 @@
 """Six unique peers for Execution Digital Twin (#310), different from #300-#309."""
 from __future__ import annotations
-from typing import Any, Dict, Mapping, Sequence
 
-def _safe(name, fn):
-    try: return {"ok": True, "subsystem": name, **(fn() or {})}
-    except Exception as e: return {"ok": False, "subsystem": name, "error": f"{type(e).__name__}: {e}"}
+import concurrent.futures
+from typing import Any, Callable, Dict, Mapping, Sequence
 
-# 1) mem20personalworkflowtwinz
-def workflow_twin(user: Mapping[str, Any] = None) -> Dict[str, Any]:
+_PEER_TIMEOUT_S = 1.5
+_EXEC = concurrent.futures.ThreadPoolExecutor(max_workers=6, thread_name_prefix="edt-peer")
+
+
+def _safe(name: str, fn: Callable[[], Dict[str, Any]]):
+    try:
+        fut = _EXEC.submit(fn)
+        return {"ok": True, "subsystem": name, **(fut.result(timeout=_PEER_TIMEOUT_S) or {})}
+    except concurrent.futures.TimeoutError:
+        fut.cancel()
+        return {"ok": False, "subsystem": name, "error": f"TimeoutError: peer call timed out after {_PEER_TIMEOUT_S}s"}
+    except Exception as e:
+        return {"ok": False, "subsystem": name, "error": f"{type(e).__name__}: {e}"}
+
+
+# 1) mem20personalworkflowtwinz - workflow twin observation
+def workflow_twin(process: Mapping[str, Any] = None) -> Dict[str, Any]:
     def run():
-        from mem20personalworkflowtwinz.domain import create_twin, efficiency_score
-        twin = create_twin(dict(user or {"id": "u1", "name": "exec"}), workflows=[{"id": "w1"}])
-        return {"efficiency": efficiency_score(twin)}
+        from mem20personalworkflowtwinz.domain import create_twin, observe, suggest_improvements, efficiency_score, twin_health
+        t = create_twin(str((process or {}).get('id', 'u1')))
+        observe(t, 'edit'); observe(t, 'edit'); observe(t, 'build')
+        return {"improvements": suggest_improvements(t), "efficiency": efficiency_score(t), "health": twin_health(t)}
     return _safe("mem20personalworkflowtwinz", run)
 
-# 2) mem20integrationdigitaltwinz
-def integration_twin(system: Mapping[str, Any] = None, real_state: Mapping[str, Any] = None) -> Dict[str, Any]:
+
+# 2) mem20integrationdigitaltwinz - integration/system twin
+def integration_twin(sys: Mapping[str, Any] = None, state: Mapping[str, Any] = None) -> Dict[str, Any]:
     def run():
-        from mem20integrationdigitaltwinz.domain import create_twin, sync, drift
-        twin = sync(create_twin(dict(system or {"id": "sys"})), dict(real_state or {"queue": 1}))
-        return {"drift": drift(twin, dict(real_state or {"queue": 1}))}
+        from mem20integrationdigitaltwinz.domain import create_twin, sync, simulate, drift, health
+        t = create_twin(str((sys or {}).get('id', 'sys')), dict((sys or {}).get('state') or {'q': 0}))
+        sync(t, dict(state or {'q': 1, 'err': 0}))
+        sim = simulate(t, [{'name': 'load', 'delta': {'q': 2}}])
+        dr = drift(t, {'q': 2, 'err': 1})
+        return {"simulate": sim, "drift": dr, "health": health([t])}
     return _safe("mem20integrationdigitaltwinz", run)
 
-# 3) mem20memorytimemachinez
+
+# 3) mem20memorytimemachinez - snapshot/replay/time travel
 def time_machine(state: Mapping[str, Any] = None) -> Dict[str, Any]:
     def run():
-        from mem20memorytimemachinez.domain import checkpoint_series, diff
-        snaps = checkpoint_series(dict(state or {"x": 1}), [{"x": 2}])
-        return {"snapshots": len(snaps), "diff": diff(snaps[0], snaps[-1]) if len(snaps) > 1 else {}}
+        from mem20memorytimemachinez.domain import rewind, replay, diff, timeline, checkpoint_series
+        snaps = [{'id': 's1', 't': 1, 'state': {'x': 1}}, {'id': 's2', 't': 2, 'state': dict(state or {'x': 2})}, {'id': 's3', 't': 3, 'state': {'x': 3}}]
+        return {"rewind": rewind(snaps, 2), "diff": diff(snaps[0]['state'], snaps[1]['state']), "timeline": timeline(snaps), "checkpoints": checkpoint_series(snaps, 2), "replay": replay(snaps, 1, 3)}
     return _safe("mem20memorytimemachinez", run)
 
-# 4) mem20counterfactualmemorysimulatorz
-def counterfactual_sim(memory: Mapping[str, Any] = None) -> Dict[str, Any]:
+
+# 4) mem20counterfactualmemorysimulatorz - counterfactual outcomes
+def counterfactual_sim(model: Mapping[str, Any] = None) -> Dict[str, Any]:
     def run():
-        from mem20counterfactualmemorysimulatorz.domain import counterfactual, outcome_probability
-        mem = dict(memory or {"state": {"x": 1}})
-        return {"counterfactual": counterfactual(mem, {"action": "retry"}), "outcome_probability": outcome_probability(mem, {"type": "advance"})}
+        from mem20counterfactualmemorysimulatorz.domain import branch, counterfactual, compare, outcome_probability
+        m = dict(model or {'state': {'rev': 10}, 'history': []})
+        alt = branch(m, {'rev': 12})
+        cf = counterfactual(m, {'rev': 15})
+        return {"branch": alt, "counterfactual": cf, "compare": compare(m, cf), "outcome_probability": outcome_probability(cf, 'rev')}
     return _safe("mem20counterfactualmemorysimulatorz", run)
 
-# 5) mem20customerdigitaltwinlabz
+
+# 5) mem20customerdigitaltwinlabz - behavior/churn/recommend
 def customer_twin(customer: Mapping[str, Any] = None) -> Dict[str, Any]:
     def run():
-        from mem20customerdigitaltwinlabz.domain import build_twin, predict_churn
-        twin = build_twin(dict(customer or {"id": "c1", "usage": 5}))
-        return {"predict_churn": predict_churn(twin)}
+        from mem20customerdigitaltwinlabz.domain import build_twin, simulate_behavior, predict_churn, recommend_action
+        t = build_twin(str((customer or {}).get('id', 'c1')), dict(customer or {'usage': 5}))
+        return {"behavior": simulate_behavior(t, {'days': 7}), "churn": predict_churn(t), "recommend": recommend_action(t)}
     return _safe("mem20customerdigitaltwinlabz", run)
 
-# 6) mem20crossruntimeeventlatticez
+
+# 6) mem20crossruntimeeventlatticez - causal event lattice
 def event_lattice(events: Sequence[Mapping[str, Any]] = None) -> Dict[str, Any]:
     def run():
-        from mem20crossruntimeeventlatticez.domain import emit, causal_link
-        e1 = emit("twin.sync", {"id": "p1"}, source="twin")
-        e2 = emit("twin.predict", {"id": "p1"}, source="twin")
-        return {"causal_link": causal_link(e1 if isinstance(e1, dict) else {"id": "e1"}, e2 if isinstance(e2, dict) else {"id": "e2"})}
+        from mem20crossruntimeeventlatticez.domain import emit, order_events, causal_link, lattice_merge, filter_by_type
+        lat = {'events': [], 'nodes': {}, 'edges': []}
+        for e in (events or [{'type': 'sync', 'ts': 1}, {'type': 'predict', 'ts': 2}]):
+            emit(lat, dict(e))
+        causal_link(lat, 'sync', 'predict')
+        return {"ordered": order_events(lat.get('events', [])), "filtered": filter_by_type(lat.get('events', []), 'sync'), "merged_count": len((lattice_merge(lat, {'events': [{'type': 'audit', 'ts': 3}], 'nodes': {}, 'edges': []}) or {}).get('events', []))}
     return _safe("mem20crossruntimeeventlatticez", run)
+
 
 def probe() -> Dict[str, Any]:
     checks = {
-        "workflow_twin": workflow_twin(), "integration_twin": integration_twin(), "time_machine": time_machine(),
-        "counterfactual_sim": counterfactual_sim(), "customer_twin": customer_twin(), "event_lattice": event_lattice(),
+        "workflow_twin": workflow_twin(),
+        "integration_twin": integration_twin(),
+        "time_machine": time_machine(),
+        "counterfactual_sim": counterfactual_sim(),
+        "customer_twin": customer_twin(),
+        "event_lattice": event_lattice(),
     }
     reachable = [k for k, v in checks.items() if v.get("ok")]
     return {"ok": len(reachable) == 6, "count": len(reachable), "reachable": reachable, "checks": checks}

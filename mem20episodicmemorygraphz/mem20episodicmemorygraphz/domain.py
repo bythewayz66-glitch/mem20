@@ -7,15 +7,30 @@ from __future__ import annotations
 
 import hashlib
 import time
+import uuid
 from dataclasses import dataclass, field
 from typing import Any, Dict, Iterable, List, Mapping, Optional, Sequence, Set
 
 
+def _episode_id(title: Any, episode_id: Any = None, idempotency_key: Any = None) -> str:
+    if episode_id is not None and str(episode_id).strip():
+        return str(episode_id).strip()
+    if idempotency_key is not None and str(idempotency_key).strip():
+        return hashlib.sha256(f"episode-idem:{idempotency_key}".encode()).hexdigest()[:24]
+    return uuid.uuid4().hex
+
+
 # ---- legacy-compatible API ----
 
-def create_episode(title, events=None):
-    return {"id": hashlib.sha256(str(title).encode()).hexdigest()[:8], "title": title,
-            "events": list(events or []), "created_at": time.time(), "entities": [], "outcomes": []}
+def create_episode(title, events=None, episode_id=None, idempotency_key=None):
+    return {
+        "id": _episode_id(title, episode_id=episode_id, idempotency_key=idempotency_key),
+        "title": str(title),
+        "events": list(events or []),
+        "created_at": time.time(),
+        "entities": [],
+        "outcomes": [],
+    }
 
 
 def add_event(ep, event):

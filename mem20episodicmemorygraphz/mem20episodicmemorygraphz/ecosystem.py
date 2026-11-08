@@ -1,10 +1,29 @@
 """Six unique peers for episodic memory graph (#306), different from #300-#305."""
 from __future__ import annotations
-from typing import Any, Dict, Mapping, Sequence
 
-def _safe(name, fn):
-    try: return {"ok": True, "subsystem": name, **(fn() or {})}
-    except Exception as e: return {"ok": False, "subsystem": name, "error": f"{type(e).__name__}: {e}"}
+import concurrent.futures
+from typing import Any, Callable, Dict, Mapping, Sequence
+
+_PEER_TIMEOUT_S = 8.0
+_EXEC = concurrent.futures.ThreadPoolExecutor(max_workers=6, thread_name_prefix="emg-peer")
+
+
+def _call_with_timeout(fn: Callable[[], Any], timeout: float = _PEER_TIMEOUT_S):
+    fut = _EXEC.submit(fn)
+    try:
+        return fut.result(timeout=timeout)
+    except concurrent.futures.TimeoutError as e:
+        fut.cancel()
+        raise TimeoutError(f"peer call timed out after {timeout}s") from e
+
+
+def _safe(name: str, fn: Callable[[], Dict[str, Any]]):
+    try:
+        result = _call_with_timeout(fn)
+        return {"ok": True, "subsystem": name, **(result or {})}
+    except Exception as e:
+        return {"ok": False, "subsystem": name, "error": f"{type(e).__name__}: {e}"}
+
 
 # 1) mem20dynamicskillgraphz - skill/proficiency graph over episode outcomes/actions
 def skill_graph(episodes: Sequence[Mapping[str, Any]] = None) -> Dict[str, Any]:
@@ -25,6 +44,7 @@ def skill_graph(episodes: Sequence[Mapping[str, Any]] = None) -> Dict[str, Any]:
         return {"target": target, "learning_path": path, "skill_gap": gap, "stats": stats}
     return _safe("mem20dynamicskillgraphz", run)
 
+
 # 2) mem20reversibleexecutiongraphz - reversible episode/replay graph
 def reversible_replay(events: Sequence[Mapping[str, Any]] = None) -> Dict[str, Any]:
     def run():
@@ -37,6 +57,7 @@ def reversible_replay(events: Sequence[Mapping[str, Any]] = None) -> Dict[str, A
         health = graph_health(g)
         return {"undo": u, "redo": r, "health": health}
     return _safe("mem20reversibleexecutiongraphz", run)
+
 
 # 3) mem20mixedinitiativefocusenginez - focus/attention for recall lens
 def recall_focus(context: Mapping[str, Any] = None, options: Sequence[Mapping[str, Any]] = None) -> Dict[str, Any]:
@@ -52,11 +73,11 @@ def recall_focus(context: Mapping[str, Any] = None, options: Sequence[Mapping[st
         return {"focus_score": score, "suggestions": sugg, "take_over": take, "blend": blended, "health": health}
     return _safe("mem20mixedinitiativefocusenginez", run)
 
+
 # 4) mem20spatialcommanduniversez - spatial/place indexing for episodes
 def spatial_places(entities: Sequence[Mapping[str, Any]] = None) -> Dict[str, Any]:
     def run():
         from mem20spatialcommanduniversez.domain import create_region, add_entity, distance, in_region, spatial_health
-        # bounds as [(min,max), (min,max)] per API contract
         region = create_region("episode-space", [(0, 100), (0, 100)])
         ents = [dict(e) for e in (entities or [{"id": "place:a", "kind": "place"}, {"id": "place:b", "kind": "place"}])]
         for i, e in enumerate(ents):
@@ -66,6 +87,7 @@ def spatial_places(entities: Sequence[Mapping[str, Any]] = None) -> Dict[str, An
         health = spatial_health([region])
         return {"region": str(region.get("name") if isinstance(region, dict) else "episode-space"), "distance_sample": d, "in_region": inside, "health": health}
     return _safe("mem20spatialcommanduniversez", run)
+
 
 # 5) mem20crossproductloyaltygraphz - relationship centrality/recommendations
 def relationship_graph(episodes: Sequence[Mapping[str, Any]] = None) -> Dict[str, Any]:
@@ -87,6 +109,7 @@ def relationship_graph(episodes: Sequence[Mapping[str, Any]] = None) -> Dict[str
         return {"nodes": len(g), "degree_sample": deg, "centrality_keys": list(cent.keys())[:5] if isinstance(cent, dict) else None, "recommendations": rec, "loyalty": loy}
     return _safe("mem20crossproductloyaltygraphz", run)
 
+
 # 6) mem20deterministicconfigurationgraphz - deterministic relationship/config resolution
 def deterministic_links(episodes: Sequence[Mapping[str, Any]] = None) -> Dict[str, Any]:
     def run():
@@ -99,11 +122,14 @@ def deterministic_links(episodes: Sequence[Mapping[str, Any]] = None) -> Dict[st
         valid = validate(g)
         resolved = None
         node_id = next(iter((g.get("nodes") or {"a": {}}).keys()))
-        try: resolved = resolve(g, node_id)
-        except Exception as e: resolved = {"error": str(e)}
+        try:
+            resolved = resolve(g, node_id)
+        except Exception as e:
+            resolved = {"error": str(e)}
         diff = diff_configs({"nodes": 1}, {"nodes": 2})
         return {"valid": valid, "resolved_sample": resolved, "diff": diff}
     return _safe("mem20deterministicconfigurationgraphz", run)
+
 
 def probe() -> Dict[str, Any]:
     checks = {
@@ -114,5 +140,5 @@ def probe() -> Dict[str, Any]:
         "relationship_graph": relationship_graph(),
         "deterministic_config": deterministic_links(),
     }
-    reachable = [k for k,v in checks.items() if v.get("ok")]
-    return {"ok": len(reachable)==6, "count": len(reachable), "reachable": reachable, "checks": checks}
+    reachable = [k for k, v in checks.items() if v.get("ok")]
+    return {"ok": len(reachable) == 6, "count": len(reachable), "reachable": reachable, "checks": checks}

@@ -178,19 +178,46 @@ class Engine:
             out={'total':len(tests),'failed':len(failed),'release_blocked':bool(failed),'failures':failed[:20]}
             try:
                 from . import domain as _dom, ecosystem as _eco
-                system=p.get('system') or {'base_load':100,'capacity':200,'redundancy':1,'components':[{'id':'api','load':60},{'id':'db','load':90}]}
+                system=p.get('system') or {'base_load':100,'capacity':200,'redundancy':1,'components':[{'id':'api','load':60,'capacity':140,'dependencies':['db']},{'id':'db','load':90,'capacity':160}]}
                 mult=float(p.get('load_multiplier',2.0)); dur=max(5,min(300,int(p.get('duration_s',60))))
-                st=_dom.stress_test(system, mult, dur)
-                res=_dom.resilience_score(st); bn=_dom.bottleneck_analysis(system); rec=_dom.recovery_time(system, str(p.get('failure_type','crash')))
-                verdict=_dom.design_verdict(st, float(p.get('threshold',0.9)))
-                out.update({'stress_test':st,'resilience':res,'bottlenecks':bn,'recovery_time_s':rec,'design_verdict':verdict,'signals':{
-                    'architecture_sim':_eco.architecture_sim({'nodes':[{'id':c.get('id','n'),'capacity_rps':max(10,int(c.get('load',50))*2)} for c in (system.get('components') or [{'id':'api','load':50}])]}, rps=float(system.get('base_load',100))),
-                    'adversarial_qa':_eco.adversarial_qa({'feature':'design-stress','system':system}),
-                    'health_nervous':_eco.health_nervous(),
-                    'synthetic_eval':_eco.synthetic_eval({'id':'design','resilience':res}),
-                    'experiment_runs':_eco.experiment_runs({'load':mult}),
-                    'intent_validate':_eco.intent_validate(str(p.get('goal') or p.get('design_intent') or 'stress test design under load')),
-                }})
+                seed=int(p.get('seed', 0) or 0)
+                failures=p.get('failures')
+                cohorts=p.get('player_cohorts')
+                production=p.get('production_profiles')
+                if hasattr(_dom, 'run_design_graph_simulation'):
+                    sim=_dom.run_design_graph_simulation(system, load_multiplier=mult, duration_s=dur, step_s=max(1,int(p.get('step_s',5))), seed=seed, cohorts=cohorts, production=production, failures=failures, threshold=float(p.get('threshold',0.9)))
+                    st=[{"t":r["t"],"load":r["workload"]["total_load"],"utilization":max((c.get("utilization",0) for c in r["components"].values()), default=0), "ok":r["ok"]} for r in sim.get("timeline",[])]
+                    res=sim.get('resilience', _dom.resilience_score(st))
+                    bn=sim.get('bottlenecks') or _dom.bottleneck_analysis(system)
+                    rec=_dom.recovery_time(system, str(p.get('failure_type','crash')))
+                    verdict=sim.get('design_verdict') or _dom.design_verdict(st, float(p.get('threshold',0.9)))
+                    out.update({'stress_test':st,'resilience':res,'bottlenecks':bn,'recovery_time_s':rec,'design_verdict':verdict,'simulation':sim})
+                else:
+                    st=_dom.stress_test(system, mult, dur)
+                    res=_dom.resilience_score(st); bn=_dom.bottleneck_analysis(system); rec=_dom.recovery_time(system, str(p.get('failure_type','crash')))
+                    verdict=_dom.design_verdict(st, float(p.get('threshold',0.9)))
+                    out.update({'stress_test':st,'resilience':res,'bottlenecks':bn,'recovery_time_s':rec,'design_verdict':verdict})
+                import concurrent.futures as _cf
+                _pool = _cf.ThreadPoolExecutor(max_workers=6, thread_name_prefix="dsl-qa")
+                try:
+                    _futs = {
+                        'architecture_sim': _pool.submit(_eco.architecture_sim, {'nodes':[{'id':c.get('id','n'),'capacity_rps':max(10,int(c.get('capacity',c.get('load',50))*2 or 100))} for c in (system.get('components') or [{'id':'api','load':50}])], 'edges':system.get('dependencies') or system.get('edges') or []}, float(system.get('base_load',100))*mult),
+                        'adversarial_qa': _pool.submit(_eco.adversarial_qa, {'feature':'design-stress','system':system,'seed':seed}),
+                        'health_nervous': _pool.submit(_eco.health_nervous),
+                        'synthetic_eval': _pool.submit(_eco.synthetic_eval, {'id':'design','resilience':res}),
+                        'experiment_runs': _pool.submit(_eco.experiment_runs, {'load':mult,'seed':seed}),
+                        'intent_validate': _pool.submit(_eco.intent_validate, str(p.get('goal') or p.get('design_intent') or 'stress test design under load')),
+                    }
+                    _done, _ = _cf.wait(_futs.values(), timeout=1.5)
+                    out['signals'] = {}
+                    for _k, _f in _futs.items():
+                        if _f in _done:
+                            try: out['signals'][_k] = _f.result()
+                            except Exception as _e: out['signals'][_k] = {'ok': False, 'subsystem': _k, 'error': f"{type(_e).__name__}: {_e}"}
+                        else:
+                            out['signals'][_k] = {'ok': False, 'subsystem': _k, 'error': 'TimeoutError: QA signal budget exceeded'}
+                finally:
+                    _pool.shutdown(wait=False, cancel_futures=True)
                 if verdict.get('pass') is False: out['release_blocked']=True
             except Exception as e:
                 out['stress_analysis_error']=f"{type(e).__name__}: {e}"

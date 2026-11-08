@@ -140,11 +140,28 @@ class Engine:
                     rnd=_dom.federated_round(grid, task)
                     health=_dom.grid_health(grid)
                     agg=_dom.aggregate_results(p.get('results_to_aggregate') or ([1.0,2.0,3.0] if rnd.get('ok') else []))
-                    res.update({'grid_health':health,'federated_round':rnd,'aggregate':agg,'signals':{
-                        'collective_intel':_eco.collective_intel(),'cognitive_search':_eco.cognitive_search(str(task.get('query','research'))),
-                        'db_playground':_eco.db_playground(),'crdt_merge':_eco.crdt_merge(),'priority_resolve':_eco.priority_resolve(),
-                        'connector_market':_eco.connector_market(),
-                    }})
+                    import concurrent.futures as _cf
+                    _pool = _cf.ThreadPoolExecutor(max_workers=6, thread_name_prefix="frg")
+                    try:
+                        _futs = {
+                            'collective_intel': _pool.submit(_eco.collective_intel),
+                            'cognitive_search': _pool.submit(_eco.cognitive_search, str(task.get('query','research'))),
+                            'db_playground': _pool.submit(_eco.db_playground),
+                            'crdt_merge': _pool.submit(_eco.crdt_merge),
+                            'priority_resolve': _pool.submit(_eco.priority_resolve),
+                            'connector_market': _pool.submit(_eco.connector_market),
+                        }
+                        _done, _ = _cf.wait(_futs.values(), timeout=2.0)
+                        _signals = {}
+                        for _k,_f in _futs.items():
+                            if _f in _done:
+                                try: _signals[_k]=_f.result()
+                                except Exception as _e: _signals[_k]={'ok':False,'subsystem':_k,'error':f"{type(_e).__name__}: {_e}"}
+                            else:
+                                _signals[_k]={'ok':False,'subsystem':_k,'error':'TimeoutError: signal budget exceeded'}
+                    finally:
+                        _pool.shutdown(wait=False, cancel_futures=True)
+                    res.update({'grid_health':health,'federated_round':rnd,'aggregate':agg,'signals':_signals})
                 except Exception as e:
                     res['grid_error']=f"{type(e).__name__}: {e}"
             return res

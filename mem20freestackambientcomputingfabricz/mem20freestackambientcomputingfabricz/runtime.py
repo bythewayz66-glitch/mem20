@@ -191,14 +191,42 @@ class Engine:
                 if not fabric.get('pool'): fabric['pool']=_dom.pool_resources(fabric.get('nodes') or [])
                 disc=_dom.discover_services(fabric, str(p.get('capability','compute')))
                 alloc=_dom.allocate({'pool':dict(fabric.get('pool') or {})}, p.get('request') or {'cpu':1,'memory':1})
-                out.update({'fabric_health':_dom.fabric_health(fabric),'ambient_score':_dom.ambient_score(fabric),'discover':disc,'allocation':alloc,'signals':{
-                    'fabric_dispatch':_eco.fabric_dispatch(str(p.get('intent','ambient')),p),
-                    'inference_compile':_eco.inference_compile(p),
-                    'capability_market':_eco.capability_market(str(p.get('capability','compute'))),
-                    'microkernel':_eco.microkernel(p),
-                    'workload_identity':_eco.workload_identity(p),
-                    'ambient_companion':_eco.ambient_companion(p.get('context') or {}),
-                }})
+                durable=None
+                if hasattr(_dom,'FabricStore') and (p.get('fabric_db') or p.get('durable_fabric')):
+                    fdb=str(p.get('fabric_db') or Path(self.store.path).with_suffix('.fabric.sqlite3'))
+                    fs=_dom.FabricStore(fdb)
+                    for n in (fabric.get('nodes') or []):
+                        if isinstance(n,dict): fs.upsert_node(n)
+                    for svc in (fabric.get('services') or []):
+                        if isinstance(svc,dict):
+                            with fs._connect() as _db:
+                                _db.execute("INSERT OR REPLACE INTO services(service_id,capabilities,device_classes,node_id,status) VALUES(?,?,?,?,?)",
+                                            (str(svc.get('id') or svc.get('service_id') or uuid.uuid4().hex[:8]), json.dumps(list(svc.get('capabilities') or []),sort_keys=True), json.dumps(list(svc.get('device_classes') or []),sort_keys=True), str(svc.get('node_id') or ''), 'online'))
+                    if p.get('request'):
+                        resv=fs.reserve(p.get('request') or {}, owner=str(p.get('owner') or 'engine'), lease_s=float(p.get('lease_s') or 60), idem_key=p.get('idem_key'), device_class=p.get('device_class'), capability=p.get('capability'), node_id=p.get('target_node'))
+                        alloc.update({'durable_reservation':resv,'allocated':resv.get('allocated',alloc.get('allocated'))})
+                    durable={'db':fdb, **fs.fabric_snapshot()}
+                import concurrent.futures as _cf
+                _pool=_cf.ThreadPoolExecutor(max_workers=6,thread_name_prefix='fab')
+                try:
+                    _futs={
+                        'fabric_dispatch':_pool.submit(_eco.fabric_dispatch,str(p.get('intent','ambient')),p),
+                        'inference_compile':_pool.submit(_eco.inference_compile,p),
+                        'capability_market':_pool.submit(_eco.capability_market,str(p.get('capability','compute'))),
+                        'microkernel':_pool.submit(_eco.microkernel,p),
+                        'workload_identity':_pool.submit(_eco.workload_identity,p),
+                        'ambient_companion':_pool.submit(_eco.ambient_companion,p.get('context') or {}),
+                    }
+                    _done,_=_cf.wait(_futs.values(),timeout=2.0)
+                    _signals={}
+                    for _k,_f in _futs.items():
+                        if _f in _done:
+                            try:_signals[_k]=_f.result()
+                            except Exception as _e:_signals[_k]={'ok':False,'subsystem':_k,'error':f"{type(_e).__name__}: {_e}"}
+                        else:_signals[_k]={'ok':False,'subsystem':_k,'error':'TimeoutError: signal budget exceeded'}
+                finally:
+                    _pool.shutdown(wait=False,cancel_futures=True)
+                out.update({'fabric_health':_dom.fabric_health(fabric),'ambient_score':_dom.ambient_score(fabric),'discover':disc,'allocation':alloc,'durable_fabric':durable,'signals':_signals})
             except Exception as e:
                 out['fabric_error']=f"{type(e).__name__}: {e}"
         return out

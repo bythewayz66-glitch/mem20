@@ -49,12 +49,17 @@ def main(argv=None):
                 if u.path=='/health': return self._j(200,{'ok':True,'version':__version__,'members':len(MEMBERS)})
                 if u.path=='/status': return self._j(200,SVC.status())
                 if u.path=='/doctor': return self._j(200,SVC.doctor())
+                if u.path.startswith('/compositions/'):
+                    cid = u.path.rsplit('/',1)[-1]
+                    return self._j(200,SVC.get_composition(cid))
                 return self._j(404,{'error':'not found'})
             def do_POST(self):
                 u=urlparse(self.path); n=int(self.headers.get('Content-Length','0') or 0)
                 try: body=json.loads(self.rfile.read(n) or b'{}')
                 except Exception: body={}
-                if u.path=='/compose': return self._j(200,SVC.compose(body.get('intent','workspace'), body.get('payload') or {}))
+                if u.path=='/compose': return self._j(200,SVC.compose(body.get('intent','workspace'), body.get('payload') or {}, composition_id=body.get('composition_id')))
+                if u.path=='/rollback': return self._j(200,SVC.rollback(str(body.get('composition_id') or ''), str(body.get('reason') or 'rollback')))
+                if u.path=='/recover': return self._j(200,SVC.recover(str(body.get('composition_id') or '')))
                 return self._j(404,{'error':'not found'})
             def log_message(self,*a): pass
         print(f"mem20facez serving on http://{args.host}:{args.port}"); HTTPServer((args.host,args.port),H).serve_forever(); return 0

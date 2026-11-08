@@ -41,6 +41,12 @@ ALLOW = (
     "scripts/sweep-tool-counts.py",
     "docs/ops/retired-infra-allowlist-2026-11-01.md",
     "scripts/verify-retired-infra-purge.sh",
+    "docs/app/narrative/serial-2026-11-01.md",
+    "docs/app/narrative/serial-2026-11-01b.md",
+    "docs/recon/README.md",
+    "docs/recon/stale-file-inventory-2026-11-07.json",
+    "scripts/stale-file-inventory.py",
+    "reference/v3/cities15000.txt",
 )
 
 FIX = {

@@ -41,8 +41,13 @@ Append-only / dated records keep their historical numbers, because rewriting
 them would falsify the record rather than correct it:
 
   CHANGELOG.md                  history of earlier reconciles
+  published/**                  immutable delivery archive (MANIFEST-pinned)
   published/daily-reports/*.md  dated ops logs
   docs/audit/*.md               dated audits
+  docs/recon/**                 the stale-file inventory and its evidence
+  docs/ops/metrics.json         dated issue titles / branch names
+  .sitemap/sitemap.json         generated snapshot
+  toolchest/inventory.json      generated snapshot
   **/*.patch, bench/optionc     captured diffs of past states
   "older docs quote 258-260"    sentences that describe the retired value
 
@@ -159,10 +164,24 @@ SKIP_FILES = {
     # generator output, not a live surface claim; rewriting it would falsify
     # the explanation of why two catalog shapes exist.
     "web/src/data/catalog.ts",
+    # Dated records and generated snapshots. The rule above is that append-only
+    # records keep their historical numbers; these four were missing from the
+    # skip list, so the sweep rewrote them and falsified the record instead of
+    # correcting it (found 2026-11-07).
+    ".sitemap/sitemap.json",                            # generated snapshot
+    "docs/ops/metrics.json",                            # dated issue titles / branch names
+    "docs/recon/stale-file-inventory-2026-11-07.json",  # inventory evidence strings
+    "toolchest/inventory.json",                         # generated snapshot (306 entries)
 }
 SKIP_PREFIXES = (
-    "published/daily-reports/",
+    # published/ is the immutable delivery archive, integrity-pinned by
+    # published/MANIFEST.tsv (per-file sha-256) and governed by
+    # published/README.md rule 3 ("never edit a preserved file in place").
+    # There is no manifest generator in the repo, so rewriting a preserved file
+    # breaks the manifest permanently. The sweep must not touch it.
+    "published/",
     "docs/audit/",
+    "docs/recon/",
 )
 # Frontend surfaces only. Prose docs (README, docs/*.md) were reconciled by the
 # docs leg and are outside this slice.

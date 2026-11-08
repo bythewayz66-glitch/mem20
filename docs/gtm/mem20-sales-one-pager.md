@@ -1,9 +1,9 @@
 # mem20 — Sales One-Pager (v3)
 
 **Seat:** VP of Sales · **Artifact:** one-pager + pilot-to-paid motion + capacity model
-**Canonical repo:** https://github.com/bythewayz66-glitch/mem20 · **Public site:** https://bythewayz66-glitch.github.io/mem20/
-**Version 3.0.0 · MIT · Python 3.10+ · 270 tools / 27 domains · JSON-RPC 2.0 over stdio**
-**Updated:** 2026-10-26 · **Numbers:** house numbers per claim ledger v3 §4
+**Canonical repo:** https://github.com/bythewayz66-glitch/mem20 · **Public site:** https://mem20.com/
+**Version 3.1.0 · MIT · Python 3.10+ · 311 tools / 39 domains · JSON-RPC 2.0 over stdio**
+**Updated:** 2026-11-07 · **Numbers:** house numbers per claim ledger v3 §4
 
 ---
 
@@ -15,7 +15,7 @@
 >
 > Since 3.0 it also refuses an **unlabeled** write: every fact must declare how it was learned — observed, inferred, imagined, user_stated, hypothesis, agent_generated, unlabeled. A fact nobody can vouch for is not stored as a fact.
 >
-> MIT-licensed, Python, self-hosted, **270 tools across 27 domains**, over MCP. You can read the code that holds your audit trail, because you cannot audit a black box.
+> MIT-licensed, Python, self-hosted, **311 tools across 39 domains**, over MCP. You can read the code that holds your audit trail, because you cannot audit a black box.
 
 **The one line for the email subject:** `The memory layer you can prove — grounded vs simulated, enforced in code.`
 
@@ -40,8 +40,8 @@
 
 | Objection | Answer |
 |---|---|
-| *"Where are your LoCoMo / LongMemEval numbers?"* | **We don't have them.** What ships is a 13-query internal corpus: direct 1.000, multi-hop 0.800, adversarial **0.000**, leak 0.000. The adversarial number is a real weakness and it is in the table, not buried. Any figure set against Mem0's 92.5 or Zep's 94.8% is a category error — different corpora, different metrics, vendor self-reported. **Lead with this; it is why they trust the rest.** |
-| *"How do I install it? Pip?"* | **Source only.** `git clone` + `pip install -r requirements.txt`. There is **no PyPI package** under `mem20`, `mem20-ai` or `mem20oreo` — all 404, checked 2026-10-26. One caveat worth stating up front: the install pins `mcp>=2.1.1`; installing `mcp<2` produces a misleading "mcp package not installed" error. |
+| *"Where are your LoCoMo / LongMemEval numbers?"* | **We don't have them.** What ships is a 250-query internal corpus over 700 grounded / 1,300 simulated facts: direct recall 1.000 on three of six modes, multi-hop 0.033–1.000, and **unanswerable 0.000 in every mode** (n=20). That abstention gap is a real weakness and it is in the table, not buried. Any figure set against Mem0's 92.5 or Zep's 94.8% is a category error — different corpora, different metrics, vendor self-reported. **Lead with this; it is why they trust the rest.** |
+| *"How do I install it? Pip?"* | **Source only.** `git clone` + `pip install -r requirements.txt`. There is **no PyPI package** under `mem20`, `mem20-ai` or `mem20oreo` — all 404, checked 2026-11-07. One caveat worth stating up front: the install pins `mcp>=2.1.1`; installing `mcp<2` produces a misleading "mcp package not installed" error. |
 | *"Is the promotion gate airtight?"* | **No — narrowed, not closed.** Bare calls are refused and the prediction-error path demands structured evidence tied to a recorded prior prediction. A free-text `confirmation` argument still promotes. We publish the four-path test result rather than describing the gate as airtight. Say this before they find it. |
 
 **Never say:** tamper-proof, unfakeable, provably secure, matches Mem0, beats Zep, industry-leading retrieval. One of those in a deal and the whole trust position collapses.
@@ -63,14 +63,14 @@
 
 $$ \text{accounts to realise SOM} = \frac{1{,}680{,}000}{14{,}000} = 120 \text{ accounts} $$
 
-At 120 accounts and a 4-quarter year, that is **30 net-new accounts per quarter** — roughly **2.3 per month**. For a $14K blended ACV with a self-serve, source-install entry, that is a land-and-expand shape, not an enterprise-field-sales shape. **Two enterprise AEs closing 1.5 accounts/month each covers the whole SOM**; the rest of the funnel is developer-led.
+At 120 accounts and a 4-quarter year, that is **30 net-new accounts per quarter** — **10 per month** (or ~2.3 per week). For a $14K blended ACV with a self-serve, source-install entry, that is a land-and-expand shape, not an enterprise-field-sales shape. **Two enterprise AEs closing 1.5 accounts/month each cover 30% of the SOM** (36 of 120 accounts a year); the rest of the funnel is developer-led.
 
 **Packaging (proposal — no price list exists in the repo; these are GTM proposals, label them as such):**
 
 | Tier | Shape | Price (proposed) | What the buyer gets |
 |---|---|---|---|
 | **Free / OSS** | MIT, self-host, unlimited | $0 | Everything in the repo. This is the funnel, not a trial. |
-| **Supported** | Annual support + version-locked build | **$14,000/yr** (the blended ACV anchor) | Response SLAs, upgrade guidance, install hardening review |
+| **Supported** | Annual support + version-locked build | **proposed $18,000/yr** (the Business tier price — **never quote the $14,000 blend as a price**) | Response SLAs, upgrade guidance, install hardening review |
 | **Compliance pack** | Supported + audit-evidence package | **proposed $28,000–$42,000/yr** | Written partition/audit evidence mapping for their model-risk file, plus a QBR cadence |
 | **Platform** | Multi-team / multi-VPC deployment | **proposed $56,000+/yr** | Deployment review, custom violation-class coverage, named engineer |
 
@@ -116,7 +116,7 @@ At 120 accounts and a 4-quarter year, that is **30 net-new accounts per quarter*
 ## 7. What to send after the call
 
 1. Repo: `https://github.com/bythewayz66-glitch/mem20`
-2. Site: `https://bythewayz66-glitch.github.io/mem20/`
+2. Site: `https://mem20.com/`
 3. Install (paste verbatim, it is two lines and it is not pip-from-PyPI):
    ```
    git clone https://github.com/bythewayz66-glitch/mem20.git

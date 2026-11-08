@@ -103,6 +103,12 @@ SUBSYSTEMS = {
         "owner": "mem20-webdev",
         "wave": 2,
     },
+    "mem20intenttomissioncompilerz": {
+        "purpose": "Intent-to-Mission Compiler (RM-031, #330): convert objectives into executable missions with dependencies, roles, completion criteria; 6-peer integrations (intent, goal scheduling, priority, skill graph, reversible execution, output compilation)",
+        "entry": "python -m mem20intenttomissioncompilerz execute '{\"goal\":\"design and ship feature\",\"parts\":[\"design\",\"build\",\"test\"]}'",
+        "owner": "mem20-webdev",
+        "wave": 2,
+    },
     "mem20goaleconomyschedulerz": {
         "purpose": "Goal Economy Scheduler (RM-056, #319): goal allocation with plan, opportunity, leak, milestone, capacity, interface integrations; legacy domain preserved",
         "entry": "python -m mem20goaleconomyschedulerz simulate",

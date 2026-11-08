@@ -45,17 +45,12 @@ jobs:
           # docs/surface.json). Overwriting the catalog with it published a
           # count the server does not serve. Validate instead of rewriting.
           python3 scripts/surface_manifest.py --check-docs
-          python3 - <<'PY'
-          import json
-          d = json.load(open('web/src/data/tools.json'))
-          print("tools.json:", d["count"], "tools across",
-                d["domain_count"], "domains")
-          PY
+          python3 -c "import json;d=json.load(open('web/src/data/tools.json'));print('tools.json:',d['count'],'tools across',d['domain_count'],'domains')"
 
       - name: Set up Node
         uses: actions/setup-node@v4
         with:
-          node-version: '20'
+          node-version: '22'
 
       - name: Install, typecheck, build
         working-directory: web

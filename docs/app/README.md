@@ -357,3 +357,4 @@ served by the fleet process itself at its root URL.
 - [Zero-Touch Node Swarm monitor](zerotouchnodeswarmz/index.html) — `PYTHONPATH=/opt/mem20 /opt/mem20/.venv/bin/python -m mem20zerotouchnodeswarmz serve --port 8846`
 - [Offer Assembly Fabric monitor](offerassemblyfabricz/index.html) — `PYTHONPATH=/opt/mem20 /opt/mem20/.venv/bin/python -m mem20offerassemblyfabricz serve --port 8847`
 - [Offer Genome Engine monitor](offergenomeenginez/index.html) — `PYTHONPATH=/opt/mem20 /opt/mem20/.venv/bin/python -m mem20offergenomeenginez serve --port 8848`
+- [Opportunity Radar monitor](opportunityradarz/index.html) — `PYTHONPATH=/opt/mem20 /opt/mem20/.venv/bin/python -m mem20opportunityradarz serve --port 8849`

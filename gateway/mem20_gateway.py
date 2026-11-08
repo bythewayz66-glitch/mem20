@@ -242,6 +242,7 @@ SUBSYSTEMS = {
         "owner": "mem20-webdev",
         "wave": 2,
     },
+    "mem20opportunityradarz": {"purpose": "Opportunity Radar with 6 peers, HTTP cockpit, MCP","entry":"python -m mem20opportunityradarz status","owner":"mem20-renovation","wave":4},
     "mem20offergenomeenginez": {"purpose": "Offer Genome Engine with 6 peers, HTTP cockpit, MCP","entry":"python -m mem20offergenomeenginez status","owner":"mem20-renovation","wave":4},
     "mem20offerassemblyfabricz": {"purpose": "Offer Assembly Fabric with 6 peers, HTTP cockpit, MCP","entry":"python -m mem20offerassemblyfabricz status","owner":"mem20-renovation","wave":4},
     "mem20zerotouchnodeswarmz": {

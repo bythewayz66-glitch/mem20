@@ -1,7 +1,14 @@
-# RM-011 — Opportunity Radar
+# mem20opportunityradarz — Opportunity Radar
 
-Outcome: Continuously detect underserved problems and quantify whether a software opportunity is worth testing
+First-class mem20 subsystem for opportunity radar (scan/score_opportunity/rank/alert/radar_health) with **6 peers**, SQLite WAL runtime, CLI, JSON HTTP API, served web cockpit, docs/app monitor, and real MCP tools. Core API preserved.
 
-Breakthrough: A self-updating map of buildable markets ranked by speed to revenue
+## Peers (6)
+`mem20autonomoussaleslaboratoryz`, `mem20productledgrowthsimulatorz`, `mem20causalroutingbrainz`, `mem20revenueleakhunterz`, `mem20eventstreamsuperhighwayz`, `mem20capabilitymarketplacez`.
 
-Machine-executable local runtime includes versioned state, SQLite WAL persistence, events, SDK CRUD, resumable/idempotent jobs, retries/timeouts/quotas, recovery, `forecast` operation logic, decision explanations, feedback, CLI, HTTP console/API, mesh selection/failover, simulator, benchmark, metrics, and opt-in signature mode.
+## CLI (runnable)
+```bash
+cd /opt/mem20
+PYTHONPATH=/opt/mem20 /opt/mem20/.venv/bin/python -m mem20opportunityradarz status
+PYTHONPATH=/opt/mem20 /opt/mem20/.venv/bin/python -m mem20opportunityradarz doctor
+PYTHONPATH=/opt/mem20 /opt/mem20/.venv/bin/python -m mem20opportunityradarz serve --port 8849
+```

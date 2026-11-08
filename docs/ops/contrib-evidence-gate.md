@@ -116,14 +116,21 @@ not yet a merge blocker.
 ## 7. Evidence
 
 The gate is proven by two runs of the same workflow on the same branch — one
-seeded to fail, one compliant:
+seeded to fail, one compliant. Both ran on the gate commit
+`e7931f7b2f778b9e36257083ba4818b79bd3c124`:
 
-| Case | PR body | Expected | Run |
+| Case | PR body | Result | Run |
 |---|---|---|---|
-| Seeded no-evidence | no SHA, no 200 URL | **red** | _filled in below_ |
-| Compliant | 40-char head SHA | **green** | _filled in below_ |
+| Seeded no-evidence | no SHA, no 200 URL | **red** (`failure`) | https://github.com/bythewayz66-glitch/mem20/actions/runs/42451608926 |
+| Compliant | 40-char head SHA + 200 URL | **green** (`success`) | https://github.com/bythewayz66-glitch/mem20/actions/runs/42451649305 |
 
-Branch head SHA (read back from the remote): _filled in below_.
+Both runs are on PR #401: https://github.com/bythewayz66-glitch/mem20/pull/401
+
+The branch head SHA is read back from the remote, never from a claim:
+
+```bash
+git ls-remote --heads origin chore/contrib-evidence-gate-2026-11-07
+```
 
 ## 8. Scope
 

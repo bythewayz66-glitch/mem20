@@ -7,7 +7,7 @@ this runtime provides the registry, CLI surface, and shared surface.
 
 from __future__ import annotations
 
-__version__ = "0.1.0"
+__version__ = "0.2.0"
 
 MEMBERS = (
     "mem20capabilitygapmapperz",
@@ -20,3 +20,6 @@ MEMBERS = (
 )
 
 __all__ = ["__version__", "MEMBERS"]
+
+from . import domain, ecosystem  # noqa: E402,F401
+__all__ = ["__version__", "MEMBERS", "domain", "ecosystem"]

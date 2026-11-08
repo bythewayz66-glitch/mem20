@@ -698,3 +698,14 @@ generic search. 6 peers: `mem20ethicalincentivesimulatorz,mem20styleguideagentz,
 mem20humanagentcoworkcanvasz,mem20dynamicphasereplannerz,mem20compoundingproductecosystemz,
 mem20asynccollaborationcapsulesz`. `/doctor`, web, root shims, fenced README, docs/PLAN, docs/app,
 gateway/toolchest. 8 tests pass, conformance **7/7**.
+
+---
+## 2026-11-07 - mem20graphz (#321): meaningful crew-runtime rebuild
+
+Rebuilt mem20graphz (fails 5,6,7; crew runtime, 7 members) as first-class while preserving
+`MEMBERS`, `__version__`, `mem20graphz.cli:main`, `--version/--members`, and existing unittest
+tests. Added meaningful real integrations with all 7 crew members: capability-gap utilities,
+loyalty graph degree/centrality, deterministic config resolve, dynamic skill/proficiency/learning
+path, relationship-context similarity, reversible execution graph/undo, semantic object hashing.
+Added domain summary, `doctor/status/serve`, web, fenced runnable README, docs/PLAN, docs/app
+monitor, gateway/toolchest. 7 tests pass, conformance **7/7**.

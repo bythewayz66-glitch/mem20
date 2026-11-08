@@ -91,7 +91,13 @@ SUBSYSTEMS = {
         "owner": "mem20-webdev",
         "wave": 2,
     },
-        "mem20goapagentdesignerz": {
+        "mem20graphz": {
+        "purpose": "mem20graphz graph crew runtime (#321): 7-member graph integrations (capability-gap, loyalty, config, skill, relationship, reversible execution, semantic objects); legacy CLI preserved",
+        "entry": "python -m mem20graphz --members",
+        "owner": "mem20-webdev",
+        "wave": 2,
+    },
+    "mem20goapagentdesignerz": {
         "purpose": "GOAP Agent Designer (RM-226, #320): goal-oriented planning/design with incentives, quality, collaboration, phasing, ecosystem, capsule integrations; legacy domain preserved",
         "entry": "python -m mem20goapagentdesignerz simulate",
         "owner": "mem20-webdev",

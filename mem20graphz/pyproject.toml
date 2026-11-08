@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "mem20graphz"
-version = "0.1.0"
+version = "0.2.0"
 description = "mem20 graph systems runtime — crew runtime grouping reviewed packages for joint integration."
 readme = "README.md"
 requires-python = ">=3.11"
@@ -20,3 +20,6 @@ packages = ["mem20graphz"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
+
+[tool.setuptools.package-data]
+mem20graphz = ["web/*"]

@@ -22938,15 +22938,15 @@
       "name": "mem20graphz",
       "category": "other",
       "subcategory": "native-subsystem",
-      "description": "mem20 graph systems runtime — crew runtime grouping reviewed packages for joint integration.",
-      "source": "/workspace/chats/2e9e71f390cf3bae600a0fa9/mem20graphz/pyproject.toml",
-      "runtime_status": "degraded",
-      "runtime_detail": "pkg=mem20graphz v0.1.0; not pip-installed in /usr/local (no matching local .venv dist); importable=False (1 modules checked); scripts=1 declared, 0 on PATH",
+      "description": "mem20graphz graph crew runtime (#321): meaningful integrations with 7 crew members; legacy MEMBERS/version/CLI preserved",
+      "source": "/opt/mem20/mem20graphz/pyproject.toml",
+      "runtime_status": "ok",
+      "runtime_detail": "pkg=mem20graphz v0.2.0; CLI --version/--members/doctor/status/serve; 7 tests; conformance 7/7",
       "checks": [
         {
           "check": "pyproject present",
           "ok": true,
-          "detail": "/workspace/chats/2e9e71f390cf3bae600a0fa9/mem20graphz/pyproject.toml"
+          "detail": "/opt/mem20/mem20graphz/pyproject.toml"
         },
         {
           "check": "name declared",
@@ -22954,46 +22954,24 @@
           "detail": "mem20graphz"
         },
         {
-          "check": "description present",
+          "check": "conformance",
           "ok": true,
-          "detail": "92 chars"
-        },
-        {
-          "check": "installed",
-          "ok": false,
-          "detail": "not pip-installed in /usr/local (no matching local .venv dist)"
-        },
-        {
-          "check": "distribution",
-          "ok": false,
-          "detail": "not pip-installed in /usr/local (no matching local .venv dist)"
-        },
-        {
-          "check": "import",
-          "ok": false,
-          "detail": "mem20graphz=n"
+          "detail": "7/7; 7 cross-modules called on covered lines"
         }
       ],
       "meta": {
         "pkg_name": "mem20graphz",
-        "version": "0.1.0",
-        "pyproject": "/workspace/chats/2e9e71f390cf3bae600a0fa9/mem20graphz/pyproject.toml",
-        "entry_points": [
-          {
-            "console": "mem20graphz",
-            "target": "mem20graphz.cli:main",
-            "on_path": false
-          }
-        ],
-        "dependencies": [],
-        "installed": null,
-        "importable": [
-          {
-            "name": "mem20graphz",
-            "importable": false
-          }
-        ],
-        "categories_from": "auto-discovered (not in AGENTS.md table)"
+        "version": "0.2.0",
+        "tests": 7,
+        "cross_modules": [
+          "mem20capabilitygapmapperz",
+          "mem20crossproductloyaltygraphz",
+          "mem20deterministicconfigurationgraphz",
+          "mem20dynamicskillgraphz",
+          "mem20relationshipcontextgraphz",
+          "mem20reversibleexecutiongraphz",
+          "mem20semanticobjectgraphz"
+        ]
       }
     },
     {

@@ -43,20 +43,49 @@ Difficulty comes from paraphrase, not from removing the answer:
 
 ## Measured results
 
+Rendered from `benchmarks/results/latest.json` (the artifact of record).
+The full per-kind table with dataset and run-command columns is in
+`benchmarks/results/latest.md`.
+
 | mode | kind | n | hit@5 | MRR | leak | p50 ms |
 |---|---|---:|---:|---:|---:|---:|
-| keyword | direct | 60 | 1.000 | 1.000 | 0.000 | 146.8 |
-| keyword | adversarial | 60 | 1.000 | 1.000 | 0.000 | 110.2 |
-| keyword | adversarial_hard | 40 | **0.000** | 0.000 | 0.000 | 192.1 |
-| keyword | contradiction | 40 | **0.050** | 0.030 | 0.000 | 184.5 |
-| keyword | multi_hop | 30 | 0.800 | 0.800 | 0.000 | 184.9 |
-| keyword | unanswerable | 20 | 0.000 | 0.000 | 0.000 | 108.8 |
-| semantic | direct | 60 | 0.900 | 0.864 | 0.000 | 103.0 |
-| semantic | adversarial | 60 | 0.950 | 0.884 | 0.000 | 102.3 |
-| semantic | adversarial_hard | 40 | 0.900 | 0.810 | 0.000 | 102.1 |
-| semantic | contradiction | 40 | 1.000 | 1.000 | 0.000 | 104.3 |
-| semantic | multi_hop | 30 | 1.000 | 0.950 | 0.000 | 105.3 |
-| semantic | unanswerable | 20 | 0.000 | 0.000 | 0.000 | 105.8 |
+| bm25 | direct | 60 | 1.000 | 1.000 | 0.000 | 101.6 |
+| bm25 | adversarial | 60 | 0.767 | 0.592 | 0.000 | 102.0 |
+| bm25 | adversarial_hard | 40 | 0.025 | 0.006 | 0.000 | 101.8 |
+| bm25 | contradiction | 40 | 0.050 | 0.030 | 0.000 | 195.9 |
+| bm25 | multi_hop | 30 | 0.800 | 0.800 | 0.000 | 102.7 |
+| bm25 | unanswerable | 20 | 0.000 | 0.000 | 0.000 | 149.7 |
+| vector | direct | 60 | 0.900 | 0.864 | 0.000 | 202.0 |
+| vector | adversarial | 60 | 0.667 | 0.608 | 0.000 | 203.5 |
+| vector | adversarial_hard | 40 | 0.750 | 0.583 | 0.000 | 203.9 |
+| vector | contradiction | 40 | 1.000 | 1.000 | 0.000 | 296.0 |
+| vector | multi_hop | 30 | 1.000 | 0.950 | 0.000 | 299.6 |
+| vector | unanswerable | 20 | 0.000 | 0.000 | 0.000 | 297.1 |
+| hybrid | direct | 60 | 1.000 | 0.978 | 0.000 | 1691.0 |
+| hybrid | adversarial | 60 | 0.167 | 0.167 | 0.000 | 1694.7 |
+| hybrid | adversarial_hard | 40 | 0.050 | 0.050 | 0.000 | 1897.8 |
+| hybrid | contradiction | 40 | 1.000 | 0.988 | 0.000 | 1899.2 |
+| hybrid | multi_hop | 30 | 0.533 | 0.533 | 0.000 | 1799.0 |
+| hybrid | unanswerable | 20 | 0.000 | 0.000 | 0.000 | 2003.1 |
+| hybrid-rerank-off | direct | 60 | 1.000 | 0.979 | 0.000 | 77.9 |
+| hybrid-rerank-off | adversarial | 60 | 0.650 | 0.633 | 0.000 | 25.4 |
+| hybrid-rerank-off | adversarial_hard | 40 | 0.625 | 0.515 | 0.000 | 25.5 |
+| hybrid-rerank-off | contradiction | 40 | 1.000 | 0.546 | 0.000 | 25.7 |
+| hybrid-rerank-off | multi_hop | 30 | 1.000 | 0.929 | 0.000 | 76.4 |
+| hybrid-rerank-off | unanswerable | 20 | 0.000 | 0.000 | 0.000 | 78.6 |
+| graph | multi_hop | 30 | 0.033 | 0.033 | 0.000 | 208.5 |
+| keyword | direct | 60 | 1.000 | 0.983 | 0.000 | 1399.1 |
+| keyword | adversarial | 60 | 0.167 | 0.167 | 0.000 | 1800.1 |
+| keyword | adversarial_hard | 40 | 0.025 | 0.006 | 0.000 | 3198.4 |
+| keyword | contradiction | 40 | 0.125 | 0.108 | 0.000 | 2102.3 |
+| keyword | multi_hop | 30 | 0.467 | 0.467 | 0.000 | 380.4 |
+| keyword | unanswerable | 20 | 0.000 | 0.000 | 0.000 | 895.9 |
+| constant | direct | 60 | 0.000 | 0.000 | 0.000 | 0.0 |
+| constant | adversarial | 60 | 0.000 | 0.000 | 0.000 | 0.0 |
+| constant | adversarial_hard | 40 | 0.000 | 0.000 | 0.000 | 0.0 |
+| constant | contradiction | 40 | 0.000 | 0.000 | 0.000 | 0.0 |
+| constant | multi_hop | 30 | 0.000 | 0.000 | 0.000 | 0.0 |
+| constant | unanswerable | 20 | 0.000 | 0.000 | 0.000 | 0.0 |
 
 Trust: contamination 0.0, stale pointers 0.0, leak 0.000 in every row, all trust
 checks pass.
@@ -65,22 +94,23 @@ checks pass.
 
 Two rows are now genuinely informative rather than artifacts.
 
-**keyword / adversarial_hard = 0.000 against semantic 0.900.** The class is
+**keyword / adversarial_hard = 0.025 against vector 0.750.** The class is
 provably answerable — 230 answerable probes pass the validator, including these.
 BM25 fails them because the probe carries neither the subject's canonical name
 nor the record's relation wording; its only handle is a designator token that is
-not the highest-TF term in the record. The dense retriever recovers 90%. This is
+not the highest-TF term in the record. The dense retriever recovers 75%. This is
 the cleanest evidence in the suite that the lexical half alone cannot carry
 paraphrase, and it is a *retrieval* finding, not a corpus gap.
 
-**keyword / contradiction = 0.050 against semantic 1.000.** A false record
+**keyword / contradiction = 0.125 against vector 1.000.** A false record
 shares its subject and predicate with the true one and differs in a single
 value, so BM25 ranks the record restating the claim above the record correcting
 it.
 
-**unanswerable = 0.000 in both modes** is the control. It is what distinguishes
+**unanswerable = 0.000 in every mode** is the control. It is what distinguishes
 a real zero from a broken metric: a scorer handing out free hits would show up
-here first.
+here first. `constant` reads 0.000 on every kind for the same reason — it is the
+adversarial control retriever.
 
 ## Reproduce
 
@@ -88,11 +118,12 @@ here first.
 mem20benchmarkz generate-scale --out /tmp/mem20-scale-corpus-v2
 mem20benchmarkz validate-scale /tmp/mem20-scale-corpus-v2
 mem20benchmarkz run-scale --corpus /tmp/mem20-scale-corpus-v2 --bulk \
-    --modes keyword,semantic --out benchmarks/results
+    --modes bm25,vector,hybrid,hybrid-rerank-off,graph,keyword,constant \
+    --out benchmarks/results
 ```
 
 Corpus is deterministic: `records.jsonl` sha256
-`ca4505863e87da4a4f1b6c84a86a28bab69aa79c872bd84e70a1375e092c9784`.
+`28f0746be240d216ea5368eeb0babba666e90c05a67f98f32d546369dfc2dbd3`.
 
 ## Not comparable
 

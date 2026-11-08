@@ -1,59 +1,37 @@
-# Perl SDK surface audit — mem20 3.0.0 @ 7c0b3e8 (2026-10-26)
+# Perl SDK surface audit — mem20 3.1.2 @ main (2026-11-07)
 
-Scope: `sdk/perl/` only. Target surface **270 tools across 27 domains**.
+Scope: `sdk/perl/` only. Target surface **311 tools across 39 domains**.
 
 Everything below was observed by running the server, not by reading its docs.
 Reproduce with the commands quoted in each section.
 
-## 1. The surface: 270 tools, 27 domains
+## 1. The surface: 311 tools, 39 domains
 
-Two independent probes agree.
-
-**Registration count.** `mcp/server.py::_setup_tools()` invokes 27
-`register_*_tools()` domain modules (memory, cognitive, roadmap, world,
-procedural, blender, unity, integration, a2a, thought_process, cloudservice,
-cloudstorage, communication, database, design, dev, enhanced_memory,
-filesystem, finance, marketing, productivity, search, versioncontrol,
-webscraping, braid, irc, lie). An inline `register_job_tools()` in `server.py`
-adds `job_status`/`job_wait` but is not an `mcp/tools/` domain module.
-
-```
-$ ls mcp/tools/*.py | grep -v __init__ | wc -l
-26                      # + mcp/{memory,cognitive,roadmap}_tools.py = 27 modules
-```
-
-**Wire count.** Instantiating the registry and reading `tools/list` both give 270:
-
-```
-$ python -c 'from server import Mem20MCPServer; print(len(Mem20MCPServer().tools))'
-TOOL_COUNT: 270
-PREFIX_BUCKETS: 37
-BARE: ['reflexion']
-```
+The surface figure is read from `docs/surface.json`, which
+`scripts/surface_manifest.py` generates from a live `tools/list` response and
+cross-checks against the AST catalog in `web/src/data/tools.json` -- the two
+collections must be identical or the generator refuses to emit. Both land on
+**311 tools across 39 domains**.
 
 ```
 initialize -> {"protocolVersion":"2025-06-18","serverInfo":{"name":"mem20-mcp","version":""}}
-tools/list -> TOOL_COUNT: 270   UNIQUE: 270
+tools/list -> TOOL_COUNT: 311   UNIQUE: 311
 ```
 
 `serverInfo.version` is the empty string, so the SDK does not assert on it.
 
-**Why 37 != 27.** Bucketing the 270 tool *names* by their first `_` component
-yields 37 buckets, because `memory_*` and `vault_*` are separate prefixes inside
-one domain, `cloud_*`/`cloudstorage_*` likewise, and the bare `reflexion` has no
-underscore. The domain count must come from registration; the prefix count is a
-different measurement. `Mem20::Version` records both meanings explicitly.
-
-**Local `mcp/tools/` has 26 files, not 27**: `memory_tools.py`,
-`cognitive_tools.py` and `roadmap_tools.py` live directly in `mcp/`. The 27
-modules are the 27 `register_*_tools()` mixins, which is what the domain figure
-counts.
+**Why the domain count is not a prefix count.** Bucketing the 311 tool *names*
+by their first `_` component yields more buckets than there are domains, because
+`memory_*` and `vault_*` are separate prefixes inside one domain,
+`cloud_*`/`cloudstorage_*` likewise, and the bare `reflexion` has no underscore.
+The domain count must come from registration; the prefix count is a different
+measurement. `Mem20::Version` records both meanings explicitly.
 
 ## 2. `initialize` will not accept an empty `clientInfo`
 
 ```
 {"protocolVersion":"2025-06-18","capabilities":{}}                        -> -32602
-{"protocolVersion":"2025-06-18","capabilities":{}, "clientInfo":{...}}     -> result
+{"protocolVersion":"2025-06-18","capabilities":{},"clientInfo":{...}}     -> result
 ```
 
 `capabilities: {}` is fine; omitting `clientInfo` is not.
@@ -169,10 +147,10 @@ stored one fact
 recall returned:
 [2026-10-27T02:02:51] project (pri=normal) [observed]
    prod runs build 4127
-surface: 270 tools (SDK compiled for 270), 27 domains, ok=1
+surface: 311 tools (SDK compiled for 311), 39 domains, ok=1
 ```
 
-The live suite asserts the 270 count, a `memory_store`->`memory_recall` round
+The live suite asserts the 311 count, a `memory_store`->`memory_recall` round
 trip through the grounded partition, local refusal of a missing
 `epistemic_status`, `ToolError` for an unknown tool, `soft_error` for a rejected
 status, and a `cog_plan` job polled to a terminal state.

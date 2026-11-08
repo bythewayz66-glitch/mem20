@@ -1,7 +1,14 @@
-# RM-030 — Personal Cognitive Search
+# mem20personalcognitivesearchz — Personal Cognitive Search
 
-Outcome: Search personal memory by meaning, relationship, time, emotion, and unfinished intent
+First-class mem20 subsystem for personal cognitive search (index/query/rank/recall/search_health) with **6 peers**, SQLite WAL runtime, CLI, JSON HTTP API, served web cockpit, docs/app monitor, and real MCP tools. Core API preserved.
 
-Breakthrough: Private memory becomes more useful than ordinary web search for personal work
+## Peers (6)
+`mem20episodicmemorygraphz`, `mem20contextcompressionforgez`, `mem20predictiverecallenginez`, `mem20eventstreamsuperhighwayz`, `mem20capabilitymarketplacez`, `mem20agentoutputcompilerz`.
 
-Machine-executable local runtime includes versioned state, SQLite WAL persistence, events, SDK CRUD, resumable/idempotent jobs, retries/timeouts/quotas, recovery, `search` operation logic, decision explanations, feedback, CLI, HTTP console/API, mesh selection/failover, simulator, benchmark, metrics, and opt-in signature mode.
+## CLI (runnable)
+```bash
+cd /opt/mem20
+PYTHONPATH=/opt/mem20 /opt/mem20/.venv/bin/python -m mem20personalcognitivesearchz status
+PYTHONPATH=/opt/mem20 /opt/mem20/.venv/bin/python -m mem20personalcognitivesearchz doctor
+PYTHONPATH=/opt/mem20 /opt/mem20/.venv/bin/python -m mem20personalcognitivesearchz serve --port 8852
+```

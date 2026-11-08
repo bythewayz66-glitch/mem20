@@ -260,6 +260,7 @@ SUBSYSTEMS = {
         "owner": "mem20-webdev",
         "wave": 2,
     },
+    "mem20personalcognitivesearchz": {"purpose": "Personal Cognitive Search with 6 peers, HTTP cockpit, MCP","entry":"python -m mem20personalcognitivesearchz status","owner":"mem20-renovation","wave":4},
     "mem20personalautomationcanvasz": {"purpose": "Personal Automation Canvas with 6 peers, HTTP cockpit, MCP","entry":"python -m mem20personalautomationcanvasz status","owner":"mem20-renovation","wave":4},
     "mem20outcomesimulationlabz": {"purpose": "Outcome Simulation Lab with 6 peers, HTTP cockpit, MCP","entry":"python -m mem20outcomesimulationlabz status","owner":"mem20-renovation","wave":4},
     "mem20opportunityradarz": {"purpose": "Opportunity Radar with 6 peers, HTTP cockpit, MCP","entry":"python -m mem20opportunityradarz status","owner":"mem20-renovation","wave":4},

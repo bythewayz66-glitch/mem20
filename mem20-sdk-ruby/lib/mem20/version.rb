@@ -11,4 +11,7 @@ module Mem20
   # `client.server_info` when you need to know what you are really talking to;
   # this constant is the baseline the gem was verified against.
   SERVER_VERSION = "3.1.2"
+
+  # The MCP protocol revision the SDK sends in the `initialize` handshake.
+  PROTOCOL_VERSION = "2025-06-18"
 end

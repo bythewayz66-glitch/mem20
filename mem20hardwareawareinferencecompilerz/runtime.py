@@ -1,0 +1,2 @@
+from mem20hardwareawareinferencecompilerz.mem20hardwareawareinferencecompilerz.runtime import *  # noqa
+from mem20hardwareawareinferencecompilerz.mem20hardwareawareinferencecompilerz.runtime import main  # noqa

@@ -27,7 +27,7 @@
 #   joblost     cog_plan returns a job envelope; job_status answers `not_found`,
 #               which is what mem20 sends for a job_id it does not know
 #
-# The failure shapes mirror what mem20 3.0.0 actually emits; see
+# The failure shapes mirror what mem20 3.1.2 actually emits; see
 # sdk/perl/AUDIT.md for the raw transcripts that established them.
 #
 # The job status vocabulary is taken from mcp/server.py, not invented:
@@ -168,7 +168,7 @@ while (defined(my $line = <STDIN>)) {
             id      => $id,
             result  => {
                 protocolVersion => '2025-06-18',
-                serverInfo      => { name => 'fake-mem20', version => '3.0.0' },
+                serverInfo      => { name => 'fake-mem20', version => '3.1.2' },
                 capabilities    => { tools => {} },
             },
         } );

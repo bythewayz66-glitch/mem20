@@ -18,11 +18,12 @@ use Mem20::Version ();
 # This file is the guard. It fails when:
 #
 #   1. the documented count and $Mem20::Version::SURFACE_TOOL_COUNT disagree;
-#   2. any doc still quotes a retired count (257 / 268 / 269 / 271);
+#   2. any doc still quotes a retired count (257 / 268 / 269 / 270 / 271 /
+#      272 / 306);
 #   3. a doc states a domain count other than SURFACE_DOMAIN_COUNT;
 #   4. the constants themselves are internally inconsistent.
 #
-# It deliberately does NOT assert the absolute value 270 against the server --
+# It deliberately does NOT assert the absolute value 311 against the server --
 # that is t/90-live-server.t's job, and it needs a live server. This test is
 # hermetic: it only checks that the SDK agrees with itself, so it runs on any
 # machine with a stock perl.
@@ -66,9 +67,11 @@ for my $doc (@DOCS) {
 }
 
 # Retired counts. 257 was the pre-3.0 surface, 268 was the domain-tools-only
-# figure that the Ruby gem once mistook for the total, 269/271 are off-by-one
-# neighbours that a hand edit produces. None of them may appear as a tool count.
-my @RETIRED = ( 257, 268, 269, 271 );
+# figure that the Ruby gem once mistook for the total, 270 was the pre-temporal
+# surface, 272 was the wave-1 surface, 306 was the pre-temporal count, and
+# 269/271 are off-by-one neighbours that a hand edit produces. None of them may
+# appear as a tool count.
+my @RETIRED = ( 257, 268, 269, 270, 271, 272, 306 );
 
 for my $doc ( sort keys %body ) {
     for my $n (@RETIRED) {
@@ -141,11 +144,11 @@ like(
 # --- the code that consumes the constants ------------------------------------
 
 # verify_surface must report the constants, not a literal of its own. A
-# hardcoded 270 inside Client.pm would pass every doc check above while
+# hardcoded 311 inside Client.pm would pass every doc check above while
 # silently ignoring a constant bump.
 #
 # Scope the check to the sub body: the POD and the comments in the same file
-# legitimately contain illustrative `domains => 27` text, and matching those
+# legitimately contain illustrative `domains => 39` text, and matching those
 # would make this test fail for the wrong reason.
 my $client_src = $body{'lib/Mem20/Client.pm'};
 my ($verify_body) = $client_src =~ /^sub verify_surface \{(.*?)^\}/ms;

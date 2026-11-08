@@ -118,8 +118,8 @@ fails immediately and leaves the previous good value in place.
 
 ## Calling tools
 
-Three routes to the same **270-tool surface across 27 domains** (verified live
-against mem20 3.0.0 — see `AUDIT.md`):
+Three routes to the same **311-tool surface across 39 domains** (verified live
+against mem20 3.1.2 — see `AUDIT.md`):
 
 ```perl
 # 1. the named memory primitives
@@ -135,18 +135,18 @@ $client->memory_status;
 $client->cog_plan(goal => 'ship the 3.0 baseline');
 ```
 
-`verify_surface` compares the live `tools/list` count with the 270/27 this
+`verify_surface` compares the live `tools/list` count with the 311/39 this
 release was built and tested against:
 
 ```perl
 my $s = $client->verify_surface;
-# { ok => 1, tools => 270, expected_tools => 270, domains => 27, server_version => '3.0.0' }
+# { ok => 1, tools => 311, expected_tools => 311, domains => 39, server_version => '3.1.2' }
 ```
 
-Note that 270 tool *names* bucket into 37 prefixes: `memory_*` and `vault_*` sit
-inside one domain, and a bare `reflexion` has no underscore. The domain figure
-comes from the server's `register_*_tools()` modules, never from splitting
-names.
+Note that tool *names* bucket into more prefixes than there are domains:
+`memory_*` and `vault_*` sit inside one domain, and a bare `reflexion` has no
+underscore. The domain figure comes from the server's `register_*_tools()`
+modules, never from splitting names.
 
 ### Long-running tools
 
@@ -254,15 +254,15 @@ MEM20_MCP_DIR=/opt/mem20/mcp MEM20_PYTHON=/opt/mem20/.venv/bin/python \
   prove -Ilib t/90-live-server.t
 ```
 
-That suite asserts the 270-tool surface, a `memory_store` → `memory_recall`
+That suite asserts the 311-tool surface, a `memory_store` → `memory_recall`
 round trip through the grounded partition, local refusal of a missing
 `epistemic_status`, `ToolError` for an unknown tool, `soft_error` for a rejected
 status, and a `cog_plan` job polled to a terminal state.
 
 ## Status
 
-Version 0.2.0, validated against mem20 server **3.0.0** on the **270-tool /
-27-domain** surface. The SDK versions independently of the server
+Version 0.2.0, validated against mem20 server **3.1.2** on the **311-tool /
+39-domain** surface. The SDK versions independently of the server
 (`$Mem20::Version::VERSION` vs `$Mem20::Version::SERVER_VERSION`).
 
 `AUDIT.md` records how the surface figure was established (registration count

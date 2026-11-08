@@ -21,7 +21,7 @@ This directory is the **git-side source of truth** for mem20 go-to-market collat
 
 ## The five numbers and states that are current
 
-1. **270 tools across 27 domains.** Live handshake: `python3 verify_mcp.py` → `TOOL_COUNT: 270`. Retired: 257, 258, 268.
+1. **311 tools across 39 domains.** Live `tools/list` via `docs/surface.json`; CI pin `MEM20_EXPECTED_TOOLS: "311"`; `python3 scripts/surface_manifest.py --check-docs`. Retired: 257, 258, 268, 270, 272.
 2. **Install is source-only.** `git clone` → `pip install -r requirements.txt`. `mem20`, `mem20-ai` and `mem20oreo` all **404** on PyPI. Never imply otherwise.
 3. **The only public web URL is `https://bythewayz66-glitch.github.io/mem20/`** (HTTP 200, byte-identical to `docs/index.html`). Every `/sites/` URL returns **403** anonymously — never publish or link one.
 4. **House numbers, restated not re-measured:** TAM **$1.28B** / SAM **$282M** / SOM **$1.68M** / blended ACV **$14,000**.
@@ -39,4 +39,4 @@ This directory is the **git-side source of truth** for mem20 go-to-market collat
 | `toolchest/inventory.json` | Regenerated `2026-10-29`; `counts.mcp` now reads `0`, so it no longer contradicts the surface — it simply no longer counts it. | Webpage Developer (P1) |
 | `docs/CNAME` | **Resolved.** Names `mem20.com`, which resolves and returns 200. The old legacy-zone hostname is retired — do not cite it. | Closed (2026-10-31) |
 
-The `docs/index.html` contradiction is closed as of this sweep: the public page and the campaign copy both say 270/27. The row is recorded rather than deleted, because this table is the reason the number stopped drifting. The one live P1 that remains is `docs/02-tools-reference.md`, which still prints 268/26 in its header.
+The `docs/index.html` contradiction is closed as of this sweep: the public page and the campaign copy both say 311/39. The row is recorded rather than deleted, because this table is the reason the number stopped drifting. The one live P1 that remains is `docs/02-tools-reference.md`, which still prints 268/26 in its header.

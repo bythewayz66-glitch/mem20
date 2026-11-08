@@ -12,8 +12,8 @@ Part 2 of 6. Index: `claim-ledger.md`. Measured at `2ea44922`.
 | V4 | Version | **3.1.0** — repo contradicts itself (`pyproject.toml` 3.0.0, highest tag v3.1.1) | **VERIFIED** | `cat VERSION; grep -E '^version' pyproject.toml; git tag --sort=-v:refname \| head -3` | `n/a: version string` |
 | V5 | License | **MIT** | **VERIFIED** | `head -1 LICENSE; grep license pyproject.toml` | `n/a: licensing` |
 | V6 | Python floor | **>=3.10** | **VERIFIED** | `grep requires-python pyproject.toml` | `n/a: runtime requirement` |
-| **V7** | **MCP tool surface** | **270 tools** | **VERIFIED** | `python3 verify_mcp.py` → `TOOL_COUNT: 270`, `RESULT: PASS` | `n/a: counts tools, not retrieval quality` |
-| **V8** | **Tool domains** | **27** | **VERIFIED** | `sed -n '/def _setup_tools/,/^    def /p' mcp/server.py \| grep -cE 'self\.register_[a-z_]+_tools\(\)'` → `27` | `n/a: counts domains, not retrieval quality` |
+| **V7** | **MCP tool surface** | **311 tools** | **VERIFIED** | `python3 scripts/surface_manifest.py --check-docs` → `OK: docs and version references match the committed surface`; `docs/surface.json` `tools = 311` | `n/a: counts tools, not retrieval quality` |
+| **V8** | **Tool domains** | **39** | **VERIFIED** | `docs/surface.json` `domains = 39`; `domain_counts` sums to 311 | `n/a: counts domains, not retrieval quality` |
 | V9 | Transport | JSON-RPC 2.0 over **stdio** (default); Streamable HTTP via `MEM20_TRANSPORT=http` on `MEM20_MCP_PORT` (8082) | **VERIFIED** | `python3 verify_mcp.py` (stdio handshake, `protocolVersion 2025-06-18`) | `n/a: transport mechanism` |
 | V10 | Health surface | `/health`, `/ready`, `/metrics`; a :8080 bind conflict degrades to a warning, not a failure | **VERIFIED** | `python3 verify_mcp.py` — observed `WARNING mem20.mcp health endpoint disabled (could not bind :8080)` and still `RESULT: PASS` | `n/a: operational surface` |
 | V11 | Embedder | `sentence-transformers/all-MiniLM-L6-v2`, 384-dim | **VERIFIED** | `python3 -c "import json;print(json.load(open('benchmarks/results/latest.json'))['environment'])"` | `0.000` — the embedder behind every `vector` row in §0 |
@@ -36,14 +36,14 @@ Part 2 of 6. Index: `claim-ledger.md`. Measured at `2ea44922`.
 **GTM never says:** "3.1.1", "3.1.2", or "the PyPI release is 3.1.0" (no PyPI release — D1). If asked about `pyproject.toml`: *"it still reads 3.0.0; the tag and `VERSION` are ahead of it. A packaging defect, filed, not a capability difference."*
 **Consequence:** `pip install .` builds an artifact labelled **3.0.0** regardless of tag. Never ship an install path implying a 3.1.0 wheel.
 
-### 1.2 The 270 / 27 figure — four agreeing measures
+### 1.2 The 311 / 39 figure — four agreeing measures
 
 | Source | Value | Command |
 |---|---|---|
-| Live handshake | **270** | `python3 verify_mcp.py` → `TOOL_COUNT: 270` |
-| `grep` unique quoted names | **270** (272 raw literal hits) | `grep -rhoE 'self\.tools\[["'"'"'][a-z0-9_]+' mcp/ \| sort -u \| wc -l` |
-| `docs/finance/inputs.json` | `tool_surface.tools = 270`, `domains = 27` | `python3 -c "import json;print(json.load(open('docs/finance/inputs.json'))['tool_surface'])"` |
-| CI pin | `MEM20_EXPECTED_TOOLS: "270"` | `grep -rn MEM20_EXPECTED_TOOLS .github/workflows/` |
+| Live `tools/list` manifest | **311** | `python3 -c "import json;print(json.load(open('docs/surface.json'))['tools'])"` |
+| AST catalog cross-check | **311** (0 only_ast, 0 only_live) | `python3 -c "import json;print(json.load(open('docs/surface.json'))['cross_check'])"` |
+| `docs/finance/inputs.json` | `tool_surface.tools = 311`, `domains = 39` | `python3 -c "import json;print(json.load(open('docs/finance/inputs.json'))['tool_surface'])"` |
+| CI pin | `MEM20_EXPECTED_TOOLS: "311"` | `grep -rn MEM20_EXPECTED_TOOLS .github/workflows/` |
 
 The verifier needs `mcp>=2.1.1`, `mcp-types`, `aiohttp`, `pydantic`, `numpy` and `pip install -e ./mem20api`; with those it passes from a full clone at this HEAD.
 
@@ -51,11 +51,11 @@ The verifier needs `mcp>=2.1.1`, `mcp-types`, `aiohttp`, `pydantic`, `numpy` and
 
 | File | What it prints | Status | Command |
 |---|---|---|---|
-| `docs/02-tools-reference.md:3-4` | **270 tools across 27 domains** — **FIXED since v6** | **VERIFIED (clean)** | `sed -n '1,8p' docs/02-tools-reference.md` |
+| `docs/02-tools-reference.md:3-4` | **311 tools across 39 domains** — **FIXED since v6** | **VERIFIED (clean)** | `sed -n '1,8p' docs/02-tools-reference.md` |
 | `docs/05-complete-tools-reference.md` | **268 tools across 26 domains** at header `:3` and totals row `:4679` | **STALE — live P1 drift** | `grep -cE '\b268\b' docs/05-complete-tools-reference.md` → `5` |
-| `docs/index.html` | 270 × 10, 27 domains × 8, retired pair × 1 (labelled "retired surface"), **`v3.0.0` × 4** | **STALE on version only** | `grep -n 'v3\.0\.0' docs/index.html` → lines 179, 486, 574, 604 |
-| `README.md` | 270 × 6, 27 domains × 5, retired pair × 0 — but the benchmark block still quotes the retired 14-fact / 13-query corpus | **STALE on benchmark only** | `grep -n 'mem20-agent-kb-v1\|14 facts\|13 queries' README.md` → lines 99, 140 |
-| `CHANGELOG.md` | 270/27 in `[Unreleased]`; 257/258/268 only as named prior values | **VERIFIED (historical)** | `grep -nE '\b(257\|258\|268)\b' CHANGELOG.md` |
+| `docs/index.html` | 311 × 10, 39 domains × 8, retired pair × 1 (labelled "retired surface"), **`v3.0.0` × 4** | **STALE on version only** | `grep -n 'v3\.0\.0' docs/index.html` → lines 179, 486, 574, 604 |
+| `README.md` | 311 × 6, 39 domains × 5, retired pair × 0 — but the benchmark block still quotes the retired 14-fact / 13-query corpus | **STALE on benchmark only** | `grep -n 'mem20-agent-kb-v1\|14 facts\|13 queries' README.md` → lines 99, 140 |
+| `CHANGELOG.md` | 311/39 in `[Unreleased]`; 257/258/268/270/272 only as named prior values | **VERIFIED (historical)** | `grep -nE '\b(257\|258\|268\|270\|272)\b' CHANGELOG.md` |
 | `toolchest/inventory.json` | `counts = {mcp: 0, cli: 2, subsystem: 310, total: 312}`, `generated_at = 2026-10-29T05:54:53Z` | **VERIFIED (no longer counts MCP tools)** | `python3 -c "import json;d=json.load(open('toolchest/inventory.json'));print(d['counts'],d['generated_at'])"` |
 
 A documentation defect, not a product ambiguity — quote the verifier and name the drift rather than matching it.
@@ -66,9 +66,9 @@ A documentation defect, not a product ambiguity — quote the verifier and name 
 
 | Field | Value | Status | Command |
 |---|---|---|---|
-| Tools | **270** | **VERIFIED** | `python3 verify_mcp.py` |
-| Domains | **27** | **VERIFIED** | `sed -n '/def _setup_tools/,/^    def /p' mcp/server.py \| grep -cE 'self\.register_[a-z_]+_tools\(\)'` |
+| Tools | **311** | **VERIFIED** | `python3 scripts/surface_manifest.py --check-docs` |
+| Domains | **39** | **VERIFIED** | `docs/surface.json` `domains = 39` |
 | Retired tool values | three superseded counts | **RETIRED** — enumerated only in §7 | `python3 docs/gtm/verify/check_ledger.py` |
 | Retired domain value | one superseded count | **RETIRED** — enumerated only in §7 | `python3 docs/gtm/verify/check_ledger.py` |
 
-**Binding:** any asset naming the surface names it **"270 tools across 27 domains."** No "~270", no "over 250". If challenged, the answer is §1.2's command.
+**Binding:** any asset naming the surface names it **"311 tools across 39 domains."** No "~311", no "over 300". If challenged, the answer is §1.2's command.

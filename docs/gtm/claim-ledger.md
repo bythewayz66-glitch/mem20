@@ -2,9 +2,9 @@
 
 **Seat:** Brand & Positioning Strategist / Opportunity & Market Analyst
 **Repo:** https://github.com/bythewayz66-glitch/mem20 · **Branch read:** `main`
-**HEAD at capture:** `2ea4492209dfaae6afb22ca884132a0d1849bfcf` (2026-11-01 06:20:25 -0700)
-**Captured:** 2026-11-01 · every row re-measured against a full clone at this HEAD; nothing inherited from v6.
-**Surface of record:** **270 tools / 27 domains.** 257, 258 and 268 are **RETIRED** and survive only in §7.
+**HEAD at capture:** `fa950b0a501e060753338334260b6a4a7486d4f2` (2026-11-07 18:23:08 -0700)
+**Captured:** 2026-11-07 · every row re-measured against a full clone at this HEAD; nothing inherited from v6.
+**Surface of record:** **311 tools / 39 domains** (`docs/surface.json`, live `tools/list`, AST cross-checked; CI pin `MEM20_EXPECTED_TOOLS: "311"`). 257, 258, 268, 270 and 272 are **RETIRED** and survive only in §7.
 **Supersedes:** v6 (HEAD `f1672473cd19d5926e1df0c80042259d3b4b17ca`, 2026-10-31).
 
 > **Acceptance rule** (owner directive 2026-11-01, `docs/ops/owner-directive-2026-11-01.md` @ `06fa1220`):
@@ -24,7 +24,7 @@
 | File | Sections |
 |---|---|
 | `claim-ledger.md` (this file) | §0 weakest measured row · §0.5 the `Adversarial` column |
-| `claim-ledger-02-facts.md` | §1 verified product facts · §1.1 version · §1.2 the 270/27 figure · §2 surface of record |
+| `claim-ledger-02-facts.md` | §1 verified product facts · §1.1 version · §1.2 the 311/39 figure · §2 surface of record |
 | `claim-ledger-03-distribution.md` | §3 distribution state · §4 live partition, audit and promotion-gate evidence |
 | `claim-ledger-04-benchmark.md` | §5 the benchmark — every row the file ships |
 | `claim-ledger-05-commercial.md` | §6 house numbers · §7 retired values (the sole register) |

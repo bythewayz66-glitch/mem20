@@ -118,9 +118,12 @@ $ curl -sS -L https://mem20.com/ -o probe/mem20com.html && wc -c probe/mem20com.
 ```
 $ grep -oiE '<title>[^<]*</title>|<meta[^>]*(description|og:)[^>]*>' probe/mem20com.html
 
+# retired 270/27 — verbatim 2026-11-01 capture, not the current surface
 <title>mem20 — Auditable agent memory · 270 tools across 27 domains</title>
+# retired 270/27 — verbatim 2026-11-01 capture, not the current surface
 <meta name="description" content="Auditable agent memory. 270 tools across 27 domains. Grounded vs simulated, enforced — not hoped for. MIT-licensed MCP server with contamination auditing, an append-only origin-tagged ledger, and published benchmarks that include the row we lose.">
 <meta property="og:title" content="mem20 — Auditable agent memory">
+# retired 270/27 — verbatim 2026-11-01 capture, not the current surface
 <meta property="og:description" content="270 tools across 27 domains. Persistent memory for AI agents — with the audit trail that regulated teams need.">
 <meta property="og:type" content="website">
 ```
@@ -143,6 +146,7 @@ $ curl -sS https://raw.githubusercontent.com/bythewayz66-glitch/mem20/main/VERSI
 
 ```
 $ grep -oE '[0-9]+ (tools|domains|organs|services)' probe/mem20com.html | sort | uniq -c
+# retired 270/27 — verbatim 2026-11-01 capture, not the current surface
       8 27 domains
       8 270 tools
 ```

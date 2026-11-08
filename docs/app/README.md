@@ -80,6 +80,15 @@ PYTHONPATH=/opt/mem20 python3 -m mem20edgetocloudintelligencecontinuumz serve --
 
 
 
+
+## Level/World/Nav Pipeline (`leveldesignworldbuildingandnavigationpipelinez/`)
+
+Static page for **mem20leveldesignworldbuildingandnavigationpipelinez** (RM-246, #332): blockout→nav→streaming→lighting→playability pipeline, 6 peer integrations.
+
+- Page: `docs/app/leveldesignworldbuildingandnavigationpipelinez/index.html`
+- Subsystem: `mem20leveldesignworldbuildingandnavigationpipelinez/`
+- Conformance: `PYTHONPATH=/opt/mem20 .venv/bin/python scripts/renovation/conformance.py mem20leveldesignworldbuildingandnavigationpipelinez`
+
 ## Intent-to-Mission Compiler (`intenttomissioncompilerz/`)
 
 Static page for **mem20intenttomissioncompilerz** (RM-031, #330): converts objectives into executable missions with dependencies, roles, and completion criteria. Includes CLI/serve usage and real 6-peer integration summary.
@@ -347,3 +356,4 @@ served by the fleet process itself at its root URL.
 - [Visual Dataflow Composer monitor](visualdataflowcomposerz/index.html) — `PYTHONPATH=/opt/mem20 /opt/mem20/.venv/bin/python -m mem20visualdataflowcomposerz serve --port 8845`
 - [Zero-Touch Node Swarm monitor](zerotouchnodeswarmz/index.html) — `PYTHONPATH=/opt/mem20 /opt/mem20/.venv/bin/python -m mem20zerotouchnodeswarmz serve --port 8846`
 - [Offer Assembly Fabric monitor](offerassemblyfabricz/index.html) — `PYTHONPATH=/opt/mem20 /opt/mem20/.venv/bin/python -m mem20offerassemblyfabricz serve --port 8847`
+- [Offer Genome Engine monitor](offergenomeenginez/index.html) — `PYTHONPATH=/opt/mem20 /opt/mem20/.venv/bin/python -m mem20offergenomeenginez serve --port 8848`

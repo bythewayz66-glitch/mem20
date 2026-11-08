@@ -1,7 +1,14 @@
-# RM-013 — Offer Genome Engine
+# mem20offergenomeenginez — Offer Genome Engine
 
-Outcome: Represent offers as modular combinations of audience, promise, feature, price, channel, and proof
+First-class mem20 subsystem for offer genome evolution (create_genome/mutate/fitness/evolve) with **6 peers**, SQLite WAL runtime, CLI, JSON HTTP API, served web cockpit, docs/app monitor, and real MCP tools. Core API preserved.
 
-Breakthrough: New offers can be bred, simulated, and improved like software variants
+## Peers (6)
+`mem20offerassemblyfabricz`, `mem20autonomousdealdeskz`, `mem20productledgrowthsimulatorz`, `mem20counterfactualmemorysimulatorz`, `mem20eventstreamsuperhighwayz`, `mem20capabilitymarketplacez`.
 
-Machine-executable local runtime includes versioned state, SQLite WAL persistence, events, SDK CRUD, resumable/idempotent jobs, retries/timeouts/quotas, recovery, `compose` operation logic, decision explanations, feedback, CLI, HTTP console/API, mesh selection/failover, simulator, benchmark, metrics, and opt-in signature mode.
+## CLI (runnable)
+```bash
+cd /opt/mem20
+PYTHONPATH=/opt/mem20 /opt/mem20/.venv/bin/python -m mem20offergenomeenginez status
+PYTHONPATH=/opt/mem20 /opt/mem20/.venv/bin/python -m mem20offergenomeenginez doctor
+PYTHONPATH=/opt/mem20 /opt/mem20/.venv/bin/python -m mem20offergenomeenginez serve --port 8848
+```

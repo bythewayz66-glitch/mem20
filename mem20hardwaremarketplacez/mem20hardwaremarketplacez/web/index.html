@@ -1,0 +1,4 @@
+<!doctype html><html><head><meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/><title>Hardware Marketplace (RM-048)</title><link rel="stylesheet" href="/style.css"/></head>
+<body><header><h1>Hardware Marketplace <small>RM-048</small></h1><div><button id="spec">Spec</button> <button id="doc">Doctor</button> <button id="run">Match</button></div></header>
+<main><div class="panel"><h2>Listings / Workloads (explicit limits)</h2><textarea id="p">{"listings":[{"seller":"gpu-a","hardware_spec":{"cores":8,"memory_gb":16,"gpu":true},"price":40,"available":true},{"seller":"cpu-b","hardware_spec":{"cores":16,"memory_gb":32},"price":20,"available":true}],"workloads":[{"id":"train","cpu":2,"memory_gb":4,"gpu":1}]}</textarea></div>
+<div class="panel"><h2>Match result</h2><pre id="o">ready</pre></div></main><script src="/app.js"></script></body></html>

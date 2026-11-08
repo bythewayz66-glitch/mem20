@@ -116,6 +116,12 @@ SUBSYSTEMS = {
         "owner": "mem20-webdev",
         "wave": 2,
     },
+    "mem20leveldesignworldbuildingandnavigationpipelinez": {
+        "purpose": "Level/World/Nav Pipeline (RM-246,#332): blockout→nav→streaming→lighting→playability with stages/artifacts/deps/checkpoints; 6 peer integrations",
+        "entry": "python -m mem20leveldesignworldbuildingandnavigationpipelinez execute '{\"goal\":\"build level\",\"stages\":[\"blockout\",\"navigation\",\"playability_tests\"],\"grid\":[[0,0],[0,0]],\"rooms\":[{\"id\":\"r1\"}]}'",
+        "owner": "mem20-webdev",
+        "wave": 2,
+    },
     "mem20labz": {
         "purpose": "Laboratory Runtime (#331): 1st-class control plane for 10 member labs with registry/probes/simulation, 6-peer ecosystem signals, durable SQLite WAL run history, CLI/API/web",
         "entry": "python -m mem20labz status",

@@ -709,3 +709,15 @@ loyalty graph degree/centrality, deterministic config resolve, dynamic skill/pro
 path, relationship-context similarity, reversible execution graph/undo, semantic object hashing.
 Added domain summary, `doctor/status/serve`, web, fenced runnable README, docs/PLAN, docs/app
 monitor, gateway/toolchest. 7 tests pass, conformance **7/7**.
+
+---
+## 2026-11-08 - mem20hardwaremarketplacez (#323): meaningful rebuild
+
+Rebuilt RM-048 (Hardware Marketplace, fails 5,6,7, operation_kind=match) preserving legacy domain
+and Engine/CLI/10-scenario simulator. `match` provides meaningful marketplace matching for
+`listings`/`workloads` payloads (fleet placement/energy/cost, capability + explicit limits,
+locality/migration, carbon/energy, swarm availability, scheduler fit) and preserves generic
+demand/supply match. 6 peers: `mem20edgefleetbrainz, mem20devicecapabilitycompilerz,
+mem20datalocalityoptimizerz, mem20energyawarecomputemigrationz, mem20zerotouchnodeswarmz,
+mem20roamingworkloadschedulerz`. `/doctor`, web, root shims, fenced README, docs/PLAN, docs/app
+monitor, gateway/toolchest. 9 tests pass.

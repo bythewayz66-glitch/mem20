@@ -5,7 +5,7 @@ build-backend="setuptools.build_meta"
 [project]
 name="mem20hardwaremarketplacez"
 version="1.0.0"
-description="mem20hardwaremarketplacez first-class module"
+description="Hardware Marketplace (RM-048): match workloads to volunteered/owned/rented compute under explicit limits; 6 peer integrations; legacy domain preserved"
 requires-python=">=3.11"
 
 [project.scripts]
@@ -14,4 +14,4 @@ mem20hardwaremarketplacez="mem20hardwaremarketplacez.runtime:main"
 [tool.setuptools]
 packages=["mem20hardwaremarketplacez"]
 [tool.setuptools.package-data]
-mem20hardwaremarketplacez=["CAPABILITY.json","roadmap.json"]
+mem20hardwaremarketplacez=["CAPABILITY.json","roadmap.json","web/*"]

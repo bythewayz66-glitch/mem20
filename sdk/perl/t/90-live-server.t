@@ -56,7 +56,7 @@ subtest 'handshake' => sub {
         'protocol revision matches the SDK constant' );
     is( $session->{server_info}{name}, 'mem20-mcp', 'server identifies as mem20-mcp' );
 
-    # serverInfo.version is an empty string in mem20 3.0.0. Asserting on it
+    # serverInfo.version is an empty string in mem20 3.1.2. Asserting on it
     # would be asserting on a bug, so only the name is checked.
     is( $session->{server_info}{version}, '', 'serverInfo.version is empty (known upstream)' );
 };
@@ -66,8 +66,8 @@ subtest 'the live surface matches what this SDK was compiled against' => sub {
 
     is( $surface->{tools}, $Mem20::Version::SURFACE_TOOL_COUNT,
         "tools/list returns $Mem20::Version::SURFACE_TOOL_COUNT tools" );
-    is( $surface->{expected_tools}, 270, 'SDK constant is 270' );
-    is( $surface->{domains}, 27, 'SDK constant says 27 domain modules' );
+    is( $surface->{expected_tools}, 311, 'SDK constant is 311' );
+    is( $surface->{domains}, 39, 'SDK constant says 39 domain modules' );
     is( $surface->{ok}, 1, 'surface check passes' );
 
     my $names = $client->tool_names;
@@ -75,7 +75,7 @@ subtest 'the live surface matches what this SDK was compiled against' => sub {
         'every advertised tool name is unique' );
 
     # Spot-check that the domain families are actually present, so the count
-    # cannot be satisfied by 270 copies of nothing.
+    # cannot be satisfied by 311 copies of nothing.
     ok( $client->can('memory_store'),      'memory domain bound' );
     ok( $client->can('cog_plan'),          'cognitive domain bound' );
     ok( $client->can('job_status'),        'inline job domain bound' );

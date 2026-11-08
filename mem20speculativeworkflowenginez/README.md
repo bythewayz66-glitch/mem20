@@ -1,22 +1,12 @@
-# RM-053 — Speculative Workflow Engine
+# mem20speculativeworkflowenginez — Speculative Workflow Engine
 
-Outcome: Run low-cost branches ahead of time and commit the best valid path
+First-class mem20 subsystem for speculative workflows (speculate/commit/rollback/speculative_health) with **6 peers**, SQLite WAL runtime, CLI, JSON HTTP API, served web cockpit, docs/app monitor, and real MCP tools. Core API preserved.
 
-Breakthrough: Complex work accelerates through controlled parallel futures
+## Peers (6)
+`mem20counterfactualmemorysimulatorz`, `mem20causalroutingbrainz`, `mem20eventstreamsuperhighwayz`, `mem20capabilitymarketplacez`, `mem20faultcontainmentcellsz`, `mem20selfhealingplansz`.
 
-Machine-executable local runtime includes versioned state, SQLite WAL persistence, events, SDK CRUD, resumable/idempotent jobs, retries/timeouts/quotas, recovery, `analyze` operation logic, decision explanations, feedback, CLI, HTTP console/API, mesh selection/failover, simulator, benchmark, metrics, and opt-in signature mode.
-
-## Run
-
-```bash
-# CLI help, then exercise the local runtime end to end
-python -m mem20speculativeworkflowenginez --help
-python -m mem20speculativeworkflowenginez simulate
-python -m mem20speculativeworkflowenginez benchmark
-```
-
-## Tests
-
-```bash
-PYTHONPATH=/opt/mem20 .venv/bin/python -m pytest mem20speculativeworkflowenginez/mem20speculativeworkflowenginez/tests -q
+## Python API (runnable)
+```python
+from mem20speculativeworkflowenginez.domain import speculate, commit, rollback, speculative_report, probe
+r=speculate({},["b1","b2"]); commit(r,"b1"); print(speculative_report()["ok"])  # True
 ```

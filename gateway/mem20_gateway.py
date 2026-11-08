@@ -31,6 +31,18 @@ MESSAGES_FILE = GATEWAY_DIR / "messages.jsonl"
 # it cannot deliver, so the conformance gate checks the name is present and the
 # subsystem's own tests check the entry point runs.
 SUBSYSTEMS = {
+    "mem20intentcompilerz": {
+        "purpose": "Intent Compiler (RM-051, #329): translate goals into typed executable graphs with resources/constraints/success conditions; 6 peer integrations; legacy domain preserved",
+        "entry": "python -m mem20intentcompilerz simulate",
+        "owner": "mem20-webdev",
+        "wave": 2,
+    },
+    "mem20integrationdigitaltwinz": {
+        "purpose": "Integration Digital Twin (RM-076, #328): simulate external services/rate limits/failures/API changes with 6 peer integrations; legacy domain preserved",
+        "entry": "python -m mem20integrationdigitaltwinz simulate",
+        "owner": "mem20-webdev",
+        "wave": 2,
+    },
     "mem20instantappsynthesisz": {
         "purpose": "Instant App Synthesis (RM-010, #327): compile objectives into capability compositions with 6 peer integrations; legacy domain preserved (#318)",
         "entry": "python -m mem20instantappsynthesisz simulate",

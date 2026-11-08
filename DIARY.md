@@ -768,3 +768,26 @@ mem20semanticobjectgraphz,mem20versioncontrollargeassetandrecoverypipelinez,
 mem20dynamicskillgraphz,mem20relationshipcontextgraphz,mem20capabilitygapmapperz`. `/doctor`,
 web, root shims, fenced README, docs/PLAN, docs/app monitor, gateway/toolchest. 9 tests pass,
 conformance **7/7**.
+
+---
+## 2026-11-08 - mem20integrationdigitaltwinz (#328): meaningful rebuild
+
+Rebuilt RM-076 (Integration Digital Twin, fails 5,6,7, operation_kind=route) preserving legacy
+domain (compat preserved). `route` provides meaningful twin routing/simulation for system/scenario
+payloads and preserves generic route. 6 peers: `mem20deterministicconfigurationgraphz,
+mem20versioncontrollargeassetandrecoverypipelinez,mem20reversibleexecutiongraphz,
+mem20semanticobjectgraphz,mem20relationshipcontextgraphz,mem20dynamicskillgraphz`. `/doctor`,
+web, root shims, fenced README, docs/PLAN, docs/app monitor, gateway/toolchest. 9 tests pass,
+conformance **7/7**.
+
+---
+## 2026-11-08 - mem20intentcompilerz (#329): meaningful rebuild (compat for 300-308)
+
+Rebuilt RM-051 (Intent Compiler, fails 5,6,7, operation_kind=compose) preserving legacy domain
+(**300-308 compat**). `compose` provides meaningful intent compilation for text/intent payloads
+(typed executable graph with resources/constraints/success conditions + deterministic config graph,
+capability plan, typed entities, intent context, reversible plan, intent versioning) and preserves
+generic composition. 6 peers: `mem20deterministicconfigurationgraphz, mem20dynamicskillgraphz,
+mem20semanticobjectgraphz, mem20relationshipcontextgraphz, mem20reversibleexecutiongraphz,
+mem20versioncontrollargeassetandrecoverypipelinez`. `/doctor`, web, root shims, fenced README,
+docs/PLAN, docs/app monitor, gateway/toolchest. 9 tests pass, conformance **7/7**.

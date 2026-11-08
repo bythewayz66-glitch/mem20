@@ -5,7 +5,7 @@ build-backend="setuptools.build_meta"
 [project]
 name="mem20integrationdigitaltwinz"
 version="1.0.0"
-description="mem20integrationdigitaltwinz first-class module"
+description="Integration Digital Twin (RM-076): simulate external services/rate limits/failures/API changes with 6 peer integrations; legacy domain preserved"
 requires-python=">=3.11"
 
 [project.scripts]
@@ -14,4 +14,4 @@ mem20integrationdigitaltwinz="mem20integrationdigitaltwinz.runtime:main"
 [tool.setuptools]
 packages=["mem20integrationdigitaltwinz"]
 [tool.setuptools.package-data]
-mem20integrationdigitaltwinz=["CAPABILITY.json","roadmap.json"]
+mem20integrationdigitaltwinz=["CAPABILITY.json","roadmap.json","web/*"]

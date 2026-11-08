@@ -23441,15 +23441,15 @@
       "name": "mem20integrationdigitaltwinz",
       "category": "other",
       "subcategory": "native-subsystem",
-      "description": "mem20integrationdigitaltwinz first-class module",
-      "source": "/workspace/chats/2e9e71f390cf3bae600a0fa9/mem20integrationdigitaltwinz/pyproject.toml",
-      "runtime_status": "degraded",
-      "runtime_detail": "pkg=mem20integrationdigitaltwinz v1.0.0; not pip-installed in /usr/local (no matching local .venv dist); importable=False (1 modules checked); scripts=1 declared, 0 on PATH",
+      "description": "Integration Digital Twin (RM-076, #328): meaningful twin routing/simulation with 6 peer integrations; legacy domain preserved",
+      "source": "/opt/mem20/mem20integrationdigitaltwinz/pyproject.toml",
+      "runtime_status": "ok",
+      "runtime_detail": "pkg=mem20integrationdigitaltwinz v1.0.0; CLI simulate/execute/serve; 9 tests; conformance 7/7",
       "checks": [
         {
           "check": "pyproject present",
           "ok": true,
-          "detail": "/workspace/chats/2e9e71f390cf3bae600a0fa9/mem20integrationdigitaltwinz/pyproject.toml"
+          "detail": "/opt/mem20/mem20integrationdigitaltwinz/pyproject.toml"
         },
         {
           "check": "name declared",
@@ -23457,46 +23457,23 @@
           "detail": "mem20integrationdigitaltwinz"
         },
         {
-          "check": "description present",
+          "check": "conformance",
           "ok": true,
-          "detail": "47 chars"
-        },
-        {
-          "check": "installed",
-          "ok": false,
-          "detail": "not pip-installed in /usr/local (no matching local .venv dist)"
-        },
-        {
-          "check": "distribution",
-          "ok": false,
-          "detail": "not pip-installed in /usr/local (no matching local .venv dist)"
-        },
-        {
-          "check": "import",
-          "ok": false,
-          "detail": "mem20integrationdigitaltwinz=n"
+          "detail": "7/7; 6 cross-modules called on covered lines"
         }
       ],
       "meta": {
         "pkg_name": "mem20integrationdigitaltwinz",
         "version": "1.0.0",
-        "pyproject": "/workspace/chats/2e9e71f390cf3bae600a0fa9/mem20integrationdigitaltwinz/pyproject.toml",
-        "entry_points": [
-          {
-            "console": "mem20integrationdigitaltwinz",
-            "target": "mem20integrationdigitaltwinz.runtime:main",
-            "on_path": false
-          }
-        ],
-        "dependencies": [],
-        "installed": null,
-        "importable": [
-          {
-            "name": "mem20integrationdigitaltwinz",
-            "importable": false
-          }
-        ],
-        "categories_from": "auto-discovered (not in AGENTS.md table)"
+        "tests": 9,
+        "cross_modules": [
+          "mem20deterministicconfigurationgraphz",
+          "mem20versioncontrollargeassetandrecoverypipelinez",
+          "mem20reversibleexecutiongraphz",
+          "mem20semanticobjectgraphz",
+          "mem20relationshipcontextgraphz",
+          "mem20dynamicskillgraphz"
+        ]
       }
     },
     {
@@ -23505,15 +23482,15 @@
       "name": "mem20intentcompilerz",
       "category": "other",
       "subcategory": "native-subsystem",
-      "description": "mem20intentcompilerz first-class module",
-      "source": "/workspace/chats/2e9e71f390cf3bae600a0fa9/mem20intentcompilerz/pyproject.toml",
-      "runtime_status": "degraded",
-      "runtime_detail": "pkg=mem20intentcompilerz v1.0.0; not pip-installed in /usr/local (no matching local .venv dist); importable=False (1 modules checked); scripts=1 declared, 0 on PATH",
+      "description": "Intent Compiler (RM-051, #329): meaningful intent-to-executable-graph composition with 6 peer integrations; legacy domain preserved (300-308 compat)",
+      "source": "/opt/mem20/mem20intentcompilerz/pyproject.toml",
+      "runtime_status": "ok",
+      "runtime_detail": "pkg=mem20intentcompilerz v1.0.0; CLI simulate/execute/serve; 9 tests; conformance 7/7",
       "checks": [
         {
           "check": "pyproject present",
           "ok": true,
-          "detail": "/workspace/chats/2e9e71f390cf3bae600a0fa9/mem20intentcompilerz/pyproject.toml"
+          "detail": "/opt/mem20/mem20intentcompilerz/pyproject.toml"
         },
         {
           "check": "name declared",
@@ -23521,46 +23498,23 @@
           "detail": "mem20intentcompilerz"
         },
         {
-          "check": "description present",
+          "check": "conformance",
           "ok": true,
-          "detail": "39 chars"
-        },
-        {
-          "check": "installed",
-          "ok": false,
-          "detail": "not pip-installed in /usr/local (no matching local .venv dist)"
-        },
-        {
-          "check": "distribution",
-          "ok": false,
-          "detail": "not pip-installed in /usr/local (no matching local .venv dist)"
-        },
-        {
-          "check": "import",
-          "ok": false,
-          "detail": "mem20intentcompilerz=n"
+          "detail": "7/7; 6 cross-modules called on covered lines"
         }
       ],
       "meta": {
         "pkg_name": "mem20intentcompilerz",
         "version": "1.0.0",
-        "pyproject": "/workspace/chats/2e9e71f390cf3bae600a0fa9/mem20intentcompilerz/pyproject.toml",
-        "entry_points": [
-          {
-            "console": "mem20intentcompilerz",
-            "target": "mem20intentcompilerz.runtime:main",
-            "on_path": false
-          }
-        ],
-        "dependencies": [],
-        "installed": null,
-        "importable": [
-          {
-            "name": "mem20intentcompilerz",
-            "importable": false
-          }
-        ],
-        "categories_from": "auto-discovered (not in AGENTS.md table)"
+        "tests": 9,
+        "cross_modules": [
+          "mem20deterministicconfigurationgraphz",
+          "mem20dynamicskillgraphz",
+          "mem20semanticobjectgraphz",
+          "mem20relationshipcontextgraphz",
+          "mem20reversibleexecutiongraphz",
+          "mem20versioncontrollargeassetandrecoverypipelinez"
+        ]
       }
     },
     {

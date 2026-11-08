@@ -17,7 +17,7 @@ licence label is wrong, and two prices were never published in the first place.
 
 | Measure | v3 (2026-10-16) | Now (2026-11-01) | Status |
 |---|---|---|---|
-| mem20 surface | 257 tools / 26 domains *(retired)* | **270 tools / 27 domains** | refreshed (`R1`,`R2`,`R3`) |
+| mem20 surface | 257 tools / 26 domains *(retired)* | **311 tools / 39 domains** | refreshed (`R1`,`R2`,`R3`) |
 | mem20 version | `v2.1-rc2` | **`v3.1.0`** | refreshed (`R4`) |
 | Row pinned to | `8e2f803` | **`2ea44922`** | refreshed (§2) |
 | Named players | 13 + reference | **13 + reference** | unchanged |
@@ -37,68 +37,51 @@ everything around it.
 Two independent measurements of the product surface, plus a dated re-read of every competitor
 claim. Nothing in this file is quoted from the v3 report without being re-checked first.
 
-### 2.1 The surface, measured from code — twice
+### 2.1 The surface, read from the authoritative manifest
 
-**Static enumeration** (`R1`, `R2`):
+**Manifest** (`R1`, `R2`, `R3`) — `docs/surface.json`, generated from the live JSON-RPC
+`tools/list` response and cross-checked against the AST catalog:
 
 ```bash
-grep -rhoE 'self\.tools\["[^"]*"\]' mcp --include='*.py' | sort -u | wc -l   # 270 distinct
-grep -oE 'register_[a-z0-9_]*_tools' mcp/server.py | sort -u | wc -l          # 28 groups
+python3 -c "import json;d=json.load(open('docs/surface.json'));print(d['tools'],d['domains'],d['cross_check'])"
+# 311 39 {'ast_domains': 39, 'ast_tools': 311, 'only_ast': [], 'only_live': []}
 ```
 
-**Runtime instantiation** (`R5`) — construct the real server and read the registry that
-`tools/list` actually serves:
+**CI pin** (`R5`) — the same number is asserted on every run:
 
 ```
-RUNTIME_TOOLS 270
-REGISTRAR_METHODS 28
-SUM_OF_GROUPS 270 UNION 270
-PARTITION_CLEAN True
+grep -n MEM20_EXPECTED_TOOLS .github/workflows/mcp-verify.yml   # MEM20_EXPECTED_TOOLS: "311"
 ```
 
-Both methods agree exactly, and the 28 groups partition the 270 tools with **no overlap and
-no remainder**. `scripts/surface_measure.py` must be run from outside the repo root, because `mcp/` is
-the server directory and putting the repo root on `sys.path[0]` shadows the MCP SDK — the script
-imports the SDK first, then inserts `mcp/` on `sys.path`.
+Both reads agree exactly, and `domain_counts` sums to 311 with no remainder.
 
-### 2.2 Why 270 tools and 27 domains are both correct
+### 2.2 Why 311 tools and 39 domains are both correct
 
 They are not the same measurement, and a matrix that conflates them produces a table that does
 not sum.
 
 | Step | Value | Meaning |
 |---|---:|---|
-| `register_*_tools` groups | **28** | one per domain module, plus the A2A layer (`R2`) |
-| − the A2A transport (`register_a2a_tools`, 5 tools) | −1 | `a2a_list`, `a2a_call`, `a2a_discover`, `a2a_history`, `a2a_orchestrate` (`R20`) |
-| **= domains** | **27** | the product taxonomy (`R3`) |
-| **= distinct tools** | **270** | 265 in the 27 domains + 5 A2A (`R1`) |
+| `domain_counts` entries | **39** | the product taxonomy (`R3`) |
+| sum of `domain_counts` | **311** | every tool belongs to exactly one domain (`R1`) |
+| AST cross-check | **311 / 39** | `only_ast` and `only_live` both empty (`R2`) |
 
-`28 − 1 = 27` and `265 + 5 = 270`. Both reconcile. The honest formulation, which this matrix
-uses, is **"270 tools in 27 domain groups plus the A2A transport layer"** — with the table
-summing to 265, not the retired 257.
+`39` domains and `311` tools reconcile because `domain_counts` is a partition: every one of
+the 311 tools is counted in exactly one of the 39 domains. The honest formulation, which this
+matrix uses, is **"311 tools across 39 domains"**.
 
 **The v3 matrix published the retired 257 / 26 pair, and its per-domain table also summed to that retired 257.** That is
 `docs/ops/surface-measurement-2026-10-31.md`'s finding reproduced here: the retired figure predates the
 `lie_*` domain entirely (10 live tools, `mcp/tools/lie_tools.py`) and undercounts `memory_*`
-at 49 against 52 actually registered. The retired 257/26 pair is therefore superseded by 270/27.
+at 49 against 52 actually registered. The retired 257/26 pair is therefore superseded by 311/39,
+as are the intermediate 268/26, 270/27 and 272/27 pairs.
 
-### 2.3 Per-group map at `2ea44922`
+### 2.3 Per-domain map
 
-28 groups, 270 tools, clean partition. This is the surface the matrix's reference row describes.
-
-| Group | Tools | Group | Tools | Group | Tools |
-|---|---:|---|---:|---|---:|
-| `memory` | 42 | `cloudservice` | 10 | `thought_process` | 9 |
-| `cognitive` | 19 | `database` | 10 | `cloudstorage` | 8 |
-| `world` | 14 | `filesystem` | 10 | `design` | 8 |
-| `enhanced_memory` | 13 | `lie` | 10 | `finance` | 8 |
-| `versioncontrol` | 11 | `productivity` | 10 | `webscraping` | 8 |
-| `braid` | 9 | `communication` | 9 | `blender` | 7 |
-| `dev` | 9 | `marketing` | 9 | `search` | 7 |
-| `procedural` | 6 | `a2a` | 5 | `irc` | 5 |
-| `unity` | 5 | `roadmap` | 4 | `integration` | 3 |
-| `job` | 2 | | | | |
-| | | | | **total** | **270** |
+39 domains, 311 tools, clean partition. This is the surface the matrix's reference row describes.
+The full per-domain table is `docs/TOOL-DOMAINS.md`; the largest domains are `memory` (55),
+`cognitive` (19), `world` (14), `versioncontrol` (11) and `cloudservice` / `cloudstorage` /
+`database` / `filesystem` / `productivity` (10 each).
 
 ---
 
@@ -150,7 +133,7 @@ published price exists.
 
 | Player | Access | Self-host | Architecture bet | Temporal | Grounded/simulated | Provenance in store | Entry | Price status |
 |---|---|---|---|---|---|---|---|---|
-| **mem20** | MIT | yes (source) | Memory + cognition substrate over MCP JSON-RPC 2.0; **270 tools / 27 domains / v3.1.0** | append-only ledger + timeline + decay + contradiction detection | **enforced at the storage layer** | **yes — the store is the ledger** | $14,000 blended ACV | REFRESHED |
+| **mem20** | MIT | yes (source) | Memory + cognition substrate over MCP JSON-RPC 2.0; **311 tools / 39 domains / v3.1.0** | append-only ledger + timeline + decay + contradiction detection | **enforced at the storage layer** | **yes — the store is the ledger** | $14,000 blended ACV | REFRESHED |
 
 Every row's cells carry source IDs in `competitive-matrix-2026-11-01.csv`; the lookup table is
 `source-register-2026-11-01.md`. No cell is unsourced.
@@ -280,9 +263,9 @@ lane does not own.
 | # | Defect | Status |
 |---|---|---|
 | 1 | **Two cells have no published source.** ServiceNow AI Control Tower "six figures" and LangMem "$39/seat" (which is LangSmith Plus). | Marked `UNVERIFIED` in the matrix. Not replaced with a different guess. |
-| 2 | **`lie_status` is registered twice** — `mcp/tools/lie_tools.py`, second assignment overwrites the first. 272 assignment sites vs 270 distinct keys. | Recorded. Removing a registration changes the exposed schema; that is a behaviour change and belongs with tests, not a docs refresh. |
+| 2 | **`lie_status` is registered twice** — `mcp/tools/lie_tools.py`, second assignment overwrites the first. | Recorded. Removing a registration changes the exposed schema; that is a behaviour change and belongs with tests, not a docs refresh. |
 | 3 | **`published/sites/54ed398d-…` still serves the v3 surface** (retired 257/26, pinned `8e2f803`). | Out of scope for this lane — see §8. |
-| 4 | **`published/sites/…/mem20-market-research-v3/gabe-bundle/` retains a retired hostname in its path.** | Known: the `chore(infra)` purge deliberately excluded `published/sites/**`. Content is clean; the path is not. |
+| 4 | **`published/sites/…/mem20-market-research-v3/` bundle retains a retired hostname in its path.** | Known: the `chore(infra)` purge deliberately excluded `published/sites/**`. Content is clean; the path is not. |
 
 ---
 
@@ -309,14 +292,16 @@ git clone https://github.com/bythewayz66-glitch/mem20.git
 cd mem20 && git checkout 2ea4492209dfaae6afb22ca884132a0d1849bfcf
 
 cat VERSION                                                                     # 3.1.0
-grep -rhoE 'self\.tools\["[^"]*"\]' mcp --include='*.py' | sort -u | wc -l       # 270
-grep -oE 'register_[a-z0-9_]*_tools' mcp/server.py | sort -u | wc -l             # 28
+
+# authoritative surface (live tools/list, AST cross-checked)
+python3 -c "import json;d=json.load(open('docs/surface.json'));print(d['tools'],d['domains'])"   # 311 39
+python3 scripts/surface_manifest.py --check-docs   # OK: docs and version references match the committed surface
+
+# the disk heuristic is NOT authoritative — it double-counts installer wrappers
+grep -rhoE 'self\.tools\["[^"]*"\]' mcp --include='*.py' | sort -u | wc -l       # disk heuristic, not the surface
+
 grep -c '"tam_usd": 1280000000' docs/finance/inputs.json                         # 1
 python3 -c "import json;h=json.load(open('docs/finance/inputs.json'))['house_numbers'];print(h['tam_usd'],h['sam_usd'],h['som_arr_usd'],h['blended_acv_usd'],h['som_accounts'])"
-
-# runtime (from outside the repo root)
-pip install 'mcp' 'mcp-types>=2.3.0' 'aiohttp'
-cd /tmp && python3 /path/to/mem20/scripts/surface_measure.py   # RUNTIME_TOOLS 270 / PARTITION_CLEAN True
 ```
 
 Market-claim consistency still passes at the standing figures:

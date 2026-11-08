@@ -18,11 +18,11 @@ vendor publishes no price, the matrix says so (`quote-only`) rather than inventi
 
 | ID | Figure | Value | Reproduce with |
 |---|---|---|---|
-| R1 | Distinct MCP tools | **270** | `grep -rhoE 'self\.tools\["[^"]*"\]' mcp --include='*.py' \| sort -u \| wc -l` |
-| R2 | `register_*_tools` groups | **28** | `grep -oE 'register_[a-z0-9_]*_tools' mcp/server.py \| sort -u \| wc -l` |
-| R3 | Domain count (27 = 28 − A2A) | **27** | taxonomy in `docs/TOOL-DOMAINS.md`; `28 − 1 = 27`, `265 + 5 = 270` |
+| R1 | Distinct MCP tools | **311** | `python3 -c "import json;print(json.load(open('docs/surface.json'))['tools'])"` |
+| R2 | AST cross-check | **311 / 39**, `only_ast` and `only_live` empty | `python3 -c "import json;print(json.load(open('docs/surface.json'))['cross_check'])"` |
+| R3 | Domain count | **39** | `docs/surface.json` `domains`; `domain_counts` sums to 311 |
 | R4 | Version | **3.1.0** | `cat VERSION` |
-| R5 | Runtime registry size | **270**, clean partition | `python3 scripts/surface_measure.py` (constructs `Mem20MCPServer`, reads `self.tools`) |
+| R5 | Runtime registry size | **311**, clean partition | `python3 scripts/surface_manifest.py --check-docs` (live `tools/list`, AST cross-checked) |
 | R6 | TAM | **$1.28B** | `docs/finance/inputs.json` → `house_numbers.tam_usd = 1280000000` |
 | R7 | SAM | **$282M** | `house_numbers.sam_usd = 282000000` |
 | R8 | SOM (ARR) | **$1.68M** | `house_numbers.som_arr_usd = 1680000` |
@@ -39,9 +39,10 @@ vendor publishes no price, the matrix says so (`quote-only`) rather than inventi
 | R19 | `memory_promote`, `memory_set_epistemic_status`, `memory_epistemic_veto`, `memory_list_simulated`, `memory_quarantine_simulated`, `memory_timeline`, `memory_decay`, `memory_contradict` exist | live | R1 registry enumeration |
 | R20 | `a2a_*` tools | **5** | R5 per-group map: `a2a_list`, `a2a_call`, `a2a_discover`, `a2a_history`, `a2a_orchestrate` |
 
-**Reproduction note for R5.** `scripts/surface_measure.py` must run from **outside** the repo root,
-because `mcp/` is the server directory and putting the repo root on `sys.path[0]` shadows the
-MCP SDK. Import the SDK first, then insert `mcp/` on `sys.path`.
+**Reproduction note for R5.** The authoritative surface is `docs/surface.json`, generated from the
+live JSON-RPC `tools/list` response and cross-checked against the AST catalog. Do not re-derive it
+from a regex over `mcp/`: that heuristic double-counts installer wrappers and duplicate
+assignments and drifts (it reads 409/92 on the current tree while the server exposes 311/39).
 
 ---
 

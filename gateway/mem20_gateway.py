@@ -122,6 +122,16 @@ SUBSYSTEMS = {
         "owner": "mem20-webdev",
         "wave": 2,
     },
+    "mem20modelsleepandwakesystemz": {
+        "purpose": "Model Sleep/Wake (RM-066,#336): predictive hibernation/restore; forecast+6 peer integrations",
+        "entry": "python -m mem20modelsleepandwakesystemz execute '{\"models\":[{\"id\":\"m1\",\"state\":\"awake\",\"last_activity\":0}],\"idle_threshold\":1}'",
+        "owner": "mem20-webdev", "wave": 2,
+    },
+    "mem20modelgenomelabz": {
+        "purpose": "Model Genome Lab (RM-061,#335): model genomes/capabilities/traits/limits/adapters/ancestry; evolution+6 peer integrations",
+        "entry": "python -m mem20modelgenomelabz execute '{\"population\":4,\"generations\":2,\"objective\":{\"quality\":1.0}}'",
+        "owner": "mem20-webdev", "wave": 2,
+    },
     "mem20modalitybridgez": {
         "purpose": "Modality Bridge (RM-064,#334): translate representations across text/image/audio/video/3D/sensor with adapters; 6 peer integrations",
         "entry": "python -m mem20modalitybridgez execute '{\"from\":\"text\",\"to\":\"image\",\"payload\":\"a cat\"}'",
@@ -260,6 +270,7 @@ SUBSYSTEMS = {
         "owner": "mem20-webdev",
         "wave": 2,
     },
+    "mem20personalmodelevolutionz": {"purpose": "Personal Model Evolution with 6 peers, HTTP cockpit, MCP","entry":"python -m mem20personalmodelevolutionz status","owner":"mem20-renovation","wave":4},
     "mem20personalcognitivesearchz": {"purpose": "Personal Cognitive Search with 6 peers, HTTP cockpit, MCP","entry":"python -m mem20personalcognitivesearchz status","owner":"mem20-renovation","wave":4},
     "mem20personalautomationcanvasz": {"purpose": "Personal Automation Canvas with 6 peers, HTTP cockpit, MCP","entry":"python -m mem20personalautomationcanvasz status","owner":"mem20-renovation","wave":4},
     "mem20outcomesimulationlabz": {"purpose": "Outcome Simulation Lab with 6 peers, HTTP cockpit, MCP","entry":"python -m mem20outcomesimulationlabz status","owner":"mem20-renovation","wave":4},

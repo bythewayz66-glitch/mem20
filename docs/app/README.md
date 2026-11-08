@@ -83,6 +83,12 @@ PYTHONPATH=/opt/mem20 python3 -m mem20edgetocloudintelligencecontinuumz serve --
 
 
 
+## Model Sleep/Wake (`modelsleepandwakesystemz/`)
+Static page for **mem20modelsleepandwakesystemz** (RM-066,#336). - Page: `docs/app/modelsleepandwakesystemz/index.html` - Conformance: `.../conformance.py mem20modelsleepandwakesystemz`
+
+## Model Genome Lab (`modelgenomelabz/`)
+Static page for **mem20modelgenomelabz** (RM-061,#335). - Page: `docs/app/modelgenomelabz/index.html` - Conformance: `.../conformance.py mem20modelgenomelabz`
+
 ## Modality Bridge (`modalitybridgez/`)
 Static page for **mem20modalitybridgez** (RM-064,#334). - Page: `docs/app/modalitybridgez/index.html` - Conformance: `.../conformance.py mem20modalitybridgez`
 
@@ -374,3 +380,4 @@ served by the fleet process itself at its root URL.
 - [Outcome Simulation Lab monitor](outcomesimulationlabz/index.html) — `PYTHONPATH=/opt/mem20 /opt/mem20/.venv/bin/python -m mem20outcomesimulationlabz serve --port 8850`
 - [Personal Automation Canvas monitor](personalautomationcanvasz/index.html) — `PYTHONPATH=/opt/mem20 /opt/mem20/.venv/bin/python -m mem20personalautomationcanvasz serve --port 8851`
 - [Personal Cognitive Search monitor](personalcognitivesearchz/index.html) — `PYTHONPATH=/opt/mem20 /opt/mem20/.venv/bin/python -m mem20personalcognitivesearchz serve --port 8852`
+- [Personal Model Evolution monitor](personalmodelevolutionz/index.html) — `PYTHONPATH=/opt/mem20 /opt/mem20/.venv/bin/python -m mem20personalmodelevolutionz serve --port 8853`

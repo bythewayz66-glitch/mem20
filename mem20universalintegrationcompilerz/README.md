@@ -1,22 +1,14 @@
-# RM-071 — Universal Integration Compiler
+# mem20universalintegrationcompilerz — Universal Integration Compiler
 
-Outcome: Compile API descriptions, examples, and observed traffic into working typed connectors
+First-class mem20 subsystem for universal integration compilation (compile_integration/validate_mapping/transform/integration_health) with **6 peers**, SQLite WAL runtime, CLI, JSON HTTP API, served web cockpit, docs/app monitor, and real MCP tools. Core API preserved.
 
-Breakthrough: New integrations can be created in hours instead of weeks
+## Peers (6)
+`mem20protocolautodiscoveryenginez`, `mem20runtimecompatibilityenginez`, `mem20agentoutputcompilerz`, `mem20eventstreamsuperhighwayz`, `mem20capabilitymarketplacez`, `mem20faultcontainmentcellsz`.
 
-Machine-executable local runtime includes versioned state, SQLite WAL persistence, events, SDK CRUD, resumable/idempotent jobs, retries/timeouts/quotas, recovery, `route` operation logic, decision explanations, feedback, CLI, HTTP console/API, mesh selection/failover, simulator, benchmark, metrics, and opt-in signature mode.
-
-## Run
-
+## CLI (runnable)
 ```bash
-# CLI help, then exercise the local runtime end to end
-python -m mem20universalintegrationcompilerz --help
-python -m mem20universalintegrationcompilerz simulate
-python -m mem20universalintegrationcompilerz benchmark
-```
-
-## Tests
-
-```bash
-PYTHONPATH=/opt/mem20 .venv/bin/python -m pytest mem20universalintegrationcompilerz/mem20universalintegrationcompilerz/tests -q
+cd /opt/mem20
+PYTHONPATH=/opt/mem20 /opt/mem20/.venv/bin/python -m mem20universalintegrationcompilerz status
+PYTHONPATH=/opt/mem20 /opt/mem20/.venv/bin/python -m mem20universalintegrationcompilerz doctor
+PYTHONPATH=/opt/mem20 /opt/mem20/.venv/bin/python -m mem20universalintegrationcompilerz serve --port 8843
 ```

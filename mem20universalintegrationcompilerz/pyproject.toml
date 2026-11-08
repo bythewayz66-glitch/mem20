@@ -1,17 +1,14 @@
 [build-system]
 requires=["setuptools>=68"]
 build-backend="setuptools.build_meta"
-
 [project]
 name="mem20universalintegrationcompilerz"
 version="1.0.0"
-description="mem20universalintegrationcompilerz first-class module"
+description="Universal Integration Compiler with 6 peers, HTTP cockpit, MCP"
 requires-python=">=3.11"
-
 [project.scripts]
 mem20universalintegrationcompilerz="mem20universalintegrationcompilerz.runtime:main"
-
 [tool.setuptools]
 packages=["mem20universalintegrationcompilerz"]
 [tool.setuptools.package-data]
-mem20universalintegrationcompilerz=["CAPABILITY.json","roadmap.json"]
+mem20universalintegrationcompilerz=["CAPABILITY.json","ROADMAP.json","roadmap.json","web/*"]

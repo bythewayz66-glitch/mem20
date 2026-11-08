@@ -31,6 +31,13 @@ MESSAGES_FILE = GATEWAY_DIR / "messages.jsonl"
 # it cannot deliver, so the conformance gate checks the name is present and the
 # subsystem's own tests check the entry point runs.
 SUBSYSTEMS = {
+    "mem20hardwareawareinferencecompilerz": {
+        "purpose": "Hardware-Aware Inference Compiler (RM-065, #322): fusion/quant/schedule/memory compile with 6 peer integrations; legacy domain preserved (#314)",
+        "entry": "python -m mem20hardwareawareinferencecompilerz simulate",
+        "owner": "mem20-webdev",
+        "wave": 2,
+    },
+
     "mem20shopz": {
         "purpose": "Storefront: catalog, Stripe Checkout, verified webhooks, once-only provisioning",
         "entry": "python -m mem20shopz --readiness",
@@ -104,7 +111,7 @@ SUBSYSTEMS = {
         "wave": 2,
     },
     "mem20intenttomissioncompilerz": {
-        "purpose": "Intent-to-Mission Compiler (RM-031, #330): convert objectives into executable missions with dependencies, roles, completion criteria; 6-peer integrations (intent, goal scheduling, priority, skill graph, reversible execution, output compilation)",
+        "purpose": "Intent-to-Mission Compiler (RM-031, #330): convert objectives into executable missions with dependencies, roles, completion criteria; 6-peer integrations (intent, goal scheduling, priority, skill graph, reversible execution, self-healing planning)",
         "entry": "python -m mem20intenttomissioncompilerz execute '{\"goal\":\"design and ship feature\",\"parts\":[\"design\",\"build\",\"test\"]}'",
         "owner": "mem20-webdev",
         "wave": 2,

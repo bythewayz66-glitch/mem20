@@ -10,7 +10,8 @@
     mem20benchmarkz ingest-scale --corpus /tmp/mem20-scale-corpus-v2 \\
         --store /tmp/mem20-scale-store --bulk
     mem20benchmarkz run-scale --corpus /tmp/mem20-scale-corpus-v2 --bulk \\
-        --modes keyword,semantic --out benchmarks/results
+        --modes bm25,vector,hybrid,hybrid-rerank-off,graph,keyword,constant \\
+        --out benchmarks/results
 """
 from __future__ import annotations
 
@@ -150,11 +151,20 @@ def cmd_render(args) -> int:
     if not src.is_file():
         print(f"no results at {src}; run mem20benchmarkz run first", file=sys.stderr)
         return 2
-    data = json.loads(src.read_text())
-    r = Report(**{k: v for k, v in data.items()})
-    md = render_markdown(r)
+    # Delegate to the canonical renderer so there is exactly ONE markdown
+    # renderer. bench.render_markdown() was a second, divergent implementation:
+    # it emitted a 7-column table with no dataset/run-command columns and a
+    # 2-mode reproduce block, so `mem20benchmarkz render` and
+    # `benchmarks/render_latest_md.py` produced different files from the same
+    # JSON. That is how latest.md drifted from latest.json in the first place.
+    import importlib.util
+    renderer = Path(__file__).resolve().parents[2] / "benchmarks" / "render_latest_md.py"
+    spec = importlib.util.spec_from_file_location("render_latest_md", renderer)
+    mod = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(mod)
+    report = json.loads(src.read_text())
     out = Path(args.dir) / "latest.md"
-    out.write_text(md)
+    out.write_text(mod.render(report))
     print(f"wrote {out}")
     return 0
 

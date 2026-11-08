@@ -10,52 +10,52 @@ Corpus `mem20-scale-corpus-v2` — 700 grounded facts, 1300 simulated facts, 250
 
 ## Retrieval quality
 
-Every row below names the dataset version and the exact command that produced it, so a number can be traced back to a reproducible run rather than to a report.
+Every row below names the dataset version and the exact command that produced it, so a number can be traced back to a reproducible run rather than to a report. This file is rendered from `latest.json` by `benchmarks/render_latest_md.py`; the JSON is the artifact of record.
 
-- Dataset: `mem20-scale-corpus-v2` (sha256 `c7031ab7ac08…`, 2000 records, 250 probes)
+- Dataset: `mem20-scale-corpus-v2` (`records.jsonl` sha256 `28f0746be240…`, 2000 records, 250 probes)
 - Run command: `mem20benchmarkz run-scale --corpus /tmp/mem20-scale-corpus-v2 --bulk --k 5 --modes bm25,vector,hybrid,hybrid-rerank-off,graph,keyword,constant --out benchmarks/results`
 - Canonical script: `benchmarks/run-7modes.sh` (the command above, parameterised; every row below names it)
 - Commit: `a9860b955fb8c8b2cadab7adbda4295693a281c9`; k=5; embedding threads=1
 
 | Mode | Query kind | n | Hit rate | MRR | Leak rate | p50 ms | Dataset | Run command |
 |---|---|---:|---:|---:|---:|---:|---|---|
-| `bm25` | adversarial | 60 | 0.767 | 0.592 | 0.000 | 5.2 | `mem20-scale-corpus-v2@c7031ab7ac08` | `benchmarks/run-7modes.sh` |
-| `bm25` | adversarial_hard | 40 | 0.025 | 0.006 | 0.000 | 5.1 | `mem20-scale-corpus-v2@c7031ab7ac08` | `benchmarks/run-7modes.sh` |
-| `bm25` | contradiction | 40 | 0.050 | 0.030 | 0.000 | 5.0 | `mem20-scale-corpus-v2@c7031ab7ac08` | `benchmarks/run-7modes.sh` |
-| `bm25` | direct | 60 | 1.000 | 1.000 | 0.000 | 4.8 | `mem20-scale-corpus-v2@c7031ab7ac08` | `benchmarks/run-7modes.sh` |
-| `bm25` | multi_hop | 30 | 0.800 | 0.800 | 0.000 | 4.9 | `mem20-scale-corpus-v2@c7031ab7ac08` | `benchmarks/run-7modes.sh` |
-| `bm25` | unanswerable | 20 | 0.000 | 0.000 | 0.000 | 5.1 | `mem20-scale-corpus-v2@c7031ab7ac08` | `benchmarks/run-7modes.sh` |
-| `constant` | adversarial | 60 | 0.000 | 0.000 | 0.000 | 0.0 | `mem20-scale-corpus-v2@c7031ab7ac08` | `benchmarks/run-7modes.sh` |
-| `constant` | adversarial_hard | 40 | 0.000 | 0.000 | 0.000 | 0.0 | `mem20-scale-corpus-v2@c7031ab7ac08` | `benchmarks/run-7modes.sh` |
-| `constant` | contradiction | 40 | 0.000 | 0.000 | 0.000 | 0.0 | `mem20-scale-corpus-v2@c7031ab7ac08` | `benchmarks/run-7modes.sh` |
-| `constant` | direct | 60 | 0.000 | 0.000 | 0.000 | 0.0 | `mem20-scale-corpus-v2@c7031ab7ac08` | `benchmarks/run-7modes.sh` |
-| `constant` | multi_hop | 30 | 0.000 | 0.000 | 0.000 | 0.0 | `mem20-scale-corpus-v2@c7031ab7ac08` | `benchmarks/run-7modes.sh` |
-| `constant` | unanswerable | 20 | 0.000 | 0.000 | 0.000 | 0.0 | `mem20-scale-corpus-v2@c7031ab7ac08` | `benchmarks/run-7modes.sh` |
-| `graph` | multi_hop | 30 | 0.033 | 0.033 | 0.000 | 14.2 | `mem20-scale-corpus-v2@c7031ab7ac08` | `benchmarks/run-7modes.sh` |
-| `hybrid` | adversarial | 60 | 0.167 | 0.167 | 0.000 | 168.5 | `mem20-scale-corpus-v2@c7031ab7ac08` | `benchmarks/run-7modes.sh` |
-| `hybrid` | adversarial_hard | 40 | 0.050 | 0.050 | 0.000 | 169.0 | `mem20-scale-corpus-v2@c7031ab7ac08` | `benchmarks/run-7modes.sh` |
-| `hybrid` | contradiction | 40 | 1.000 | 0.988 | 0.000 | 166.0 | `mem20-scale-corpus-v2@c7031ab7ac08` | `benchmarks/run-7modes.sh` |
-| `hybrid` | direct | 60 | 1.000 | 0.978 | 0.000 | 148.2 | `mem20-scale-corpus-v2@c7031ab7ac08` | `benchmarks/run-7modes.sh` |
-| `hybrid` | multi_hop | 30 | 0.533 | 0.533 | 0.000 | 167.4 | `mem20-scale-corpus-v2@c7031ab7ac08` | `benchmarks/run-7modes.sh` |
-| `hybrid` | unanswerable | 20 | 0.000 | 0.000 | 0.000 | 183.7 | `mem20-scale-corpus-v2@c7031ab7ac08` | `benchmarks/run-7modes.sh` |
-| `hybrid-rerank-off` | adversarial | 60 | 0.650 | 0.633 | 0.000 | 25.6 | `mem20-scale-corpus-v2@c7031ab7ac08` | `benchmarks/run-7modes.sh` |
-| `hybrid-rerank-off` | adversarial_hard | 40 | 0.625 | 0.515 | 0.000 | 24.3 | `mem20-scale-corpus-v2@c7031ab7ac08` | `benchmarks/run-7modes.sh` |
-| `hybrid-rerank-off` | contradiction | 40 | 1.000 | 0.546 | 0.000 | 25.1 | `mem20-scale-corpus-v2@c7031ab7ac08` | `benchmarks/run-7modes.sh` |
-| `hybrid-rerank-off` | direct | 60 | 1.000 | 0.979 | 0.000 | 25.5 | `mem20-scale-corpus-v2@c7031ab7ac08` | `benchmarks/run-7modes.sh` |
-| `hybrid-rerank-off` | multi_hop | 30 | 1.000 | 0.929 | 0.000 | 24.8 | `mem20-scale-corpus-v2@c7031ab7ac08` | `benchmarks/run-7modes.sh` |
-| `hybrid-rerank-off` | unanswerable | 20 | 0.000 | 0.000 | 0.000 | 25.6 | `mem20-scale-corpus-v2@c7031ab7ac08` | `benchmarks/run-7modes.sh` |
-| `keyword` | adversarial | 60 | 0.167 | 0.167 | 0.000 | 173.5 | `mem20-scale-corpus-v2@c7031ab7ac08` | `benchmarks/run-7modes.sh` |
-| `keyword` | adversarial_hard | 40 | 0.025 | 0.006 | 0.000 | 166.9 | `mem20-scale-corpus-v2@c7031ab7ac08` | `benchmarks/run-7modes.sh` |
-| `keyword` | contradiction | 40 | 0.125 | 0.108 | 0.000 | 169.9 | `mem20-scale-corpus-v2@c7031ab7ac08` | `benchmarks/run-7modes.sh` |
-| `keyword` | direct | 60 | 1.000 | 0.983 | 0.000 | 155.0 | `mem20-scale-corpus-v2@c7031ab7ac08` | `benchmarks/run-7modes.sh` |
-| `keyword` | multi_hop | 30 | 0.467 | 0.467 | 0.000 | 159.9 | `mem20-scale-corpus-v2@c7031ab7ac08` | `benchmarks/run-7modes.sh` |
-| `keyword` | unanswerable | 20 | 0.000 | 0.000 | 0.000 | 183.7 | `mem20-scale-corpus-v2@c7031ab7ac08` | `benchmarks/run-7modes.sh` |
-| `vector` | adversarial | 60 | 0.667 | 0.608 | 0.000 | 18.5 | `mem20-scale-corpus-v2@c7031ab7ac08` | `benchmarks/run-7modes.sh` |
-| `vector` | adversarial_hard | 40 | 0.750 | 0.583 | 0.000 | 17.8 | `mem20-scale-corpus-v2@c7031ab7ac08` | `benchmarks/run-7modes.sh` |
-| `vector` | contradiction | 40 | 1.000 | 1.000 | 0.000 | 19.0 | `mem20-scale-corpus-v2@c7031ab7ac08` | `benchmarks/run-7modes.sh` |
-| `vector` | direct | 60 | 0.900 | 0.864 | 0.000 | 17.9 | `mem20-scale-corpus-v2@c7031ab7ac08` | `benchmarks/run-7modes.sh` |
-| `vector` | multi_hop | 30 | 1.000 | 0.950 | 0.000 | 18.9 | `mem20-scale-corpus-v2@c7031ab7ac08` | `benchmarks/run-7modes.sh` |
-| `vector` | unanswerable | 20 | 0.000 | 0.000 | 0.000 | 20.1 | `mem20-scale-corpus-v2@c7031ab7ac08` | `benchmarks/run-7modes.sh` |
+| `bm25` | direct | 60 | 1.000 | 1.000 | 0.000 | 101.6 | `mem20-scale-corpus-v2@28f0746be240` | `benchmarks/run-7modes.sh` |
+| `bm25` | adversarial | 60 | 0.767 | 0.592 | 0.000 | 102.0 | `mem20-scale-corpus-v2@28f0746be240` | `benchmarks/run-7modes.sh` |
+| `bm25` | adversarial_hard | 40 | 0.025 | 0.006 | 0.000 | 101.8 | `mem20-scale-corpus-v2@28f0746be240` | `benchmarks/run-7modes.sh` |
+| `bm25` | contradiction | 40 | 0.050 | 0.030 | 0.000 | 195.9 | `mem20-scale-corpus-v2@28f0746be240` | `benchmarks/run-7modes.sh` |
+| `bm25` | multi_hop | 30 | 0.800 | 0.800 | 0.000 | 102.7 | `mem20-scale-corpus-v2@28f0746be240` | `benchmarks/run-7modes.sh` |
+| `bm25` | unanswerable | 20 | 0.000 | 0.000 | 0.000 | 149.7 | `mem20-scale-corpus-v2@28f0746be240` | `benchmarks/run-7modes.sh` |
+| `vector` | direct | 60 | 0.900 | 0.864 | 0.000 | 202.0 | `mem20-scale-corpus-v2@28f0746be240` | `benchmarks/run-7modes.sh` |
+| `vector` | adversarial | 60 | 0.667 | 0.608 | 0.000 | 203.5 | `mem20-scale-corpus-v2@28f0746be240` | `benchmarks/run-7modes.sh` |
+| `vector` | adversarial_hard | 40 | 0.750 | 0.583 | 0.000 | 203.9 | `mem20-scale-corpus-v2@28f0746be240` | `benchmarks/run-7modes.sh` |
+| `vector` | contradiction | 40 | 1.000 | 1.000 | 0.000 | 296.0 | `mem20-scale-corpus-v2@28f0746be240` | `benchmarks/run-7modes.sh` |
+| `vector` | multi_hop | 30 | 1.000 | 0.950 | 0.000 | 299.6 | `mem20-scale-corpus-v2@28f0746be240` | `benchmarks/run-7modes.sh` |
+| `vector` | unanswerable | 20 | 0.000 | 0.000 | 0.000 | 297.1 | `mem20-scale-corpus-v2@28f0746be240` | `benchmarks/run-7modes.sh` |
+| `hybrid` | direct | 60 | 1.000 | 0.978 | 0.000 | 1691.0 | `mem20-scale-corpus-v2@28f0746be240` | `benchmarks/run-7modes.sh` |
+| `hybrid` | adversarial | 60 | 0.167 | 0.167 | 0.000 | 1694.7 | `mem20-scale-corpus-v2@28f0746be240` | `benchmarks/run-7modes.sh` |
+| `hybrid` | adversarial_hard | 40 | 0.050 | 0.050 | 0.000 | 1897.8 | `mem20-scale-corpus-v2@28f0746be240` | `benchmarks/run-7modes.sh` |
+| `hybrid` | contradiction | 40 | 1.000 | 0.988 | 0.000 | 1899.2 | `mem20-scale-corpus-v2@28f0746be240` | `benchmarks/run-7modes.sh` |
+| `hybrid` | multi_hop | 30 | 0.533 | 0.533 | 0.000 | 1799.0 | `mem20-scale-corpus-v2@28f0746be240` | `benchmarks/run-7modes.sh` |
+| `hybrid` | unanswerable | 20 | 0.000 | 0.000 | 0.000 | 2003.1 | `mem20-scale-corpus-v2@28f0746be240` | `benchmarks/run-7modes.sh` |
+| `hybrid-rerank-off` | direct | 60 | 1.000 | 0.979 | 0.000 | 77.9 | `mem20-scale-corpus-v2@28f0746be240` | `benchmarks/run-7modes.sh` |
+| `hybrid-rerank-off` | adversarial | 60 | 0.650 | 0.633 | 0.000 | 25.4 | `mem20-scale-corpus-v2@28f0746be240` | `benchmarks/run-7modes.sh` |
+| `hybrid-rerank-off` | adversarial_hard | 40 | 0.625 | 0.515 | 0.000 | 25.5 | `mem20-scale-corpus-v2@28f0746be240` | `benchmarks/run-7modes.sh` |
+| `hybrid-rerank-off` | contradiction | 40 | 1.000 | 0.546 | 0.000 | 25.7 | `mem20-scale-corpus-v2@28f0746be240` | `benchmarks/run-7modes.sh` |
+| `hybrid-rerank-off` | multi_hop | 30 | 1.000 | 0.929 | 0.000 | 76.4 | `mem20-scale-corpus-v2@28f0746be240` | `benchmarks/run-7modes.sh` |
+| `hybrid-rerank-off` | unanswerable | 20 | 0.000 | 0.000 | 0.000 | 78.6 | `mem20-scale-corpus-v2@28f0746be240` | `benchmarks/run-7modes.sh` |
+| `graph` | multi_hop | 30 | 0.033 | 0.033 | 0.000 | 208.5 | `mem20-scale-corpus-v2@28f0746be240` | `benchmarks/run-7modes.sh` |
+| `keyword` | direct | 60 | 1.000 | 0.983 | 0.000 | 1399.1 | `mem20-scale-corpus-v2@28f0746be240` | `benchmarks/run-7modes.sh` |
+| `keyword` | adversarial | 60 | 0.167 | 0.167 | 0.000 | 1800.1 | `mem20-scale-corpus-v2@28f0746be240` | `benchmarks/run-7modes.sh` |
+| `keyword` | adversarial_hard | 40 | 0.025 | 0.006 | 0.000 | 3198.4 | `mem20-scale-corpus-v2@28f0746be240` | `benchmarks/run-7modes.sh` |
+| `keyword` | contradiction | 40 | 0.125 | 0.108 | 0.000 | 2102.3 | `mem20-scale-corpus-v2@28f0746be240` | `benchmarks/run-7modes.sh` |
+| `keyword` | multi_hop | 30 | 0.467 | 0.467 | 0.000 | 380.4 | `mem20-scale-corpus-v2@28f0746be240` | `benchmarks/run-7modes.sh` |
+| `keyword` | unanswerable | 20 | 0.000 | 0.000 | 0.000 | 895.9 | `mem20-scale-corpus-v2@28f0746be240` | `benchmarks/run-7modes.sh` |
+| `constant` | direct | 60 | 0.000 | 0.000 | 0.000 | 0.0 | `mem20-scale-corpus-v2@28f0746be240` | `benchmarks/run-7modes.sh` |
+| `constant` | adversarial | 60 | 0.000 | 0.000 | 0.000 | 0.0 | `mem20-scale-corpus-v2@28f0746be240` | `benchmarks/run-7modes.sh` |
+| `constant` | adversarial_hard | 40 | 0.000 | 0.000 | 0.000 | 0.0 | `mem20-scale-corpus-v2@28f0746be240` | `benchmarks/run-7modes.sh` |
+| `constant` | contradiction | 40 | 0.000 | 0.000 | 0.000 | 0.0 | `mem20-scale-corpus-v2@28f0746be240` | `benchmarks/run-7modes.sh` |
+| `constant` | multi_hop | 30 | 0.000 | 0.000 | 0.000 | 0.0 | `mem20-scale-corpus-v2@28f0746be240` | `benchmarks/run-7modes.sh` |
+| `constant` | unanswerable | 20 | 0.000 | 0.000 | 0.000 | 0.0 | `mem20-scale-corpus-v2@28f0746be240` | `benchmarks/run-7modes.sh` |
 
 ### Adversarial control
 
@@ -63,10 +63,10 @@ Every row below names the dataset version and the exact command that produced it
 
 | Query kind | n | Hit rate | MRR |
 |---|---:|---:|---:|
+| direct | 60 | 0.000 | 0.000 |
 | adversarial | 60 | 0.000 | 0.000 |
 | adversarial_hard | 40 | 0.000 | 0.000 |
 | contradiction | 40 | 0.000 | 0.000 |
-| direct | 60 | 0.000 | 0.000 |
 | multi_hop | 30 | 0.000 | 0.000 |
 | unanswerable | 20 | 0.000 | 0.000 |
 
@@ -88,19 +88,19 @@ Every retrieval mode present in the tree, whether this run scored it, and — wh
 | `entities` | MemoryStore.entities (enumeration) | **no** | no | NOT SCORED: query-free enumeration has no expected-evidence target, so hit rate is not a defined metric for it. |
 | `ledger` | MemoryStore.ledger (append-only tail) | **no** | no | NOT SCORED: not a ranked retriever. Out of scope for hit-rate scoring by construction; belongs under a durability test. |
 
-**7 of 11 declared modes scored in this run; 7 are scoreable by this harness.** The remainder are listed with their blocker rather than omitted.
+**7 of 11 declared modes scored in this run; 7 are scoreable by this harness.** The remaining 4 are listed with their blocker rather than omitted.
 
 ## Latency
 
 | Mode | n | p50 ms | p95 ms | p99 ms | max ms |
 |---|---:|---:|---:|---:|---:|
-| `bm25` | 250 | 5.1 | 13.4 | 34.4 | 159.3 |
+| `bm25` | 250 | 102.2 | 299.8 | 402.2 | 4398.5 |
+| `vector` | 250 | 204.9 | 396.8 | 496.2 | 2197.0 |
+| `hybrid` | 250 | 1797.1 | 2406.3 | 3398.8 | 3904.2 |
+| `hybrid-rerank-off` | 250 | 27.3 | 97.2 | 197.4 | 657.3 |
+| `graph` | 30 | 208.4 | 2293.9 | 2405.8 | 2405.8 |
+| `keyword` | 250 | 1692.2 | 3502.5 | 4199.7 | 6097.3 |
 | `constant` | 250 | 0.0 | 0.0 | 0.0 | 0.0 |
-| `graph` | 30 | 14.2 | 160.3 | 180.1 | 180.1 |
-| `hybrid` | 250 | 166.9 | 202.7 | 278.9 | 307.1 |
-| `hybrid-rerank-off` | 250 | 25.3 | 60.9 | 172.1 | 203.1 |
-| `keyword` | 250 | 166.2 | 202.5 | 308.1 | 335.8 |
-| `vector` | 250 | 18.5 | 50.9 | 65.8 | 204.4 |
 
 ## Trustworthiness
 
@@ -114,7 +114,7 @@ This is the axis mem20 claims as its differentiator, and the one no competitor p
 | Index healthy | True | True |
 | Ledger records | 700 | — |
 | Graph entities / edges | 654 / 3601 | — |
-| Queries reporting a diagnostic | 1530 | — |
+| Queries reporting a drift diagnostic | 250 | — |
 | All reported healthy | True | True |
 
 ## Environment

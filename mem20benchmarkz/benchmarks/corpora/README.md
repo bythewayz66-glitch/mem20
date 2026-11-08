@@ -4,6 +4,7 @@
 |--------|------|---------|
 | `mem20-agent-kb-v1` | 14 facts / 13 queries | CI regression gate (in `corpus.py`) |
 | **`mem20-scale-corpus-v2`** (current) | **2,000 records** (700 grounded / 650 ungrounded / 650 false) + 250 probes | Scale latency + trust + adversarial |
+| `mem20-scale-corpus-v3` | **122,178 records** (40,726 each) / 101,090,449 bytes + 600 probes | ~100 MB load test |
 | `mem20-scale-corpus-v1` | 2000 facts / 40 simulated / 140 queries | Superseded by v2 |
 
 ## Generate the 2000-entry scale corpus (v2)
@@ -27,7 +28,8 @@ Produces:
 
 ```bash
 mem20benchmarkz run-scale --corpus /tmp/mem20-scale-corpus-v2 --bulk \
-    --modes keyword,semantic --out benchmarks/results
+    --modes bm25,vector,hybrid,hybrid-rerank-off,graph,keyword,constant \
+    --out benchmarks/results
 ```
 
 Trust gates still apply: **contamination_rate must be 0.0**, adversarial leak_rate must be 0.0.

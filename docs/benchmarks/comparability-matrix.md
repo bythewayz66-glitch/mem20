@@ -38,7 +38,7 @@ Axis B is the one the current prose omits entirely, and it is the most important
 | 1 | **LoCoMo 92.5** | Mem0 | LoCoMo public 10-conversation release, **1,540** questions, 4 of 5 categories | End-to-end QA accuracy, LLM-judge | Mem0 managed platform, v3 pipeline; top-200 retrieval; GPT-5 answerer + GPT-5 judge | `mem0ai/memory-benchmarks` README (92.5% = 1425/1540); `mem0.ai/research` | **Not comparable** (A, B, C) |
 | 2 | **LongMemEval 94.4** | Mem0 | LongMemEval `_S`, **500** questions, 6 types, cleaned file | End-to-end QA accuracy, LLM-judge | top-200 retrieval; GPT-5 answerer + GPT-5 judge (472/500) | `mem0ai/memory-benchmarks` README (94.4% = 472/500) | **Not comparable** (A, B, C) |
 | 3 | **DMR 94.8%** | Zep | DMR = **500-conversation subset of Multi-Session Chat**, ~60 messages each | End-to-end QA accuracy, LLM-judge | Zep/Graphiti; top-10 retrieved nodes + edges; GPT-4-turbo | arXiv 2501.13956v1 (§4, §4.2) | **Not comparable** (A, B, C) |
-| 4 | mem20 `hybrid` direct **1.000**, multi-hop **0.800**, adversarial **0.000**; leak **0.000** | mem20 | `mem20-agent-kb-v1`: **14** grounded facts, 3 simulated, **13** queries | **Retrieval only** — hit@5, MRR, leak rate. No reader, no judge | `hybrid` mode, `k=5`, MiniLM-L6-v2 384-dim, cross-encoder on | `benchmarks/results/latest.md`, `benchmarks/results/latest.json` | **Reference row** |
+| 4 | mem20 `hybrid` direct **1.000**, multi-hop **0.800**, adversarial **0.000**; leak **0.000** | mem20 | `mem20-agent-kb-v1`: **14** grounded facts, 3 simulated, **13** queries | **Retrieval only** — hit@5, MRR, leak rate. No reader, no judge | `hybrid` mode, `k=5`, MiniLM-L6-v2 384-dim, cross-encoder on | `docs/benchmarks/results-v1.json` (the retired 13-query run; `benchmarks/results/latest.json` now holds the 250-probe v2 run) | **Reference row** |
 
 Verdicts above are all *against mem20's row*. The cross-vendor pairs among rows 1–3 are also non-comparable to each other, which §5 shows empirically.
 
@@ -127,7 +127,10 @@ The dispute resolves, for present purposes, into a single usable conclusion: **L
 
 ### 4.6 mem20 — the reference row, stated plainly
 
-From `benchmarks/results/latest.md` and `latest.json`:
+From `docs/benchmarks/results-v1.json` (the retired `mem20-agent-kb-v1` run).
+`benchmarks/results/latest.json` no longer holds these numbers: it is the
+250-probe `mem20-scale-corpus-v2` run, whose `hybrid` row is direct 1.000 /
+multi-hop 0.533 / adversarial 0.167.
 
 - **Corpus:** `mem20-agent-kb-v1` — 14 grounded facts, 3 simulated facts, 13 queries. Per-kind `n` is 2–5.
 - **Metric:** retrieval only. Per `mem20benchmarkz/mem20benchmarkz/bench.py`: `hit@k` is "fraction of answerable queries whose top-k results contain the expected evidence"; `mrr` is mean reciprocal rank; `leak@k` is "for adversarial queries, the fraction that returned any grounded support at all." Default `k=5`.

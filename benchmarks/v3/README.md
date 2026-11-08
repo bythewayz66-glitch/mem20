@@ -98,7 +98,7 @@ the code.
 
 | file | what |
 |---|---|
-| `records.part-01..03.jsonl` | the corpus, 122,178 records |
+| `records.part-01..03.jsonl` | the corpus, 122,178 records — **not committed** (the repo gitignores `*.jsonl`); regenerate from the seed + `reference/v3/` |
 | `probes.jsonl` | 600 probes with gold keys and expected evidence |
 | `manifest.json` | counts, bytes, schema, sha256 of every file and reference input |
 | `validation.json` | the validator's report |

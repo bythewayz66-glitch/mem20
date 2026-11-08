@@ -88,8 +88,10 @@ report = {
         "elapsed_s_per_mode": {m: slices[m]["_elapsed_s"] for m in MODES},
     },
     "per_query_note": (
-        f"{len(per_query)} per-query rows are committed verbatim in "
-        "per-query.jsonl.gz next to this file, not omitted."),
+        f"{len(per_query)} per-query rows are written to "
+        "benchmarks/results/per-query.jsonl, which is NOT committed: the repo "
+        "gitignores *.jsonl. Regenerate them with the run command in latest.md; "
+        "the aggregate rows in this file are the committed artifact."),
 }
 
 OUT.mkdir(parents=True, exist_ok=True)

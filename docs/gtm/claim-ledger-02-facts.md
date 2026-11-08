@@ -52,7 +52,7 @@ The verifier needs `mcp>=2.1.1`, `mcp-types`, `aiohttp`, `pydantic`, `numpy` and
 | File | What it prints | Status | Command |
 |---|---|---|---|
 | `docs/02-tools-reference.md:3-4` | **311 tools across 39 domains** — **FIXED since v6** | **VERIFIED (clean)** | `sed -n '1,8p' docs/02-tools-reference.md` |
-| `docs/05-complete-tools-reference.md` | **268 tools across 26 domains** at header `:3` and totals row `:4679` | **STALE — live P1 drift** | `grep -cE '\b268\b' docs/05-complete-tools-reference.md` → `5` |
+| `docs/05-complete-tools-reference.md` | **311 tools across 39 domains** at header `:3` — **FIXED since v7** | **VERIFIED (clean)** | `grep -cE '\b268\b' docs/05-complete-tools-reference.md` → `0`; `grep -cE '\b311\b'` → `5` |
 | `docs/index.html` | 311 × 10, 39 domains × 8, retired pair × 1 (labelled "retired surface"), **`v3.0.0` × 4** | **STALE on version only** | `grep -n 'v3\.0\.0' docs/index.html` → lines 179, 486, 574, 604 |
 | `README.md` | 311 × 6, 39 domains × 5, retired pair × 0 — but the benchmark block still quotes the retired 14-fact / 13-query corpus | **STALE on benchmark only** | `grep -n 'mem20-agent-kb-v1\|14 facts\|13 queries' README.md` → lines 99, 140 |
 | `CHANGELOG.md` | 311/39 in `[Unreleased]`; 257/258/268/270/272 only as named prior values | **VERIFIED (historical)** | `grep -nE '\b(257\|258\|268\|270\|272)\b' CHANGELOG.md` |

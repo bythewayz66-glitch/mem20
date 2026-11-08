@@ -36,7 +36,7 @@
 
 1. **The benchmark scores SEVEN modes, not two.** v6 said `hybrid` and `graph` had "no rows at all" and marked both `unmeasured`. At this HEAD `latest.json` scores `bm25`, `vector`, `hybrid`, `hybrid-rerank-off`, `graph`, `keyword`, `constant`. **Both are measured.**
 2. **The `keyword` numbers moved.** v6 published `keyword` adversarial **1.000** / `adversarial_hard` **0.000**; now **0.167** / **0.025**. `semantic` is now `vector`, adversarial 0.950 → **0.667**.
-3. **`docs/02-tools-reference.md` is FIXED** — prints 270/27, not 268/26. Only `docs/05` still carries the retired pair.
+3. **`docs/02-tools-reference.md` is FIXED** — prints **311/39**, not the retired 268/26 or 270/27. `docs/05` has also been swept to 311/39.
 4. **Clone-audit artifacts are BACK** — `PROOF.md`, `UPGRADE.md`, `bench/clone_audit.json` ship; 293 packages / 65 distinct / 228 duplicates reproduce.
 5. **`docs/index.html` still carries `v3.0.0` four times** (owner directive G3). Counts on that page are correct.
 
@@ -44,7 +44,7 @@
 |---|---|---|
 | C1 | Benchmark scope 2 → 7 modes | `hybrid`/`graph` no longer `unmeasured` |
 | C2 | `keyword`/`vector` numbers moved | see §5.1 |
-| C3 | `docs/02` drift CLOSED | now 270/27 |
+| C3 | `docs/02` drift CLOSED | now 311/39 |
 | C4 | Clone-audit artifacts present | 65 distinct / 228 duplicates / 293 packages |
 | C5 | `docs/index.html` version drift OPEN | 4 × `v3.0.0` at lines 179, 486, 574, 604 |
 | C6 | Tracked files 8,516 → 8,536 | `git ls-tree -r --name-only HEAD \| wc -l` |

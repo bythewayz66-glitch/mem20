@@ -29,7 +29,7 @@
 
 namespace {
 
-constexpr const char* kExpectedSurface = "272 tools across 27 domains";
+constexpr const char* kExpectedSurface = "311 tools across 39 domains";
 
 int g_failures = 0;
 
@@ -52,8 +52,8 @@ int main() {
   // --- 1. headers + constants ----------------------------------------------
   check(std::string(mem20::surface::summary()) == kExpectedSurface,
         "surface::summary() != \"" + std::string(kExpectedSurface) + "\"");
-  check(mem20::surface::kToolCount == 272, "kToolCount != 272");
-  check(mem20::surface::kDomainCount == 27, "kDomainCount != 27");
+  check(mem20::surface::kToolCount == 311, "kToolCount != 311");
+  check(mem20::surface::kDomainCount == 39, "kDomainCount != 39");
   check(std::string(mem20::surface::kServerVersion) ==
             std::string(mem20::kServerBaseline),
         "surface.hpp and version.hpp disagree on the server baseline");

@@ -1,7 +1,14 @@
-# RM-008 — Personal Automation Canvas
+# mem20personalautomationcanvasz — Personal Automation Canvas
 
-Outcome: Let users draw automations that combine agents, APIs, files, devices, and schedules
+First-class mem20 subsystem for personal automation canvas (create_canvas/add_workflow/add_trigger/run_workflow/canvas_health) with **6 peers**, SQLite WAL runtime, CLI, JSON HTTP API, served web cockpit, docs/app monitor, and real MCP tools. Core API preserved.
 
-Breakthrough: Non-programmers build reliable local-first software by connecting live blocks
+## Peers (6)
+`mem20autonomousworkcellsz`, `mem20agentoutputcompilerz`, `mem20selfhealingplansz`, `mem20eventstreamsuperhighwayz`, `mem20capabilitymarketplacez`, `mem20causalroutingbrainz`.
 
-Machine-executable local runtime includes versioned state, SQLite WAL persistence, events, SDK CRUD, resumable/idempotent jobs, retries/timeouts/quotas, recovery, `analyze` operation logic, decision explanations, feedback, CLI, HTTP console/API, mesh selection/failover, simulator, benchmark, metrics, and opt-in signature mode.
+## CLI (runnable)
+```bash
+cd /opt/mem20
+PYTHONPATH=/opt/mem20 /opt/mem20/.venv/bin/python -m mem20personalautomationcanvasz status
+PYTHONPATH=/opt/mem20 /opt/mem20/.venv/bin/python -m mem20personalautomationcanvasz doctor
+PYTHONPATH=/opt/mem20 /opt/mem20/.venv/bin/python -m mem20personalautomationcanvasz serve --port 8851
+```

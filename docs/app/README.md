@@ -82,6 +82,10 @@ PYTHONPATH=/opt/mem20 python3 -m mem20edgetocloudintelligencecontinuumz serve --
 
 
 
+
+## Modality Bridge (`modalitybridgez/`)
+Static page for **mem20modalitybridgez** (RM-064,#334). - Page: `docs/app/modalitybridgez/index.html` - Conformance: `.../conformance.py mem20modalitybridgez`
+
 ## mem20meshz Mesh Gold Runtime (`meshz/`)
 
 Static page for **mem20meshz** (#333): 6 vendored meshes + 6 external ecosystem integrations, lazy orchestration.
@@ -368,3 +372,4 @@ served by the fleet process itself at its root URL.
 - [Offer Genome Engine monitor](offergenomeenginez/index.html) — `PYTHONPATH=/opt/mem20 /opt/mem20/.venv/bin/python -m mem20offergenomeenginez serve --port 8848`
 - [Opportunity Radar monitor](opportunityradarz/index.html) — `PYTHONPATH=/opt/mem20 /opt/mem20/.venv/bin/python -m mem20opportunityradarz serve --port 8849`
 - [Outcome Simulation Lab monitor](outcomesimulationlabz/index.html) — `PYTHONPATH=/opt/mem20 /opt/mem20/.venv/bin/python -m mem20outcomesimulationlabz serve --port 8850`
+- [Personal Automation Canvas monitor](personalautomationcanvasz/index.html) — `PYTHONPATH=/opt/mem20 /opt/mem20/.venv/bin/python -m mem20personalautomationcanvasz serve --port 8851`

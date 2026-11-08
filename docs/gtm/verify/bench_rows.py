@@ -66,36 +66,65 @@ def trust(d):
 
 
 def discrepancies(d):
+    """Check latest.md against latest.json instead of asserting old drift.
+
+    This block used to hardcode five disagreements (a p50 column that was not
+    the json p50, a trust row reporting the per-query row count, a phantom
+    per-query.jsonl.gz, and two provenance keys that never existed). Those were
+    real, and they are fixed: latest.md is now rendered from latest.json by
+    benchmarks/render_latest_md.py. Asserting them here would make the verifier
+    lie in the other direction, so it now measures.
+    """
+    import re
     print()
     print("=== latest.md vs latest.json ===")
-    print("json trust.queries_with_drift_diagnostic = %s"
-          % d["trust"]["queries_with_drift_diagnostic"])
+    with open(MD_PATH) as f:
+        md = f.read()
+
+    problems = []
+
+    # 1. every per-kind p50 cell must equal recall.<mode>.<kind>.median_latency_ms
+    rows = re.findall(
+        r"^\| `([a-z0-9-]+)` \| ([a-z_]+) \| (\d+) \| ([\d.]+) \| ([\d.]+) \| "
+        r"([\d.]+) \| ([\d.]+) \|", md, re.M)
+    for mode, kind, n, hit, mrr, leak, p50 in rows:
+        cell = d["recall"].get(mode, {}).get(kind)
+        if cell is None:
+            problems.append(f"md row {mode}/{kind} has no json cell")
+            continue
+        if int(n) != cell["n"]:
+            problems.append(f"{mode}/{kind}: n {n} != {cell['n']}")
+        for label, got, want in (("hit", hit, cell["hit_rate"]),
+                                 ("mrr", mrr, cell["mrr"]),
+                                 ("leak", leak, cell["leak_rate"]),
+                                 ("p50", p50, cell["median_latency_ms"])):
+            if abs(float(got) - want) > 0.06:
+                problems.append(f"{mode}/{kind}: {label} {got} != {want}")
+
+    # 2. the trust row must be the json value, not the per-query row count
+    want = d["trust"]["queries_with_drift_diagnostic"]
+    if f"| Queries reporting a drift diagnostic | {want} |" not in md:
+        problems.append(
+            f"md trust row is not json queries_with_drift_diagnostic={want}")
+
+    # 3. no phantom per-query.jsonl.gz claim anywhere in the artifact
+    if "per-query.jsonl.gz" in md or "per-query.jsonl.gz" in json.dumps(d):
+        problems.append("phantom per-query.jsonl.gz claim still present")
+
+    # 4. the dataset digest cited in md must be a real run_manifest digest
+    digests = set(d["run_manifest"]["corpus_sha256"].values())
+    for cited in re.findall(r"sha256 `([0-9a-f]{12})", md):
+        if not any(x.startswith(cited) for x in digests):
+            problems.append(f"md cites sha256 {cited} not in run_manifest")
+
+    if problems:
+        print("DRIFT (%d):" % len(problems))
+        for p in problems:
+            print("  -", p)
+    else:
+        print("OK: latest.md matches latest.json on every checked cell")
+    print()
     print("json per_query_note = %s" % d.get("per_query_note"))
-    print()
-    print("json latency p50 per mode:")
-    for m, v in d["latency_ms"].items():
-        print("  %-20s p50=%s" % (m, v["p50"]))
-    print()
-    print("json recall median_latency_ms per mode/kind (first kind only):")
-    for m, rows in d["recall"].items():
-        first = next(iter(rows.values()))
-        print("  %-20s %s" % (m, first["median_latency_ms"]))
-    print()
-    print("--- claims made by latest.md that the json does not support ---")
-    print("1. per-row 'p50 ms' column: md prints 5.2 / 18.5 / 168.5 / 173.5 for")
-    print("   bm25 / vector / hybrid / keyword; json latency_ms p50 is")
-    print("   102.2 / 204.94 / 1797.13 / 1692.2. The md column is not the json p50.")
-    print("2. md 'Queries reporting a diagnostic 1530' vs json")
-    print("   trust.queries_with_drift_diagnostic = %s."
-          % d["trust"]["queries_with_drift_diagnostic"])
-    print("   1530 is the per-query ROW count (250 probes x 6 text modes + 30 graph),")
-    print("   not a count of queries reporting a diagnostic.")
-    print("3. json per_query_note claims per-query.jsonl.gz is committed next to the")
-    print("   file. It is absent: `ls benchmarks/results/` shows only latest.md/json.")
-    print("4. benchmarks/run-7modes.sh says it reads latest.json -> provenance.commit")
-    print("   and dataset_sha256. Neither key exists in latest.json.")
-    print("5. latest.md cites dataset sha256 c7031ab7ac08; latest.json carries only")
-    print("   per-file sha256s under run_manifest.corpus_sha256, no dataset_sha256.")
 
 
 def main():

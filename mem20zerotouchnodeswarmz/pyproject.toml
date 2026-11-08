@@ -5,7 +5,7 @@ build-backend="setuptools.build_meta"
 [project]
 name="mem20zerotouchnodeswarmz"
 version="1.0.0"
-description="Zero-touch node swarm: discovery, joining, task distribution, healing"
+description="Zero-touch node swarm with 6 peers, HTTP cockpit, MCP"
 requires-python=">=3.11"
 
 [project.scripts]
@@ -14,4 +14,4 @@ mem20zerotouchnodeswarmz="mem20zerotouchnodeswarmz.runtime:main"
 [tool.setuptools]
 packages=["mem20zerotouchnodeswarmz"]
 [tool.setuptools.package-data]
-mem20zerotouchnodeswarmz=["CAPABILITY.json","roadmap.json"]
+mem20zerotouchnodeswarmz=["CAPABILITY.json","roadmap.json","web/*"]

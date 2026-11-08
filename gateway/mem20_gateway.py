@@ -110,6 +110,12 @@ SUBSYSTEMS = {
         "owner": "mem20-webdev",
         "wave": 2,
     },
+    "mem20labz": {
+        "purpose": "Laboratory Runtime (#331): 1st-class control plane for 10 member labs with registry/probes/simulation, 6-peer ecosystem signals, durable SQLite WAL run history, CLI/API/web",
+        "entry": "python -m mem20labz status",
+        "owner": "mem20-webdev",
+        "wave": 2,
+    },
     "mem20intenttomissioncompilerz": {
         "purpose": "Intent-to-Mission Compiler (RM-031, #330): convert objectives into executable missions with dependencies, roles, completion criteria; 6-peer integrations (intent, goal scheduling, priority, skill graph, reversible execution, self-healing planning)",
         "entry": "python -m mem20intenttomissioncompilerz execute '{\"goal\":\"design and ship feature\",\"parts\":[\"design\",\"build\",\"test\"]}'",

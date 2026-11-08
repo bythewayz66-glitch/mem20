@@ -79,6 +79,15 @@ PYTHONPATH=/opt/mem20 python3 -m mem20edgetocloudintelligencecontinuumz serve --
 
 
 
+
+## Intent-to-Mission Compiler (`intenttomissioncompilerz/`)
+
+Static page for **mem20intenttomissioncompilerz** (RM-031, #330): converts objectives into executable missions with dependencies, roles, and completion criteria. Includes CLI/serve usage and real 6-peer integration summary.
+
+- Page: `docs/app/intenttomissioncompilerz/index.html`
+- Subsystem: `mem20intenttomissioncompilerz/` (`python -m mem20intenttomissioncompilerz execute ...`, `serve`, `simulate`)
+- Conformance: `PYTHONPATH=/opt/mem20 .venv/bin/python scripts/renovation/conformance.py mem20intenttomissioncompilerz`
+
 ## GOAP Agent Designer monitor (`goap-agent-designer/`)
 
 [`goap-agent-designer/index.html`](goap-agent-designer/index.html) — static monitor for RM-226 (#320). Reads `/spec`/`/metrics`/`/doctor` (`?api=`).
@@ -334,3 +343,4 @@ served by the fleet process itself at its root URL.
 - [Unit Economics Autopilot monitor](uniteconomicsautopilotz/index.html) — `PYTHONPATH=/opt/mem20 /opt/mem20/.venv/bin/python -m mem20uniteconomicsautopilotz serve --port 8841`
 - [Universal Health Nervous System monitor](universalhealthnervoussystemz/index.html) — `PYTHONPATH=/opt/mem20 /opt/mem20/.venv/bin/python -m mem20universalhealthnervoussystemz serve --port 8842`
 - [Universal Integration Compiler monitor](universalintegrationcompilerz/index.html) — `PYTHONPATH=/opt/mem20 /opt/mem20/.venv/bin/python -m mem20universalintegrationcompilerz serve --port 8843`
+- [Visual Agent Blackboard monitor](visualagentblackboardz/index.html) — `PYTHONPATH=/opt/mem20 /opt/mem20/.venv/bin/python -m mem20visualagentblackboardz serve --port 8844`

@@ -1,24 +1,14 @@
-# RM-225 — Visual Agent Blackboard
+# mem20visualagentblackboardz — Visual Agent Blackboard
 
-**Outcome:** Expose agent perceptions, goals, memory, plans, messages, and live actions
+First-class mem20 subsystem for visual agent blackboard (create_blackboard/post/read/clear/blackboard_health) with **6 peers**, SQLite WAL runtime, CLI, JSON HTTP API, served web cockpit, docs/app monitor, and real MCP tools. Core API preserved.
 
-**Breakthrough:** Autonomous behavior becomes understandable and debuggable
+## Peers (6)
+`mem20autonomousworkcellsz`, `mem20agentoutputcompilerz`, `mem20realtimeteampresencez`, `mem20episodicmemorygraphz`, `mem20eventstreamsuperhighwayz`, `mem20capabilitymarketplacez`.
 
-This package is the machine-executable local implementation derived from the supplied Off Record Lab roadmap. It includes versioned typed state, SQLite WAL persistence, event history/snapshots, SDK CRUD/subscription, resumable idempotent jobs, cancellation, retries/timeouts/quotas/backpressure, deterministic replica reconciliation, local/hybrid/cloud placement/failover, roadmap-specific `search` logic, decision confidence/explanations, feedback, CLI, HTTP console/API, safety guards, simulator, benchmark/metrics, and rollback-capable installer.
-
-Named live product surfaces, real provider/device credentials, production traffic, and governed FreeStack deployment remain target-environment integration and are not claimed complete.
-
-## Run
-
+## CLI (runnable)
 ```bash
-# CLI help, then exercise the local runtime end to end
-python -m mem20visualagentblackboardz --help
-python -m mem20visualagentblackboardz simulate
-python -m mem20visualagentblackboardz benchmark
-```
-
-## Tests
-
-```bash
-PYTHONPATH=/opt/mem20 .venv/bin/python -m pytest mem20visualagentblackboardz/mem20visualagentblackboardz/tests -q
+cd /opt/mem20
+PYTHONPATH=/opt/mem20 /opt/mem20/.venv/bin/python -m mem20visualagentblackboardz status
+PYTHONPATH=/opt/mem20 /opt/mem20/.venv/bin/python -m mem20visualagentblackboardz doctor
+PYTHONPATH=/opt/mem20 /opt/mem20/.venv/bin/python -m mem20visualagentblackboardz serve --port 8844
 ```

@@ -381,3 +381,4 @@ served by the fleet process itself at its root URL.
 - [Personal Automation Canvas monitor](personalautomationcanvasz/index.html) — `PYTHONPATH=/opt/mem20 /opt/mem20/.venv/bin/python -m mem20personalautomationcanvasz serve --port 8851`
 - [Personal Cognitive Search monitor](personalcognitivesearchz/index.html) — `PYTHONPATH=/opt/mem20 /opt/mem20/.venv/bin/python -m mem20personalcognitivesearchz serve --port 8852`
 - [Personal Model Evolution monitor](personalmodelevolutionz/index.html) — `PYTHONPATH=/opt/mem20 /opt/mem20/.venv/bin/python -m mem20personalmodelevolutionz serve --port 8853`
+- [Personal Workflow Twin monitor](personalworkflowtwinz/index.html) — `PYTHONPATH=/opt/mem20 /opt/mem20/.venv/bin/python -m mem20personalworkflowtwinz serve --port 8854`

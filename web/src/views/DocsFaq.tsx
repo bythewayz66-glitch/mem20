@@ -136,9 +136,8 @@ const FAQ: Array<{ q: string; a: React.ReactNode; src: string; tags: string[] }>
         <span className="mono">install()</span> is called from{' '}
         <span className="mono">mcp/tools/__init__.py</span>). A declaration that is never wired is
         not a tool the server can answer, so it is excluded from the count and listed separately as
-        unwired. <span className="mono">257</span>, <span className="mono">258</span>,{' '}
-        <span className="mono">268</span> and <span className="mono">270</span> are retired counts
-        and are not restated here.
+        unwired. Older counts quoted in past decks and release notes are retired and are not
+        restated here — the number above is the only one this build asserts.
       </>
     ),
     src: 'src/data/tools.json (wiring-checked AST extraction)',

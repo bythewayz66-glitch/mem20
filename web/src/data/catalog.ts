@@ -7,8 +7,8 @@
  *                                   — what .github/workflows/mem20-web.yml
  *                                     writes when it regenerates the catalog
  *
- * Commit 09ac980 regenerated the file at 270 tools / 27 domains but left the
- * three view components reading the long keys, so every row in the tool
+ * Commit 09ac980 regenerated the file at an older tool/domain count but left
+ * the three view components reading the long keys, so every row in the tool
  * reference rendered `undefined`. Teaching each view the short keys would just
  * move the breakage to the next regeneration, so normalise once here and
  * accept either shape.

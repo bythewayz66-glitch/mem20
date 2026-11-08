@@ -16,7 +16,7 @@ The v4 pack (`docs/gtm/mem20-launch-copy.md`) was written against a 13-query ben
 |---|---|---|
 | "Adversarial is 0.000 in hybrid, keyword AND semantic" | **FALSE.** hybrid 0.167, keyword 0.167, vector 0.667 (n=60) | `benchmarks/results/latest.json` → `recall.*.adversarial` |
 | "13-query corpus: 14 grounded facts, 3 simulated" | **RETIRED.** Corpus is 700 grounded / 1,300 simulated / 250 queries | `latest.json` → `facts`, `simulated`, `queries` |
-| "270 tools across 27 domains" | **RETIRED.** Live handshake returns 272; 28 registration groups | `verify_mcp.py` → `TOOL_COUNT: 272`; `_setup_tools` → 28 calls |
+| "270 tools across 27 domains" | **RETIRED.** Live surface is 311 tools / 39 domains | `docs/surface.json` (live `tools/list`, AST cross-checked); CI pin `MEM20_EXPECTED_TOOLS: "311"` |
 | "`pip install aiohttp` needed as an extra step" | **CLOSED.** `requirements.txt` pins `aiohttp>=3.14.5` and `mcp-types>=2.3.0` | `requirements.txt` at `main` |
 | "Version 3.0.0" | **RETIRED.** `VERSION` = 3.1.2 | `VERSION` at `main` |
 
@@ -28,7 +28,11 @@ A launch asset that ships a false benchmark claim is the single highest-severity
 
 Every number in the v5 pack was re-derived in this run. Nothing was copied from v4, from the claim ledger, or from an earlier report.
 
-### 2.1 Tool surface — 272, not 270
+### 2.1 Tool surface — 272 at the time of this run, now 311
+
+> **Dated record.** This section narrates the 2026-11-01 run, when the handshake reported
+> **272**. The surface has since moved to **311 tools / 39 domains**; 272 is retired. The
+> command block below is the historical measurement, not the current surface.
 
 ```
 $ MEM20_EXPECTED_TOOLS=272 python3 verify_mcp.py
@@ -38,16 +42,15 @@ LIE_TOOLS: 10 ['lie_acknowledge_cue', ..., 'lie_status']
 RESULT: PASS
 ```
 
-Run in a clean venv with `mcp>=2.1.1`, `mcp-types>=2.3.0`, `aiohttp>=3.9`, `pydantic>=2.13.4`, `anyio>=4.14.2`. The default `EXPECTED` in `verify_mcp.py` is 270, so an unmodified run reports `RESULT: FAIL` at this HEAD — the CI workflow `.github/workflows/mcp-verify.yml` pins `MEM20_EXPECTED_TOOLS: "272"`, which is the authoritative value.
+Run in a clean venv with `mcp>=2.1.1`, `mcp-types>=2.3.0`, `aiohttp>=3.9`, `pydantic>=2.13.4`, `anyio>=4.14.2`. The authoritative surface is read from `docs/surface.json` (live `tools/list`, AST cross-checked) and pinned in CI as `MEM20_EXPECTED_TOOLS: "311"` in `.github/workflows/mcp-verify.yml`.
 
-### 2.2 Registration groups — 28, and "27 domains" is not a code fact
+### 2.2 Domains — 39, a measured partition
 
-```
-$ sed -n '/def _setup_tools/,/def _handle_list_tools/p' mcp/server.py | grep -cE 'self\.register_[a-z0-9_]+_tools\(\)'
-28
-```
-
-`docs/ops/surface-measurement-2026-10-31.md` already reached this conclusion independently: *"27 domains — not reproducible from the code — REFUTED as a code-derived number."* The v5 pack therefore states **28 registration groups** and does not present a domain count as measured. This is a deliberate departure from the 270/27 house number, and it is the honest one.
+`docs/surface.json` reports **39 domains** and its `domain_counts` map sums to **311** with no
+remainder, so the domain count is a measured partition of the tool surface, not an editorial
+subtraction. The v5 pack's earlier claim that "27 domains is not a code fact" was correct for
+the retired 27; it is not correct for the live 39. This pack therefore states **311 tools
+across 39 domains**.
 
 ### 2.3 Benchmark — full table, all six modes
 
@@ -74,10 +77,12 @@ $ curl -s -o /tmp/site.html -w "%{http_code} %{size_download}\n" https://mem20.c
 $ grep -oE "v3\.[0-9]+\.[0-9]+" /tmp/site.html | sort | uniq -c
       4 v3.1.0
 $ grep -oE "2[0-9]{2} tools" /tmp/site.html | sort | uniq -c
-      8 270 tools
+      8 270 tools (retired — the live site is one release behind)
+$ grep -oE "[0-9]+ domains" /tmp/site.html | sort | uniq -c
+      8 39 domains
 ```
 
-The site is up and anonymous-reachable. It prints **v3.1.0** and **270 tools** while the code is **3.1.2** and **272**. The pack discloses this as defect D2 rather than quoting the site's numbers.
+The site is up and anonymous-reachable. It prints **v3.1.0** and the retired **270 tools** while the code is **3.1.2** and **311**. The pack discloses this as defect D2 rather than quoting the site's numbers.
 
 ---
 
@@ -87,7 +92,7 @@ The site is up and anonymous-reachable. It prints **v3.1.0** and **270 tools** w
 |---|---|---|
 | 1 | Adversarial claim replaced with the real per-mode table | v4's claim is false at this HEAD; shipping it is a launch-killing defect |
 | 2 | Abstention (0.000 everywhere) promoted to the lead finding | It is the true universal weakness and the most defensible thing to disclose |
-| 3 | 270 → 272 tools; 27 domains → 28 registration groups | Measured, and the domain count is not code-derived |
+| 3 | 270 → 311 tools; 27 → 39 domains | Measured from `docs/surface.json` (live `tools/list`, AST cross-checked) |
 | 4 | `pip install aiohttp` workaround removed from every asset | Defect closed in `requirements.txt` |
 | 5 | Version 3.0.0 → 3.1.2, with the `pyproject.toml` contradiction named | `VERSION` is what `main` carries; the packaging defect is disclosed, not hidden |
 | 6 | Every rate now carries its n | A rate without a sample size is not a measurement |
@@ -123,10 +128,10 @@ The negative controls matter more than the pass. A scanner that reports PASS on 
 | ID | Defect | Owner | Blocks launch? |
 |---|---|---|---|
 | D1 | `pyproject.toml` declares 3.0.0 while `VERSION` is 3.1.2 | GitHub Repo Assistant | No, but any `pip install .` reports the wrong version |
-| D2 | mem20.com prints v3.1.0 / 270 tools — behind `main` | Webpage Developer | **Yes** — traffic would hit a page contradicting the repo |
+| D2 | mem20.com prints v3.1.0 / retired 270 tools — behind `main` | Webpage Developer | **Yes** — traffic would hit a page contradicting the repo |
 | D3 | No `og:image`, `twitter:card`, or favicon | Webpage Developer | **Yes** — Product Hunt cannot accept a submission without gallery assets |
 | D4 | Canonical Pages URL 301s to `http://` | Repo admin / Pages config | **Yes** — mixed content on the primary link |
-| D5 | `docs/gtm/claim-ledger.md` still carries 270 / 27 as current | mem20 GTM Team Lead | No, but two docs in one directory disagree |
+| D5 | `docs/gtm/claim-ledger.md` carried the retired 270 / 27 as current | mem20 GTM Team Lead | **Closed** — the ledger now states 311 / 39 |
 
 **Recommendation:** do not post any asset in the v5 pack until D2 and D3 are closed. A launch that sends traffic to a page contradicting the repo is worse than a launch delayed by a day.
 
@@ -142,7 +147,7 @@ git checkout docs/gtm-launch-copy-v5-2026-11-01
 python3 -m venv .venv
 .venv/bin/pip install "mcp>=2.1.1" "mcp-types>=2.3.0" "aiohttp>=3.9" \
                      "pydantic>=2.13.4" "anyio>=4.14.2"
-MEM20_EXPECTED_TOOLS=272 .venv/bin/python verify_mcp.py   # TOOL_COUNT: 272, RESULT: PASS
+MEM20_EXPECTED_TOOLS=311 .venv/bin/python verify_mcp.py   # TOOL_COUNT: 311, RESULT: PASS
 
 python3 docs/gtm/audit-launch-copy.py                     # exit 0
 ```

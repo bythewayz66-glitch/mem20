@@ -29,7 +29,7 @@ and no amount of link hygiene changes that.**
 
 ## 2. Redirect topology — verified, and it does preserve the query string
 
-Every tracked link is built on `https://bythewayz66-glitch.github.io/mem20/`. That host does not
+Every tracked link is built on `https://mem20.com/`. The legacy `github.io/mem20/` host does not
 serve the page directly; it redirects. Verified anonymously (no token) on 2026-11-01:
 
 | Hop | Result |
@@ -161,23 +161,25 @@ This is an owner decision, not a GTM-runnable one: it changes the public page.
 
 ---
 
-## 7. Known drift found while building this (not fixed here)
+## 7. Known drift found while building this (resolved 2026-11-07)
 
-**The tool-surface number is inconsistent between CI and the claim ledger.**
+**The tool-surface number was inconsistent between CI and the claim ledger.**
 
-| Source | Says | Location |
+| Source | Said (2026-11-01) | Location |
 |---|---|---|
 | CI pin | **272** | `.github/workflows/mcp-verify.yml:47` → `MEM20_EXPECTED_TOOLS: "272"` |
-| Claim ledger V7 | **270**, and asserts CI pins 270 | `docs/gtm/claim-ledger.md:90` |
+| Claim ledger V7 | **270**, and asserted CI pins 270 | `docs/gtm/claim-ledger.md:90` |
 
-The ledger's V7 row states "CI `.github/workflows/mcp-verify.yml` pins `MEM20_EXPECTED_TOOLS: "270"`".
-That is no longer true — the pin is 272. The ledger row is stale on its own evidence.
+The ledger's V7 row stated "CI `.github/workflows/mcp-verify.yml` pins `MEM20_EXPECTED_TOOLS: "270"`".
+That was already stale — the pin was 272. The ledger row was stale on its own evidence.
 
-`python3 verify_mcp.py` could not be used to settle it in this environment (it exits with
-`EOF from server`), so **272 is reported here as the CI pin, not as a verified handshake count.**
-A raw `grep -rhoE 'self\.tools\[' mcp/ --include="*.py" | wc -l` returns 286 literal hits and 282
-unique quoted names at this HEAD, which matches neither number — the counting method matters and
-should be pinned down by whoever owns the surface claim.
+**Resolved 2026-11-07.** The live surface is **311 tools / 39 domains**, read from
+`docs/surface.json` (live `tools/list`, AST cross-checked) and pinned in CI as
+`MEM20_EXPECTED_TOOLS: "311"`. The claim ledger now states 311/39, and 270 and 272 are retired
+values that may appear only as explicitly labelled history. The disk heuristic quoted below
+(`grep -rhoE 'self\.tools\['`) is **not** the surface — it double-counts installer wrappers and
+duplicate assignments — which is why it matched neither number; the authoritative read is
+`python3 scripts/surface_manifest.py --check-docs` → `OK`.
 
 **This file does not edit `claim-ledger.md`** — that file is owned by the GTM Team Lead
 (`docs/ws1-gtm-claim-ledger-refresh`). The drift is recorded here so it is not lost.
@@ -196,7 +198,7 @@ python3 scripts/check_gtm_claims.py --strict     # fail on any violation, any ow
 
 It flags four classes of statement:
 
-1. **`RETIRED_TOOL_COUNT`** — 257 / 258 / 268 (or 26 domains) presented as the current surface.
+1. **`RETIRED_TOOL_COUNT`** — 257 / 258 / 268 / 270 / 272 (or 26 / 27 domains) presented as the current surface.
 2. **`SITES_URL`** — a `/sites/` or `/files/` artifact URL used as a destination. Those return 403
    to an anonymous visitor, so a launch link pointing at one is a dead end. URLs quoted *as
    evidence of the 403* are recorded separately and do not fail the run.

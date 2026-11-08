@@ -17,53 +17,121 @@ end
 
 # --- surface:check ---------------------------------------------------------
 #
-# Compares Mem20::Surface with the authoritative live manifest in
-# docs/surface.json, which scripts/surface_manifest.py generates from a real
-# `tools/list` response and cross-checks against the AST catalog in
-# web/src/data/tools.json. The counts quoted in the README and docs/ went stale
-# three different ways (257 / 268 / 270) precisely because nothing recounted
-# them against the live surface.
+# Recounts the mem20 tool surface from the Python sources and compares it with
+# Mem20::Surface. The counts quoted in the README and docs/ went stale three
+# different ways (257 / 268 / 270 / 272) precisely because nothing recounted them.
+# Run from the SDK directory with the repo checked out one level up:
 #
 #   rake surface:check
 module SurfaceCheck
   REPO_ROOT = File.expand_path("..", __dir__)
-  SURFACE_JSON = File.join(REPO_ROOT, "docs", "surface.json")
+  MCP_DIR = File.join(REPO_ROOT, "mcp")
+
+  # `self.tools["name"] = mt.Tool(...)` is the only registration style in the
+  # server; there is no decorator form to account for.
+  REGISTRATION = /self\.tools\["([a-z0-9_]+)"\]\s*=/
+
+  # Domain modules: the mixins under mcp/tools/ plus the three that live
+  # directly in mcp/. `lie_bootstrap.py` / `error_handler.py` register nothing.
+  #
+  # NOT every file under mcp/tools/ is reachable. `lattice_tools.py` and
+  # `eventstream_tools.py` define `LatticeToolsMixin` / `EventStreamToolsMixin`
+  # but `mcp/server.py` never imports or registers them, so their 10 tools
+  # (lattice_* / stream_*) are absent from `tools/list`. Counting every file in
+  # the directory therefore over-reports by 10. Only the
+  # mixins the server actually registers are counted, which is what the live
+  # surface contains.
+  DOMAIN_GLOBS = [
+    File.join(MCP_DIR, "tools", "*.py"),
+    File.join(MCP_DIR, "memory_tools.py"),
+    File.join(MCP_DIR, "cognitive_tools.py"),
+    File.join(MCP_DIR, "roadmap_tools.py")
+  ].freeze
+
+  # Mixin modules that exist on disk but are never wired into the server.
+  # Bracket arrays, not %w[]: .rubocop.yml sets Style/WordArray to `brackets`.
+  UNREGISTERED_MODULES = ["lattice_tools.py", "eventstream_tools.py"].freeze
+
+  # Installer modules: they do not define a domain of their own, they
+  # monkeypatch `VersionControlToolsMixin#register_versioncontrol_tools` to add
+  # one tool each. Their tools belong to the version-control domain, so the
+  # names are counted but the files are not counted as modules.
+  INSTALLER_MODULES = ["rm239_tools.py", "rm052_tools.py"].freeze
+
+  # Tools registered by the server itself (`register_job_tools`), which belong
+  # to the transport rather than to any domain.
+  INFRA_FILE = File.join(MCP_DIR, "server.py")
 
   DRIFT_MESSAGE = "surface drift detected - update lib/mem20/surface.rb " \
                   "and the counts in README.md/docs/"
 
   module_function
 
-  def manifest
-    require "json"
-    JSON.parse(File.read(SURFACE_JSON))
+  def names_in(path)
+    File.read(path).scan(REGISTRATION).flatten.uniq
+  end
+
+  # Files that actually contribute to the live surface: every domain glob,
+  # minus the mixins the server never registers.
+  def domain_files
+    DOMAIN_GLOBS.flat_map { |glob| Dir[glob] }.sort.uniq
+                .reject { |path| UNREGISTERED_MODULES.include?(File.basename(path)) }
+  end
+
+  # path => tool names, dropping files that register nothing.
+  def domain_map
+    domain_files.to_h { |path| [path, names_in(path)] }
+                .reject { |_path, names| names.empty? }
+  end
+
+  def measure
+    domain = domain_map
+    modules = domain.keys.reject { |path| INSTALLER_MODULES.include?(File.basename(path)) }
+    {
+      modules: modules.size,
+      domain: domain.values.flatten.uniq.sort,
+      infra: names_in(INFRA_FILE).sort
+    }
+  end
+
+  def actual
+    @actual ||= measure
+  end
+
+  def total
+    @total ||= (actual[:domain] + actual[:infra]).uniq
   end
 
   def mismatch(label, got, want, const_name)
     return nil if got == want
 
-    "#{label}: docs/surface.json #{got} != Surface::#{const_name} #{want}"
+    "#{label}: source #{got} != Surface::#{const_name} #{want}"
+  end
+
+  def infra_problems
+    source = actual[:infra].sort
+    expected = Mem20::Surface::INFRA_TOOLS.sort
+    return [] if source == expected
+
+    ["infra tools: source #{source.inspect} != Surface::INFRA_TOOLS #{expected.inspect}"]
   end
 
   def problems
-    data = manifest
-    live_tools = data.fetch("tools")
-    live_domains = data.fetch("domains")
     [
-      mismatch("total tools", live_tools, Mem20::Surface::TOOL_COUNT, "TOOL_COUNT"),
-      mismatch("domains", live_domains, Mem20::Surface::DOMAIN_COUNT, "DOMAIN_COUNT"),
-      mismatch("domain tools", live_tools, Mem20::Surface::DOMAIN_TOOLS, "DOMAIN_TOOLS")
-    ].compact
+      mismatch("domain modules", actual[:modules], Mem20::Surface::DOMAIN_COUNT, "DOMAIN_COUNT"),
+      mismatch("domain tools", actual[:domain].size, Mem20::Surface::DOMAIN_TOOLS, "DOMAIN_TOOLS"),
+      mismatch("total tools", total.size, Mem20::Surface::TOOL_COUNT, "TOOL_COUNT")
+    ].compact + infra_problems
   end
 
   def report
-    data = manifest
-    puts "manifest: #{data['tools']} tools across #{data['domains']} domains (docs/surface.json)"
-    puts "surface:  #{Mem20::Surface.summary}"
+    puts "source:  #{actual[:modules]} modules, #{actual[:domain].size} domain tools, " \
+         "#{actual[:infra].size} infra tools (#{actual[:infra].join(", ")}), #{total.size} total"
+    puts "surface: #{Mem20::Surface.summary}"
   end
 
   def run!
-    abort "rake surface:check: no docs/surface.json at #{SURFACE_JSON}" unless File.exist?(SURFACE_JSON)
+    abort "rake surface:check: no mcp/ directory at #{MCP_DIR}" unless Dir.exist?(MCP_DIR)
 
     require_relative "lib/mem20/surface"
 
@@ -71,12 +139,12 @@ module SurfaceCheck
     problems.each { |problem| warn "MISMATCH #{problem}" }
     abort DRIFT_MESSAGE unless problems.empty?
 
-    puts "OK - Mem20::Surface matches docs/surface.json"
+    puts "OK - Mem20::Surface matches mcp/"
   end
 end
 
 namespace :surface do
-  desc "Compare Mem20::Surface with the live manifest in docs/surface.json"
+  desc "Recount the mem20 tool surface from mcp/ and compare with Mem20::Surface"
   task :check do
     SurfaceCheck.run!
   end

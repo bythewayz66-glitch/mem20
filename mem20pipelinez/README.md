@@ -1,26 +1,16 @@
-# mem20pipelinez — crew runtime
+# mem20pipelinez — crew pipeline runtime
 
-mem20 production pipeline runtime for game-maker and software pipelines.
+Crew runtime for game-maker and software pipelines (12 members). Preserves core `MEMBERS`, `__version__`, and legacy CLI (`--version`, `--members`) while adding full depth spec: **6 peers**, SQLite WAL runtime, CLI subcommands, JSON HTTP API, served web cockpit, docs/app monitor, and real MCP tools. `estate_context` is a superset.
 
-## Members (12)
+## Peers (6)
+`mem20personalautomationcanvasz`, `mem20autonomousworkcellsz`, `mem20agentoutputcompilerz`, `mem20eventstreamsuperhighwayz`, `mem20capabilitymarketplacez`, `mem20causalroutingbrainz`.
 
-Reviewed packages grouped here for joint integration under the
-package-review rulings:
-
-- `mem20assetintakecatalogingandvalidationpipelinez`
-- `mem20audiovoiceandmusicpipelinez`
-- `mem20executablegameconceptandscopepipelinez`
-- `mem20gameplaysystemsdataandbalancepipelinez`
-- `mem20leveldesignworldbuildingandnavigationpipelinez`
-- `mem20narrativedialogueandlocalizationpipelinez`
-- `mem20personalworkflowtwinz`
-- `mem20productionplanningandtaskorchestrationpipelinez`
-- `mem20realtimestyletransferpipelinez`
-- `mem20rigginganimationandmotionpipelinez`
-- `mem20securebuildtodevicepipelinez`
-- `mem20versioncontrollargeassetandrecoverypipelinez`
-
-## Status
-
-Skeleton slice: registry, CLI (`--version`, `--members`), hermetic
-tests. Member wiring arrives in the integration phase.
+## CLI (runnable)
+```bash
+cd /opt/mem20
+PYTHONPATH=/opt/mem20 /opt/mem20/.venv/bin/python -m mem20pipelinez --version
+PYTHONPATH=/opt/mem20 /opt/mem20/.venv/bin/python -m mem20pipelinez --members
+PYTHONPATH=/opt/mem20 /opt/mem20/.venv/bin/python -m mem20pipelinez status
+PYTHONPATH=/opt/mem20 /opt/mem20/.venv/bin/python -m mem20pipelinez doctor
+PYTHONPATH=/opt/mem20 /opt/mem20/.venv/bin/python -m mem20pipelinez serve --port 8855
+```

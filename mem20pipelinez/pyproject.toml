@@ -5,7 +5,7 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "mem20pipelinez"
 version = "0.1.0"
-description = "mem20 production pipeline runtime for game-maker and software pipelines — crew runtime grouping reviewed packages for joint integration."
+description = "mem20 production pipeline runtime for game-maker and software pipelines — crew runtime with 6 peers, HTTP cockpit, MCP."
 readme = "README.md"
 requires-python = ">=3.11"
 license = { text = "MIT" }
@@ -16,7 +16,10 @@ dependencies = []
 mem20pipelinez = "mem20pipelinez.cli:main"
 
 [tool.setuptools]
-packages = ["mem20pipelinez"]
+packages = ["mem20pipelinez", "mem20pipelinez.mem20pipelinez"]
+
+[tool.setuptools.package-data]
+"mem20pipelinez.mem20pipelinez" = ["web/*"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]

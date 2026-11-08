@@ -276,6 +276,7 @@ SUBSYSTEMS = {
         "owner": "mem20-webdev",
         "wave": 2,
     },
+    "mem20pipelinez": {"purpose": "mem20pipelinez crew runtime with 6 peers, HTTP cockpit, MCP","entry":"python -m mem20pipelinez status","owner":"mem20-renovation","wave":4},
     "mem20personalworkflowtwinz": {"purpose": "Personal Workflow Twin with 6 peers, HTTP cockpit, MCP","entry":"python -m mem20personalworkflowtwinz status","owner":"mem20-renovation","wave":4},
     "mem20personalmodelevolutionz": {"purpose": "Personal Model Evolution with 6 peers, HTTP cockpit, MCP","entry":"python -m mem20personalmodelevolutionz status","owner":"mem20-renovation","wave":4},
     "mem20personalcognitivesearchz": {"purpose": "Personal Cognitive Search with 6 peers, HTTP cockpit, MCP","entry":"python -m mem20personalcognitivesearchz status","owner":"mem20-renovation","wave":4},

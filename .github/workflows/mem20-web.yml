@@ -3,15 +3,17 @@ name: mem20 web shell
 # Builds the mem20 web shell from the committed web/ source tree and publishes
 # the static bundle to docs/app/, which GitHub Pages serves at /mem20/app/.
 #
-# The tool catalog (web/src/data/tools.json) is GENERATED, not hand-written:
-# it is AST-extracted from the estate's own mcp/tools/*.py, exactly as
-# web/README.md documents. Regenerating it here keeps the catalog honest and
-# reproducible from the repo alone.
+# The tool catalog (web/src/data/tools.json) is GENERATED, not hand-written.
+# Its authority is the live server's `tools/list` response, captured in
+# docs/surface.json by scripts/surface_manifest.py. This workflow VALIDATES
+# that the committed catalog still agrees with the docs; it does not rewrite
+# it. Regenerate deliberately with `python3 scripts/surface_manifest.py
+# --write` when the surface actually changes.
 
 on:
   workflow_dispatch:
   push:
-    branches: [main, mem20frontendz]
+    branches: [main, mem20frontendz, fix/frontend-stale-refs]
     paths:
       - 'web/**'
       - '.github/workflows/mem20-web.yml'
@@ -33,29 +35,21 @@ jobs:
           ref: ${{ github.ref_name }}
           fetch-depth: 1
 
-      - name: Regenerate tool catalog from source
+      - name: Validate the tool catalog against the committed surface
         run: |
           set -euo pipefail
-          python3 web/scripts/extract-tools.py --root . --out /tmp/raw-tools.json
+          # The previous form of this step ran web/scripts/extract-tools.py and
+          # wrote its output over web/src/data/tools.json. That extractor scans
+          # every mcp/**/*.py module and reports a broader set (428 tools / 93
+          # domains) than the live server answers (311 / 39, per
+          # docs/surface.json). Overwriting the catalog with it published a
+          # count the server does not serve. Validate instead of rewriting.
+          python3 scripts/surface_manifest.py --check-docs
           python3 - <<'PY'
           import json
-          raw = json.load(open('/tmp/raw-tools.json'))
-          # Keep the extractor's own record shape (n/t/d/x/p) and its header
-          # fields. An earlier version of this step rewrote the records to
-          # long keys and dropped domain_count, which is what left the three
-          # view components reading keys the file no longer had.
-          out = {
-              "source": raw["source"],
-              "files_scanned": raw["files_scanned"],
-              "count": raw["count"],
-              "domain_count": len({t["x"] for t in raw["tools"]}),
-              "domains": sorted({t["x"] for t in raw["tools"]}),
-              "tools": raw["tools"],
-          }
-          with open('web/src/data/tools.json', 'w') as fh:
-              fh.write(json.dumps(out, separators=(",", ":")))
-          print("tools.json:", out["count"], "tools across",
-                out["domain_count"], "domains")
+          d = json.load(open('web/src/data/tools.json'))
+          print("tools.json:", d["count"], "tools across",
+                d["domain_count"], "domains")
           PY
 
       - name: Set up Node

@@ -44,9 +44,9 @@ namespace {
 
 // Live tools/list surface captured from mcp/mcp_server.py on the canonical
 // repository (bythewayz66-glitch/mem20, main). If the server's registered tool
-// table changes, this number must change with it — that is the point of the
+// table changes, this number must change with it -- that is the point of the
 // assertion.
-constexpr std::size_t kExpectedToolCount = 272;
+constexpr std::size_t kExpectedToolCount = 311;
 
 constexpr int kExitOk = 0;
 constexpr int kExitFail = 1;

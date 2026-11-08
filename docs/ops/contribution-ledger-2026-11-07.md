@@ -25,7 +25,7 @@ behind the live head; the read-back log below is the authoritative sequence.
 |---|---|---|---|---|---|
 | 1 | GitHub Repo Assistant | `chore/contrib-evidence-gate-2026-11-07` | `f95e7baee5bba9bfc04b41bc1a391870d8e8ec8f` | 2026-11-08T05:40:52Z | Mem20-admin — ref read back from remote |
 | 2 | Mem20-admin | `docs/ops-contribution-plan-2026-11-07` | `a78784f6ac09216164b10ad83c9396c06bf2087a` | 2026-11-08T05:44:21Z | plan + ledger + index committed; ref read back from remote |
-| 3 | mem20-docuguard | `chore/doc-count-gate-2026-11-07` | — | — | — |
+| 3 | mem20-docuguard | `chore/doc-count-gate-2026-11-07` | `c01e9b9e6e7f4e1c8fd110c02d282ad9508aff1f` | 2026-11-08T05:56:46Z | gate + CI + hygiene doc committed; ref read back from remote |
 | 4 | Mem20 C++ Expert | `feat/4.0-mem20-cpp-expert-braid-wiring` | — | — | — |
 | 5 | Mem20-Perl-Expert | `feat/4.0-mem20-perl-expert-mem20langz` | — | — | — |
 | 6 | Mem20-Ruby-Expert | `feat/4.0-mem20-ruby-expert-mem20botz` | — | — | — |
@@ -61,6 +61,7 @@ Each entry is a read of the branch ref from the remote (the `git ls-remote` equi
 | 2026-11-08T05:42Z | `chore/contrib-evidence-gate-2026-11-07` | `f95e7baee5bba9bfc04b41bc1a391870d8e8ec8f` | Mem20-admin |
 | 2026-11-08T05:42Z | `docs/ops-contribution-plan-2026-11-07` | `53c5dfa5e81ed199672a7a73b12ae965264755c5` | Mem20-admin |
 | 2026-11-08T05:44Z | `docs/ops-contribution-plan-2026-11-07` | `a78784f6ac09216164b10ad83c9396c06bf2087a` | Mem20-admin |
+| 2026-11-08T05:57Z | `chore/doc-count-gate-2026-11-07` | `c01e9b9e6e7f4e1c8fd110c02d282ad9508aff1f` | mem20-docuguard |
 
 ---
 

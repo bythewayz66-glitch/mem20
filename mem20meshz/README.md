@@ -10,3 +10,11 @@ Six domain mesh engines are **vendored** under `mem20meshz.meshes`:
 - selfhealing (ex `mem20selfhealingconnectormeshz`)
 
 The old top-level packages are removed after consolidation.
+
+## CLI (runnable)
+
+```bash
+cd /opt/mem20
+PYTHONPATH=/opt/mem20 /opt/mem20/.venv/bin/python -m mem20meshz --help
+PYTHONPATH=/opt/mem20 /opt/mem20/.venv/bin/python -m mem20meshz list
+```

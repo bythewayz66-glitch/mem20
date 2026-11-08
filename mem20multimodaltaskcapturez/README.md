@@ -1,7 +1,21 @@
-# RM-037 — Multimodal Task Capture
+# RM-037 — Multimodal Task Capture (#338)
 
-Outcome: Turn speech, sketches, screenshots, gestures, and rough notes into structured executable work
+**Outcome:** Turn speech, sketches, screenshots, gestures, and rough notes into structured executable work.  
+**Operation kind:** `ingest`.
 
-Breakthrough: Ideas can enter the system in the form most natural to the user
+## 1st-class implementation
+- **Domain:** `capture/merge_captures/extract_action_items/capture_health` (legacy) plus `ingest_capture` producing structured executable task + action items across modalities.
+- **Runtime:** `ingest` wired to domain + 6 peer signals.
+- **Ecosystem (6 peers, unique set):** `mem20modalitybridgez`, `mem20sensorymemoryingestz`, `mem20intentcompilerz`, `mem20personalworkflowtwinz`, `mem20agentoutputcompilerz`, `mem20episodicmemorygraphz`.
 
-Machine-executable local runtime includes versioned state, SQLite WAL persistence, events, SDK CRUD, resumable/idempotent jobs, retries/timeouts/quotas, recovery, `ingest` operation logic, decision explanations, feedback, CLI, HTTP console/API, mesh selection/failover, simulator, benchmark, metrics, and opt-in signature mode.
+## Runnable example (verified)
+```bash
+cd /opt/mem20
+PYTHONPATH=/opt/mem20 .venv/bin/python -m mem20multimodaltaskcapturez execute '{"text":"build api. test api","source":"chat"}'
+```
+
+## Tests / conformance
+```bash
+PYTHONPATH=/opt/mem20 .venv/bin/python -m pytest mem20multimodaltaskcapturez/mem20multimodaltaskcapturez/tests/test_domain.py -q
+```
+Gateway `SUBSYSTEMS["mem20multimodaltaskcapturez"]`; docs `docs/app/multimodaltaskcapturez/index.html`; target 7/7.

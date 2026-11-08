@@ -1,0 +1,16 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>mem20labz — Laboratory Runtime</title>
+<style>body{font:16px/1.5 system-ui,sans-serif;max-width:900px;margin:2rem auto;padding:0 1rem}pre{background:#111;color:#eee;padding:1rem;overflow:auto;border-radius:8px}code{font-family:ui-monospace,monospace}</style>
+</head><body>
+<h1>mem20labz — Laboratory Runtime (#331)</h1>
+<p>1st-class control plane for 10 member lab subsystems: registry/discovery, health probes, simulation orchestration, 6-peer ecosystem signals, durable SQLite WAL run history, CLI, JSON/HTTP API, and served web frontend.</p>
+<h2>CLI</h2>
+<pre><code>cd /opt/mem20
+PYTHONPATH=/opt/mem20 .venv/bin/python -m mem20labz --members
+PYTHONPATH=/opt/mem20 .venv/bin/python -m mem20labz status
+PYTHONPATH=/opt/mem20 .venv/bin/python -m mem20labz signals
+PYTHONPATH=/opt/mem20 .venv/bin/python -m mem20labz serve --port 8841</code></pre>
+<p>API/frontend routes: <code>/</code>, <code>/api/status</code>, <code>/api/registry</code>, <code>/api/probe</code>, <code>/api/simulate</code>, <code>/api/signals</code>, <code>/api/history</code>, <code>/health</code>.</p>
+<p>Source: <a href="../../../mem20labz/README.md">mem20labz/README.md</a></p>
+</body></html>

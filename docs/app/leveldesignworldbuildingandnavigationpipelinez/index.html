@@ -1,0 +1,9 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Level/World/Nav Pipeline (#332)</title>
+<style>body{font:16px/1.5 system-ui,sans-serif;max-width:900px;margin:2rem auto;padding:0 1rem}pre{background:#111;color:#eee;padding:1rem;overflow:auto;border-radius:8px}</style></head><body>
+<h1>RM-246 Level Design, World-Building and Navigation Pipeline (#332)</h1>
+<p>1st-class pipeline: blockout→encounters→navigation→streaming→lighting→playability tests with stages/artifacts/dependencies/transformations/checkpoints, navmesh/pathfinding/playability validation, 6 real peer integrations, CLI/HTTP runtime.</p>
+<pre><code>cd /opt/mem20
+PYTHONPATH=/opt/mem20 .venv/bin/python -m mem20leveldesignworldbuildingandnavigationpipelinez execute \
+  '{"goal":"build level","grid":[[0,0],[0,0]],"rooms":[{"id":"r1"}],"stages":["blockout","navigation","playability_tests"]}'</code></pre>
+<p><a href="../../../mem20leveldesignworldbuildingandnavigationpipelinez/README.md">README</a></p>
+</body></html>

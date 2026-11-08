@@ -179,6 +179,12 @@ class Engine:
                 if o.get('blocked'):blocked.append(o)
                 else:done.append(o.get('id',o.get('name','stage')))
             return {'completed':done,'blocked':blocked,'progress':round(len(done)/max(1,len(stages)),4)}
+        if k in ('graph','pipeline'):
+            try:
+                from . import domain as _dom, ecosystem as _eco
+                res=_dom.export_narrative(p); res['signals']=_eco.narrative_signals(p); return res
+            except Exception as e:
+                return {'ok':False,'error':f"{type(e).__name__}: {e}"}
         vals=[float(x) for x in p.get('values',[]) if isinstance(x,(int,float))];return {'count':len(vals),'mean':statistics.fmean(vals) if vals else None,'min':min(vals) if vals else None,'max':max(vals) if vals else None,'decision':d.choice,'confidence':d.confidence,'explanation':d.explanation}
     def _cache_get(self,key):
         with self._cache_lock:

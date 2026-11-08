@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>mem20intenttomissioncompilerz — Intent-to-Mission Compiler</title>
+  <style>body{font:16px/1.5 system-ui,sans-serif;max-width:900px;margin:2rem auto;padding:0 1rem}pre{background:#111;color:#eee;padding:1rem;overflow:auto;border-radius:8px}code{font-family:ui-monospace,monospace}a{color:#7dd3fc}</style>
+</head>
+<body>
+  <h1>RM-031 Intent-to-Mission Compiler</h1>
+  <p><strong>Subsystem:</strong> <code>mem20intenttomissioncompilerz</code> (#330). Converts a human objective into an executable mission with dependencies, roles, and completion criteria. Includes real integrations with intent parsing, goal scheduling, priority collision resolution, skill/role analysis, reversible execution planning, and self-healing mission planning.</p>
+  <h2>Run (CLI)</h2>
+  <pre><code>cd /opt/mem20
+PYTHONPATH=/opt/mem20 .venv/bin/python -m mem20intenttomissioncompilerz execute \
+  '{"goal":"design and ship feature","parts":["design","build","test"],"agents":["planner","engineer"]}'</code></pre>
+  <p>Returns a live mission plan: <code>mission_id</code>, ordered <code>steps</code> with <code>depends_on</code>/<code>role</code>/<code>completion_criteria</code>/<code>status</code>, <code>dependencies</code>, validation/progress, and 6 peer signal reports (fail-open, honest <code>ok/error</code>).</p>
+  <h2>Serve web console/API</h2>
+  <pre><code>cd /opt/mem20
+PYTHONPATH=/opt/mem20 .venv/bin/python -m mem20intenttomissioncompilerz serve --port 8831</code></pre>
+  <p>Starts the runtime HTTP console/API (versioned SQLite WAL state, events/jobs, metrics/health routes as provided by the runtime).</p>
+  <h2>Conformance</h2>
+  <pre><code>cd /opt/mem20
+PYTHONPATH=/opt/mem20 .venv/bin/python scripts/renovation/conformance.py mem20intenttomissioncompilerz</code></pre>
+  <p>Source: <a href="../../../mem20intenttomissioncompilerz/README.md">mem20intenttomissioncompilerz/README.md</a></p>
+</body>
+</html>

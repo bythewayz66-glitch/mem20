@@ -164,6 +164,12 @@ class Engine:
                 if isinstance(e,dict):
                     a=str(e.get('from')); b=str(e.get('to')); deg[a]=deg.get(a,0)+1; deg[b]=deg.get(b,0)+1
             return {'nodes':len(deg),'edges':len(edges),'degree':deg,'hubs':sorted(deg,key=deg.get,reverse=True)[:5]}
+        if k=='ingest':
+            try:
+                from . import domain as _dom, ecosystem as _eco
+                res=_dom.ingest_capture(p); res['signals']=_eco.capture_signals(p); return res
+            except Exception as e:
+                return {'ok':False,'error':f"{type(e).__name__}: {e}"}
         vals=[float(x) for x in p.get('values',[]) if isinstance(x,(int,float))]
         return {'count':len(vals),'mean':statistics.fmean(vals) if vals else None,'min':min(vals) if vals else None,'max':max(vals) if vals else None,'decision':d.choice,'confidence':d.confidence,'explanation':d.explanation}
     def execute(self,p,idem=None,retries=2,timeout_ms=None):

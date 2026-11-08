@@ -34,3 +34,11 @@ def extract_action_items(task):
 
 def capture_health(tasks):
     return {"total": len(tasks), "modalities": len(set(m for t in tasks for m in t.get("modalities", [])))}
+
+# 1st-class extensions (#338)
+def ingest_capture(payload=None):
+    payload=dict(payload or {})
+    task=capture(text=payload.get("text"), voice=payload.get("voice"), image=payload.get("image"), video=payload.get("video"), source=payload.get("source","ingest"))
+    actions=extract_action_items(task)
+    structured={"task":task,"action_items":actions,"executable":bool(actions) or bool(task.get("text") or task.get("voice_transcript")),"modalities":task.get("modalities",[])}
+    return {"ok":True,"structured":structured}

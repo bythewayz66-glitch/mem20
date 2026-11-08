@@ -117,10 +117,15 @@ class Engine:
                 if best: used.add(best[1]); matches.append({'demand':a,'supply':best[2],'score':round(best[0],4)})
             return {'matches':matches,'unmatched':max(0,len(demand)-len(matches))}
         if k=='forecast':
-            series=[float(x) for x in (p.get('series') or p.get('history') or [0,1])]
-            n=len(series); xs=list(range(n)); xm=sum(xs)/n; ym=sum(series)/n; den=sum((x-xm)**2 for x in xs) or 1; slope=sum((x-xm)*(y-ym) for x,y in zip(xs,series))/den
-            steps=max(1,min(100,int(p.get('steps',3)))); pred=[ym+slope*((n+i)-xm) for i in range(steps)]
-            return {'slope':slope,'forecast':pred,'confidence':max(.2,min(.95,1/(1+(statistics.pstdev(series) if n>1 else 0))))}
+            try:
+                from . import domain as _dom, ecosystem as _eco
+                models=p.get('models') or p.get('candidates') or []
+                rep=_dom.sleepwake_report(models, idle_threshold=float(p.get('idle_threshold',300)))
+                rep['signals']=_eco.sleepwake_signals({"models":models})
+                series=[float(x) for x in (p.get('series') or p.get('history') or [1,1,2])]; n=len(series); xs=list(range(n)); xm=sum(xs)/max(1,n); ym=sum(series)/max(1,n); den=sum((x-xm)**2 for x in xs) or 1; slope=sum((x-xm)*(y-ym) for x,y in zip(xs,series))/den; steps=max(1,min(100,int(p.get('steps',3)))); rep['forecast_series']=[ym+slope*((n+i)-xm) for i in range(steps)]; rep['slope']=slope
+                return rep
+            except Exception as e:
+                series=[float(x) for x in (p.get('series') or p.get('history') or [0,1])]; n=len(series); xs=list(range(n)); xm=sum(xs)/max(1,n); ym=sum(series)/max(1,n); den=sum((x-xm)**2 for x in xs) or 1; slope=sum((x-xm)*(y-ym) for x,y in zip(xs,series))/den; steps=max(1,min(100,int(p.get('steps',3)))); return {'slope':slope,'forecast':[ym+slope*((n+i)-xm) for i in range(steps)],'error':f"{type(e).__name__}: {e}"}
         if k=='search':
             docs=p.get('documents') or p.get('items') or p.get('candidates') or []; q=self.tokens(p.get('query') or p.get('goal') or '')
             out=[]

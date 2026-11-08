@@ -128,8 +128,15 @@ class Engine:
                 text=json.dumps(d0,sort_keys=True) if isinstance(d0,(dict,list)) else str(d0); t=self.tokens(text); s=len(q&t)/max(1,len(q|t)); out.append({'score':round(s,6),'item':d0})
             return {'results':sorted(out,key=lambda x:x['score'],reverse=True)[:int(p.get('limit',10))]}
         if k=='simulate':
-            base=float(p.get('baseline',1)); scenarios=p.get('scenarios') or [{'name':'baseline','multiplier':1.0},{'name':'upside','multiplier':1.15},{'name':'downside','multiplier':.85}]
-            return {'scenarios':[{'name':s.get('name',str(i)),'value':base*float(s.get('multiplier',1))*float(s.get('probability',1))} for i,s in enumerate(scenarios)]}
+            try:
+                from . import domain as _dom, ecosystem as _eco
+                spec=dict(p); res=_dom.simulate_genome_lab(spec); res['signals']=_eco.genome_signals(spec)
+                base=float(p.get('baseline',1)); scenarios=p.get('scenarios') or [{'name':'baseline','multiplier':1.0},{'name':'upside','multiplier':1.15},{'name':'downside','multiplier':.85}]
+                res['scenarios']=[{'name':sc.get('name',str(i)),'value':base*float(sc.get('multiplier',1))*float(sc.get('probability',1))} for i,sc in enumerate(scenarios)]
+                return res
+            except Exception as e:
+                base=float(p.get('baseline',1)); scenarios=p.get('scenarios') or [{'name':'baseline','multiplier':1.0},{'name':'upside','multiplier':1.15},{'name':'downside','multiplier':.85}]
+                return {'scenarios':[{'name':sc.get('name',str(i)),'value':base*float(sc.get('multiplier',1))*float(sc.get('probability',1))} for i,sc in enumerate(scenarios)],'error':f"{type(e).__name__}: {e}"}
         if k=='compose':
             parts=p.get('components') or p.get('capabilities') or p.get('candidates') or []; goal=self.tokens(p.get('goal') or self.config['outcome']); chosen=[]; covered=set()
             for part in parts:

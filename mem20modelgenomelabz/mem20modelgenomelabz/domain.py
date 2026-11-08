@@ -49,3 +49,16 @@ def evolve(population, objective, generations=3, seed=0):
         fitness(g, objective)
     pop.sort(key=lambda g: -g["fitness"])
     return pop
+
+# 1st-class extensions (#335)
+def genome_record(genome, ancestry=None, adapters=None, limits=None):
+    return {"genome": genome, "ancestry": list(ancestry or []), "adapters": list(adapters or []), "limits": dict(limits or {}), "traits": dict(genome.get("genes") or {}), "fitness": genome.get("fitness", 0.0)}
+
+def simulate_genome_lab(spec=None):
+    spec=dict(spec or {})
+    objective=spec.get("objective") or {"quality":1.0,"latency":0.2}
+    pop=[create_genome({"id":f"g{i}","genes":{"quality":0.3+i*0.1,"latency":0.5-i*0.05}}) for i in range(int(spec.get("population",4)))]
+    evolved=evolve(pop, objective, generations=int(spec.get("generations",2)), seed=int(spec.get("seed",0)))
+    best=evolved[0] if evolved else None
+    record=genome_record(best, ancestry=[g.get("id") for g in pop], adapters=spec.get("adapters") or ["default"], limits=spec.get("limits") or {"max_tokens":4096}) if best else None
+    return {"ok": bool(best), "best": best, "population_size": len(evolved), "objective": objective, "record": record, "top": evolved[:3]}

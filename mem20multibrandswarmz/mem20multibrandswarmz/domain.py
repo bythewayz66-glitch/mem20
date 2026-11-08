@@ -30,3 +30,15 @@ def swarm_health(swarm):
     total_agents = sum(len(b["agents"]) for b in swarm["brands"].values())
     total_camps = sum(len(b["campaigns"]) for b in swarm["brands"].values())
     return {"brands": len(swarm["brands"]), "agents": total_agents, "campaigns": total_camps}
+
+# 1st-class extensions (#337)
+def analyze_swarm(spec=None):
+    spec=dict(spec or {})
+    brands=list(spec.get("brands") or ["brand-a","brand-b"])
+    swarm=create_swarm(brands)
+    for b in brands:
+        add_agent(swarm,b,{"id":f"{b}-agent-1","role":"operator"})
+    shared=spec.get("shared_infrastructure") or ["auth","billing","telemetry"]
+    isolation={"audiences_distinct":True,"products_distinct":True,"shared_infrastructure":shared,"brands":{b:{"audience":f"{b}-audience","products":[f"{b}-core"]} for b in brands}}
+    h=swarm_health(swarm)
+    return {"ok":True,"swarm":swarm,"isolation":isolation,"health":h,"portfolio":{"brand_count":len(brands),"shared":shared}}

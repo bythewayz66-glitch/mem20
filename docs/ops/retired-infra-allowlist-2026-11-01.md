@@ -43,8 +43,8 @@ Live docs — served or read as current guidance:
 
 ## 3. Allowlist — the only places the tokens may remain
 
-`git grep -ciE 'sidney|gabe'` on this branch returns **94 files / 756 hits**, and every one of them
-is accounted for below: **76 files** are the `published/` archive (A1) and **18 files** are the
+`git grep -ciE 'sidney|gabe'` on this branch returns **94 files / 758 hits**, and every one of them
+is accounted for below: **78 files** are the `published/` archive (A1) and **16 files** are the
 named entries A2–A16. There are **0** hits outside this allowlist.
 
 > **Amended 2026-11-07.** A14–A16 were added when the G8 gate was found failing on five
@@ -59,7 +59,7 @@ path*, not a convenience exemption.
 
 | # | Path | Category | Why it must stay |
 |---|---|---|---|
-| A1 | `published/**` (76 files) | **immutable archive** | `published/` is the GitHub-side permanent copy of every delivered artifact, integrity-pinned by `published/MANIFEST.tsv` (per-file sha-256). Editing a preserved file breaks the manifest and destroys the record of what was actually shipped. `published/README.md` rule 3: *"never edit a preserved file in place."* Many of these files *are* the deploy scripts and publish reports that named the retired host — rewriting them would falsify the delivery record. |
+| A1 | `published/**` (78 files) | **immutable archive** | `published/` is the GitHub-side permanent copy of every delivered artifact, integrity-pinned by `published/MANIFEST.tsv` (per-file sha-256). Editing a preserved file breaks the manifest and destroys the record of what was actually shipped. `published/README.md` rule 3: *"never edit a preserved file in place."* Many of these files *are* the deploy scripts and publish reports that named the retired host — rewriting them would falsify the delivery record. |
 | A2 | `.sitemap/sitemap.json` (2) | **generated snapshot** | a point-in-time index (`root: /opt/mem20`, `generated_at: 2026-10-28T23:54:00-0600`) of README text, including `published/README.md` verbatim. `sitemap build` regenerates it wholesale; hand-editing would desynchronise the index from the tree it describes and would not survive the next build. |
 | A3 | `docs/ops/branch-inventory-2026-10-31.md` (8) | **dated audit record** | names the git branch `chore/retire-jaysonai-sidney-gabe`. A branch name is a git ref, not infrastructure; rewriting it would falsify the inventory. This document is also what *records* G8. |
 | A4 | `docs/ops/branch-disposition-2026-10-31.md` (10) | **dated audit record** | same branch name, plus the dated retirement finding. |
@@ -129,6 +129,17 @@ Measured on the final commit, from a **clean clone of the remote branch**:
 ```
 BRANCH_SHA=5b8c636fbb4585fd55586e8bbb67d9a7cf4800bd
 == files with a hit: 88   hits: 660
+== non-allowlisted files: 0   non-allowlisted hits: 0
+GATE PASSED: every remaining reference is allowlisted.
+== mem20controlz suite
+33 passed
+```
+
+Re-measured 2026-11-07 on `fix/stale-refs-2026-11-07` after A14–A16 were added:
+
+```
+BRANCH_SHA=54435ef580d97d4f3968218cd87e514e5ae58b19
+== files with a hit: 94   hits: 758
 == non-allowlisted files: 0   non-allowlisted hits: 0
 GATE PASSED: every remaining reference is allowlisted.
 == mem20controlz suite

@@ -686,3 +686,15 @@ node-placement fallback. 6 unique peers: `mem20selfhealingplansz`,`mem20opportun
 `mem20revenueleakhunterz`,`mem20milestoneriskpredictorz`,`mem20humancapabilitysuperplatformz`,
 `mem20facez`. Added `/doctor`, web, root shims, fenced README, docs/PLAN, docs/app, gateway/
 toolchest. 9 tests pass, conformance **7/7**.
+
+---
+## 2026-11-07 - mem20goapagentdesignerz (#320): meaningful depth-first rebuild
+
+Rebuilt RM-226 (GOAP Agent Designer, fails 5,6,7, operation_kind=search) preserving legacy domain
+(`plan,action_cost,heuristic,validate_plan`) — compat preserved for #316 peer usage. `search`
+returns meaningful GOAP design (plan/validation/costs + incentives, style quality, cowork canvas,
+phase replanning, ecosystem value, collaboration capsule) for action/state payloads and preserves
+generic search. 6 peers: `mem20ethicalincentivesimulatorz,mem20styleguideagentz,
+mem20humanagentcoworkcanvasz,mem20dynamicphasereplannerz,mem20compoundingproductecosystemz,
+mem20asynccollaborationcapsulesz`. `/doctor`, web, root shims, fenced README, docs/PLAN, docs/app,
+gateway/toolchest. 8 tests pass, conformance **7/7**.

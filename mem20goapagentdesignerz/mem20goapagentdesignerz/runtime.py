@@ -5,6 +5,9 @@ from dataclasses import dataclass
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 from urllib.parse import urlparse, parse_qs
+import mimetypes
+
+WEB_DIR = Path(__file__).with_name("web")
 
 class ValidationError(ValueError): pass
 class QuotaError(RuntimeError): pass
@@ -140,9 +143,19 @@ class Engine:
             series=[float(x) for x in (p.get('series') or p.get('history') or [0,1])]; n=len(series); xs=list(range(n)); xm=sum(xs)/n; ym=sum(series)/n; den=sum((x-xm)**2 for x in xs) or 1; slope=sum((x-xm)*(y-ym) for x,y in zip(xs,series))/den; steps=max(1,min(100,int(p.get('steps',3)))); pred=[ym+slope*((n+i)-xm) for i in range(steps)]
             return {'slope':slope,'forecast':pred,'confidence':max(.2,min(.95,1/(1+(statistics.pstdev(series) if n>1 else 0))))}
         if k=='search':
+            # meaningful GOAP designer when actions/goals/states provided
+            if p.get('actions') is not None or p.get('start_state') is not None or p.get('goal_state') is not None or p.get('goap'):
+                try:
+                    from . import ecosystem as _eco
+                    rep = _eco.goap_design_report(p)
+                    # also provide generic-shaped results for compatibility
+                    rep['results'] = [{"score": 1.0 if rep.get('valid_plan') else 0.5, "item": {"plan": rep.get('plan'), "valid": rep.get('valid_plan')}}]
+                    return rep
+                except Exception as e:
+                    return {'error': f"{type(e).__name__}: {e}"}
             docs=p.get('documents') or p.get('items') or p.get('candidates') or [];q=self.tokens(p.get('query') or p.get('goal') or '');out=[]
             for d0 in docs:
-                text=json.dumps(d0,sort_keys=True) if isinstance(d0,(dict,list)) else str(d0);t=self.tokens(text);s=len(q&t)/max(1,len(q|t));out.append({'score':round(s,6),'item':d0})
+                text=json.dumps(d0,sort_keys=True) if isinstance(d0,(dict,list)) else str(d0);t=self.tokens(text);sc=len(q&t)/max(1,len(q|t));out.append({'score':round(sc,6),'item':d0})
             return {'results':sorted(out,key=lambda x:x['score'],reverse=True)[:int(p.get('limit',10))]}
         if k=='simulate':
             base=float(p.get('baseline',1)); scenarios=p.get('scenarios') or [{'name':'baseline','multiplier':1.0},{'name':'upside','multiplier':1.15},{'name':'downside','multiplier':.85}]; return {'scenarios':[{'name':s.get('name',str(i)),'value':base*float(s.get('multiplier',1))*float(s.get('probability',1))} for i,s in enumerate(scenarios)]}
@@ -273,15 +286,30 @@ class Handler(BaseHTTPRequestHandler):
         body=json.dumps(obj,indent=2,sort_keys=True).encode();self.send_response(code);self.send_header('Content-Type',ctype);self.send_header('Content-Length',str(len(body)));self.end_headers();self.wfile.write(body)
     def body(self):
         n=int(self.headers.get('Content-Length','0'));return json.loads(self.rfile.read(n) or b'{}')
+    def _static(self,path):
+        try:
+            rel='index.html' if path in ('/','') else path.lstrip('/'); f=(WEB_DIR/rel).resolve(); f.relative_to(WEB_DIR.resolve())
+            if not f.is_file(): return False
+            ct=mimetypes.guess_type(str(f))[0] or 'application/octet-stream'
+            if ct.startswith('text/') or ct=='application/javascript': ct+='; charset=utf-8'
+            b=f.read_bytes(); self.send_response(200); self.send_header('Content-Type',ct); self.send_header('Content-Length',str(len(b))); self.send_header('Access-Control-Allow-Origin','*'); self.end_headers(); self.wfile.write(b); return True
+        except Exception: return False
     def do_GET(self):
         u=urlparse(self.path);q=parse_qs(u.query)
+        if u.path in ('/style.css','/app.js') or (u.path.startswith('/') and '.' in u.path.rsplit('/',1)[-1]):
+            if self._static(u.path): return
         if u.path=='/health':return self.sendj(200,{'ok':True,'roadmap':self.engine.config['id']})
         if u.path=='/spec':return self.sendj(200,self.engine.config)
         if u.path=='/metrics':return self.sendj(200,self.engine.metrics_snapshot())
         if u.path=='/events':return self.sendj(200,self.engine.store.events(int(q.get('since',['0'])[0])))
         if u.path=='/objects':return self.sendj(200,self.engine.store.query(q.get('kind',[None])[0]))
+        if u.path in ('/doctor','/api/doctor'):
+            try:
+                from . import ecosystem as _eco; return self.sendj(200,{'ok':True,'probe':_eco.probe(),'roadmap':self.engine.config['id']})
+            except Exception as e: return self.sendj(200,{'ok':False,'error':str(e)})
         if u.path=='/':
-            title=f"{self.engine.config['id']} — {self.engine.config['title']}";html=("<!doctype html><meta charset=utf-8><title>"+title+"</title><style>body{font:16px system-ui;max-width:1000px;margin:40px auto;padding:0 18px}textarea{width:100%;height:180px}pre{background:#111;color:#eee;padding:16px;overflow:auto}</style><h1>"+title+"</h1><p>"+self.engine.config['outcome']+"</p><p><b>Breakthrough:</b> "+self.engine.config['breakthrough']+"</p><textarea id=p>{\"goal\":\""+self.engine.config['outcome'].replace('"','&quot;')+"\",\"candidates\":[{\"id\":\"local\",\"utility\":0.9},{\"id\":\"edge\",\"utility\":0.8}]}</textarea><button onclick=go()>Execute</button><pre id=o></pre><script>async function go(){let r=await fetch('/execute',{method:'POST',headers:{'content-type':'application/json'},body:p.value});o.textContent=JSON.stringify(await r.json(),null,2)}</script>").encode();self.send_response(200);self.send_header('Content-Type','text/html; charset=utf-8');self.send_header('Content-Length',str(len(html)));self.end_headers();return self.wfile.write(html)
+            if self._static('/'): return
+            title=f"{self.engine.config['id']} — {self.engine.config['title']}";html=("<!doctype html><meta charset=utf-8><title>"+title+"</title><style>body{font:16px system-ui;max-width:1000px;margin:40px auto;padding:0 18px}textarea{width:100%;height:180px}pre{background:#111;color:#eee;padding:16px;overflow:auto}</style><h1>"+title+"</h1><p>"+self.engine.config['outcome']+"</p><textarea id=p>{\"actions\":[{\"name\":\"move\",\"effects\":{\"at\":\"target\"},\"cost\":1}],\"start_state\":{\"at\":\"start\"},\"goal_state\":{\"at\":\"target\"}}</textarea><button onclick=go()>Execute</button><pre id=o></pre><script>async function go(){let r=await fetch('/execute',{method:'POST',headers:{'content-type':'application/json'},body:p.value});o.textContent=JSON.stringify(await r.json(),null,2)}</script>").encode();self.send_response(200);self.send_header('Content-Type','text/html; charset=utf-8');self.send_header('Content-Length',str(len(html)));self.end_headers();return self.wfile.write(html)
         return self.sendj(404,{'error':'not found'})
     def do_POST(self):
         try:

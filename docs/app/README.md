@@ -1,6 +1,6 @@
 # App / product narrative — `docs/app/`
 
-Entry point for the `docs/app/` documentation set. **42 tracked file(s).**
+Entry point for the `docs/app/` documentation set. **43 tracked file(s).**
 
 ## Contents
 
@@ -24,6 +24,7 @@ Entry point for the `docs/app/` documentation set. **42 tracked file(s).**
 - [`game-production-control-center/index.html`](game-production-control-center/index.html)
 - [`global-capability-marketplace/index.html`](global-capability-marketplace/index.html)
 - [`goal-economy-scheduler/index.html`](goal-economy-scheduler/index.html)
+- [`goap-agent-designer/index.html`](goap-agent-designer/index.html)
 - [`ethical-incentive-simulator/index.html`](ethical-incentive-simulator/index.html)
 - [`energy-migration/index.html`](energy-migration/index.html)
 - [`transport/index.html`](transport/index.html)
@@ -76,6 +77,15 @@ PYTHONPATH=/opt/mem20 python3 -m mem20edgetocloudintelligencecontinuumz serve --
 
 
 
+
+
+## GOAP Agent Designer monitor (`goap-agent-designer/`)
+
+[`goap-agent-designer/index.html`](goap-agent-designer/index.html) — static monitor for RM-226 (#320). Reads `/spec`/`/metrics`/`/doctor` (`?api=`).
+
+```bash
+PYTHONPATH=/opt/mem20 python3 -m mem20goapagentdesignerz serve --port 8800
+```
 
 ## Goal Economy Scheduler monitor (`goal-economy-scheduler/`)
 

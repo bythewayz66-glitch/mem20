@@ -91,7 +91,13 @@ SUBSYSTEMS = {
         "owner": "mem20-webdev",
         "wave": 2,
     },
-        "mem20goaleconomyschedulerz": {
+        "mem20goapagentdesignerz": {
+        "purpose": "GOAP Agent Designer (RM-226, #320): goal-oriented planning/design with incentives, quality, collaboration, phasing, ecosystem, capsule integrations; legacy domain preserved",
+        "entry": "python -m mem20goapagentdesignerz simulate",
+        "owner": "mem20-webdev",
+        "wave": 2,
+    },
+    "mem20goaleconomyschedulerz": {
         "purpose": "Goal Economy Scheduler (RM-056, #319): goal allocation with plan, opportunity, leak, milestone, capacity, interface integrations; legacy domain preserved",
         "entry": "python -m mem20goaleconomyschedulerz simulate",
         "owner": "mem20-webdev",

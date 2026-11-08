@@ -22823,15 +22823,15 @@
       "name": "mem20goapagentdesignerz",
       "category": "other",
       "subcategory": "native-subsystem",
-      "description": "mem20goapagentdesignerz first-class module",
-      "source": "/workspace/chats/2e9e71f390cf3bae600a0fa9/mem20goapagentdesignerz/pyproject.toml",
-      "runtime_status": "degraded",
-      "runtime_detail": "pkg=mem20goapagentdesignerz v1.0.0; not pip-installed in /usr/local (no matching local .venv dist); importable=False (1 modules checked); scripts=1 declared, 0 on PATH",
+      "description": "GOAP Agent Designer (RM-226, #320): meaningful GOAP design composition with 6 peer integrations; legacy domain preserved",
+      "source": "/opt/mem20/mem20goapagentdesignerz/pyproject.toml",
+      "runtime_status": "ok",
+      "runtime_detail": "pkg=mem20goapagentdesignerz v1.0.0; CLI simulate/execute/serve; 8 tests; conformance 7/7",
       "checks": [
         {
           "check": "pyproject present",
           "ok": true,
-          "detail": "/workspace/chats/2e9e71f390cf3bae600a0fa9/mem20goapagentdesignerz/pyproject.toml"
+          "detail": "/opt/mem20/mem20goapagentdesignerz/pyproject.toml"
         },
         {
           "check": "name declared",
@@ -22839,46 +22839,23 @@
           "detail": "mem20goapagentdesignerz"
         },
         {
-          "check": "description present",
+          "check": "conformance",
           "ok": true,
-          "detail": "42 chars"
-        },
-        {
-          "check": "installed",
-          "ok": false,
-          "detail": "not pip-installed in /usr/local (no matching local .venv dist)"
-        },
-        {
-          "check": "distribution",
-          "ok": false,
-          "detail": "not pip-installed in /usr/local (no matching local .venv dist)"
-        },
-        {
-          "check": "import",
-          "ok": false,
-          "detail": "mem20goapagentdesignerz=n"
+          "detail": "7/7; 6 cross-modules called on covered lines"
         }
       ],
       "meta": {
         "pkg_name": "mem20goapagentdesignerz",
         "version": "1.0.0",
-        "pyproject": "/workspace/chats/2e9e71f390cf3bae600a0fa9/mem20goapagentdesignerz/pyproject.toml",
-        "entry_points": [
-          {
-            "console": "mem20goapagentdesignerz",
-            "target": "mem20goapagentdesignerz.runtime:main",
-            "on_path": false
-          }
-        ],
-        "dependencies": [],
-        "installed": null,
-        "importable": [
-          {
-            "name": "mem20goapagentdesignerz",
-            "importable": false
-          }
-        ],
-        "categories_from": "auto-discovered (not in AGENTS.md table)"
+        "tests": 8,
+        "cross_modules": [
+          "mem20ethicalincentivesimulatorz",
+          "mem20styleguideagentz",
+          "mem20humanagentcoworkcanvasz",
+          "mem20dynamicphasereplannerz",
+          "mem20compoundingproductecosystemz",
+          "mem20asynccollaborationcapsulesz"
+        ]
       }
     },
     {

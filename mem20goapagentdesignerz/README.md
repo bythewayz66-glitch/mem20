@@ -1,9 +1,32 @@
-# RM-226 — GOAP Agent Designer
+# mem20goapagentdesignerz — GOAP Agent Designer (RM-226, #320)
 
-**Outcome:** Build goal-oriented agents through a visual editor for actions, costs, perceptions, and memory
+**Outcome:** build goal-oriented agents through a visual editor for actions, costs, perceptions, and memory.
 
-**Breakthrough:** Believable autonomous behavior becomes accessible without heavy coding
+Preserves legacy domain API and CAPABILITY Engine/CLI/10-scenario simulator. `search` is meaningful for GOAP design payloads and backward-compatible for generic search.
 
-This package is the machine-executable local implementation derived from the supplied Off Record Lab roadmap. It includes versioned typed state, SQLite WAL persistence, event history/snapshots, SDK CRUD/subscription, resumable idempotent jobs, cancellation, retries/timeouts/quotas/backpressure, deterministic replica reconciliation, local/hybrid/cloud placement/failover, roadmap-specific `search` logic, decision confidence/explanations, feedback, CLI, HTTP console/API, safety guards, simulator, benchmark/metrics, and rollback-capable installer.
+## Legacy domain API (preserved)
+`plan(actions,start_state,goal_state)`, `action_cost(action)`, `heuristic(state,goal)`, `validate_plan(plan,actions)`.
 
-Named live product surfaces, real provider/device credentials, production traffic, and governed FreeStack deployment remain target-environment integration and are not claimed complete.
+## Meaningful cross-subsystem wiring (criterion 6)
+| Peer | Real calls | GOAP design role |
+|---|---|---|
+| `mem20ethicalincentivesimulatorz` | `fairness_score`,`simulate_incentives` | incentive alignment for actions/agents |
+| `mem20styleguideagentz` | `style_health`,`style_score` | design/spec quality checks |
+| `mem20humanagentcoworkcanvasz` | `create_canvas`,`add_item`,`canvas_summary` | human-agent design collaboration |
+| `mem20dynamicphasereplannerz` | `DynamicPhaseReplanner` (+ phase/order) | phase replanning structure |
+| `mem20compoundingproductecosystemz` | `ecosystem_health`,`network_value`,`synergy` | agent ecosystem value signals |
+| `mem20asynccollaborationcapsulesz` | `create_capsule`,`capsule_checksum`,`active_members` | async collaboration capsule |
+
+## Runnable example (verified)
+```bash
+cd /opt/mem20
+PYTHONPATH=/opt/mem20 .venv/bin/python -m mem20goapagentdesignerz simulate
+PYTHONPATH=/opt/mem20 .venv/bin/python -m mem20goapagentdesignerz execute '{"actions":[{"name":"move","effects":{"at":"target"},"cost":1}],"start_state":{"at":"start"},"goal_state":{"at":"target"}}'
+PYTHONPATH=/opt/mem20 .venv/bin/python -m mem20goapagentdesignerz serve --port 8800
+```
+
+## Tests / conformance
+```bash
+PYTHONPATH=/opt/mem20 .venv/bin/python -m pytest mem20goapagentdesignerz/tests mem20goapagentdesignerz/mem20goapagentdesignerz/tests -q --noconftest
+PYTHONPATH=/opt/mem20 .venv/bin/python scripts/renovation/conformance.py mem20goapagentdesignerz
+```

@@ -5,7 +5,7 @@ build-backend="setuptools.build_meta"
 [project]
 name="mem20goapagentdesignerz"
 version="1.0.0"
-description="mem20goapagentdesignerz first-class module"
+description="GOAP Agent Designer (RM-226): goal-oriented planning/design with incentives, quality, collaboration, phasing, ecosystem, and capsule peer integrations; legacy domain preserved"
 requires-python=">=3.11"
 
 [project.scripts]
@@ -14,4 +14,4 @@ mem20goapagentdesignerz="mem20goapagentdesignerz.runtime:main"
 [tool.setuptools]
 packages=["mem20goapagentdesignerz"]
 [tool.setuptools.package-data]
-mem20goapagentdesignerz=["CAPABILITY.json","roadmap.json"]
+mem20goapagentdesignerz=["CAPABILITY.json","roadmap.json","web/*"]

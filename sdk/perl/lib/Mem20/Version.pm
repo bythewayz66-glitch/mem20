@@ -1,19 +1,16 @@
 package Mem20::Version;
-
 use strict;
 use warnings;
 
+# The SDK version. Tracked independently of the mem20 server release, exactly
+# as the Ruby gem does (Mem20::VERSION vs Mem20::SERVER_VERSION).
 our $VERSION = '0.2.0';
 
-# The mem20 server release this SDK was built and tested against.
-#
-# This is NOT the SDK version. The SDK and the server version independently:
-# a 0.2.0 SDK talking to a 3.1.2 server is the supported arrangement.
-#
-# Prefer reporting the value the server actually sent in its initialize reply
-# (`Mem20::Client->server_info`) when you need to know what you are really
-# talking to; this constant is the baseline the SDK was verified against.
+# The mem20 server release this SDK was validated against.
 our $SERVER_VERSION = '3.1.2';
+
+# The MCP protocol revision sent in the `initialize` handshake.
+our $PROTOCOL_VERSION = '2025-06-18';
 
 # The tool surface this SDK is compiled against.
 #
@@ -33,7 +30,6 @@ our $SURFACE_TOOL_COUNT   = 311;
 our $SURFACE_DOMAIN_COUNT = 39;
 
 1;
-
 __END__
 
 =head1 NAME
@@ -42,15 +38,18 @@ Mem20::Version - version constants for the mem20 Perl SDK
 
 =head1 DESCRIPTION
 
-Three constants, each answering a different question:
+Constants, kept separate on purpose:
 
 =over 4
 
-=item C<$Mem20::Version::VERSION> - the SDK's own release (0.2.0).
+=item C<$Mem20::Version::VERSION> - this SDK's own version.
 
 =item C<$Mem20::Version::SERVER_VERSION> - the mem20 server release the SDK
 was tested against. A 0.2.0 SDK talking to a 3.1.2 server is expected; they
 version independently.
+
+=item C<$Mem20::Version::PROTOCOL_VERSION> - the MCP protocol revision used
+in the C<initialize> handshake.
 
 =item C<$Mem20::Version::SURFACE_TOOL_COUNT> - tools the SDK is compiled
 against (311), used by C<< Mem20::Client->verify_surface >>.
@@ -60,9 +59,5 @@ registers (39). This is a registration count, B<not> a count of tool-name
 prefixes; those are two different numbers.
 
 =back
-
-=head1 SEE ALSO
-
-L<Mem20::Client>, L<Mem20::Transport>
 
 =cut

@@ -121,6 +121,13 @@ fails immediately and leaves the previous good value in place.
 Three routes to the same **270-tool surface across 27 domains** (verified live
 against mem20 3.0.0 — see `AUDIT.md`):
 
+> **Count note (2026-11-07).** 270/27 is the surface this SDK release was built
+> and tested against, and it is pinned in code (`expected_tools` in
+> `lib/Mem20/Client.pm`), so the prose here matches the pin. The **live** server
+> surface has since grown to **311 tools across 39 domains**
+> (`docs/surface.json`, pinned in `.github/workflows/mcp-verify.yml`). Bumping
+> the pin is a code change with its own test run, not a docs edit.
+
 ```perl
 # 1. the named memory primitives
 $client->memory_store(content => 'x', category => 'general', epistemic_status => 'observed');
@@ -274,4 +281,4 @@ the job-envelope tools, and the `aiohttp` gap in `requirements.txt`.
 
 - `mem20-sdk-ruby/` — the Ruby gem, same surface
 - `mem20api/` — the Python API
-- `../docs/API.md` — the tool surface both SDKs expose
+- `mem20-sdk-ruby/docs/API.md` — the class-by-class API reference for the Ruby SDK

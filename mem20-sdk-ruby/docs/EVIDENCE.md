@@ -9,11 +9,27 @@ a Kali Linux host against the mem20 server; nothing here is estimated.
 - Canonical repo: `github.com/bythewayz66-glitch/mem20` @ `main` (MIT)
 - Server: mem20-mcp, release `v2.1.0rc2`, protocol `2025-06-18`, 270 tools
 
-> **Surface re-verified 2026-11-01: the live surface is now 272 tools.** The
-> capture below is kept verbatim as the historical record of the 0.2.0 run
+> **Surface re-verified 2026-11-07: the live surface is now 311 tools across 39
+> domains** (`docs/surface.json`, pinned in `.github/workflows/mcp-verify.yml`).
+> The capture below is kept verbatim as the historical record of the 0.2.0 run
 > (270 tools). The current count and its measurement are in section 0.
 
-## 0. Surface re-verification (2026-11-01)
+## 0. Surface re-verification (2026-11-07)
+
+Measured on `main` @ `fa950b0a501e060753338334260b6a4a7486d4f2` from
+`docs/surface.json`, which is generated from the live JSON-RPC `tools/list`
+response by `scripts/surface_manifest.py` and cross-checked against the AST
+catalog:
+
+```
+tools:   311
+domains: 39
+```
+
+`docs/surface.json` → `cross_check` reports `only_ast: []` and `only_live: []`,
+so the AST derivation and the live `tools/list` agree exactly.
+
+### Historical: the 2026-11-01 re-verification (272 tools)
 
 Measured on `main` @ `d99ab5d8e9c5c45a1fb3d02d3b65b2f9a96b5110` with
 `MEM20_EXPECTED_TOOLS=272 python3 verify_mcp.py` (real `initialize` +
@@ -92,13 +108,13 @@ VERSION=0.2.0
 
 Run with `ruby -Ilib examples/quickstart.rb` against the real server
 (`MEM20_CWD=/opt/mem20/mem20`). This is the **0.2.0 capture, kept verbatim**; the
-surface has since grown to 272 (see section 0), so the `tools:` line below is
+surface has since grown to 311 (see section 0), so the `tools:` line below is
 historical, not current.
 
 ```
 server:       mem20-mcp (reported version "")
 protocol:     2025-06-18
-tools:        270   # historical: 0.2.0 capture, current surface is 272
+tools:        270   # historical: 0.2.0 capture, current surface is 311
 sdk version:  0.2.0
 
 store -> Stored in mem20 memory: [project] quickstart token ruby-quickstart-1791998110 (tags: quickstart,ruby)

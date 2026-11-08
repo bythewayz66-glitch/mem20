@@ -112,3 +112,19 @@ Both degrade gracefully when the respective application is not installed.
 MIT — see [LICENSE](https://github.com/bythewayz66-glitch/mem20/blob/main/LICENSE).
 
 Canonical repository: [bythewayz66-glitch/mem20](https://github.com/bythewayz66-glitch/mem20). Originally built by the JaysonAIOnline project.
+
+## Dated records
+
+Append-only records kept for provenance. They are **not** live guidance: where a
+number here disagrees with the sections above, the section above wins.
+
+| Document | What it records |
+|---|---|
+| [`agentz-evidence.md`](agentz-evidence.md) | OREO editor (agentZ) delivery evidence for PR #240. |
+| [`attestations/`](attestations/) | Token-use attestations, one file per dated event. |
+| [`app/narrative/serial-2026-11-01-publication-note.md`](app/narrative/serial-2026-11-01-publication-note.md) | Publication note for the 2026-11-01 narrative instalment. |
+| [`gtm/launch-copy-refresh-2026-11-01.md`](gtm/launch-copy-refresh-2026-11-01.md) | What changed in the launch copy (v5) and why. |
+| [`ops/analytics-reporter-reverify-2026-11-01.md`](ops/analytics-reporter-reverify-2026-11-01.md) | Re-verification of the analytics reporter. |
+| [`ops/mem20-api-service-2026-11-01.md`](ops/mem20-api-service-2026-11-01.md) | State of the `mem20-api` service on 2026-11-01. |
+| [`webdev/github-token-mandate-2026-11-01.md`](webdev/github-token-mandate-2026-11-01.md) | The GitHub-token handling mandate for web work. |
+| [`recon/`](recon/) | Stale-file inventory and its regenerator. |

@@ -5,7 +5,7 @@ build-backend="setuptools.build_meta"
 [project]
 name="mem20humanagentcoworkcanvasz"
 version="1.0.0"
-description="mem20humanagentcoworkcanvasz first-class module"
+description="Human-Agent Co-work Canvas (RM-032): sync humans/agents on tasks, files, decisions, live artifacts; 6 peer integrations; legacy domain preserved (#320)"
 requires-python=">=3.11"
 
 [project.scripts]
@@ -14,4 +14,4 @@ mem20humanagentcoworkcanvasz="mem20humanagentcoworkcanvasz.runtime:main"
 [tool.setuptools]
 packages=["mem20humanagentcoworkcanvasz"]
 [tool.setuptools.package-data]
-mem20humanagentcoworkcanvasz=["CAPABILITY.json","roadmap.json"]
+mem20humanagentcoworkcanvasz=["CAPABILITY.json","roadmap.json","web/*"]

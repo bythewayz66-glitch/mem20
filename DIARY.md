@@ -733,3 +733,15 @@ readiness) and preserves generic analyze fallback. 6 peers: `mem20versioncontrol
 mem20deterministicconfigurationgraphz,mem20reversibleexecutiongraphz,mem20semanticobjectgraphz,
 mem20relationshipcontextgraphz,mem20dynamicskillgraphz`. `/doctor`, web, root shims, fenced README,
 docs/PLAN, docs/app monitor, gateway/toolchest. 9 tests pass, conformance **7/7**.
+
+---
+## 2026-11-08 - mem20humanagentcoworkcanvasz (#325): meaningful rebuild (compat for #320)
+
+Rebuilt RM-032 (Human-Agent Co-work Canvas, fails 5,6,7, operation_kind=sync) preserving legacy
+domain (**#320 compat**). `sync` provides meaningful canvas sync (domain canvas + presence,
+collaboration capsule, artifact versioning, workspace config, semantic identity, relationship
+context) and preserves generic sync fallback. 6 peers: `mem20realtimeteampresencez,
+mem20asynccollaborationcapsulesz,mem20versioncontrollargeassetandrecoverypipelinez,
+mem20deterministicconfigurationgraphz,mem20semanticobjectgraphz,mem20relationshipcontextgraphz`.
+`/doctor`, web, root shims, fenced README, docs/PLAN, docs/app monitor, gateway/toolchest. 9 tests
+pass, conformance **7/7**.

@@ -31,6 +31,12 @@ MESSAGES_FILE = GATEWAY_DIR / "messages.jsonl"
 # it cannot deliver, so the conformance gate checks the name is present and the
 # subsystem's own tests check the entry point runs.
 SUBSYSTEMS = {
+    "mem20humanagentcoworkcanvasz": {
+        "purpose": "Human-Agent Co-work Canvas (RM-032, #325): sync humans/agents on tasks, files, decisions, live artifacts with 6 peer integrations; legacy domain preserved (#320)",
+        "entry": "python -m mem20humanagentcoworkcanvasz simulate",
+        "owner": "mem20-webdev",
+        "wave": 2,
+    },
     "mem20hotswappableservicefoundationz": {
         "purpose": "Hot-Swappable Service Foundation (RM-091, #324): zero-disruption service swaps with 6 peer integrations; legacy domain preserved (#317)",
         "entry": "python -m mem20hotswappableservicefoundationz simulate",

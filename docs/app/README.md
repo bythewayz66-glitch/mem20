@@ -1,6 +1,6 @@
 # App / product narrative — `docs/app/`
 
-Entry point for the `docs/app/` documentation set. **45 tracked file(s).**
+Entry point for the `docs/app/` documentation set. **46 tracked file(s).**
 
 ## Contents
 

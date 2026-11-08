@@ -745,3 +745,15 @@ mem20asynccollaborationcapsulesz,mem20versioncontrollargeassetandrecoverypipelin
 mem20deterministicconfigurationgraphz,mem20semanticobjectgraphz,mem20relationshipcontextgraphz`.
 `/doctor`, web, root shims, fenced README, docs/PLAN, docs/app monitor, gateway/toolchest. 9 tests
 pass, conformance **7/7**.
+
+---
+## 2026-11-08 - mem20humancapabilitysuperplatformz (#326): meaningful rebuild (compat for #319)
+
+Rebuilt RM-220 (Human Capability Super-Platform, fails 5,6,7, operation_kind=search, advanced
+runtime) preserving legacy domain (**#319 compat**) and all runtime behaviors (policy guards,
+replica merge, cancellation, snapshot, 10-scenario simulator). `search` provides meaningful
+capability search for users/skills/evidence payloads and preserves generic document search. 6
+peers: `mem20dynamicskillgraphz, mem20capabilitygapmapperz, mem20relationshipcontextgraphz,
+mem20semanticobjectgraphz, mem20versioncontrollargeassetandrecoverypipelinez,
+mem20deterministicconfigurationgraphz`. `/doctor`, web, root shims, fenced README, docs/PLAN,
+docs/app monitor, gateway/toolchest. 9 tests pass, conformance **7/7**.

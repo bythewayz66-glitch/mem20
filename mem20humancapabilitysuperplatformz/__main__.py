@@ -1,0 +1,2 @@
+from mem20humancapabilitysuperplatformz.mem20humancapabilitysuperplatformz.runtime import main
+raise SystemExit(main())

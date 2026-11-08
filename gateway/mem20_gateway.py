@@ -31,6 +31,12 @@ MESSAGES_FILE = GATEWAY_DIR / "messages.jsonl"
 # it cannot deliver, so the conformance gate checks the name is present and the
 # subsystem's own tests check the entry point runs.
 SUBSYSTEMS = {
+    "mem20humancapabilitysuperplatformz": {
+        "purpose": "Human Capability Super-Platform (RM-220, #326): capability search/assessment/growth with 6 peer integrations; legacy domain preserved (#319)",
+        "entry": "python -m mem20humancapabilitysuperplatformz simulate",
+        "owner": "mem20-webdev",
+        "wave": 2,
+    },
     "mem20humanagentcoworkcanvasz": {
         "purpose": "Human-Agent Co-work Canvas (RM-032, #325): sync humans/agents on tasks, files, decisions, live artifacts with 6 peer integrations; legacy domain preserved (#320)",
         "entry": "python -m mem20humanagentcoworkcanvasz simulate",
@@ -127,6 +133,21 @@ SUBSYSTEMS = {
         "entry": "python -m mem20goapagentdesignerz simulate",
         "owner": "mem20-webdev",
         "wave": 2,
+    },
+    "mem20multibrandswarmz": {
+        "purpose": 'Multi-Brand Swarm (RM-016,#337): multi-brand portfolio with distinct audiences/products, shared infra; 6 peers',
+        "entry": 'python -m mem20multibrandswarmz execute \'{"brands":["alpha","beta"]}\'',
+        "owner": "mem20-webdev", "wave": 2,
+    },
+    "mem20multimodaltaskcapturez": {
+        "purpose": 'Multimodal Task Capture (RM-037,#338): speech/sketch/screenshot/notes to structured executable work; 6 peers',
+        "entry": 'python -m mem20multimodaltaskcapturez execute \'{"text":"build api. test api"}\'',
+        "owner": "mem20-webdev", "wave": 2,
+    },
+    "mem20narrativedialogueandlocalizationpipelinez": {
+        "purpose": 'Narrative/Dialogue/Localization Pipeline (RM-244,#339): dialogue graphs, localization, export; 6 peers',
+        "entry": 'python -m mem20narrativedialogueandlocalizationpipelinez execute \'{"text":"NPC: Hello\\nHERO: Ready","target_languages":["en","es"]}\'',
+        "owner": "mem20-webdev", "wave": 2,
     },
     "mem20modelsleepandwakesystemz": {
         "purpose": "Model Sleep/Wake (RM-066,#336): predictive hibernation/restore; forecast+6 peer integrations",

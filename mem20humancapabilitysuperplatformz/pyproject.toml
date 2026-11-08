@@ -5,7 +5,7 @@ build-backend="setuptools.build_meta"
 [project]
 name="mem20humancapabilitysuperplatformz"
 version="1.0.0"
-description="mem20humancapabilitysuperplatformz first-class module"
+description="Human Capability Super-Platform (RM-220): capability search/assessment/growth with 6 peer integrations; legacy domain preserved (#319)"
 requires-python=">=3.11"
 
 [project.scripts]
@@ -14,4 +14,4 @@ mem20humancapabilitysuperplatformz="mem20humancapabilitysuperplatformz.runtime:m
 [tool.setuptools]
 packages=["mem20humancapabilitysuperplatformz"]
 [tool.setuptools.package-data]
-mem20humancapabilitysuperplatformz=["CAPABILITY.json","roadmap.json"]
+mem20humancapabilitysuperplatformz=["CAPABILITY.json","roadmap.json","web/*"]

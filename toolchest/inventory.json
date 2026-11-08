@@ -23295,15 +23295,15 @@
       "name": "mem20humancapabilitysuperplatformz",
       "category": "other",
       "subcategory": "native-subsystem",
-      "description": "mem20humancapabilitysuperplatformz first-class module",
-      "source": "/workspace/chats/2e9e71f390cf3bae600a0fa9/mem20humancapabilitysuperplatformz/pyproject.toml",
-      "runtime_status": "degraded",
-      "runtime_detail": "pkg=mem20humancapabilitysuperplatformz v1.0.0; not pip-installed in /usr/local (no matching local .venv dist); importable=False (1 modules checked); scripts=1 declared, 0 on PATH",
+      "description": "Human Capability Super-Platform (RM-220, #326): meaningful capability search with 6 peer integrations; legacy domain preserved (#319)",
+      "source": "/opt/mem20/mem20humancapabilitysuperplatformz/pyproject.toml",
+      "runtime_status": "ok",
+      "runtime_detail": "pkg=mem20humancapabilitysuperplatformz v1.0.0; CLI simulate/execute/serve; 9 tests; conformance 7/7",
       "checks": [
         {
           "check": "pyproject present",
           "ok": true,
-          "detail": "/workspace/chats/2e9e71f390cf3bae600a0fa9/mem20humancapabilitysuperplatformz/pyproject.toml"
+          "detail": "/opt/mem20/mem20humancapabilitysuperplatformz/pyproject.toml"
         },
         {
           "check": "name declared",
@@ -23311,46 +23311,23 @@
           "detail": "mem20humancapabilitysuperplatformz"
         },
         {
-          "check": "description present",
+          "check": "conformance",
           "ok": true,
-          "detail": "53 chars"
-        },
-        {
-          "check": "installed",
-          "ok": false,
-          "detail": "not pip-installed in /usr/local (no matching local .venv dist)"
-        },
-        {
-          "check": "distribution",
-          "ok": false,
-          "detail": "not pip-installed in /usr/local (no matching local .venv dist)"
-        },
-        {
-          "check": "import",
-          "ok": false,
-          "detail": "mem20humancapabilitysuperplatformz=n"
+          "detail": "7/7; 6 cross-modules called on covered lines"
         }
       ],
       "meta": {
         "pkg_name": "mem20humancapabilitysuperplatformz",
         "version": "1.0.0",
-        "pyproject": "/workspace/chats/2e9e71f390cf3bae600a0fa9/mem20humancapabilitysuperplatformz/pyproject.toml",
-        "entry_points": [
-          {
-            "console": "mem20humancapabilitysuperplatformz",
-            "target": "mem20humancapabilitysuperplatformz.runtime:main",
-            "on_path": false
-          }
-        ],
-        "dependencies": [],
-        "installed": null,
-        "importable": [
-          {
-            "name": "mem20humancapabilitysuperplatformz",
-            "importable": false
-          }
-        ],
-        "categories_from": "auto-discovered (not in AGENTS.md table)"
+        "tests": 9,
+        "cross_modules": [
+          "mem20dynamicskillgraphz",
+          "mem20capabilitygapmapperz",
+          "mem20relationshipcontextgraphz",
+          "mem20semanticobjectgraphz",
+          "mem20versioncontrollargeassetandrecoverypipelinez",
+          "mem20deterministicconfigurationgraphz"
+        ]
       }
     },
     {

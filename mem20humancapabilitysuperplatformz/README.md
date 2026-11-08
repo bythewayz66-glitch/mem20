@@ -1,9 +1,33 @@
-# RM-220 — Human Capability Superplatform
+# mem20humancapabilitysuperplatformz — Human Capability Super-Platform (RM-220, #326)
 
-**Outcome:** Unify memory, learning, simulation, tools, agents, devices, and personal goals around real human outcomes
+**Outcome:** increase what ordinary people can accomplish through capability discovery, assessment, and growth.
+**Breakthrough:** FreeStack becomes famous for increasing what ordinary people can accomplish.
 
-**Breakthrough:** FreeStack becomes famous for increasing what ordinary people can accomplish
+Preserves legacy domain API (**#319 peer dependency**) and advanced CAPABILITY Engine/CLI/10-scenario simulator (`search` operation kind, policy guards, replica merge, cancellation, snapshot).
 
-This package is the machine-executable local implementation derived from the supplied Off Record Lab roadmap. It includes versioned typed state, SQLite WAL persistence, event history/snapshots, SDK CRUD/subscription, resumable idempotent jobs, cancellation, retries/timeouts/quotas/backpressure, deterministic replica reconciliation, local/hybrid/cloud placement/failover, roadmap-specific `search` logic, decision confidence/explanations, feedback, CLI, HTTP console/API, safety guards, simulator, benchmark/metrics, and rollback-capable installer.
+## Legacy domain API (preserved for #319)
+`assess(capability,evidence)`, `growth_plan(current,target)`, `capability_matrix(users,skills)`, `team_capability(matrix,skill)`, `learning_recommendation(gaps)`.
 
-Named live product surfaces, real provider/device credentials, production traffic, and governed FreeStack deployment remain target-environment integration and are not claimed complete.
+## Meaningful cross-subsystem wiring (criterion 6)
+| Peer | Real calls | Capability role (feeds search outcome) |
+|---|---|---|
+| `mem20dynamicskillgraphz` | `add_skill`,`update_proficiency`,`learning_path` | skill/proficiency growth path |
+| `mem20capabilitygapmapperz` | `canonical`,`stable_hash`,`words` | capability identity and terms |
+| `mem20relationshipcontextgraphz` | `canonical`,`similarity` | human accomplishment context |
+| `mem20semanticobjectgraphz` | `canonical`,`stable_hash` | capability/skill semantic objects |
+| `mem20versioncontrollargeassetandrecoverypipelinez` | `version_asset`,`vc_health` | evidence versioning/provenance |
+| `mem20deterministicconfigurationgraphz` | `add_node`,`add_edge`,`resolve` | deterministic platform config |
+
+## Runnable example (verified)
+```bash
+cd /opt/mem20
+PYTHONPATH=/opt/mem20 .venv/bin/python -m mem20humancapabilitysuperplatformz simulate
+PYTHONPATH=/opt/mem20 .venv/bin/python -m mem20humancapabilitysuperplatformz execute '{"users":[{"id":"u1","skills":{"execution":3},"evidence":[{"weight":1,"value":0.8}]}],"skills":["execution","collaboration","leadership"]}'
+PYTHONPATH=/opt/mem20 .venv/bin/python -m mem20humancapabilitysuperplatformz serve --port 8806
+```
+
+## Tests / conformance
+```bash
+PYTHONPATH=/opt/mem20 .venv/bin/python -m pytest mem20humancapabilitysuperplatformz/tests mem20humancapabilitysuperplatformz/mem20humancapabilitysuperplatformz/tests -q --noconftest
+PYTHONPATH=/opt/mem20 .venv/bin/python scripts/renovation/conformance.py mem20humancapabilitysuperplatformz
+```

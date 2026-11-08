@@ -1,6 +1,6 @@
 # App / product narrative — `docs/app/`
 
-Entry point for the `docs/app/` documentation set. **46 tracked file(s).**
+Entry point for the `docs/app/` documentation set. **47 tracked file(s).**
 
 ## Contents
 
@@ -82,6 +82,18 @@ PYTHONPATH=/opt/mem20 python3 -m mem20edgetocloudintelligencecontinuumz serve --
 
 
 
+
+
+## Multi-Brand Swarm (`multibrandswarmz/`)
+Static page for **mem20multibrandswarmz** (#337). - Page: `docs/app/multibrandswarmz/index.html` - Conformance: `.../conformance.py mem20multibrandswarmz`
+
+
+## Multimodal Task Capture (`multimodaltaskcapturez/`)
+Static page for **mem20multimodaltaskcapturez** (#338). - Page: `docs/app/multimodaltaskcapturez/index.html` - Conformance: `.../conformance.py mem20multimodaltaskcapturez`
+
+
+## Narrative/Dialogue/Localization (`narrativedialogueandlocalizationpipelinez/`)
+Static page for **mem20narrativedialogueandlocalizationpipelinez** (#339). - Page: `docs/app/narrativedialogueandlocalizationpipelinez/index.html` - Conformance: `.../conformance.py mem20narrativedialogueandlocalizationpipelinez`
 
 ## Model Sleep/Wake (`modelsleepandwakesystemz/`)
 Static page for **mem20modelsleepandwakesystemz** (RM-066,#336). - Page: `docs/app/modelsleepandwakesystemz/index.html` - Conformance: `.../conformance.py mem20modelsleepandwakesystemz`

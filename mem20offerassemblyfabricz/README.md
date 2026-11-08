@@ -1,7 +1,14 @@
-# RM-084 — Offer Assembly Fabric
+# mem20offerassemblyfabricz — Offer Assembly Fabric
 
-Outcome: Compose sellable offers from capabilities, service levels, pricing, and delivery capacity
+First-class mem20 subsystem for offer assembly (create_offer/add_component/price_offer/publish/offer_health) with **6 peers**, SQLite WAL runtime, CLI, JSON HTTP API, served web cockpit, docs/app monitor, and real MCP tools. Core API preserved.
 
-Breakthrough: New products can be assembled from reusable business primitives
+## Peers (6)
+`mem20autonomousdealdeskz`, `mem20servicebundlingenginez`, `mem20productledgrowthsimulatorz`, `mem20revenueleakhunterz`, `mem20eventstreamsuperhighwayz`, `mem20capabilitymarketplacez`.
 
-Machine-executable local runtime includes versioned state, SQLite WAL persistence, events, SDK CRUD, resumable/idempotent jobs, retries/timeouts/quotas, recovery, `simulate` operation logic, decision explanations, feedback, CLI, HTTP console/API, mesh selection/failover, simulator, benchmark, metrics, and opt-in signature mode.
+## CLI (runnable)
+```bash
+cd /opt/mem20
+PYTHONPATH=/opt/mem20 /opt/mem20/.venv/bin/python -m mem20offerassemblyfabricz status
+PYTHONPATH=/opt/mem20 /opt/mem20/.venv/bin/python -m mem20offerassemblyfabricz doctor
+PYTHONPATH=/opt/mem20 /opt/mem20/.venv/bin/python -m mem20offerassemblyfabricz serve --port 8847
+```

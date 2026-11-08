@@ -31,6 +31,12 @@ MESSAGES_FILE = GATEWAY_DIR / "messages.jsonl"
 # it cannot deliver, so the conformance gate checks the name is present and the
 # subsystem's own tests check the entry point runs.
 SUBSYSTEMS = {
+    "mem20hardwaremarketplacez": {
+        "purpose": "Hardware Marketplace (RM-048, #323): match workloads to volunteered/owned/rented compute under explicit limits with 6 peer integrations; legacy domain preserved",
+        "entry": "python -m mem20hardwaremarketplacez simulate",
+        "owner": "mem20-webdev",
+        "wave": 2,
+    },
     "mem20hardwareawareinferencecompilerz": {
         "purpose": "Hardware-Aware Inference Compiler (RM-065, #322): fusion/quant/schedule/memory compile with 6 peer integrations; legacy domain preserved (#314)",
         "entry": "python -m mem20hardwareawareinferencecompilerz simulate",
@@ -230,6 +236,7 @@ SUBSYSTEMS = {
         "owner": "mem20-webdev",
         "wave": 2,
     },
+    "mem20offerassemblyfabricz": {"purpose": "Offer Assembly Fabric with 6 peers, HTTP cockpit, MCP","entry":"python -m mem20offerassemblyfabricz status","owner":"mem20-renovation","wave":4},
     "mem20zerotouchnodeswarmz": {
         "purpose": "Zero-touch node swarm: discovery, joining, task distribution, healing",
         "entry": "python -m mem20zerotouchnodeswarmz simulate",

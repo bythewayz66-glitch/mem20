@@ -1,6 +1,6 @@
 # App / product narrative — `docs/app/`
 
-Entry point for the `docs/app/` documentation set. **43 tracked file(s).**
+Entry point for the `docs/app/` documentation set. **44 tracked file(s).**
 
 ## Contents
 
@@ -346,3 +346,4 @@ served by the fleet process itself at its root URL.
 - [Visual Agent Blackboard monitor](visualagentblackboardz/index.html) — `PYTHONPATH=/opt/mem20 /opt/mem20/.venv/bin/python -m mem20visualagentblackboardz serve --port 8844`
 - [Visual Dataflow Composer monitor](visualdataflowcomposerz/index.html) — `PYTHONPATH=/opt/mem20 /opt/mem20/.venv/bin/python -m mem20visualdataflowcomposerz serve --port 8845`
 - [Zero-Touch Node Swarm monitor](zerotouchnodeswarmz/index.html) — `PYTHONPATH=/opt/mem20 /opt/mem20/.venv/bin/python -m mem20zerotouchnodeswarmz serve --port 8846`
+- [Offer Assembly Fabric monitor](offerassemblyfabricz/index.html) — `PYTHONPATH=/opt/mem20 /opt/mem20/.venv/bin/python -m mem20offerassemblyfabricz serve --port 8847`

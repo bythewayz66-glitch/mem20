@@ -126,19 +126,19 @@ Mem20.configure { |c| c.cwd = "/opt/mem20/mem20" }
 client = Mem20.client
 
 puts client.transport.initialize_session.protocol_version  # "2025-06-18"
-puts client.tool_names.size                                 # 272
-puts client.tools.dig("tools").size                        # 272
-puts Mem20::Surface.summary                                 # 272 tools across 27 domains
+puts client.tool_names.size                                 # 311
+puts client.tools.dig("tools").size                        # 311
+puts Mem20::Surface.summary                                 # 311 tools across 39 domains
 puts client.healthy?                                       # true when :8080/health answers 200
 
 client.close
 ```
 
-The live surface is **272 tools across 27 domains**: 270 tools registered by the 27
-domain mixins (`mcp/tools/*.py` plus `mcp/memory_tools.py`, `cognitive_tools.py` and
-`roadmap_tools.py`), plus the 2 job tools `job_status` / `job_wait` that
-`mcp/server.py` registers itself. `Mem20::Surface` encodes that decomposition and
-`rake surface:check` re-derives it from the Python sources.
+The live surface is **311 tools across 39 domains**. `docs/surface.json` is the
+authoritative manifest: `scripts/surface_manifest.py` generates it from a live
+`tools/list` response and cross-checks it against the AST catalog in
+`web/src/data/tools.json`. `Mem20::Surface` encodes those numbers and
+`rake surface:check` compares them with `docs/surface.json`.
 
 Or from the shell:
 

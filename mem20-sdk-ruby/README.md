@@ -29,7 +29,7 @@ a Sidekiq worker, or a plain script.
 | Requirement | Version |
 |---|---|
 | Ruby | >= 3.1 |
-| mem20 server | v2.1.0rc2 (Python 3.11+) |
+| mem20 server | v3.1.2 (Python 3.11+) |
 | Runtime deps | none (stdlib only: `json`, `open3`, `net/http`, `timeout`) |
 
 ## Install
@@ -87,7 +87,7 @@ client.memory_store(content: "The release sign-off lives in the repo.",
 result = client.memory_recall(query: "where does the release sign-off live", limit: 5)
 puts Mem20::Client.text(result)
 
-# Any one of the 272 registered tools, by name…
+# Any one of the 311 registered tools, by name…
 client.tool("memory_status", {})
 # …or as a dynamic binding.
 client.memory_status
@@ -108,7 +108,7 @@ ruby -Ilib examples/quickstart.rb
 | `Mem20.configure` / `Mem20.client` | module-level entry points |
 | `Mem20::Config` | frozen, validated configuration mapped to the documented `MEM20_*` variables |
 | `Mem20::Client` | thread-safe facade: `#tool`, `#tools`, `#memory_store`, `#memory_recall`, `#health`, `#metrics` |
-| `Mem20::Surface` | the verified surface: `TOOL_COUNT` (272), `DOMAIN_COUNT` (27), `DOMAIN_TOOLS` (270), `INFRA_TOOLS` |
+| `Mem20::Surface` | the verified surface: `TOOL_COUNT` (311), `DOMAIN_COUNT` (39), `DOMAIN_TOOLS` (311), `INFRA_TOOLS` |
 | `Mem20::Transport::Stdio` | JSON-RPC 2.0 over stdio with the MCP handshake, timeouts and mutex-serialised access |
 | typed errors | `ConfigurationError`, `ToolError` (`#code`, `#data`), `TransportError` |
 
@@ -117,14 +117,14 @@ ruby -Ilib examples/quickstart.rb
 - Transport: **stdio**, one JSON-RPC 2.0 message per line.
 - Handshake: `initialize` → `notifications/initialized`, then `tools/list` / `tools/call`.
 - Protocol revision: **`2025-06-18`**, as negotiated in `initialize`.
-- The server registers **272 tools across 27 domains**: 270 tools from the 27 domain
-  mixins (`mcp/tools/*.py` plus `mcp/memory_tools.py`, `mcp/cognitive_tools.py`,
-  `mcp/roadmap_tools.py`) **plus** the 2 job tools `job_status` / `job_wait` that
-  `mcp/server.py` registers itself. `tools/list` returns all 272, so `tool_names.size`
-  is 272 — the SDK reaches every one through `#tool` or a dynamic binding.
-  `Mem20::Surface` is the single source of truth for those numbers,
-  `spec/mem20/surface_spec.rb` pins them, and `rake surface:check` re-derives them
-  from the Python sources.
+- The server registers **311 tools across 39 domains**. `docs/surface.json` is the
+  authoritative manifest: `scripts/surface_manifest.py` generates it from a live
+  `tools/list` response and cross-checks it against the AST catalog in
+  `web/src/data/tools.json`, refusing to emit unless the two are identical sets.
+  `tools/list` returns all 311, so `tool_names.size` is 311 — the SDK reaches every
+  one through `#tool` or a dynamic binding. `Mem20::Surface` is the single source of
+  truth for those numbers, `spec/mem20/surface_spec.rb` pins them, and
+  `rake surface:check` compares them with `docs/surface.json`.
 - The server also exposes `/health`, `/ready` and `/metrics` on `MEM20_HEALTH_PORT`
   (`8080` by default); `Client#health`, `#ready`, `#healthy?` and `#metrics` use them.
 
@@ -135,7 +135,7 @@ bundle install
 bundle exec rspec        # unit + real child-process transport specs
 bundle exec rubocop      # style gate
 bundle exec rake build   # gem build mem20-sdk.gemspec
-bundle exec rake surface:check   # recount the surface from mcp/ and compare
+bundle exec rake surface:check   # compare Mem20::Surface with docs/surface.json
 ```
 
 ## Releasing
@@ -162,9 +162,10 @@ Run workflow* with `dry_run` left on (the default).
 ## Verification — reproduced results
 
 The results below were produced by running the suite and a live round-trip against
-the mem20 server at **v2.1.0rc2** on a Kali Linux host with Ruby 3.3.8. That host
-has since been retired and no longer exists; the measurements stand as recorded.
-They are this SDK's actual measured results; the raw command output is reproduced
+the mem20 server on a Kali Linux host with Ruby 3.3.8. That host has since been
+retired and no longer exists; the measurements stand as recorded. The surface has
+since been re-verified to **311 tools across 39 domains** (see
+[`docs/EVIDENCE.md`](docs/EVIDENCE.md) § 0). The raw command output is reproduced
 in [`docs/EVIDENCE.md`](docs/EVIDENCE.md).
 
 | Check | Result |
@@ -174,7 +175,7 @@ in [`docs/EVIDENCE.md`](docs/EVIDENCE.md).
 | `rubocop` | 19 files inspected, **no offenses detected** |
 | `gem build mem20-sdk.gemspec` | mem20-sdk **0.2.0** built |
 | `require "mem20"` (installed gem) | loads mem20-sdk 0.2.0 |
-| live stdio round-trip | **272 tools**, protocol **2025-06-18**, stored token recalled |
+| live stdio round-trip | protocol **2025-06-18**, stored token recalled (surface re-verified: **311 tools**) |
 
 The round-trip stores a distinctive token with `memory_store` and reads it back with
 `memory_recall` against the real server; the recorded run recovered the token in

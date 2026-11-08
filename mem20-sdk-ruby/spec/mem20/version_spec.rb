@@ -8,7 +8,7 @@ RSpec.describe "Mem20 version constants" do
   end
 
   it "declares the mem20 server release this SDK was validated against" do
-    expect(Mem20::SERVER_VERSION).to eq("2.1.0rc2")
+    expect(Mem20::SERVER_VERSION).to eq("3.1.2")
   end
 
   it "declares the MCP protocol revision sent in the handshake" do

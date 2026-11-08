@@ -7,6 +7,12 @@ All notable changes to the mem20 Ruby SDK are documented here. The format follow
 ## [Unreleased]
 
 ### Fixed
+- **Surface counts and server version aligned with the live value.** The gem quoted
+  **272 tools across 27 domains** and server **v2.1.0rc2**. The live surface is
+  **311 tools across 39 domains** (`docs/surface.json`, generated from a real
+  `tools/list`), and the server release is **3.1.2**. `Mem20::Surface`,
+  `Mem20::SERVER_VERSION`, the gemspec, the README and `docs/` now all state the live
+  values, and `rake surface:check` compares them with `docs/surface.json`.
 - **`Client#tool` rejected the documented call form.** `def tool(name, **params)` cannot
   accept a positional Hash under Ruby 3.x, so `client.tool("memory_status", {})` — the
   spelling used in `README.md`, `docs/USAGE.md` and `docs/API.md` — raised
@@ -14,15 +20,16 @@ All notable changes to the mem20 Ruby SDK are documented here. The format follow
   optional trailing Hash (`tool(name, arguments = nil, **params)`), accepts String or
   Symbol keys, lets explicit keywords win, and raises a clear message for a non-Hash.
 - **Stale tool-surface counts.** The gemspec and the `Client` docstring said **257** tools;
-  `docs/INSTALL.md` predicted **268** from `tool_names.size`. The live surface is **270**.
-  `268` was the domain-only subtotal and was being quoted as the total.
+  `docs/INSTALL.md` predicted **268** from `tool_names.size`. Both were the domain-only
+  subtotal or an older surface, quoted as the total. The live surface is **311**.
 
 ### Added
 - `Mem20::Surface` (`lib/mem20/surface.rb`): the single source of truth for the surface —
-  `TOOL_COUNT` (270), `DOMAIN_COUNT` (27), `DOMAIN_TOOLS` (268), `INFRA_TOOLS`
-  (`job_status`, `job_wait`), plus `.consistent?` and `.summary`.
-- `rake surface:check`: recounts registrations from `mcp/` and fails on drift from
-  `Mem20::Surface`, so the count can no longer go stale silently.
+  `TOOL_COUNT` (311), `DOMAIN_COUNT` (39), `DOMAIN_TOOLS` (311), `INFRA_TOOLS`
+  (empty: `job_status` / `job_wait` are the `job` domain), plus `.consistent?` and
+  `.summary`.
+- `rake surface:check`: compares `Mem20::Surface` with the live manifest in
+  `docs/surface.json`, so the count can no longer go stale silently.
 - `spec/mem20/surface_spec.rb` and `spec/mem20/surface_binding_spec.rb`: pin the counts,
   guard the documented files against re-introducing 257/268, and cover both `#tool`
   argument shapes plus dynamic binding of non-memory tools.

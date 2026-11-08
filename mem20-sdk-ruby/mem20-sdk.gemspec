@@ -5,24 +5,20 @@ require_relative "lib/mem20/version"
 Gem::Specification.new do |spec|
   spec.name          = "mem20-sdk"
   spec.version       = Mem20::VERSION
-  spec.authors       = ["bythewayz66"]
-  spec.email         = ["bythewayz66@users.noreply.github.com"]
+  spec.authors       = ["mem20"]
+  spec.email         = ["mem20@users.noreply.github.com"]
 
-  spec.summary       = "Ruby SDK for mem20 - persistent memory + cognition " \
-                       "substrate for AI agents."
-  spec.description   = "Idiomatic Ruby client for the mem20 MCP server " \
-                       "(JSON-RPC 2.0 over stdio, protocol 2025-06-18). " \
-                       "Provides a typed, thread-safe facade over the " \
-                       "272-tool mem20 surface (27 domains)."
+  spec.summary       = "Ruby client for the mem20 MCP server"
+  spec.description   = "Native Ruby client for mem20: JSON-RPC 2.0 over stdio, " \
+                       "MCP handshake, tool discovery and invocation over the " \
+                       "311-tool mem20 surface (39 domains)."
   spec.homepage      = "https://github.com/bythewayz66-glitch/mem20"
   spec.license       = "MIT"
-  spec.required_ruby_version = ">= 3.1.0"
+  spec.required_ruby_version = ">= 3.0"
 
-  spec.metadata["homepage_uri"]      = spec.homepage
-  spec.metadata["source_code_uri"]   = "#{spec.homepage}/tree/main/mem20-sdk-ruby"
-  spec.metadata["changelog_uri"]     = "#{spec.homepage}/blob/main/mem20-sdk-ruby/CHANGELOG.md"
-  spec.metadata["documentation_uri"] = "#{spec.homepage}/tree/main/mem20-sdk-ruby/docs"
-  spec.metadata["rubygems_mfa_required"] = "true"
+  spec.metadata["homepage_uri"]    = spec.homepage
+  spec.metadata["source_code_uri"] = spec.homepage
+  spec.metadata["changelog_uri"]   = "#{spec.homepage}/blob/main/mem20-sdk-ruby/CHANGELOG.md"
 
   spec.files = Dir[
     "lib/**/*.rb",
@@ -30,8 +26,12 @@ Gem::Specification.new do |spec|
     "examples/**/*.rb",
     "README.md",
     "CHANGELOG.md",
-    "LICENSE"
+    "LICENSE",
   ]
   spec.require_paths = ["lib"]
-  # Development dependencies live in the Gemfile (see Gemspec/DevelopmentDependencies).
+
+  # No runtime dependencies: the gem speaks JSON-RPC over a pipe with the
+  # standard library only. `rspec` and `rubocop` are development dependencies
+  # and are declared in the Gemfile, not here, so installing the gem never
+  # pulls a test framework into a production bundle.
 end

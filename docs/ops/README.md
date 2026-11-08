@@ -1,17 +1,19 @@
 # Operations — `docs/ops/`
 
-Entry point for the `docs/ops/` documentation set. **26 tracked file(s).**
+Entry point for the `docs/ops/` documentation set. **28 tracked file(s).**
 
 ## Contents
 
 - [`270-27-APPLY.md`](270-27-APPLY.md)
 - [`270-27.patch`](270-27.patch)
 - [`GITHUB_ACCESS.md`](GITHUB_ACCESS.md)
+- [`agent-contribution-plan-2026-11-07.md`](agent-contribution-plan-2026-11-07.md)
 - [`agent-worklog.md`](agent-worklog.md)
 - [`apply-270-27.py`](apply-270-27.py)
 - [`branch-audit.md`](branch-audit.md)
 - [`branch-disposition-2026-10-31.md`](branch-disposition-2026-10-31.md)
 - [`branch-inventory-2026-10-31.md`](branch-inventory-2026-10-31.md)
+- [`contribution-ledger-2026-11-07.md`](contribution-ledger-2026-11-07.md)
 - [`corrections-2026-10-26.md`](corrections-2026-10-26.md)
 - [`launch-page-270-urls.md`](launch-page-270-urls.md)
 - [`merge-order-2026-10-27.md`](merge-order-2026-10-27.md)

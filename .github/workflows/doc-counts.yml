@@ -1,0 +1,44 @@
+name: Doc counts
+
+# Fails when a live doc carries a retired tool/domain band (257/258/259/260/265/
+# 268/270/306 tools, 26/27/38 domains) instead of the live pin in
+# docs/surface.json. The pin is read from that file, never hardcoded here, so the
+# gate cannot drift when the surface moves.
+#
+# Scope and the retirement-marker rule: docs/hygiene/doc-count-gate.md
+# Run locally: python3 scripts/ops/check-doc-counts.py
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: doc-counts-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  doc-counts:
+    name: doc-count drift gate
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Self-test the gate patterns
+        run: python3 scripts/ops/check-doc-counts.py --self-test
+
+      - name: Fail on any retired tool/domain band in a live doc
+        run: python3 scripts/ops/check-doc-counts.py

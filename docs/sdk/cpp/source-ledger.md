@@ -27,7 +27,7 @@ previous repo location.
 |---|---|---|---|
 | S1 | Canonical repo URL is `github.com/bythewayz66-glitch/mem20`, branch `main`, MIT | `CANONICAL.md`, `LICENSE` | file read |
 | S2 | `JaysonAIOnline/mem20` is **not** canonical (absent / historical) | `CANONICAL.md` § Canonical designation (`JaysonAIOnline/mcp-cognitive-substrate` "earlier, much smaller … Historical / reference only") | file read |
-| S3 | Package name/version is `mem20` **3.0.0**, `requires-python >=3.10` | `pyproject.toml` (`[project] name/version/requires-python`) | file read |
+| S3 | Package name/version is `mem20` **3.1.2**, `requires-python >=3.10` | `pyproject.toml` (`[project] name/version/requires-python`) | file read |
 | S4 | Runtime deps: `mcp>=2.1.1`, `pydantic>=2.13.4`, `anyio>=4.14.2`, `numpy>=1.24`, `faiss-cpu>=1.7.4`, `sentence-transformers>=2.2.0` | `requirements.txt`, `pyproject.toml` | file read |
 | S5 | Canonical entry point is the script `mcp/mcp_server.py` (thin shim → `server.py:main`) | `mcp/mcp_server.py` (`from server import main`) | file read |
 | S6 | `mcp/` is a *script directory*, not an importable package (no `__init__.py`) | `README.md` § Transport/protocol; `launcher.py` docstring | file read |
@@ -52,8 +52,8 @@ previous repo location.
 
 | # | Claim | Source path | Verified by |
 |---|---|---|---|
-| T1 | The surface is **270 tools** | measured, not quoted: `len(Mem20MCPServer().tools) == 270`, and `tools/list` over stdio returns 270 unique names | live introspection |
-| T2 | The 270 tools span **27 domains** | `mcp/server.py::_setup_tools()` makes 28 `register_*` calls; `register_memory_tools` + `register_enhanced_memory_tools` are both Core memory → 27 distinct domains. Table: `docs/README.md` § "270 Tools Across 27 Domains" | source read + live count |
+| T1 | The surface is **311 tools** | measured, not quoted: `docs/surface.json` (generated from a live `tools/list` by `scripts/surface_manifest.py`) declares 311, and `tools/list` over stdio returns 311 unique names | live introspection |
+| T2 | The 311 tools span **39 domains** | `docs/surface.json` `domains` = 39, cross-checked against the AST catalog in `web/src/data/tools.json`; the two collections must be identical or the generator refuses to emit. Table: `docs/TOOL-DOMAINS.md` | source read + live count |
 | T4 | `serverInfo` is `{"name": "mem20-mcp", "version": ""}`; `protocolVersion` negotiates to `2025-06-18` | live `initialize` result over stdio | live introspection |
 | T3 | Server tool modules: `mcp/memory_tools.py`, `enhanced_memory_tools.py`, `cognitive_tools.py`, `thought_process.py`, `roadmap_tools.py`, `tools/world_tools.py`, `tools/braid_tools.py`, `tools/blender_tools.py`, `tools/unity_tools.py`, `tools/integration_tools.py` | `README.md` § Transport/protocol | file read |
 
@@ -126,7 +126,7 @@ repo documentation itself:
 
 > **Superseded:** the `257 tools · 26 domains` figures in the rows above are the values
 > *as corrected in that earlier pass*, not the current surface. The live surface at the
-> commit pinned above is **270 tools across 27 domains** (T1/T2). The table is kept as a
+> commit pinned above is **311 tools across 39 domains** (T1/T2). The table is kept as a
 > change record and is not itself a current claim.
 
 Remaining `JaysonAIOnline/*` mentions are **intentional**: `CANONICAL.md` deliberately

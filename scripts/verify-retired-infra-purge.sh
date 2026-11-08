@@ -27,6 +27,12 @@ ALLOW=(
   "scripts/sweep-tool-counts.py"                                 # A11 real on-disk path
   "docs/ops/retired-infra-allowlist-2026-11-01.md"               # A12 this document
   "scripts/verify-retired-infra-purge.sh"                        # A13 this script
+  "docs/app/narrative/serial-2026-11-01.md"                      # A14 dated chronicle
+  "docs/app/narrative/serial-2026-11-01b.md"                     # A14 dated chronicle
+  "docs/recon/README.md"                                         # A15 inventory doc
+  "docs/recon/stale-file-inventory-2026-11-07.json"              # A15 inventory data
+  "scripts/stale-file-inventory.py"                              # A15 inventory generator
+  "reference/v3/cities15000.txt"                                 # A16 false positive (GeoNames)
 )
 
 is_allowed() {

@@ -122,6 +122,12 @@ SUBSYSTEMS = {
         "owner": "mem20-webdev",
         "wave": 2,
     },
+    "mem20meshz": {
+        "purpose": "Mesh Gold Runtime (#333): orchestrates 6 vendored meshes (crisis/crossdevice/federated/nearby/offline/selfhealing) with 6 external ecosystem integrations, lazy aggregation/failover",
+        "entry": "python -m mem20meshz status",
+        "owner": "mem20-webdev",
+        "wave": 2,
+    },
     "mem20leveldesignworldbuildingandnavigationpipelinez": {
         "purpose": "Level/World/Nav Pipeline (RM-246,#332): blockout→nav→streaming→lighting→playability with stages/artifacts/deps/checkpoints; 6 peer integrations",
         "entry": "python -m mem20leveldesignworldbuildingandnavigationpipelinez execute '{\"goal\":\"build level\",\"stages\":[\"blockout\",\"navigation\",\"playability_tests\"],\"grid\":[[0,0],[0,0]],\"rooms\":[{\"id\":\"r1\"}]}'",

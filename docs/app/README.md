@@ -81,6 +81,15 @@ PYTHONPATH=/opt/mem20 python3 -m mem20edgetocloudintelligencecontinuumz serve --
 
 
 
+
+## mem20meshz Mesh Gold Runtime (`meshz/`)
+
+Static page for **mem20meshz** (#333): 6 vendored meshes + 6 external ecosystem integrations, lazy orchestration.
+
+- Page: `docs/app/meshz/index.html`
+- Subsystem: `mem20meshz/` (`python -m mem20meshz status|list|ecosystem|execute`)
+- Conformance: `PYTHONPATH=/opt/mem20 .venv/bin/python scripts/renovation/conformance.py mem20meshz`
+
 ## Level/World/Nav Pipeline (`leveldesignworldbuildingandnavigationpipelinez/`)
 
 Static page for **mem20leveldesignworldbuildingandnavigationpipelinez** (RM-246, #332): blockout→nav→streaming→lighting→playability pipeline, 6 peer integrations.

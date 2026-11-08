@@ -4,6 +4,9 @@ from dataclasses import dataclass
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 from urllib.parse import urlparse, parse_qs
+import mimetypes
+
+WEB_DIR = Path(__file__).with_name("web")
 
 class ValidationError(ValueError): pass
 class QuotaError(RuntimeError): pass
@@ -164,8 +167,20 @@ class Engine:
                 if isinstance(e,dict):
                     a=str(e.get('from')); b=str(e.get('to')); deg[a]=deg.get(a,0)+1; deg[b]=deg.get(b,0)+1
             return {'nodes':len(deg),'edges':len(edges),'degree':deg,'hubs':sorted(deg,key=deg.get,reverse=True)[:5]}
-        vals=[float(x) for x in p.get('values',[]) if isinstance(x,(int,float))]
-        return {'count':len(vals),'mean':statistics.fmean(vals) if vals else None,'min':min(vals) if vals else None,'max':max(vals) if vals else None,'decision':d.choice,'confidence':d.confidence,'explanation':d.explanation}
+        if k=='analyze':
+            if any(x in p for x in ('service','registry','impl','new_impl','op','swap','hot_swap')):
+                try:
+                    from . import ecosystem as _eco
+                    rep = _eco.analyze_report(p)
+                    rep.setdefault('decision', rep.get('decision') or d.choice)
+                    rep.setdefault('confidence', (rep.get('decision') or {}).get('confidence', d.confidence) if isinstance(rep.get('decision'), dict) else d.confidence)
+                    return rep
+                except Exception as e:
+                    return {'error': f"{type(e).__name__}: {e}", 'decision': d.choice, 'confidence': d.confidence}
+            # generic analyze fallback (compatible)
+            vals=[float(x) for x in p.get('values',[]) if isinstance(x,(int,float))]
+            return {'count':len(vals),'mean':statistics.fmean(vals) if vals else None,'min':min(vals) if vals else None,'max':max(vals) if vals else None,'decision':d.choice,'confidence':d.confidence,'explanation':d.explanation}
+        
     def execute(self,p,idem=None,retries=2,timeout_ms=None):
         self.validate(p); retries=max(0,min(int(retries),self.HARD_LIMITS['max_retries'])); timeout_ms=min(int(timeout_ms or self.HARD_LIMITS['max_runtime_ms']),self.HARD_LIMITS['max_runtime_ms'])
         idem=idem or hashlib.sha256(json.dumps(p,sort_keys=True).encode()).hexdigest(); old=self.store.job_by_idem(idem)
@@ -226,16 +241,31 @@ class Handler(BaseHTTPRequestHandler):
         body=json.dumps(obj,indent=2,sort_keys=True).encode(); self.send_response(code); self.send_header('Content-Type',ctype); self.send_header('Content-Length',str(len(body))); self.end_headers(); self.wfile.write(body)
     def body(self):
         n=int(self.headers.get('Content-Length','0')); return json.loads(self.rfile.read(n) or b'{}')
+    def _static(self,path):
+        try:
+            rel='index.html' if path in ('/','') else path.lstrip('/'); f=(WEB_DIR/rel).resolve(); f.relative_to(WEB_DIR.resolve())
+            if not f.is_file(): return False
+            ct=mimetypes.guess_type(str(f))[0] or 'application/octet-stream'
+            if ct.startswith('text/') or ct=='application/javascript': ct+='; charset=utf-8'
+            b=f.read_bytes(); self.send_response(200); self.send_header('Content-Type',ct); self.send_header('Content-Length',str(len(b))); self.send_header('Access-Control-Allow-Origin','*'); self.end_headers(); self.wfile.write(b); return True
+        except Exception: return False
     def do_GET(self):
-        u=urlparse(self.path); q=parse_qs(u.query)
+        u=urlparse(self.path);q=parse_qs(u.query)
+        if u.path in ('/style.css','/app.js') or (u.path.startswith('/') and '.' in u.path.rsplit('/',1)[-1] and not u.path.startswith('/api/')):
+            if self._static(u.path): return
         if u.path=='/health': return self.sendj(200,{'ok':True,'roadmap':self.engine.config['id']})
         if u.path=='/spec': return self.sendj(200,self.engine.config)
         if u.path=='/metrics': return self.sendj(200,self.engine.metrics_snapshot())
         if u.path=='/events': return self.sendj(200,self.engine.store.events(int(q.get('since',['0'])[0])))
         if u.path=='/objects': return self.sendj(200,self.engine.store.query(q.get('kind',[None])[0]))
+        if u.path in ('/doctor','/api/doctor'):
+            try:
+                from . import ecosystem as _eco; return self.sendj(200,{'ok':True,'probe':_eco.probe(),'roadmap':self.engine.config['id']})
+            except Exception as e: return self.sendj(200,{'ok':False,'error':str(e)})
         if u.path=='/':
-            title=f"{self.engine.config['id']} — {self.engine.config['title']}"
-            html=("<!doctype html><meta charset=utf-8><title>"+title+"</title><style>body{font:16px system-ui;max-width:1000px;margin:40px auto;padding:0 18px}textarea{width:100%;height:180px}pre{background:#111;color:#eee;padding:16px;overflow:auto}</style><h1>"+title+"</h1><p>"+self.engine.config['outcome']+"</p><p><b>Signature mode:</b> "+self.engine.config['breakthrough']+"</p><p><b>Roadmap surfaces:</b> "+', '.join(self.engine.config['surfaces'])+"</p><textarea id=p>{\"goal\":\""+self.engine.config['outcome'].replace('"','&quot;')+"\",\"candidates\":[{\"id\":\"local\",\"utility\":0.9},{\"id\":\"edge\",\"utility\":0.8}]}</textarea><button onclick=go()>Execute</button><pre id=o></pre><script>async function go(){let r=await fetch('/execute',{method:'POST',headers:{'content-type':'application/json'},body:p.value});o.textContent=JSON.stringify(await r.json(),null,2)}</script>").encode()
+            if self._static('/'): return
+            title=f"{self.engine.config['id']} — {self.engine.config['title']}"; ex='{"service":"api","op":"swap","current_impl":"v1","impl":"v2","config":{"deps":["runtime"]}}'
+            html=("<!doctype html><meta charset=utf-8><title>"+title+"</title><style>body{font:16px system-ui;max-width:1000px;margin:40px auto;padding:0 18px}textarea{width:100%;height:180px}pre{background:#111;color:#eee;padding:16px;overflow:auto}</style><h1>"+title+"</h1><p>"+self.engine.config['outcome']+"</p><textarea id=p>"+ex+"</textarea><button onclick=go()>Analyze/Swap</button><pre id=o></pre><script>async function go(){let r=await fetch('/execute',{method:'POST',headers:{'content-type':'application/json'},body:p.value});o.textContent=JSON.stringify(await r.json(),null,2)}</script>").encode()
             self.send_response(200); self.send_header('Content-Type','text/html; charset=utf-8'); self.send_header('Content-Length',str(len(html))); self.end_headers(); return self.wfile.write(html)
         return self.sendj(404,{'error':'not found'})
     def do_POST(self):

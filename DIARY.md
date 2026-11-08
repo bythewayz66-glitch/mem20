@@ -721,3 +721,15 @@ demand/supply match. 6 peers: `mem20edgefleetbrainz, mem20devicecapabilitycompil
 mem20datalocalityoptimizerz, mem20energyawarecomputemigrationz, mem20zerotouchnodeswarmz,
 mem20roamingworkloadschedulerz`. `/doctor`, web, root shims, fenced README, docs/PLAN, docs/app
 monitor, gateway/toolchest. 9 tests pass.
+
+---
+## 2026-11-08 - mem20hotswappableservicefoundationz (#324): meaningful rebuild (compat for #317)
+
+Rebuilt RM-091 (Hot-Swappable Service Foundation, fails 5,6,7, operation_kind=analyze) preserving
+legacy domain (**#317 compat**: `register_service,swap,health,rollback,list_services`). `analyze`
+provides meaningful hot-swap analysis for service payloads (domain health/ops + versioning/
+recovery, deterministic config, reversible safety, semantic identity, dependency context, capability
+readiness) and preserves generic analyze fallback. 6 peers: `mem20versioncontrollargeassetandrecoverypipelinez,
+mem20deterministicconfigurationgraphz,mem20reversibleexecutiongraphz,mem20semanticobjectgraphz,
+mem20relationshipcontextgraphz,mem20dynamicskillgraphz`. `/doctor`, web, root shims, fenced README,
+docs/PLAN, docs/app monitor, gateway/toolchest. 9 tests pass, conformance **7/7**.

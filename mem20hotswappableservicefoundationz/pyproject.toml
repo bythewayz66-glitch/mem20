@@ -5,7 +5,7 @@ build-backend="setuptools.build_meta"
 [project]
 name="mem20hotswappableservicefoundationz"
 version="1.0.0"
-description="mem20hotswappableservicefoundationz first-class module"
+description="Hot-Swappable Service Foundation (RM-091): zero-disruption service swaps with versioning, config, reversibility, identity, context, capability peers; legacy domain preserved (#317)"
 requires-python=">=3.11"
 
 [project.scripts]
@@ -14,4 +14,4 @@ mem20hotswappableservicefoundationz="mem20hotswappableservicefoundationz.runtime
 [tool.setuptools]
 packages=["mem20hotswappableservicefoundationz"]
 [tool.setuptools.package-data]
-mem20hotswappableservicefoundationz=["CAPABILITY.json","roadmap.json"]
+mem20hotswappableservicefoundationz=["CAPABILITY.json","roadmap.json","web/*"]

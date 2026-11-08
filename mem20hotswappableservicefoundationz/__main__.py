@@ -1,0 +1,2 @@
+from mem20hotswappableservicefoundationz.mem20hotswappableservicefoundationz.runtime import main
+raise SystemExit(main())

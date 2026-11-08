@@ -1,7 +1,14 @@
-# RM-038 — Outcome Simulation Lab
+# mem20outcomesimulationlabz — Outcome Simulation Lab
 
-Outcome: Simulate schedules, staffing, dependencies, and failure modes before committing work
+First-class mem20 subsystem for outcome simulation (simulate_once/monte_carlo/summarize/scenario_compare/risk_of_loss) with **6 peers**, SQLite WAL runtime, CLI, JSON HTTP API, served web cockpit, docs/app monitor, and real MCP tools. Core API preserved.
 
-Breakthrough: Teams test execution strategies before spending time or money
+## Peers (6)
+`mem20counterfactualmemorysimulatorz`, `mem20realtimebusinesstwinz`, `mem20businessmodelsimulatorz`, `mem20eventstreamsuperhighwayz`, `mem20capabilitymarketplacez`, `mem20causalroutingbrainz`.
 
-Machine-executable local runtime includes versioned state, SQLite WAL persistence, events, SDK CRUD, resumable/idempotent jobs, retries/timeouts/quotas, recovery, `simulate` operation logic, decision explanations, feedback, CLI, HTTP console/API, mesh selection/failover, simulator, benchmark, metrics, and opt-in signature mode.
+## CLI (runnable)
+```bash
+cd /opt/mem20
+PYTHONPATH=/opt/mem20 /opt/mem20/.venv/bin/python -m mem20outcomesimulationlabz status
+PYTHONPATH=/opt/mem20 /opt/mem20/.venv/bin/python -m mem20outcomesimulationlabz doctor
+PYTHONPATH=/opt/mem20 /opt/mem20/.venv/bin/python -m mem20outcomesimulationlabz serve --port 8850
+```

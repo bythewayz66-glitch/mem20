@@ -31,6 +31,12 @@ MESSAGES_FILE = GATEWAY_DIR / "messages.jsonl"
 # it cannot deliver, so the conformance gate checks the name is present and the
 # subsystem's own tests check the entry point runs.
 SUBSYSTEMS = {
+    "mem20hotswappableservicefoundationz": {
+        "purpose": "Hot-Swappable Service Foundation (RM-091, #324): zero-disruption service swaps with 6 peer integrations; legacy domain preserved (#317)",
+        "entry": "python -m mem20hotswappableservicefoundationz simulate",
+        "owner": "mem20-webdev",
+        "wave": 2,
+    },
     "mem20hardwaremarketplacez": {
         "purpose": "Hardware Marketplace (RM-048, #323): match workloads to volunteered/owned/rented compute under explicit limits with 6 peer integrations; legacy domain preserved",
         "entry": "python -m mem20hardwaremarketplacez simulate",
@@ -242,6 +248,7 @@ SUBSYSTEMS = {
         "owner": "mem20-webdev",
         "wave": 2,
     },
+    "mem20outcomesimulationlabz": {"purpose": "Outcome Simulation Lab with 6 peers, HTTP cockpit, MCP","entry":"python -m mem20outcomesimulationlabz status","owner":"mem20-renovation","wave":4},
     "mem20opportunityradarz": {"purpose": "Opportunity Radar with 6 peers, HTTP cockpit, MCP","entry":"python -m mem20opportunityradarz status","owner":"mem20-renovation","wave":4},
     "mem20offergenomeenginez": {"purpose": "Offer Genome Engine with 6 peers, HTTP cockpit, MCP","entry":"python -m mem20offergenomeenginez status","owner":"mem20-renovation","wave":4},
     "mem20offerassemblyfabricz": {"purpose": "Offer Assembly Fabric with 6 peers, HTTP cockpit, MCP","entry":"python -m mem20offerassemblyfabricz status","owner":"mem20-renovation","wave":4},

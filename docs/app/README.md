@@ -1,6 +1,6 @@
 # App / product narrative — `docs/app/`
 
-Entry point for the `docs/app/` documentation set. **44 tracked file(s).**
+Entry point for the `docs/app/` documentation set. **45 tracked file(s).**
 
 ## Contents
 
@@ -358,3 +358,4 @@ served by the fleet process itself at its root URL.
 - [Offer Assembly Fabric monitor](offerassemblyfabricz/index.html) — `PYTHONPATH=/opt/mem20 /opt/mem20/.venv/bin/python -m mem20offerassemblyfabricz serve --port 8847`
 - [Offer Genome Engine monitor](offergenomeenginez/index.html) — `PYTHONPATH=/opt/mem20 /opt/mem20/.venv/bin/python -m mem20offergenomeenginez serve --port 8848`
 - [Opportunity Radar monitor](opportunityradarz/index.html) — `PYTHONPATH=/opt/mem20 /opt/mem20/.venv/bin/python -m mem20opportunityradarz serve --port 8849`
+- [Outcome Simulation Lab monitor](outcomesimulationlabz/index.html) — `PYTHONPATH=/opt/mem20 /opt/mem20/.venv/bin/python -m mem20outcomesimulationlabz serve --port 8850`

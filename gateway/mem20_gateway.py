@@ -162,9 +162,9 @@ SUBSYSTEMS = {
         "entry": 'python -m mem20multimodaltaskcapturez execute \'{"text":"build api. test api"}\'',
         "owner": "mem20-webdev", "wave": 2,
     },
-    "mem20narrativedialogueandlocalizationpipelinez": {
+    "mem20pipez": {
         "purpose": 'Narrative/Dialogue/Localization Pipeline (RM-244,#339): dialogue graphs, localization, export; 6 peers',
-        "entry": 'python -m mem20narrativedialogueandlocalizationpipelinez execute \'{"text":"NPC: Hello\\nHERO: Ready","target_languages":["en","es"]}\'',
+        "entry": 'python -m mem20pipez execute \'{"text":"NPC: Hello\\nHERO: Ready","target_languages":["en","es"]}\'',
         "owner": "mem20-webdev", "wave": 2,
     },
     "mem20modelsleepandwakesystemz": {
@@ -189,9 +189,9 @@ SUBSYSTEMS = {
         "owner": "mem20-webdev",
         "wave": 2,
     },
-    "mem20leveldesignworldbuildingandnavigationpipelinez": {
+    "mem20pipez": {
         "purpose": "Level/World/Nav Pipeline (RM-246,#332): blockout→nav→streaming→lighting→playability with stages/artifacts/deps/checkpoints; 6 peer integrations",
-        "entry": "python -m mem20leveldesignworldbuildingandnavigationpipelinez execute '{\"goal\":\"build level\",\"stages\":[\"blockout\",\"navigation\",\"playability_tests\"],\"grid\":[[0,0],[0,0]],\"rooms\":[{\"id\":\"r1\"}]}'",
+        "entry": "python -m mem20pipez execute '{\"goal\":\"build level\",\"stages\":[\"blockout\",\"navigation\",\"playability_tests\"],\"grid\":[[0,0],[0,0]],\"rooms\":[{\"id\":\"r1\"}]}'",
         "owner": "mem20-webdev",
         "wave": 2,
     },
@@ -225,9 +225,9 @@ SUBSYSTEMS = {
         "owner": "mem20-webdev",
         "wave": 2,
     },
-    "mem20gameplaysystemsdataandbalancepipelinez": {
+    "mem20pipez": {
         "purpose": "Gameplay Systems Data & Balance Pipeline (RM-245, #316): telemetry/analysis/tuning pipeline with 6 peer signals; legacy domain preserved",
-        "entry": "python -m mem20gameplaysystemsdataandbalancepipelinez simulate",
+        "entry": "python -m mem20pipez simulate",
         "owner": "mem20-webdev",
         "wave": 2,
     },
@@ -267,9 +267,9 @@ SUBSYSTEMS = {
         "owner": "mem20-webdev",
         "wave": 2,
     },
-    "mem20executablegameconceptandscopepipelinez": {
+    "mem20pipez": {
         "purpose": "Executable Game Concept & Scope Pipeline (RM-237): concept scoring, scope/feasibility/risk/stage with 6 production/growth/foundry peer signals",
-        "entry": "python -m mem20executablegameconceptandscopepipelinez simulate",
+        "entry": "python -m mem20pipez simulate",
         "owner": "mem20-webdev",
         "wave": 2,
     },
@@ -316,7 +316,7 @@ SUBSYSTEMS = {
         "wave": 2,
     },
     "mem20planetarybatchfabricz": {"purpose": "Planetary Batch Fabric with 6 peers, HTTP cockpit, MCP","entry":"python -m mem20planetarybatchfabricz status","owner":"mem20-renovation","wave":4},
-    "mem20pipelinez": {"purpose": "mem20pipelinez crew runtime with 6 peers, HTTP cockpit, MCP","entry":"python -m mem20pipelinez status","owner":"mem20-renovation","wave":4},
+    "mem20pipez": {"purpose": "mem20pipez crew runtime with 6 peers, HTTP cockpit, MCP","entry":"python -m mem20pipez status","owner":"mem20-renovation","wave":4},
     "mem20personalworkflowtwinz": {"purpose": "Personal Workflow Twin with 6 peers, HTTP cockpit, MCP","entry":"python -m mem20personalworkflowtwinz status","owner":"mem20-renovation","wave":4},
     "mem20personalmodelevolutionz": {"purpose": "Personal Model Evolution with 6 peers, HTTP cockpit, MCP","entry":"python -m mem20personalmodelevolutionz status","owner":"mem20-renovation","wave":4},
     "mem20personalcognitivesearchz": {"purpose": "Personal Cognitive Search with 6 peers, HTTP cockpit, MCP","entry":"python -m mem20personalcognitivesearchz status","owner":"mem20-renovation","wave":4},
@@ -331,9 +331,9 @@ SUBSYSTEMS = {
         "owner": "hsp2",
         "wave": 2,
     },
-    "mem20audiovoiceandmusicpipelinez": {
+    "mem20pipez": {
         "purpose": "Audio/voice/music pipeline (mix, normalize, sync, export, mastering) with 6 subsystem-specific peer integrations, HTTP cockpit, and MCP tools",
-        "entry": "python -m mem20audiovoiceandmusicpipelinez status",
+        "entry": "python -m mem20pipez status",
         "owner": "mem20-renovation",
         "wave": 3,
     },
@@ -366,7 +366,7 @@ SUBSYSTEMS = {
     "mem20realitytosoftwarecompilerz": {"purpose": "Reality-to-Software Compiler with 6 peers, HTTP cockpit, MCP","entry":"python -m mem20realitytosoftwarecompilerz status","owner":"mem20-renovation","wave":4},
     "mem20protocolautodiscoveryenginez": {"purpose": "Protocol Auto-Discovery Engine with 6 peers, HTTP cockpit, MCP","entry":"python -m mem20protocolautodiscoveryenginez status","owner":"mem20-renovation","wave":4},
     "mem20productledgrowthsimulatorz": {"purpose": "Product-Led Growth Simulator with 6 peers, HTTP cockpit, MCP","entry":"python -m mem20productledgrowthsimulatorz status","owner":"mem20-renovation","wave":4},
-    "mem20productionplanningandtaskorchestrationpipelinez": {"purpose": "Production Planning and Task Orchestration Pipeline with 6 peers, HTTP cockpit, MCP","entry":"python -m mem20productionplanningandtaskorchestrationpipelinez status","owner":"mem20-renovation","wave":4},
+    "mem20pipez": {"purpose": "Production Planning and Task Orchestration Pipeline with 6 peers, HTTP cockpit, MCP","entry":"python -m mem20pipez status","owner":"mem20-renovation","wave":4},
     "mem20predictiverecallenginez": {"purpose": "Predictive Recall Engine with 6 peers, HTTP cockpit, MCP","entry":"python -m mem20predictiverecallenginez status","owner":"mem20-renovation","wave":4},
     "mem20playermotivationtwinz": {"purpose": "Player Motivation Twin with 6 peers, HTTP cockpit, MCP","entry":"python -m mem20playermotivationtwinz status","owner":"mem20-renovation","wave":4},
     "mem20dynamicskillgraphz": {"purpose": "Dynamic Skill Graph with 6 peers, HTTP cockpit, MCP","entry":"python -m mem20dynamicskillgraphz status","owner":"mem20-renovation","wave":3},
@@ -594,9 +594,9 @@ SUBSYSTEMS = {
         "owner": "mem20-webdev",
         "wave": 2,
     },
-    "mem20rigginganimationandmotionpipelinez": {
+    "mem20pipez": {
         "purpose": "Automate skeleton mapping, retargeting, clip validation, IK, compression, and state integration",
-        "entry": "python -m mem20rigginganimationandmotionpipelinez simulate",
+        "entry": "python -m mem20pipez simulate",
         "owner": "mem20-webdev",
         "wave": 2,
     },

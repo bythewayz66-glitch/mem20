@@ -11,7 +11,7 @@ Preserves legacy domain API (**#317 peer dependency**) and CAPABILITY Engine/CLI
 ## Meaningful cross-subsystem wiring (criterion 6)
 | Peer | Real calls | Hot-swap role (feeds analysis outcome) |
 |---|---|---|
-| `mem20versioncontrollargeassetandrecoverypipelinez` | `version_asset`,`diff_versions`,`recover`,`vc_health` | impl versioning and recovery readiness |
+| `mem20pipez` | `version_asset`,`diff_versions`,`recover`,`vc_health` | impl versioning and recovery readiness |
 | `mem20deterministicconfigurationgraphz` | `add_node`,`add_edge`,`resolve` | deterministic service/config resolution |
 | `mem20reversibleexecutiongraphz` | `create_graph`,`add_node`,`undo` | reversible swap/rollback safety model |
 | `mem20semanticobjectgraphz` | `words`,`stable_hash`,`canonical` | service identity and semantic hashing |

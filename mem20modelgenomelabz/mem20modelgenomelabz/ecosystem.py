@@ -20,11 +20,11 @@ def runtime_compat_signal(ctx: Mapping[str, Any]) -> Dict[str, Any]:
 
 def cost_opt_signal(ctx: Mapping[str, Any]) -> Dict[str, Any]:
     def run():
-        try: from mem20aipipelinecostoptimizerz.domain import stage_cost, pipeline_cost
-        except Exception: from mem20aipipelinecostoptimizerz.mem20aipipelinecostoptimizerz.domain import stage_cost, pipeline_cost
+        try: from mem20pipez.domain import stage_cost, pipeline_cost
+        except Exception: from mem20pipez.mem20pipez.domain import stage_cost, pipeline_cost
         sc=stage_cost({"name":"genome-eval","cost_per_unit":0.01}, throughput=10); pc=pipeline_cost([{"name":"g","cost_per_unit":0.01}], throughput=10)
         return {"stage_cost":sc,"pipeline_cost":pc}
-    return _safe("mem20aipipelinecostoptimizerz", run)
+    return _safe("mem20pipez", run)
 
 def kernel_opt_signal(ctx: Mapping[str, Any]) -> Dict[str, Any]:
     def run():

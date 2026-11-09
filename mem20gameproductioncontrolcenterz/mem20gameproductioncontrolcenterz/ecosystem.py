@@ -72,14 +72,14 @@ def resilience_assessment(project: Dict[str, Any] = None) -> Dict[str, Any]:
 def asset_animation_pipeline(assets: Dict[str, Any] = None) -> Dict[str, Any]:
     """Use rigging/animation pipeline to assess asset production readiness."""
     def run():
-        from mem20rigginganimationandmotionpipelinez.domain import create_rig, set_pose, animate
+        from mem20pipez.domain import create_rig, set_pose, animate
         bones = list((assets or {}).get("bones") or ["root", "spine", "arm"])
         rig = create_rig(bones)
         set_pose(rig, bones[0] if bones else "root", (0, 0, 0))
         frames = (assets or {}).get("frame_data") or [{bones[0] if bones else "root": (0, 0, 0)}]
         anim = animate(rig, frames)
         return {"rig_bones": len(rig.get("bones", [])) if isinstance(rig, dict) else 0, "animation": anim}
-    return _safe("mem20rigginganimationandmotionpipelinez", run)
+    return _safe("mem20pipez", run)
 
 def production_control_report(payload: Dict[str, Any]) -> Dict[str, Any]:
     """Compose a meaningful production control report from local domain + 6 peer integrations."""

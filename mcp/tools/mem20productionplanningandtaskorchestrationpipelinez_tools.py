@@ -1,4 +1,4 @@
-"""mem20productionplanningandtaskorchestrationpipelinez MCP tools."""
+"""mem20pipez MCP tools."""
 from __future__ import annotations
 import json,os,sys
 from typing import Any,Dict
@@ -6,9 +6,9 @@ try: import mcp_types as mt; MCP_SDK_AVAILABLE=True
 except ImportError: MCP_SDK_AVAILABLE=False; mt=None  # type: ignore
 _REPO_ROOT=os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 def _load():
-    p=os.path.join(_REPO_ROOT,"mem20productionplanningandtaskorchestrationpipelinez")
+    p=os.path.join(_REPO_ROOT,"mem20pipez")
     if p not in sys.path: sys.path.insert(0,p)
-    import mem20productionplanningandtaskorchestrationpipelinez.domain as domain  # type: ignore
+    import mem20pipez.domain as domain  # type: ignore
     return domain
 def _d(v): return json.dumps(v,indent=2,default=str)
 class ProductionPlanningAndTaskOrchestrationPipelineToolsMixin:

@@ -17,14 +17,14 @@ def _safe(name, fn):
 
 def versioning(impl_name: str, impl_content: str) -> Dict[str, Any]:
     def run():
-        from mem20versioncontrollargeassetandrecoverypipelinez.domain import version_asset, diff_versions, recover, vc_health
+        from mem20pipez.domain import version_asset, diff_versions, recover, vc_health
         cur = version_asset(impl_name, impl_content)
         prev = version_asset(impl_name, (impl_content or "impl") + "-prev")
         diff = diff_versions(prev, cur)
         rec = recover([prev, cur], prev["version"])
         h = vc_health([prev, cur])
         return {"version": cur["version"], "changed": diff.get("changed"), "recoverable": rec is not None, "vc_health": h}
-    return _safe("mem20versioncontrollargeassetandrecoverypipelinez", run)
+    return _safe("mem20pipez", run)
 
 def config_resolution(service: str, config: Dict[str, Any]) -> Dict[str, Any]:
     def run():

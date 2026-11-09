@@ -4,7 +4,7 @@ import pathlib,sys
 from typing import Mapping,Sequence
 __all__=["audio_pipeline","rig_pipeline","production_pipeline","studio_events","studio_routing","workcell_dispatch","probe"]
 _REPO_ROOT=pathlib.Path(__file__).resolve().parents[2]
-_PROJECTS=("mem20audiovoiceandmusicpipelinez","mem20rigginganimationandmotionpipelinez","mem20productionplanningandtaskorchestrationpipelinez","mem20eventstreamsuperhighwayz","mem20capabilitymarketplacez","mem20autonomousworkcellsz")
+_PROJECTS=("mem20pipez","mem20pipez","mem20pipez","mem20eventstreamsuperhighwayz","mem20capabilitymarketplacez","mem20autonomousworkcellsz")
 def _bootstrap():
     for name in reversed(_PROJECTS):
         p=str(_REPO_ROOT/name)
@@ -14,23 +14,23 @@ def _bootstrap():
 _bootstrap()
 def audio_pipeline()->dict:
     try:
-        from mem20audiovoiceandmusicpipelinez.domain import pipeline_report, probe as p
-        r=pipeline_report(); return {"ok":bool(r.get("ok",True)),"subsystem":"mem20audiovoiceandmusicpipelinez","report":r is not None}
+        from mem20pipez.domain import pipeline_report, probe as p
+        r=pipeline_report(); return {"ok":bool(r.get("ok",True)),"subsystem":"mem20pipez","report":r is not None}
     except Exception:
         try:
-            from mem20audiovoiceandmusicpipelinez.domain import probe as p
-            r=p(); return {"ok":bool(r.get("ok",True)),"subsystem":"mem20audiovoiceandmusicpipelinez","probe":r is not None}
-        except Exception as exc: return {"ok":False,"subsystem":"mem20audiovoiceandmusicpipelinez","error":f"{type(exc).__name__}: {exc}"}
+            from mem20pipez.domain import probe as p
+            r=p(); return {"ok":bool(r.get("ok",True)),"subsystem":"mem20pipez","probe":r is not None}
+        except Exception as exc: return {"ok":False,"subsystem":"mem20pipez","error":f"{type(exc).__name__}: {exc}"}
 def rig_pipeline()->dict:
     try:
-        from mem20rigginganimationandmotionpipelinez.domain import probe as p
-        r=p(); return {"ok":bool(r.get("ok",True)),"subsystem":"mem20rigginganimationandmotionpipelinez","probe":r is not None}
-    except Exception as exc: return {"ok":False,"subsystem":"mem20rigginganimationandmotionpipelinez","error":f"{type(exc).__name__}: {exc}"}
+        from mem20pipez.domain import probe as p
+        r=p(); return {"ok":bool(r.get("ok",True)),"subsystem":"mem20pipez","probe":r is not None}
+    except Exception as exc: return {"ok":False,"subsystem":"mem20pipez","error":f"{type(exc).__name__}: {exc}"}
 def production_pipeline()->dict:
     try:
-        from mem20productionplanningandtaskorchestrationpipelinez.domain import probe as p
-        r=p(); return {"ok":bool(r.get("ok",True)),"subsystem":"mem20productionplanningandtaskorchestrationpipelinez","probe":r is not None}
-    except Exception as exc: return {"ok":False,"subsystem":"mem20productionplanningandtaskorchestrationpipelinez","error":f"{type(exc).__name__}: {exc}"}
+        from mem20pipez.domain import probe as p
+        r=p(); return {"ok":bool(r.get("ok",True)),"subsystem":"mem20pipez","probe":r is not None}
+    except Exception as exc: return {"ok":False,"subsystem":"mem20pipez","error":f"{type(exc).__name__}: {exc}"}
 def studio_events(name:str,payload:Mapping)->dict:
     try:
         from mem20eventstreamsuperhighwayz.domain import create_stream,publish,throughput

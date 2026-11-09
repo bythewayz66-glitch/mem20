@@ -1,7 +1,7 @@
 """RM-239 large-asset release audit tools for the mem20 MCP server.
 
 Registers ``vcs_asset_release_audit``, which delegates to
-``mem20versioncontrollargeassetandrecoverypipelinez.integration.audit_asset_release``.
+``mem20pipez.integration.audit_asset_release``.
 Keeping the registration in its own mixin means the subsystem is wired into the
 MCP surface without editing the large version-control mixin.
 """
@@ -20,13 +20,13 @@ except ImportError:
     raise
 
 _REPO_ROOT = Path(__file__).resolve().parents[2]
-_RM239_DIR = _REPO_ROOT / "mem20versioncontrollargeassetandrecoverypipelinez"
+_RM239_DIR = _REPO_ROOT / "mem20pipez"
 if str(_RM239_DIR) not in sys.path:
     sys.path.insert(0, str(_RM239_DIR))
 
 try:
-    from mem20versioncontrollargeassetandrecoverypipelinez import domain as rm239_domain
-    from mem20versioncontrollargeassetandrecoverypipelinez.integration import (
+    from mem20pipez import domain as rm239_domain
+    from mem20pipez.integration import (
         audit_asset_release as rm239_audit_asset_release,
     )
     RM239_AVAILABLE = True
@@ -54,7 +54,7 @@ def _tool_spec():
             "Version a large asset (scene/model/media) and audit the release: "
             "credential screening, asset budget, grounded ledger write + "
             "read-back, store integrity, and estate registration. "
-            "Backed by mem20versioncontrollargeassetandrecoverypipelinez (RM-239)."
+            "Backed by mem20pipez (RM-239)."
         ),
         inputSchema={
             "type": "object",
@@ -72,7 +72,7 @@ def _tool_spec():
 
 async def _handle(args: Dict) -> str:
     if not RM239_AVAILABLE:
-        return "Error: mem20versioncontrollargeassetandrecoverypipelinez is not importable"
+        return "Error: mem20pipez is not importable"
     try:
         result = rm239_audit_asset_release(
             asset_id=args.get("asset_id", ""),

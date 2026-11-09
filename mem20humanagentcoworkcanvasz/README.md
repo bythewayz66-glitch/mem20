@@ -13,7 +13,7 @@ Preserves legacy domain API (**#320 peer dependency**) and CAPABILITY Engine/CLI
 |---|---|---|
 | `mem20realtimeteampresencez` | `set_presence`,`online_users`,`away_users` | participant presence/availability |
 | `mem20asynccollaborationcapsulesz` | `create_capsule`,`apply_change`,`merge_capsules`,`capsule_checksum` | async change capture and merge |
-| `mem20versioncontrollargeassetandrecoverypipelinez` | `version_asset`,`diff_versions`,`recover` | live artifact versioning/recovery |
+| `mem20pipez` | `version_asset`,`diff_versions`,`recover` | live artifact versioning/recovery |
 | `mem20deterministicconfigurationgraphz` | `add_node`,`add_edge`,`resolve` | deterministic workspace config |
 | `mem20semanticobjectgraphz` | `canonical`,`stable_hash`,`words` | artifact/decision identity |
 | `mem20relationshipcontextgraphz` | `canonical`,`similarity` | human-agent teammate context |

@@ -472,8 +472,8 @@ budgets, optimization actions). Preserved legacy domain API (`power_reading`,
 policy evaluation with durable SQLite WAL state, service, CLI/JSON HTTP/cockpit.
 6 unique peers (different from #300-#303): `mem20selftuningresourcegovernorz`,
 `mem20realtimebusinesstwinz`, `mem20freestackambientcomputingfabricz`,
-`mem20gameplaysystemsdataandbalancepipelinez`,
-`mem20productionplanningandtaskorchestrationpipelinez`,
+`mem20pipez`,
+`mem20pipez`,
 `mem20autonomousworkcellsz`. Docs/app monitor, gateway/toolchest. Verification:
 4 tests pass (conformance-style flags), simulate/doctor 6/6, conformance 7/7.
 
@@ -521,7 +521,7 @@ legacy domain API and existing CAPABILITY-driven Engine/Store/SDK/CLI/HTTP behav
 (fairness, harm/manipulation violations, aligned rewards, risk vs hard-safety threshold) and
 6 unique peers (different from #300-#306): `mem20outcomesimulationlabz`, `mem20gamebalancesimulatorz`,
 `mem20executiondigitaltwinz`, `mem20dynamicquestrewardcomposerz`, `mem20rewardforgez`,
-`mem20executablegameconceptandscopepipelinez`. Added `/doctor` peer probe, web cockpit, root shim,
+`mem20pipez`. Added `/doctor` peer probe, web cockpit, root shim,
 README fenced runnable example, docs/PLAN, docs/app monitor, gateway/toolchest. Verification:
 8 tests pass (incl. 5 legacy + Engine simulator compatibility), conformance **7/7**.
 
@@ -538,7 +538,7 @@ docs/PLAN, docs/app monitor, gateway/toolchest. Verification: 8 tests pass (lega
 conformance **7/7**.
 
 ---
-## 2026-11-07 - mem20executablegameconceptandscopepipelinez (#309): depth-first rebuild
+## 2026-11-07 - mem20pipez (#309): depth-first rebuild
 
 Rebuilt RM-237 (Executable Game Concept & Scope Pipeline, fails 5,6,7, operation_kind=graph) as
 first-class while preserving legacy domain API (`concept_score`,`scope_estimate`,`feasibility_check`,
@@ -633,7 +633,7 @@ shims, fenced runnable README, docs/PLAN, docs/app monitor, gateway/toolchest. V
 10 tests pass (5 legacy + 5 new), conformance **7/7**.
 
 ---
-## 2026-11-07 - mem20gameplaysystemsdataandbalancepipelinez (#316): depth-first rebuild
+## 2026-11-07 - mem20pipez (#316): depth-first rebuild
 
 Rebuilt RM-245 (Gameplay Systems Data & Balance Pipeline, fails 5,6,7, operation_kind=progression)
 as first-class while preserving legacy domain API (`collect_telemetry,aggregate_metrics,balance_tuning,
@@ -657,7 +657,7 @@ real peer-derived inputs (effective capacity from team presence; unit-economics 
 hot-swappable release readiness; specialist forge status; resilience-adjusted risk via design
 stress lab; rigging/animation asset-pipeline status). 6 unique peers (#300–#316 unused):
 `mem20realtimeteampresencez`,`mem20uniteconomicsautopilotz`,`mem20hotswappableservicefoundationz`,
-`mem20specialistmodelforgez`,`mem20executabledesignstresslabz`,`mem20rigginganimationandmotionpipelinez`.
+`mem20specialistmodelforgez`,`mem20executabledesignstresslabz`,`mem20pipez`.
 Added `/doctor`, web cockpit, root shims, fenced runnable README, docs/PLAN, docs/app monitor,
 gateway/toolchest. Verification: 10 tests pass, conformance **7/7**.
 
@@ -729,7 +729,7 @@ Rebuilt RM-091 (Hot-Swappable Service Foundation, fails 5,6,7, operation_kind=an
 legacy domain (**#317 compat**: `register_service,swap,health,rollback,list_services`). `analyze`
 provides meaningful hot-swap analysis for service payloads (domain health/ops + versioning/
 recovery, deterministic config, reversible safety, semantic identity, dependency context, capability
-readiness) and preserves generic analyze fallback. 6 peers: `mem20versioncontrollargeassetandrecoverypipelinez,
+readiness) and preserves generic analyze fallback. 6 peers: `mem20pipez,
 mem20deterministicconfigurationgraphz,mem20reversibleexecutiongraphz,mem20semanticobjectgraphz,
 mem20relationshipcontextgraphz,mem20dynamicskillgraphz`. `/doctor`, web, root shims, fenced README,
 docs/PLAN, docs/app monitor, gateway/toolchest. 9 tests pass, conformance **7/7**.
@@ -741,7 +741,7 @@ Rebuilt RM-032 (Human-Agent Co-work Canvas, fails 5,6,7, operation_kind=sync) pr
 domain (**#320 compat**). `sync` provides meaningful canvas sync (domain canvas + presence,
 collaboration capsule, artifact versioning, workspace config, semantic identity, relationship
 context) and preserves generic sync fallback. 6 peers: `mem20realtimeteampresencez,
-mem20asynccollaborationcapsulesz,mem20versioncontrollargeassetandrecoverypipelinez,
+mem20asynccollaborationcapsulesz,mem20pipez,
 mem20deterministicconfigurationgraphz,mem20semanticobjectgraphz,mem20relationshipcontextgraphz`.
 `/doctor`, web, root shims, fenced README, docs/PLAN, docs/app monitor, gateway/toolchest. 9 tests
 pass, conformance **7/7**.
@@ -754,7 +754,7 @@ runtime) preserving legacy domain (**#319 compat**) and all runtime behaviors (p
 replica merge, cancellation, snapshot, 10-scenario simulator). `search` provides meaningful
 capability search for users/skills/evidence payloads and preserves generic document search. 6
 peers: `mem20dynamicskillgraphz, mem20capabilitygapmapperz, mem20relationshipcontextgraphz,
-mem20semanticobjectgraphz, mem20versioncontrollargeassetandrecoverypipelinez,
+mem20semanticobjectgraphz, mem20pipez,
 mem20deterministicconfigurationgraphz`. `/doctor`, web, root shims, fenced README, docs/PLAN,
 docs/app monitor, gateway/toolchest. 9 tests pass, conformance **7/7**.
 
@@ -764,7 +764,7 @@ docs/app monitor, gateway/toolchest. 9 tests pass, conformance **7/7**.
 Rebuilt RM-010 (Instant App Synthesis, fails 5,6,7, operation_kind=compose) preserving legacy
 domain (**#318 compat**). `compose` provides meaningful app synthesis for spec/objective payloads
 and preserves generic composition. 6 peers: `mem20deterministicconfigurationgraphz,
-mem20semanticobjectgraphz,mem20versioncontrollargeassetandrecoverypipelinez,
+mem20semanticobjectgraphz,mem20pipez,
 mem20dynamicskillgraphz,mem20relationshipcontextgraphz,mem20capabilitygapmapperz`. `/doctor`,
 web, root shims, fenced README, docs/PLAN, docs/app monitor, gateway/toolchest. 9 tests pass,
 conformance **7/7**.
@@ -775,7 +775,7 @@ conformance **7/7**.
 Rebuilt RM-076 (Integration Digital Twin, fails 5,6,7, operation_kind=route) preserving legacy
 domain (compat preserved). `route` provides meaningful twin routing/simulation for system/scenario
 payloads and preserves generic route. 6 peers: `mem20deterministicconfigurationgraphz,
-mem20versioncontrollargeassetandrecoverypipelinez,mem20reversibleexecutiongraphz,
+mem20pipez,mem20reversibleexecutiongraphz,
 mem20semanticobjectgraphz,mem20relationshipcontextgraphz,mem20dynamicskillgraphz`. `/doctor`,
 web, root shims, fenced README, docs/PLAN, docs/app monitor, gateway/toolchest. 9 tests pass,
 conformance **7/7**.
@@ -789,7 +789,7 @@ Rebuilt RM-051 (Intent Compiler, fails 5,6,7, operation_kind=compose) preserving
 capability plan, typed entities, intent context, reversible plan, intent versioning) and preserves
 generic composition. 6 peers: `mem20deterministicconfigurationgraphz, mem20dynamicskillgraphz,
 mem20semanticobjectgraphz, mem20relationshipcontextgraphz, mem20reversibleexecutiongraphz,
-mem20versioncontrollargeassetandrecoverypipelinez`. `/doctor`, web, root shims, fenced README,
+mem20pipez`. `/doctor`, web, root shims, fenced README,
 docs/PLAN, docs/app monitor, gateway/toolchest. 9 tests pass, conformance **7/7**.
 
 ---
@@ -799,14 +799,14 @@ Delivered 10 subsystems (330–339) one at a time with real, non-generic impleme
 
 - **330 mem20intenttomissioncompilerz (RM-031, compose, 7/7):** real mission compiler (deps/roles/completion criteria, dependency-aware execution/progress, `compile_live_plan`), runtime wired; 6 peers intentcompilerz/goaleconomyschedulerz/prioritycollisionresolverz/dynamicskillgraphz/reversibleexecutiongraphz/selfhealingplansz. Fixed test collection robustness (pytest.ini+tests/conftest, robust imports).
 - **331 mem20labz (#331 crew runtime, 7/7):** replaced prior top-level re-export shims with real canonical implementation (domain registry/probe/sim/aggregate, SQLite WAL LabStore/LabRuntime, JSON/HTTP API + served web frontend, full CLI compat `--version/--members` + status/registry/probe/simulate/signals/history/serve). 6 peers outcomesimulationlabz/remoteexperimentlabz/executabledesignstresslabz/modelgenomelabz/customerdigitaltwinlabz/autonomoussaleslaboratoryz.
-- **332 mem20leveldesignworldbuildingandnavigationpipelinez (RM-246, pipeline, 7/7):** blockout→encounters→navigation→streaming→lighting→playability pipeline with stages/artifacts/deps/transformations/checkpoints, navmesh/pathfind/playability, runtime pipeline wired. Restored lost domain/test extensions after regression detected. 6 peers gameproductioncontrolcenterz/assetintakecatalogingandvalidationpipelinez/gameplaysystemsdataandbalancepipelinez/ailevelarchitectz/narrativedialogueandlocalizationpipelinez/productionplanningandtaskorchestrationpipelinez.
+- **332 mem20pipez (RM-246, pipeline, 7/7):** blockout→encounters→navigation→streaming→lighting→playability pipeline with stages/artifacts/deps/transformations/checkpoints, navmesh/pathfind/playability, runtime pipeline wired. Restored lost domain/test extensions after regression detected. 6 peers gameproductioncontrolcenterz/assetintakecatalogingandvalidationpipelinez/gameplaysystemsdataandbalancepipelinez/ailevelarchitectz/narrativedialogueandlocalizationpipelinez/productionplanningandtaskorchestrationpipelinez.
 - **333 mem20meshz (RM-MESH, orchestrate, 7/7):** lazy-loading MasterEngine (real perf/testability fix), status/ecosystem CLI, 6 external peers eventstreamsuperhighwayz/executiondigitaltwinz/federatedresearchgridz/autonomousrecoverydirectorz/counterfactualmemorysimulatorz/protocolautodiscoveryenginez; vendored meshes preserved.
 - **334 mem20modalitybridgez (RM-064, analyze, 7/7):** `analyze_bridge` (text/image/audio/video/3d/sensor adapters/capabilities), runtime analyze wired. Restored lost domain/test extensions. 6 peers sensorymemoryingestz/specialistmodelforgez/predictiverecallenginez/agentoutputcompilerz/contextcompressionforgez/episodicmemorygraphz.
 - **335 mem20modelgenomelabz (RM-061, simulate, 7/7):** `genome_record`/`simulate_genome_lab` (evolution, ancestry/adapters/limits/traits), runtime simulate wired. 6 peers runtimecompatibilityenginez/aipipelinecostoptimizerz/selfoptimizingkernelz/counterfactualmemorysimulatorz/executiondigitaltwinz/eventstreamsuperhighwayz.
 - **336 mem20modelsleepandwakesystemz (RM-066, forecast, 7/7):** hibernation/predictive wake report, runtime forecast wired; fixed wrong peer APIs (BatteryAwareAgentScheduler, energy_cost/greenest_node/migration_plan) to achieve 6 covered peers. 6 peers demandforecastandcapacitybrainz/batteryawareagentschedulerz/roamingworkloadschedulerz/selftuningresourcegovernorz/energyawarecomputemigrationz/runtimecompatibilityenginez.
 - **337 mem20multibrandswarmz (RM-016, analyze, 7/7):** multi-brand isolation/portfolio analysis, runtime analyze wired; fixed peer APIs. 6 peers offerassemblyfabricz/compoundingproductecosystemz/businessmodelsimulatorz/goaleconomyschedulerz/eventstreamsuperhighwayz/capabilitymarketplacez (criterion 6 PASS; 5 detected in report).
 - **338 mem20multimodaltaskcapturez (RM-037, ingest, 7/7):** structured executable task/action-item capture across modalities, runtime ingest wired; fixed modality/personalworkflowtwinz peers. 6 peers modalitybridgez/sensorymemoryingestz/intentcompilerz/personalworkflowtwinz/agentoutputcompilerz/episodicmemorygraphz.
-- **339 mem20narrativedialogueandlocalizationpipelinez (RM-244, graph/pipeline, 7/7):** dialogue graph/localizations/export/word-count, runtime graph/pipeline wired; fixed word_count arg bug and replaced missing universaltranslatorcoprocessorz with loreragcontentgeneratorz. 6 peers leveldesignworldbuildingandnavigationpipelinez/dynamicnarrativeenginez/loreragcontentgeneratorz/contextcompressionforgez/episodicmemorygraphz/eventstreamsuperhighwayz.
+- **339 mem20pipez (RM-244, graph/pipeline, 7/7):** dialogue graph/localizations/export/word-count, runtime graph/pipeline wired; fixed word_count arg bug and replaced missing universaltranslatorcoprocessorz with loreragcontentgeneratorz. 6 peers leveldesignworldbuildingandnavigationpipelinez/dynamicnarrativeenginez/loreragcontentgeneratorz/contextcompressionforgez/episodicmemorygraphz/eventstreamsuperhighwayz.
 
 **Registrations:** `gateway/mem20_gateway.py` SUBSYSTEMS entries + `docs/app/*` static pages/README links for 330–339 (no compiled Vite assets touched). **Not done:** 340–349 (stopped at 339). **es//:** mem20 Code Mode/context/self-model save-back tools unavailable in this environment; git commit/push/merge performed for touched paths only.
 
@@ -819,7 +819,7 @@ Completed depth-first rebuild to **7/7** for #315-#329 (11 subsystems in this se
 ## 2026-11-09 - full install / OpenCode mem20 restore / live 487-129 alignment (glyph-cluster)
 
 - **OpenCode mem20 restored (root cause):** mem20 MCP (stdio `mem20-mcp`) was down due to server wiring crashes, not port 8080 (health bind non-fatal). Fixed `mcp/tools/ops_tools.py` to re-export mixins imported by `mcp/server.py` (restored `DataLocalityOptimizerToolsMixin`) and added `CrossProductLoyaltyGraphToolsMixin` to `Mem20MCPServer` bases in `mcp/server.py`. `mem20-mcp` now passes `initialize`/`tools/list`; OpenCode config set `MEM20_HEALTH_PORT=0`, `MEM20_NO_TELEMETRY=1`.
-- **Full install:** `/opt/mem20` full non-shallow clone. Root deps + `mem20 3.1.2` editable in `.venv`; core imports OK. Editable `pip install -e` completed for 295 subsystem packages: **293 OK / 2 FAIL** (`mem20enginez`, `mem20pipelinez`) — root cause: `pyproject.toml` declared `mem20X.mem20X` but package path resolved incorrectly for mixed top-level+inner layout; fixed with `package-dir = {"mem20X" = "."}` in `mem20enginez/pyproject.toml`, `mem20pipelinez/pyproject.toml`; both now install OK. SDKs: C++ built/installed, ctest `live_surface`+`surface_docs` PASS (487/129); Perl build+tests PASS incl. `t/90-live-server.t` 8/8; Ruby gem `mem20-sdk-0.2.0` installed; TS `@mem20/sdk` built (`package-lock.json` added); Godot addon present. `aiohttp` installed to system site-packages.
+- **Full install:** `/opt/mem20` full non-shallow clone. Root deps + `mem20 3.1.2` editable in `.venv`; core imports OK. Editable `pip install -e` completed for 295 subsystem packages: **293 OK / 2 FAIL** (`mem20enginez`, `mem20pipez`) — root cause: `pyproject.toml` declared `mem20X.mem20X` but package path resolved incorrectly for mixed top-level+inner layout; fixed with `package-dir = {"mem20X" = "."}` in `mem20enginez/pyproject.toml`, `mem20pipez/pyproject.toml`; both now install OK. SDKs: C++ built/installed, ctest `live_surface`+`surface_docs` PASS (487/129); Perl build+tests PASS incl. `t/90-live-server.t` 8/8; Ruby gem `mem20-sdk-0.2.0` installed; TS `@mem20/sdk` built (`package-lock.json` added); Godot addon present. `aiohttp` installed to system site-packages.
 - **Live surface & stale counts:** verified **487 tools / 129 domains** (`Mem20MCPServer().tools`, live). Regenerated `docs/surface.json`, `docs/TOOL-DOMAINS.md`, `web/src/data/tools.json`; aligned current-facing docs/SDKs/CI/finance/verify (`verify_mcp.py`, workflows, finance model/inputs regenerated, C++/Perl/Ruby surfaces + live tests). `scripts/surface_manifest.py --check-docs` = **OK**. Historical records (DIARY/changelogs/dated reports) left as history.
 
 ## 2026-11-09 - 100% coverage agent skill catalog (second track) + sitemapz/toolchest docs
@@ -834,6 +834,9 @@ Completed depth-first rebuild to **7/7** for #315-#329 (11 subsystems in this se
 
 ## 2026-11-09 - consolidate training/cert/apprenticeship into mem20schoolz
 - **Consolidation:** Created `mem20schoolz` (unified training + certification + apprenticeship), created/build consolidated `mem20trainingz` and `mem20certificationz` as intermediate then merged into `mem20schoolz` per request; removed originals `mem20apprenticeshipruntimez`, `mem20trainingz`, `mem20certificationz`. Renamed MCP tools to `mem20schoolz_tools.py`. Repo-wide references updated (docs, sitemap, inventory, skills catalogs, etc.). Stale references updated across tree.
+
+## 2026-11-09 - consolidate all pipe subsystems into mem20pipez
+- **Consolidation:** Created `mem20pipez` as unified pipeline subsystem with all pipe runtimes copied as modules under `mem20pipez/pipes/`. Removed all pipe-named originals (`mem202dand3dartproductionoptimizationpipelinez`, `mem20aipipelinecostoptimizerz`, `mem20assetintakecatalogingandvalidationpipelinez`, `mem20audiovoiceandmusicpipelinez`, `mem20executablegameconceptandscopepipelinez`, `mem20gameplaysystemsdataandbalancepipelinez`, `mem20leveldesignworldbuildingandnavigationpipelinez`, `mem20narrativedialogueandlocalizationpipelinez`, `mem20pipelinez`, `mem20productionplanningandtaskorchestrationpipelinez`, `mem20realtimestyletransferpipelinez`, `mem20rigginganimationandmotionpipelinez`, `mem20securebuildtodevicepipelinez`, `mem20versioncontrollargeassetandrecoverypipelinez`). Repo-wide references updated to `mem20pipez`.
 - **Full pytest follow-up fixes (then pushed):** fixed `gateway/mem20_gateway.py` syntax/structure (criterion-7 block was dangling in `main()` breaking `elif read`; moved 39 missing entries into `SUBSYSTEMS`). Fixed `mem20mktz` root causes (truthful `braid_hook` availability via `braid_bridge.available()`; `bundle.compose` queries UCG only when `cap_ids` present; env-honest test guards/assertions) → **33 passed, 9 skipped**. Fixed `mem20selfhealingruntimecivilizationz.integrations.PlansEngineBridge` adapter for real `mem20selfhealingplansz` API (no `Engine`) → **53 passed**.
 - **es//:** mem20 context + self-model saved (GitHub steps skipped earlier); commits/pushes to `origin/main` record the work.
 
@@ -849,7 +852,7 @@ Reworked/verified subsystems #340–#350 (oldest→newest, 1 at a time) to full 
 - **345 mem20personalcognitivesearchz** `ff590fd3` (13t, ok/6, hits 1): peers `mem20episodicmemorygraphz, mem20contextcompressionforgez, mem20predictiverecallenginez, mem20eventstreamsuperhighwayz, mem20capabilitymarketplacez, mem20agentoutputcompilerz`; core `index,query,rank,recall,search_health,estate_context` superset.
 - **346 mem20personalmodelevolutionz** `c63fce8b` (13t, ok/6, v2): peers `mem20collectivemodelintelligencez, mem20skillmemorytransferz, mem20episodicmemorygraphz, mem20eventstreamsuperhighwayz, mem20capabilitymarketplacez, mem20causalroutingbrainz`; core `create_model,adapt,predict,reset,evolution_health,estate_context` superset.
 - **347 mem20personalworkflowtwinz** `1d5cb0e7` (13t, ok/6, suggestions 1): peers `mem20personalautomationcanvasz, mem20autonomousworkcellsz, mem20agentoutputcompilerz, mem20episodicmemorygraphz, mem20eventstreamsuperhighwayz, mem20capabilitymarketplacez`; core `create_twin,observe,suggest_improvements,efficiency_score,twin_health,estate_context` superset.
-- **348 mem20pipelinez** (crew runtime, unusual layout) `3f49fd51` (7t incl 4 legacy, ok/6, members 12): peers `mem20personalautomationcanvasz, mem20autonomousworkcellsz, mem20agentoutputcompilerz, mem20eventstreamsuperhighwayz, mem20capabilitymarketplacez, mem20causalroutingbrainz`; preserved `MEMBERS,__version__`, legacy CLI `--version/--members`; `estate_context` superset (+`peer_count,peers_ok,checks`) + `pipeline_report/probe`; subcommands added without breaking legacy.
+- **348 mem20pipez** (crew runtime, unusual layout) `3f49fd51` (7t incl 4 legacy, ok/6, members 12): peers `mem20personalautomationcanvasz, mem20autonomousworkcellsz, mem20agentoutputcompilerz, mem20eventstreamsuperhighwayz, mem20capabilitymarketplacez, mem20causalroutingbrainz`; preserved `MEMBERS,__version__`, legacy CLI `--version/--members`; `estate_context` superset (+`peer_count,peers_ok,checks`) + `pipeline_report/probe`; subcommands added without breaking legacy.
 - **349 mem20planetarybatchfabricz** `53f42d97` (13t, ok/6, scheduled 1): peers `mem20roamingworkloadschedulerz, mem20autonomousworkcellsz, mem20eventstreamsuperhighwayz, mem20capabilitymarketplacez, mem20autonomousrecoverydirectorz, mem20agentoutputcompilerz`; core `submit_job,schedule,job_status,fabric_health,retry,estate_context` superset.
 - **350 mem20playermotivationtwinz** (CLOSED, prior `9962c809`) **verified compliant, no rework**: 12t pass, status ok/6 (`capability_routing,challenge_engagement,lifecycle_context,motivation_events,motivation_scenarios,quest_motivation`); core preserved (`create_twin,update,predict_churn,motivation_segments,twin_health,motivation_report,probe,estate_context`).
 

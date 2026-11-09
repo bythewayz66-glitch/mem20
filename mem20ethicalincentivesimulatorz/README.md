@@ -16,7 +16,7 @@ First-class implementation preserving legacy domain API and the CAPABILITY-drive
 | `mem20executiondigitaltwinz` | `create_twin`,`sync_twin`,`simulate`,`predict_outcome`,`drift` | incentive process digital twin |
 | `mem20dynamicquestrewardcomposerz` | `generate_quest`,`reward_for_quest`,`balance_quests`,`quest_chain`,`completion_rate` | reward composition/balancing |
 | `mem20rewardforgez` | `linear_reward`,`shaped_reward`,`normalize`,`reward_health` | shaped/normalized reward signals |
-| `mem20executablegameconceptandscopepipelinez` | `concept_score`,`scope_estimate`,`feasibility_check`,`risk_assessment`,`pipeline_stage` | harm/manipulation risk & feasibility |
+| `mem20pipez` | `concept_score`,`scope_estimate`,`feasibility_check`,`risk_assessment`,`pipeline_stage` | harm/manipulation risk & feasibility |
 
 ## Runnable example (verified)
 

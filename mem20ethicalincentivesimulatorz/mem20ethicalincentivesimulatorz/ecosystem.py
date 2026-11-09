@@ -74,10 +74,10 @@ def reward_forge(state: Mapping[str, Any] = None, rewards: Sequence[float] = Non
         return {"linear": lin, "shaped": shaped, "normalized": norm, "health": health}
     return _safe("mem20rewardforgez", run)
 
-# 6) mem20executablegameconceptandscopepipelinez - risk/feasibility assessment
+# 6) mem20pipez - risk/feasibility assessment
 def risk_feasibility(concept: Mapping[str, Any] = None) -> Dict[str, Any]:
     def run():
-        from mem20executablegameconceptandscopepipelinez.domain import concept_score, scope_estimate, feasibility_check, risk_assessment, pipeline_stage
+        from mem20pipez.domain import concept_score, scope_estimate, feasibility_check, risk_assessment, pipeline_stage
         c = dict(concept or {"name": "ethical-incentive", "complexity": 3, "harm_risk": 0.2, "manipulation_risk": 0.1, "budget_weeks": 8})
         score = concept_score(c)
         scope = scope_estimate(c)
@@ -85,7 +85,7 @@ def risk_feasibility(concept: Mapping[str, Any] = None) -> Dict[str, Any]:
         risk = risk_assessment(c)
         stage = pipeline_stage(c)
         return {"concept_score": score, "scope": scope, "feasibility": feas, "risk_assessment": risk, "stage": stage}
-    return _safe("mem20executablegameconceptandscopepipelinez", run)
+    return _safe("mem20pipez", run)
 
 def probe() -> Dict[str, Any]:
     checks = {

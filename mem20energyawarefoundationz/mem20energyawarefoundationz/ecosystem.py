@@ -36,24 +36,24 @@ def ambient_fabric(nodes: Sequence[Mapping[str,Any]], request: Mapping[str,Any]=
 
 def telemetry_aggregate(events: Sequence[Mapping[str,Any]]) -> Dict[str,Any]:
     def run():
-        from mem20gameplaysystemsdataandbalancepipelinez.domain import collect_telemetry, aggregate_metrics, pipeline_report
+        from mem20pipez.domain import collect_telemetry, aggregate_metrics, pipeline_report
         _events = [dict(e) for e in (events or [{"player":"device","action":"power_read"}])]
         tel = collect_telemetry(_events)
         tel["raw"] = _events
         metrics = aggregate_metrics(tel)
         report = pipeline_report([{"valid": True, **e} for e in _events])
         return {"telemetry": tel, "metrics": metrics, "report": report}
-    return _safe("mem20gameplaysystemsdataandbalancepipelinez", run)
+    return _safe("mem20pipez", run)
 
 def orchestrate_actions(actions: Sequence[Mapping[str,Any]], agents: Sequence[str]=None) -> Dict[str,Any]:
     def run():
-        from mem20productionplanningandtaskorchestrationpipelinez.domain import create_plan, orchestrate, pipeline_health
+        from mem20pipez.domain import create_plan, orchestrate, pipeline_health
         tasks = [{"id": a.get("device") or f"a{i}", "priority": 1, "effort": 1, "status":"pending", **dict(a)} for i,a in enumerate(actions or [{"device":"d1","action":"reduce"}])]
         plan = create_plan([dict(t) for t in tasks], capacity=max(1,len(tasks)))
         assigns = orchestrate(plan.get("scheduled", tasks), list(agents or ["power-agent"]))
         health = pipeline_health(tasks)
         return {"plan": plan, "assignments": assigns, "pipeline_health": health}
-    return _safe("mem20productionplanningandtaskorchestrationpipelinez", run)
+    return _safe("mem20pipez", run)
 
 def action_workcell(actions: Sequence[Mapping[str,Any]]) -> Dict[str,Any]:
     def run():

@@ -260,7 +260,7 @@ Building these in name order wastes effort on low-value packages. Better to go b
 - **Must refuse:** to be a general-purpose runtime, and to return a confident answer when it is out of its depth.
 - **Proven by:** a test asserting a specific value, bound or contradiction — not that the function ran.
 
-### `mem20aipipelinecostoptimizerz`
+### `mem20pipez`
 
 - **Should be:** pipeline cost optimiser — know what each pipeline step costs before running it.
 - **Must refuse:** to be a general-purpose runtime, and to return a confident answer when it is out of its depth.
@@ -366,7 +366,7 @@ Building these in name order wastes effort on low-value packages. Better to go b
 - **Must refuse:** to be a general-purpose runtime, and to return a confident answer when it is out of its depth.
 - **Proven by:** a test asserting a specific value, bound or contradiction — not that the function ran.
 
-### `mem20leveldesignworldbuildingandnavigationpipelinez`
+### `mem20pipez`
 
 - **Should be:** level design — a level that navigates well, proven by walking it.
 - **Must refuse:** to be a general-purpose runtime, and to return a confident answer when it is out of its depth.
@@ -636,7 +636,7 @@ Building these in name order wastes effort on low-value packages. Better to go b
 - **Must refuse:** to be a general-purpose runtime, and to return a confident answer when it is out of its depth.
 - **Proven by:** a test asserting a specific value, bound or contradiction — not that the function ran.
 
-### `mem20productionplanningandtaskorchestrationpipelinez`
+### `mem20pipez`
 
 - **Should be:** task orchestration — a plan with dependencies that survives a member failing.
 - **Must refuse:** to be a general-purpose runtime, and to return a confident answer when it is out of its depth.
@@ -880,13 +880,13 @@ Building these in name order wastes effort on low-value packages. Better to go b
 
 **What this family is for.** story that holds together across a long arc; keep audio and image in step, measurably; motion that lands on the beat and holds a silhouette; produce assets under a real budget, not an aspiration
 
-### `mem202dand3dartproductionoptimizationpipelinez`
+### `mem20pipez`
 
 - **Should be:** 3D pipeline — geometry that survives export, import and re-edit.
 - **Must refuse:** to be a general-purpose runtime, and to return a confident answer when it is out of its depth.
 - **Proven by:** a test asserting a specific value, bound or contradiction — not that the function ran.
 
-### `mem20assetintakecatalogingandvalidationpipelinez`
+### `mem20pipez`
 
 - **Should be:** asset pipeline — produce assets under a real budget, not an aspiration.
 - **Must refuse:** to be a general-purpose runtime, and to return a confident answer when it is out of its depth.
@@ -922,19 +922,19 @@ Building these in name order wastes effort on low-value packages. Better to go b
 - **Must refuse:** to be a general-purpose runtime, and to return a confident answer when it is out of its depth.
 - **Proven by:** a test asserting a specific value, bound or contradiction — not that the function ran.
 
-### `mem20narrativedialogueandlocalizationpipelinez`
+### `mem20pipez`
 
 - **Should be:** narrative — story that holds together across a long arc.
 - **Must refuse:** to be a general-purpose runtime, and to return a confident answer when it is out of its depth.
 - **Proven by:** a test asserting a specific value, bound or contradiction — not that the function ran.
 
-### `mem20rigginganimationandmotionpipelinez`
+### `mem20pipez`
 
 - **Should be:** rigging & animation — motion that lands on the beat and holds a silhouette.
 - **Must refuse:** to be a general-purpose runtime, and to return a confident answer when it is out of its depth.
 - **Proven by:** a test asserting a specific value, bound or contradiction — not that the function ran.
 
-### `mem20versioncontrollargeassetandrecoverypipelinez`
+### `mem20pipez`
 
 - **Should be:** asset pipeline — produce assets under a real budget, not an aspiration.
 - **Must refuse:** to be a general-purpose runtime, and to return a confident answer when it is out of its depth.
@@ -1288,7 +1288,7 @@ These names do not state a capability the audit can pin down. Give each a one-li
 - **Must refuse:** to be a general-purpose runtime, and to return a confident answer when it is out of its depth.
 - **Proven by:** a test asserting a specific value, bound or contradiction — not that the function ran.
 
-### `mem20realtimestyletransferpipelinez`
+### `mem20pipez`
 
 - **Should be:** realtimestyletransferpipeline — The name does not state a capability this audit can pin down. Either give it a one-line purpose or fold it into a sibling that already does the job honestly..
 - **Must refuse:** to be a general-purpose runtime, and to return a confident answer when it is out of its depth.
@@ -1420,7 +1420,7 @@ These names do not state a capability the audit can pin down. Give each a one-li
 - **Must refuse:** to be a general-purpose runtime, and to return a confident answer when it is out of its depth.
 - **Proven by:** a test asserting a specific value, bound or contradiction — not that the function ran.
 
-### `mem20audiovoiceandmusicpipelinez`
+### `mem20pipez`
 
 - **Should be:** audio/voice/music pipeline — produce a coherent sound bed, not unrelated stems.
 - **Must refuse:** to be a general-purpose runtime, and to return a confident answer when it is out of its depth.
@@ -1466,7 +1466,7 @@ These names do not state a capability the audit can pin down. Give each a one-li
 - **Must refuse:** to be a general-purpose runtime, and to return a confident answer when it is out of its depth.
 - **Proven by:** a test asserting a specific value, bound or contradiction — not that the function ran.
 
-### `mem20securebuildtodevicepipelinez`
+### `mem20pipez`
 
 - **Should be:** secure build — prove the artefact came from the source it claims.
 - **Must refuse:** to be a general-purpose runtime, and to return a confident answer when it is out of its depth.

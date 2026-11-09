@@ -14,8 +14,8 @@ Preserves legacy domain API (**#314 peer dependency**) and CAPABILITY Engine/CLI
 | `mem20modalitybridgez` | `supported_modalities`,`encode_text`,`bridge` | model/modality context |
 | `mem20modelgenomelabz` | `create_genome`,`fitness`,`mutate` | model variant evaluation |
 | `mem20personalmodelevolutionz` | `create_model`,`adapt`,`predict` | device/user adaptation signal |
-| `mem20leveldesignworldbuildingandnavigationpipelinez` | `pathfind`,`validate_level` | graph traversal/validation |
-| `mem20narrativedialogueandlocalizationpipelinez` | `parse_dialogue`,`validate_dialogue`,`export_script` | artifact spec validation/export |
+| `mem20pipez` | `pathfind`,`validate_level` | graph traversal/validation |
+| `mem20pipez` | `parse_dialogue`,`validate_dialogue`,`export_script` | artifact spec validation/export |
 
 ## Runnable example (verified)
 ```bash

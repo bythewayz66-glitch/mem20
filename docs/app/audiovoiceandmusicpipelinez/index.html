@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="theme-color" content="#0b1020"/>
   <title>Audio/Voice/Music Pipeline — estate monitor</title>
-  <link rel="stylesheet" href="../../../mem20audiovoiceandmusicpipelinez/mem20audiovoiceandmusicpipelinez/web/style.css"/>
+  <link rel="stylesheet" href="../../../mem20pipez/mem20pipez/web/style.css"/>
 </head>
 <body>
   <header class="topbar">
@@ -17,12 +17,12 @@
       <label for="api-base">API</label>
       <input id="api-base" placeholder="http://127.0.0.1:8781"/>
       <button id="api-save" class="ghost">Connect</button>
-      <span class="pill"><a href="../README.md">docs/app</a> · <a href="../../../mem20audiovoiceandmusicpipelinez/README.md">subsystem README</a></span>
+      <span class="pill"><a href="../README.md">docs/app</a> · <a href="../../../mem20pipez/README.md">subsystem README</a></span>
     </div>
   </header>
   <main>
     <section class="panel"><div class="panel-head"><h2>How to run</h2></div>
-      <pre class="output">PYTHONPATH=/opt/mem20 /opt/mem20/.venv/bin/python -m mem20audiovoiceandmusicpipelinez serve --port 8781
+      <pre class="output">PYTHONPATH=/opt/mem20 /opt/mem20/.venv/bin/python -m mem20pipez serve --port 8781
 # then open this page and set API to http://127.0.0.1:8781</pre>
     </section>
     <section class="stats" id="stats"></section>
@@ -47,6 +47,6 @@
     </div>
   </main>
   <div id="toast" class="toast" hidden></div>
-  <script src="../../../mem20audiovoiceandmusicpipelinez/mem20audiovoiceandmusicpipelinez/web/app.js" type="module"></script>
+  <script src="../../../mem20pipez/mem20pipez/web/app.js" type="module"></script>
 </body>
 </html>

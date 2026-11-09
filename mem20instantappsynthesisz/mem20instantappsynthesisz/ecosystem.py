@@ -27,10 +27,10 @@ def spec_identity(spec: Dict[str, Any]) -> Dict[str, Any]:
 
 def artifact_version(spec: Dict[str, Any]) -> Dict[str, Any]:
     def run():
-        from mem20versioncontrollargeassetandrecoverypipelinez.domain import version_asset, vc_health
+        from mem20pipez.domain import version_asset, vc_health
         v=version_asset(str((spec or {}).get("name","app")), str(spec))
         return {"version": v.get("version"), "vc_health": vc_health([v])}
-    return _safe("mem20versioncontrollargeassetandrecoverypipelinez", run)
+    return _safe("mem20pipez", run)
 
 def capability_path(spec: Dict[str, Any]) -> Dict[str, Any]:
     def run():

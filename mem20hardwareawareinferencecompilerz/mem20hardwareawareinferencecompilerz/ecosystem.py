@@ -45,21 +45,21 @@ def personal_adaptation(payload=None) -> Dict[str, Any]:
 
 def graph_traversal(payload=None) -> Dict[str, Any]:
     def run():
-        from mem20leveldesignworldbuildingandnavigationpipelinez.domain import pathfind, validate_level
+        from mem20pipez.domain import pathfind, validate_level
         grid = [[0,0,0],[0,1,0],[0,0,0]]
         path = pathfind(grid, (0,0), (2,2))
         v = validate_level({"grid": grid, "rooms": [{"id":"r1"}]})
         return {"path_len": len(path) if path else 0, "valid": v}
-    return _safe("mem20leveldesignworldbuildingandnavigationpipelinez", run)
+    return _safe("mem20pipez", run)
 
 def artifact_validation(payload=None) -> Dict[str, Any]:
     def run():
-        from mem20narrativedialogueandlocalizationpipelinez.domain import parse_dialogue, validate_dialogue, export_script
+        from mem20pipez.domain import parse_dialogue, validate_dialogue, export_script
         d = parse_dialogue("op: fuse\nop: quantize")
         v = validate_dialogue(d)
         ex = export_script(d, 'txt')
         return {"valid": v, "export_len": len(ex) if isinstance(ex, str) else 0}
-    return _safe("mem20narrativedialogueandlocalizationpipelinez", run)
+    return _safe("mem20pipez", run)
 
 def compile_report(payload: Dict[str, Any]) -> Dict[str, Any]:
     """Meaningful hardware-aware compile report: local fusion/quant/schedule/memory + peer context."""

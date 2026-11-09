@@ -15,7 +15,7 @@ Preserves legacy domain API (**#319 peer dependency**) and advanced CAPABILITY E
 | `mem20capabilitygapmapperz` | `canonical`,`stable_hash`,`words` | capability identity and terms |
 | `mem20relationshipcontextgraphz` | `canonical`,`similarity` | human accomplishment context |
 | `mem20semanticobjectgraphz` | `canonical`,`stable_hash` | capability/skill semantic objects |
-| `mem20versioncontrollargeassetandrecoverypipelinez` | `version_asset`,`vc_health` | evidence versioning/provenance |
+| `mem20pipez` | `version_asset`,`vc_health` | evidence versioning/provenance |
 | `mem20deterministicconfigurationgraphz` | `add_node`,`add_edge`,`resolve` | deterministic platform config |
 
 ## Runnable example (verified)

@@ -10,8 +10,8 @@ from __future__ import annotations
 __version__ = "0.1.0"
 
 MEMBERS = (
-    "mem202dand3dartproductionoptimizationpipelinez",
-    "mem20aipipelinecostoptimizerz",
+    "mem20pipez",
+    "mem20pipez",
     "mem20buildsequenceoptimizerz",
     "mem20datalocalityoptimizerz",
     "mem20demandforecastandcapacitybrainz",

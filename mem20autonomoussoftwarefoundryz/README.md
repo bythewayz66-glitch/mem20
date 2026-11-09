@@ -44,7 +44,7 @@ These peers were chosen for the *software foundry* job (build/tooling, versioned
 | peer | real functions/classes used | role in this subsystem |
 |---|---|---|
 | `mem20capabilitymarketplacez` | `CapabilityMarketplace(replicas=32)`, `add`, `locate`, `distribution` | route a build key to a tool/capability owner via consistent hashing and report distribution |
-| `mem20versioncontrollargeassetandrecoverypipelinez` | `version_asset`, `recover`, `vc_health` | version an artifact, recover a target version, and report version-control health |
+| `mem20pipez` | `version_asset`, `recover`, `vc_health` | version an artifact, recover a target version, and report version-control health |
 | `mem20eventstreamsuperhighwayz` | `create_stream`, `publish`, `throughput` | publish build/foundry events to a stream and report throughput |
 | `mem20faultcontainmentcellsz` | `FaultContainmentCells`, `CircuitOpen`, `call` | contain deploy execution behind a circuit breaker; open-circuit is reported, not fatal |
 | `mem20loreragcontentgeneratorz` | `generate`, `rank_adapters`, `quality_score` | assess/spec-generate quality for a build prompt and select/rank adapters |

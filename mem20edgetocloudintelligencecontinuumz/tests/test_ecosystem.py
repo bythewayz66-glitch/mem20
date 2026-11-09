@@ -26,7 +26,7 @@ def test_federated_plan_returns_real_health_and_distribution():
 
 def test_cost_plan_computes_pipeline_and_bottleneck():
     res = ecosystem.cost_plan(sample_targets(), sample_workload())
-    assert res["ok"] and res["subsystem"] == "mem20aipipelinecostoptimizerz"
+    assert res["ok"] and res["subsystem"] == "mem20pipez"
     assert isinstance(res["pipeline_cost"], (int, float))
     assert "breakdown" in res and isinstance(res["breakdown"], list)
 

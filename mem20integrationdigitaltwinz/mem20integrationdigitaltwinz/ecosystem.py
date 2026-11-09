@@ -19,10 +19,10 @@ def service_config(service: str) -> Dict[str, Any]:
 
 def state_version(system_id: str, state: Dict[str, Any]) -> Dict[str, Any]:
     def run():
-        from mem20versioncontrollargeassetandrecoverypipelinez.domain import version_asset, diff_versions
+        from mem20pipez.domain import version_asset, diff_versions
         a=version_asset(system_id,str(state)); b=version_asset(system_id,str({**(state or {}),"simulated":True}))
         return {"version": b.get("version"), "changed": diff_versions(a,b).get("changed")}
-    return _safe("mem20versioncontrollargeassetandrecoverypipelinez", run)
+    return _safe("mem20pipez", run)
 
 def reversible_sim(scenario: str) -> Dict[str, Any]:
     def run():

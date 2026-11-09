@@ -16,7 +16,7 @@ Preserves legacy domain API and CAPABILITY Engine/CLI/10-scenario simulator. `si
 | `mem20hotswappableservicefoundationz` | `register_service`,`swap`,`health` | assesses build/release service readiness |
 | `mem20specialistmodelforgez` | `forge_health` | reports production capability/model readiness |
 | `mem20executabledesignstresslabz` | `resilience_score`,`recovery_time` | adjusts risk via resilience and recovery estimates |
-| `mem20rigginganimationandmotionpipelinez` | `create_rig`,`set_pose`,`animate` | reports asset/animation pipeline readiness |
+| `mem20pipez` | `create_rig`,`set_pose`,`animate` | reports asset/animation pipeline readiness |
 
 ## Runnable example (verified)
 ```bash

@@ -21,7 +21,7 @@ clouds. Make placement **invisible** (constraints, not machine names),
 ## Unique cross-subsystem peers (criterion 6)
 
 1. `mem20federatedresearchgridz` — `register_node`, `distribute_task`, `federated_round`, `grid_health`
-2. `mem20aipipelinecostoptimizerz` — `stage_cost`, `pipeline_cost`, `bottleneck`, `optimize_throughput`, `cost_breakdown`
+2. `mem20pipez` — `stage_cost`, `pipeline_cost`, `bottleneck`, `optimize_throughput`, `cost_breakdown`
 3. `mem20edgetransportfabricz` — `route_path`, `qos_class`, `allocate_bandwidth`, `transport_health`
 4. `mem20zerodowntimemigrationbrainz` — `ZeroDowntimeMigrationBrain.begin/verify_and_cutover/rollback`
 5. `mem20globalcapabilitymarketplacez` — `list_capability`, `search_marketplace`, `match`, `transaction`, `marketplace_health`

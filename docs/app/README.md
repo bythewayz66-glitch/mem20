@@ -93,7 +93,7 @@ Static page for **mem20multimodaltaskcapturez** (#338). - Page: `docs/app/multim
 
 
 ## Narrative/Dialogue/Localization (`narrativedialogueandlocalizationpipelinez/`)
-Static page for **mem20narrativedialogueandlocalizationpipelinez** (#339). - Page: `docs/app/narrativedialogueandlocalizationpipelinez/index.html` - Conformance: `.../conformance.py mem20narrativedialogueandlocalizationpipelinez`
+Static page for **mem20pipez** (#339). - Page: `docs/app/narrativedialogueandlocalizationpipelinez/index.html` - Conformance: `.../conformance.py mem20pipez`
 
 ## Model Sleep/Wake (`modelsleepandwakesystemz/`)
 Static page for **mem20modelsleepandwakesystemz** (RM-066,#336). - Page: `docs/app/modelsleepandwakesystemz/index.html` - Conformance: `.../conformance.py mem20modelsleepandwakesystemz`
@@ -114,11 +114,11 @@ Static page for **mem20meshz** (#333): 6 vendored meshes + 6 external ecosystem 
 
 ## Level/World/Nav Pipeline (`leveldesignworldbuildingandnavigationpipelinez/`)
 
-Static page for **mem20leveldesignworldbuildingandnavigationpipelinez** (RM-246, #332): blockout→nav→streaming→lighting→playability pipeline, 6 peer integrations.
+Static page for **mem20pipez** (RM-246, #332): blockout→nav→streaming→lighting→playability pipeline, 6 peer integrations.
 
 - Page: `docs/app/leveldesignworldbuildingandnavigationpipelinez/index.html`
-- Subsystem: `mem20leveldesignworldbuildingandnavigationpipelinez/`
-- Conformance: `PYTHONPATH=/opt/mem20 .venv/bin/python scripts/renovation/conformance.py mem20leveldesignworldbuildingandnavigationpipelinez`
+- Subsystem: `mem20pipez/`
+- Conformance: `PYTHONPATH=/opt/mem20 .venv/bin/python scripts/renovation/conformance.py mem20pipez`
 
 ## Intent-to-Mission Compiler (`intenttomissioncompilerz/`)
 
@@ -165,7 +165,7 @@ PYTHONPATH=/opt/mem20 python3 -m mem20gameproductioncontrolcenterz serve --port 
 [`gameplay-systems-data-balance-pipeline/index.html`](gameplay-systems-data-balance-pipeline/index.html) — static monitor for RM-245 (#316). Reads `/spec`/`/metrics`/`/doctor` (`?api=`).
 
 ```bash
-PYTHONPATH=/opt/mem20 python3 -m mem20gameplaysystemsdataandbalancepipelinez serve --port 8796
+PYTHONPATH=/opt/mem20 python3 -m mem20pipez serve --port 8796
 ```
 
 ## Game Balance Simulator monitor (`game-balance-simulator/`)
@@ -221,7 +221,7 @@ PYTHONPATH=/opt/mem20 python3 -m mem20executiondigitaltwinz serve --port 8790
 [`concept-scope-pipeline/index.html`](concept-scope-pipeline/index.html) — static monitor for RM-237 (#309). Reads `/spec`/`/metrics`/`/doctor` (`?api=`).
 
 ```bash
-PYTHONPATH=/opt/mem20 python3 -m mem20executablegameconceptandscopepipelinez serve --port 8789
+PYTHONPATH=/opt/mem20 python3 -m mem20pipez serve --port 8789
 ```
 
 ## Design Stress Lab monitor (`design-stress-lab/`)
@@ -322,7 +322,7 @@ served by the fleet process itself at its root URL.
 - Tool/domain counts in this tree must match the live surface. Derive, never hand-count:
   `python3 web/scripts/extract-tools.py --root . --out /tmp/tools.json`
 
-- [Audio/Voice/Music Pipeline monitor](audiovoiceandmusicpipelinez/index.html) — run `PYTHONPATH=/opt/mem20 /opt/mem20/.venv/bin/python -m mem20audiovoiceandmusicpipelinez serve --port 8781` and connect the estate monitor to its API.
+- [Audio/Voice/Music Pipeline monitor](audiovoiceandmusicpipelinez/index.html) — run `PYTHONPATH=/opt/mem20 /opt/mem20/.venv/bin/python -m mem20pipez serve --port 8781` and connect the estate monitor to its API.
 - [Autonomous Deal Desk monitor](autonomousdealdeskz/index.html) — `PYTHONPATH=/opt/mem20 /opt/mem20/.venv/bin/python -m mem20autonomousdealdeskz serve --port 8782`
 - [Autonomous Micro-SaaS Foundry monitor](autonomousmicrosaasfoundryz/index.html) — `PYTHONPATH=/opt/mem20 /opt/mem20/.venv/bin/python -m mem20autonomousmicrosaasfoundryz serve --port 8783`
 - [Autonomous Recovery Director monitor](autonomousrecoverydirectorz/index.html) — `PYTHONPATH=/opt/mem20 /opt/mem20/.venv/bin/python -m mem20autonomousrecoverydirectorz serve --port 8784`
@@ -347,7 +347,7 @@ served by the fleet process itself at its root URL.
 - [Dynamic Skill Graph monitor](dynamicskillgraphz/index.html) — `PYTHONPATH=/opt/mem20 /opt/mem20/.venv/bin/python -m mem20dynamicskillgraphz serve --port 8804`
 - [Player Motivation Twin monitor](playermotivationtwinz/index.html) — `PYTHONPATH=/opt/mem20 /opt/mem20/.venv/bin/python -m mem20playermotivationtwinz serve --port 8805`
 - [Predictive Recall Engine monitor](predictiverecallenginez/index.html) — `PYTHONPATH=/opt/mem20 /opt/mem20/.venv/bin/python -m mem20predictiverecallenginez serve --port 8806`
-- [Production Planning and Task Orchestration Pipeline monitor](productionplanningandtaskorchestrationpipelinez/index.html) — `PYTHONPATH=/opt/mem20 /opt/mem20/.venv/bin/python -m mem20productionplanningandtaskorchestrationpipelinez serve --port 8807`
+- [Production Planning and Task Orchestration Pipeline monitor](productionplanningandtaskorchestrationpipelinez/index.html) — `PYTHONPATH=/opt/mem20 /opt/mem20/.venv/bin/python -m mem20pipez serve --port 8807`
 - [Product-Led Growth Simulator monitor](productledgrowthsimulatorz/index.html) — `PYTHONPATH=/opt/mem20 /opt/mem20/.venv/bin/python -m mem20productledgrowthsimulatorz serve --port 8808`
 - [Protocol Auto-Discovery Engine monitor](protocolautodiscoveryenginez/index.html) — `PYTHONPATH=/opt/mem20 /opt/mem20/.venv/bin/python -m mem20protocolautodiscoveryenginez serve --port 8809`
 - [Reality-to-Software Compiler monitor](realitytosoftwarecompilerz/index.html) — `PYTHONPATH=/opt/mem20 /opt/mem20/.venv/bin/python -m mem20realitytosoftwarecompilerz serve --port 8810`
@@ -359,7 +359,7 @@ served by the fleet process itself at its root URL.
 - [Resource Exchange Market monitor](resourceexchangemarketz/index.html) — `PYTHONPATH=/opt/mem20 /opt/mem20/.venv/bin/python -m mem20resourceexchangemarketz serve --port 8816`
 - [Revenue Leak Hunter monitor](revenueleakhunterz/index.html) — `PYTHONPATH=/opt/mem20 /opt/mem20/.venv/bin/python -m mem20revenueleakhunterz serve --port 8817`
 - [Reward Forge monitor](rewardforgez/index.html) — `PYTHONPATH=/opt/mem20 /opt/mem20/.venv/bin/python -m mem20rewardforgez serve --port 8818`
-- [Rigging, Animation and Motion Pipeline monitor](rigginganimationandmotionpipelinez/index.html) — `PYTHONPATH=/opt/mem20 /opt/mem20/.venv/bin/python -m mem20rigginganimationandmotionpipelinez serve --port 8819`
+- [Rigging, Animation and Motion Pipeline monitor](rigginganimationandmotionpipelinez/index.html) — `PYTHONPATH=/opt/mem20 /opt/mem20/.venv/bin/python -m mem20pipez serve --port 8819`
 - [Roaming Workload Scheduler monitor](roamingworkloadschedulerz/index.html) — `PYTHONPATH=/opt/mem20 /opt/mem20/.venv/bin/python -m mem20roamingworkloadschedulerz serve --port 8820`
 - [Runtime Compatibility Engine monitor](runtimecompatibilityenginez/index.html) — `PYTHONPATH=/opt/mem20 /opt/mem20/.venv/bin/python -m mem20runtimecompatibilityenginez serve --port 8821`
 - [Runtime Prompt Optimizer monitor](runtimepromptoptimizerz/index.html) — `PYTHONPATH=/opt/mem20 /opt/mem20/.venv/bin/python -m mem20runtimepromptoptimizerz serve --port 8822`

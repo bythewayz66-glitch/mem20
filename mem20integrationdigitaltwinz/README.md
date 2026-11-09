@@ -12,7 +12,7 @@ Preserves legacy domain API and CAPABILITY Engine/CLI/10-scenario simulator (`ro
 | Peer | Real calls | Twin/routing role (feeds outcome) |
 |---|---|---|
 | `mem20deterministicconfigurationgraphz` | `add_node`,`add_edge`,`resolve` | external service/config resolution |
-| `mem20versioncontrollargeassetandrecoverypipelinez` | `version_asset`,`diff_versions` | twin state versioning/snapshots |
+| `mem20pipez` | `version_asset`,`diff_versions` | twin state versioning/snapshots |
 | `mem20reversibleexecutiongraphz` | `create_graph`,`add_node`,`undo` | reversible scenario simulation |
 | `mem20semanticobjectgraphz` | `canonical`,`stable_hash`,`words` | service/API semantic identity |
 | `mem20relationshipcontextgraphz` | `canonical`,`similarity` | integration/failure/API-change context |

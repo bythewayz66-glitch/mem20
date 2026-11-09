@@ -54,9 +54,9 @@ $ git rev-parse HEAD
 $ python3 -m pytest -q -m "not integration" \
     mem20adaptiveinterfacecomposerz/tests mem20assistz/tests mem20autoz/tests \
     mem20biz/tests mem20boxz/tests mem20enginez/tests \
-    mem20executablegameconceptandscopepipelinez/tests mem20fabricz/tests \
+    mem20pipez/tests mem20fabricz/tests \
     mem20facez/tests mem20graphz/tests mem20greenz/tests mem20labz/tests \
-    mem20orcaz/tests mem20pipelinez/tests mem20selfz/tests mem20sensorz/tests \
+    mem20orcaz/tests mem20pipez/tests mem20selfz/tests mem20sensorz/tests \
     mem20simz/tests mem20sitemapz/tests mem20studioz/tests mem20teamz/tests \
     mem20twinz/tests mem20zimr/tests
 
@@ -79,9 +79,9 @@ Remove the one phantom root; the identical selection runs clean:
 ```console
 $ python3 -m pytest -q -m "not integration" \
     mem20assistz/tests mem20autoz/tests mem20biz/tests mem20boxz/tests \
-    mem20enginez/tests mem20executablegameconceptandscopepipelinez/tests \
+    mem20enginez/tests mem20pipez/tests \
     mem20fabricz/tests mem20facez/tests mem20graphz/tests mem20greenz/tests \
-    mem20labz/tests mem20orcaz/tests mem20pipelinez/tests mem20selfz/tests \
+    mem20labz/tests mem20orcaz/tests mem20pipez/tests mem20selfz/tests \
     mem20sensorz/tests mem20simz/tests mem20sitemapz/tests mem20studioz/tests \
     mem20teamz/tests mem20twinz/tests mem20zimr/tests
 
@@ -97,9 +97,9 @@ individually too, so no package hides a failure behind the aggregate:
 |---|---|---|
 | `mem20assistz` / `mem20autoz` / `mem20biz` / `mem20boxz` | 0 | 4 passed each |
 | `mem20enginez` / `mem20fabricz` / `mem20facez` / `mem20graphz` | 0 | 4 passed each |
-| `mem20executablegameconceptandscopepipelinez` | 0 | 34 passed |
+| `mem20pipez` | 0 | 34 passed |
 | `mem20greenz` / `mem20teamz` | 0 | 11 passed each |
-| `mem20labz` / `mem20pipelinez` / `mem20selfz` / `mem20simz` | 0 | 4 passed each |
+| `mem20labz` / `mem20pipez` / `mem20selfz` / `mem20simz` | 0 | 4 passed each |
 | `mem20orcaz` | 0 | 39 passed, 1 skipped |
 | `mem20sensorz` | 0 | 22 passed |
 | `mem20sitemapz` | 0 | 43 passed |

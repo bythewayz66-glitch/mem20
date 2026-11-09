@@ -11,7 +11,7 @@ First-class mem20 subsystem for incident recovery: triage severity/priority, pla
 | `mem20faultcontainmentcellsz` | `FaultContainmentCells`, `CircuitOpen` | containment/circuit behavior |
 | `mem20selfhealingplansz` | `create_plan`, `plan_status` | healing plan creation/status |
 | `mem20universalhealthnervoussystemz` | `register_subsystem`,`check_all`,`overall` | health signals/overall status |
-| `mem20versioncontrollargeassetandrecoverypipelinez` | `version_asset`,`recover`,`vc_health` | versioning and recovery/rollback |
+| `mem20pipez` | `version_asset`,`recover`,`vc_health` | versioning and recovery/rollback |
 | `mem20eventstreamsuperhighwayz` | `create_stream`,`publish`,`throughput` | incident event publishing |
 | `mem20zerotouchnodeswarmz` | `register_node`,`discover`,`quorum` | swarm/node readiness & quorum |
 

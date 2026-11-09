@@ -10,7 +10,7 @@ def test_health(): assert 0<=_m().health_after({"success_rate":0.8})<=1
 def test_ecosystem_fault_containment(): r=_eco().fault_containment("api"); assert r["ok"] and r["subsystem"]=="mem20faultcontainmentcellsz"
 def test_ecosystem_healing_plan(): r=_eco().healing_plan(["diagnose"]); assert r["ok"] and r["subsystem"]=="mem20selfhealingplansz"
 def test_ecosystem_health_signal(): r=_eco().health_signal(["api"]); assert r["ok"] and r["subsystem"]=="mem20universalhealthnervoussystemz" and "overall" in r
-def test_ecosystem_recovery_pipeline(): r=_eco().recovery_pipeline("asset"); assert r["ok"] and r["subsystem"]=="mem20versioncontrollargeassetandrecoverypipelinez"
+def test_ecosystem_recovery_pipeline(): r=_eco().recovery_pipeline("asset"); assert r["ok"] and r["subsystem"]=="mem20pipez"
 def test_ecosystem_incident_events(): r=_eco().incident_events({"severity":"high"}); assert r["ok"] and r["subsystem"]=="mem20eventstreamsuperhighwayz" and r["published"]==1
 def test_ecosystem_swarm_status(): r=_eco().swarm_status("n1"); assert r["ok"] and r["subsystem"]=="mem20zerotouchnodeswarmz"
 def test_recovery_report_and_probe():

@@ -47,7 +47,7 @@ A machine-readable map of this monorepo so an agent can find the right subsystem
 | `mem20aionbordz` | 1562 | 1 | `mem20aionbordz` | Generate verified onboarding packs for newly-hired mem20 agents: hire guide, orientation, governance, self-model setup, and pinned-block delivery. |
 | `mem20liez` | 1525 | 3 | `fs-lie` | Real-time micro-expression, voice-stress, emotion, manipulation and deception detection for mem20 |
 | `mem20kimiz` | 1427 | 3 | - | mem20kimiz — native Kimi Agent Swarm substrate for mem20 (parallel subagent fan-out, rate-limit-aware batched scheduling, resume, ordered result co... |
-| `mem20executablegameconceptandscopepipelinez` | 1264 | 1 | - | RM-237 — Executable Game Concept and Scope Pipeline |
+| `mem20pipez` | 1264 | 1 | - | RM-237 — Executable Game Concept and Scope Pipeline |
 | `mem20langz` | 1214 | 1 | - | Native mem20 graph substrate absorption: stateful multi-agent graphs (StateGraph, Pregel runtime, checkpointers, streaming, interrupts, Send) |
 | `mem20ucgz` | 1212 | 1 | `mem20ucgz` | mem20 RM-001 Universal Capability Graph (absorbed from FreeStack RM-001) — typed capability graph, composition planner, mesh, event plane |
 | `mem20unikitz` | 1124 | 1 | `mem20unikitz` | Native mem20 UniKit AI absorption — Behavior trees, GOAP, utility AI, navigation, perception, blackboard |
@@ -81,16 +81,16 @@ A machine-readable map of this monorepo so an agent can find the right subsystem
 | `mem20connectormarketplacez` | 348 | 1 | - | RM-080 — Connector Marketplace |
 | `mem20capabilitymarketplacez` | 345 | 1 | - | RM-006 — Capability Marketplace |
 | `mem20cliz` | 334 | 1 | `mem20-cli` | Shared machine contract for mem20 fleet CLIs: a json_main decorator that adds --json to any CLI without changing its human output. |
-| `mem202dand3dartproductionoptimizationpipelinez` | 333 | 0 | - | RM-241 — 2D and 3D Art Production Optimization Pipeline |
+| `mem20pipez` | 333 | 0 | - | RM-241 — 2D and 3D Art Production Optimization Pipeline |
 | `mem20adaptiveachievementenginez` | 333 | 0 | - | RM-202 — Adaptive Achievement Engine |
 | `mem20adversarialqacrewz` | 333 | 0 | - | RM-230 — Adversarial QA Crew |
 | `mem20agentoutputcompilerz` | 333 | 0 | - | RM-224 — Agent Output Compiler |
 | `mem20aigamestudiobuilderz` | 333 | 0 | - | RM-222 — AI Game Studio Builder |
 | `mem20ailevelarchitectz` | 333 | 0 | - | RM-227 — AI Level Architect |
-| `mem20aipipelinecostoptimizerz` | 333 | 0 | - | RM-232 — AI Pipeline Cost Optimizer |
+| `mem20pipez` | 333 | 0 | - | RM-232 — AI Pipeline Cost Optimizer |
 | `mem20aiproductionstudiooperatingsystemz` | 333 | 0 | - | RM-236 — AI Production Studio Operating System |
-| `mem20assetintakecatalogingandvalidationpipelinez` | 333 | 0 | - | RM-240 — Asset Intake, Cataloging and Validation Pipeline |
-| `mem20audiovoiceandmusicpipelinez` | 333 | 0 | - | RM-243 — Audio, Voice and Music Pipeline |
+| `mem20pipez` | 333 | 0 | - | RM-240 — Asset Intake, Cataloging and Validation Pipeline |
+| `mem20pipez` | 333 | 0 | - | RM-243 — Audio, Voice and Music Pipeline |
 | `mem20autonomoussoftwarefoundryz` | 333 | 0 | - | RM-213 — Autonomous Software Foundry |
 | `mem20collectivemodelintelligencez` | 333 | 0 | - | RM-219 — Collective Model Intelligence |
 | `mem20communitychallengeenginez` | 333 | 0 | - | RM-207 — Community Challenge Engine |
@@ -102,28 +102,28 @@ A machine-readable map of this monorepo so an agent can find the right subsystem
 | `mem20executabledesignstresslabz` | 333 | 0 | - | RM-221 — Executable Design Stress Lab |
 | `mem20freestackambientcomputingfabricz` | 333 | 0 | - | RM-211 — FreeStack Ambient Computing Fabric |
 | `mem20gamebalancesimulatorz` | 333 | 0 | - | RM-231 — Game Balance Simulator |
-| `mem20gameplaysystemsdataandbalancepipelinez` | 333 | 0 | - | RM-245 — Gameplay Systems, Data and Balance Pipeline |
+| `mem20pipez` | 333 | 0 | - | RM-245 — Gameplay Systems, Data and Balance Pipeline |
 | `mem20gameproductioncontrolcenterz` | 333 | 0 | - | RM-233 — Game Production Control Center |
 | `mem20globalcapabilitymarketplacez` | 333 | 0 | - | RM-218 — Global Capability Marketplace |
 | `mem20goapagentdesignerz` | 333 | 0 | - | RM-226 — GOAP Agent Designer |
 | `mem20humancapabilitysuperplatformz` | 333 | 0 | - | RM-220 — Human Capability Superplatform |
-| `mem20leveldesignworldbuildingandnavigationpipelinez` | 333 | 0 | - | RM-246 — Level Design, World-Building and Navigation Pipeline |
+| `mem20pipez` | 333 | 0 | - | RM-246 — Level Design, World-Building and Navigation Pipeline |
 | `mem20liveprojectdemonstrationenginez` | 333 | 0 | - | RM-235 — Live Project Demonstration Engine |
 | `mem20livingagenteconomyz` | 333 | 0 | - | RM-215 — Living Agent Economy |
 | `mem20loreragcontentgeneratorz` | 333 | 0 | - | RM-223 — Lore-RAG Content Generator |
-| `mem20narrativedialogueandlocalizationpipelinez` | 333 | 0 | - | RM-244 — Narrative, Dialogue and Localization Pipeline |
+| `mem20pipez` | 333 | 0 | - | RM-244 — Narrative, Dialogue and Localization Pipeline |
 | `mem20playermotivationtwinz` | 333 | 0 | - | RM-204 — Player Motivation Twin |
-| `mem20productionplanningandtaskorchestrationpipelinez` | 333 | 0 | - | RM-238 — Production Planning and Task Orchestration Pipeline |
+| `mem20pipez` | 333 | 0 | - | RM-238 — Production Planning and Task Orchestration Pipeline |
 | `mem20realitytosoftwarecompilerz` | 333 | 0 | - | RM-212 — Reality-to-Software Compiler |
 | `mem20realworldimpactrewardsz` | 333 | 0 | - | RM-210 — Real-World Impact Rewards |
 | `mem20rewardforgez` | 333 | 0 | - | RM-201 — Reward Forge 2.0 |
-| `mem20rigginganimationandmotionpipelinez` | 333 | 0 | - | RM-242 — Rigging, Animation and Motion Pipeline |
+| `mem20pipez` | 333 | 0 | - | RM-242 — Rigging, Animation and Motion Pipeline |
 | `mem20runtimepromptoptimizerz` | 333 | 0 | - | RM-234 — Runtime Prompt Optimizer |
 | `mem20selfhealingruntimecivilizationz` | 333 | 0 | - | RM-217 — Self-Healing Runtime Civilization |
 | `mem20skillbasedprogressionbrainz` | 333 | 0 | - | RM-208 — Skill-Based Progression Brain |
 | `mem20spatialcommanduniversez` | 333 | 0 | - | RM-216 — Spatial Command Universe |
 | `mem20styleguideagentz` | 333 | 0 | - | RM-228 — Style Guide Agent |
-| `mem20versioncontrollargeassetandrecoverypipelinez` | 333 | 0 | - | RM-239 — Version Control, Large-Asset and Recovery Pipeline |
+| `mem20pipez` | 333 | 0 | - | RM-239 — Version Control, Large-Asset and Recovery Pipeline |
 | `mem20visualagentblackboardz` | 333 | 0 | - | RM-225 — Visual Agent Blackboard |
 | `mem20crossdevicememorymeshz` | 330 | 1 | `mem20crossdevicememorymeshz` | Cross-Device Memory Mesh — synchronize private memory across trusted devices |
 | `mem20federatedmodellearningmeshz` | 329 | 1 | `mem20federatedmodellearningmeshz` | Federated Model Learning Mesh — aggregate model updates across participants |
@@ -224,7 +224,7 @@ A machine-readable map of this monorepo so an agent can find the right subsystem
 | `mem20fabricz` | 108 | 1 | `mem20fabricz` | mem20 integration fabric runtime — crew runtime grouping reviewed packages for joint integration. |
 | `mem20milestoneriskpredictorz` | 103 | 1 | `mem20milestoneriskpredictorz` | Forecast likely delay and failure points from dependency and runtime signals |
 | `mem20selfz` | 101 | 1 | `mem20selfz` | mem20 self-healing, self-tuning, forecasting and optimization runtime — crew runtime grouping reviewed packages for joint integration. |
-| `mem20pipelinez` | 97 | 1 | `mem20pipelinez` | mem20 production pipeline runtime for game-maker and software pipelines — crew runtime grouping reviewed packages for joint integration. |
+| `mem20pipez` | 97 | 1 | `mem20pipez` | mem20 production pipeline runtime for game-maker and software pipelines — crew runtime grouping reviewed packages for joint integration. |
 | `mem20labz` | 95 | 1 | `mem20labz` | mem20 laboratory runtime — crew runtime grouping reviewed packages for joint integration. |
 | `mem20assistz` | 94 | 1 | `mem20assistz` | mem20 companion, coach and assistant runtime — crew runtime grouping reviewed packages for joint integration. |
 | `mem20facez` | 93 | 1 | `mem20facez` | mem20 interface and workspace runtime — crew runtime grouping reviewed packages for joint integration. |
@@ -305,7 +305,7 @@ A machine-readable map of this monorepo so an agent can find the right subsystem
 | `mem20qualityriskforecasterz` | 9 | 0 | `mem20qualityriskforecasterz` | Predict likely defects from change size, dependency shape, history, and runtime behavior |
 | `mem20quantuminspiredoptimizerz` | 9 | 0 | `mem20quantuminspiredoptimizerz` | Apply annealing and tensor-inspired heuristics to hard scheduling and search problems |
 | `mem20realtimeexecutionmapz` | 9 | 0 | `mem20realtimeexecutionmapz` | Visualize work, data, and resource movement as it happens |
-| `mem20realtimestyletransferpipelinez` | 9 | 0 | `mem20realtimestyletransferpipelinez` | Apply a controlled visual language across live UI, video, game, and 3D assets |
+| `mem20pipez` | 9 | 0 | `mem20pipez` | Apply a controlled visual language across live UI, video, game, and 3D assets |
 | `mem20relationshipcontextgraphz` | 9 | 0 | `mem20relationshipcontextgraphz` | Track shared projects, commitments, preferences, and interaction history across contacts |
 | `mem20releasereadinesspredictorz` | 9 | 0 | `mem20releasereadinesspredictorz` | Forecast whether a candidate build can survive expected load, usage, and failure conditions |
 | `mem20remotedevicerepairz` | 9 | 0 | `mem20remotedevicerepairz` | Diagnose configuration, storage, network, and application faults and apply bounded fixes |
@@ -313,7 +313,7 @@ A machine-readable map of this monorepo so an agent can find the right subsystem
 | `mem20runtimebugpredictionenginez` | 9 | 0 | `mem20runtimebugpredictionenginez` | Predict likely failures from code paths, telemetry, and recent changes |
 | `mem20safepatchsynthesisz` | 9 | 0 | `mem20safepatchsynthesisz` | Generate minimal patches constrained by tests, interfaces, and blast-radius limits |
 | `mem20scopemutationsandboxz` | 9 | 0 | `mem20scopemutationsandboxz` | Apply proposed additions or cuts and calculate downstream impact immediately |
-| `mem20securebuildtodevicepipelinez` | 9 | 0 | `mem20securebuildtodevicepipelinez` | Compile, sign, install, launch, and test builds on target devices automatically |
+| `mem20pipez` | 9 | 0 | `mem20pipez` | Compile, sign, install, launch, and test builds on target devices automatically |
 | `mem20selfrepairingtestfactoryz` | 9 | 0 | `mem20selfrepairingtestfactoryz` | Generate, mutate, and maintain tests as application behavior evolves |
 | `mem20semanticobjectgraphz` | 9 | 0 | `mem20semanticobjectgraphz` | Unify relational, document, vector, graph, and event views of the same objects |
 | `mem20sensorfusiongatewayz` | 9 | 0 | `mem20sensorfusiongatewayz` | Normalize camera, microphone, motion, location, biometric, and environmental signals |
@@ -490,7 +490,7 @@ mem20parallelworkstreamcomposerz = mem20parallelworkstreamcomposerz.core:cli
 mem20peertopeerappruntimez = mem20peertopeerappruntimez.core:cli
 mem20performanceregressionhunterz = mem20performanceregressionhunterz.core:cli
 mem20personalintelligencecompanionz = mem20personalintelligencecompanionz.core:cli
-mem20pipelinez = mem20pipelinez.cli:main
+mem20pipez = mem20pipez.cli:main
 mem20presenceawarecommunicationshubz = mem20presenceawarecommunicationshubz.core:cli
 mem20prioritycollisionresolverz = mem20prioritycollisionresolverz.core:cli
 mem20privacypreservingdatacapsulesz = mem20privacypreservingdatacapsulesz.core:cli
@@ -499,7 +499,7 @@ mem20protocolinventionstudioz = mem20protocolinventionstudioz.core:cli
 mem20qualityriskforecasterz = mem20qualityriskforecasterz.core:cli
 mem20quantuminspiredoptimizerz = mem20quantuminspiredoptimizerz.core:cli
 mem20realtimeexecutionmapz = mem20realtimeexecutionmapz.core:cli
-mem20realtimestyletransferpipelinez = mem20realtimestyletransferpipelinez.core:cli
+mem20pipez = mem20pipez.core:cli
 mem20relationshipcontextgraphz = mem20relationshipcontextgraphz.core:cli
 mem20releasereadinesspredictorz = mem20releasereadinesspredictorz.core:cli
 mem20remotedevicerepairz = mem20remotedevicerepairz.core:cli
@@ -509,7 +509,7 @@ mem20runtimebugpredictionenginez = mem20runtimebugpredictionenginez.core:cli
 mem20safepatchsynthesisz = mem20safepatchsynthesisz.core:cli
 mem20scopemutationsandboxz = mem20scopemutationsandboxz.core:cli
 mem20secretz = mem20secretz.cli:main
-mem20securebuildtodevicepipelinez = mem20securebuildtodevicepipelinez.core:cli
+mem20pipez = mem20pipez.core:cli
 mem20selfhealingconnectormeshz = mem20selfhealingconnectormeshz.runtime:main
 mem20selfrepairingtestfactoryz = mem20selfrepairingtestfactoryz.core:cli
 mem20selfz = mem20selfz.cli:main

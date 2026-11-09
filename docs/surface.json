@@ -35,7 +35,7 @@
     "mem20architecturesimulationsandboxz": 1,
     "mem20assetremixstudioz": 1,
     "mem20asynccollaborationcapsulesz": 1,
-    "mem20audiovoiceandmusicpipelinez": 4,
+    "mem20pipez": 4,
     "mem20autonomousdealdeskz": 3,
     "mem20autonomousmicrosaasfoundryz": 2,
     "mem20autonomousrecoverydirectorz": 2,
@@ -72,12 +72,12 @@
     "mem20personalcognitivesearchz": 2,
     "mem20personalmodelevolutionz": 2,
     "mem20personalworkflowtwinz": 2,
-    "mem20pipelinez": 2,
+    "mem20pipez": 2,
     "mem20planetarybatchfabricz": 2,
     "mem20playermotivationtwinz": 2,
     "mem20predictiverecallenginez": 2,
     "mem20prioritycollisionresolverz": 1,
-    "mem20productionplanningandtaskorchestrationpipelinez": 2,
+    "mem20pipez": 2,
     "mem20productledgrowthsimulatorz": 2,
     "mem20protocolautodiscoveryenginez": 2,
     "mem20realitytosoftwarecompilerz": 2,
@@ -89,7 +89,7 @@
     "mem20resourceexchangemarketz": 2,
     "mem20revenueleakhunterz": 2,
     "mem20rewardforgez": 2,
-    "mem20rigginganimationandmotionpipelinez": 2,
+    "mem20pipez": 2,
     "mem20roamingworkloadschedulerz": 2,
     "mem20runtimecompatibilityenginez": 2,
     "mem20runtimepromptoptimizerz": 2,
@@ -166,7 +166,7 @@
     "mem20architecturesimulationsandboxz",
     "mem20assetremixstudioz",
     "mem20asynccollaborationcapsulesz",
-    "mem20audiovoiceandmusicpipelinez",
+    "mem20pipez",
     "mem20autonomousdealdeskz",
     "mem20autonomousmicrosaasfoundryz",
     "mem20autonomousrecoverydirectorz",
@@ -203,12 +203,12 @@
     "mem20personalcognitivesearchz",
     "mem20personalmodelevolutionz",
     "mem20personalworkflowtwinz",
-    "mem20pipelinez",
+    "mem20pipez",
     "mem20planetarybatchfabricz",
     "mem20playermotivationtwinz",
     "mem20predictiverecallenginez",
     "mem20prioritycollisionresolverz",
-    "mem20productionplanningandtaskorchestrationpipelinez",
+    "mem20pipez",
     "mem20productledgrowthsimulatorz",
     "mem20protocolautodiscoveryenginez",
     "mem20realitytosoftwarecompilerz",
@@ -220,7 +220,7 @@
     "mem20resourceexchangemarketz",
     "mem20revenueleakhunterz",
     "mem20rewardforgez",
-    "mem20rigginganimationandmotionpipelinez",
+    "mem20pipez",
     "mem20roamingworkloadschedulerz",
     "mem20runtimecompatibilityenginez",
     "mem20runtimepromptoptimizerz",
@@ -602,9 +602,9 @@
       "tools": 4
     },
     {
-      "domain": "mem20audiovoiceandmusicpipelinez",
+      "domain": "mem20pipez",
       "modules": [
-        "mcp/tools/mem20audiovoiceandmusicpipelinez_tools.py"
+        "mcp/tools/mem20pipez_tools.py"
       ],
       "prefixes": [
         "audiovoiceandmusicpipelinez_*"
@@ -972,9 +972,9 @@
       "tools": 2
     },
     {
-      "domain": "mem20pipelinez",
+      "domain": "mem20pipez",
       "modules": [
-        "mcp/tools/mem20pipelinez_tools.py"
+        "mcp/tools/mem20pipez_tools.py"
       ],
       "prefixes": [
         "pipelinez_*"
@@ -1012,9 +1012,9 @@
       "tools": 2
     },
     {
-      "domain": "mem20productionplanningandtaskorchestrationpipelinez",
+      "domain": "mem20pipez",
       "modules": [
-        "mcp/tools/mem20productionplanningandtaskorchestrationpipelinez_tools.py"
+        "mcp/tools/mem20pipez_tools.py"
       ],
       "prefixes": [
         "productionplanningandtaskorchestrationpipelinez_*"
@@ -1132,9 +1132,9 @@
       "tools": 2
     },
     {
-      "domain": "mem20rigginganimationandmotionpipelinez",
+      "domain": "mem20pipez",
       "modules": [
-        "mcp/tools/mem20rigginganimationandmotionpipelinez_tools.py"
+        "mcp/tools/mem20pipez_tools.py"
       ],
       "prefixes": [
         "rigginganimationandmotionpipelinez_*"

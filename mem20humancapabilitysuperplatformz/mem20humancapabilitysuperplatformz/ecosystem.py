@@ -50,10 +50,10 @@ def capability_objects(skills: List[str]) -> Dict[str, Any]:
 
 def evidence_versioning(user_id: str, evidence: List[Dict[str, Any]]) -> Dict[str, Any]:
     def run():
-        from mem20versioncontrollargeassetandrecoverypipelinez.domain import version_asset, vc_health
+        from mem20pipez.domain import version_asset, vc_health
         v = version_asset(user_id or "user", str(evidence or []))
         return {"version": v.get("version"), "vc_health": vc_health([v])}
-    return _safe("mem20versioncontrollargeassetandrecoverypipelinez", run)
+    return _safe("mem20pipez", run)
 
 def platform_config() -> Dict[str, Any]:
     def run():

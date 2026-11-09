@@ -94,7 +94,7 @@ mem20eventstreamsuperhighwayz/.../integration.py:55,61
 mem20ops/src/mem20ops/memchecks.py:31
 mem20reversibleexecutiongraphz/.../integration.py:63,64
 mem20selfhealingruntimecivilizationz/.../integrations.py:68,69
-mem20versioncontrollargeassetandrecoverypipelinez/.../integration.py:76,77
+mem20pipez/.../integration.py:76,77
 memory.py:10,11                      (repo-root shim)
 tests/conftest.py:16
 tests/test_rerank_no_silent_noop.py:34

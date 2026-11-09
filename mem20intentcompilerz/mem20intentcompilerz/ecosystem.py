@@ -50,10 +50,10 @@ def reversible_plan(intent: Dict[str, Any]) -> Dict[str, Any]:
 
 def intent_versioning(intent: Dict[str, Any]) -> Dict[str, Any]:
     def run():
-        from mem20versioncontrollargeassetandrecoverypipelinez.domain import version_asset, vc_health
+        from mem20pipez.domain import version_asset, vc_health
         v=version_asset(str(intent.get("verb","intent")), str(intent))
         return {"version": v.get("version"), "vc_health": vc_health([v])}
-    return _safe("mem20versioncontrollargeassetandrecoverypipelinez", run)
+    return _safe("mem20pipez", run)
 
 def compose_report(payload: Dict[str, Any]) -> Dict[str, Any]:
     from . import domain as _dom

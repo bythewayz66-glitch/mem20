@@ -1207,20 +1207,20 @@
       }
     },
     {
-      "id": "cli:mem202dand3dartproductionoptimizationpipelinez",
+      "id": "cli:mem20pipez",
       "kind": "cli",
-      "name": "mem202dand3dartproductionoptimizationpipelinez",
+      "name": "mem20pipez",
       "category": "cli",
       "subcategory": "mem20",
-      "description": "mem202dand3dartproductionoptimizationpipelinez \u00b7 runs with /opt/mem20/.venv/bin/python",
-      "source": "/opt/mem20/.venv/bin/mem202dand3dartproductionoptimizationpipelinez",
+      "description": "mem20pipez \u00b7 runs with /opt/mem20/.venv/bin/python",
+      "source": "/opt/mem20/.venv/bin/mem20pipez",
       "runtime_status": "ok",
       "runtime_detail": "script in /opt/mem20/.venv/bin",
       "checks": [
         {
           "check": "path exists",
           "ok": true,
-          "detail": "/opt/mem20/.venv/bin/mem202dand3dartproductionoptimizationpipelinez"
+          "detail": "/opt/mem20/.venv/bin/mem20pipez"
         },
         {
           "check": "executable",
@@ -1235,7 +1235,7 @@
         "executable": true,
         "size": 212,
         "symlink": false,
-        "resolved_target": "/opt/mem20/.venv/bin/mem202dand3dartproductionoptimizationpipelinez"
+        "resolved_target": "/opt/mem20/.venv/bin/mem20pipez"
       }
     },
     {
@@ -1527,20 +1527,20 @@
       }
     },
     {
-      "id": "cli:mem20aipipelinecostoptimizerz",
+      "id": "cli:mem20pipez",
       "kind": "cli",
-      "name": "mem20aipipelinecostoptimizerz",
+      "name": "mem20pipez",
       "category": "cli",
       "subcategory": "mem20",
-      "description": "mem20aipipelinecostoptimizerz \u00b7 runs with /opt/mem20/.venv/bin/python",
-      "source": "/opt/mem20/.venv/bin/mem20aipipelinecostoptimizerz",
+      "description": "mem20pipez \u00b7 runs with /opt/mem20/.venv/bin/python",
+      "source": "/opt/mem20/.venv/bin/mem20pipez",
       "runtime_status": "ok",
       "runtime_detail": "script in /opt/mem20/.venv/bin",
       "checks": [
         {
           "check": "path exists",
           "ok": true,
-          "detail": "/opt/mem20/.venv/bin/mem20aipipelinecostoptimizerz"
+          "detail": "/opt/mem20/.venv/bin/mem20pipez"
         },
         {
           "check": "executable",
@@ -1555,7 +1555,7 @@
         "executable": true,
         "size": 195,
         "symlink": false,
-        "resolved_target": "/opt/mem20/.venv/bin/mem20aipipelinecostoptimizerz"
+        "resolved_target": "/opt/mem20/.venv/bin/mem20pipez"
       }
     },
     {
@@ -1687,20 +1687,20 @@
       }
     },
     {
-      "id": "cli:mem20assetintakecatalogingandvalidationpipelinez",
+      "id": "cli:mem20pipez",
       "kind": "cli",
-      "name": "mem20assetintakecatalogingandvalidationpipelinez",
+      "name": "mem20pipez",
       "category": "cli",
       "subcategory": "mem20",
-      "description": "mem20assetintakecatalogingandvalidationpipelinez \u00b7 runs with /opt/mem20/.venv/bin/python",
-      "source": "/opt/mem20/.venv/bin/mem20assetintakecatalogingandvalidationpipelinez",
+      "description": "mem20pipez \u00b7 runs with /opt/mem20/.venv/bin/python",
+      "source": "/opt/mem20/.venv/bin/mem20pipez",
       "runtime_status": "ok",
       "runtime_detail": "script in /opt/mem20/.venv/bin",
       "checks": [
         {
           "check": "path exists",
           "ok": true,
-          "detail": "/opt/mem20/.venv/bin/mem20assetintakecatalogingandvalidationpipelinez"
+          "detail": "/opt/mem20/.venv/bin/mem20pipez"
         },
         {
           "check": "executable",
@@ -1715,7 +1715,7 @@
         "executable": true,
         "size": 214,
         "symlink": false,
-        "resolved_target": "/opt/mem20/.venv/bin/mem20assetintakecatalogingandvalidationpipelinez"
+        "resolved_target": "/opt/mem20/.venv/bin/mem20pipez"
       }
     },
     {
@@ -1783,20 +1783,20 @@
       }
     },
     {
-      "id": "cli:mem20audiovoiceandmusicpipelinez",
+      "id": "cli:mem20pipez",
       "kind": "cli",
-      "name": "mem20audiovoiceandmusicpipelinez",
+      "name": "mem20pipez",
       "category": "cli",
       "subcategory": "mem20",
-      "description": "mem20audiovoiceandmusicpipelinez \u00b7 runs with /opt/mem20/.venv/bin/python",
-      "source": "/opt/mem20/.venv/bin/mem20audiovoiceandmusicpipelinez",
+      "description": "mem20pipez \u00b7 runs with /opt/mem20/.venv/bin/python",
+      "source": "/opt/mem20/.venv/bin/mem20pipez",
       "runtime_status": "ok",
       "runtime_detail": "script in /opt/mem20/.venv/bin",
       "checks": [
         {
           "check": "path exists",
           "ok": true,
-          "detail": "/opt/mem20/.venv/bin/mem20audiovoiceandmusicpipelinez"
+          "detail": "/opt/mem20/.venv/bin/mem20pipez"
         },
         {
           "check": "executable",
@@ -1811,7 +1811,7 @@
         "executable": true,
         "size": 198,
         "symlink": false,
-        "resolved_target": "/opt/mem20/.venv/bin/mem20audiovoiceandmusicpipelinez"
+        "resolved_target": "/opt/mem20/.venv/bin/mem20pipez"
       }
     },
     {
@@ -4119,20 +4119,20 @@
       }
     },
     {
-      "id": "cli:mem20executablegameconceptandscopepipelinez",
+      "id": "cli:mem20pipez",
       "kind": "cli",
-      "name": "mem20executablegameconceptandscopepipelinez",
+      "name": "mem20pipez",
       "category": "cli",
       "subcategory": "mem20",
-      "description": "mem20executablegameconceptandscopepipelinez \u00b7 runs with /opt/mem20/.venv/bin/python",
-      "source": "/opt/mem20/.venv/bin/mem20executablegameconceptandscopepipelinez",
+      "description": "mem20pipez \u00b7 runs with /opt/mem20/.venv/bin/python",
+      "source": "/opt/mem20/.venv/bin/mem20pipez",
       "runtime_status": "ok",
       "runtime_detail": "script in /opt/mem20/.venv/bin",
       "checks": [
         {
           "check": "path exists",
           "ok": true,
-          "detail": "/opt/mem20/.venv/bin/mem20executablegameconceptandscopepipelinez"
+          "detail": "/opt/mem20/.venv/bin/mem20pipez"
         },
         {
           "check": "executable",
@@ -4147,7 +4147,7 @@
         "executable": true,
         "size": 209,
         "symlink": false,
-        "resolved_target": "/opt/mem20/.venv/bin/mem20executablegameconceptandscopepipelinez"
+        "resolved_target": "/opt/mem20/.venv/bin/mem20pipez"
       }
     },
     {
@@ -4535,20 +4535,20 @@
       }
     },
     {
-      "id": "cli:mem20gameplaysystemsdataandbalancepipelinez",
+      "id": "cli:mem20pipez",
       "kind": "cli",
-      "name": "mem20gameplaysystemsdataandbalancepipelinez",
+      "name": "mem20pipez",
       "category": "cli",
       "subcategory": "mem20",
-      "description": "mem20gameplaysystemsdataandbalancepipelinez \u00b7 runs with /opt/mem20/.venv/bin/python",
-      "source": "/opt/mem20/.venv/bin/mem20gameplaysystemsdataandbalancepipelinez",
+      "description": "mem20pipez \u00b7 runs with /opt/mem20/.venv/bin/python",
+      "source": "/opt/mem20/.venv/bin/mem20pipez",
       "runtime_status": "ok",
       "runtime_detail": "script in /opt/mem20/.venv/bin",
       "checks": [
         {
           "check": "path exists",
           "ok": true,
-          "detail": "/opt/mem20/.venv/bin/mem20gameplaysystemsdataandbalancepipelinez"
+          "detail": "/opt/mem20/.venv/bin/mem20pipez"
         },
         {
           "check": "executable",
@@ -4563,7 +4563,7 @@
         "executable": true,
         "size": 209,
         "symlink": false,
-        "resolved_target": "/opt/mem20/.venv/bin/mem20gameplaysystemsdataandbalancepipelinez"
+        "resolved_target": "/opt/mem20/.venv/bin/mem20pipez"
       }
     },
     {
@@ -5431,20 +5431,20 @@
       }
     },
     {
-      "id": "cli:mem20leveldesignworldbuildingandnavigationpipelinez",
+      "id": "cli:mem20pipez",
       "kind": "cli",
-      "name": "mem20leveldesignworldbuildingandnavigationpipelinez",
+      "name": "mem20pipez",
       "category": "cli",
       "subcategory": "mem20",
-      "description": "mem20leveldesignworldbuildingandnavigationpipelinez \u00b7 runs with /opt/mem20/.venv/bin/python",
-      "source": "/opt/mem20/.venv/bin/mem20leveldesignworldbuildingandnavigationpipelinez",
+      "description": "mem20pipez \u00b7 runs with /opt/mem20/.venv/bin/python",
+      "source": "/opt/mem20/.venv/bin/mem20pipez",
       "runtime_status": "ok",
       "runtime_detail": "script in /opt/mem20/.venv/bin",
       "checks": [
         {
           "check": "path exists",
           "ok": true,
-          "detail": "/opt/mem20/.venv/bin/mem20leveldesignworldbuildingandnavigationpipelinez"
+          "detail": "/opt/mem20/.venv/bin/mem20pipez"
         },
         {
           "check": "executable",
@@ -5459,7 +5459,7 @@
         "executable": true,
         "size": 217,
         "symlink": false,
-        "resolved_target": "/opt/mem20/.venv/bin/mem20leveldesignworldbuildingandnavigationpipelinez"
+        "resolved_target": "/opt/mem20/.venv/bin/mem20pipez"
       }
     },
     {
@@ -6327,20 +6327,20 @@
       }
     },
     {
-      "id": "cli:mem20narrativedialogueandlocalizationpipelinez",
+      "id": "cli:mem20pipez",
       "kind": "cli",
-      "name": "mem20narrativedialogueandlocalizationpipelinez",
+      "name": "mem20pipez",
       "category": "cli",
       "subcategory": "mem20",
-      "description": "mem20narrativedialogueandlocalizationpipelinez \u00b7 runs with /opt/mem20/.venv/bin/python",
-      "source": "/opt/mem20/.venv/bin/mem20narrativedialogueandlocalizationpipelinez",
+      "description": "mem20pipez \u00b7 runs with /opt/mem20/.venv/bin/python",
+      "source": "/opt/mem20/.venv/bin/mem20pipez",
       "runtime_status": "ok",
       "runtime_detail": "script in /opt/mem20/.venv/bin",
       "checks": [
         {
           "check": "path exists",
           "ok": true,
-          "detail": "/opt/mem20/.venv/bin/mem20narrativedialogueandlocalizationpipelinez"
+          "detail": "/opt/mem20/.venv/bin/mem20pipez"
         },
         {
           "check": "executable",
@@ -6355,7 +6355,7 @@
         "executable": true,
         "size": 212,
         "symlink": false,
-        "resolved_target": "/opt/mem20/.venv/bin/mem20narrativedialogueandlocalizationpipelinez"
+        "resolved_target": "/opt/mem20/.venv/bin/mem20pipez"
       }
     },
     {
@@ -6999,20 +6999,20 @@
       }
     },
     {
-      "id": "cli:mem20pipelinez",
+      "id": "cli:mem20pipez",
       "kind": "cli",
-      "name": "mem20pipelinez",
+      "name": "mem20pipez",
       "category": "cli",
       "subcategory": "mem20",
-      "description": "mem20pipelinez \u00b7 runs with /opt/mem20/.venv/bin/python",
-      "source": "/opt/mem20/.venv/bin/mem20pipelinez",
+      "description": "mem20pipez \u00b7 runs with /opt/mem20/.venv/bin/python",
+      "source": "/opt/mem20/.venv/bin/mem20pipez",
       "runtime_status": "ok",
       "runtime_detail": "script in /opt/mem20/.venv/bin",
       "checks": [
         {
           "check": "path exists",
           "ok": true,
-          "detail": "/opt/mem20/.venv/bin/mem20pipelinez"
+          "detail": "/opt/mem20/.venv/bin/mem20pipez"
         },
         {
           "check": "executable",
@@ -7027,7 +7027,7 @@
         "executable": true,
         "size": 176,
         "symlink": false,
-        "resolved_target": "/opt/mem20/.venv/bin/mem20pipelinez"
+        "resolved_target": "/opt/mem20/.venv/bin/mem20pipez"
       }
     },
     {
@@ -7255,20 +7255,20 @@
       }
     },
     {
-      "id": "cli:mem20productionplanningandtaskorchestrationpipelinez",
+      "id": "cli:mem20pipez",
       "kind": "cli",
-      "name": "mem20productionplanningandtaskorchestrationpipelinez",
+      "name": "mem20pipez",
       "category": "cli",
       "subcategory": "mem20",
-      "description": "mem20productionplanningandtaskorchestrationpipelinez \u00b7 runs with /opt/mem20/.venv/bin/python",
-      "source": "/opt/mem20/.venv/bin/mem20productionplanningandtaskorchestrationpipelinez",
+      "description": "mem20pipez \u00b7 runs with /opt/mem20/.venv/bin/python",
+      "source": "/opt/mem20/.venv/bin/mem20pipez",
       "runtime_status": "ok",
       "runtime_detail": "script in /opt/mem20/.venv/bin",
       "checks": [
         {
           "check": "path exists",
           "ok": true,
-          "detail": "/opt/mem20/.venv/bin/mem20productionplanningandtaskorchestrationpipelinez"
+          "detail": "/opt/mem20/.venv/bin/mem20pipez"
         },
         {
           "check": "executable",
@@ -7283,7 +7283,7 @@
         "executable": true,
         "size": 218,
         "symlink": false,
-        "resolved_target": "/opt/mem20/.venv/bin/mem20productionplanningandtaskorchestrationpipelinez"
+        "resolved_target": "/opt/mem20/.venv/bin/mem20pipez"
       }
     },
     {
@@ -7575,20 +7575,20 @@
       }
     },
     {
-      "id": "cli:mem20realtimestyletransferpipelinez",
+      "id": "cli:mem20pipez",
       "kind": "cli",
-      "name": "mem20realtimestyletransferpipelinez",
+      "name": "mem20pipez",
       "category": "cli",
       "subcategory": "mem20",
-      "description": "mem20realtimestyletransferpipelinez \u00b7 runs with /opt/mem20/.venv/bin/python",
-      "source": "/opt/mem20/.venv/bin/mem20realtimestyletransferpipelinez",
+      "description": "mem20pipez \u00b7 runs with /opt/mem20/.venv/bin/python",
+      "source": "/opt/mem20/.venv/bin/mem20pipez",
       "runtime_status": "ok",
       "runtime_detail": "script in /opt/mem20/.venv/bin",
       "checks": [
         {
           "check": "path exists",
           "ok": true,
-          "detail": "/opt/mem20/.venv/bin/mem20realtimestyletransferpipelinez"
+          "detail": "/opt/mem20/.venv/bin/mem20pipez"
         },
         {
           "check": "executable",
@@ -7603,7 +7603,7 @@
         "executable": true,
         "size": 196,
         "symlink": false,
-        "resolved_target": "/opt/mem20/.venv/bin/mem20realtimestyletransferpipelinez"
+        "resolved_target": "/opt/mem20/.venv/bin/mem20pipez"
       }
     },
     {
@@ -7927,20 +7927,20 @@
       }
     },
     {
-      "id": "cli:mem20rigginganimationandmotionpipelinez",
+      "id": "cli:mem20pipez",
       "kind": "cli",
-      "name": "mem20rigginganimationandmotionpipelinez",
+      "name": "mem20pipez",
       "category": "cli",
       "subcategory": "mem20",
-      "description": "mem20rigginganimationandmotionpipelinez \u00b7 runs with /opt/mem20/.venv/bin/python",
-      "source": "/opt/mem20/.venv/bin/mem20rigginganimationandmotionpipelinez",
+      "description": "mem20pipez \u00b7 runs with /opt/mem20/.venv/bin/python",
+      "source": "/opt/mem20/.venv/bin/mem20pipez",
       "runtime_status": "ok",
       "runtime_detail": "script in /opt/mem20/.venv/bin",
       "checks": [
         {
           "check": "path exists",
           "ok": true,
-          "detail": "/opt/mem20/.venv/bin/mem20rigginganimationandmotionpipelinez"
+          "detail": "/opt/mem20/.venv/bin/mem20pipez"
         },
         {
           "check": "executable",
@@ -7955,7 +7955,7 @@
         "executable": true,
         "size": 205,
         "symlink": false,
-        "resolved_target": "/opt/mem20/.venv/bin/mem20rigginganimationandmotionpipelinez"
+        "resolved_target": "/opt/mem20/.venv/bin/mem20pipez"
       }
     },
     {
@@ -8279,20 +8279,20 @@
       }
     },
     {
-      "id": "cli:mem20securebuildtodevicepipelinez",
+      "id": "cli:mem20pipez",
       "kind": "cli",
-      "name": "mem20securebuildtodevicepipelinez",
+      "name": "mem20pipez",
       "category": "cli",
       "subcategory": "mem20",
-      "description": "mem20securebuildtodevicepipelinez \u00b7 runs with /opt/mem20/.venv/bin/python",
-      "source": "/opt/mem20/.venv/bin/mem20securebuildtodevicepipelinez",
+      "description": "mem20pipez \u00b7 runs with /opt/mem20/.venv/bin/python",
+      "source": "/opt/mem20/.venv/bin/mem20pipez",
       "runtime_status": "ok",
       "runtime_detail": "script in /opt/mem20/.venv/bin",
       "checks": [
         {
           "check": "path exists",
           "ok": true,
-          "detail": "/opt/mem20/.venv/bin/mem20securebuildtodevicepipelinez"
+          "detail": "/opt/mem20/.venv/bin/mem20pipez"
         },
         {
           "check": "executable",
@@ -8307,7 +8307,7 @@
         "executable": true,
         "size": 194,
         "symlink": false,
-        "resolved_target": "/opt/mem20/.venv/bin/mem20securebuildtodevicepipelinez"
+        "resolved_target": "/opt/mem20/.venv/bin/mem20pipez"
       }
     },
     {
@@ -9495,20 +9495,20 @@
       }
     },
     {
-      "id": "cli:mem20versioncontrollargeassetandrecoverypipelinez",
+      "id": "cli:mem20pipez",
       "kind": "cli",
-      "name": "mem20versioncontrollargeassetandrecoverypipelinez",
+      "name": "mem20pipez",
       "category": "cli",
       "subcategory": "mem20",
-      "description": "mem20versioncontrollargeassetandrecoverypipelinez \u00b7 runs with /opt/mem20/.venv/bin/python",
-      "source": "/opt/mem20/.venv/bin/mem20versioncontrollargeassetandrecoverypipelinez",
+      "description": "mem20pipez \u00b7 runs with /opt/mem20/.venv/bin/python",
+      "source": "/opt/mem20/.venv/bin/mem20pipez",
       "runtime_status": "ok",
       "runtime_detail": "script in /opt/mem20/.venv/bin",
       "checks": [
         {
           "check": "path exists",
           "ok": true,
-          "detail": "/opt/mem20/.venv/bin/mem20versioncontrollargeassetandrecoverypipelinez"
+          "detail": "/opt/mem20/.venv/bin/mem20pipez"
         },
         {
           "check": "executable",
@@ -9523,7 +9523,7 @@
         "executable": true,
         "size": 215,
         "symlink": false,
-        "resolved_target": "/opt/mem20/.venv/bin/mem20versioncontrollargeassetandrecoverypipelinez"
+        "resolved_target": "/opt/mem20/.venv/bin/mem20pipez"
       }
     },
     {
@@ -10977,25 +10977,25 @@
       }
     },
     {
-      "id": "subsystem:mem202dand3dartproductionoptimizationpipelinez",
+      "id": "subsystem:mem20pipez",
       "kind": "subsystem",
-      "name": "mem202dand3dartproductionoptimizationpipelinez",
+      "name": "mem20pipez",
       "category": "other",
       "subcategory": "native-subsystem",
-      "description": "mem202dand3dartproductionoptimizationpipelinez first-class module",
-      "source": "/opt/mem20/mem202dand3dartproductionoptimizationpipelinez/pyproject.toml",
+      "description": "mem20pipez first-class module",
+      "source": "/opt/mem20/mem20pipez/pyproject.toml",
       "runtime_status": "ok",
-      "runtime_detail": "pkg=mem202dand3dartproductionoptimizationpipelinez v1.0.0; installed 1.0.0 via root-venv; importable=False (1 modules checked); scripts=1 declared, 1 on PATH",
+      "runtime_detail": "pkg=mem20pipez v1.0.0; installed 1.0.0 via root-venv; importable=False (1 modules checked); scripts=1 declared, 1 on PATH",
       "checks": [
         {
           "check": "pyproject present",
           "ok": true,
-          "detail": "/opt/mem20/mem202dand3dartproductionoptimizationpipelinez/pyproject.toml"
+          "detail": "/opt/mem20/mem20pipez/pyproject.toml"
         },
         {
           "check": "name declared",
           "ok": true,
-          "detail": "mem202dand3dartproductionoptimizationpipelinez"
+          "detail": "mem20pipez"
         },
         {
           "check": "description present",
@@ -11015,17 +11015,17 @@
         {
           "check": "import",
           "ok": false,
-          "detail": "mem202dand3dartproductionoptimizationpipelinez=n"
+          "detail": "mem20pipez=n"
         }
       ],
       "meta": {
-        "pkg_name": "mem202dand3dartproductionoptimizationpipelinez",
+        "pkg_name": "mem20pipez",
         "version": "1.0.0",
-        "pyproject": "/opt/mem20/mem202dand3dartproductionoptimizationpipelinez/pyproject.toml",
+        "pyproject": "/opt/mem20/mem20pipez/pyproject.toml",
         "entry_points": [
           {
-            "console": "mem202dand3dartproductionoptimizationpipelinez",
-            "target": "mem202dand3dartproductionoptimizationpipelinez.runtime:main",
+            "console": "mem20pipez",
+            "target": "mem20pipez.runtime:main",
             "on_path": true
           }
         ],
@@ -11037,7 +11037,7 @@
         },
         "importable": [
           {
-            "name": "mem202dand3dartproductionoptimizationpipelinez",
+            "name": "mem20pipez",
             "importable": false
           }
         ],
@@ -11738,25 +11738,25 @@
       }
     },
     {
-      "id": "subsystem:mem20aipipelinecostoptimizerz",
+      "id": "subsystem:mem20pipez",
       "kind": "subsystem",
-      "name": "mem20aipipelinecostoptimizerz",
+      "name": "mem20pipez",
       "category": "other",
       "subcategory": "native-subsystem",
-      "description": "mem20aipipelinecostoptimizerz first-class module",
-      "source": "/opt/mem20/mem20aipipelinecostoptimizerz/pyproject.toml",
+      "description": "mem20pipez first-class module",
+      "source": "/opt/mem20/mem20pipez/pyproject.toml",
       "runtime_status": "ok",
-      "runtime_detail": "pkg=mem20aipipelinecostoptimizerz v1.0.0; installed 1.0.0 via root-venv; importable=False (1 modules checked); scripts=1 declared, 1 on PATH",
+      "runtime_detail": "pkg=mem20pipez v1.0.0; installed 1.0.0 via root-venv; importable=False (1 modules checked); scripts=1 declared, 1 on PATH",
       "checks": [
         {
           "check": "pyproject present",
           "ok": true,
-          "detail": "/opt/mem20/mem20aipipelinecostoptimizerz/pyproject.toml"
+          "detail": "/opt/mem20/mem20pipez/pyproject.toml"
         },
         {
           "check": "name declared",
           "ok": true,
-          "detail": "mem20aipipelinecostoptimizerz"
+          "detail": "mem20pipez"
         },
         {
           "check": "description present",
@@ -11776,17 +11776,17 @@
         {
           "check": "import",
           "ok": false,
-          "detail": "mem20aipipelinecostoptimizerz=n"
+          "detail": "mem20pipez=n"
         }
       ],
       "meta": {
-        "pkg_name": "mem20aipipelinecostoptimizerz",
+        "pkg_name": "mem20pipez",
         "version": "1.0.0",
-        "pyproject": "/opt/mem20/mem20aipipelinecostoptimizerz/pyproject.toml",
+        "pyproject": "/opt/mem20/mem20pipez/pyproject.toml",
         "entry_points": [
           {
-            "console": "mem20aipipelinecostoptimizerz",
-            "target": "mem20aipipelinecostoptimizerz.runtime:main",
+            "console": "mem20pipez",
+            "target": "mem20pipez.runtime:main",
             "on_path": true
           }
         ],
@@ -11798,7 +11798,7 @@
         },
         "importable": [
           {
-            "name": "mem20aipipelinecostoptimizerz",
+            "name": "mem20pipez",
             "importable": false
           }
         ],
@@ -12394,25 +12394,25 @@
       }
     },
     {
-      "id": "subsystem:mem20assetintakecatalogingandvalidationpipelinez",
+      "id": "subsystem:mem20pipez",
       "kind": "subsystem",
-      "name": "mem20assetintakecatalogingandvalidationpipelinez",
+      "name": "mem20pipez",
       "category": "other",
       "subcategory": "native-subsystem",
-      "description": "mem20assetintakecatalogingandvalidationpipelinez first-class module",
-      "source": "/opt/mem20/mem20assetintakecatalogingandvalidationpipelinez/pyproject.toml",
+      "description": "mem20pipez first-class module",
+      "source": "/opt/mem20/mem20pipez/pyproject.toml",
       "runtime_status": "ok",
-      "runtime_detail": "pkg=mem20assetintakecatalogingandvalidationpipelinez v1.0.0; installed 1.0.0 via root-venv; importable=False (1 modules checked); scripts=1 declared, 1 on PATH",
+      "runtime_detail": "pkg=mem20pipez v1.0.0; installed 1.0.0 via root-venv; importable=False (1 modules checked); scripts=1 declared, 1 on PATH",
       "checks": [
         {
           "check": "pyproject present",
           "ok": true,
-          "detail": "/opt/mem20/mem20assetintakecatalogingandvalidationpipelinez/pyproject.toml"
+          "detail": "/opt/mem20/mem20pipez/pyproject.toml"
         },
         {
           "check": "name declared",
           "ok": true,
-          "detail": "mem20assetintakecatalogingandvalidationpipelinez"
+          "detail": "mem20pipez"
         },
         {
           "check": "description present",
@@ -12432,17 +12432,17 @@
         {
           "check": "import",
           "ok": false,
-          "detail": "mem20assetintakecatalogingandvalidationpipelinez=n"
+          "detail": "mem20pipez=n"
         }
       ],
       "meta": {
-        "pkg_name": "mem20assetintakecatalogingandvalidationpipelinez",
+        "pkg_name": "mem20pipez",
         "version": "1.0.0",
-        "pyproject": "/opt/mem20/mem20assetintakecatalogingandvalidationpipelinez/pyproject.toml",
+        "pyproject": "/opt/mem20/mem20pipez/pyproject.toml",
         "entry_points": [
           {
-            "console": "mem20assetintakecatalogingandvalidationpipelinez",
-            "target": "mem20assetintakecatalogingandvalidationpipelinez.runtime:main",
+            "console": "mem20pipez",
+            "target": "mem20pipez.runtime:main",
             "on_path": true
           }
         ],
@@ -12454,7 +12454,7 @@
         },
         "importable": [
           {
-            "name": "mem20assetintakecatalogingandvalidationpipelinez",
+            "name": "mem20pipez",
             "importable": false
           }
         ],
@@ -12722,25 +12722,25 @@
       }
     },
     {
-      "id": "subsystem:mem20audiovoiceandmusicpipelinez",
+      "id": "subsystem:mem20pipez",
       "kind": "subsystem",
-      "name": "mem20audiovoiceandmusicpipelinez",
+      "name": "mem20pipez",
       "category": "other",
       "subcategory": "native-subsystem",
       "description": "Audio, voice, and music pipeline with subsystem-specific estate integration",
-      "source": "/opt/mem20/mem20audiovoiceandmusicpipelinez/pyproject.toml",
+      "source": "/opt/mem20/mem20pipez/pyproject.toml",
       "runtime_status": "ok",
-      "runtime_detail": "pkg=mem20audiovoiceandmusicpipelinez v1.0.0; installed 1.0.0 via root-venv; importable=False (1 modules checked); scripts=1 declared, 1 on PATH",
+      "runtime_detail": "pkg=mem20pipez v1.0.0; installed 1.0.0 via root-venv; importable=False (1 modules checked); scripts=1 declared, 1 on PATH",
       "checks": [
         {
           "check": "pyproject present",
           "ok": true,
-          "detail": "/opt/mem20/mem20audiovoiceandmusicpipelinez/pyproject.toml"
+          "detail": "/opt/mem20/mem20pipez/pyproject.toml"
         },
         {
           "check": "name declared",
           "ok": true,
-          "detail": "mem20audiovoiceandmusicpipelinez"
+          "detail": "mem20pipez"
         },
         {
           "check": "description present",
@@ -12760,17 +12760,17 @@
         {
           "check": "import",
           "ok": false,
-          "detail": "mem20audiovoiceandmusicpipelinez=n"
+          "detail": "mem20pipez=n"
         }
       ],
       "meta": {
-        "pkg_name": "mem20audiovoiceandmusicpipelinez",
+        "pkg_name": "mem20pipez",
         "version": "1.0.0",
-        "pyproject": "/opt/mem20/mem20audiovoiceandmusicpipelinez/pyproject.toml",
+        "pyproject": "/opt/mem20/mem20pipez/pyproject.toml",
         "entry_points": [
           {
-            "console": "mem20audiovoiceandmusicpipelinez",
-            "target": "mem20audiovoiceandmusicpipelinez.runtime:main",
+            "console": "mem20pipez",
+            "target": "mem20pipez.runtime:main",
             "on_path": true
           }
         ],
@@ -12782,7 +12782,7 @@
         },
         "importable": [
           {
-            "name": "mem20audiovoiceandmusicpipelinez",
+            "name": "mem20pipez",
             "importable": false
           }
         ],
@@ -18061,25 +18061,25 @@
       }
     },
     {
-      "id": "subsystem:mem20executablegameconceptandscopepipelinez",
+      "id": "subsystem:mem20pipez",
       "kind": "subsystem",
-      "name": "mem20executablegameconceptandscopepipelinez",
+      "name": "mem20pipez",
       "category": "other",
       "subcategory": "native-subsystem",
       "description": "Executable Game Concept & Scope Pipeline (RM-237): concept scoring, scope/feasibility/risk/stage analysis with production/growth/foundry peer signals",
-      "source": "/opt/mem20/mem20executablegameconceptandscopepipelinez/pyproject.toml",
+      "source": "/opt/mem20/mem20pipez/pyproject.toml",
       "runtime_status": "ok",
-      "runtime_detail": "pkg=mem20executablegameconceptandscopepipelinez v1.0.0; installed 1.0.0 via root-venv; importable=True (1 modules checked); scripts=1 declared, 1 on PATH",
+      "runtime_detail": "pkg=mem20pipez v1.0.0; installed 1.0.0 via root-venv; importable=True (1 modules checked); scripts=1 declared, 1 on PATH",
       "checks": [
         {
           "check": "pyproject present",
           "ok": true,
-          "detail": "/opt/mem20/mem20executablegameconceptandscopepipelinez/pyproject.toml"
+          "detail": "/opt/mem20/mem20pipez/pyproject.toml"
         },
         {
           "check": "name declared",
           "ok": true,
-          "detail": "mem20executablegameconceptandscopepipelinez"
+          "detail": "mem20pipez"
         },
         {
           "check": "description present",
@@ -18099,17 +18099,17 @@
         {
           "check": "import",
           "ok": true,
-          "detail": "mem20executablegameconceptandscopepipelinez=y"
+          "detail": "mem20pipez=y"
         }
       ],
       "meta": {
-        "pkg_name": "mem20executablegameconceptandscopepipelinez",
+        "pkg_name": "mem20pipez",
         "version": "1.0.0",
-        "pyproject": "/opt/mem20/mem20executablegameconceptandscopepipelinez/pyproject.toml",
+        "pyproject": "/opt/mem20/mem20pipez/pyproject.toml",
         "entry_points": [
           {
-            "console": "mem20executablegameconceptandscopepipelinez",
-            "target": "mem20executablegameconceptandscopepipelinez.runtime:main",
+            "console": "mem20pipez",
+            "target": "mem20pipez.runtime:main",
             "on_path": true
           }
         ],
@@ -18121,7 +18121,7 @@
         },
         "importable": [
           {
-            "name": "mem20executablegameconceptandscopepipelinez",
+            "name": "mem20pipez",
             "importable": true
           }
         ],
@@ -18947,25 +18947,25 @@
       }
     },
     {
-      "id": "subsystem:mem20gameplaysystemsdataandbalancepipelinez",
+      "id": "subsystem:mem20pipez",
       "kind": "subsystem",
-      "name": "mem20gameplaysystemsdataandbalancepipelinez",
+      "name": "mem20pipez",
       "category": "other",
       "subcategory": "native-subsystem",
       "description": "Gameplay Systems Data & Balance Pipeline (RM-245): telemetry/analysis/tuning pipeline with 6 peer signals; legacy domain preserved",
-      "source": "/opt/mem20/mem20gameplaysystemsdataandbalancepipelinez/pyproject.toml",
+      "source": "/opt/mem20/mem20pipez/pyproject.toml",
       "runtime_status": "ok",
-      "runtime_detail": "pkg=mem20gameplaysystemsdataandbalancepipelinez v1.0.0; installed 1.0.0 via root-venv; importable=True (1 modules checked); scripts=1 declared, 1 on PATH",
+      "runtime_detail": "pkg=mem20pipez v1.0.0; installed 1.0.0 via root-venv; importable=True (1 modules checked); scripts=1 declared, 1 on PATH",
       "checks": [
         {
           "check": "pyproject present",
           "ok": true,
-          "detail": "/opt/mem20/mem20gameplaysystemsdataandbalancepipelinez/pyproject.toml"
+          "detail": "/opt/mem20/mem20pipez/pyproject.toml"
         },
         {
           "check": "name declared",
           "ok": true,
-          "detail": "mem20gameplaysystemsdataandbalancepipelinez"
+          "detail": "mem20pipez"
         },
         {
           "check": "description present",
@@ -18985,17 +18985,17 @@
         {
           "check": "import",
           "ok": true,
-          "detail": "mem20gameplaysystemsdataandbalancepipelinez=y"
+          "detail": "mem20pipez=y"
         }
       ],
       "meta": {
-        "pkg_name": "mem20gameplaysystemsdataandbalancepipelinez",
+        "pkg_name": "mem20pipez",
         "version": "1.0.0",
-        "pyproject": "/opt/mem20/mem20gameplaysystemsdataandbalancepipelinez/pyproject.toml",
+        "pyproject": "/opt/mem20/mem20pipez/pyproject.toml",
         "entry_points": [
           {
-            "console": "mem20gameplaysystemsdataandbalancepipelinez",
-            "target": "mem20gameplaysystemsdataandbalancepipelinez.runtime:main",
+            "console": "mem20pipez",
+            "target": "mem20pipez.runtime:main",
             "on_path": true
           }
         ],
@@ -19007,7 +19007,7 @@
         },
         "importable": [
           {
-            "name": "mem20gameplaysystemsdataandbalancepipelinez",
+            "name": "mem20pipez",
             "importable": true
           }
         ],
@@ -20935,25 +20935,25 @@
       }
     },
     {
-      "id": "subsystem:mem20leveldesignworldbuildingandnavigationpipelinez",
+      "id": "subsystem:mem20pipez",
       "kind": "subsystem",
-      "name": "mem20leveldesignworldbuildingandnavigationpipelinez",
+      "name": "mem20pipez",
       "category": "other",
       "subcategory": "native-subsystem",
-      "description": "mem20leveldesignworldbuildingandnavigationpipelinez first-class module",
-      "source": "/opt/mem20/mem20leveldesignworldbuildingandnavigationpipelinez/pyproject.toml",
+      "description": "mem20pipez first-class module",
+      "source": "/opt/mem20/mem20pipez/pyproject.toml",
       "runtime_status": "ok",
-      "runtime_detail": "pkg=mem20leveldesignworldbuildingandnavigationpipelinez v1.0.0; installed 1.0.0 via root-venv; importable=False (1 modules checked); scripts=1 declared, 1 on PATH",
+      "runtime_detail": "pkg=mem20pipez v1.0.0; installed 1.0.0 via root-venv; importable=False (1 modules checked); scripts=1 declared, 1 on PATH",
       "checks": [
         {
           "check": "pyproject present",
           "ok": true,
-          "detail": "/opt/mem20/mem20leveldesignworldbuildingandnavigationpipelinez/pyproject.toml"
+          "detail": "/opt/mem20/mem20pipez/pyproject.toml"
         },
         {
           "check": "name declared",
           "ok": true,
-          "detail": "mem20leveldesignworldbuildingandnavigationpipelinez"
+          "detail": "mem20pipez"
         },
         {
           "check": "description present",
@@ -20973,17 +20973,17 @@
         {
           "check": "import",
           "ok": false,
-          "detail": "mem20leveldesignworldbuildingandnavigationpipelinez=n"
+          "detail": "mem20pipez=n"
         }
       ],
       "meta": {
-        "pkg_name": "mem20leveldesignworldbuildingandnavigationpipelinez",
+        "pkg_name": "mem20pipez",
         "version": "1.0.0",
-        "pyproject": "/opt/mem20/mem20leveldesignworldbuildingandnavigationpipelinez/pyproject.toml",
+        "pyproject": "/opt/mem20/mem20pipez/pyproject.toml",
         "entry_points": [
           {
-            "console": "mem20leveldesignworldbuildingandnavigationpipelinez",
-            "target": "mem20leveldesignworldbuildingandnavigationpipelinez.runtime:main",
+            "console": "mem20pipez",
+            "target": "mem20pipez.runtime:main",
             "on_path": true
           }
         ],
@@ -20995,7 +20995,7 @@
         },
         "importable": [
           {
-            "name": "mem20leveldesignworldbuildingandnavigationpipelinez",
+            "name": "mem20pipez",
             "importable": false
           }
         ],
@@ -23046,25 +23046,25 @@
       }
     },
     {
-      "id": "subsystem:mem20narrativedialogueandlocalizationpipelinez",
+      "id": "subsystem:mem20pipez",
       "kind": "subsystem",
-      "name": "mem20narrativedialogueandlocalizationpipelinez",
+      "name": "mem20pipez",
       "category": "other",
       "subcategory": "native-subsystem",
-      "description": "mem20narrativedialogueandlocalizationpipelinez first-class module",
-      "source": "/opt/mem20/mem20narrativedialogueandlocalizationpipelinez/pyproject.toml",
+      "description": "mem20pipez first-class module",
+      "source": "/opt/mem20/mem20pipez/pyproject.toml",
       "runtime_status": "ok",
-      "runtime_detail": "pkg=mem20narrativedialogueandlocalizationpipelinez v1.0.0; installed 1.0.0 via root-venv; importable=False (1 modules checked); scripts=1 declared, 1 on PATH",
+      "runtime_detail": "pkg=mem20pipez v1.0.0; installed 1.0.0 via root-venv; importable=False (1 modules checked); scripts=1 declared, 1 on PATH",
       "checks": [
         {
           "check": "pyproject present",
           "ok": true,
-          "detail": "/opt/mem20/mem20narrativedialogueandlocalizationpipelinez/pyproject.toml"
+          "detail": "/opt/mem20/mem20pipez/pyproject.toml"
         },
         {
           "check": "name declared",
           "ok": true,
-          "detail": "mem20narrativedialogueandlocalizationpipelinez"
+          "detail": "mem20pipez"
         },
         {
           "check": "description present",
@@ -23084,17 +23084,17 @@
         {
           "check": "import",
           "ok": false,
-          "detail": "mem20narrativedialogueandlocalizationpipelinez=n"
+          "detail": "mem20pipez=n"
         }
       ],
       "meta": {
-        "pkg_name": "mem20narrativedialogueandlocalizationpipelinez",
+        "pkg_name": "mem20pipez",
         "version": "1.0.0",
-        "pyproject": "/opt/mem20/mem20narrativedialogueandlocalizationpipelinez/pyproject.toml",
+        "pyproject": "/opt/mem20/mem20pipez/pyproject.toml",
         "entry_points": [
           {
-            "console": "mem20narrativedialogueandlocalizationpipelinez",
-            "target": "mem20narrativedialogueandlocalizationpipelinez.runtime:main",
+            "console": "mem20pipez",
+            "target": "mem20pipez.runtime:main",
             "on_path": true
           }
         ],
@@ -23106,7 +23106,7 @@
         },
         "importable": [
           {
-            "name": "mem20narrativedialogueandlocalizationpipelinez",
+            "name": "mem20pipez",
             "importable": false
           }
         ],
@@ -24555,25 +24555,25 @@
       }
     },
     {
-      "id": "subsystem:mem20pipelinez",
+      "id": "subsystem:mem20pipez",
       "kind": "subsystem",
-      "name": "mem20pipelinez",
+      "name": "mem20pipez",
       "category": "other",
       "subcategory": "native-subsystem",
       "description": "mem20 production pipeline runtime for game-maker and software pipelines \u2014 crew runtime with 6 peers, HTTP cockpit, MCP.",
-      "source": "/opt/mem20/mem20pipelinez/pyproject.toml",
+      "source": "/opt/mem20/mem20pipez/pyproject.toml",
       "runtime_status": "ok",
-      "runtime_detail": "pkg=mem20pipelinez v0.1.0; installed 0.1.0 via root-venv; importable=True (2 modules checked); scripts=1 declared, 1 on PATH",
+      "runtime_detail": "pkg=mem20pipez v0.1.0; installed 0.1.0 via root-venv; importable=True (2 modules checked); scripts=1 declared, 1 on PATH",
       "checks": [
         {
           "check": "pyproject present",
           "ok": true,
-          "detail": "/opt/mem20/mem20pipelinez/pyproject.toml"
+          "detail": "/opt/mem20/mem20pipez/pyproject.toml"
         },
         {
           "check": "name declared",
           "ok": true,
-          "detail": "mem20pipelinez"
+          "detail": "mem20pipez"
         },
         {
           "check": "description present",
@@ -24593,17 +24593,17 @@
         {
           "check": "import",
           "ok": true,
-          "detail": "mem20pipelinez=y, mem20pipelinez.mem20pipelinez=y"
+          "detail": "mem20pipez=y, mem20pipez.mem20pipez=y"
         }
       ],
       "meta": {
-        "pkg_name": "mem20pipelinez",
+        "pkg_name": "mem20pipez",
         "version": "0.1.0",
-        "pyproject": "/opt/mem20/mem20pipelinez/pyproject.toml",
+        "pyproject": "/opt/mem20/mem20pipez/pyproject.toml",
         "entry_points": [
           {
-            "console": "mem20pipelinez",
-            "target": "mem20pipelinez.cli:main",
+            "console": "mem20pipez",
+            "target": "mem20pipez.cli:main",
             "on_path": true
           }
         ],
@@ -24615,11 +24615,11 @@
         },
         "importable": [
           {
-            "name": "mem20pipelinez",
+            "name": "mem20pipez",
             "importable": true
           },
           {
-            "name": "mem20pipelinez.mem20pipelinez",
+            "name": "mem20pipez.mem20pipez",
             "importable": true
           }
         ],
@@ -25103,25 +25103,25 @@
       }
     },
     {
-      "id": "subsystem:mem20productionplanningandtaskorchestrationpipelinez",
+      "id": "subsystem:mem20pipez",
       "kind": "subsystem",
-      "name": "mem20productionplanningandtaskorchestrationpipelinez",
+      "name": "mem20pipez",
       "category": "other",
       "subcategory": "native-subsystem",
       "description": "Production Planning and Task Orchestration Pipeline with 6 peers, HTTP cockpit, MCP",
-      "source": "/opt/mem20/mem20productionplanningandtaskorchestrationpipelinez/pyproject.toml",
+      "source": "/opt/mem20/mem20pipez/pyproject.toml",
       "runtime_status": "ok",
-      "runtime_detail": "pkg=mem20productionplanningandtaskorchestrationpipelinez v1.0.0; installed 1.0.0 via root-venv; importable=False (1 modules checked); scripts=1 declared, 1 on PATH",
+      "runtime_detail": "pkg=mem20pipez v1.0.0; installed 1.0.0 via root-venv; importable=False (1 modules checked); scripts=1 declared, 1 on PATH",
       "checks": [
         {
           "check": "pyproject present",
           "ok": true,
-          "detail": "/opt/mem20/mem20productionplanningandtaskorchestrationpipelinez/pyproject.toml"
+          "detail": "/opt/mem20/mem20pipez/pyproject.toml"
         },
         {
           "check": "name declared",
           "ok": true,
-          "detail": "mem20productionplanningandtaskorchestrationpipelinez"
+          "detail": "mem20pipez"
         },
         {
           "check": "description present",
@@ -25141,17 +25141,17 @@
         {
           "check": "import",
           "ok": false,
-          "detail": "mem20productionplanningandtaskorchestrationpipelinez=n"
+          "detail": "mem20pipez=n"
         }
       ],
       "meta": {
-        "pkg_name": "mem20productionplanningandtaskorchestrationpipelinez",
+        "pkg_name": "mem20pipez",
         "version": "1.0.0",
-        "pyproject": "/opt/mem20/mem20productionplanningandtaskorchestrationpipelinez/pyproject.toml",
+        "pyproject": "/opt/mem20/mem20pipez/pyproject.toml",
         "entry_points": [
           {
-            "console": "mem20productionplanningandtaskorchestrationpipelinez",
-            "target": "mem20productionplanningandtaskorchestrationpipelinez.runtime:main",
+            "console": "mem20pipez",
+            "target": "mem20pipez.runtime:main",
             "on_path": true
           }
         ],
@@ -25163,7 +25163,7 @@
         },
         "importable": [
           {
-            "name": "mem20productionplanningandtaskorchestrationpipelinez",
+            "name": "mem20pipez",
             "importable": false
           }
         ],
@@ -25783,25 +25783,25 @@
       }
     },
     {
-      "id": "subsystem:mem20realtimestyletransferpipelinez",
+      "id": "subsystem:mem20pipez",
       "kind": "subsystem",
-      "name": "mem20realtimestyletransferpipelinez",
+      "name": "mem20pipez",
       "category": "other",
       "subcategory": "native-subsystem",
       "description": "Apply a controlled visual language across live UI, video, game, and 3D assets",
-      "source": "/opt/mem20/mem20realtimestyletransferpipelinez/pyproject.toml",
+      "source": "/opt/mem20/mem20pipez/pyproject.toml",
       "runtime_status": "ok",
-      "runtime_detail": "pkg=mem20realtimestyletransferpipelinez v1.0.0; installed 1.0.0 via root-venv; importable=False (1 modules checked); scripts=1 declared, 1 on PATH",
+      "runtime_detail": "pkg=mem20pipez v1.0.0; installed 1.0.0 via root-venv; importable=False (1 modules checked); scripts=1 declared, 1 on PATH",
       "checks": [
         {
           "check": "pyproject present",
           "ok": true,
-          "detail": "/opt/mem20/mem20realtimestyletransferpipelinez/pyproject.toml"
+          "detail": "/opt/mem20/mem20pipez/pyproject.toml"
         },
         {
           "check": "name declared",
           "ok": true,
-          "detail": "mem20realtimestyletransferpipelinez"
+          "detail": "mem20pipez"
         },
         {
           "check": "description present",
@@ -25821,17 +25821,17 @@
         {
           "check": "import",
           "ok": false,
-          "detail": "mem20realtimestyletransferpipelinez=n"
+          "detail": "mem20pipez=n"
         }
       ],
       "meta": {
-        "pkg_name": "mem20realtimestyletransferpipelinez",
+        "pkg_name": "mem20pipez",
         "version": "1.0.0",
-        "pyproject": "/opt/mem20/mem20realtimestyletransferpipelinez/pyproject.toml",
+        "pyproject": "/opt/mem20/mem20pipez/pyproject.toml",
         "entry_points": [
           {
-            "console": "mem20realtimestyletransferpipelinez",
-            "target": "mem20realtimestyletransferpipelinez.core:cli",
+            "console": "mem20pipez",
+            "target": "mem20pipez.core:cli",
             "on_path": true
           }
         ],
@@ -25843,7 +25843,7 @@
         },
         "importable": [
           {
-            "name": "mem20realtimestyletransferpipelinez",
+            "name": "mem20pipez",
             "importable": false
           }
         ],
@@ -26531,25 +26531,25 @@
       }
     },
     {
-      "id": "subsystem:mem20rigginganimationandmotionpipelinez",
+      "id": "subsystem:mem20pipez",
       "kind": "subsystem",
-      "name": "mem20rigginganimationandmotionpipelinez",
+      "name": "mem20pipez",
       "category": "other",
       "subcategory": "native-subsystem",
       "description": "Rigging, Animation and Motion Pipeline with 6 peers, HTTP cockpit, MCP",
-      "source": "/opt/mem20/mem20rigginganimationandmotionpipelinez/pyproject.toml",
+      "source": "/opt/mem20/mem20pipez/pyproject.toml",
       "runtime_status": "ok",
-      "runtime_detail": "pkg=mem20rigginganimationandmotionpipelinez v1.0.0; installed 1.0.0 via root-venv; importable=False (1 modules checked); scripts=1 declared, 1 on PATH",
+      "runtime_detail": "pkg=mem20pipez v1.0.0; installed 1.0.0 via root-venv; importable=False (1 modules checked); scripts=1 declared, 1 on PATH",
       "checks": [
         {
           "check": "pyproject present",
           "ok": true,
-          "detail": "/opt/mem20/mem20rigginganimationandmotionpipelinez/pyproject.toml"
+          "detail": "/opt/mem20/mem20pipez/pyproject.toml"
         },
         {
           "check": "name declared",
           "ok": true,
-          "detail": "mem20rigginganimationandmotionpipelinez"
+          "detail": "mem20pipez"
         },
         {
           "check": "description present",
@@ -26569,17 +26569,17 @@
         {
           "check": "import",
           "ok": false,
-          "detail": "mem20rigginganimationandmotionpipelinez=n"
+          "detail": "mem20pipez=n"
         }
       ],
       "meta": {
-        "pkg_name": "mem20rigginganimationandmotionpipelinez",
+        "pkg_name": "mem20pipez",
         "version": "1.0.0",
-        "pyproject": "/opt/mem20/mem20rigginganimationandmotionpipelinez/pyproject.toml",
+        "pyproject": "/opt/mem20/mem20pipez/pyproject.toml",
         "entry_points": [
           {
-            "console": "mem20rigginganimationandmotionpipelinez",
-            "target": "mem20rigginganimationandmotionpipelinez.runtime:main",
+            "console": "mem20pipez",
+            "target": "mem20pipez.runtime:main",
             "on_path": true
           }
         ],
@@ -26591,7 +26591,7 @@
         },
         "importable": [
           {
-            "name": "mem20rigginganimationandmotionpipelinez",
+            "name": "mem20pipez",
             "importable": false
           }
         ],
@@ -27281,25 +27281,25 @@
       }
     },
     {
-      "id": "subsystem:mem20securebuildtodevicepipelinez",
+      "id": "subsystem:mem20pipez",
       "kind": "subsystem",
-      "name": "mem20securebuildtodevicepipelinez",
+      "name": "mem20pipez",
       "category": "other",
       "subcategory": "native-subsystem",
       "description": "Compile, sign, install, launch, and test builds on target devices automatically",
-      "source": "/opt/mem20/mem20securebuildtodevicepipelinez/pyproject.toml",
+      "source": "/opt/mem20/mem20pipez/pyproject.toml",
       "runtime_status": "ok",
-      "runtime_detail": "pkg=mem20securebuildtodevicepipelinez v1.0.0; installed 1.0.0 via root-venv; importable=False (1 modules checked); scripts=1 declared, 1 on PATH",
+      "runtime_detail": "pkg=mem20pipez v1.0.0; installed 1.0.0 via root-venv; importable=False (1 modules checked); scripts=1 declared, 1 on PATH",
       "checks": [
         {
           "check": "pyproject present",
           "ok": true,
-          "detail": "/opt/mem20/mem20securebuildtodevicepipelinez/pyproject.toml"
+          "detail": "/opt/mem20/mem20pipez/pyproject.toml"
         },
         {
           "check": "name declared",
           "ok": true,
-          "detail": "mem20securebuildtodevicepipelinez"
+          "detail": "mem20pipez"
         },
         {
           "check": "description present",
@@ -27319,17 +27319,17 @@
         {
           "check": "import",
           "ok": false,
-          "detail": "mem20securebuildtodevicepipelinez=n"
+          "detail": "mem20pipez=n"
         }
       ],
       "meta": {
-        "pkg_name": "mem20securebuildtodevicepipelinez",
+        "pkg_name": "mem20pipez",
         "version": "1.0.0",
-        "pyproject": "/opt/mem20/mem20securebuildtodevicepipelinez/pyproject.toml",
+        "pyproject": "/opt/mem20/mem20pipez/pyproject.toml",
         "entry_points": [
           {
-            "console": "mem20securebuildtodevicepipelinez",
-            "target": "mem20securebuildtodevicepipelinez.core:cli",
+            "console": "mem20pipez",
+            "target": "mem20pipez.core:cli",
             "on_path": true
           }
         ],
@@ -27341,7 +27341,7 @@
         },
         "importable": [
           {
-            "name": "mem20securebuildtodevicepipelinez",
+            "name": "mem20pipez",
             "importable": false
           }
         ],
@@ -30084,25 +30084,25 @@
       }
     },
     {
-      "id": "subsystem:mem20versioncontrollargeassetandrecoverypipelinez",
+      "id": "subsystem:mem20pipez",
       "kind": "subsystem",
-      "name": "mem20versioncontrollargeassetandrecoverypipelinez",
+      "name": "mem20pipez",
       "category": "other",
       "subcategory": "native-subsystem",
-      "description": "mem20versioncontrollargeassetandrecoverypipelinez first-class module",
-      "source": "/opt/mem20/mem20versioncontrollargeassetandrecoverypipelinez/pyproject.toml",
+      "description": "mem20pipez first-class module",
+      "source": "/opt/mem20/mem20pipez/pyproject.toml",
       "runtime_status": "ok",
-      "runtime_detail": "pkg=mem20versioncontrollargeassetandrecoverypipelinez v1.0.0; installed 1.0.0 via root-venv; importable=False (1 modules checked); scripts=1 declared, 1 on PATH",
+      "runtime_detail": "pkg=mem20pipez v1.0.0; installed 1.0.0 via root-venv; importable=False (1 modules checked); scripts=1 declared, 1 on PATH",
       "checks": [
         {
           "check": "pyproject present",
           "ok": true,
-          "detail": "/opt/mem20/mem20versioncontrollargeassetandrecoverypipelinez/pyproject.toml"
+          "detail": "/opt/mem20/mem20pipez/pyproject.toml"
         },
         {
           "check": "name declared",
           "ok": true,
-          "detail": "mem20versioncontrollargeassetandrecoverypipelinez"
+          "detail": "mem20pipez"
         },
         {
           "check": "description present",
@@ -30122,17 +30122,17 @@
         {
           "check": "import",
           "ok": false,
-          "detail": "mem20versioncontrollargeassetandrecoverypipelinez=n"
+          "detail": "mem20pipez=n"
         }
       ],
       "meta": {
-        "pkg_name": "mem20versioncontrollargeassetandrecoverypipelinez",
+        "pkg_name": "mem20pipez",
         "version": "1.0.0",
-        "pyproject": "/opt/mem20/mem20versioncontrollargeassetandrecoverypipelinez/pyproject.toml",
+        "pyproject": "/opt/mem20/mem20pipez/pyproject.toml",
         "entry_points": [
           {
-            "console": "mem20versioncontrollargeassetandrecoverypipelinez",
-            "target": "mem20versioncontrollargeassetandrecoverypipelinez.runtime:main",
+            "console": "mem20pipez",
+            "target": "mem20pipez.runtime:main",
             "on_path": true
           }
         ],
@@ -30144,7 +30144,7 @@
         },
         "importable": [
           {
-            "name": "mem20versioncontrollargeassetandrecoverypipelinez",
+            "name": "mem20pipez",
             "importable": false
           }
         ],

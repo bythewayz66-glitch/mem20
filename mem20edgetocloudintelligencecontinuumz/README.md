@@ -30,7 +30,7 @@ This subsystem is a real, first-class continuum control plane: typed domain logi
 | Peer | Real calls used | What it contributes |
 |---|---|---|
 | `mem20federatedresearchgridz` | `register_node`, `distribute_task`, `federated_round`, `grid_health` | Federated task distribution/health across continuum tiers |
-| `mem20aipipelinecostoptimizerz` | `stage_cost`, `pipeline_cost`, `bottleneck`, `optimize_throughput`, `cost_breakdown` | Cost-aware pipeline/placement economics |
+| `mem20pipez` | `stage_cost`, `pipeline_cost`, `bottleneck`, `optimize_throughput`, `cost_breakdown` | Cost-aware pipeline/placement economics |
 | `mem20edgetransportfabricz` | `route_path`, `qos_class`, `allocate_bandwidth`, `transport_health` | Transport path, QoS class, bandwidth allocation/health |
 | `mem20zerodowntimemigrationbrainz` | `ZeroDowntimeMigrationBrain.begin`, `write/read`, `verify_and_cutover`/rollback semantics | Verified zero-downtime migration semantics (refuse unverified cutover) |
 | `mem20globalcapabilitymarketplacez` | `list_capability`, `search_marketplace`, `match`, `transaction`, `marketplace_health` | Capability discovery/matching across tiers/providers |

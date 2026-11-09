@@ -1,4 +1,4 @@
-"""mem20audiovoiceandmusicpipelinez MCP tools — audio/voice/music pipeline surface.
+"""mem20pipez MCP tools — audio/voice/music pipeline surface.
 
 Real domain operations and subsystem-specific peer probes (asset intake,
 production studio, LoReRAG binding, model fusion, 2D/3D optimization, event
@@ -22,10 +22,10 @@ _REPO_ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__f
 
 
 def _load():
-    project = os.path.join(_REPO_ROOT, "mem20audiovoiceandmusicpipelinez")
+    project = os.path.join(_REPO_ROOT, "mem20pipez")
     if project not in sys.path:
         sys.path.insert(0, project)
-    import mem20audiovoiceandmusicpipelinez.domain as domain  # type: ignore[import-not-found]
+    import mem20pipez.domain as domain  # type: ignore[import-not-found]
     return domain
 
 

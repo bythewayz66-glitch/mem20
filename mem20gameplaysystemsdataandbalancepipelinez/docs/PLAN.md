@@ -1,2 +1,0 @@
-# Gameplay Systems Data & Balance Pipeline (RM-245, #316)
-Preserve legacy domain API and CAPABILITY Engine/CLI/10-scenario simulator. Enrich progression with gated telemetry/analysis/tuning/pipeline analysis and 6 unique peer signals (different from #300–#315): `mem20sensorymemoryingestz`, `mem20selfoptimizingkernelz`, `mem20realitytosoftwarecompilerz`, `mem20dynamicnarrativeenginez`, `mem20businessmodelsimulatorz`, `mem20goapagentdesignerz`. `/doctor`, web, fenced README, docs/app, gateway/toolchest, 7/7.

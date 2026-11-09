@@ -16,7 +16,7 @@ Preserves legacy domain API (**compat critical for 300-308 peer set**) and CAPAB
 | `mem20semanticobjectgraphz` | `canonical`,`stable_hash`,`words` | typed intent/entity identity |
 | `mem20relationshipcontextgraphz` | `canonical`,`similarity` | goal executability context |
 | `mem20reversibleexecutiongraphz` | `create_graph`,`add_node`,`undo` | reversible execution planning |
-| `mem20versioncontrollargeassetandrecoverypipelinez` | `version_asset`,`vc_health` | intent/plan versioning |
+| `mem20pipez` | `version_asset`,`vc_health` | intent/plan versioning |
 
 ## Runnable example (verified)
 ```bash

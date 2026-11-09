@@ -8,7 +8,7 @@ def test_deploy(): assert _m().deploy_decision(0.8) is True
 def test_effort(): assert _m().estimate_effort({"features":["a","b","c"]})["days"]==6
 def test_artifact(): assert "checksum" in _m().build_artifact({"name":"app"},"code")
 def test_ecosystem_capability_routing(): r=_eco().capability_routing("b1",["lint"]); assert r["ok"] and r["subsystem"]=="mem20capabilitymarketplacez"
-def test_ecosystem_artifact_recovery(): r=_eco().artifact_recovery("app"); assert r["ok"] and r["subsystem"]=="mem20versioncontrollargeassetandrecoverypipelinez"
+def test_ecosystem_artifact_recovery(): r=_eco().artifact_recovery("app"); assert r["ok"] and r["subsystem"]=="mem20pipez"
 def test_ecosystem_build_events(): r=_eco().build_events("x",{"a":1}); assert r["ok"] and r["subsystem"]=="mem20eventstreamsuperhighwayz"
 def test_ecosystem_deploy_containment(): r=_eco().deploy_containment("deploy"); assert r["ok"] and r["subsystem"]=="mem20faultcontainmentcellsz"
 def test_ecosystem_spec_quality(): r=_eco().spec_quality("build"); assert r["ok"] and r["subsystem"]=="mem20loreragcontentgeneratorz"

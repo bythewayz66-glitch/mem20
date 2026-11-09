@@ -62,7 +62,7 @@ same tools are present. A non-empty symmetric difference aborts generation.
 | 30 | `crewz` | 4 | `crewz_*` | `mcp/tools/crewz_tools.py` |
 | 31 | `dreamz` | 4 | `dreamz_*` | `mcp/tools/dreamz_tools.py` |
 | 32 | `kilnz` | 4 | `kilnz_*` | `mcp/tools/kilnz_tools.py` |
-| 33 | `mem20audiovoiceandmusicpipelinez` | 4 | `audiovoiceandmusicpipelinez_*` | `mcp/tools/mem20audiovoiceandmusicpipelinez_tools.py` |
+| 33 | `mem20pipez` | 4 | `audiovoiceandmusicpipelinez_*` | `mcp/tools/mem20pipez_tools.py` |
 | 34 | `roadmap` | 4 | `roadmap_*` | `mcp/roadmap_tools.py` |
 | 35 | `verify` | 4 | `verify_*` | `mcp/tools/verify_tools.py` |
 | 36 | `integration` | 3 | `fs_*` | `mcp/tools/integration_tools.py` |
@@ -99,11 +99,11 @@ same tools are present. A non-empty symmetric difference aborts generation.
 | 67 | `mem20personalcognitivesearchz` | 2 | `personalcognitivesearchz_*` | `mcp/tools/mem20personalcognitivesearchz_tools.py` |
 | 68 | `mem20personalmodelevolutionz` | 2 | `personalmodelevolutionz_*` | `mcp/tools/mem20personalmodelevolutionz_tools.py` |
 | 69 | `mem20personalworkflowtwinz` | 2 | `personalworkflowtwinz_*` | `mcp/tools/mem20personalworkflowtwinz_tools.py` |
-| 70 | `mem20pipelinez` | 2 | `pipelinez_*` | `mcp/tools/mem20pipelinez_tools.py` |
+| 70 | `mem20pipez` | 2 | `pipelinez_*` | `mcp/tools/mem20pipez_tools.py` |
 | 71 | `mem20planetarybatchfabricz` | 2 | `planetarybatchfabricz_*` | `mcp/tools/mem20planetarybatchfabricz_tools.py` |
 | 72 | `mem20playermotivationtwinz` | 2 | `playermotivationtwinz_*` | `mcp/tools/mem20playermotivationtwinz_tools.py` |
 | 73 | `mem20predictiverecallenginez` | 2 | `predictiverecallenginez_*` | `mcp/tools/mem20predictiverecallenginez_tools.py` |
-| 74 | `mem20productionplanningandtaskorchestrationpipelinez` | 2 | `productionplanningandtaskorchestrationpipelinez_*` | `mcp/tools/mem20productionplanningandtaskorchestrationpipelinez_tools.py` |
+| 74 | `mem20pipez` | 2 | `productionplanningandtaskorchestrationpipelinez_*` | `mcp/tools/mem20pipez_tools.py` |
 | 75 | `mem20productledgrowthsimulatorz` | 2 | `productledgrowthsimulatorz_*` | `mcp/tools/mem20productledgrowthsimulatorz_tools.py` |
 | 76 | `mem20protocolautodiscoveryenginez` | 2 | `protocolautodiscoveryenginez_*` | `mcp/tools/mem20protocolautodiscoveryenginez_tools.py` |
 | 77 | `mem20realitytosoftwarecompilerz` | 2 | `realitytosoftwarecompilerz_*` | `mcp/tools/mem20realitytosoftwarecompilerz_tools.py` |
@@ -115,7 +115,7 @@ same tools are present. A non-empty symmetric difference aborts generation.
 | 83 | `mem20resourceexchangemarketz` | 2 | `resourceexchangemarketz_*` | `mcp/tools/mem20resourceexchangemarketz_tools.py` |
 | 84 | `mem20revenueleakhunterz` | 2 | `revenueleakhunterz_*` | `mcp/tools/mem20revenueleakhunterz_tools.py` |
 | 85 | `mem20rewardforgez` | 2 | `rewardforgez_*` | `mcp/tools/mem20rewardforgez_tools.py` |
-| 86 | `mem20rigginganimationandmotionpipelinez` | 2 | `rigginganimationandmotionpipelinez_*` | `mcp/tools/mem20rigginganimationandmotionpipelinez_tools.py` |
+| 86 | `mem20pipez` | 2 | `rigginganimationandmotionpipelinez_*` | `mcp/tools/mem20pipez_tools.py` |
 | 87 | `mem20roamingworkloadschedulerz` | 2 | `roamingworkloadschedulerz_*` | `mcp/tools/mem20roamingworkloadschedulerz_tools.py` |
 | 88 | `mem20runtimecompatibilityenginez` | 2 | `runtimecompatibilityenginez_*` | `mcp/tools/mem20runtimecompatibilityenginez_tools.py` |
 | 89 | `mem20runtimepromptoptimizerz` | 2 | `runtimepromptoptimizerz_*` | `mcp/tools/mem20runtimepromptoptimizerz_tools.py` |

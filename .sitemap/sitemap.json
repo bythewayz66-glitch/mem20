@@ -883,9 +883,9 @@
       "code_lines": 333,
       "dependencies": [],
       "description": "",
-      "dir": "mem202dand3dartproductionoptimizationpipelinez",
+      "dir": "mem20pipez",
       "docs": [
-        "mem202dand3dartproductionoptimizationpipelinez/README.md"
+        "mem20pipez/README.md"
       ],
       "entry_points": {},
       "file_count": 10,
@@ -908,13 +908,13 @@
         "installer",
         "runtime"
       ],
-      "name": "mem202dand3dartproductionoptimizationpipelinez",
+      "name": "mem20pipez",
       "packaged": false,
       "readme_summary": "RM-241 \u2014 2D and 3D Art Production Optimization Pipeline",
       "readme_text": "# rm-241 \u2014 2d and 3d art production optimization pipeline\n\n**outcome:** move art from concept through generation, editing, lods, materials, compression, and engine import\n\n**breakthrough:** visual production adapts automatically to each target platform\n\nthis package is the machine-executable local implementation derived from the supplied off record lab roadmap. it includes versioned typed state, sqlite wal persistence, event history/snapshots, sdk crud/subscription, resumable idempotent jobs, cancellation, retries/timeouts/quotas/backpressure, deterministic replica reconciliation, local/hybrid/cloud placement/failover, roadmap-specific `optimize` logic, decision confidence/explanations, feedback, cli, http console/api, safety guards, simulator, benchmark/metrics, and rollback-capable installer.\n\nnamed live product surfaces, real provider/device credentials, production traffic, and governed freestack deployment remain target-environment integration and are not claimed complete.\n",
       "requires_python": null,
       "subdirs": [
-        "mem202dand3dartproductionoptimizationpipelinez"
+        "mem20pipez"
       ],
       "test_files": 0,
       "version": null
@@ -1789,9 +1789,9 @@
       "code_lines": 333,
       "dependencies": [],
       "description": "",
-      "dir": "mem20aipipelinecostoptimizerz",
+      "dir": "mem20pipez",
       "docs": [
-        "mem20aipipelinecostoptimizerz/README.md"
+        "mem20pipez/README.md"
       ],
       "entry_points": {},
       "file_count": 10,
@@ -1814,13 +1814,13 @@
         "installer",
         "runtime"
       ],
-      "name": "mem20aipipelinecostoptimizerz",
+      "name": "mem20pipez",
       "packaged": false,
       "readme_summary": "RM-232 \u2014 AI Pipeline Cost Optimizer",
       "readme_text": "# rm-232 \u2014 ai pipeline cost optimizer\n\n**outcome:** route creative and engineering tasks across local, free, peer, and paid models by value\n\n**breakthrough:** high-end production becomes affordable through intelligent compute choice\n\nthis package is the machine-executable local implementation derived from the supplied off record lab roadmap. it includes versioned typed state, sqlite wal persistence, event history/snapshots, sdk crud/subscription, resumable idempotent jobs, cancellation, retries/timeouts/quotas/backpressure, deterministic replica reconciliation, local/hybrid/cloud placement/failover, roadmap-specific `optimize` logic, decision confidence/explanations, feedback, cli, http console/api, safety guards, simulator, benchmark/metrics, and rollback-capable installer.\n\nnamed live product surfaces, real provider/device credentials, production traffic, and governed freestack deployment remain target-environment integration and are not claimed complete.\n",
       "requires_python": null,
       "subdirs": [
-        "mem20aipipelinecostoptimizerz"
+        "mem20pipez"
       ],
       "test_files": 0,
       "version": null
@@ -2228,9 +2228,9 @@
       "code_lines": 333,
       "dependencies": [],
       "description": "",
-      "dir": "mem20assetintakecatalogingandvalidationpipelinez",
+      "dir": "mem20pipez",
       "docs": [
-        "mem20assetintakecatalogingandvalidationpipelinez/README.md"
+        "mem20pipez/README.md"
       ],
       "entry_points": {},
       "file_count": 10,
@@ -2253,13 +2253,13 @@
         "installer",
         "runtime"
       ],
-      "name": "mem20assetintakecatalogingandvalidationpipelinez",
+      "name": "mem20pipez",
       "packaged": false,
       "readme_summary": "RM-240 \u2014 Asset Intake, Cataloging and Validation Pipeline",
       "readme_text": "# rm-240 \u2014 asset intake, cataloging and validation pipeline\n\n**outcome:** normalize, inspect, convert, license-check, deduplicate, and route incoming assets automatically\n\n**breakthrough:** every asset becomes engine-ready or is rejected before polluting the project\n\nthis package is the machine-executable local implementation derived from the supplied off record lab roadmap. it includes versioned typed state, sqlite wal persistence, event history/snapshots, sdk crud/subscription, resumable idempotent jobs, cancellation, retries/timeouts/quotas/backpressure, deterministic replica reconciliation, local/hybrid/cloud placement/failover, roadmap-specific `qa` logic, decision confidence/explanations, feedback, cli, http console/api, safety guards, simulator, benchmark/metrics, and rollback-capable installer.\n\nnamed live product surfaces, real provider/device credentials, production traffic, and governed freestack deployment remain target-environment integration and are not claimed complete.\n",
       "requires_python": null,
       "subdirs": [
-        "mem20assetintakecatalogingandvalidationpipelinez"
+        "mem20pipez"
       ],
       "test_files": 0,
       "version": null
@@ -2456,9 +2456,9 @@
       "code_lines": 333,
       "dependencies": [],
       "description": "",
-      "dir": "mem20audiovoiceandmusicpipelinez",
+      "dir": "mem20pipez",
       "docs": [
-        "mem20audiovoiceandmusicpipelinez/README.md"
+        "mem20pipez/README.md"
       ],
       "entry_points": {},
       "file_count": 10,
@@ -2481,13 +2481,13 @@
         "installer",
         "runtime"
       ],
-      "name": "mem20audiovoiceandmusicpipelinez",
+      "name": "mem20pipez",
       "packaged": false,
       "readme_summary": "RM-243 \u2014 Audio, Voice and Music Pipeline",
       "readme_text": "# rm-243 \u2014 audio, voice and music pipeline\n\n**outcome:** generate or ingest sound, clean it, spatialize it, mix it, subtitle it, and bind it to gameplay\n\n**breakthrough:** audio becomes a live programmable system instead of a folder of files\n\nthis package is the machine-executable local implementation derived from the supplied off record lab roadmap. it includes versioned typed state, sqlite wal persistence, event history/snapshots, sdk crud/subscription, resumable idempotent jobs, cancellation, retries/timeouts/quotas/backpressure, deterministic replica reconciliation, local/hybrid/cloud placement/failover, roadmap-specific `ingest` logic, decision confidence/explanations, feedback, cli, http console/api, safety guards, simulator, benchmark/metrics, and rollback-capable installer.\n\nnamed live product surfaces, real provider/device credentials, production traffic, and governed freestack deployment remain target-environment integration and are not claimed complete.\n",
       "requires_python": null,
       "subdirs": [
-        "mem20audiovoiceandmusicpipelinez"
+        "mem20pipez"
       ],
       "test_files": 0,
       "version": null
@@ -6116,9 +6116,9 @@
       "code_lines": 1264,
       "dependencies": [],
       "description": "",
-      "dir": "mem20executablegameconceptandscopepipelinez",
+      "dir": "mem20pipez",
       "docs": [
-        "mem20executablegameconceptandscopepipelinez/README.md"
+        "mem20pipez/README.md"
       ],
       "entry_points": {},
       "file_count": 13,
@@ -6144,13 +6144,13 @@
         "runtime",
         "test_concept"
       ],
-      "name": "mem20executablegameconceptandscopepipelinez",
+      "name": "mem20pipez",
       "packaged": false,
       "readme_summary": "RM-237 \u2014 Executable Game Concept and Scope Pipeline",
       "readme_text": "# rm-237 \u2014 executable game concept and scope pipeline\n\n**outcome:** turn a game concept into measurable mechanics, dependency graphs, prototypes, and scope simulations\n\n**breakthrough:** scope is validated through running systems rather than documents\n\nthis package is the machine-executable local implementation derived from the supplied off record lab roadmap. it includes versioned typed state, sqlite wal persistence, event history/snapshots, sdk crud/subscription, resumable idempotent jobs, cancellation, retries/timeouts/quotas/backpressure, deterministic replica reconciliation, local/hybrid/cloud placement/failover, roadmap-specific `graph` logic, decision confidence/explanations, feedback, cli, http console/api, safety guards, simulator, benchmark/metrics, and rollback-capable installer.\n\nnamed live product surfaces, real provider/device credentials, production traffic, and governed freestack deployment remain target-environment integration and are not claimed complete.\n",
       "requires_python": null,
       "subdirs": [
-        "mem20executablegameconceptandscopepipelinez",
+        "mem20pipez",
         "tests"
       ],
       "test_files": 1,
@@ -6751,9 +6751,9 @@
       "code_lines": 333,
       "dependencies": [],
       "description": "",
-      "dir": "mem20gameplaysystemsdataandbalancepipelinez",
+      "dir": "mem20pipez",
       "docs": [
-        "mem20gameplaysystemsdataandbalancepipelinez/README.md"
+        "mem20pipez/README.md"
       ],
       "entry_points": {},
       "file_count": 10,
@@ -6776,13 +6776,13 @@
         "installer",
         "runtime"
       ],
-      "name": "mem20gameplaysystemsdataandbalancepipelinez",
+      "name": "mem20pipez",
       "packaged": false,
       "readme_summary": "RM-245 \u2014 Gameplay Systems, Data and Balance Pipeline",
       "readme_text": "# rm-245 \u2014 gameplay systems, data and balance pipeline\n\n**outcome:** represent mechanics, abilities, items, enemies, economy, and progression as validated simulation-ready data\n\n**breakthrough:** designers can change gameplay safely without scattering values through code\n\nthis package is the machine-executable local implementation derived from the supplied off record lab roadmap. it includes versioned typed state, sqlite wal persistence, event history/snapshots, sdk crud/subscription, resumable idempotent jobs, cancellation, retries/timeouts/quotas/backpressure, deterministic replica reconciliation, local/hybrid/cloud placement/failover, roadmap-specific `progression` logic, decision confidence/explanations, feedback, cli, http console/api, safety guards, simulator, benchmark/metrics, and rollback-capable installer.\n\nnamed live product surfaces, real provider/device credentials, production traffic, and governed freestack deployment remain target-environment integration and are not claimed complete.\n",
       "requires_python": null,
       "subdirs": [
-        "mem20gameplaysystemsdataandbalancepipelinez"
+        "mem20pipez"
       ],
       "test_files": 0,
       "version": null
@@ -8129,9 +8129,9 @@
       "code_lines": 333,
       "dependencies": [],
       "description": "",
-      "dir": "mem20leveldesignworldbuildingandnavigationpipelinez",
+      "dir": "mem20pipez",
       "docs": [
-        "mem20leveldesignworldbuildingandnavigationpipelinez/README.md"
+        "mem20pipez/README.md"
       ],
       "entry_points": {},
       "file_count": 10,
@@ -8154,13 +8154,13 @@
         "installer",
         "runtime"
       ],
-      "name": "mem20leveldesignworldbuildingandnavigationpipelinez",
+      "name": "mem20pipez",
       "packaged": false,
       "readme_summary": "RM-246 \u2014 Level Design, World-Building and Navigation Pipeline",
       "readme_text": "# rm-246 \u2014 level design, world-building and navigation pipeline\n\n**outcome:** build spaces from blockout through encounters, navigation, streaming, lighting, and automated playability tests\n\n**breakthrough:** world production becomes generative, measurable, and continuously repairable\n\nthis package is the machine-executable local implementation derived from the supplied off record lab roadmap. it includes versioned typed state, sqlite wal persistence, event history/snapshots, sdk crud/subscription, resumable idempotent jobs, cancellation, retries/timeouts/quotas/backpressure, deterministic replica reconciliation, local/hybrid/cloud placement/failover, roadmap-specific `pipeline` logic, decision confidence/explanations, feedback, cli, http console/api, safety guards, simulator, benchmark/metrics, and rollback-capable installer.\n\nnamed live product surfaces, real provider/device credentials, production traffic, and governed freestack deployment remain target-environment integration and are not claimed complete.\n",
       "requires_python": null,
       "subdirs": [
-        "mem20leveldesignworldbuildingandnavigationpipelinez"
+        "mem20pipez"
       ],
       "test_files": 0,
       "version": null
@@ -9501,9 +9501,9 @@
       "code_lines": 333,
       "dependencies": [],
       "description": "",
-      "dir": "mem20narrativedialogueandlocalizationpipelinez",
+      "dir": "mem20pipez",
       "docs": [
-        "mem20narrativedialogueandlocalizationpipelinez/README.md"
+        "mem20pipez/README.md"
       ],
       "entry_points": {},
       "file_count": 10,
@@ -9526,13 +9526,13 @@
         "installer",
         "runtime"
       ],
-      "name": "mem20narrativedialogueandlocalizationpipelinez",
+      "name": "mem20pipez",
       "packaged": false,
       "readme_summary": "RM-244 \u2014 Narrative, Dialogue and Localization Pipeline",
       "readme_text": "# rm-244 \u2014 narrative, dialogue and localization pipeline\n\n**outcome:** drive story state, dialogue graphs, translation, timing, and engine reintegration from one runtime\n\n**breakthrough:** a game can speak many languages without breaking logic or character identity\n\nthis package is the machine-executable local implementation derived from the supplied off record lab roadmap. it includes versioned typed state, sqlite wal persistence, event history/snapshots, sdk crud/subscription, resumable idempotent jobs, cancellation, retries/timeouts/quotas/backpressure, deterministic replica reconciliation, local/hybrid/cloud placement/failover, roadmap-specific `graph` logic, decision confidence/explanations, feedback, cli, http console/api, safety guards, simulator, benchmark/metrics, and rollback-capable installer.\n\nnamed live product surfaces, real provider/device credentials, production traffic, and governed freestack deployment remain target-environment integration and are not claimed complete.\n",
       "requires_python": null,
       "subdirs": [
-        "mem20narrativedialogueandlocalizationpipelinez"
+        "mem20pipez"
       ],
       "test_files": 0,
       "version": null
@@ -10685,12 +10685,12 @@
       "code_lines": 97,
       "dependencies": [],
       "description": "mem20 production pipeline runtime for game-maker and software pipelines \u2014 crew runtime grouping reviewed packages for joint integration.",
-      "dir": "mem20pipelinez",
+      "dir": "mem20pipez",
       "docs": [
-        "mem20pipelinez/README.md"
+        "mem20pipez/README.md"
       ],
       "entry_points": {
-        "mem20pipelinez": "mem20pipelinez.cli:main"
+        "mem20pipez": "mem20pipez.cli:main"
       },
       "file_count": 7,
       "keywords": [
@@ -10716,15 +10716,15 @@
         "__main__",
         "cli",
         "conftest",
-        "test_mem20pipelinez"
+        "test_mem20pipez"
       ],
-      "name": "mem20pipelinez",
+      "name": "mem20pipez",
       "packaged": true,
-      "readme_summary": "mem20pipelinez \u2014 crew runtime",
-      "readme_text": "# mem20pipelinez \u2014 crew runtime\n\nmem20 production pipeline runtime for game-maker and software pipelines.\n\n## members (12)\n\nreviewed packages grouped here for joint integration under the\npackage-review rulings:\n\n- `mem20assetintakecatalogingandvalidationpipelinez`\n- `mem20audiovoiceandmusicpipelinez`\n- `mem20executablegameconceptandscopepipelinez`\n- `mem20gameplaysystemsdataandbalancepipelinez`\n- `mem20leveldesignworldbuildingandnavigationpipelinez`\n- `mem20narrativedialogueandlocalizationpipelinez`\n- `mem20personalworkflowtwinz`\n- `mem20productionplanningandtaskorchestrationpipelinez`\n- `mem20realtimestyletransferpipelinez`\n- `mem20rigginganimationandmotionpipelinez`\n- `mem20securebuildtodevicepipelinez`\n- `mem20versioncontrollargeassetandrecoverypipelinez`\n\n## status\n\nskeleton slice: registry, cli (`--version`, `--members`), hermetic\ntests. member wiring arrives in the integration phase.\n",
+      "readme_summary": "mem20pipez \u2014 crew runtime",
+      "readme_text": "# mem20pipez \u2014 crew runtime\n\nmem20 production pipeline runtime for game-maker and software pipelines.\n\n## members (12)\n\nreviewed packages grouped here for joint integration under the\npackage-review rulings:\n\n- `mem20pipez`\n- `mem20pipez`\n- `mem20pipez`\n- `mem20pipez`\n- `mem20pipez`\n- `mem20pipez`\n- `mem20personalworkflowtwinz`\n- `mem20pipez`\n- `mem20pipez`\n- `mem20pipez`\n- `mem20pipez`\n- `mem20pipez`\n\n## status\n\nskeleton slice: registry, cli (`--version`, `--members`), hermetic\ntests. member wiring arrives in the integration phase.\n",
       "requires_python": ">=3.11",
       "subdirs": [
-        "mem20pipelinez",
+        "mem20pipez",
         "tests"
       ],
       "test_files": 1,
@@ -11041,9 +11041,9 @@
       "code_lines": 333,
       "dependencies": [],
       "description": "",
-      "dir": "mem20productionplanningandtaskorchestrationpipelinez",
+      "dir": "mem20pipez",
       "docs": [
-        "mem20productionplanningandtaskorchestrationpipelinez/README.md"
+        "mem20pipez/README.md"
       ],
       "entry_points": {},
       "file_count": 10,
@@ -11066,13 +11066,13 @@
         "installer",
         "runtime"
       ],
-      "name": "mem20productionplanningandtaskorchestrationpipelinez",
+      "name": "mem20pipez",
       "packaged": false,
       "readme_summary": "RM-238 \u2014 Production Planning and Task Orchestration Pipeline",
       "readme_text": "# rm-238 \u2014 production planning and task orchestration pipeline\n\n**outcome:** break features into dependency-aware work and route it across human and agent teams\n\n**breakthrough:** production continuously reorganizes around the critical path\n\nthis package is the machine-executable local implementation derived from the supplied off record lab roadmap. it includes versioned typed state, sqlite wal persistence, event history/snapshots, sdk crud/subscription, resumable idempotent jobs, cancellation, retries/timeouts/quotas/backpressure, deterministic replica reconciliation, local/hybrid/cloud placement/failover, roadmap-specific `schedule` logic, decision confidence/explanations, feedback, cli, http console/api, safety guards, simulator, benchmark/metrics, and rollback-capable installer.\n\nnamed live product surfaces, real provider/device credentials, production traffic, and governed freestack deployment remain target-environment integration and are not claimed complete.\n",
       "requires_python": null,
       "subdirs": [
-        "mem20productionplanningandtaskorchestrationpipelinez"
+        "mem20pipez"
       ],
       "test_files": 0,
       "version": null
@@ -11469,12 +11469,12 @@
       "code_lines": 9,
       "dependencies": [],
       "description": "Apply a controlled visual language across live UI, video, game, and 3D assets",
-      "dir": "mem20realtimestyletransferpipelinez",
+      "dir": "mem20pipez",
       "docs": [
-        "mem20realtimestyletransferpipelinez/README.md"
+        "mem20pipez/README.md"
       ],
       "entry_points": {
-        "mem20realtimestyletransferpipelinez": "mem20realtimestyletransferpipelinez.core:cli"
+        "mem20pipez": "mem20pipez.core:cli"
       },
       "file_count": 9,
       "keywords": [],
@@ -11497,13 +11497,13 @@
         "core",
         "run"
       ],
-      "name": "mem20realtimestyletransferpipelinez",
+      "name": "mem20pipez",
       "packaged": true,
       "readme_summary": "RM-134 \u2014 Real-Time Style Transfer Pipeline",
       "readme_text": "# rm-134 \u2014 real-time style transfer pipeline\n\n**owner:** jammee  \n**lane:** creative production, media, brand, and experience design\n\n## outcome\napply a controlled visual language across live ui, video, game, and 3d assets\n\n## breakthrough\nproducts can transform presentation without reauthoring every asset\n\nthis package implements the locally executable/non-human portion of this off record lab roadmap on a shared, zero-dependency runtime substrate. it includes typed/versioned roadmap validation, sqlite wal state + event history, resumable/idempotent jobs, cancellation/timeouts/quotas, deterministic recovery, adaptive mode decisions with confidence/alternatives/bottlenecks/explanations, feedback tuning, cli + typed client + http api + browser command surface + event stream, local/hybrid/cloud peer execution, conflict-safe lww synchronization, caching, backpressure/failover, metrics, simulator scenarios, benchmark tooling, safety gating, and a rollback manifest.\n\nthe domain engine for this package is keyed specifically to rm-134 and produces deterministic executable results for the roadmap's core operation using only local standard-library code. external hardware, proprietary models, production credentials, live third-party services, and deployment authorization are intentionally not fabricated; those remain environment-bound integration points.\n\n## run\n```bash\npython run.py inspect\npython run.py run '{\"text\":\"demo\",\"cache\":false}'\npython run.py simulate\npython run.py benchmark --runs 5\npython run.py serve --port 8765\n```\n\nopen `http://127.0.0.1:8765/` for the live command surface.\n",
       "requires_python": ">=3.11",
       "subdirs": [
-        "mem20realtimestyletransferpipelinez"
+        "mem20pipez"
       ],
       "test_files": 0,
       "version": "1.0.0"
@@ -11938,9 +11938,9 @@
       "code_lines": 333,
       "dependencies": [],
       "description": "",
-      "dir": "mem20rigginganimationandmotionpipelinez",
+      "dir": "mem20pipez",
       "docs": [
-        "mem20rigginganimationandmotionpipelinez/README.md"
+        "mem20pipez/README.md"
       ],
       "entry_points": {},
       "file_count": 10,
@@ -11963,13 +11963,13 @@
         "installer",
         "runtime"
       ],
-      "name": "mem20rigginganimationandmotionpipelinez",
+      "name": "mem20pipez",
       "packaged": false,
       "readme_summary": "RM-242 \u2014 Rigging, Animation and Motion Pipeline",
       "readme_text": "# rm-242 \u2014 rigging, animation and motion pipeline\n\n**outcome:** automate skeleton mapping, retargeting, clip validation, ik, compression, and state integration\n\n**breakthrough:** characters can share motion safely across tools and engines\n\nthis package is the machine-executable local implementation derived from the supplied off record lab roadmap. it includes versioned typed state, sqlite wal persistence, event history/snapshots, sdk crud/subscription, resumable idempotent jobs, cancellation, retries/timeouts/quotas/backpressure, deterministic replica reconciliation, local/hybrid/cloud placement/failover, roadmap-specific `qa` logic, decision confidence/explanations, feedback, cli, http console/api, safety guards, simulator, benchmark/metrics, and rollback-capable installer.\n\nnamed live product surfaces, real provider/device credentials, production traffic, and governed freestack deployment remain target-environment integration and are not claimed complete.\n",
       "requires_python": null,
       "subdirs": [
-        "mem20rigginganimationandmotionpipelinez"
+        "mem20pipez"
       ],
       "test_files": 0,
       "version": null
@@ -12427,12 +12427,12 @@
       "code_lines": 9,
       "dependencies": [],
       "description": "Compile, sign, install, launch, and test builds on target devices automatically",
-      "dir": "mem20securebuildtodevicepipelinez",
+      "dir": "mem20pipez",
       "docs": [
-        "mem20securebuildtodevicepipelinez/README.md"
+        "mem20pipez/README.md"
       ],
       "entry_points": {
-        "mem20securebuildtodevicepipelinez": "mem20securebuildtodevicepipelinez.core:cli"
+        "mem20pipez": "mem20pipez.core:cli"
       },
       "file_count": 9,
       "keywords": [],
@@ -12455,13 +12455,13 @@
         "core",
         "run"
       ],
-      "name": "mem20securebuildtodevicepipelinez",
+      "name": "mem20pipez",
       "packaged": true,
       "readme_summary": "RM-157 \u2014 Secure Build-to-Device Pipeline",
       "readme_text": "# rm-157 \u2014 secure build-to-device pipeline\n\n**owner:** andi  \n**lane:** device, mobile, enrollment, build, and edge delivery\n\n## outcome\ncompile, sign, install, launch, and test builds on target devices automatically\n\n## breakthrough\nhardware delivery becomes a repeatable software operation\n\nthis package implements the locally executable/non-human portion of this off record lab roadmap on a shared, zero-dependency runtime substrate. it includes typed/versioned roadmap validation, sqlite wal state + event history, resumable/idempotent jobs, cancellation/timeouts/quotas, deterministic recovery, adaptive mode decisions with confidence/alternatives/bottlenecks/explanations, feedback tuning, cli + typed client + http api + browser command surface + event stream, local/hybrid/cloud peer execution, conflict-safe lww synchronization, caching, backpressure/failover, metrics, simulator scenarios, benchmark tooling, safety gating, and a rollback manifest.\n\nthe domain engine for this package is keyed specifically to rm-157 and produces deterministic executable results for the roadmap's core operation using only local standard-library code. external hardware, proprietary models, production credentials, live third-party services, and deployment authorization are intentionally not fabricated; those remain environment-bound integration points.\n\n## run\n```bash\npython run.py inspect\npython run.py run '{\"text\":\"demo\",\"cache\":false}'\npython run.py simulate\npython run.py benchmark --runs 5\npython run.py serve --port 8765\n```\n\nopen `http://127.0.0.1:8765/` for the live command surface.\n",
       "requires_python": ">=3.11",
       "subdirs": [
-        "mem20securebuildtodevicepipelinez"
+        "mem20pipez"
       ],
       "test_files": 0,
       "version": "1.0.0"
@@ -12807,7 +12807,7 @@
       "name": "mem20selfz",
       "packaged": true,
       "readme_summary": "mem20selfz \u2014 crew runtime",
-      "readme_text": "# mem20selfz \u2014 crew runtime\n\nmem20 self-healing, self-tuning, forecasting and optimization runtime.\n\n## members (16)\n\nreviewed packages grouped here for joint integration under the\npackage-review rulings:\n\n- `mem202dand3dartproductionoptimizationpipelinez`\n- `mem20aipipelinecostoptimizerz`\n- `mem20buildsequenceoptimizerz`\n- `mem20datalocalityoptimizerz`\n- `mem20demandforecastandcapacitybrainz`\n- `mem20milestoneriskpredictorz`\n- `mem20qualityriskforecasterz`\n- `mem20quantuminspiredoptimizerz`\n- `mem20releasereadinesspredictorz`\n- `mem20runtimepromptoptimizerz`\n- `mem20selfhealingconnectormeshz`\n- `mem20selfhealingplansz`\n- `mem20selfhealingruntimecivilizationz`\n- `mem20selfoptimizingkernelz`\n- `mem20selfrepairingtestfactoryz`\n- `mem20selftuningresourcegovernorz`\n\n## status\n\nskeleton slice: registry, cli (`--version`, `--members`), hermetic\ntests. member wiring arrives in the integration phase.\n",
+      "readme_text": "# mem20selfz \u2014 crew runtime\n\nmem20 self-healing, self-tuning, forecasting and optimization runtime.\n\n## members (16)\n\nreviewed packages grouped here for joint integration under the\npackage-review rulings:\n\n- `mem20pipez`\n- `mem20pipez`\n- `mem20buildsequenceoptimizerz`\n- `mem20datalocalityoptimizerz`\n- `mem20demandforecastandcapacitybrainz`\n- `mem20milestoneriskpredictorz`\n- `mem20qualityriskforecasterz`\n- `mem20quantuminspiredoptimizerz`\n- `mem20releasereadinesspredictorz`\n- `mem20runtimepromptoptimizerz`\n- `mem20selfhealingconnectormeshz`\n- `mem20selfhealingplansz`\n- `mem20selfhealingruntimecivilizationz`\n- `mem20selfoptimizingkernelz`\n- `mem20selfrepairingtestfactoryz`\n- `mem20selftuningresourcegovernorz`\n\n## status\n\nskeleton slice: registry, cli (`--version`, `--members`), hermetic\ntests. member wiring arrives in the integration phase.\n",
       "requires_python": ">=3.11",
       "subdirs": [
         "mem20selfz",
@@ -14357,9 +14357,9 @@
       "code_lines": 333,
       "dependencies": [],
       "description": "",
-      "dir": "mem20versioncontrollargeassetandrecoverypipelinez",
+      "dir": "mem20pipez",
       "docs": [
-        "mem20versioncontrollargeassetandrecoverypipelinez/README.md"
+        "mem20pipez/README.md"
       ],
       "entry_points": {},
       "file_count": 10,
@@ -14382,13 +14382,13 @@
         "installer",
         "runtime"
       ],
-      "name": "mem20versioncontrollargeassetandrecoverypipelinez",
+      "name": "mem20pipez",
       "packaged": false,
       "readme_summary": "RM-239 \u2014 Version Control, Large-Asset and Recovery Pipeline",
       "readme_text": "# rm-239 \u2014 version control, large-asset and recovery pipeline\n\n**outcome:** manage code, scenes, models, media, branches, locking, replication, and recovery as one system\n\n**breakthrough:** large creative projects gain software-grade traceability and resilience\n\nthis package is the machine-executable local implementation derived from the supplied off record lab roadmap. it includes versioned typed state, sqlite wal persistence, event history/snapshots, sdk crud/subscription, resumable idempotent jobs, cancellation, retries/timeouts/quotas/backpressure, deterministic replica reconciliation, local/hybrid/cloud placement/failover, roadmap-specific `heal` logic, decision confidence/explanations, feedback, cli, http console/api, safety guards, simulator, benchmark/metrics, and rollback-capable installer.\n\nnamed live product surfaces, real provider/device credentials, production traffic, and governed freestack deployment remain target-environment integration and are not claimed complete.\n",
       "requires_python": null,
       "subdirs": [
-        "mem20versioncontrollargeassetandrecoverypipelinez"
+        "mem20pipez"
       ],
       "test_files": 0,
       "version": null

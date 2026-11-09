@@ -1,0 +1,17 @@
+[build-system]
+requires=["setuptools>=68"]
+build-backend="setuptools.build_meta"
+
+[project]
+name="mem20pipez"
+version="1.0.0"
+description="mem20pipez — unified pipeline system aggregating all pipe runtimes"
+requires-python=">=3.11"
+
+[project.scripts]
+mem20pipez="mem20pipez.runtime:main"
+
+[tool.setuptools]
+packages=["mem20pipez"]
+[tool.setuptools.package-data]
+mem20pipez=["CAPABILITY.json","roadmap.json","web/*"]

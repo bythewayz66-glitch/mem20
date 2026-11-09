@@ -13,7 +13,7 @@ Preserves legacy domain API (**#318 peer dependency**) and CAPABILITY Engine/CLI
 |---|---|---|
 | `mem20deterministicconfigurationgraphz` | `add_node`,`add_edge`,`resolve` | app/page config graph resolution |
 | `mem20semanticobjectgraphz` | `canonical`,`stable_hash`,`words` | spec/component semantic identity |
-| `mem20versioncontrollargeassetandrecoverypipelinez` | `version_asset`,`vc_health` | synthesized artifact versioning |
+| `mem20pipez` | `version_asset`,`vc_health` | synthesized artifact versioning |
 | `mem20dynamicskillgraphz` | `add_skill`,`learning_path` | capability composition path |
 | `mem20relationshipcontextgraphz` | `canonical`,`similarity` | objective-to-composition intent context |
 | `mem20capabilitygapmapperz` | `canonical`,`stable_hash` | capability gap/coverage check |

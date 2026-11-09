@@ -4,7 +4,7 @@ import pathlib,sys
 from typing import Mapping,Sequence
 __all__=["capability_routing","artifact_recovery","build_events","deploy_containment","spec_quality","effort_economics","probe"]
 _REPO_ROOT=pathlib.Path(__file__).resolve().parents[2]
-_PROJECTS=("mem20capabilitymarketplacez","mem20versioncontrollargeassetandrecoverypipelinez","mem20eventstreamsuperhighwayz","mem20faultcontainmentcellsz","mem20loreragcontentgeneratorz","mem20businessmodelsimulatorz")
+_PROJECTS=("mem20capabilitymarketplacez","mem20pipez","mem20eventstreamsuperhighwayz","mem20faultcontainmentcellsz","mem20loreragcontentgeneratorz","mem20businessmodelsimulatorz")
 def _bootstrap():
     for name in reversed(_PROJECTS):
         p=str(_REPO_ROOT/name)
@@ -25,11 +25,11 @@ def capability_routing(key:str, tools:Sequence[str])->dict:
 
 def artifact_recovery(artifact_id:str)->dict:
     try:
-        from mem20versioncontrollargeassetandrecoverypipelinez.domain import recover,version_asset,vc_health
+        from mem20pipez.domain import recover,version_asset,vc_health
         versions=[version_asset(artifact_id,"src-v1"), version_asset(artifact_id,"src-v2")]
         rec=recover(versions,"src-v1"); health=vc_health(versions)
-        return {"ok":True,"subsystem":"mem20versioncontrollargeassetandrecoverypipelinez","recovered":rec,"versions":len(versions),"health":health}
-    except Exception as exc: return {"ok":False,"subsystem":"mem20versioncontrollargeassetandrecoverypipelinez","error":f"{type(exc).__name__}: {exc}"}
+        return {"ok":True,"subsystem":"mem20pipez","recovered":rec,"versions":len(versions),"health":health}
+    except Exception as exc: return {"ok":False,"subsystem":"mem20pipez","error":f"{type(exc).__name__}: {exc}"}
 
 def build_events(name:str, payload:Mapping)->dict:
     try:

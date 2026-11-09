@@ -3,7 +3,7 @@
 Six fleet/continuum peers, all different from mem20edgefleetbrainz's set:
 
 1. mem20federatedresearchgridz — federated task distribution across tiers
-2. mem20aipipelinecostoptimizerz — cost-aware pipeline/placement economics
+2. mem20pipez — cost-aware pipeline/placement economics
 3. mem20edgetransportfabricz — transport path, QoS, bandwidth allocation
 4. mem20zerodowntimemigrationbrainz — zero-downtime migration verification
 5. mem20globalcapabilitymarketplacez — capability discovery/matching
@@ -21,7 +21,7 @@ from typing import Any, Mapping, Sequence
 _REPO_ROOT = pathlib.Path(__file__).resolve().parents[2]
 _PROJECTS = (
     "mem20federatedresearchgridz",
-    "mem20aipipelinecostoptimizerz",
+    "mem20pipez",
     "mem20edgetransportfabricz",
     "mem20zerodowntimemigrationbrainz",
     "mem20globalcapabilitymarketplacez",
@@ -88,7 +88,7 @@ def federated_plan(targets: Sequence[Mapping[str, Any]], workload: Mapping[str, 
 
 def cost_plan(targets: Sequence[Mapping[str, Any]], workload: Mapping[str, Any]) -> dict:
     try:
-        from mem20aipipelinecostoptimizerz.domain import (
+        from mem20pipez.domain import (
             stage_cost, pipeline_cost, bottleneck, optimize_throughput, cost_breakdown,
         )
 
@@ -108,12 +108,12 @@ def cost_plan(targets: Sequence[Mapping[str, Any]], workload: Mapping[str, Any])
         breakdown = cost_breakdown(stages, workload_size) if stages else []
         per_stage = [stage_cost(s, workload_size) for s in stages[:5]]
         return {
-            "ok": True, "subsystem": "mem20aipipelinecostoptimizerz",
+            "ok": True, "subsystem": "mem20pipez",
             "pipeline_cost": total, "bottleneck": bneck, "optimize": plan,
             "breakdown": breakdown, "sample_stage_costs": per_stage,
         }
     except Exception as exc:  # noqa: BLE001
-        return {"ok": False, "subsystem": "mem20aipipelinecostoptimizerz", "error": f"{type(exc).__name__}: {exc}"}
+        return {"ok": False, "subsystem": "mem20pipez", "error": f"{type(exc).__name__}: {exc}"}
 
 
 def transport_plan(targets: Sequence[Mapping[str, Any]], source_id: str | None, dest_id: str | None,
@@ -223,7 +223,7 @@ def resource_market(targets: Sequence[Mapping[str, Any]], workload: Mapping[str,
 def probe() -> dict:
     report = {
         "mem20federatedresearchgridz": federated_plan([], {"workload_id": "probe", "cpu": 1}),
-        "mem20aipipelinecostoptimizerz": cost_plan([], {"workload_id": "probe", "cpu": 1, "duration_s": 60}),
+        "mem20pipez": cost_plan([], {"workload_id": "probe", "cpu": 1, "duration_s": 60}),
         "mem20edgetransportfabricz": transport_plan([], None, None, {"workload_id": "probe", "max_latency_ms": 100, "priority": 50, "size_mb": 1}),
         "mem20zerodowntimemigrationbrainz": migration_semantics({"workload_id": "probe"}, True),
         "mem20globalcapabilitymarketplacez": capability_market([], {"workload_id": "probe", "required_capabilities": ["compute"]}),

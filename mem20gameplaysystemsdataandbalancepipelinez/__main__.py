@@ -1,2 +1,0 @@
-from mem20gameplaysystemsdataandbalancepipelinez.mem20gameplaysystemsdataandbalancepipelinez.runtime import main
-raise SystemExit(main())

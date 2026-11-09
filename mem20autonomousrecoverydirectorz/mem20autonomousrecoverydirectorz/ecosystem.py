@@ -4,7 +4,7 @@ import pathlib,sys
 from typing import Mapping,Sequence
 __all__=["fault_containment","healing_plan","health_signal","recovery_pipeline","incident_events","swarm_status","probe"]
 _REPO_ROOT=pathlib.Path(__file__).resolve().parents[2]
-_PROJECTS=("mem20faultcontainmentcellsz","mem20selfhealingplansz","mem20universalhealthnervoussystemz","mem20versioncontrollargeassetandrecoverypipelinez","mem20eventstreamsuperhighwayz","mem20zerotouchnodeswarmz")
+_PROJECTS=("mem20faultcontainmentcellsz","mem20selfhealingplansz","mem20universalhealthnervoussystemz","mem20pipez","mem20eventstreamsuperhighwayz","mem20zerotouchnodeswarmz")
 def _bootstrap():
     for name in reversed(_PROJECTS):
         p=str(_REPO_ROOT/name)
@@ -52,12 +52,12 @@ def health_signal(components:Sequence[str]) -> dict:
 
 def recovery_pipeline(asset_id:str) -> dict:
     try:
-        from mem20versioncontrollargeassetandrecoverypipelinez.domain import recover, version_asset, vc_health
+        from mem20pipez.domain import recover, version_asset, vc_health
         versions=[version_asset(asset_id, "v1"), version_asset(asset_id, "v2")]
         rec=recover(versions, "v1")
         health=vc_health(versions)
-        return {"ok":True,"subsystem":"mem20versioncontrollargeassetandrecoverypipelinez","recovered":rec,"versions":len(versions),"health":health}
-    except Exception as exc: return {"ok":False,"subsystem":"mem20versioncontrollargeassetandrecoverypipelinez","error":f"{type(exc).__name__}: {exc}"}
+        return {"ok":True,"subsystem":"mem20pipez","recovered":rec,"versions":len(versions),"health":health}
+    except Exception as exc: return {"ok":False,"subsystem":"mem20pipez","error":f"{type(exc).__name__}: {exc}"}
 
 def incident_events(incident:Mapping) -> dict:
     try:

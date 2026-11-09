@@ -37,12 +37,12 @@ def collaboration_capsule(canvas_name: str, items: List[Dict[str, Any]]) -> Dict
 
 def artifact_versioning(artifact_id: str, content: str) -> Dict[str, Any]:
     def run():
-        from mem20versioncontrollargeassetandrecoverypipelinez.domain import version_asset, diff_versions, recover, vc_health
+        from mem20pipez.domain import version_asset, diff_versions, recover, vc_health
         v1 = version_asset(artifact_id, content or "v1")
         v2 = version_asset(artifact_id, (content or "v1") + "-live")
         diff = diff_versions(v1, v2)
         return {"version": v2.get("version"), "changed": diff.get("changed"), "recoverable": recover([v1, v2], v1.get("version")) is not None}
-    return _safe("mem20versioncontrollargeassetandrecoverypipelinez", run)
+    return _safe("mem20pipez", run)
 
 def workspace_config(canvas_name: str) -> Dict[str, Any]:
     def run():

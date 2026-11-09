@@ -138,7 +138,7 @@ mem20ops  mem20orcaz  mem20verify  mem20wasmz
 mem20apishapeshiftinggatewayz  mem20crossruntimeeventlatticez
 mem20eventstreamsuperhighwayz  mem20reversibleexecutiongraphz
 mem20selfhealingruntimecivilizationz  mem20universalhealthnervoussystemz
-mem20versioncontrollargeassetandrecoverypipelinez
+mem20pipez
 ```
 
 | Owner | Wave-1 modules |
@@ -147,7 +147,7 @@ mem20versioncontrollargeassetandrecoverypipelinez
 | AI Engineer | `mem20agentz`, `memory_engine`, `mem20dreamz`, `mem20crewz`, `mem20kilnz` |
 | Super Agent | `toolchest`, `mem20corez`, `mem20verify`, `mem20ops` |
 | mem20 Orchestrator | `mem20orcaz` |
-| GitHub Repo Assistant | `mem20versioncontrollargeassetandrecoverypipelinez`, `mem20reversibleexecutiongraphz` |
+| GitHub Repo Assistant | `mem20pipez`, `mem20reversibleexecutiongraphz` |
 | mem20-sybsystems | `mem20selfhealingruntimecivilizationz`, `mem20universalhealthnervoussystemz` |
 | Mem20 C++ Expert | `braid` (Rust), `mem20wasmz` |
 | Analytics Reporter | `mem20eventstreamsuperhighwayz`, `mem20crossruntimeeventlatticez` |
@@ -179,8 +179,8 @@ Every remaining subsystem owned by a wave-1 or wave-2 agent. Focus areas:
 | Pricing Analyst | `mem20uniteconomicsautopilotz`, `mem20servicebundlingenginez`, `mem20resourceexchangemarketz` |
 | Finance Assistant | `mem20revenueleakhunterz`, `mem20businessmodelsimulatorz` |
 | Growth Hacker | `mem20productledgrowthsimulatorz`, `mem20crossproductloyaltygraphz`, `mem20communitychallengeenginez` |
-| Mem20 Content Creator | `mem20dynamicnarrativeenginez`, `mem20narrativedialogueandlocalizationpipelinez`, `mem20styleguideagentz` |
-| Slides Assistant | `mem20audiovoiceandmusicpipelinez`, `mem202dand3dartproductionoptimizationpipelinez`, `mem20rigginganimationandmotionpipelinez` |
+| Mem20 Content Creator | `mem20dynamicnarrativeenginez`, `mem20pipez`, `mem20styleguideagentz` |
+| Slides Assistant | `mem20pipez`, `mem20pipez`, `mem20pipez` |
 | UX Researcher | `mem20humanagentcoworkcanvasz`, `mem20personalworkflowtwinz`, `mem20playermotivationtwinz` |
 | Mem20-naration | `mem20liveprojectdemonstrationenginez`, `mem20ambientteamradioz` |
 

@@ -16,7 +16,7 @@ MEMBERS = (
     "mem20pipez",
     "mem20pipez",
     "mem20pipez",
-    "mem20personalworkflowtwinz",
+    "mem20twinz",
     "mem20pipez",
     "mem20pipez",
     "mem20pipez",

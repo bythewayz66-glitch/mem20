@@ -6,7 +6,7 @@ Power monitoring, thresholds, budgets, and optimization actions with durable sta
 | Peer | Real calls | Contribution |
 |---|---|---|
 | `mem20selftuningresourcegovernorz` | `govern`,`adjust_quota`,`governor_health` | power/budget quota governance |
-| `mem20realtimebusinesstwinz` | `create_twin`,`update_kpi`,`check_alerts`,`twin_health` | KPI threshold alerts/twin health |
+| `mem20twinz` | `create_twin`,`update_kpi`,`check_alerts`,`twin_health` | KPI threshold alerts/twin health |
 | `mem20freestackambientcomputingfabricz` | `pool_resources`,`allocate`,`fabric_health` | resource pool/allocation view |
 | `mem20pipez` | `collect_telemetry`,`aggregate_metrics`,`pipeline_report` | telemetry aggregation/reporting |
 | `mem20pipez` | `create_plan`,`orchestrate`,`pipeline_health` | optimization action orchestration |

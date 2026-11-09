@@ -4,7 +4,7 @@ import pathlib,sys
 from typing import Mapping,Sequence
 __all__=["counterfactual","business_twin","business_model","sim_events","sim_routing","causal_routing","probe"]
 _REPO_ROOT=pathlib.Path(__file__).resolve().parents[2]
-_PROJECTS=("mem20simz","mem20realtimebusinesstwinz","mem20simz","mem20eventstreamsuperhighwayz","mem20capabilitymarketplacez","mem20causalroutingbrainz")
+_PROJECTS=("mem20simz","mem20twinz","mem20simz","mem20eventstreamsuperhighwayz","mem20capabilitymarketplacez","mem20causalroutingbrainz")
 def _bootstrap():
     for name in reversed(_PROJECTS):
         p=str(_REPO_ROOT/name)
@@ -19,9 +19,9 @@ def counterfactual()->dict:
     except Exception as exc: return {"ok":False,"subsystem":"mem20simz","error":f"{type(exc).__name__}: {exc}"}
 def business_twin()->dict:
     try:
-        from mem20realtimebusinesstwinz.domain import create_twin,twin_health
-        t=create_twin("sim"); h=twin_health(t); return {"ok":True,"subsystem":"mem20realtimebusinesstwinz","healthy":h is not None}
-    except Exception as exc: return {"ok":False,"subsystem":"mem20realtimebusinesstwinz","error":f"{type(exc).__name__}: {exc}"}
+        from mem20twinz.domain import create_twin,twin_health
+        t=create_twin("sim"); h=twin_health(t); return {"ok":True,"subsystem":"mem20twinz","healthy":h is not None}
+    except Exception as exc: return {"ok":False,"subsystem":"mem20twinz","error":f"{type(exc).__name__}: {exc}"}
 def business_model()->dict:
     try:
         from mem20simz.domain import probe as p

@@ -360,7 +360,7 @@ Building these in name order wastes effort on low-value packages. Better to go b
 - **Must refuse:** to be a general-purpose runtime, and to return a confident answer when it is out of its depth.
 - **Proven by:** a test asserting a specific value, bound or contradiction — not that the function ran.
 
-### `mem20humansatisfactiontwinz`
+### `mem20twinz`
 
 - **Should be:** digital twin — a live model that tracks a real thing and is wrong when it changes.
 - **Must refuse:** to be a general-purpose runtime, and to return a confident answer when it is out of its depth.
@@ -378,13 +378,13 @@ Building these in name order wastes effort on low-value packages. Better to go b
 - **Must refuse:** to be a general-purpose runtime, and to return a confident answer when it is out of its depth.
 - **Proven by:** a test asserting a specific value, bound or contradiction — not that the function ran.
 
-### `mem20personalworkflowtwinz`
+### `mem20twinz`
 
 - **Should be:** digital twin — a live model that tracks a real thing and is wrong when it changes.
 - **Must refuse:** to be a general-purpose runtime, and to return a confident answer when it is out of its depth.
 - **Proven by:** a test asserting a specific value, bound or contradiction — not that the function ran.
 
-### `mem20playermotivationtwinz`
+### `mem20twinz`
 
 - **Should be:** digital twin — a live model that tracks a real thing and is wrong when it changes.
 - **Must refuse:** to be a general-purpose runtime, and to return a confident answer when it is out of its depth.
@@ -396,7 +396,7 @@ Building these in name order wastes effort on low-value packages. Better to go b
 - **Must refuse:** to be a general-purpose runtime, and to return a confident answer when it is out of its depth.
 - **Proven by:** a test asserting a specific value, bound or contradiction — not that the function ran.
 
-### `mem20realtimebusinesstwinz`
+### `mem20twinz`
 
 - **Should be:** digital twin — a live model that tracks a real thing and is wrong when it changes.
 - **Must refuse:** to be a general-purpose runtime, and to return a confident answer when it is out of its depth.
@@ -1020,19 +1020,19 @@ Building these in name order wastes effort on low-value packages. Better to go b
 - **Must refuse:** to be a general-purpose runtime, and to return a confident answer when it is out of its depth.
 - **Proven by:** a test asserting a specific value, bound or contradiction — not that the function ran.
 
-### `mem20customerdigitaltwinlabz`
+### `mem20twinz`
 
 - **Should be:** digital twin — a live model that tracks a real thing and is wrong when the thing changes.
 - **Must refuse:** to be a general-purpose runtime, and to return a confident answer when it is out of its depth.
 - **Proven by:** a test asserting a specific value, bound or contradiction — not that the function ran.
 
-### `mem20executiondigitaltwinz`
+### `mem20twinz`
 
 - **Should be:** digital twin — a live model that tracks a real thing and is wrong when the thing changes.
 - **Must refuse:** to be a general-purpose runtime, and to return a confident answer when it is out of its depth.
 - **Proven by:** a test asserting a specific value, bound or contradiction — not that the function ran.
 
-### `mem20integrationdigitaltwinz`
+### `mem20twinz`
 
 - **Should be:** digital twin — a live model that tracks a real thing and is wrong when the thing changes.
 - **Must refuse:** to be a general-purpose runtime, and to return a confident answer when it is out of its depth.

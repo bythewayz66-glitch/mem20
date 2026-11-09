@@ -32,14 +32,14 @@ def eventstream_signal(mesh: Dict[str, Any]) -> Dict[str, Any]:
 def execution_twin_signal(mesh: Dict[str, Any]) -> Dict[str, Any]:
     def run():
         try:
-            from mem20executiondigitaltwinz.domain import create_twin, simulate, predict_outcome
+            from mem20twinz.domain import create_twin, simulate, predict_outcome
         except Exception:
-            from mem20executiondigitaltwinz.mem20executiondigitaltwinz.domain import create_twin, simulate, predict_outcome
+            from mem20twinz.mem20twinz.domain import create_twin, simulate, predict_outcome
         twin = create_twin({"id": "meshz-twin", "workload": mesh.get("mesh", "mem20meshz")})
         sim = simulate(twin, [{"event": "probe"}])
         pred = predict_outcome(twin, {"action": "probe"})
         return {"twin_id": (twin.get("id") if isinstance(twin, dict) else None), "simulated": sim is not None, "prediction": pred}
-    return _safe("mem20executiondigitaltwinz", run)
+    return _safe("mem20twinz", run)
 
 
 def federated_grid_signal(mesh: Dict[str, Any]) -> Dict[str, Any]:

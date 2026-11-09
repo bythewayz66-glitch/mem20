@@ -17,12 +17,12 @@ def resource_governance(resources: Mapping[str,float], usage: Mapping[str,float]
 
 def business_twin_alerts(kpis: Mapping[str,float], thresholds: Mapping[str,float]) -> Dict[str,Any]:
     def run():
-        from mem20realtimebusinesstwinz.domain import create_twin, update_kpi, check_alerts, twin_health
+        from mem20twinz.domain import create_twin, update_kpi, check_alerts, twin_health
         t = create_twin("energy-foundation")
         for k,v in (kpis or {}).items(): update_kpi(t,k,v)
         alerts = check_alerts(t, dict(thresholds or {}))
         return {"alerts": alerts, "twin_health": twin_health(t), "kpis": t.get("kpis")}
-    return _safe("mem20realtimebusinesstwinz", run)
+    return _safe("mem20twinz", run)
 
 def ambient_fabric(nodes: Sequence[Mapping[str,Any]], request: Mapping[str,Any]=None) -> Dict[str,Any]:
     def run():

@@ -471,7 +471,7 @@ budgets, optimization actions). Preserved legacy domain API (`power_reading`,
 `threshold_check`, `energy_budget`, `optimize_power`, `daily_energy`) and added
 policy evaluation with durable SQLite WAL state, service, CLI/JSON HTTP/cockpit.
 6 unique peers (different from #300-#303): `mem20selftuningresourcegovernorz`,
-`mem20realtimebusinesstwinz`, `mem20freestackambientcomputingfabricz`,
+`mem20twinz`, `mem20freestackambientcomputingfabricz`,
 `mem20pipez`,
 `mem20pipez`,
 `mem20autonomousworkcellsz`. Docs/app monitor, gateway/toolchest. Verification:
@@ -520,7 +520,7 @@ legacy domain API and existing CAPABILITY-driven Engine/Store/SDK/CLI/HTTP behav
 `simulate` still passes). Enriched `progression` with real ethical incentive simulation
 (fairness, harm/manipulation violations, aligned rewards, risk vs hard-safety threshold) and
 6 unique peers (different from #300-#306): `mem20simz`, `mem20simz`,
-`mem20executiondigitaltwinz`, `mem20dynamicquestrewardcomposerz`, `mem20rewardforgez`,
+`mem20twinz`, `mem20dynamicquestrewardcomposerz`, `mem20rewardforgez`,
 `mem20pipez`. Added `/doctor` peer probe, web cockpit, root shim,
 README fenced runnable example, docs/PLAN, docs/app monitor, gateway/toolchest. Verification:
 8 tests pass (incl. 5 legacy + Engine simulator compatibility), conformance **7/7**.
@@ -554,14 +554,14 @@ deterministic tie-break. Verification: 9 scoped tests pass (4 new + 5 legacy nes
 34 `test_concept.py` pass with `--noconftest`; conformance **7/7**.
 
 ---
-## 2026-11-07 - mem20executiondigitaltwinz (#310): depth-first rebuild
+## 2026-11-07 - mem20twinz (#310): depth-first rebuild
 
 Rebuilt RM-059 (Execution Digital Twin, fails 5,7, operation_kind=forecast) as first-class while
 preserving legacy domain API (`create_twin`,`sync_twin`,`simulate`,`predict_outcome`,`drift`) used
 by #307 and preserving CAPABILITY Engine/CLI/10-scenario simulator. Enriched `forecast` with real
 digital twin analysis (create/sync/simulate/predict/drift) and 6 unique peer signals (different from
-#300-#309) for explicit twin requests: `mem20personalworkflowtwinz`,`mem20integrationdigitaltwinz`,
-`mem20memorytimemachinez`,`mem20simz`,`mem20customerdigitaltwinlabz`,
+#300-#309) for explicit twin requests: `mem20twinz`,`mem20twinz`,
+`mem20memorytimemachinez`,`mem20simz`,`mem20twinz`,
 `mem20crossruntimeeventlatticez`. Peer enrichment gated for simulator/5s compatibility. Added
 `/doctor`, web cockpit, root shims, README fenced runnable example, docs/PLAN, docs/app monitor,
 gateway/toolchest. Verification: 9 tests pass (5 legacy + 4 new including 6-peer coverage),
@@ -627,7 +627,7 @@ while preserving legacy domain API (`dps,ttk,economy_balance,difficulty_curve,ba
 used by #307 and preserving CAPABILITY Engine/CLI/10-scenario simulator. Enriched progression
 operation (gated by explicit balance/simulation flags) with combat/economy/progression balance
 analysis and 6 unique peer signals (different from #300–#314): `mem20skillbasedprogressionbrainz`,
-`mem20playermotivationtwinz`,`mem20ailevelarchitectz`,`mem20communitychallengeenginez`,
+`mem20twinz`,`mem20ailevelarchitectz`,`mem20communitychallengeenginez`,
 `mem20skillmemorytransferz`,`mem20realworldimpactrewardsz`. Added `/doctor`, web cockpit, root
 shims, fenced runnable README, docs/PLAN, docs/app monitor, gateway/toolchest. Verification:
 10 tests pass (5 legacy + 5 new), conformance **7/7**.
@@ -770,7 +770,7 @@ web, root shims, fenced README, docs/PLAN, docs/app monitor, gateway/toolchest. 
 conformance **7/7**.
 
 ---
-## 2026-11-08 - mem20integrationdigitaltwinz (#328): meaningful rebuild
+## 2026-11-08 - mem20twinz (#328): meaningful rebuild
 
 Rebuilt RM-076 (Integration Digital Twin, fails 5,6,7, operation_kind=route) preserving legacy
 domain (compat preserved). `route` provides meaningful twin routing/simulation for system/scenario
@@ -840,6 +840,9 @@ Completed depth-first rebuild to **7/7** for #315-#329 (11 subsystems in this se
 
 ## 2026-11-09 - consolidate simulation subsystems into mem20simz
 - **Consolidation:** Merged simulator/simulation-related subsystems into `mem20simz` as modules under `mem20simz/sims/` (architecturesimulationsandboxz, audiencereactionsimulatorz, businessmodelsimulatorz, counterfactualmemorysimulatorz, ethicalincentivesimulatorz, gamebalancesimulatorz, lifescenariosimulatorz, operationsreplaysimulatorz, outcomesimulationlabz, productledgrowthsimulatorz, roadmapsimulationtwinz, useracceptancesimulatorz). Removed originals; repo-wide references updated to `mem20simz`.
+
+## 2026-11-09 - consolidate twin subsystems into mem20twinz
+- **Consolidation:** Merged twin/digital-twin subsystems into `mem20twinz` as modules under `mem20twinz/twins/` (customerdigitaltwinlabz, executiondigitaltwinz, humansatisfactiontwinz, integrationdigitaltwinz, personalworkflowtwinz, playermotivationtwinz, realtimebusinesstwinz). Removed originals; repo-wide references updated to `mem20twinz`.
 - **Full pytest follow-up fixes (then pushed):** fixed `gateway/mem20_gateway.py` syntax/structure (criterion-7 block was dangling in `main()` breaking `elif read`; moved 39 missing entries into `SUBSYSTEMS`). Fixed `mem20mktz` root causes (truthful `braid_hook` availability via `braid_bridge.available()`; `bundle.compose` queries UCG only when `cap_ids` present; env-honest test guards/assertions) → **33 passed, 9 skipped**. Fixed `mem20selfhealingruntimecivilizationz.integrations.PlansEngineBridge` adapter for real `mem20selfhealingplansz` API (no `Engine`) → **53 passed**.
 - **es//:** mem20 context + self-model saved (GitHub steps skipped earlier); commits/pushes to `origin/main` record the work.
 
@@ -850,13 +853,13 @@ Reworked/verified subsystems #340–#350 (oldest→newest, 1 at a time) to full 
 - **340 mem20offerassemblyfabricz** `9e6a1084` (13t, ok/6, price 8): peers `mem20autonomousdealdeskz, mem20servicebundlingenginez, mem20simz, mem20revenueleakhunterz, mem20eventstreamsuperhighwayz, mem20capabilitymarketplacez`; core `create_offer,add_component,price_offer,publish,offer_health,estate_context` superset.
 - **341 mem20offergenomeenginez** `743f1e5b` (12t, ok/6, pop 4): peers `mem20offerassemblyfabricz, mem20autonomousdealdeskz, mem20simz, mem20simz, mem20eventstreamsuperhighwayz, mem20capabilitymarketplacez`; core `create_genome,mutate,fitness,evolve,estate_context` superset.
 - **342 mem20opportunityradarz** `a93dc060` (13t, ok/6, scanned 1): peers `mem20autonomoussaleslaboratoryz, mem20simz, mem20causalroutingbrainz, mem20revenueleakhunterz, mem20eventstreamsuperhighwayz, mem20capabilitymarketplacez`; core `scan,score_opportunity,rank,alert,radar_health,estate_context` superset.
-- **343 mem20simz** `e8085c7a` (13t, ok/6, runs 20): peers `mem20simz, mem20realtimebusinesstwinz, mem20simz, mem20eventstreamsuperhighwayz, mem20capabilitymarketplacez, mem20causalroutingbrainz`; core `simulate_once,monte_carlo,summarize,scenario_compare,risk_of_loss,estate_context` superset.
+- **343 mem20simz** `e8085c7a` (13t, ok/6, runs 20): peers `mem20simz, mem20twinz, mem20simz, mem20eventstreamsuperhighwayz, mem20capabilitymarketplacez, mem20causalroutingbrainz`; core `simulate_once,monte_carlo,summarize,scenario_compare,risk_of_loss,estate_context` superset.
 - **344 mem20personalautomationcanvasz** `ebbea9a9` (13t, ok/6, completed): peers `mem20autonomousworkcellsz, mem20agentoutputcompilerz, mem20selfhealingplansz, mem20eventstreamsuperhighwayz, mem20capabilitymarketplacez, mem20causalroutingbrainz`; core `create_canvas,add_workflow,add_trigger,run_workflow,canvas_health,estate_context` superset.
 - **345 mem20personalcognitivesearchz** `ff590fd3` (13t, ok/6, hits 1): peers `mem20episodicmemorygraphz, mem20contextcompressionforgez, mem20predictiverecallenginez, mem20eventstreamsuperhighwayz, mem20capabilitymarketplacez, mem20agentoutputcompilerz`; core `index,query,rank,recall,search_health,estate_context` superset.
 - **346 mem20personalmodelevolutionz** `c63fce8b` (13t, ok/6, v2): peers `mem20collectivemodelintelligencez, mem20skillmemorytransferz, mem20episodicmemorygraphz, mem20eventstreamsuperhighwayz, mem20capabilitymarketplacez, mem20causalroutingbrainz`; core `create_model,adapt,predict,reset,evolution_health,estate_context` superset.
-- **347 mem20personalworkflowtwinz** `1d5cb0e7` (13t, ok/6, suggestions 1): peers `mem20personalautomationcanvasz, mem20autonomousworkcellsz, mem20agentoutputcompilerz, mem20episodicmemorygraphz, mem20eventstreamsuperhighwayz, mem20capabilitymarketplacez`; core `create_twin,observe,suggest_improvements,efficiency_score,twin_health,estate_context` superset.
+- **347 mem20twinz** `1d5cb0e7` (13t, ok/6, suggestions 1): peers `mem20personalautomationcanvasz, mem20autonomousworkcellsz, mem20agentoutputcompilerz, mem20episodicmemorygraphz, mem20eventstreamsuperhighwayz, mem20capabilitymarketplacez`; core `create_twin,observe,suggest_improvements,efficiency_score,twin_health,estate_context` superset.
 - **348 mem20pipez** (crew runtime, unusual layout) `3f49fd51` (7t incl 4 legacy, ok/6, members 12): peers `mem20personalautomationcanvasz, mem20autonomousworkcellsz, mem20agentoutputcompilerz, mem20eventstreamsuperhighwayz, mem20capabilitymarketplacez, mem20causalroutingbrainz`; preserved `MEMBERS,__version__`, legacy CLI `--version/--members`; `estate_context` superset (+`peer_count,peers_ok,checks`) + `pipeline_report/probe`; subcommands added without breaking legacy.
 - **349 mem20planetarybatchfabricz** `53f42d97` (13t, ok/6, scheduled 1): peers `mem20roamingworkloadschedulerz, mem20autonomousworkcellsz, mem20eventstreamsuperhighwayz, mem20capabilitymarketplacez, mem20autonomousrecoverydirectorz, mem20agentoutputcompilerz`; core `submit_job,schedule,job_status,fabric_health,retry,estate_context` superset.
-- **350 mem20playermotivationtwinz** (CLOSED, prior `9962c809`) **verified compliant, no rework**: 12t pass, status ok/6 (`capability_routing,challenge_engagement,lifecycle_context,motivation_events,motivation_scenarios,quest_motivation`); core preserved (`create_twin,update,predict_churn,motivation_segments,twin_health,motivation_report,probe,estate_context`).
+- **350 mem20twinz** (CLOSED, prior `9962c809`) **verified compliant, no rework**: 12t pass, status ok/6 (`capability_routing,challenge_engagement,lifecycle_context,motivation_events,motivation_scenarios,quest_motivation`); core preserved (`create_twin,update,predict_churn,motivation_segments,twin_health,motivation_report,probe,estate_context`).
 
 **es//:** All touched #340-349 work already committed/pushed (and #350 verified/commented). DIARY/failures updated and pushed in this wrap-up. Unrelated staged/unstaged/untracked files (others’ work, e.g. intenttomissioncompilerz/labz/meshz/modalitybridgez/modelgenomelabz/leveldesign* docs/app mixed, etc.) left untouched (unstaged/restored from accidental staging risk). mem20 context/self-model save-back tools not available in this environment/Code Mode catalog; no direct mem20 access used.

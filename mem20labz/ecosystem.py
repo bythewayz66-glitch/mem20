@@ -89,9 +89,9 @@ def modelgenome_signal() -> Dict[str, Any]:
 def customerdigitaltwin_signal() -> Dict[str, Any]:
     def run():
         try:
-            from mem20customerdigitaltwinlabz.domain import build_twin, twin_accuracy
+            from mem20twinz.domain import build_twin, twin_accuracy
         except Exception:
-            from mem20customerdigitaltwinlabz.mem20customerdigitaltwinlabz.domain import build_twin, twin_accuracy
+            from mem20twinz.mem20twinz.domain import build_twin, twin_accuracy
         twin = build_twin({"customer_id": "labz-probe", "traits": {}})
         try:
             acc = twin_accuracy(twin, [{"event": "probe"}])
@@ -101,7 +101,7 @@ def customerdigitaltwin_signal() -> Dict[str, Any]:
             except Exception as e:
                 acc = {"error": f"{type(e).__name__}: {e}"}
         return {"twin": twin, "accuracy": acc}
-    return _safe("mem20customerdigitaltwinlabz", run)
+    return _safe("mem20twinz", run)
 
 
 def autonomoussales_signal() -> Dict[str, Any]:

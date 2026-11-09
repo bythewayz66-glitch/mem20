@@ -1,3 +1,0 @@
-# Execution Digital Twin (RM-059, #310) — implementation plan
-
-Preserve legacy domain API (`create_twin`, `sync_twin`, `simulate`, `predict_outcome`, `drift`) — used as a peer by #307 — and preserve CAPABILITY Engine/CLI/10-scenario simulator. Enrich `forecast` with real digital twin analysis (create/sync/simulate/predict/drift) and, for explicit twin requests, 6 unique peer signals (different from #300–#309): `mem20personalworkflowtwinz`, `mem20integrationdigitaltwinz`, `mem20memorytimemachinez`, `mem20simz`, `mem20customerdigitaltwinlabz`, `mem20crossruntimeeventlatticez`. Gating keeps 5s simulator budget compatible. `/doctor`, web cockpit, root shims, README fenced runnable example, docs/app monitor, gateway/toolchest. 7/7.

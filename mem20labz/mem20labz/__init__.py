@@ -12,7 +12,7 @@ __version__ = "0.1.0"
 MEMBERS = (
     "mem20autonomoussaleslaboratoryz",
     "mem20continuouscompatibilitylabz",
-    "mem20customerdigitaltwinlabz",
+    "mem20twinz",
     "mem20dependencymutationlabz",
     "mem20executabledesignstresslabz",
     "mem20modelgenomelabz",

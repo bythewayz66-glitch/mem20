@@ -184,7 +184,7 @@ OVERRIDES = {
     "mem20syntheticevaluatorarenaz": "Mem20 Benchmark Dataset Builder",
     "mem20executabledesignstresslabz": "Mem20 Benchmark Dataset Builder",
     "mem20twinz": "Experiment Tracker",
-    "mem20executiondigitaltwinz": "Experiment Tracker",
+    "mem20twinz": "Experiment Tracker",
     "mem20simz": "Experiment Tracker",
     # gtm / finance
     "mem20offergenomeenginez": "mem20 GTM Team Lead",
@@ -209,8 +209,8 @@ OVERRIDES = {
     "mem20pipez": "Slides Assistant",
     "mem20pipez": "Slides Assistant",
     "mem20humanagentcoworkcanvasz": "UX Researcher",
-    "mem20personalworkflowtwinz": "UX Researcher",
-    "mem20playermotivationtwinz": "UX Researcher",
+    "mem20twinz": "UX Researcher",
+    "mem20twinz": "UX Researcher",
     "mem20liveprojectdemonstrationenginez": "Mem20-naration",
     "mem20ambientteamradioz": "Mem20-naration",
 }

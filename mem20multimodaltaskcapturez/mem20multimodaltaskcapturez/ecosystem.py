@@ -35,11 +35,11 @@ def intent_compile_signal(ctx:Mapping[str,Any])->Dict[str,Any]:
 
 def task_capture_personal_signal(ctx:Mapping[str,Any])->Dict[str,Any]:
  def run():
-  try: from mem20personalworkflowtwinz.domain import create_twin, observe, twin_health
-  except Exception: from mem20personalworkflowtwinz.mem20personalworkflowtwinz.domain import create_twin, observe, twin_health
+  try: from mem20twinz.domain import create_twin, observe, twin_health
+  except Exception: from mem20twinz.mem20twinz.domain import create_twin, observe, twin_health
   twin=create_twin({"user":"probe"}); observe(twin,{"task":ctx.get("text","probe")}); h=twin_health(twin)
   return {"twin":twin,"health":h}
- return _safe("mem20personalworkflowtwinz", run)
+ return _safe("mem20twinz", run)
 
 def output_compile_signal(ctx:Mapping[str,Any])->Dict[str,Any]:
  def run():

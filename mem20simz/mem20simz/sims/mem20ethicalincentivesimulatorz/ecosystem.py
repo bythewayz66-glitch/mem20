@@ -33,10 +33,10 @@ def balance_dynamics(stats: Mapping[str, Any] = None) -> Dict[str, Any]:
         return {"dps": d, "ttk": t, "economy": econ, "difficulty_curve": curve, "balance_check": bal, "win_rate": wr}
     return _safe("mem20simz", run)
 
-# 3) mem20executiondigitaltwinz - twin/simulate incentive process outcomes
+# 3) mem20twinz - twin/simulate incentive process outcomes
 def incentive_twin(process: Mapping[str, Any] = None, action: Mapping[str, Any] = None) -> Dict[str, Any]:
     def run():
-        from mem20executiondigitaltwinz.domain import create_twin, sync_twin, simulate, predict_outcome, drift
+        from mem20twinz.domain import create_twin, sync_twin, simulate, predict_outcome, drift
         proc = dict(process or {"id": "incentive-flow", "state": {"reward": 10, "fairness": 0.8}})
         twin = create_twin(proc)
         twin = sync_twin(twin, dict(proc.get("state") or {}))
@@ -45,7 +45,7 @@ def incentive_twin(process: Mapping[str, Any] = None, action: Mapping[str, Any] 
         pred = predict_outcome(twin, act)
         dr = drift(twin, {"reward": 12, "fairness": 0.7})
         return {"twin_id": (twin.get("id") if isinstance(twin, dict) else None), "simulate": sim, "predict_outcome": pred, "drift": dr}
-    return _safe("mem20executiondigitaltwinz", run)
+    return _safe("mem20twinz", run)
 
 # 4) mem20dynamicquestrewardcomposerz - reward composition/balance
 def reward_composition(level: int = 1, quests: Sequence[Mapping[str, Any]] = None) -> Dict[str, Any]:

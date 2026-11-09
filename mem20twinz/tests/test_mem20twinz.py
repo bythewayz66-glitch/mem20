@@ -15,7 +15,7 @@ class TestBranding(unittest.TestCase):
         import mem20twinz as pkg
         self.assertTrue(pkg.MEMBERS)
         self.assertEqual(len(pkg.MEMBERS), 6)
-        self.assertIn("mem20executiondigitaltwinz", pkg.MEMBERS)
+        self.assertIn("mem20twinz", pkg.MEMBERS)
 
 
 class TestCli(unittest.TestCase):

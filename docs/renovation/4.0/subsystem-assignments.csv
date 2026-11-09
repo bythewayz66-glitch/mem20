@@ -87,7 +87,7 @@ mem20pipez,python,7,393,1,True,True,0,0,Slides Assistant,3,feat/4.0-slides-assis
 mem20edgetocloudintelligencecontinuumz,python,7,392,1,True,True,0,0,Mem20 C++ Expert,2,feat/4.0-mem20-cpp-expert-mem20edgetocloudintelligencecontinuumz
 mem20runtimepromptoptimizerz,python,7,390,1,True,True,0,0,Server Builder,2,feat/4.0-server-builder-mem20runtimepromptoptimizerz
 mem20globalcapabilitymarketplacez,python,7,389,1,True,True,0,0,Market Research,3,feat/4.0-market-research-mem20globalcapabilitymarketplacez
-mem20playermotivationtwinz,python,7,389,1,True,True,0,0,UX Researcher,3,feat/4.0-ux-researcher-mem20playermotivationtwinz
+mem20twinz,python,7,389,1,True,True,0,0,UX Researcher,3,feat/4.0-ux-researcher-mem20twinz
 mem20styleguideagentz,python,7,389,1,True,True,0,0,Mem20 Content Creator,3,feat/4.0-mem20-content-creator-mem20styleguideagentz
 mem20visualagentblackboardz,python,7,386,1,True,True,0,0,Webpage Developer,2,feat/4.0-webpage-developer-mem20visualagentblackboardz
 mem20livingagenteconomyz,python,6,384,0,True,True,0,0,Pricing Analyst,3,feat/4.0-pricing-analyst-mem20livingagenteconomyz
@@ -108,7 +108,7 @@ mem20modelgenomelabz,python,6,336,1,True,True,0,0,AI Engineer,2,feat/4.0-ai-engi
 mem20devicecapabilitycompilerz,python,6,335,1,True,True,0,0,Mem20-Perl-Expert,2,feat/4.0-mem20-perl-expert-mem20devicecapabilitycompilerz
 mem20customerlifecycleenginez,python,6,333,1,True,True,0,0,mem20 GTM Team Lead,2,feat/4.0-mem20-gtm-team-lead-mem20customerlifecycleenginez
 mem20contextcompressionforgez,python,6,332,1,True,True,0,0,Pricing Analyst,3,feat/4.0-pricing-analyst-mem20contextcompressionforgez
-mem20customerdigitaltwinlabz,python,6,331,1,True,True,0,0,mem20 GTM Team Lead,2,feat/4.0-mem20-gtm-team-lead-mem20customerdigitaltwinlabz
+mem20twinz,python,6,331,1,True,True,0,0,mem20 GTM Team Lead,2,feat/4.0-mem20-gtm-team-lead-mem20twinz
 mem20simz,python,6,330,1,True,True,0,0,Finance Assistant,3,feat/4.0-finance-assistant-mem20simz
 mem20datalocalityoptimizerz,python,6,330,1,True,True,0,0,Mem20 C++ Expert,2,feat/4.0-mem20-cpp-expert-mem20datalocalityoptimizerz
 mem20episodicmemorygraphz,python,6,330,1,True,True,0,0,AI Engineer,2,feat/4.0-ai-engineer-mem20episodicmemorygraphz
@@ -123,14 +123,14 @@ mem20hotswappableservicefoundationz,python,6,323,1,True,True,0,0,UX Researcher,3
 mem20personalcognitivesearchz,python,6,323,1,True,True,0,0,AI Engineer,2,feat/4.0-ai-engineer-mem20personalcognitivesearchz
 mem20compoundingproductecosystemz,python,6,322,1,True,True,0,0,Growth Hacker,3,feat/4.0-growth-hacker-mem20compoundingproductecosystemz
 mem20hardwareawareinferencecompilerz,python,6,322,1,True,True,0,0,AI Engineer,2,feat/4.0-ai-engineer-mem20hardwareawareinferencecompilerz
-mem20integrationdigitaltwinz,python,6,322,1,True,True,0,0,Server Builder,2,feat/4.0-server-builder-mem20integrationdigitaltwinz
+mem20twinz,python,6,322,1,True,True,0,0,Server Builder,2,feat/4.0-server-builder-mem20twinz
 mem20offergenomeenginez,python,6,322,1,True,True,0,0,mem20 GTM Team Lead,2,feat/4.0-mem20-gtm-team-lead-mem20offergenomeenginez
 mem20simz,python,6,322,1,True,True,0,0,Growth Hacker,3,feat/4.0-growth-hacker-mem20simz
 mem20protocolautodiscoveryenginez,python,6,322,1,True,True,0,0,Server Builder,2,feat/4.0-server-builder-mem20protocolautodiscoveryenginez
 mem20reversibleexecutiongraphz,python,6,322,1,True,True,0,0,GitHub Repo Assistant,1,feat/4.0-github-repo-assistant-mem20reversibleexecutiongraphz
 mem20autonomoussaleslaboratoryz,python,6,321,1,True,True,0,0,mem20 GTM Team Lead,2,feat/4.0-mem20-gtm-team-lead-mem20autonomoussaleslaboratoryz
-mem20executiondigitaltwinz,python,6,321,1,True,True,0,0,Experiment Tracker,2,feat/4.0-experiment-tracker-mem20executiondigitaltwinz
-mem20personalworkflowtwinz,python,6,321,1,True,True,0,0,UX Researcher,3,feat/4.0-ux-researcher-mem20personalworkflowtwinz
+mem20twinz,python,6,321,1,True,True,0,0,Experiment Tracker,2,feat/4.0-experiment-tracker-mem20twinz
+mem20twinz,python,6,321,1,True,True,0,0,UX Researcher,3,feat/4.0-ux-researcher-mem20twinz
 mem20selfhealingplansz,python,6,321,1,True,True,0,0,mem20-sybsystems,2,feat/4.0-mem20-sybsystems-mem20selfhealingplansz
 mem20autonomousworkcellsz,python,6,320,1,True,True,0,0,Market Research,3,feat/4.0-market-research-mem20autonomousworkcellsz
 mem20edgetransportfabricz,python,6,320,1,True,True,0,0,Server Builder,2,feat/4.0-server-builder-mem20edgetransportfabricz
@@ -147,7 +147,7 @@ mem20causalroutingbrainz,python,6,318,1,True,True,0,0,GitHub Repo Assistant,2,fe
 mem20personalmodelevolutionz,python,6,318,1,True,True,0,0,UX Researcher,3,feat/4.0-ux-researcher-mem20personalmodelevolutionz
 mem20predictiverecallenginez,python,6,318,1,True,True,0,0,AI Engineer,2,feat/4.0-ai-engineer-mem20predictiverecallenginez
 mem20multibrandswarmz,python,6,317,1,True,True,0,0,Growth Hacker,3,feat/4.0-growth-hacker-mem20multibrandswarmz
-mem20realtimebusinesstwinz,python,6,317,1,True,True,0,0,Experiment Tracker,2,feat/4.0-experiment-tracker-mem20realtimebusinesstwinz
+mem20twinz,python,6,317,1,True,True,0,0,Experiment Tracker,2,feat/4.0-experiment-tracker-mem20twinz
 mem20crossplatformmicrokernelz,python,6,316,1,True,True,0,0,Server Builder,2,feat/4.0-server-builder-mem20crossplatformmicrokernelz
 mem20goaleconomyschedulerz,python,6,316,1,True,True,0,0,mem20-sybsystems,2,feat/4.0-mem20-sybsystems-mem20goaleconomyschedulerz
 mem20instantappsynthesisz,python,6,316,1,True,True,0,0,Webpage Developer,2,feat/4.0-webpage-developer-mem20instantappsynthesisz

@@ -112,7 +112,7 @@ A machine-readable map of this monorepo so an agent can find the right subsystem
 | `mem20livingagenteconomyz` | 333 | 0 | - | RM-215 — Living Agent Economy |
 | `mem20loreragcontentgeneratorz` | 333 | 0 | - | RM-223 — Lore-RAG Content Generator |
 | `mem20pipez` | 333 | 0 | - | RM-244 — Narrative, Dialogue and Localization Pipeline |
-| `mem20playermotivationtwinz` | 333 | 0 | - | RM-204 — Player Motivation Twin |
+| `mem20twinz` | 333 | 0 | - | RM-204 — Player Motivation Twin |
 | `mem20pipez` | 333 | 0 | - | RM-238 — Production Planning and Task Orchestration Pipeline |
 | `mem20realitytosoftwarecompilerz` | 333 | 0 | - | RM-212 — Reality-to-Software Compiler |
 | `mem20realworldimpactrewardsz` | 333 | 0 | - | RM-210 — Real-World Impact Rewards |
@@ -143,7 +143,7 @@ A machine-readable map of this monorepo so an agent can find the right subsystem
 | `mem20simz` | 263 | 0 | - | RM-029 — Counterfactual Memory Simulator |
 | `mem20crossplatformmicrokernelz` | 263 | 0 | - | RM-100 — Cross-Platform Microkernel |
 | `mem20crossruntimeeventlatticez` | 263 | 0 | - | RM-005 — Cross-Runtime Event Lattice |
-| `mem20customerdigitaltwinlabz` | 263 | 0 | - | RM-014 — Customer Digital Twin Lab |
+| `mem20twinz` | 263 | 0 | - | RM-014 — Customer Digital Twin Lab |
 | `mem20customerlifecycleenginez` | 263 | 0 | - | RM-083 — Customer Lifecycle Engine |
 | `mem20datalocalityoptimizerz` | 263 | 0 | - | RM-096 — Data Locality Optimizer |
 | `mem20deterministicconfigurationgraphz` | 263 | 0 | - | RM-092 — Deterministic Configuration Graph |
@@ -155,7 +155,7 @@ A machine-readable map of this monorepo so an agent can find the right subsystem
 | `mem20energyawarefoundationz` | 263 | 0 | - | RM-098 — Energy-Aware Foundation |
 | `mem20episodicmemorygraphz` | 263 | 0 | - | RM-021 — Episodic Memory Graph |
 | `mem20eventstreamsuperhighwayz` | 263 | 0 | - | RM-074 — Event Stream Superhighway |
-| `mem20executiondigitaltwinz` | 263 | 0 | - | RM-059 — Execution Digital Twin |
+| `mem20twinz` | 263 | 0 | - | RM-059 — Execution Digital Twin |
 | `mem20federatedresearchgridz` | 263 | 0 | - | RM-043 — Federated Research Grid |
 | `mem20goaleconomyschedulerz` | 263 | 0 | - | RM-056 — Goal Economy Scheduler |
 | `mem20hardwareawareinferencecompilerz` | 263 | 0 | - | RM-065 — Hardware-Aware Inference Compiler |
@@ -163,7 +163,7 @@ A machine-readable map of this monorepo so an agent can find the right subsystem
 | `mem20hotswappableservicefoundationz` | 263 | 0 | - | RM-091 — Hot-Swappable Service Foundation |
 | `mem20humanagentcoworkcanvasz` | 263 | 0 | - | RM-032 — Human-Agent Cowork Canvas |
 | `mem20instantappsynthesisz` | 263 | 0 | - | RM-010 — Instant App Synthesis |
-| `mem20integrationdigitaltwinz` | 263 | 0 | - | RM-076 — Integration Digital Twin |
+| `mem20twinz` | 263 | 0 | - | RM-076 — Integration Digital Twin |
 | `mem20intentcompilerz` | 263 | 0 | - | RM-051 — Intent Compiler |
 | `mem20intenttomissioncompilerz` | 263 | 0 | - | RM-031 — Intent-to-Mission Compiler |
 | `mem20livemodelfusionz` | 263 | 0 | - | RM-062 — Live Model Fusion |
@@ -182,12 +182,12 @@ A machine-readable map of this monorepo so an agent can find the right subsystem
 | `mem20personalautomationcanvasz` | 263 | 0 | - | RM-008 — Personal Automation Canvas |
 | `mem20personalcognitivesearchz` | 263 | 0 | - | RM-030 — Personal Cognitive Search |
 | `mem20personalmodelevolutionz` | 263 | 0 | - | RM-069 — Personal Model Evolution |
-| `mem20personalworkflowtwinz` | 263 | 0 | - | RM-040 — Personal Workflow Twin |
+| `mem20twinz` | 263 | 0 | - | RM-040 — Personal Workflow Twin |
 | `mem20planetarybatchfabricz` | 263 | 0 | - | RM-050 — Planetary Batch Fabric |
 | `mem20predictiverecallenginez` | 263 | 0 | - | RM-022 — Predictive Recall Engine |
 | `mem20simz` | 263 | 0 | - | RM-018 — Product-Led Growth Simulator |
 | `mem20protocolautodiscoveryenginez` | 263 | 0 | - | RM-072 — Protocol Autodiscovery Engine |
-| `mem20realtimebusinesstwinz` | 263 | 0 | - | RM-081 — Real-Time Business Twin |
+| `mem20twinz` | 263 | 0 | - | RM-081 — Real-Time Business Twin |
 | `mem20realtimeeventautopilotz` | 263 | 0 | - | RM-058 — Real-Time Event Autopilot |
 | `mem20realtimeteampresencez` | 263 | 0 | - | RM-039 — Real-Time Team Presence |
 | `mem20remoteexperimentlabz` | 263 | 0 | - | RM-049 — Remote Experiment Lab |
@@ -274,7 +274,7 @@ A machine-readable map of this monorepo so an agent can find the right subsystem
 | `mem20featuredependencygraphenginez` | 9 | 0 | `mem20featuredependencygraphenginez` | Model technical, data, interface, and capability dependencies at feature level |
 | `mem20generativebrandworldenginez` | 9 | 0 | `mem20generativebrandworldenginez` | Turn a brand identity into coherent visual, audio, spatial, and interactive systems |
 | `mem20humancapabilityacceleratorz` | 9 | 0 | `mem20humancapabilityacceleratorz` | Combine coaching, tools, agents, memory, and simulation around measurable personal growth |
-| `mem20humansatisfactiontwinz` | 9 | 0 | `mem20humansatisfactiontwinz` | Model satisfaction, trust, control, and cognitive load alongside technical metrics |
+| `mem20twinz` | 9 | 0 | `mem20twinz` | Model satisfaction, trust, control, and cognitive load alongside technical metrics |
 | `mem20intenttoagentmatchmakerz` | 9 | 0 | `mem20intenttoagentmatchmakerz` | Match user requests to capable agents and tool combinations |
 | `mem20interactivecampaignbuilderz` | 9 | 0 | `mem20interactivecampaignbuilderz` | Create campaigns whose media and experiences react to audience behavior |
 | `mem20simz` | 9 | 0 | `mem20simz` | Model personal choices, schedules, budgets, tradeoffs, and likely downstream effects |
@@ -447,7 +447,7 @@ mem20googlez = mem20googlez.cli:main
 mem20graphz = mem20graphz.cli:main
 mem20greenz = mem20greenz.cli:main
 mem20humancapabilityacceleratorz = mem20humancapabilityacceleratorz.core:cli
-mem20humansatisfactiontwinz = mem20humansatisfactiontwinz.core:cli
+mem20twinz = mem20twinz.core:cli
 mem20intenttoagentmatchmakerz = mem20intenttoagentmatchmakerz.core:cli
 mem20interactivecampaignbuilderz = mem20interactivecampaignbuilderz.core:cli
 mem20ircz = mem20ircz.cli:main

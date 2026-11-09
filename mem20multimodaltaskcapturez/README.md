@@ -6,7 +6,7 @@
 ## 1st-class implementation
 - **Domain:** `capture/merge_captures/extract_action_items/capture_health` (legacy) plus `ingest_capture` producing structured executable task + action items across modalities.
 - **Runtime:** `ingest` wired to domain + 6 peer signals.
-- **Ecosystem (6 peers, unique set):** `mem20modalitybridgez`, `mem20sensorymemoryingestz`, `mem20intentcompilerz`, `mem20personalworkflowtwinz`, `mem20agentoutputcompilerz`, `mem20episodicmemorygraphz`.
+- **Ecosystem (6 peers, unique set):** `mem20modalitybridgez`, `mem20sensorymemoryingestz`, `mem20intentcompilerz`, `mem20twinz`, `mem20agentoutputcompilerz`, `mem20episodicmemorygraphz`.
 
 ## Runnable example (verified)
 ```bash

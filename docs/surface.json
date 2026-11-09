@@ -54,7 +54,7 @@
     "mem20crdtcollaborationenginez": 1,
     "mem20crossplatformmicrokernelz": 2,
     "mem20crossproductloyaltygraphz": 2,
-    "mem20customerdigitaltwinlabz": 2,
+    "mem20twinz": 2,
     "mem20customerlifecycleenginez": 2,
     "mem20datalocalityoptimizerz": 2,
     "mem20deterministicconfigurationgraphz": 2,
@@ -71,17 +71,17 @@
     "mem20personalautomationcanvasz": 2,
     "mem20personalcognitivesearchz": 2,
     "mem20personalmodelevolutionz": 2,
-    "mem20personalworkflowtwinz": 2,
+    "mem20twinz": 2,
     "mem20pipez": 2,
     "mem20planetarybatchfabricz": 2,
-    "mem20playermotivationtwinz": 2,
+    "mem20twinz": 2,
     "mem20predictiverecallenginez": 2,
     "mem20prioritycollisionresolverz": 1,
     "mem20pipez": 2,
     "mem20simz": 2,
     "mem20protocolautodiscoveryenginez": 2,
     "mem20realitytosoftwarecompilerz": 2,
-    "mem20realtimebusinesstwinz": 2,
+    "mem20twinz": 2,
     "mem20realtimeeventautopilotz": 2,
     "mem20realtimeteampresencez": 2,
     "mem20realworldimpactrewardsz": 2,
@@ -185,7 +185,7 @@
     "mem20crdtcollaborationenginez",
     "mem20crossplatformmicrokernelz",
     "mem20crossproductloyaltygraphz",
-    "mem20customerdigitaltwinlabz",
+    "mem20twinz",
     "mem20customerlifecycleenginez",
     "mem20datalocalityoptimizerz",
     "mem20deterministicconfigurationgraphz",
@@ -202,17 +202,17 @@
     "mem20personalautomationcanvasz",
     "mem20personalcognitivesearchz",
     "mem20personalmodelevolutionz",
-    "mem20personalworkflowtwinz",
+    "mem20twinz",
     "mem20pipez",
     "mem20planetarybatchfabricz",
-    "mem20playermotivationtwinz",
+    "mem20twinz",
     "mem20predictiverecallenginez",
     "mem20prioritycollisionresolverz",
     "mem20pipez",
     "mem20simz",
     "mem20protocolautodiscoveryenginez",
     "mem20realitytosoftwarecompilerz",
-    "mem20realtimebusinesstwinz",
+    "mem20twinz",
     "mem20realtimeeventautopilotz",
     "mem20realtimeteampresencez",
     "mem20realworldimpactrewardsz",
@@ -812,9 +812,9 @@
       "tools": 2
     },
     {
-      "domain": "mem20customerdigitaltwinlabz",
+      "domain": "mem20twinz",
       "modules": [
-        "mcp/tools/mem20customerdigitaltwinlabz_tools.py"
+        "mcp/tools/mem20twinz_tools.py"
       ],
       "prefixes": [
         "customerdigitaltwinlabz_*"
@@ -962,9 +962,9 @@
       "tools": 2
     },
     {
-      "domain": "mem20personalworkflowtwinz",
+      "domain": "mem20twinz",
       "modules": [
-        "mcp/tools/mem20personalworkflowtwinz_tools.py"
+        "mcp/tools/mem20twinz_tools.py"
       ],
       "prefixes": [
         "personalworkflowtwinz_*"
@@ -992,9 +992,9 @@
       "tools": 2
     },
     {
-      "domain": "mem20playermotivationtwinz",
+      "domain": "mem20twinz",
       "modules": [
-        "mcp/tools/mem20playermotivationtwinz_tools.py"
+        "mcp/tools/mem20twinz_tools.py"
       ],
       "prefixes": [
         "playermotivationtwinz_*"
@@ -1052,9 +1052,9 @@
       "tools": 2
     },
     {
-      "domain": "mem20realtimebusinesstwinz",
+      "domain": "mem20twinz",
       "modules": [
-        "mcp/tools/mem20realtimebusinesstwinz_tools.py"
+        "mcp/tools/mem20twinz_tools.py"
       ],
       "prefixes": [
         "realtimebusinesstwinz_*"

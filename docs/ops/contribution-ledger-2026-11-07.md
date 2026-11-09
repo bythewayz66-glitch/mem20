@@ -32,7 +32,7 @@ behind the live head; the read-back log below is the authoritative sequence.
 | 7 | Webpage Developer | `feat/4.0-webpage-developer-mem20owebz` | — | — | — |
 | 8 | mem20-webdev | `feat/4.0-mem20-webdev-mem20kanbanz` | — | — | — |
 | 9 | mem20-frontends | `feat/4.0-mem20-frontends-mem20controlz` | — | — | — |
-| 10 | UX Researcher | `feat/4.0-ux-researcher-mem20playermotivationtwinz` | — | — | — |
+| 10 | UX Researcher | `feat/4.0-ux-researcher-mem20twinz` | — | — | — |
 | 11 | Experiment Tracker | `feat/4.0-experiment-tracker-mem20remoteexperimentlabz` | — | — | — |
 | 12 | Mem20 Benchmark Dataset Builder | `bench/ws1-retrieval-modes-2026-11-07` | — | — | — |
 | 13 | Analytics Reporter | `feat/4.0-analytics-reporter-mem20googlez` | — | — | — |

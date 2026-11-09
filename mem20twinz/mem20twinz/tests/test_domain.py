@@ -2,8 +2,8 @@ import importlib
 MOD="mem20twinz"
 def _m(): return importlib.import_module(MOD+".domain")
 def _eco(): return importlib.import_module(MOD+".ecosystem")
-def test_eco_exec(): r=_eco().execution_twin(); assert r["ok"] and r["subsystem"]=="mem20executiondigitaltwinz"
-def test_eco_biz(): r=_eco().business_twin(); assert r["ok"] and r["subsystem"]=="mem20realtimebusinesstwinz"
+def test_eco_exec(): r=_eco().execution_twin(); assert r["ok"] and r["subsystem"]=="mem20twinz"
+def test_eco_biz(): r=_eco().business_twin(); assert r["ok"] and r["subsystem"]=="mem20twinz"
 def test_eco_cf(): r=_eco().counterfactual_sim(); assert r["ok"] and r["subsystem"]=="mem20simz"
 def test_eco_events(): r=_eco().twin_events("t",{}); assert r["ok"] and r["subsystem"]=="mem20eventstreamsuperhighwayz"
 def test_eco_route(): r=_eco().twin_routing("k",["t"]); assert r["ok"] and r["subsystem"]=="mem20capabilitymarketplacez"

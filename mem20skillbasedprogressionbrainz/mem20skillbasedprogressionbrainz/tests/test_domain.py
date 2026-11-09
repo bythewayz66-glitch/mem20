@@ -11,7 +11,7 @@ def test_estate_context_real_integrations(tmp_path):
     assert ctx["engine_status_checked"] is True and ctx["work_recorded"] is True and ctx["path_scripts"]>=0
     assert "inventory_keys" in ctx and isinstance(ctx["focus_score"], float) and ctx["sitemap_skips_cache"] is True
 def test_eco_graph(): r=_eco().skill_graph(); assert r["ok"] and r["subsystem"]=="mem20dynamicskillgraphz"
-def test_eco_motivation(): r=_eco().motivation_twin(); assert r["ok"] and r["subsystem"]=="mem20playermotivationtwinz"
+def test_eco_motivation(): r=_eco().motivation_twin(); assert r["ok"] and r["subsystem"]=="mem20twinz"
 def test_eco_reward(): r=_eco().reward_forge(); assert r["ok"] and r["subsystem"]=="mem20rewardforgez"
 def test_eco_events(): r=_eco().progression_events("p",{}); assert r["ok"] and r["subsystem"]=="mem20eventstreamsuperhighwayz"
 def test_eco_route(): r=_eco().progression_routing("k",["p"]); assert r["ok"] and r["subsystem"]=="mem20capabilitymarketplacez"

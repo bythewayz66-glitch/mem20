@@ -10,11 +10,11 @@ from __future__ import annotations
 __version__ = "0.1.0"
 
 MEMBERS = (
-    "mem20executiondigitaltwinz",
-    "mem20humansatisfactiontwinz",
-    "mem20integrationdigitaltwinz",
-    "mem20playermotivationtwinz",
-    "mem20realtimebusinesstwinz",
+    "mem20twinz",
+    "mem20twinz",
+    "mem20twinz",
+    "mem20twinz",
+    "mem20twinz",
     "mem20simz",
 )
 

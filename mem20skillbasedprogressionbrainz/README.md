@@ -3,7 +3,7 @@
 First-class mem20 subsystem for skill-based progression (gain_xp/unlock_skill/level/progression_health) with **6 peers**, SQLite WAL runtime, CLI, JSON HTTP API, served web cockpit, docs/app monitor, and real MCP tools. Core API preserved.
 
 ## Peers (6)
-`mem20dynamicskillgraphz`, `mem20playermotivationtwinz`, `mem20rewardforgez`, `mem20eventstreamsuperhighwayz`, `mem20capabilitymarketplacez`, `mem20universalhealthnervoussystemz`.
+`mem20dynamicskillgraphz`, `mem20twinz`, `mem20rewardforgez`, `mem20eventstreamsuperhighwayz`, `mem20capabilitymarketplacez`, `mem20universalhealthnervoussystemz`.
 
 ## Python API (runnable)
 ```python

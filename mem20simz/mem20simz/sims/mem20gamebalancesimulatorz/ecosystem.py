@@ -30,11 +30,11 @@ def skill_progression(payload=None) -> Dict[str, Any]:
 
 def player_motivation(payload=None) -> Dict[str, Any]:
     def run():
-        from mem20playermotivationtwinz.domain import create_twin, update, predict_churn, motivation_segments
+        from mem20twinz.domain import create_twin, update, predict_churn, motivation_segments
         t = create_twin(str((payload or {}).get("player", "p1")))
         update(t, {"type": str((payload or {}).get("event", "win"))})
         return {"churn_risk": predict_churn(t), "segments": motivation_segments(t)}
-    return _safe("mem20playermotivationtwinz", run)
+    return _safe("mem20twinz", run)
 
 
 def level_architecture(payload=None) -> Dict[str, Any]:

@@ -10,7 +10,7 @@ def _pkg_meta():
         from . import MEMBERS, __version__
         return MEMBERS, __version__
     except Exception:
-        return ("mem20executiondigitaltwinz","mem20realtimebusinesstwinz","mem20playermotivationtwinz","mem20simz","mem20simz","mem20realtimeteampresencez"), "0.1.0"
+        return ("mem20twinz","mem20twinz","mem20twinz","mem20simz","mem20simz","mem20realtimeteampresencez"), "0.1.0"
 MEMBERS,__version__=_pkg_meta()
 _WEB_DIR=Path(__file__).resolve().parent/"web"; _CT={".html":"text/html; charset=utf-8",".js":"text/javascript; charset=utf-8",".css":"text/css; charset=utf-8",".json":"application/json"}
 ENV="MEM20_TWINZ_STORE"; PORT=8840; NAME="mem20twinz"

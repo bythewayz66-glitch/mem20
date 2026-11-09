@@ -4,7 +4,7 @@ import pathlib,sys
 from typing import Mapping,Sequence
 __all__=["execution_twin","business_twin","counterfactual_sim","twin_events","twin_routing","causal_routing","probe"]
 _REPO_ROOT=pathlib.Path(__file__).resolve().parents[2]
-_PROJECTS=("mem20executiondigitaltwinz","mem20realtimebusinesstwinz","mem20simz","mem20eventstreamsuperhighwayz","mem20capabilitymarketplacez","mem20causalroutingbrainz")
+_PROJECTS=("mem20twinz","mem20twinz","mem20simz","mem20eventstreamsuperhighwayz","mem20capabilitymarketplacez","mem20causalroutingbrainz")
 def _bootstrap():
     for name in reversed(_PROJECTS):
         p=str(_REPO_ROOT/name)
@@ -14,14 +14,14 @@ def _bootstrap():
 _bootstrap()
 def execution_twin()->dict:
     try:
-        from mem20executiondigitaltwinz.domain import create_twin, drift
-        t=create_twin({"id":"p"}); d=drift(t,{"id":"p","state":"ok"}); return {"ok":True,"subsystem":"mem20executiondigitaltwinz","drift":d is not None}
-    except Exception as exc: return {"ok":False,"subsystem":"mem20executiondigitaltwinz","error":f"{type(exc).__name__}: {exc}"}
+        from mem20twinz.domain import create_twin, drift
+        t=create_twin({"id":"p"}); d=drift(t,{"id":"p","state":"ok"}); return {"ok":True,"subsystem":"mem20twinz","drift":d is not None}
+    except Exception as exc: return {"ok":False,"subsystem":"mem20twinz","error":f"{type(exc).__name__}: {exc}"}
 def business_twin()->dict:
     try:
-        from mem20realtimebusinesstwinz.domain import create_twin,twin_health
-        t=create_twin("twinz"); h=twin_health(t); return {"ok":True,"subsystem":"mem20realtimebusinesstwinz","healthy":h is not None}
-    except Exception as exc: return {"ok":False,"subsystem":"mem20realtimebusinesstwinz","error":f"{type(exc).__name__}: {exc}"}
+        from mem20twinz.domain import create_twin,twin_health
+        t=create_twin("twinz"); h=twin_health(t); return {"ok":True,"subsystem":"mem20twinz","healthy":h is not None}
+    except Exception as exc: return {"ok":False,"subsystem":"mem20twinz","error":f"{type(exc).__name__}: {exc}"}
 def counterfactual_sim()->dict:
     try:
         from mem20simz.domain import counterfactual,compare

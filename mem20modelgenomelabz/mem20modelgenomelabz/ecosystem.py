@@ -44,11 +44,11 @@ def counterfactual_signal(ctx: Mapping[str, Any]) -> Dict[str, Any]:
 
 def execution_twin_signal(ctx: Mapping[str, Any]) -> Dict[str, Any]:
     def run():
-        try: from mem20executiondigitaltwinz.domain import create_twin, simulate
-        except Exception: from mem20executiondigitaltwinz.mem20executiondigitaltwinz.domain import create_twin, simulate
+        try: from mem20twinz.domain import create_twin, simulate
+        except Exception: from mem20twinz.mem20twinz.domain import create_twin, simulate
         t=create_twin({"id":"genome-twin","workload":"evolution"}); s=simulate(t,[{"event":"evolve"}])
         return {"twin":(t.get("id") if isinstance(t,dict) else "t"),"simulated":s is not None}
-    return _safe("mem20executiondigitaltwinz", run)
+    return _safe("mem20twinz", run)
 
 def eventstream_signal(ctx: Mapping[str, Any]) -> Dict[str, Any]:
     def run():

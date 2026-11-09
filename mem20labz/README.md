@@ -9,7 +9,7 @@ package-review rulings:
 
 - `mem20autonomoussaleslaboratoryz`
 - `mem20continuouscompatibilitylabz`
-- `mem20customerdigitaltwinlabz`
+- `mem20twinz`
 - `mem20dependencymutationlabz`
 - `mem20executabledesignstresslabz`
 - `mem20modelgenomelabz`

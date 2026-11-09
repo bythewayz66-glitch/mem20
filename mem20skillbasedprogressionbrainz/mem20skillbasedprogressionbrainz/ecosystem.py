@@ -4,7 +4,7 @@ import pathlib,sys
 from typing import Mapping,Sequence
 __all__=["skill_graph","motivation_twin","reward_forge","progression_events","progression_routing","progression_health_peer","probe"]
 _REPO_ROOT=pathlib.Path(__file__).resolve().parents[2]
-_PROJECTS=("mem20dynamicskillgraphz","mem20playermotivationtwinz","mem20rewardforgez","mem20eventstreamsuperhighwayz","mem20capabilitymarketplacez","mem20universalhealthnervoussystemz")
+_PROJECTS=("mem20dynamicskillgraphz","mem20twinz","mem20rewardforgez","mem20eventstreamsuperhighwayz","mem20capabilitymarketplacez","mem20universalhealthnervoussystemz")
 def _bootstrap():
     for name in reversed(_PROJECTS):
         p=str(_REPO_ROOT/name)
@@ -19,9 +19,9 @@ def skill_graph()->dict:
     except Exception as exc: return {"ok":False,"subsystem":"mem20dynamicskillgraphz","error":f"{type(exc).__name__}: {exc}"}
 def motivation_twin()->dict:
     try:
-        from mem20playermotivationtwinz.domain import create_twin, twin_health
-        t=create_twin("p1"); h=twin_health(t); return {"ok":True,"subsystem":"mem20playermotivationtwinz","healthy":h is not None}
-    except Exception as exc: return {"ok":False,"subsystem":"mem20playermotivationtwinz","error":f"{type(exc).__name__}: {exc}"}
+        from mem20twinz.domain import create_twin, twin_health
+        t=create_twin("p1"); h=twin_health(t); return {"ok":True,"subsystem":"mem20twinz","healthy":h is not None}
+    except Exception as exc: return {"ok":False,"subsystem":"mem20twinz","error":f"{type(exc).__name__}: {exc}"}
 def reward_forge()->dict:
     try:
         from mem20rewardforgez.domain import linear_reward

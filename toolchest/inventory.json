@@ -3287,20 +3287,20 @@
       }
     },
     {
-      "id": "cli:mem20customerdigitaltwinlabz",
+      "id": "cli:mem20twinz",
       "kind": "cli",
-      "name": "mem20customerdigitaltwinlabz",
+      "name": "mem20twinz",
       "category": "cli",
       "subcategory": "mem20",
-      "description": "mem20customerdigitaltwinlabz \u00b7 runs with /opt/mem20/.venv/bin/python",
-      "source": "/opt/mem20/.venv/bin/mem20customerdigitaltwinlabz",
+      "description": "mem20twinz \u00b7 runs with /opt/mem20/.venv/bin/python",
+      "source": "/opt/mem20/.venv/bin/mem20twinz",
       "runtime_status": "ok",
       "runtime_detail": "script in /opt/mem20/.venv/bin",
       "checks": [
         {
           "check": "path exists",
           "ok": true,
-          "detail": "/opt/mem20/.venv/bin/mem20customerdigitaltwinlabz"
+          "detail": "/opt/mem20/.venv/bin/mem20twinz"
         },
         {
           "check": "executable",
@@ -3315,7 +3315,7 @@
         "executable": true,
         "size": 194,
         "symlink": false,
-        "resolved_target": "/opt/mem20/.venv/bin/mem20customerdigitaltwinlabz"
+        "resolved_target": "/opt/mem20/.venv/bin/mem20twinz"
       }
     },
     {
@@ -4183,20 +4183,20 @@
       }
     },
     {
-      "id": "cli:mem20executiondigitaltwinz",
+      "id": "cli:mem20twinz",
       "kind": "cli",
-      "name": "mem20executiondigitaltwinz",
+      "name": "mem20twinz",
       "category": "cli",
       "subcategory": "mem20",
-      "description": "mem20executiondigitaltwinz \u00b7 runs with /opt/mem20/.venv/bin/python",
-      "source": "/opt/mem20/.venv/bin/mem20executiondigitaltwinz",
+      "description": "mem20twinz \u00b7 runs with /opt/mem20/.venv/bin/python",
+      "source": "/opt/mem20/.venv/bin/mem20twinz",
       "runtime_status": "ok",
       "runtime_detail": "script in /opt/mem20/.venv/bin",
       "checks": [
         {
           "check": "path exists",
           "ok": true,
-          "detail": "/opt/mem20/.venv/bin/mem20executiondigitaltwinz"
+          "detail": "/opt/mem20/.venv/bin/mem20twinz"
         },
         {
           "check": "executable",
@@ -4211,7 +4211,7 @@
         "executable": true,
         "size": 192,
         "symlink": false,
-        "resolved_target": "/opt/mem20/.venv/bin/mem20executiondigitaltwinz"
+        "resolved_target": "/opt/mem20/.venv/bin/mem20twinz"
       }
     },
     {
@@ -5047,20 +5047,20 @@
       }
     },
     {
-      "id": "cli:mem20humansatisfactiontwinz",
+      "id": "cli:mem20twinz",
       "kind": "cli",
-      "name": "mem20humansatisfactiontwinz",
+      "name": "mem20twinz",
       "category": "cli",
       "subcategory": "mem20",
-      "description": "mem20humansatisfactiontwinz \u00b7 runs with /opt/mem20/.venv/bin/python",
-      "source": "/opt/mem20/.venv/bin/mem20humansatisfactiontwinz",
+      "description": "mem20twinz \u00b7 runs with /opt/mem20/.venv/bin/python",
+      "source": "/opt/mem20/.venv/bin/mem20twinz",
       "runtime_status": "ok",
       "runtime_detail": "script in /opt/mem20/.venv/bin",
       "checks": [
         {
           "check": "path exists",
           "ok": true,
-          "detail": "/opt/mem20/.venv/bin/mem20humansatisfactiontwinz"
+          "detail": "/opt/mem20/.venv/bin/mem20twinz"
         },
         {
           "check": "executable",
@@ -5075,7 +5075,7 @@
         "executable": true,
         "size": 188,
         "symlink": false,
-        "resolved_target": "/opt/mem20/.venv/bin/mem20humansatisfactiontwinz"
+        "resolved_target": "/opt/mem20/.venv/bin/mem20twinz"
       }
     },
     {
@@ -5111,20 +5111,20 @@
       }
     },
     {
-      "id": "cli:mem20integrationdigitaltwinz",
+      "id": "cli:mem20twinz",
       "kind": "cli",
-      "name": "mem20integrationdigitaltwinz",
+      "name": "mem20twinz",
       "category": "cli",
       "subcategory": "mem20",
-      "description": "mem20integrationdigitaltwinz \u00b7 runs with /opt/mem20/.venv/bin/python",
-      "source": "/opt/mem20/.venv/bin/mem20integrationdigitaltwinz",
+      "description": "mem20twinz \u00b7 runs with /opt/mem20/.venv/bin/python",
+      "source": "/opt/mem20/.venv/bin/mem20twinz",
       "runtime_status": "ok",
       "runtime_detail": "script in /opt/mem20/.venv/bin",
       "checks": [
         {
           "check": "path exists",
           "ok": true,
-          "detail": "/opt/mem20/.venv/bin/mem20integrationdigitaltwinz"
+          "detail": "/opt/mem20/.venv/bin/mem20twinz"
         },
         {
           "check": "executable",
@@ -5139,7 +5139,7 @@
         "executable": true,
         "size": 194,
         "symlink": false,
-        "resolved_target": "/opt/mem20/.venv/bin/mem20integrationdigitaltwinz"
+        "resolved_target": "/opt/mem20/.venv/bin/mem20twinz"
       }
     },
     {
@@ -6967,20 +6967,20 @@
       }
     },
     {
-      "id": "cli:mem20personalworkflowtwinz",
+      "id": "cli:mem20twinz",
       "kind": "cli",
-      "name": "mem20personalworkflowtwinz",
+      "name": "mem20twinz",
       "category": "cli",
       "subcategory": "mem20",
-      "description": "mem20personalworkflowtwinz \u00b7 runs with /opt/mem20/.venv/bin/python",
-      "source": "/opt/mem20/.venv/bin/mem20personalworkflowtwinz",
+      "description": "mem20twinz \u00b7 runs with /opt/mem20/.venv/bin/python",
+      "source": "/opt/mem20/.venv/bin/mem20twinz",
       "runtime_status": "ok",
       "runtime_detail": "script in /opt/mem20/.venv/bin",
       "checks": [
         {
           "check": "path exists",
           "ok": true,
-          "detail": "/opt/mem20/.venv/bin/mem20personalworkflowtwinz"
+          "detail": "/opt/mem20/.venv/bin/mem20twinz"
         },
         {
           "check": "executable",
@@ -6995,7 +6995,7 @@
         "executable": true,
         "size": 192,
         "symlink": false,
-        "resolved_target": "/opt/mem20/.venv/bin/mem20personalworkflowtwinz"
+        "resolved_target": "/opt/mem20/.venv/bin/mem20twinz"
       }
     },
     {
@@ -7063,20 +7063,20 @@
       }
     },
     {
-      "id": "cli:mem20playermotivationtwinz",
+      "id": "cli:mem20twinz",
       "kind": "cli",
-      "name": "mem20playermotivationtwinz",
+      "name": "mem20twinz",
       "category": "cli",
       "subcategory": "mem20",
-      "description": "mem20playermotivationtwinz \u00b7 runs with /opt/mem20/.venv/bin/python",
-      "source": "/opt/mem20/.venv/bin/mem20playermotivationtwinz",
+      "description": "mem20twinz \u00b7 runs with /opt/mem20/.venv/bin/python",
+      "source": "/opt/mem20/.venv/bin/mem20twinz",
       "runtime_status": "ok",
       "runtime_detail": "script in /opt/mem20/.venv/bin",
       "checks": [
         {
           "check": "path exists",
           "ok": true,
-          "detail": "/opt/mem20/.venv/bin/mem20playermotivationtwinz"
+          "detail": "/opt/mem20/.venv/bin/mem20twinz"
         },
         {
           "check": "executable",
@@ -7091,7 +7091,7 @@
         "executable": true,
         "size": 192,
         "symlink": false,
-        "resolved_target": "/opt/mem20/.venv/bin/mem20playermotivationtwinz"
+        "resolved_target": "/opt/mem20/.venv/bin/mem20twinz"
       }
     },
     {
@@ -7479,20 +7479,20 @@
       }
     },
     {
-      "id": "cli:mem20realtimebusinesstwinz",
+      "id": "cli:mem20twinz",
       "kind": "cli",
-      "name": "mem20realtimebusinesstwinz",
+      "name": "mem20twinz",
       "category": "cli",
       "subcategory": "mem20",
-      "description": "mem20realtimebusinesstwinz \u00b7 runs with /opt/mem20/.venv/bin/python",
-      "source": "/opt/mem20/.venv/bin/mem20realtimebusinesstwinz",
+      "description": "mem20twinz \u00b7 runs with /opt/mem20/.venv/bin/python",
+      "source": "/opt/mem20/.venv/bin/mem20twinz",
       "runtime_status": "ok",
       "runtime_detail": "script in /opt/mem20/.venv/bin",
       "checks": [
         {
           "check": "path exists",
           "ok": true,
-          "detail": "/opt/mem20/.venv/bin/mem20realtimebusinesstwinz"
+          "detail": "/opt/mem20/.venv/bin/mem20twinz"
         },
         {
           "check": "executable",
@@ -7507,7 +7507,7 @@
         "executable": true,
         "size": 192,
         "symlink": false,
-        "resolved_target": "/opt/mem20/.venv/bin/mem20realtimebusinesstwinz"
+        "resolved_target": "/opt/mem20/.venv/bin/mem20twinz"
       }
     },
     {
@@ -16148,25 +16148,25 @@
       }
     },
     {
-      "id": "subsystem:mem20customerdigitaltwinlabz",
+      "id": "subsystem:mem20twinz",
       "kind": "subsystem",
-      "name": "mem20customerdigitaltwinlabz",
+      "name": "mem20twinz",
       "category": "other",
       "subcategory": "native-subsystem",
       "description": "Customer Digital Twin Lab with 6 peers, HTTP cockpit, MCP",
-      "source": "/opt/mem20/mem20customerdigitaltwinlabz/pyproject.toml",
+      "source": "/opt/mem20/mem20twinz/pyproject.toml",
       "runtime_status": "ok",
-      "runtime_detail": "pkg=mem20customerdigitaltwinlabz v1.0.0; installed 1.0.0 via root-venv; importable=False (1 modules checked); scripts=1 declared, 1 on PATH",
+      "runtime_detail": "pkg=mem20twinz v1.0.0; installed 1.0.0 via root-venv; importable=False (1 modules checked); scripts=1 declared, 1 on PATH",
       "checks": [
         {
           "check": "pyproject present",
           "ok": true,
-          "detail": "/opt/mem20/mem20customerdigitaltwinlabz/pyproject.toml"
+          "detail": "/opt/mem20/mem20twinz/pyproject.toml"
         },
         {
           "check": "name declared",
           "ok": true,
-          "detail": "mem20customerdigitaltwinlabz"
+          "detail": "mem20twinz"
         },
         {
           "check": "description present",
@@ -16186,17 +16186,17 @@
         {
           "check": "import",
           "ok": false,
-          "detail": "mem20customerdigitaltwinlabz=n"
+          "detail": "mem20twinz=n"
         }
       ],
       "meta": {
-        "pkg_name": "mem20customerdigitaltwinlabz",
+        "pkg_name": "mem20twinz",
         "version": "1.0.0",
-        "pyproject": "/opt/mem20/mem20customerdigitaltwinlabz/pyproject.toml",
+        "pyproject": "/opt/mem20/mem20twinz/pyproject.toml",
         "entry_points": [
           {
-            "console": "mem20customerdigitaltwinlabz",
-            "target": "mem20customerdigitaltwinlabz.runtime:main",
+            "console": "mem20twinz",
+            "target": "mem20twinz.runtime:main",
             "on_path": true
           }
         ],
@@ -16208,7 +16208,7 @@
         },
         "importable": [
           {
-            "name": "mem20customerdigitaltwinlabz",
+            "name": "mem20twinz",
             "importable": false
           }
         ],
@@ -18197,25 +18197,25 @@
       }
     },
     {
-      "id": "subsystem:mem20executiondigitaltwinz",
+      "id": "subsystem:mem20twinz",
       "kind": "subsystem",
-      "name": "mem20executiondigitaltwinz",
+      "name": "mem20twinz",
       "category": "other",
       "subcategory": "native-subsystem",
       "description": "Execution Digital Twin (RM-059): predictive workflow twin forecast with sync/simulate/drift and peer counterfactual/time-machine/event signals",
-      "source": "/opt/mem20/mem20executiondigitaltwinz/pyproject.toml",
+      "source": "/opt/mem20/mem20twinz/pyproject.toml",
       "runtime_status": "ok",
-      "runtime_detail": "pkg=mem20executiondigitaltwinz v1.0.0; installed 1.0.0 via root-venv; importable=True (1 modules checked); scripts=1 declared, 1 on PATH",
+      "runtime_detail": "pkg=mem20twinz v1.0.0; installed 1.0.0 via root-venv; importable=True (1 modules checked); scripts=1 declared, 1 on PATH",
       "checks": [
         {
           "check": "pyproject present",
           "ok": true,
-          "detail": "/opt/mem20/mem20executiondigitaltwinz/pyproject.toml"
+          "detail": "/opt/mem20/mem20twinz/pyproject.toml"
         },
         {
           "check": "name declared",
           "ok": true,
-          "detail": "mem20executiondigitaltwinz"
+          "detail": "mem20twinz"
         },
         {
           "check": "description present",
@@ -18235,17 +18235,17 @@
         {
           "check": "import",
           "ok": true,
-          "detail": "mem20executiondigitaltwinz=y"
+          "detail": "mem20twinz=y"
         }
       ],
       "meta": {
-        "pkg_name": "mem20executiondigitaltwinz",
+        "pkg_name": "mem20twinz",
         "version": "1.0.0",
-        "pyproject": "/opt/mem20/mem20executiondigitaltwinz/pyproject.toml",
+        "pyproject": "/opt/mem20/mem20twinz/pyproject.toml",
         "entry_points": [
           {
-            "console": "mem20executiondigitaltwinz",
-            "target": "mem20executiondigitaltwinz.runtime:main",
+            "console": "mem20twinz",
+            "target": "mem20twinz.runtime:main",
             "on_path": true
           }
         ],
@@ -18257,7 +18257,7 @@
         },
         "importable": [
           {
-            "name": "mem20executiondigitaltwinz",
+            "name": "mem20twinz",
             "importable": true
           }
         ],
@@ -20046,25 +20046,25 @@
       }
     },
     {
-      "id": "subsystem:mem20humansatisfactiontwinz",
+      "id": "subsystem:mem20twinz",
       "kind": "subsystem",
-      "name": "mem20humansatisfactiontwinz",
+      "name": "mem20twinz",
       "category": "other",
       "subcategory": "native-subsystem",
       "description": "Model satisfaction, trust, control, and cognitive load alongside technical metrics",
-      "source": "/opt/mem20/mem20humansatisfactiontwinz/pyproject.toml",
+      "source": "/opt/mem20/mem20twinz/pyproject.toml",
       "runtime_status": "ok",
-      "runtime_detail": "pkg=mem20humansatisfactiontwinz v1.0.0; installed 1.0.0 via root-venv; importable=False (1 modules checked); scripts=1 declared, 1 on PATH",
+      "runtime_detail": "pkg=mem20twinz v1.0.0; installed 1.0.0 via root-venv; importable=False (1 modules checked); scripts=1 declared, 1 on PATH",
       "checks": [
         {
           "check": "pyproject present",
           "ok": true,
-          "detail": "/opt/mem20/mem20humansatisfactiontwinz/pyproject.toml"
+          "detail": "/opt/mem20/mem20twinz/pyproject.toml"
         },
         {
           "check": "name declared",
           "ok": true,
-          "detail": "mem20humansatisfactiontwinz"
+          "detail": "mem20twinz"
         },
         {
           "check": "description present",
@@ -20084,17 +20084,17 @@
         {
           "check": "import",
           "ok": false,
-          "detail": "mem20humansatisfactiontwinz=n"
+          "detail": "mem20twinz=n"
         }
       ],
       "meta": {
-        "pkg_name": "mem20humansatisfactiontwinz",
+        "pkg_name": "mem20twinz",
         "version": "1.0.0",
-        "pyproject": "/opt/mem20/mem20humansatisfactiontwinz/pyproject.toml",
+        "pyproject": "/opt/mem20/mem20twinz/pyproject.toml",
         "entry_points": [
           {
-            "console": "mem20humansatisfactiontwinz",
-            "target": "mem20humansatisfactiontwinz.core:cli",
+            "console": "mem20twinz",
+            "target": "mem20twinz.core:cli",
             "on_path": true
           }
         ],
@@ -20106,7 +20106,7 @@
         },
         "importable": [
           {
-            "name": "mem20humansatisfactiontwinz",
+            "name": "mem20twinz",
             "importable": false
           }
         ],
@@ -20182,25 +20182,25 @@
       }
     },
     {
-      "id": "subsystem:mem20integrationdigitaltwinz",
+      "id": "subsystem:mem20twinz",
       "kind": "subsystem",
-      "name": "mem20integrationdigitaltwinz",
+      "name": "mem20twinz",
       "category": "other",
       "subcategory": "native-subsystem",
       "description": "Integration Digital Twin (RM-076): simulate external services/rate limits/failures/API changes with 6 peer integrations; legacy domain preserved",
-      "source": "/opt/mem20/mem20integrationdigitaltwinz/pyproject.toml",
+      "source": "/opt/mem20/mem20twinz/pyproject.toml",
       "runtime_status": "ok",
-      "runtime_detail": "pkg=mem20integrationdigitaltwinz v1.0.0; installed 1.0.0 via root-venv; importable=True (1 modules checked); scripts=1 declared, 1 on PATH",
+      "runtime_detail": "pkg=mem20twinz v1.0.0; installed 1.0.0 via root-venv; importable=True (1 modules checked); scripts=1 declared, 1 on PATH",
       "checks": [
         {
           "check": "pyproject present",
           "ok": true,
-          "detail": "/opt/mem20/mem20integrationdigitaltwinz/pyproject.toml"
+          "detail": "/opt/mem20/mem20twinz/pyproject.toml"
         },
         {
           "check": "name declared",
           "ok": true,
-          "detail": "mem20integrationdigitaltwinz"
+          "detail": "mem20twinz"
         },
         {
           "check": "description present",
@@ -20220,17 +20220,17 @@
         {
           "check": "import",
           "ok": true,
-          "detail": "mem20integrationdigitaltwinz=y"
+          "detail": "mem20twinz=y"
         }
       ],
       "meta": {
-        "pkg_name": "mem20integrationdigitaltwinz",
+        "pkg_name": "mem20twinz",
         "version": "1.0.0",
-        "pyproject": "/opt/mem20/mem20integrationdigitaltwinz/pyproject.toml",
+        "pyproject": "/opt/mem20/mem20twinz/pyproject.toml",
         "entry_points": [
           {
-            "console": "mem20integrationdigitaltwinz",
-            "target": "mem20integrationdigitaltwinz.runtime:main",
+            "console": "mem20twinz",
+            "target": "mem20twinz.runtime:main",
             "on_path": true
           }
         ],
@@ -20242,7 +20242,7 @@
         },
         "importable": [
           {
-            "name": "mem20integrationdigitaltwinz",
+            "name": "mem20twinz",
             "importable": true
           }
         ],
@@ -24487,25 +24487,25 @@
       }
     },
     {
-      "id": "subsystem:mem20personalworkflowtwinz",
+      "id": "subsystem:mem20twinz",
       "kind": "subsystem",
-      "name": "mem20personalworkflowtwinz",
+      "name": "mem20twinz",
       "category": "other",
       "subcategory": "native-subsystem",
       "description": "Personal Workflow Twin with 6 peers, HTTP cockpit, MCP",
-      "source": "/opt/mem20/mem20personalworkflowtwinz/pyproject.toml",
+      "source": "/opt/mem20/mem20twinz/pyproject.toml",
       "runtime_status": "ok",
-      "runtime_detail": "pkg=mem20personalworkflowtwinz v1.0.0; installed 1.0.0 via root-venv; importable=False (1 modules checked); scripts=1 declared, 1 on PATH",
+      "runtime_detail": "pkg=mem20twinz v1.0.0; installed 1.0.0 via root-venv; importable=False (1 modules checked); scripts=1 declared, 1 on PATH",
       "checks": [
         {
           "check": "pyproject present",
           "ok": true,
-          "detail": "/opt/mem20/mem20personalworkflowtwinz/pyproject.toml"
+          "detail": "/opt/mem20/mem20twinz/pyproject.toml"
         },
         {
           "check": "name declared",
           "ok": true,
-          "detail": "mem20personalworkflowtwinz"
+          "detail": "mem20twinz"
         },
         {
           "check": "description present",
@@ -24525,17 +24525,17 @@
         {
           "check": "import",
           "ok": false,
-          "detail": "mem20personalworkflowtwinz=n"
+          "detail": "mem20twinz=n"
         }
       ],
       "meta": {
-        "pkg_name": "mem20personalworkflowtwinz",
+        "pkg_name": "mem20twinz",
         "version": "1.0.0",
-        "pyproject": "/opt/mem20/mem20personalworkflowtwinz/pyproject.toml",
+        "pyproject": "/opt/mem20/mem20twinz/pyproject.toml",
         "entry_points": [
           {
-            "console": "mem20personalworkflowtwinz",
-            "target": "mem20personalworkflowtwinz.runtime:main",
+            "console": "mem20twinz",
+            "target": "mem20twinz.runtime:main",
             "on_path": true
           }
         ],
@@ -24547,7 +24547,7 @@
         },
         "importable": [
           {
-            "name": "mem20personalworkflowtwinz",
+            "name": "mem20twinz",
             "importable": false
           }
         ],
@@ -24695,25 +24695,25 @@
       }
     },
     {
-      "id": "subsystem:mem20playermotivationtwinz",
+      "id": "subsystem:mem20twinz",
       "kind": "subsystem",
-      "name": "mem20playermotivationtwinz",
+      "name": "mem20twinz",
       "category": "other",
       "subcategory": "native-subsystem",
       "description": "Player Motivation Twin with 6 peers, HTTP cockpit, MCP",
-      "source": "/opt/mem20/mem20playermotivationtwinz/pyproject.toml",
+      "source": "/opt/mem20/mem20twinz/pyproject.toml",
       "runtime_status": "ok",
-      "runtime_detail": "pkg=mem20playermotivationtwinz v1.0.0; installed 1.0.0 via root-venv; importable=False (1 modules checked); scripts=1 declared, 1 on PATH",
+      "runtime_detail": "pkg=mem20twinz v1.0.0; installed 1.0.0 via root-venv; importable=False (1 modules checked); scripts=1 declared, 1 on PATH",
       "checks": [
         {
           "check": "pyproject present",
           "ok": true,
-          "detail": "/opt/mem20/mem20playermotivationtwinz/pyproject.toml"
+          "detail": "/opt/mem20/mem20twinz/pyproject.toml"
         },
         {
           "check": "name declared",
           "ok": true,
-          "detail": "mem20playermotivationtwinz"
+          "detail": "mem20twinz"
         },
         {
           "check": "description present",
@@ -24733,17 +24733,17 @@
         {
           "check": "import",
           "ok": false,
-          "detail": "mem20playermotivationtwinz=n"
+          "detail": "mem20twinz=n"
         }
       ],
       "meta": {
-        "pkg_name": "mem20playermotivationtwinz",
+        "pkg_name": "mem20twinz",
         "version": "1.0.0",
-        "pyproject": "/opt/mem20/mem20playermotivationtwinz/pyproject.toml",
+        "pyproject": "/opt/mem20/mem20twinz/pyproject.toml",
         "entry_points": [
           {
-            "console": "mem20playermotivationtwinz",
-            "target": "mem20playermotivationtwinz.runtime:main",
+            "console": "mem20twinz",
+            "target": "mem20twinz.runtime:main",
             "on_path": true
           }
         ],
@@ -24755,7 +24755,7 @@
         },
         "importable": [
           {
-            "name": "mem20playermotivationtwinz",
+            "name": "mem20twinz",
             "importable": false
           }
         ],
@@ -25579,25 +25579,25 @@
       }
     },
     {
-      "id": "subsystem:mem20realtimebusinesstwinz",
+      "id": "subsystem:mem20twinz",
       "kind": "subsystem",
-      "name": "mem20realtimebusinesstwinz",
+      "name": "mem20twinz",
       "category": "other",
       "subcategory": "native-subsystem",
       "description": "Real-Time Business Twin with 6 peers, HTTP cockpit, MCP",
-      "source": "/opt/mem20/mem20realtimebusinesstwinz/pyproject.toml",
+      "source": "/opt/mem20/mem20twinz/pyproject.toml",
       "runtime_status": "ok",
-      "runtime_detail": "pkg=mem20realtimebusinesstwinz v1.0.0; installed 1.0.0 via root-venv; importable=False (1 modules checked); scripts=1 declared, 1 on PATH",
+      "runtime_detail": "pkg=mem20twinz v1.0.0; installed 1.0.0 via root-venv; importable=False (1 modules checked); scripts=1 declared, 1 on PATH",
       "checks": [
         {
           "check": "pyproject present",
           "ok": true,
-          "detail": "/opt/mem20/mem20realtimebusinesstwinz/pyproject.toml"
+          "detail": "/opt/mem20/mem20twinz/pyproject.toml"
         },
         {
           "check": "name declared",
           "ok": true,
-          "detail": "mem20realtimebusinesstwinz"
+          "detail": "mem20twinz"
         },
         {
           "check": "description present",
@@ -25617,17 +25617,17 @@
         {
           "check": "import",
           "ok": false,
-          "detail": "mem20realtimebusinesstwinz=n"
+          "detail": "mem20twinz=n"
         }
       ],
       "meta": {
-        "pkg_name": "mem20realtimebusinesstwinz",
+        "pkg_name": "mem20twinz",
         "version": "1.0.0",
-        "pyproject": "/opt/mem20/mem20realtimebusinesstwinz/pyproject.toml",
+        "pyproject": "/opt/mem20/mem20twinz/pyproject.toml",
         "entry_points": [
           {
-            "console": "mem20realtimebusinesstwinz",
-            "target": "mem20realtimebusinesstwinz.runtime:main",
+            "console": "mem20twinz",
+            "target": "mem20twinz.runtime:main",
             "on_path": true
           }
         ],
@@ -25639,7 +25639,7 @@
         },
         "importable": [
           {
-            "name": "mem20realtimebusinesstwinz",
+            "name": "mem20twinz",
             "importable": false
           }
         ],

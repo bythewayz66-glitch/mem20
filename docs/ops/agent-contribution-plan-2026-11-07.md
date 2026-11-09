@@ -114,7 +114,7 @@ later step verifiable; the three likely-in-flight agents land last.
 | 7 | Webpage Developer | Web surfaces | `mem20owebz` to 7/7 conformance | `feat/4.0-webpage-developer-mem20owebz` |
 | 8 | mem20-webdev | Web apps | `mem20kanbanz` to 7/7 conformance | `feat/4.0-mem20-webdev-mem20kanbanz` |
 | 9 | mem20-frontends | Frontends / desktop | `mem20controlz` to 7/7 conformance | `feat/4.0-mem20-frontends-mem20controlz` |
-| 10 | UX Researcher | UX research | `mem20playermotivationtwinz` to 7/7 | `feat/4.0-ux-researcher-mem20playermotivationtwinz` |
+| 10 | UX Researcher | UX research | `mem20twinz` to 7/7 | `feat/4.0-ux-researcher-mem20twinz` |
 | 11 | Experiment Tracker | Experiment tracking | `mem20remoteexperimentlabz` to 7/7 | `feat/4.0-experiment-tracker-mem20remoteexperimentlabz` |
 | 12 | Mem20 Benchmark Dataset Builder | Benchmarks / datasets | Score the 5 unscored retrieval modes; publish the 7-mode table | `bench/ws1-retrieval-modes-2026-11-07` |
 | 13 | Analytics Reporter | Analytics | `mem20googlez` to 7/7 conformance | `feat/4.0-analytics-reporter-mem20googlez` |
@@ -216,9 +216,9 @@ touch.** Anything outside the list is either frozen (§1) or someone else's laye
 
 ### Step 10 — UX Researcher
 - **Domain:** UX research.
-- **Contribution:** bring `mem20playermotivationtwinz` to 7/7 conformance.
-- **Branch:** `feat/4.0-ux-researcher-mem20playermotivationtwinz`
-- **Files:** `mem20playermotivationtwinz/**` only.
+- **Contribution:** bring `mem20twinz` to 7/7 conformance.
+- **Branch:** `feat/4.0-ux-researcher-mem20twinz`
+- **Files:** `mem20twinz/**` only.
 - **Evidence:** 40-char SHA + conformance exit 0.
 
 ### Step 11 — Experiment Tracker

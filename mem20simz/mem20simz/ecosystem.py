@@ -4,7 +4,7 @@ import pathlib,sys
 from typing import Mapping,Sequence
 __all__=["counterfactual_sim","business_twin","causal_routing","sim_events","sim_routing","sim_containment","probe"]
 _REPO_ROOT=pathlib.Path(__file__).resolve().parents[2]
-_PROJECTS=("mem20simz","mem20realtimebusinesstwinz","mem20causalroutingbrainz","mem20eventstreamsuperhighwayz","mem20capabilitymarketplacez","mem20faultcontainmentcellsz")
+_PROJECTS=("mem20simz","mem20twinz","mem20causalroutingbrainz","mem20eventstreamsuperhighwayz","mem20capabilitymarketplacez","mem20faultcontainmentcellsz")
 def _bootstrap():
     for name in reversed(_PROJECTS):
         p=str(_REPO_ROOT/name)
@@ -19,9 +19,9 @@ def counterfactual_sim(state:Mapping)->dict:
     except Exception as exc: return {"ok":False,"subsystem":"mem20simz","error":f"{type(exc).__name__}: {exc}"}
 def business_twin()->dict:
     try:
-        from mem20realtimebusinesstwinz.domain import create_twin,twin_health
-        t=create_twin("simz"); h=twin_health(t); return {"ok":True,"subsystem":"mem20realtimebusinesstwinz","healthy":h is not None}
-    except Exception as exc: return {"ok":False,"subsystem":"mem20realtimebusinesstwinz","error":f"{type(exc).__name__}: {exc}"}
+        from mem20twinz.domain import create_twin,twin_health
+        t=create_twin("simz"); h=twin_health(t); return {"ok":True,"subsystem":"mem20twinz","healthy":h is not None}
+    except Exception as exc: return {"ok":False,"subsystem":"mem20twinz","error":f"{type(exc).__name__}: {exc}"}
 def causal_routing(features:Mapping,weights:Mapping)->dict:
     try:
         from mem20causalroutingbrainz.domain import route_by_cause

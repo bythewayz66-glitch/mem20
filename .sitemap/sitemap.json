@@ -4882,9 +4882,9 @@
       "code_lines": 263,
       "dependencies": [],
       "description": "",
-      "dir": "mem20customerdigitaltwinlabz",
+      "dir": "mem20twinz",
       "docs": [
-        "mem20customerdigitaltwinlabz/README.md"
+        "mem20twinz/README.md"
       ],
       "entry_points": {},
       "file_count": 8,
@@ -4906,13 +4906,13 @@
         "capability",
         "runtime"
       ],
-      "name": "mem20customerdigitaltwinlabz",
+      "name": "mem20twinz",
       "packaged": false,
       "readme_summary": "RM-014 \u2014 Customer Digital Twin Lab",
       "readme_text": "# rm-014 \u2014 customer digital twin lab\n\noutcome: model customer goals, objections, behavior, and product usage before shipping changes\n\nbreakthrough: product decisions can be rehearsed against realistic customer populations\n\nmachine-executable local runtime includes versioned state, sqlite wal persistence, events, sdk crud, resumable/idempotent jobs, retries/timeouts/quotas, recovery, `simulate` operation logic, decision explanations, feedback, cli, http console/api, mesh selection/failover, simulator, benchmark, metrics, and opt-in signature mode.\n",
       "requires_python": null,
       "subdirs": [
-        "mem20customerdigitaltwinlabz"
+        "mem20twinz"
       ],
       "test_files": 0,
       "version": null
@@ -6207,9 +6207,9 @@
       "code_lines": 263,
       "dependencies": [],
       "description": "",
-      "dir": "mem20executiondigitaltwinz",
+      "dir": "mem20twinz",
       "docs": [
-        "mem20executiondigitaltwinz/README.md"
+        "mem20twinz/README.md"
       ],
       "entry_points": {},
       "file_count": 8,
@@ -6231,13 +6231,13 @@
         "capability",
         "runtime"
       ],
-      "name": "mem20executiondigitaltwinz",
+      "name": "mem20twinz",
       "packaged": false,
       "readme_summary": "RM-059 \u2014 Execution Digital Twin",
       "readme_text": "# rm-059 \u2014 execution digital twin\n\noutcome: mirror every live workflow in a predictive simulation updated from telemetry\n\nbreakthrough: the system sees likely bottlenecks and failures before they happen\n\nmachine-executable local runtime includes versioned state, sqlite wal persistence, events, sdk crud, resumable/idempotent jobs, retries/timeouts/quotas, recovery, `forecast` operation logic, decision explanations, feedback, cli, http console/api, mesh selection/failover, simulator, benchmark, metrics, and opt-in signature mode.\n",
       "requires_python": null,
       "subdirs": [
-        "mem20executiondigitaltwinz"
+        "mem20twinz"
       ],
       "test_files": 0,
       "version": null
@@ -7486,12 +7486,12 @@
       "code_lines": 9,
       "dependencies": [],
       "description": "Model satisfaction, trust, control, and cognitive load alongside technical metrics",
-      "dir": "mem20humansatisfactiontwinz",
+      "dir": "mem20twinz",
       "docs": [
-        "mem20humansatisfactiontwinz/README.md"
+        "mem20twinz/README.md"
       ],
       "entry_points": {
-        "mem20humansatisfactiontwinz": "mem20humansatisfactiontwinz.core:cli"
+        "mem20twinz": "mem20twinz.core:cli"
       },
       "file_count": 9,
       "keywords": [],
@@ -7514,13 +7514,13 @@
         "core",
         "run"
       ],
-      "name": "mem20humansatisfactiontwinz",
+      "name": "mem20twinz",
       "packaged": true,
       "readme_summary": "RM-180 \u2014 Human Satisfaction Twin",
       "readme_text": "# rm-180 \u2014 human satisfaction twin\n\n**owner:** mary  \n**lane:** completion, review, quality, and user-outcome validation\n\n## outcome\nmodel satisfaction, trust, control, and cognitive load alongside technical metrics\n\n## breakthrough\nproducts optimize for how they feel to use, not only whether they run\n\nthis package implements the locally executable/non-human portion of this off record lab roadmap on a shared, zero-dependency runtime substrate. it includes typed/versioned roadmap validation, sqlite wal state + event history, resumable/idempotent jobs, cancellation/timeouts/quotas, deterministic recovery, adaptive mode decisions with confidence/alternatives/bottlenecks/explanations, feedback tuning, cli + typed client + http api + browser command surface + event stream, local/hybrid/cloud peer execution, conflict-safe lww synchronization, caching, backpressure/failover, metrics, simulator scenarios, benchmark tooling, safety gating, and a rollback manifest.\n\nthe domain engine for this package is keyed specifically to rm-180 and produces deterministic executable results for the roadmap's core operation using only local standard-library code. external hardware, proprietary models, production credentials, live third-party services, and deployment authorization are intentionally not fabricated; those remain environment-bound integration points.\n\n## run\n```bash\npython run.py inspect\npython run.py run '{\"text\":\"demo\",\"cache\":false}'\npython run.py simulate\npython run.py benchmark --runs 5\npython run.py serve --port 8765\n```\n\nopen `http://127.0.0.1:8765/` for the live command surface.\n",
       "requires_python": ">=3.11",
       "subdirs": [
-        "mem20humansatisfactiontwinz"
+        "mem20twinz"
       ],
       "test_files": 0,
       "version": "1.0.0"
@@ -7572,9 +7572,9 @@
       "code_lines": 263,
       "dependencies": [],
       "description": "",
-      "dir": "mem20integrationdigitaltwinz",
+      "dir": "mem20twinz",
       "docs": [
-        "mem20integrationdigitaltwinz/README.md"
+        "mem20twinz/README.md"
       ],
       "entry_points": {},
       "file_count": 8,
@@ -7596,13 +7596,13 @@
         "capability",
         "runtime"
       ],
-      "name": "mem20integrationdigitaltwinz",
+      "name": "mem20twinz",
       "packaged": false,
       "readme_summary": "RM-076 \u2014 Integration Digital Twin",
       "readme_text": "# rm-076 \u2014 integration digital twin\n\noutcome: simulate external services, rate limits, failures, and future api changes\n\nbreakthrough: connectors can be fully tested without touching production systems\n\nmachine-executable local runtime includes versioned state, sqlite wal persistence, events, sdk crud, resumable/idempotent jobs, retries/timeouts/quotas, recovery, `route` operation logic, decision explanations, feedback, cli, http console/api, mesh selection/failover, simulator, benchmark, metrics, and opt-in signature mode.\n",
       "requires_python": null,
       "subdirs": [
-        "mem20integrationdigitaltwinz"
+        "mem20twinz"
       ],
       "test_files": 0,
       "version": null
@@ -8068,7 +8068,7 @@
       "name": "mem20labz",
       "packaged": true,
       "readme_summary": "mem20labz \u2014 crew runtime",
-      "readme_text": "# mem20labz \u2014 crew runtime\n\nmem20 laboratory runtime.\n\n## members (10)\n\nreviewed packages grouped here for joint integration under the\npackage-review rulings:\n\n- `mem20autonomoussaleslaboratoryz`\n- `mem20continuouscompatibilitylabz`\n- `mem20customerdigitaltwinlabz`\n- `mem20dependencymutationlabz`\n- `mem20executabledesignstresslabz`\n- `mem20modelgenomelabz`\n- `mem20neuromorphiceventlabz`\n- `mem20simz`\n- `mem20remoteexperimentlabz`\n- `mem20webassemblycomponentlabz`\n\n## status\n\nskeleton slice: registry, cli (`--version`, `--members`), hermetic\ntests. member wiring arrives in the integration phase.\n",
+      "readme_text": "# mem20labz \u2014 crew runtime\n\nmem20 laboratory runtime.\n\n## members (10)\n\nreviewed packages grouped here for joint integration under the\npackage-review rulings:\n\n- `mem20autonomoussaleslaboratoryz`\n- `mem20continuouscompatibilitylabz`\n- `mem20twinz`\n- `mem20dependencymutationlabz`\n- `mem20executabledesignstresslabz`\n- `mem20modelgenomelabz`\n- `mem20neuromorphiceventlabz`\n- `mem20simz`\n- `mem20remoteexperimentlabz`\n- `mem20webassemblycomponentlabz`\n\n## status\n\nskeleton slice: registry, cli (`--version`, `--members`), hermetic\ntests. member wiring arrives in the integration phase.\n",
       "requires_python": ">=3.11",
       "subdirs": [
         "mem20labz",
@@ -10644,9 +10644,9 @@
       "code_lines": 263,
       "dependencies": [],
       "description": "",
-      "dir": "mem20personalworkflowtwinz",
+      "dir": "mem20twinz",
       "docs": [
-        "mem20personalworkflowtwinz/README.md"
+        "mem20twinz/README.md"
       ],
       "entry_points": {},
       "file_count": 8,
@@ -10668,13 +10668,13 @@
         "capability",
         "runtime"
       ],
-      "name": "mem20personalworkflowtwinz",
+      "name": "mem20twinz",
       "packaged": false,
       "readme_summary": "RM-040 \u2014 Personal Workflow Twin",
       "readme_text": "# rm-040 \u2014 personal workflow twin\n\noutcome: learn an individual work pattern and proactively prepare tools, context, and next actions\n\nbreakthrough: the workspace adapts to the person rather than forcing a rigid process\n\nmachine-executable local runtime includes versioned state, sqlite wal persistence, events, sdk crud, resumable/idempotent jobs, retries/timeouts/quotas, recovery, `search` operation logic, decision explanations, feedback, cli, http console/api, mesh selection/failover, simulator, benchmark, metrics, and opt-in signature mode.\n",
       "requires_python": null,
       "subdirs": [
-        "mem20personalworkflowtwinz"
+        "mem20twinz"
       ],
       "test_files": 0,
       "version": null
@@ -10721,7 +10721,7 @@
       "name": "mem20pipez",
       "packaged": true,
       "readme_summary": "mem20pipez \u2014 crew runtime",
-      "readme_text": "# mem20pipez \u2014 crew runtime\n\nmem20 production pipeline runtime for game-maker and software pipelines.\n\n## members (12)\n\nreviewed packages grouped here for joint integration under the\npackage-review rulings:\n\n- `mem20pipez`\n- `mem20pipez`\n- `mem20pipez`\n- `mem20pipez`\n- `mem20pipez`\n- `mem20pipez`\n- `mem20personalworkflowtwinz`\n- `mem20pipez`\n- `mem20pipez`\n- `mem20pipez`\n- `mem20pipez`\n- `mem20pipez`\n\n## status\n\nskeleton slice: registry, cli (`--version`, `--members`), hermetic\ntests. member wiring arrives in the integration phase.\n",
+      "readme_text": "# mem20pipez \u2014 crew runtime\n\nmem20 production pipeline runtime for game-maker and software pipelines.\n\n## members (12)\n\nreviewed packages grouped here for joint integration under the\npackage-review rulings:\n\n- `mem20pipez`\n- `mem20pipez`\n- `mem20pipez`\n- `mem20pipez`\n- `mem20pipez`\n- `mem20pipez`\n- `mem20twinz`\n- `mem20pipez`\n- `mem20pipez`\n- `mem20pipez`\n- `mem20pipez`\n- `mem20pipez`\n\n## status\n\nskeleton slice: registry, cli (`--version`, `--members`), hermetic\ntests. member wiring arrives in the integration phase.\n",
       "requires_python": ">=3.11",
       "subdirs": [
         "mem20pipez",
@@ -10777,9 +10777,9 @@
       "code_lines": 333,
       "dependencies": [],
       "description": "",
-      "dir": "mem20playermotivationtwinz",
+      "dir": "mem20twinz",
       "docs": [
-        "mem20playermotivationtwinz/README.md"
+        "mem20twinz/README.md"
       ],
       "entry_points": {},
       "file_count": 10,
@@ -10802,13 +10802,13 @@
         "installer",
         "runtime"
       ],
-      "name": "mem20playermotivationtwinz",
+      "name": "mem20twinz",
       "packaged": false,
       "readme_summary": "RM-204 \u2014 Player Motivation Twin",
       "readme_text": "# rm-204 \u2014 player motivation twin\n\n**outcome:** model different motivation profiles and predict response to progression systems\n\n**breakthrough:** rewards can fit the person instead of forcing one universal loop\n\nthis package is the machine-executable local implementation derived from the supplied off record lab roadmap. it includes versioned typed state, sqlite wal persistence, event history/snapshots, sdk crud/subscription, resumable idempotent jobs, cancellation, retries/timeouts/quotas/backpressure, deterministic replica reconciliation, local/hybrid/cloud placement/failover, roadmap-specific `progression` logic, decision confidence/explanations, feedback, cli, http console/api, safety guards, simulator, benchmark/metrics, and rollback-capable installer.\n\nnamed live product surfaces, real provider/device credentials, production traffic, and governed freestack deployment remain target-environment integration and are not claimed complete.\n",
       "requires_python": null,
       "subdirs": [
-        "mem20playermotivationtwinz"
+        "mem20twinz"
       ],
       "test_files": 0,
       "version": null
@@ -11342,9 +11342,9 @@
       "code_lines": 263,
       "dependencies": [],
       "description": "",
-      "dir": "mem20realtimebusinesstwinz",
+      "dir": "mem20twinz",
       "docs": [
-        "mem20realtimebusinesstwinz/README.md"
+        "mem20twinz/README.md"
       ],
       "entry_points": {},
       "file_count": 8,
@@ -11366,13 +11366,13 @@
         "capability",
         "runtime"
       ],
-      "name": "mem20realtimebusinesstwinz",
+      "name": "mem20twinz",
       "packaged": false,
       "readme_summary": "RM-081 \u2014 Real-Time Business Twin",
       "readme_text": "# rm-081 \u2014 real-time business twin\n\noutcome: mirror customers, operations, costs, capacity, and revenue in a live simulation\n\nbreakthrough: owners can test business decisions before making them real\n\nmachine-executable local runtime includes versioned state, sqlite wal persistence, events, sdk crud, resumable/idempotent jobs, retries/timeouts/quotas, recovery, `simulate` operation logic, decision explanations, feedback, cli, http console/api, mesh selection/failover, simulator, benchmark, metrics, and opt-in signature mode.\n",
       "requires_python": null,
       "subdirs": [
-        "mem20realtimebusinesstwinz"
+        "mem20twinz"
       ],
       "test_files": 0,
       "version": null
@@ -13869,7 +13869,7 @@
       "name": "mem20twinz",
       "packaged": true,
       "readme_summary": "mem20twinz \u2014 crew runtime",
-      "readme_text": "# mem20twinz \u2014 crew runtime\n\nmem20 digital twin runtime.\n\n## members (6)\n\nreviewed packages grouped here for joint integration under the\npackage-review rulings:\n\n- `mem20executiondigitaltwinz`\n- `mem20humansatisfactiontwinz`\n- `mem20integrationdigitaltwinz`\n- `mem20playermotivationtwinz`\n- `mem20realtimebusinesstwinz`\n- `mem20simz`\n\n## status\n\nskeleton slice: registry, cli (`--version`, `--members`), hermetic\ntests. member wiring arrives in the integration phase.\n",
+      "readme_text": "# mem20twinz \u2014 crew runtime\n\nmem20 digital twin runtime.\n\n## members (6)\n\nreviewed packages grouped here for joint integration under the\npackage-review rulings:\n\n- `mem20twinz`\n- `mem20twinz`\n- `mem20twinz`\n- `mem20twinz`\n- `mem20twinz`\n- `mem20simz`\n\n## status\n\nskeleton slice: registry, cli (`--version`, `--members`), hermetic\ntests. member wiring arrives in the integration phase.\n",
       "requires_python": ">=3.11",
       "subdirs": [
         "mem20twinz",

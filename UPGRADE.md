@@ -1414,7 +1414,7 @@ These names do not state a capability the audit can pin down. Give each a one-li
 - **Must refuse:** to be a general-purpose runtime, and to return a confident answer when it is out of its depth.
 - **Proven by:** a test asserting a specific value, bound or contradiction — not that the function ran.
 
-### `mem20apprenticeshipruntimez`
+### `mem20schoolz`
 
 - **Should be:** apprenticeship runtime — learn by doing under supervision, with the supervision explicit.
 - **Must refuse:** to be a general-purpose runtime, and to return a confident answer when it is out of its depth.

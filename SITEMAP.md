@@ -130,7 +130,7 @@ A machine-readable map of this monorepo so an agent can find the right subsystem
 | `mem20offlineresiliencemeshz` | 327 | 1 | `mem20offlineresiliencemeshz` | Offline Resilience Mesh — queue, retry, and sync across connectivity loss |
 | `mem20acquisitionandpartnershipscoutz` | 263 | 0 | - | RM-019 — Acquisition and Partnership Scout |
 | `mem20apishapeshiftinggatewayz` | 263 | 0 | - | RM-075 — API Shape-Shifting Gateway |
-| `mem20apprenticeshipruntimez` | 263 | 0 | - | RM-036 — Apprenticeship Runtime |
+| `mem20schoolz` | 263 | 0 | - | RM-036 — Apprenticeship Runtime |
 | `mem20autonomousdealdeskz` | 263 | 0 | - | RM-086 — Autonomous Deal Desk |
 | `mem20autonomousmicrosaasfoundryz` | 263 | 0 | - | RM-012 — Autonomous Micro-SaaS Foundry |
 | `mem20autonomousrecoverydirectorz` | 263 | 0 | - | RM-060 — Autonomous Recovery Director |

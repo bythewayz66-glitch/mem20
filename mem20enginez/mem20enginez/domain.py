@@ -19,7 +19,7 @@ MEMBERS: tuple[str, ...] = (
     "mem20adaptivedispatchenginez",
     "mem20adaptiveforgettingenginez",
     "mem20adaptivepersonalityruntimez",
-    "mem20apprenticeshipruntimez",
+    "mem20schoolz",
     "mem20chaosnativeapplicationruntimez",
     "mem20communitychallengeenginez",
     "mem20communitypulseenginez",

@@ -96,7 +96,7 @@ counted as drift, and `verify` never mutates the pack it inspects.
 
 ## Crosscheck note
 
-Built after confirming no existing subsystem covers this. `mem20apprenticeshipruntimez`
+Built after confirming no existing subsystem covers this. `mem20schoolz`
 (RM-036) teaches *humans* through guided execution while agents learn from
 corrections — a runtime, not a pack generator. Sitemap search for "onboarding"
 returns only unrelated organs.

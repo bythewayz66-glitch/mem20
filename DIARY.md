@@ -831,6 +831,9 @@ Completed depth-first rebuild to **7/7** for #315-#329 (11 subsystems in this se
 ## 2026-11-09 - repo sync/cleanup + license fix
 - **Issues/PRs:** Closed #392, #227, #184; left #229 open (engine in separate repo). Merged mergeable PRs/dependabot updates; closed remaining stale PRs; pruned branches for flat main tree.
 - **Local install:** Updated repo to latest, fixed `pyproject.toml` license `MIT`→`Apache-2.0`, reinstalled editable package (metadata corrected).
+
+## 2026-11-09 - consolidate training/cert/apprenticeship into mem20schoolz
+- **Consolidation:** Created `mem20schoolz` (unified training + certification + apprenticeship), created/build consolidated `mem20trainingz` and `mem20certificationz` as intermediate then merged into `mem20schoolz` per request; removed originals `mem20apprenticeshipruntimez`, `mem20trainingz`, `mem20certificationz`. Renamed MCP tools to `mem20schoolz_tools.py`. Repo-wide references updated (docs, sitemap, inventory, skills catalogs, etc.). Stale references updated across tree.
 - **Full pytest follow-up fixes (then pushed):** fixed `gateway/mem20_gateway.py` syntax/structure (criterion-7 block was dangling in `main()` breaking `elif read`; moved 39 missing entries into `SUBSYSTEMS`). Fixed `mem20mktz` root causes (truthful `braid_hook` availability via `braid_bridge.available()`; `bundle.compose` queries UCG only when `cap_ids` present; env-honest test guards/assertions) → **33 passed, 9 skipped**. Fixed `mem20selfhealingruntimecivilizationz.integrations.PlansEngineBridge` adapter for real `mem20selfhealingplansz` API (no `Engine`) → **53 passed**.
 - **es//:** mem20 context + self-model saved (GitHub steps skipped earlier); commits/pushes to `origin/main` record the work.
 

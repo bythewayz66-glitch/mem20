@@ -872,8 +872,6 @@ def main():
     "mem20wasmz": {"purpose": "WebAssembly component lab (language-neutral component compatibility)","entry":"python -m mem20wasmz --help","owner":"mem20-renovation","wave":4},
     "mem20yetiz": {"purpose": "Yeti Claw absorption (3D rigging, animation, BVH mocap, glTF)","entry":"python -m mem20yetiz --help","owner":"mem20-renovation","wave":4},
     "mem20zimr": {"purpose": "RM-002 Zero-Install Microapp Runtime (signed microapps)","entry":"python -m mem20zimr --help","owner":"mem20-renovation","wave":4},
-
-    # --- criterion 7 registrations (domain subsystems) ---
     "mem20alternativedatabaseplaygroundz": {"purpose": "Alternative database playground (query planning, indexing, engine comparison)","entry":"python -m mem20alternativedatabaseplaygroundz --help","owner":"mem20-renovation","wave":4},
     "mem20ambientdevicecompanionz": {"purpose": "Ambient device companion (context sensing, proactive suggestions, routines)","entry":"python -m mem20ambientdevicecompanionz --help","owner":"mem20-renovation","wave":4},
     "mem20ambientteamradioz": {"purpose": "Ambient team radio (channels, messaging, routing, activity)","entry":"python -m mem20ambientteamradioz --help","owner":"mem20-renovation","wave":4},

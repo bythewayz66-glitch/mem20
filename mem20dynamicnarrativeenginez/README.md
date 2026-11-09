@@ -3,7 +3,7 @@
 First-class mem20 subsystem for dynamic narrative engines (story graph, branching choices, state tracking) with **6 peers**, SQLite WAL runtime, CLI, JSON HTTP API, served web cockpit, docs/app monitor, and real MCP tools. Core API preserved.
 
 ## Peers (6)
-`mem20eventstreamsuperhighwayz`, `mem20communitychallengeenginez`, `mem20contextcompressionforgez`, `mem20mixedinitiativefocusenginez`, `mem20capabilitymarketplacez`, `mem20simz`.
+`mem20eventstreamsuperhighwayz`, `mem20communitychallengeenginez`, `mem20rewardforgez`, `mem20mixedinitiativefocusenginez`, `mem20capabilitymarketplacez`, `mem20simz`.
 
 ## Python API (runnable)
 ```python

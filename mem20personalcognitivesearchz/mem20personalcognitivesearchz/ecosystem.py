@@ -4,7 +4,7 @@ import pathlib,sys
 from typing import Mapping,Sequence
 __all__=["episodic_memory","context_compress","predictive_recall","search_events","search_routing","output_compile","probe"]
 _REPO_ROOT=pathlib.Path(__file__).resolve().parents[2]
-_PROJECTS=("mem20episodicmemorygraphz","mem20contextcompressionforgez","mem20predictiverecallenginez","mem20eventstreamsuperhighwayz","mem20capabilitymarketplacez","mem20agentoutputcompilerz")
+_PROJECTS=("mem20episodicmemorygraphz","mem20rewardforgez","mem20predictiverecallenginez","mem20eventstreamsuperhighwayz","mem20capabilitymarketplacez","mem20agentoutputcompilerz")
 def _bootstrap():
     for name in reversed(_PROJECTS):
         p=str(_REPO_ROOT/name)
@@ -20,9 +20,9 @@ def episodic_memory()->dict:
     except Exception as exc: return {"ok":False,"subsystem":"mem20episodicmemorygraphz","error":f"{type(exc).__name__}: {exc}"}
 def context_compress(text:str)->dict:
     try:
-        from mem20contextcompressionforgez.domain import compress
-        r=compress(text or "search", ratio=0.5); return {"ok":True,"subsystem":"mem20contextcompressionforgez","compressed":r is not None}
-    except Exception as exc: return {"ok":False,"subsystem":"mem20contextcompressionforgez","error":f"{type(exc).__name__}: {exc}"}
+        from mem20rewardforgez.domain import compress
+        r=compress(text or "search", ratio=0.5); return {"ok":True,"subsystem":"mem20rewardforgez","compressed":r is not None}
+    except Exception as exc: return {"ok":False,"subsystem":"mem20rewardforgez","error":f"{type(exc).__name__}: {exc}"}
 def predictive_recall()->dict:
     try:
         from mem20predictiverecallenginez.domain import probe as p

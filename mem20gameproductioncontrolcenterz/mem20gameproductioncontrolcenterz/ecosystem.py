@@ -52,11 +52,11 @@ def release_readiness(services: List[Dict[str, Any]] = None) -> Dict[str, Any]:
 def capability_forge_status(payload: Dict[str, Any] = None) -> Dict[str, Any]:
     """Use specialist model forge to assess production capability/model readiness."""
     def run():
-        from mem20specialistmodelforgez.domain import forge_health
+        from mem20rewardforgez.domain import forge_health
         models = (payload or {}).get("models") or [{"id": "level-design", "specialty": "design"}, {"id": "qa", "specialty": "qa"}]
         status = forge_health(models)
         return {"forge": status, "models": len(models)}
-    return _safe("mem20specialistmodelforgez", run)
+    return _safe("mem20rewardforgez", run)
 
 def resilience_assessment(project: Dict[str, Any] = None) -> Dict[str, Any]:
     """Use design stress lab to assess production resilience and recovery."""

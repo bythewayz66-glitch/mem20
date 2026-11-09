@@ -1,4 +1,6 @@
-# mem20rewardforgez — Reward Forge
+# mem20rewardforgez — Reward Forge (unified)
+
+Unified forge subsystem consolidating forge/modelforge/reward/character/compression/synthetic data runtimes under `mem20rewardforgez/forges/`.
 
 First-class mem20 subsystem for reward forging (linear rewards, shaping, normalization, reward health) with **6 peers**, SQLite WAL runtime, CLI, JSON HTTP API, served web cockpit, docs/app monitor, and real MCP tools. Core API preserved.
 

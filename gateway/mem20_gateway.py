@@ -498,9 +498,9 @@ SUBSYSTEMS = {
         "owner": "mem20-webdev",
         "wave": 2,
     },
-    "mem20specialistmodelforgez": {
+    "mem20rewardforgez": {
         "purpose": "Create small task-specific models and adapters from successful workflows",
-        "entry": "python -m mem20specialistmodelforgez simulate",
+        "entry": "python -m mem20rewardforgez simulate",
         "owner": "mem20-webdev",
         "wave": 2,
     },

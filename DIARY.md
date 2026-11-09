@@ -324,7 +324,7 @@ Closed: #391 `mem20zerotouchnodeswarmz` (5b6bc1d3), #390
 `mem20syntheticevaluatorarenaz` (aa4d2b72), #383 `mem20styleguideagentz`
 (9bbc7e7a), #382 `mem20studioz` (2aa96517), #381
 `mem20speculativeworkflowenginez` (15977736), #380
-`mem20specialistmodelforgez` (87f4d4e5), #379 `mem20spatialcommanduniversez`
+`mem20rewardforgez` (87f4d4e5), #379 `mem20spatialcommanduniversez`
 (00e3deab), #378 `mem20skillmemorytransferz` (e6df0f6c).
 
 Each fix contains:
@@ -657,7 +657,7 @@ real peer-derived inputs (effective capacity from team presence; unit-economics 
 hot-swappable release readiness; specialist forge status; resilience-adjusted risk via design
 stress lab; rigging/animation asset-pipeline status). 6 unique peers (#300–#316 unused):
 `mem20realtimeteampresencez`,`mem20uniteconomicsautopilotz`,`mem20hotswappableservicefoundationz`,
-`mem20specialistmodelforgez`,`mem20labz`,`mem20pipez`.
+`mem20rewardforgez`,`mem20labz`,`mem20pipez`.
 Added `/doctor`, web cockpit, root shims, fenced runnable README, docs/PLAN, docs/app monitor,
 gateway/toolchest. Verification: 10 tests pass, conformance **7/7**.
 
@@ -852,6 +852,9 @@ Completed depth-first rebuild to **7/7** for #315-#329 (11 subsystems in this se
 
 ## 2026-11-09 - consolidate lab subsystems into mem20labz
 - **Consolidation:** Merged experimental/lab subsystems into `mem20labz` as modules under `mem20labz/labs/` (continuouscompatibilitylabz, dependencymutationlabz, executabledesignstresslabz, modelgenomelabz, neuromorphiceventlabz, remoteexperimentlabz, webassemblycomponentlabz). Removed originals; repo-wide references updated to `mem20labz`.
+
+## 2026-11-09 - consolidate forge subsystems into mem20rewardforgez
+- **Consolidation:** Merged forge/modelforge/compression/character/synthetic-data subsystems into `mem20rewardforgez` as modules under `mem20rewardforgez/forges/` (characterandmascotforgez, contextcompressionforgez, specialistmodelforgez, syntheticdataforgez). Removed originals; references consolidated.
 - **Full pytest follow-up fixes (then pushed):** fixed `gateway/mem20_gateway.py` syntax/structure (criterion-7 block was dangling in `main()` breaking `elif read`; moved 39 missing entries into `SUBSYSTEMS`). Fixed `mem20mktz` root causes (truthful `braid_hook` availability via `braid_bridge.available()`; `bundle.compose` queries UCG only when `cap_ids` present; env-honest test guards/assertions) → **33 passed, 9 skipped**. Fixed `mem20selfhealingruntimecivilizationz.integrations.PlansEngineBridge` adapter for real `mem20selfhealingplansz` API (no `Engine`) → **53 passed**.
 - **es//:** mem20 context + self-model saved (GitHub steps skipped earlier); commits/pushes to `origin/main` record the work.
 
@@ -864,7 +867,7 @@ Reworked/verified subsystems #340–#350 (oldest→newest, 1 at a time) to full 
 - **342 mem20opportunityradarz** `a93dc060` (13t, ok/6, scanned 1): peers `mem20autonomoussaleslaboratoryz, mem20simz, mem20causalroutingbrainz, mem20revenueleakhunterz, mem20eventstreamsuperhighwayz, mem20capabilitymarketplacez`; core `scan,score_opportunity,rank,alert,radar_health,estate_context` superset.
 - **343 mem20simz** `e8085c7a` (13t, ok/6, runs 20): peers `mem20simz, mem20twinz, mem20simz, mem20eventstreamsuperhighwayz, mem20capabilitymarketplacez, mem20causalroutingbrainz`; core `simulate_once,monte_carlo,summarize,scenario_compare,risk_of_loss,estate_context` superset.
 - **344 mem20personalautomationcanvasz** `ebbea9a9` (13t, ok/6, completed): peers `mem20autonomousworkcellsz, mem20agentoutputcompilerz, mem20selfhealingplansz, mem20eventstreamsuperhighwayz, mem20capabilitymarketplacez, mem20causalroutingbrainz`; core `create_canvas,add_workflow,add_trigger,run_workflow,canvas_health,estate_context` superset.
-- **345 mem20personalcognitivesearchz** `ff590fd3` (13t, ok/6, hits 1): peers `mem20episodicmemorygraphz, mem20contextcompressionforgez, mem20predictiverecallenginez, mem20eventstreamsuperhighwayz, mem20capabilitymarketplacez, mem20agentoutputcompilerz`; core `index,query,rank,recall,search_health,estate_context` superset.
+- **345 mem20personalcognitivesearchz** `ff590fd3` (13t, ok/6, hits 1): peers `mem20episodicmemorygraphz, mem20rewardforgez, mem20predictiverecallenginez, mem20eventstreamsuperhighwayz, mem20capabilitymarketplacez, mem20agentoutputcompilerz`; core `index,query,rank,recall,search_health,estate_context` superset.
 - **346 mem20personalmodelevolutionz** `c63fce8b` (13t, ok/6, v2): peers `mem20collectivemodelintelligencez, mem20skillmemorytransferz, mem20episodicmemorygraphz, mem20eventstreamsuperhighwayz, mem20capabilitymarketplacez, mem20causalroutingbrainz`; core `create_model,adapt,predict,reset,evolution_health,estate_context` superset.
 - **347 mem20twinz** `1d5cb0e7` (13t, ok/6, suggestions 1): peers `mem20personalautomationcanvasz, mem20autonomousworkcellsz, mem20agentoutputcompilerz, mem20episodicmemorygraphz, mem20eventstreamsuperhighwayz, mem20capabilitymarketplacez`; core `create_twin,observe,suggest_improvements,efficiency_score,twin_health,estate_context` superset.
 - **348 mem20pipez** (crew runtime, unusual layout) `3f49fd51` (7t incl 4 legacy, ok/6, members 12): peers `mem20personalautomationcanvasz, mem20autonomousworkcellsz, mem20agentoutputcompilerz, mem20eventstreamsuperhighwayz, mem20capabilitymarketplacez, mem20causalroutingbrainz`; preserved `MEMBERS,__version__`, legacy CLI `--version/--members`; `estate_context` superset (+`peer_count,peers_ok,checks`) + `pipeline_report/probe`; subcommands added without breaking legacy.

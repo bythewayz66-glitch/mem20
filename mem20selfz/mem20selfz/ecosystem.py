@@ -4,7 +4,7 @@ import pathlib,sys
 from typing import Mapping,Sequence
 __all__=["episodic_memory","context_compression","causal_routing","self_events","capability_routing","health_nervous","probe"]
 _REPO_ROOT=pathlib.Path(__file__).resolve().parents[2]
-_PROJECTS=("mem20episodicmemorygraphz","mem20contextcompressionforgez","mem20causalroutingbrainz","mem20eventstreamsuperhighwayz","mem20capabilitymarketplacez","mem20universalhealthnervoussystemz")
+_PROJECTS=("mem20episodicmemorygraphz","mem20rewardforgez","mem20causalroutingbrainz","mem20eventstreamsuperhighwayz","mem20capabilitymarketplacez","mem20universalhealthnervoussystemz")
 def _bootstrap():
     for name in reversed(_PROJECTS):
         p=str(_REPO_ROOT/name)
@@ -20,9 +20,9 @@ def episodic_memory(title:str)->dict:
     except Exception as exc: return {"ok":False,"subsystem":"mem20episodicmemorygraphz","error":f"{type(exc).__name__}: {exc}"}
 def context_compression(text:str)->dict:
     try:
-        from mem20contextcompressionforgez.domain import compress
-        r=compress(text or "self context", ratio=0.5); return {"ok":True,"subsystem":"mem20contextcompressionforgez","compressed":r is not None}
-    except Exception as exc: return {"ok":False,"subsystem":"mem20contextcompressionforgez","error":f"{type(exc).__name__}: {exc}"}
+        from mem20rewardforgez.domain import compress
+        r=compress(text or "self context", ratio=0.5); return {"ok":True,"subsystem":"mem20rewardforgez","compressed":r is not None}
+    except Exception as exc: return {"ok":False,"subsystem":"mem20rewardforgez","error":f"{type(exc).__name__}: {exc}"}
 def causal_routing(features:Mapping,weights:Mapping)->dict:
     try:
         from mem20causalroutingbrainz.domain import route_by_cause

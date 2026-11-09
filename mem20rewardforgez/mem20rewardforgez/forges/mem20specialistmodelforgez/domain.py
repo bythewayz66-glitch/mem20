@@ -42,9 +42,9 @@ def estate_context(store_path: str | None = None):
     inventory_path = root / "toolchest" / "inventory.json"
     if not inventory_path.exists(): inventory_path = root / "toolchest" / "src" / "toolchest" / "inventory.json"
     inventory = load_inventory(inventory_path)
-    ledger = DeliveryLedger(max_entries=4); ledger.add("mem20specialistmodelforgez-work")
+    ledger = DeliveryLedger(max_entries=4); ledger.add("mem20rewardforgez-work")
     ctx = {"path_scripts": len(mem20path.discover_scripts()), "inventory_keys": len(inventory) if isinstance(inventory, dict) else 0,
-           "work_recorded": "mem20specialistmodelforgez-work" in ledger, "focus_score": float(focus_score({"priority":1,"distractions":0})),
+           "work_recorded": "mem20rewardforgez-work" in ledger, "focus_score": float(focus_score({"priority":1,"distractions":0})),
            "sitemap_skips_cache": is_skipped_dir("__pycache__")}
     if store_path is not None:
         config = EngineConfig(store_path=Path(store_path).expanduser().resolve()); MemoryEngine(config); ctx["engine_status_checked"]=True

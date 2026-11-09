@@ -3575,12 +3575,12 @@
       "code_lines": 9,
       "dependencies": [],
       "description": "Design consistent characters with appearance, voice, motion, behavior, and memory",
-      "dir": "mem20characterandmascotforgez",
+      "dir": "mem20rewardforgez",
       "docs": [
-        "mem20characterandmascotforgez/README.md"
+        "mem20rewardforgez/README.md"
       ],
       "entry_points": {
-        "mem20characterandmascotforgez": "mem20characterandmascotforgez.core:cli"
+        "mem20rewardforgez": "mem20rewardforgez.core:cli"
       },
       "file_count": 9,
       "keywords": [],
@@ -3603,13 +3603,13 @@
         "core",
         "run"
       ],
-      "name": "mem20characterandmascotforgez",
+      "name": "mem20rewardforgez",
       "packaged": true,
       "readme_summary": "RM-136 \u2014 Character and Mascot Forge",
       "readme_text": "# rm-136 \u2014 character and mascot forge\n\n**owner:** jammee  \n**lane:** creative production, media, brand, and experience design\n\n## outcome\ndesign consistent characters with appearance, voice, motion, behavior, and memory\n\n## breakthrough\na brand character can operate across chat, game, video, and spatial interfaces\n\nthis package implements the locally executable/non-human portion of this off record lab roadmap on a shared, zero-dependency runtime substrate. it includes typed/versioned roadmap validation, sqlite wal state + event history, resumable/idempotent jobs, cancellation/timeouts/quotas, deterministic recovery, adaptive mode decisions with confidence/alternatives/bottlenecks/explanations, feedback tuning, cli + typed client + http api + browser command surface + event stream, local/hybrid/cloud peer execution, conflict-safe lww synchronization, caching, backpressure/failover, metrics, simulator scenarios, benchmark tooling, safety gating, and a rollback manifest.\n\nthe domain engine for this package is keyed specifically to rm-136 and produces deterministic executable results for the roadmap's core operation using only local standard-library code. external hardware, proprietary models, production credentials, live third-party services, and deployment authorization are intentionally not fabricated; those remain environment-bound integration points.\n\n## run\n```bash\npython run.py inspect\npython run.py run '{\"text\":\"demo\",\"cache\":false}'\npython run.py simulate\npython run.py benchmark --runs 5\npython run.py serve --port 8765\n```\n\nopen `http://127.0.0.1:8765/` for the live command surface.\n",
       "requires_python": ">=3.11",
       "subdirs": [
-        "mem20characterandmascotforgez"
+        "mem20rewardforgez"
       ],
       "test_files": 0,
       "version": "1.0.0"
@@ -4017,9 +4017,9 @@
       "code_lines": 263,
       "dependencies": [],
       "description": "",
-      "dir": "mem20contextcompressionforgez",
+      "dir": "mem20rewardforgez",
       "docs": [
-        "mem20contextcompressionforgez/README.md"
+        "mem20rewardforgez/README.md"
       ],
       "entry_points": {},
       "file_count": 8,
@@ -4041,13 +4041,13 @@
         "capability",
         "runtime"
       ],
-      "name": "mem20contextcompressionforgez",
+      "name": "mem20rewardforgez",
       "packaged": false,
       "readme_summary": "RM-025 \u2014 Context Compression Forge",
       "readme_text": "# rm-025 \u2014 context compression forge\n\noutcome: distill long project history into compact task-specific working memory\n\nbreakthrough: large projects stay coherent without overwhelming model context windows\n\nmachine-executable local runtime includes versioned state, sqlite wal persistence, events, sdk crud, resumable/idempotent jobs, retries/timeouts/quotas, recovery, `search` operation logic, decision explanations, feedback, cli, http console/api, mesh selection/failover, simulator, benchmark, metrics, and opt-in signature mode.\n",
       "requires_python": null,
       "subdirs": [
-        "mem20contextcompressionforgez"
+        "mem20rewardforgez"
       ],
       "test_files": 0,
       "version": null
@@ -6329,7 +6329,7 @@
       "name": "mem20fabricz",
       "packaged": true,
       "readme_summary": "mem20fabricz \u2014 crew runtime",
-      "readme_text": "# mem20fabricz \u2014 crew runtime\n\nmem20 integration fabric runtime.\n\n## members (23)\n\nreviewed packages grouped here for joint integration under the\npackage-review rulings:\n\n- `mem20apishapeshiftinggatewayz`\n- `mem20characterandmascotforgez`\n- `mem20collectivemodelintelligencez`\n- `mem20contextcompressionforgez`\n- `mem20crisisresponsemeshz`\n- `mem20crossruntimeeventlatticez`\n- `mem20edgetransportfabricz`\n- `mem20eventstreamsuperhighwayz`\n- `mem20federatedmodellearningmeshz`\n- `mem20freestackambientcomputingfabricz`\n- `mem20livemodelfusionz`\n- `mem20modalitybridgez`\n- `mem20modelsleepandwakesystemz`\n- `mem20nearbydevicemeshz`\n- `mem20offlineresiliencemeshz`\n- `mem20personalmodelevolutionz`\n- `mem20planetarybatchfabricz`\n- `mem20rewardforgez`\n- `mem20sensorfusiongatewayz`\n- `mem20specialistmodelforgez`\n- `mem20syntheticdataforgez`\n- `mem20temporaldatabasefabricz`\n- `mem20universalintegrationcompilerz`\n\n## status\n\nskeleton slice: registry, cli (`--version`, `--members`), hermetic\ntests. member wiring arrives in the integration phase.\n",
+      "readme_text": "# mem20fabricz \u2014 crew runtime\n\nmem20 integration fabric runtime.\n\n## members (23)\n\nreviewed packages grouped here for joint integration under the\npackage-review rulings:\n\n- `mem20apishapeshiftinggatewayz`\n- `mem20rewardforgez`\n- `mem20collectivemodelintelligencez`\n- `mem20rewardforgez`\n- `mem20crisisresponsemeshz`\n- `mem20crossruntimeeventlatticez`\n- `mem20edgetransportfabricz`\n- `mem20eventstreamsuperhighwayz`\n- `mem20federatedmodellearningmeshz`\n- `mem20freestackambientcomputingfabricz`\n- `mem20livemodelfusionz`\n- `mem20modalitybridgez`\n- `mem20modelsleepandwakesystemz`\n- `mem20nearbydevicemeshz`\n- `mem20offlineresiliencemeshz`\n- `mem20personalmodelevolutionz`\n- `mem20planetarybatchfabricz`\n- `mem20rewardforgez`\n- `mem20sensorfusiongatewayz`\n- `mem20rewardforgez`\n- `mem20rewardforgez`\n- `mem20temporaldatabasefabricz`\n- `mem20universalintegrationcompilerz`\n\n## status\n\nskeleton slice: registry, cli (`--version`, `--members`), hermetic\ntests. member wiring arrives in the integration phase.\n",
       "requires_python": ">=3.11",
       "subdirs": [
         "mem20fabricz",
@@ -13472,9 +13472,9 @@
       "code_lines": 263,
       "dependencies": [],
       "description": "",
-      "dir": "mem20specialistmodelforgez",
+      "dir": "mem20rewardforgez",
       "docs": [
-        "mem20specialistmodelforgez/README.md"
+        "mem20rewardforgez/README.md"
       ],
       "entry_points": {},
       "file_count": 8,
@@ -13496,13 +13496,13 @@
         "capability",
         "runtime"
       ],
-      "name": "mem20specialistmodelforgez",
+      "name": "mem20rewardforgez",
       "packaged": false,
       "readme_summary": "RM-063 \u2014 Specialist Model Forge",
       "readme_text": "# rm-063 \u2014 specialist model forge\n\noutcome: create small task-specific models and adapters from successful workflows\n\nbreakthrough: the system converts repeated cloud work into cheap local expertise\n\nmachine-executable local runtime includes versioned state, sqlite wal persistence, events, sdk crud, resumable/idempotent jobs, retries/timeouts/quotas, recovery, `compose` operation logic, decision explanations, feedback, cli, http console/api, mesh selection/failover, simulator, benchmark, metrics, and opt-in signature mode.\n",
       "requires_python": null,
       "subdirs": [
-        "mem20specialistmodelforgez"
+        "mem20rewardforgez"
       ],
       "test_files": 0,
       "version": null
@@ -13647,12 +13647,12 @@
       "code_lines": 9,
       "dependencies": [],
       "description": "Generate realistic non-production datasets that preserve useful distributions and edge cases",
-      "dir": "mem20syntheticdataforgez",
+      "dir": "mem20rewardforgez",
       "docs": [
-        "mem20syntheticdataforgez/README.md"
+        "mem20rewardforgez/README.md"
       ],
       "entry_points": {
-        "mem20syntheticdataforgez": "mem20syntheticdataforgez.core:cli"
+        "mem20rewardforgez": "mem20rewardforgez.core:cli"
       },
       "file_count": 9,
       "keywords": [],
@@ -13675,13 +13675,13 @@
         "core",
         "run"
       ],
-      "name": "mem20syntheticdataforgez",
+      "name": "mem20rewardforgez",
       "packaged": true,
       "readme_summary": "RM-168 \u2014 Synthetic Data Forge",
       "readme_text": "# rm-168 \u2014 synthetic data forge\n\n**owner:** kimberly  \n**lane:** schema, data shape, database, and information transformation\n\n## outcome\ngenerate realistic non-production datasets that preserve useful distributions and edge cases\n\n## breakthrough\nteams can test deeply without exposing real user data\n\nthis package implements the locally executable/non-human portion of this off record lab roadmap on a shared, zero-dependency runtime substrate. it includes typed/versioned roadmap validation, sqlite wal state + event history, resumable/idempotent jobs, cancellation/timeouts/quotas, deterministic recovery, adaptive mode decisions with confidence/alternatives/bottlenecks/explanations, feedback tuning, cli + typed client + http api + browser command surface + event stream, local/hybrid/cloud peer execution, conflict-safe lww synchronization, caching, backpressure/failover, metrics, simulator scenarios, benchmark tooling, safety gating, and a rollback manifest.\n\nthe domain engine for this package is keyed specifically to rm-168 and produces deterministic executable results for the roadmap's core operation using only local standard-library code. external hardware, proprietary models, production credentials, live third-party services, and deployment authorization are intentionally not fabricated; those remain environment-bound integration points.\n\n## run\n```bash\npython run.py inspect\npython run.py run '{\"text\":\"demo\",\"cache\":false}'\npython run.py simulate\npython run.py benchmark --runs 5\npython run.py serve --port 8765\n```\n\nopen `http://127.0.0.1:8765/` for the live command surface.\n",
       "requires_python": ">=3.11",
       "subdirs": [
-        "mem20syntheticdataforgez"
+        "mem20rewardforgez"
       ],
       "test_files": 0,
       "version": "1.0.0"

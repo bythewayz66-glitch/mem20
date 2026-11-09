@@ -5,13 +5,13 @@ from typing import Any, Dict, List, Optional
 import importlib, time
 
 MEMBERS = (
-    "mem20apishapeshiftinggatewayz","mem20characterandmascotforgez","mem20collectivemodelintelligencez",
-    "mem20contextcompressionforgez","mem20crisisresponsemeshz","mem20crossruntimeeventlatticez",
+    "mem20apishapeshiftinggatewayz","mem20rewardforgez","mem20collectivemodelintelligencez",
+    "mem20rewardforgez","mem20crisisresponsemeshz","mem20crossruntimeeventlatticez",
     "mem20edgetransportfabricz","mem20eventstreamsuperhighwayz","mem20federatedmodellearningmeshz",
     "mem20freestackambientcomputingfabricz","mem20livemodelfusionz","mem20modalitybridgez",
     "mem20modelsleepandwakesystemz","mem20nearbydevicemeshz","mem20offlineresiliencemeshz",
     "mem20personalmodelevolutionz","mem20planetarybatchfabricz","mem20rewardforgez",
-    "mem20sensorfusiongatewayz","mem20specialistmodelforgez","mem20syntheticdataforgez",
+    "mem20sensorfusiongatewayz","mem20rewardforgez","mem20rewardforgez",
     "mem20temporaldatabasefabricz","mem20universalintegrationcompilerz",
 )
 

@@ -139,7 +139,7 @@ A machine-readable map of this monorepo so an agent can find the right subsystem
 | `mem20simz` | 263 | 0 | - | RM-090 — Business Model Simulator |
 | `mem20causalroutingbrainz` | 263 | 0 | - | RM-054 — Causal Routing Brain |
 | `mem20compoundingproductecosystemz` | 263 | 0 | - | RM-020 — Compounding Product Ecosystem |
-| `mem20contextcompressionforgez` | 263 | 0 | - | RM-025 — Context Compression Forge |
+| `mem20rewardforgez` | 263 | 0 | - | RM-025 — Context Compression Forge |
 | `mem20simz` | 263 | 0 | - | RM-029 — Counterfactual Memory Simulator |
 | `mem20crossplatformmicrokernelz` | 263 | 0 | - | RM-100 — Cross-Platform Microkernel |
 | `mem20crossruntimeeventlatticez` | 263 | 0 | - | RM-005 — Cross-Runtime Event Lattice |
@@ -204,7 +204,7 @@ A machine-readable map of this monorepo so an agent can find the right subsystem
 | `mem20sensorymemoryingestz` | 263 | 0 | - | RM-024 — Sensory Memory Ingest |
 | `mem20servicebundlingenginez` | 263 | 0 | - | RM-087 — Service Bundling Engine |
 | `mem20skillmemorytransferz` | 263 | 0 | - | RM-028 — Skill Memory Transfer |
-| `mem20specialistmodelforgez` | 263 | 0 | - | RM-063 — Specialist Model Forge |
+| `mem20rewardforgez` | 263 | 0 | - | RM-063 — Specialist Model Forge |
 | `mem20speculativeworkflowenginez` | 263 | 0 | - | RM-053 — Speculative Workflow Engine |
 | `mem20syntheticevaluatorarenaz` | 263 | 0 | - | RM-067 — Synthetic Evaluator Arena |
 | `mem20uniteconomicsautopilotz` | 263 | 0 | - | RM-082 — Unit Economics Autopilot |
@@ -252,7 +252,7 @@ A machine-readable map of this monorepo so an agent can find the right subsystem
 | `mem20buildsequenceoptimizerz` | 9 | 0 | `mem20buildsequenceoptimizerz` | Find faster and safer implementation orders under real resource constraints |
 | `mem20capabilitygapmapperz` | 9 | 0 | `mem20capabilitygapmapperz` | Compare desired features with available runtimes, models, connectors, and skills |
 | `mem20chaosnativeapplicationruntimez` | 9 | 0 | `mem20chaosnativeapplicationruntimez` | Design applications that expect components, networks, and providers to fail |
-| `mem20characterandmascotforgez` | 9 | 0 | `mem20characterandmascotforgez` | Design consistent characters with appearance, voice, motion, behavior, and memory |
+| `mem20rewardforgez` | 9 | 0 | `mem20rewardforgez` | Design consistent characters with appearance, voice, motion, behavior, and memory |
 | `mem20communitypulseenginez` | 9 | 0 | `mem20communitypulseenginez` | Detect emerging questions, friction, excitement, and needs across opted-in communities |
 | `mem20completionconfidenceenginez` | 9 | 0 | `mem20completionconfidenceenginez` | Estimate whether work is truly usable rather than merely marked complete |
 | `mem20conflictdeescalationassistantz` | 9 | 0 | `mem20conflictdeescalationassistantz` | Offer neutral reframing, timing suggestions, and shared-fact checks during tense exchanges |
@@ -320,7 +320,7 @@ A machine-readable map of this monorepo so an agent can find the right subsystem
 | `mem20smartmeetingcopilotz` | 9 | 0 | `mem20smartmeetingcopilotz` | Turn live meetings into decisions, assigned actions, follow-ups, and callable workflows |
 | `mem20spatialcomputingsandboxz` | 9 | 0 | `mem20spatialcomputingsandboxz` | Build shared 3D workspaces that expose capabilities, agents, and data as spatial objects |
 | `mem20spatialexperiencedesignerz` | 9 | 0 | `mem20spatialexperiencedesignerz` | Compose immersive rooms, exhibits, stores, and game spaces from reusable primitives |
-| `mem20syntheticdataforgez` | 9 | 0 | `mem20syntheticdataforgez` | Generate realistic non-production datasets that preserve useful distributions and edge cases |
+| `mem20rewardforgez` | 9 | 0 | `mem20rewardforgez` | Generate realistic non-production datasets that preserve useful distributions and edge cases |
 | `mem20universalcompaniondevicesdkz` | 9 | 0 | `mem20universalcompaniondevicesdkz` | Expose devices and sensors through a stable cross-platform capability API |
 | `mem20universaldatatranslatorz` | 9 | 0 | `mem20universaldatatranslatorz` | Map records, events, documents, and objects between incompatible systems |
 | `mem20simz` | 9 | 0 | `mem20simz` | Model how different users attempt tasks and where they fail or abandon |
@@ -405,7 +405,7 @@ mem20boxz = mem20boxz.cli:main
 mem20buildsequenceoptimizerz = mem20buildsequenceoptimizerz.core:cli
 mem20capabilitygapmapperz = mem20capabilitygapmapperz.core:cli
 mem20chaosnativeapplicationruntimez = mem20chaosnativeapplicationruntimez.core:cli
-mem20characterandmascotforgez = mem20characterandmascotforgez.core:cli
+mem20rewardforgez = mem20rewardforgez.core:cli
 mem20-cli = mem20cliz:main
 mem20communitypulseenginez = mem20communitypulseenginez.core:cli
 mem20completionconfidenceenginez = mem20completionconfidenceenginez.core:cli
@@ -523,7 +523,7 @@ mem20smartmeetingcopilotz = mem20smartmeetingcopilotz.core:cli
 mem20spatialcomputingsandboxz = mem20spatialcomputingsandboxz.core:cli
 mem20spatialexperiencedesignerz = mem20spatialexperiencedesignerz.core:cli
 mem20studioz = mem20studioz.cli:main
-mem20syntheticdataforgez = mem20syntheticdataforgez.core:cli
+mem20rewardforgez = mem20rewardforgez.core:cli
 mem20teamz = mem20teamz.cli:main
 mem20temporaldatabasefabricz = mem20temporaldatabasefabricz.temporal.cli:main
 mem20twinz = mem20twinz.cli:main

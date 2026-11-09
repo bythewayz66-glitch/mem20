@@ -1,5 +1,5 @@
 import importlib
-MOD="mem20specialistmodelforgez"
+MOD="mem20rewardforgez"
 def _m(): return importlib.import_module(MOD+".domain")
 def _eco(): return importlib.import_module(MOD+".ecosystem")
 def test_forge(): m=_m(); r=m.forge("base","code",["d1"]); assert "code" in r["name"]
@@ -7,7 +7,7 @@ def test_eval(): m=_m(); r=m.forge("base","code",["d1"]); assert 0<=m.evaluate(r
 def test_merge(): m=_m(); a=m.forge("base","code",["d1"]); b=m.forge("base","math",["d2"]); r=m.merge_specialists([a,b]); assert "merged" in r["name"]
 def test_health(): m=_m(); r=m.forge("base","code",["d1"]); assert m.forge_health([r])["models"]==1
 def test_estate_context_real_integrations(tmp_path):
-    m=importlib.import_module("mem20specialistmodelforgez.domain"); ctx=m.estate_context(tmp_path/"store")
+    m=importlib.import_module("mem20rewardforgez.domain"); ctx=m.estate_context(tmp_path/"store")
     assert ctx["engine_status_checked"] is True and ctx["work_recorded"] is True and ctx["path_scripts"]>=0
     assert "inventory_keys" in ctx and isinstance(ctx["focus_score"], float) and ctx["sitemap_skips_cache"] is True
 def test_eco_collective(): r=_eco().collective_intel(); assert r["ok"] and r["subsystem"]=="mem20collectivemodelintelligencez"

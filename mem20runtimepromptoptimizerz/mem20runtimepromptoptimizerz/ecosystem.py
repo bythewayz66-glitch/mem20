@@ -4,7 +4,7 @@ import pathlib,sys
 from typing import Mapping,Sequence
 __all__=["context_compression","causal_routing","capability_routing","prompt_events","optimize_containment","cost_forecast","probe"]
 _REPO_ROOT=pathlib.Path(__file__).resolve().parents[2]
-_PROJECTS=("mem20contextcompressionforgez","mem20causalroutingbrainz","mem20capabilitymarketplacez","mem20eventstreamsuperhighwayz","mem20faultcontainmentcellsz","mem20causalroutingbrainz")
+_PROJECTS=("mem20rewardforgez","mem20causalroutingbrainz","mem20capabilitymarketplacez","mem20eventstreamsuperhighwayz","mem20faultcontainmentcellsz","mem20causalroutingbrainz")
 def _bootstrap():
     for name in reversed(_PROJECTS):
         p=str(_REPO_ROOT/name)
@@ -14,9 +14,9 @@ def _bootstrap():
 _bootstrap()
 def context_compression(text:str)->dict:
     try:
-        from mem20contextcompressionforgez.domain import compress,compression_ratio
-        c=compress(text or "prompt",0.5); return {"ok":True,"subsystem":"mem20contextcompressionforgez","ratio":compression_ratio(text or "prompt",c)}
-    except Exception as exc: return {"ok":False,"subsystem":"mem20contextcompressionforgez","error":f"{type(exc).__name__}: {exc}"}
+        from mem20rewardforgez.domain import compress,compression_ratio
+        c=compress(text or "prompt",0.5); return {"ok":True,"subsystem":"mem20rewardforgez","ratio":compression_ratio(text or "prompt",c)}
+    except Exception as exc: return {"ok":False,"subsystem":"mem20rewardforgez","error":f"{type(exc).__name__}: {exc}"}
 def causal_routing(features:Mapping,weights:Mapping)->dict:
     try:
         from mem20causalroutingbrainz.domain import route_by_cause

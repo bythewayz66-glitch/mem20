@@ -166,7 +166,7 @@ Building these in name order wastes effort on low-value packages. Better to go b
 - **Must refuse:** to be a general-purpose runtime, and to return a confident answer when it is out of its depth.
 - **Proven by:** a test asserting a specific value, bound or contradiction — not that the function ran.
 
-### `mem20contextcompressionforgez`
+### `mem20rewardforgez`
 
 - **Should be:** context compression — cut context losslessly where possible, lossy only where declared.
 - **Must refuse:** to be a general-purpose runtime, and to return a confident answer when it is out of its depth.
@@ -782,7 +782,7 @@ Building these in name order wastes effort on low-value packages. Better to go b
 - **Must refuse:** to be a general-purpose runtime, and to return a confident answer when it is out of its depth.
 - **Proven by:** a test asserting a specific value, bound or contradiction — not that the function ran.
 
-### `mem20specialistmodelforgez`
+### `mem20rewardforgez`
 
 - **Should be:** specialist model forge — distil a narrow model and show it beats the generalist on its task.
 - **Must refuse:** to be a general-purpose runtime, and to return a confident answer when it is out of its depth.
@@ -1426,7 +1426,7 @@ These names do not state a capability the audit can pin down. Give each a one-li
 - **Must refuse:** to be a general-purpose runtime, and to return a confident answer when it is out of its depth.
 - **Proven by:** a test asserting a specific value, bound or contradiction — not that the function ran.
 
-### `mem20characterandmascotforgez`
+### `mem20rewardforgez`
 
 - **Should be:** character forge — a character with a consistent voice and silhouette.
 - **Must refuse:** to be a general-purpose runtime, and to return a confident answer when it is out of its depth.

@@ -12,7 +12,7 @@ def test_eco_quest(): r=_eco().quest_progression(); assert r["ok"] and r["subsys
 def test_eco_lifecycle(): r=_eco().lifecycle_progression(); assert r["ok"] and r["subsystem"]=="mem20customerlifecycleenginez"
 def test_eco_events(): r=_eco().skill_events("e",{}); assert r["ok"] and r["subsystem"]=="mem20eventstreamsuperhighwayz"
 def test_eco_causal(): r=_eco().causal_routing({"g":1},{"g":1}); assert r["ok"] and r["subsystem"]=="mem20causalroutingbrainz"
-def test_eco_compress(): r=_eco().context_compression("skills path"); assert r["ok"] and r["subsystem"]=="mem20contextcompressionforgez"
+def test_eco_compress(): r=_eco().context_compression("skills path"); assert r["ok"] and r["subsystem"]=="mem20rewardforgez"
 def test_report_and_probe():
     m=_m(); rep=m.skill_report(); assert len(rep["path"])>0 and len(rep["peers"])==6
     for k,v in rep["peers"].items(): assert v["ok"] is True,(k,v.get("error"))

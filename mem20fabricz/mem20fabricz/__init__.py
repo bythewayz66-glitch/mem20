@@ -11,9 +11,9 @@ __version__ = "0.1.0"
 
 MEMBERS = (
     "mem20apishapeshiftinggatewayz",
-    "mem20characterandmascotforgez",
+    "mem20rewardforgez",
     "mem20collectivemodelintelligencez",
-    "mem20contextcompressionforgez",
+    "mem20rewardforgez",
     "mem20crisisresponsemeshz",
     "mem20crossruntimeeventlatticez",
     "mem20edgetransportfabricz",
@@ -29,8 +29,8 @@ MEMBERS = (
     "mem20planetarybatchfabricz",
     "mem20rewardforgez",
     "mem20sensorfusiongatewayz",
-    "mem20specialistmodelforgez",
-    "mem20syntheticdataforgez",
+    "mem20rewardforgez",
+    "mem20rewardforgez",
     "mem20temporaldatabasefabricz",
     "mem20universalintegrationcompilerz",
 )

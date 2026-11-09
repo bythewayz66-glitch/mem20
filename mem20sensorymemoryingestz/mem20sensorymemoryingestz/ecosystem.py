@@ -4,7 +4,7 @@ import pathlib,sys
 from typing import Mapping,Sequence
 __all__=["episodic_store","ingest_events","context_compression","ingest_routing","health_nervous","ingest_containment","probe"]
 _REPO_ROOT=pathlib.Path(__file__).resolve().parents[2]
-_PROJECTS=("mem20episodicmemorygraphz","mem20eventstreamsuperhighwayz","mem20contextcompressionforgez","mem20capabilitymarketplacez","mem20universalhealthnervoussystemz","mem20faultcontainmentcellsz")
+_PROJECTS=("mem20episodicmemorygraphz","mem20eventstreamsuperhighwayz","mem20rewardforgez","mem20capabilitymarketplacez","mem20universalhealthnervoussystemz","mem20faultcontainmentcellsz")
 def _bootstrap():
     for name in reversed(_PROJECTS):
         p=str(_REPO_ROOT/name)
@@ -24,9 +24,9 @@ def ingest_events(name:str,payload:Mapping)->dict:
     except Exception as exc: return {"ok":False,"subsystem":"mem20eventstreamsuperhighwayz","error":f"{type(exc).__name__}: {exc}"}
 def context_compression(text:str)->dict:
     try:
-        from mem20contextcompressionforgez.domain import compress
-        r=compress(text or "sensory", ratio=0.5); return {"ok":True,"subsystem":"mem20contextcompressionforgez","compressed":r is not None}
-    except Exception as exc: return {"ok":False,"subsystem":"mem20contextcompressionforgez","error":f"{type(exc).__name__}: {exc}"}
+        from mem20rewardforgez.domain import compress
+        r=compress(text or "sensory", ratio=0.5); return {"ok":True,"subsystem":"mem20rewardforgez","compressed":r is not None}
+    except Exception as exc: return {"ok":False,"subsystem":"mem20rewardforgez","error":f"{type(exc).__name__}: {exc}"}
 def ingest_routing(key:str,caps:Sequence[str])->dict:
     try:
         from mem20capabilitymarketplacez.domain import CapabilityMarketplace

@@ -14,7 +14,7 @@ def test_estate_context_real_integrations(tmp_path):
     assert "inventory_keys" in ctx and isinstance(ctx["focus_score"], float) and ctx["sitemap_skips_cache"] is True
 
 def test_eco_episodic(): r=_eco().episodic_memory(); assert r["ok"] and r["subsystem"]=="mem20episodicmemorygraphz"
-def test_eco_compress(): r=_eco().context_compress("q"); assert r["ok"] and r["subsystem"]=="mem20contextcompressionforgez"
+def test_eco_compress(): r=_eco().context_compress("q"); assert r["ok"] and r["subsystem"]=="mem20rewardforgez"
 def test_eco_recall(): r=_eco().predictive_recall(); assert r["ok"] and r["subsystem"]=="mem20predictiverecallenginez"
 def test_eco_events(): r=_eco().search_events("s",{}); assert r["ok"] and r["subsystem"]=="mem20eventstreamsuperhighwayz"
 def test_eco_route(): r=_eco().search_routing("k",["s"]); assert r["ok"] and r["subsystem"]=="mem20capabilitymarketplacez"

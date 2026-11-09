@@ -79,7 +79,7 @@ same tools are present. A non-empty symmetric difference aborts generation.
 | 47 | `mem20collectivemodelintelligencez` | 2 | `collectivemodelintelligencez_*` | `mcp/tools/mem20collectivemodelintelligencez_tools.py` |
 | 48 | `mem20communitychallengeenginez` | 2 | `communitychallengeenginez_*` | `mcp/tools/mem20communitychallengeenginez_tools.py` |
 | 49 | `mem20compoundingproductecosystemz` | 2 | `compoundingproductecosystemz_*` | `mcp/tools/mem20compoundingproductecosystemz_tools.py` |
-| 50 | `mem20contextcompressionforgez` | 2 | `contextcompressionforgez_*` | `mcp/tools/mem20contextcompressionforgez_tools.py` |
+| 50 | `mem20rewardforgez` | 2 | `contextcompressionforgez_*` | `mcp/tools/mem20rewardforgez_tools.py` |
 | 51 | `mem20simz` | 2 | `counterfactualmemorysimulatorz_*` | `mcp/tools/mem20simz_tools.py` |
 | 52 | `mem20crossplatformmicrokernelz` | 2 | `crossplatformmicrokernelz_*` | `mcp/tools/mem20crossplatformmicrokernelz_tools.py` |
 | 53 | `mem20crossproductloyaltygraphz` | 2 | `crossproductloyaltygraphz_*` | `mcp/tools/mem20crossproductloyaltygraphz_tools.py` |
@@ -131,7 +131,7 @@ same tools are present. A non-empty symmetric difference aborts generation.
 | 99 | `mem20causalroutingbrainz` | 2 | `skillbasedprogressionbrainz_*` | `mcp/tools/mem20causalroutingbrainz_tools.py` |
 | 100 | `mem20skillmemorytransferz` | 2 | `skillmemorytransferz_*` | `mcp/tools/mem20skillmemorytransferz_tools.py` |
 | 101 | `mem20spatialcommanduniversez` | 2 | `spatialcommanduniversez_*` | `mcp/tools/mem20spatialcommanduniversez_tools.py` |
-| 102 | `mem20specialistmodelforgez` | 2 | `specialistmodelforgez_*` | `mcp/tools/mem20specialistmodelforgez_tools.py` |
+| 102 | `mem20rewardforgez` | 2 | `specialistmodelforgez_*` | `mcp/tools/mem20rewardforgez_tools.py` |
 | 103 | `mem20speculativeworkflowenginez` | 2 | `speculativeworkflowenginez_*` | `mcp/tools/mem20speculativeworkflowenginez_tools.py` |
 | 104 | `mem20studioz` | 2 | `studioz_*` | `mcp/tools/mem20studioz_tools.py` |
 | 105 | `mem20styleguideagentz` | 2 | `styleguideagentz_*` | `mcp/tools/mem20styleguideagentz_tools.py` |

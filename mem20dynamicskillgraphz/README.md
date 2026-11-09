@@ -3,7 +3,7 @@
 First-class mem20 subsystem for dynamic skill graphs (skills, prerequisites, proficiency, learning paths, skill gaps, stats) with **6 peers**, SQLite WAL runtime, CLI, JSON HTTP API, served web cockpit, docs/app monitor, and real MCP tools. Core API preserved.
 
 ## Peers (6)
-`mem20capabilitymarketplacez`, `mem20dynamicquestrewardcomposerz`, `mem20customerlifecycleenginez`, `mem20eventstreamsuperhighwayz`, `mem20causalroutingbrainz`, `mem20contextcompressionforgez`.
+`mem20capabilitymarketplacez`, `mem20dynamicquestrewardcomposerz`, `mem20customerlifecycleenginez`, `mem20eventstreamsuperhighwayz`, `mem20causalroutingbrainz`, `mem20rewardforgez`.
 
 ## Python API (runnable)
 ```python

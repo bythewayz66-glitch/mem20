@@ -3,7 +3,7 @@
 First-class mem20 subsystem for style guide checking (check/fix/style_score/style_health) with **6 peers**, SQLite WAL runtime, CLI, JSON HTTP API, served web cockpit, docs/app monitor, and real MCP tools. Core API preserved.
 
 ## Peers (6)
-`mem20agentoutputcompilerz`, `mem20autonomoussoftwarefoundryz`, `mem20contextcompressionforgez`, `mem20eventstreamsuperhighwayz`, `mem20capabilitymarketplacez`, `mem20universalhealthnervoussystemz`.
+`mem20agentoutputcompilerz`, `mem20autonomoussoftwarefoundryz`, `mem20rewardforgez`, `mem20eventstreamsuperhighwayz`, `mem20capabilitymarketplacez`, `mem20universalhealthnervoussystemz`.
 
 ## CLI (runnable)
 ```bash

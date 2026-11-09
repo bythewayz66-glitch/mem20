@@ -4,7 +4,7 @@ import pathlib,sys
 from typing import Mapping,Sequence
 __all__=["output_compile","software_foundry","context_compression","style_events","style_routing","style_health_peer","probe"]
 _REPO_ROOT=pathlib.Path(__file__).resolve().parents[2]
-_PROJECTS=("mem20agentoutputcompilerz","mem20autonomoussoftwarefoundryz","mem20contextcompressionforgez","mem20eventstreamsuperhighwayz","mem20capabilitymarketplacez","mem20universalhealthnervoussystemz")
+_PROJECTS=("mem20agentoutputcompilerz","mem20autonomoussoftwarefoundryz","mem20rewardforgez","mem20eventstreamsuperhighwayz","mem20capabilitymarketplacez","mem20universalhealthnervoussystemz")
 def _bootstrap():
     for name in reversed(_PROJECTS):
         p=str(_REPO_ROOT/name)
@@ -24,9 +24,9 @@ def software_foundry()->dict:
     except Exception as exc: return {"ok":False,"subsystem":"mem20autonomoussoftwarefoundryz","error":f"{type(exc).__name__}: {exc}"}
 def context_compression(text:str)->dict:
     try:
-        from mem20contextcompressionforgez.domain import compress
-        r=compress(text or "style", ratio=0.5); return {"ok":True,"subsystem":"mem20contextcompressionforgez","compressed":r is not None}
-    except Exception as exc: return {"ok":False,"subsystem":"mem20contextcompressionforgez","error":f"{type(exc).__name__}: {exc}"}
+        from mem20rewardforgez.domain import compress
+        r=compress(text or "style", ratio=0.5); return {"ok":True,"subsystem":"mem20rewardforgez","compressed":r is not None}
+    except Exception as exc: return {"ok":False,"subsystem":"mem20rewardforgez","error":f"{type(exc).__name__}: {exc}"}
 def style_events(name:str,payload:Mapping)->dict:
     try:
         from mem20eventstreamsuperhighwayz.domain import create_stream,publish,throughput

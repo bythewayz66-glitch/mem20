@@ -28,13 +28,13 @@ def sensory_ingest_signal(ctx: Mapping[str, Any]) -> Dict[str, Any]:
 def specialist_forge_signal(ctx: Mapping[str, Any]) -> Dict[str, Any]:
     def run():
         try:
-            from mem20specialistmodelforgez.domain import forge, evaluate
+            from mem20rewardforgez.domain import forge, evaluate
         except Exception:
-            from mem20specialistmodelforgez.mem20specialistmodelforgez.domain import forge, evaluate
+            from mem20rewardforgez.mem20rewardforgez.domain import forge, evaluate
         model = forge({"id": "base"}, specialty=str(ctx.get("to") or "multimodal"), data=[{"x": 1}])
         ev = evaluate(model, [{"x": 1}])
         return {"model": model, "evaluation": ev}
-    return _safe("mem20specialistmodelforgez", run)
+    return _safe("mem20rewardforgez", run)
 
 def predictive_recall_signal(ctx: Mapping[str, Any]) -> Dict[str, Any]:
     def run():
@@ -62,15 +62,15 @@ def output_compile_signal(ctx: Mapping[str, Any]) -> Dict[str, Any]:
 def compression_signal(ctx: Mapping[str, Any]) -> Dict[str, Any]:
     def run():
         try:
-            from mem20contextcompressionforgez.domain import extractive_summary, key_terms, compression_ratio
+            from mem20rewardforgez.domain import extractive_summary, key_terms, compression_ratio
         except Exception:
-            from mem20contextcompressionforgez.mem20contextcompressionforgez.domain import extractive_summary, key_terms, compression_ratio
+            from mem20rewardforgez.mem20rewardforgez.domain import extractive_summary, key_terms, compression_ratio
         text = str(ctx.get("payload") or f"bridge {ctx.get('from','text')} to {ctx.get('to','image')} representation")
         summary = extractive_summary(text, n_sentences=1)
         terms = key_terms(text, top=3)
         ratio = compression_ratio(text, summary)
         return {"summary": summary, "key_terms": terms, "ratio": ratio}
-    return _safe("mem20contextcompressionforgez", run)
+    return _safe("mem20rewardforgez", run)
 
 def episodic_signal(ctx: Mapping[str, Any]) -> Dict[str, Any]:
     def run():

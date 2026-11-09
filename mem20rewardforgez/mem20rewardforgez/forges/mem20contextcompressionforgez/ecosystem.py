@@ -1,4 +1,4 @@
-"""Cross-subsystem wiring for mem20contextcompressionforgez (6 peers, context-compression specific)."""
+"""Cross-subsystem wiring for mem20rewardforgez (6 peers, context-compression specific)."""
 from __future__ import annotations
 import pathlib,sys
 from typing import Mapping,Sequence

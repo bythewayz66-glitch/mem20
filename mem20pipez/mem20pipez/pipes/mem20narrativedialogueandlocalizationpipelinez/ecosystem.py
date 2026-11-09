@@ -35,10 +35,10 @@ def lore_content_signal(ctx:Mapping[str,Any])->Dict[str,Any]:
 
 def context_compression_signal(ctx:Mapping[str,Any])->Dict[str,Any]:
  def run():
-  try: from mem20contextcompressionforgez.domain import extractive_summary, key_terms
-  except Exception: from mem20contextcompressionforgez.mem20contextcompressionforgez.domain import extractive_summary, key_terms
+  try: from mem20rewardforgez.domain import extractive_summary, key_terms
+  except Exception: from mem20rewardforgez.mem20rewardforgez.domain import extractive_summary, key_terms
   t=str(ctx.get("text","NPC: Hello. HERO: Ready.")); return {"summary":extractive_summary(t,1),"terms":key_terms(t,3)}
- return _safe("mem20contextcompressionforgez", run)
+ return _safe("mem20rewardforgez", run)
 
 def episodic_signal(ctx:Mapping[str,Any])->Dict[str,Any]:
  def run():

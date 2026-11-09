@@ -1,14 +1,13 @@
-"""CLI and HTTP surface for mem20contextcompressionforgez."""
+"""CLI and HTTP surface for mem20rewardforgez."""
 from __future__ import annotations
 import argparse,json,os,sqlite3,sys,threading,time
 from http.server import BaseHTTPRequestHandler,ThreadingHTTPServer
 from pathlib import Path
-from urllib.parse import parse_qs,urlparse
+from urllib.parse import urlparse
 from . import domain
-_WEB_DIR=Path(__file__).resolve().parent/"web"
-_CT={".html":"text/html; charset=utf-8",".js":"text/javascript; charset=utf-8",".css":"text/css; charset=utf-8",".json":"application/json"}
+_WEB_DIR=Path(__file__).resolve().parent/"web"; _CT={".html":"text/html; charset=utf-8",".js":"text/javascript; charset=utf-8",".css":"text/css; charset=utf-8",".json":"application/json"}
 def default_store_path():
-    e=os.environ.get("MEM20_CCF_STORE"); return Path(e).expanduser() if e else Path.home()/".mem20"/"mem20contextcompressionforgez"/"state.sqlite3"
+    e=os.environ.get("MEM20_MFORGE_STORE"); return Path(e).expanduser() if e else Path.home()/".mem20"/"mem20rewardforgez"/"state.sqlite3"
 class EventStore:
     def __init__(self,path):
         self.path=str(path); Path(self.path).parent.mkdir(parents=True,exist_ok=True); self._lock=threading.RLock()
@@ -21,63 +20,53 @@ class EventStore:
         return [{"seq":r["seq"],"ts":r["ts"],"type":r["type"],"payload":json.loads(r["payload"])} for r in rows]
 class Service:
     def __init__(self,store_path=None): self.store=EventStore(store_path or default_store_path())
-    def status(self,**kw): r=domain.compression_report(**kw); self.store.append("report",{"ok":r.get("ok")}); return r
+    def status(self,**kw): r=domain.forge_report(**kw); self.store.append("report",{"ok":r.get("ok")}); return r
     def doctor(self): r=domain.probe(); self.store.append("doctor",{"ok":r.get("ok")}); return r
-    def simulate(self):
-        s={}
-        def run(n,f):
-            try: s[n]={"ok":True,"result":f()}
-            except Exception as e: s[n]={"ok":False,"error":f"{type(e).__name__}: {e}"}
-        run("core",lambda:domain.compression_report()["ok"] is True); run("report",lambda:domain.compression_report()["ok"]); run("doctor",lambda:domain.probe()["ok"])
-        out={"ok":all(v.get("ok") for v in s.values()),"scenarios":s}; self.store.append("simulate",{"ok":out["ok"]}); return out
+    def simulate(self): r={"ok":bool(domain.forge_report().get("ok") and domain.probe().get("ok"))}; self.store.append("simulate",r); return r
 class Handler(BaseHTTPRequestHandler):
-    server_version="mem20contextcompressionforgez"
+    server_version="mem20rewardforgez"
     @property
     def service(self)->Service: return self.server.service  # type: ignore
-    def _send(self,st,body,ct): self.send_response(st); self.send_header("Content-Type",ct); self.send_header("Content-Length",str(len(body))); self.send_header("Access-Control-Allow-Origin","*"); self.send_header("Access-Control-Allow-Methods","GET, POST, OPTIONS"); self.send_header("Access-Control-Allow-Headers","Content-Type"); self.end_headers(); self.wfile.write(body)
+    def _send(self,st,body,ct): self.send_response(st); self.send_header("Content-Type",ct); self.send_header("Content-Length",str(len(body))); self.send_header("Access-Control-Allow-Origin","*"); self.end_headers(); self.wfile.write(body)
     def _json(self,p,st=200): self._send(st,json.dumps(p,default=str).encode(),"application/json")
     def _body(self):
-        n=int(self.headers.get("Content-Length",0) or 0)
-        if n<=0: return {}
-        p=json.loads(self.rfile.read(n).decode() or "{}");
+        n=int(self.headers.get("Content-Length",0) or 0); p=json.loads(self.rfile.read(n).decode() or "{}") if n else {}
         if not isinstance(p,dict): raise ValueError("JSON body must be an object"); return p
     def _static(self,route):
         rel="index.html" if route in ("","/") else route.lstrip("/"); cand=(_WEB_DIR/rel).resolve()
-        if _WEB_DIR.resolve() not in cand.parents and cand!=_WEB_DIR.resolve(): self._json({"ok":False,"error":"path traversal refused"},400); return
-        if not cand.is_file(): self._json({"ok":False,"error":f"not found: {route}"},404); return
+        if _WEB_DIR.resolve() not in cand.parents and cand!=_WEB_DIR.resolve(): self._json({"ok":False},400); return
+        if not cand.is_file(): self._json({"ok":False},404); return
         self._send(200,cand.read_bytes(),_CT.get(cand.suffix,"application/octet-stream"))
     def do_OPTIONS(self): self._send(204,b"","text/plain")  # noqa
     def do_GET(self):  # noqa
         route=urlparse(self.path).path
         try:
             if not route.startswith("/api/"): self._static(route); return
-            q={k:v[-1] for k,v in parse_qs(urlparse(self.path).query).items()}
-            if route=="/api/health": self._json({"ok":True,"subsystem":"mem20contextcompressionforgez"})
+            if route=="/api/health": self._json({"ok":True})
             elif route=="/api/status": self._json(self.service.status())
             elif route=="/api/doctor": self._json(self.service.doctor())
-            elif route=="/api/events": self._json({"ok":True,"events":self.service.store.list(int(q.get("since",0)),int(q.get("limit",50)))})
-            else: self._json({"ok":False,"error":f"unknown route {route}"},404)
+            elif route=="/api/events": self._json({"ok":True,"events":self.service.store.list()})
+            else: self._json({"ok":False},404)
         except Exception as e: self._json({"ok":False,"error":f"{type(e).__name__}: {e}"},500)
     def do_POST(self):  # noqa
         route=urlparse(self.path).path
         try:
             p=self._body()
-            if route=="/api/status": self._json(self.service.status(**{k:v for k,v in p.items() if k not in ('','store')}))
+            if route=="/api/status": self._json(self.service.status(**p))
             elif route=="/api/doctor": self._json(self.service.doctor())
             elif route=="/api/simulate": self._json(self.service.simulate())
-            else: self._json({"ok":False,"error":f"unknown route {route}"},404)
+            else: self._json({"ok":False},404)
         except Exception as e: self._json({"ok":False,"error":f"{type(e).__name__}: {e}"},400)
     def log_message(self,*a): pass  # noqa
 def make_server(host="127.0.0.1",port=0,store_path=None): h=ThreadingHTTPServer((host,port),Handler); h.service=Service(store_path); return h  # type: ignore
-def serve(host="127.0.0.1",port=8793,store_path=None):
+def serve(host="127.0.0.1",port=8835,store_path=None):
     h=make_server(host,port,store_path); print(f"http://{host}:{h.server_port}",flush=True)
     try: h.serve_forever()
     except KeyboardInterrupt: pass
     finally: h.server_close()
 def main(argv=None):
-    ap=argparse.ArgumentParser(prog="mem20contextcompressionforgez",description="Context Compression Forge — CLI/HTTP/cockpit")
-    ap.add_argument("--store"); sub=ap.add_subparsers(dest="cmd",required=True)
-    s=sub.add_parser("serve"); s.add_argument("--host",default="127.0.0.1"); s.add_argument("--port",type=int,default=8793)
+    ap=argparse.ArgumentParser(prog="mem20rewardforgez"); ap.add_argument("--store"); sub=ap.add_subparsers(dest="cmd",required=True)
+    s=sub.add_parser("serve"); s.add_argument("--host",default="127.0.0.1"); s.add_argument("--port",type=int,default=8835)
     sub.add_parser("status"); sub.add_parser("doctor"); sub.add_parser("simulate")
     args=ap.parse_args(argv); svc=Service(args.store)
     if args.cmd=="serve": serve(args.host,args.port,args.store)

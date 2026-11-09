@@ -12,7 +12,7 @@ def test_estate_context_real_integrations(tmp_path):
     assert "inventory_keys" in ctx and isinstance(ctx["focus_score"], float) and ctx["sitemap_skips_cache"] is True
 def test_eco_compile(): r=_eco().output_compile(); assert r["ok"] and r["subsystem"]=="mem20agentoutputcompilerz"
 def test_eco_foundry(): r=_eco().software_foundry(); assert r["ok"] and r["subsystem"]=="mem20autonomoussoftwarefoundryz"
-def test_eco_compress(): r=_eco().context_compression("a"); assert r["ok"] and r["subsystem"]=="mem20contextcompressionforgez"
+def test_eco_compress(): r=_eco().context_compression("a"); assert r["ok"] and r["subsystem"]=="mem20rewardforgez"
 def test_eco_events(): r=_eco().style_events("s",{}); assert r["ok"] and r["subsystem"]=="mem20eventstreamsuperhighwayz"
 def test_eco_route(): r=_eco().style_routing("k",["s"]); assert r["ok"] and r["subsystem"]=="mem20capabilitymarketplacez"
 def test_eco_health_peer(): r=_eco().style_health_peer(); assert r["ok"] and r["subsystem"]=="mem20universalhealthnervoussystemz"

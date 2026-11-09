@@ -1,5 +1,5 @@
 import importlib
-MOD="mem20contextcompressionforgez"
+MOD="mem20rewardforgez"
 def _m(): return importlib.import_module(MOD+".domain")
 def _eco(): return importlib.import_module(MOD+".ecosystem")
 def test_compress(): assert "..." in _m().compress("a b c d e f g h", 0.5)

@@ -3,7 +3,7 @@
 First-class mem20 subsystem for runtime prompt optimization (tokenize, compress, score, optimize, prompt health) with **6 peers**, SQLite WAL runtime, CLI, JSON HTTP API, served web cockpit, docs/app monitor, and real MCP tools. Core API preserved.
 
 ## Peers (6)
-`mem20contextcompressionforgez`, `mem20causalroutingbrainz`, `mem20capabilitymarketplacez`, `mem20eventstreamsuperhighwayz`, `mem20faultcontainmentcellsz`, `mem20causalroutingbrainz`.
+`mem20rewardforgez`, `mem20causalroutingbrainz`, `mem20capabilitymarketplacez`, `mem20eventstreamsuperhighwayz`, `mem20faultcontainmentcellsz`, `mem20causalroutingbrainz`.
 
 ## Python API (runnable)
 ```python

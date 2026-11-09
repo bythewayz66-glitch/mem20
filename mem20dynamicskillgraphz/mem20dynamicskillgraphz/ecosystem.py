@@ -4,7 +4,7 @@ import pathlib,sys
 from typing import Mapping,Sequence
 __all__=["capability_match","quest_progression","lifecycle_progression","skill_events","causal_routing","context_compression","probe"]
 _REPO_ROOT=pathlib.Path(__file__).resolve().parents[2]
-_PROJECTS=("mem20capabilitymarketplacez","mem20dynamicquestrewardcomposerz","mem20customerlifecycleenginez","mem20eventstreamsuperhighwayz","mem20causalroutingbrainz","mem20contextcompressionforgez")
+_PROJECTS=("mem20capabilitymarketplacez","mem20dynamicquestrewardcomposerz","mem20customerlifecycleenginez","mem20eventstreamsuperhighwayz","mem20causalroutingbrainz","mem20rewardforgez")
 def _bootstrap():
     for name in reversed(_PROJECTS):
         p=str(_REPO_ROOT/name)
@@ -41,9 +41,9 @@ def causal_routing(features:Mapping,weights:Mapping)->dict:
     except Exception as exc: return {"ok":False,"subsystem":"mem20causalroutingbrainz","error":f"{type(exc).__name__}: {exc}"}
 def context_compression(text:str)->dict:
     try:
-        from mem20contextcompressionforgez.domain import compress,compression_ratio
-        c=compress(text or "skill graph summary and learning path", 0.5); return {"ok":True,"subsystem":"mem20contextcompressionforgez","ratio":compression_ratio(text or "skill graph summary and learning path", c)}
-    except Exception as exc: return {"ok":False,"subsystem":"mem20contextcompressionforgez","error":f"{type(exc).__name__}: {exc}"}
+        from mem20rewardforgez.domain import compress,compression_ratio
+        c=compress(text or "skill graph summary and learning path", 0.5); return {"ok":True,"subsystem":"mem20rewardforgez","ratio":compression_ratio(text or "skill graph summary and learning path", c)}
+    except Exception as exc: return {"ok":False,"subsystem":"mem20rewardforgez","error":f"{type(exc).__name__}: {exc}"}
 def probe()->dict:
     checks={"capability_match":capability_match("k",["s"]),"quest_progression":quest_progression(),"lifecycle_progression":lifecycle_progression(),"skill_events":skill_events("e",{}),"causal_routing":causal_routing({"gap":1},{"gap":1}),"context_compression":context_compression("skill path")}
     return {"ok":all(v.get("ok") for v in checks.values()),"checks":checks}

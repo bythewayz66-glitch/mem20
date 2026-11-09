@@ -3,7 +3,7 @@
 First-class mem20 subsystem/crew runtime for self-model integration with **6 peers**, SQLite WAL runtime, CLI, JSON HTTP API, served web cockpit, docs/app monitor, and real MCP tools. Core APIs preserved (`estate_context`, `MEMBERS`, `__version__`, legacy `--members/--version`).
 
 ## Peers (6)
-`mem20episodicmemorygraphz`, `mem20contextcompressionforgez`, `mem20causalroutingbrainz`, `mem20eventstreamsuperhighwayz`, `mem20capabilitymarketplacez`, `mem20universalhealthnervoussystemz`.
+`mem20episodicmemorygraphz`, `mem20rewardforgez`, `mem20causalroutingbrainz`, `mem20eventstreamsuperhighwayz`, `mem20capabilitymarketplacez`, `mem20universalhealthnervoussystemz`.
 
 ## Python API (runnable)
 ```python

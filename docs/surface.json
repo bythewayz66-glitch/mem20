@@ -49,7 +49,7 @@
     "mem20collectivemodelintelligencez": 2,
     "mem20communitychallengeenginez": 2,
     "mem20compoundingproductecosystemz": 2,
-    "mem20contextcompressionforgez": 2,
+    "mem20rewardforgez": 2,
     "mem20simz": 2,
     "mem20crdtcollaborationenginez": 1,
     "mem20crossplatformmicrokernelz": 2,
@@ -105,7 +105,7 @@
     "mem20causalroutingbrainz": 2,
     "mem20skillmemorytransferz": 2,
     "mem20spatialcommanduniversez": 2,
-    "mem20specialistmodelforgez": 2,
+    "mem20rewardforgez": 2,
     "mem20speculativeworkflowenginez": 2,
     "mem20studioz": 2,
     "mem20styleguideagentz": 2,
@@ -180,7 +180,7 @@
     "mem20collectivemodelintelligencez",
     "mem20communitychallengeenginez",
     "mem20compoundingproductecosystemz",
-    "mem20contextcompressionforgez",
+    "mem20rewardforgez",
     "mem20simz",
     "mem20crdtcollaborationenginez",
     "mem20crossplatformmicrokernelz",
@@ -236,7 +236,7 @@
     "mem20causalroutingbrainz",
     "mem20skillmemorytransferz",
     "mem20spatialcommanduniversez",
-    "mem20specialistmodelforgez",
+    "mem20rewardforgez",
     "mem20speculativeworkflowenginez",
     "mem20studioz",
     "mem20styleguideagentz",
@@ -772,9 +772,9 @@
       "tools": 2
     },
     {
-      "domain": "mem20contextcompressionforgez",
+      "domain": "mem20rewardforgez",
       "modules": [
-        "mcp/tools/mem20contextcompressionforgez_tools.py"
+        "mcp/tools/mem20rewardforgez_tools.py"
       ],
       "prefixes": [
         "contextcompressionforgez_*"
@@ -1292,9 +1292,9 @@
       "tools": 2
     },
     {
-      "domain": "mem20specialistmodelforgez",
+      "domain": "mem20rewardforgez",
       "modules": [
-        "mcp/tools/mem20specialistmodelforgez_tools.py"
+        "mcp/tools/mem20rewardforgez_tools.py"
       ],
       "prefixes": [
         "specialistmodelforgez_*"

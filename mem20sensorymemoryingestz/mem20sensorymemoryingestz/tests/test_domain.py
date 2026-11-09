@@ -20,7 +20,7 @@ def test_estate_context_real_integrations(tmp_path):
 
 def test_eco_episodic(): r=_eco().episodic_store("s",{"v":1}); assert r["ok"] and r["subsystem"]=="mem20episodicmemorygraphz"
 def test_eco_events(): r=_eco().ingest_events("i",{}); assert r["ok"] and r["subsystem"]=="mem20eventstreamsuperhighwayz"
-def test_eco_compress(): r=_eco().context_compression("a"); assert r["ok"] and r["subsystem"]=="mem20contextcompressionforgez"
+def test_eco_compress(): r=_eco().context_compression("a"); assert r["ok"] and r["subsystem"]=="mem20rewardforgez"
 def test_eco_route(): r=_eco().ingest_routing("k",["i"]); assert r["ok"] and r["subsystem"]=="mem20capabilitymarketplacez"
 def test_eco_health_peer(): r=_eco().health_nervous(); assert r["ok"] and r["subsystem"]=="mem20universalhealthnervoussystemz"
 def test_eco_contain(): r=_eco().ingest_containment("i"); assert r["ok"] and r["subsystem"]=="mem20faultcontainmentcellsz"

@@ -1,4 +1,4 @@
-"""Cross-subsystem wiring for mem20specialistmodelforgez (6 peers)."""
+"""Cross-subsystem wiring for mem20rewardforgez (6 peers)."""
 from __future__ import annotations
 import pathlib,sys
 from typing import Mapping,Sequence

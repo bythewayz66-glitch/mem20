@@ -1,0 +1,47 @@
+name: Contribution Evidence Gate
+
+# A contribution is a commit on a pushed branch. Nothing else counts.
+#
+# This gate reads the PULL REQUEST BODY and fails unless it carries at least one
+# of:
+#   (a) a 40-character commit SHA, or
+#   (b) a URL that answers HTTP 200.
+#
+# It is body-only on purpose: it never inspects the diff, so a PR cannot satisfy
+# it by the change itself, and it never needs a token. It is the mechanical
+# enforcement of the all-agent contribution plan
+# (docs/ops/agent-contribution-plan-2026-11-07.md).
+#
+# Policy and the flip procedure: docs/ops/contrib-evidence-gate.md
+
+on:
+  pull_request:
+    types: [opened, edited, reopened, synchronize, ready_for_review]
+    branches: [main]
+
+concurrency:
+  group: contrib-evidence-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  contrib-evidence:
+    name: contribution evidence
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Write the PR body to a file
+        env:
+          PR_BODY: ${{ github.event.pull_request.body }}
+        run: |
+          set -euo pipefail
+          printf '%s' "$PR_BODY" > "$RUNNER_TEMP/pr-body.txt"
+          echo "body bytes: $(wc -c < "$RUNNER_TEMP/pr-body.txt")"
+
+      - name: Run the contribution-evidence gate
+        run: |
+          set -euo pipefail
+          bash scripts/ops/verify-contrib-evidence.sh --body-file "$RUNNER_TEMP/pr-body.txt"

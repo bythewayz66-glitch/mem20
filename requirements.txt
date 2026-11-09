@@ -37,7 +37,7 @@ stripe>=16.1
 # which aborted collection for mem20messenger and mem20mktz. Pinned below the
 # release that removed the argument; raise this only together with a fastapi
 # upgrade that stops passing it.
-fastapi>=0.115,<0.116
+fastapi>=0.162.0,<0.163
 starlette>=0.40,<0.42
 
 # mem20autouez imports websockets at module scope (connection.py:12).

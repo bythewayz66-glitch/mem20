@@ -8,7 +8,7 @@ version = "3.1.2"
 description = "mem20 — trusted, auditable memory + world-model layer for agents (MCP server)."
 readme = "README.md"
 requires-python = ">=3.10"
-license = { text = "MIT" }
+license = { text = "Apache-2.0" }
 keywords = ["agent", "memory", "mcp", "world-model", "cognitive"]
 dependencies = [
     "mcp>=2.1.1",

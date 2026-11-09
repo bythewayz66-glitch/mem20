@@ -827,6 +827,10 @@ Completed depth-first rebuild to **7/7** for #315-#329 (11 subsystems in this se
 - **Agent skill catalog (machine-only, AI-searchable):** Created comprehensive agent skill catalog for full mem20 ecosystem operation. Generated **907 skills** (>=500) as agent-only JSON/JSONL with dense machine schema, inverted AI-searchable index, tags/capabilities/procedures/verification/failure modes/composability. Outputs in `toolchest/skills/` (skills.catalog.agent.jsonl/json, skills.index.agent.json), `agent_skills_catalog/`, `skills_catalog_agent/`. Includes core memory/MCP/toolchest/sitemapz/agent orchestration/procedural skills plus per-subsystem operate/inspect/test skills and workflows.
 - **Toolchest second track:** Extended toolchest with skills track (`toolchest/src/toolchest/skills.py`, CLI subcommands `skills list/search/show/stats` and shortcuts). Regenerator `toolchest/generate_skills_catalog.py` added.
 - **Docs:** Added **toolchest** and **sitemapz** mentions to `AGENTS.md` and `GAMUT_AGENTS.md` under Tooling & Discovery.
+
+## 2026-11-09 - repo sync/cleanup + license fix
+- **Issues/PRs:** Closed #392, #227, #184; left #229 open (engine in separate repo). Merged mergeable PRs/dependabot updates; closed remaining stale PRs; pruned branches for flat main tree.
+- **Local install:** Updated repo to latest, fixed `pyproject.toml` license `MIT`→`Apache-2.0`, reinstalled editable package (metadata corrected).
 - **Full pytest follow-up fixes (then pushed):** fixed `gateway/mem20_gateway.py` syntax/structure (criterion-7 block was dangling in `main()` breaking `elif read`; moved 39 missing entries into `SUBSYSTEMS`). Fixed `mem20mktz` root causes (truthful `braid_hook` availability via `braid_bridge.available()`; `bundle.compose` queries UCG only when `cap_ids` present; env-honest test guards/assertions) → **33 passed, 9 skipped**. Fixed `mem20selfhealingruntimecivilizationz.integrations.PlansEngineBridge` adapter for real `mem20selfhealingplansz` API (no `Engine`) → **53 passed**.
 - **es//:** mem20 context + self-model saved (GitHub steps skipped earlier); commits/pushes to `origin/main` record the work.
 

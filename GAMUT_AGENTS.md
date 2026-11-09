@@ -87,3 +87,8 @@
 8. **No premature surrender:** "Cannot proceed" is only acceptable after exhausting all reasonable approaches.
 9. **Resourceful:** Look up docs, search codebase, check configs, install missing deps if appropriate and safe.
 10. **See it through:** Complete the task to the end. Partial completion due to fixable issues is not acceptable.
+
+## Tooling & Discovery
+
+- **toolchest**: Runtime-checked inventory/registry for the mem20 agent fleet. Tracks MCP tools, CLI binaries, and native subsystems with real verification. Use `toolchest` CLI or MCP tools (`toolchest_inventory`, `toolchest_wiring`). Located at `toolchest/`.
+- **sitemapz**: Estate-wide sitemap/indexing and discovery. Provides structured views of subsystems, files, and relationships across the mem20 ecosystem. Located at `mem20sitemapz/`.

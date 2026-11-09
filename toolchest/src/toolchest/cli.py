@@ -22,6 +22,7 @@ from toolchest import integrations
 from toolchest.catalog import (
     REQUIRED_FIELDS, build_inventory, load_inventory, write_inventory,
 )
+from toolchest import skills as skills_track
 
 def _locate_inventory() -> Path:
     """Find the project-root inventory.json without hardcoding a parent depth.
@@ -186,10 +187,60 @@ def cmd_stats(args: argparse.Namespace) -> int:
     return 0
 
 
+def cmd_skills_list(args: argparse.Namespace) -> int:
+    skills = skills_track.list_skills(ns=getattr(args, 'ns', ''), cat=getattr(args, 'category', ''), limit=getattr(args, 'limit', 200) or 200)
+    if getattr(args, 'json', False):
+        print(json.dumps(skills, indent=2))
+        return 0
+    if not skills:
+        print("(no skills)")
+        return 0
+    nlen = max(len(s.get('id','')) for s in skills)
+    for s in skills:
+        print(f"{s.get('id'):<{nlen}}  [{s.get('cat')}]  {s.get('desc','')[:70]}")
+    print(f"\n{len(skills)} skills")
+    return 0
+
+
+def cmd_skills_search(args: argparse.Namespace) -> int:
+    hits = skills_track.search_skills(args.term, limit=getattr(args, 'limit', 100) or 100)
+    if getattr(args, 'json', False):
+        print(json.dumps(hits, indent=2))
+        return 0
+    if not hits:
+        print("(no hits)")
+        return 0
+    nlen = max(len(s.get('id','')) for s in hits)
+    for s in hits:
+        print(f"{s.get('id'):<{nlen}}  [{s.get('cat')}]  {s.get('desc','')[:70]}")
+    print(f"\n{len(hits)} hits")
+    return 0
+
+
+def cmd_skills_show(args: argparse.Namespace) -> int:
+    skills = skills_track.load_skills()
+    target = args.name.lower()
+    matches = [s for s in skills if s.get('id','').lower() == target or target in s.get('id','').lower()]
+    if not matches:
+        print(f"no skill matching '{args.name}'", file=sys.stderr)
+        return 1
+    print(json.dumps(matches[0], indent=2))
+    return 0
+
+
+def cmd_skills_stats(args: argparse.Namespace) -> int:
+    skills = skills_track.load_skills()
+    from collections import Counter
+    print(f"skills track: {len(skills)} skills (agent-only, ai-searchable)")
+    print(f"  by_cat: {dict(Counter(s.get('cat','') for s in skills))}")
+    print(f"  by_ns:   {dict(Counter(s.get('ns','').split('.')[0] for s in skills))}")
+    return 0
+
+
 def main(argv: Optional[List[str]] = None) -> int:
     parser = argparse.ArgumentParser(
         prog="toolchest",
-        description="mem20 tool inventory registry — query the real tool registry.",
+        description="mem20 tool inventory registry + skills track (second track) — query the real registry and agent skills.",
     )
     parser.add_argument("--version", action="version", version=__version__)
     parser.add_argument("--inventory", type=Path, default=DEFAULT_INVENTORY,
@@ -236,8 +287,43 @@ def main(argv: Optional[List[str]] = None) -> int:
                           help="emit the wiring report as JSON")
     p_wiring.set_defaults(func=cmd_wiring)
 
+    # Skills track (second track)
+    p_skills = sub.add_parser("skills", help="skills track (second track) - list/search/show/stats")
+    p_skills_sub = p_skills.add_subparsers(dest="skills_cmd", required=True)
+    p_sklist = p_skills_sub.add_parser("list", help="list skills")
+    p_sklist.add_argument("--ns", default="")
+    p_sklist.add_argument("--category", default="")
+    p_sklist.add_argument("--limit", type=int, default=200)
+    p_sklist.add_argument("--json", action="store_true")
+    p_sklist.set_defaults(func=cmd_skills_list)
+    p_sksearch = p_skills_sub.add_parser("search", help="search skills")
+    p_sksearch.add_argument("term")
+    p_sksearch.add_argument("--limit", type=int, default=100)
+    p_sksearch.add_argument("--json", action="store_true")
+    p_sksearch.set_defaults(func=cmd_skills_search)
+    p_skshow = p_skills_sub.add_parser("show", help="show skill")
+    p_skshow.add_argument("name")
+    p_skshow.set_defaults(func=cmd_skills_show)
+    p_skstats = p_skills_sub.add_parser("stats", help="skills stats")
+    p_skstats.set_defaults(func=cmd_skills_stats)
+
+    # shortcuts
+    p_slist = sub.add_parser("skills-list", help="list skills (shortcut)")
+    p_slist.add_argument("--ns", default="")
+    p_slist.add_argument("--category", default="")
+    p_slist.add_argument("--limit", type=int, default=200)
+    p_slist.add_argument("--json", action="store_true")
+    p_slist.set_defaults(func=cmd_skills_list)
+    p_ssearch = sub.add_parser("skills-search", help="search skills (shortcut)")
+    p_ssearch.add_argument("term")
+    p_ssearch.add_argument("--limit", type=int, default=100)
+    p_ssearch.add_argument("--json", action="store_true")
+    p_ssearch.set_defaults(func=cmd_skills_search)
+    p_sstats = sub.add_parser("skills-stats", help="skills stats (shortcut)")
+    p_sstats.set_defaults(func=cmd_skills_stats)
+
     args = parser.parse_args(argv)
-    if args.command not in ("refresh", "wiring"):
+    if args.command not in ("refresh", "wiring", "skills", "skills-list", "skills-search", "skills-show", "skills-stats"):
         if not Path(args.inventory).exists():
             print(f"inventory not found: {args.inventory} — run "
                   f"'python -m toolchest refresh' first", file=sys.stderr)

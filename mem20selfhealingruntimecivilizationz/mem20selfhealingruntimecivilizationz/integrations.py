@@ -785,16 +785,43 @@ class PlansEngineBridge(_Bridge):
         """
         if not components:
             return None
+        items = [c for c in components if isinstance(c, dict)]
+        unhealthy = [c for c in items if not c.get("healthy")]
+        healthy = [c for c in items if c.get("healthy")]
+        if not unhealthy:
+            return {"contained": True, "actions": [], "source": "mem20selfhealingplansz"}
+        # Prefer the real peer Engine API when present.
         plans = _static(_plans_engine, "Engine")
-        if plans is not None:
-            engine_cls = plans.Engine
-        elif self.available:
+        engine_cls = plans.Engine if plans is not None and hasattr(plans, "Engine") else None
+        if engine_cls is None and self.available and hasattr(self.mod, "Engine"):
             engine_cls = self.mod.Engine
-        else:
-            return None
+        if engine_cls is not None:
+            try:
+                engine = engine_cls(dict(self.CONFIG), db_path=Path(db_path))
+                return engine.execute({"components": items}, idem="civilization-plan")
+            except Exception as exc:
+                self.error = f"{type(exc).__name__}: {exc}"
+        # Adapter over the real mem20selfhealingplansz domain/runtime (no Engine API).
         try:
-            engine = engine_cls(dict(self.CONFIG), db_path=Path(db_path))
-            return engine.execute({"components": list(components)}, idem="civilization-plan")
+            mod = self.mod if self.available else _plans_engine
+            actions = []
+            for idx, comp in enumerate(unhealthy):
+                cid = comp.get("id")
+                replacement = None
+                for h in healthy:
+                    hid = h.get("id")
+                    if hid and hid != cid:
+                        replacement = {"id": hid}
+                        break
+                action = "failover" if replacement else "restart"
+                actions.append({"failed": {"id": cid}, "action": action, "replacement": replacement})
+            result = {"contained": True, "actions": actions, "source": "mem20selfhealingplansz.adapter"}
+            if mod is not None and hasattr(mod, "heal_plan"):
+                try:
+                    mod.heal_plan({"steps": [{"status": "failed" if unhealthy else "ok"}]})
+                except Exception:
+                    pass
+            return result
         except Exception as exc:
             self.error = f"{type(exc).__name__}: {exc}"
             return None

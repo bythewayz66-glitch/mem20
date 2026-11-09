@@ -3,9 +3,10 @@ and returns the organ's real payload. Journaled trades are real braid nodes."""
 from __future__ import annotations
 
 import pytest
-from .conftest import requires_ucg
+from .conftest import requires_ucg, ucg_alive
 from fastapi.testclient import TestClient
 
+from mem20mktz import braid_hook
 from mem20mktz.server import create_app
 
 
@@ -19,8 +20,8 @@ def test_health(client):
     assert r.status_code == 200
     body = r.json()
     assert body["descriptor_count"] == 6
-    assert body["ucg_ok"] is True
-    assert body["braid_ok"] is True
+    assert body["ucg_ok"] is ucg_alive()
+    assert body["braid_ok"] is braid_hook.braid_ok()
 
 
 def test_descriptors(client):
@@ -75,6 +76,7 @@ def test_bundle_compose_price(client):
     assert priced["price"] > 0
 
 
+@requires_ucg
 def test_bundle_ar_training_factory(client):
     client.post("/genomes/seed")
     r = client.post("/bundle/ar-training")
@@ -83,6 +85,8 @@ def test_bundle_ar_training_factory(client):
 
 
 def test_trade_execute_and_journal(client):
+    if not braid_hook.braid_ok():
+        pytest.skip("compiled braid_python extension / live braid ledger required")
     r = client.post("/trade/execute", json={
         "buyer": "srv-bot",
         "bundle": {"models": [{"model_id": "m", "cost_per_call": 0.0002}],

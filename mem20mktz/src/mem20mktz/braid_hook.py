@@ -30,11 +30,12 @@ if _REPO_ROOT and _REPO_ROOT not in sys.path:
 
 BRAID_AVAILABLE = False
 try:
+    from braid_bridge import available as _braid_available
     from braid_bridge import commit, head, prove, read  # type: ignore
     from braid_bridge import status as _braid_status
 
     _braid_status()
-    BRAID_AVAILABLE = True
+    BRAID_AVAILABLE = bool(_braid_available())
 except Exception:  # pragma: no cover - depends on external ledger
     BRAID_AVAILABLE = False
 finally:

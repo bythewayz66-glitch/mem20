@@ -55,17 +55,19 @@ class ServiceBundlingEngine:
                            "cost_per_call": g["cost_per_call"],
                            "quality": g["quality"],
                            "visibility": g["visibility"]})
-        # resolve UCG capability nodes
+        # resolve UCG capability nodes (only when needed)
         caps = []
-        all_caps = self.cap_market._ucg.query("", active_only=False)
-        for cid in set(cap_ids):
-            node = next((c for c in all_caps if c.get("id") == cid), None)
-            if node is None:
-                raise BundleError(f"unknown capability node {cid!r}")
-            caps.append({"cap_id": node["id"],
-                         "name": node.get("name"),
-                         "provider": node.get("provider"),
-                         "endpoint": node.get("endpoint")})
+        cap_ids_set = set(cap_ids)
+        if cap_ids_set:
+            all_caps = self.cap_market._ucg.query("", active_only=False)
+            for cid in cap_ids_set:
+                node = next((c for c in all_caps if c.get("id") == cid), None)
+                if node is None:
+                    raise BundleError(f"unknown capability node {cid!r}")
+                caps.append({"cap_id": node["id"],
+                             "name": node.get("name"),
+                             "provider": node.get("provider"),
+                             "endpoint": node.get("endpoint")})
         if not models and not caps:
             raise BundleError("bundle must contain at least one model or capability")
         bundle_id = f"bundle-{new_nonce()[:12]}"

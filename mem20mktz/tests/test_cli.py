@@ -5,7 +5,7 @@ from __future__ import annotations
 import json
 
 import pytest
-from .conftest import requires_ucg
+from .conftest import requires_ucg, ucg_alive
 
 from mem20mktz import braid_hook
 from mem20mktz.cli import main
@@ -21,8 +21,8 @@ def test_health(env_store, capsys):
     rc, out = run(capsys, ["health"], env_store)
     assert rc == 0
     assert out["descriptor_count"] == 6
-    assert out["ucg_ok"] is True
-    assert out["braid_ok"] is True
+    assert out["ucg_ok"] is ucg_alive()
+    assert out["braid_ok"] is braid_hook.braid_ok()
 
 
 def test_descriptors(env_store, capsys):

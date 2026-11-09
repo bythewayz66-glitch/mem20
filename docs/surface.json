@@ -85,7 +85,7 @@
     "mem20realtimeeventautopilotz": 2,
     "mem20realtimeteampresencez": 2,
     "mem20realworldimpactrewardsz": 2,
-    "mem20remoteexperimentlabz": 2,
+    "mem20labz": 2,
     "mem20resourceexchangemarketz": 2,
     "mem20revenueleakhunterz": 2,
     "mem20rewardforgez": 2,
@@ -216,7 +216,7 @@
     "mem20realtimeeventautopilotz",
     "mem20realtimeteampresencez",
     "mem20realworldimpactrewardsz",
-    "mem20remoteexperimentlabz",
+    "mem20labz",
     "mem20resourceexchangemarketz",
     "mem20revenueleakhunterz",
     "mem20rewardforgez",
@@ -1092,9 +1092,9 @@
       "tools": 2
     },
     {
-      "domain": "mem20remoteexperimentlabz",
+      "domain": "mem20labz",
       "modules": [
-        "mcp/tools/mem20remoteexperimentlabz_tools.py"
+        "mcp/tools/mem20labz_tools.py"
       ],
       "prefixes": [
         "remoteexperimentlabz_*"

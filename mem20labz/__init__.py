@@ -10,15 +10,15 @@ __version__ = "0.1.0"
 
 MEMBERS = (
     "mem20autonomoussaleslaboratoryz",
-    "mem20continuouscompatibilitylabz",
+    "mem20labz",
     "mem20twinz",
-    "mem20dependencymutationlabz",
-    "mem20executabledesignstresslabz",
-    "mem20modelgenomelabz",
-    "mem20neuromorphiceventlabz",
+    "mem20labz",
+    "mem20labz",
+    "mem20labz",
+    "mem20labz",
     "mem20simz",
-    "mem20remoteexperimentlabz",
-    "mem20webassemblycomponentlabz",
+    "mem20labz",
+    "mem20labz",
 )
 
 from . import cli, domain, ecosystem, runtime, server  # noqa: E402

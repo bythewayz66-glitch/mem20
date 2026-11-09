@@ -115,7 +115,7 @@ later step verifiable; the three likely-in-flight agents land last.
 | 8 | mem20-webdev | Web apps | `mem20kanbanz` to 7/7 conformance | `feat/4.0-mem20-webdev-mem20kanbanz` |
 | 9 | mem20-frontends | Frontends / desktop | `mem20controlz` to 7/7 conformance | `feat/4.0-mem20-frontends-mem20controlz` |
 | 10 | UX Researcher | UX research | `mem20twinz` to 7/7 | `feat/4.0-ux-researcher-mem20twinz` |
-| 11 | Experiment Tracker | Experiment tracking | `mem20remoteexperimentlabz` to 7/7 | `feat/4.0-experiment-tracker-mem20remoteexperimentlabz` |
+| 11 | Experiment Tracker | Experiment tracking | `mem20labz` to 7/7 | `feat/4.0-experiment-tracker-mem20labz` |
 | 12 | Mem20 Benchmark Dataset Builder | Benchmarks / datasets | Score the 5 unscored retrieval modes; publish the 7-mode table | `bench/ws1-retrieval-modes-2026-11-07` |
 | 13 | Analytics Reporter | Analytics | `mem20googlez` to 7/7 conformance | `feat/4.0-analytics-reporter-mem20googlez` |
 | 14 | mem20 Orchestrator | Orchestration | `mem20prioritycollisionresolverz` to 7/7 | `feat/4.0-mem20-orchestrator-mem20prioritycollisionresolverz` |
@@ -223,9 +223,9 @@ touch.** Anything outside the list is either frozen (§1) or someone else's laye
 
 ### Step 11 — Experiment Tracker
 - **Domain:** experiment tracking.
-- **Contribution:** bring `mem20remoteexperimentlabz` to 7/7 conformance.
-- **Branch:** `feat/4.0-experiment-tracker-mem20remoteexperimentlabz`
-- **Files:** `mem20remoteexperimentlabz/**` only.
+- **Contribution:** bring `mem20labz` to 7/7 conformance.
+- **Branch:** `feat/4.0-experiment-tracker-mem20labz`
+- **Files:** `mem20labz/**` only.
 - **Evidence:** 40-char SHA + conformance exit 0.
 
 ### Step 12 — Mem20 Benchmark Dataset Builder

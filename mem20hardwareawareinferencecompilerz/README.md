@@ -12,7 +12,7 @@ Preserves legacy domain API (**#314 peer dependency**) and CAPABILITY Engine/CLI
 |---|---|---|
 | `mem20causalroutingbrainz` | `Node`,`Workload`,`estimate_energy_wh`,`estimate_cost`,`score_placement` | hardware target energy/cost/placement |
 | `mem20modalitybridgez` | `supported_modalities`,`encode_text`,`bridge` | model/modality context |
-| `mem20modelgenomelabz` | `create_genome`,`fitness`,`mutate` | model variant evaluation |
+| `mem20labz` | `create_genome`,`fitness`,`mutate` | model variant evaluation |
 | `mem20personalmodelevolutionz` | `create_model`,`adapt`,`predict` | device/user adaptation signal |
 | `mem20pipez` | `pathfind`,`validate_level` | graph traversal/validation |
 | `mem20pipez` | `parse_dialogue`,`validate_dialogue`,`export_script` | artifact spec validation/export |

@@ -454,7 +454,7 @@ Building these in name order wastes effort on low-value packages. Better to go b
 - **Must refuse:** to be a general-purpose runtime, and to return a confident answer when it is out of its depth.
 - **Proven by:** a test asserting a specific value, bound or contradiction — not that the function ran.
 
-### `mem20dependencymutationlabz`
+### `mem20labz`
 
 - **Should be:** mutation lab — change one thing and observe, in a lab not a production.
 - **Must refuse:** to be a general-purpose runtime, and to return a confident answer when it is out of its depth.
@@ -506,7 +506,7 @@ Building these in name order wastes effort on low-value packages. Better to go b
 - **Must refuse:** to be a general-purpose runtime, and to return a confident answer when it is out of its depth.
 - **Proven by:** a test asserting a specific value, bound or contradiction — not that the function ran.
 
-### `mem20continuouscompatibilitylabz`
+### `mem20labz`
 
 - **Should be:** compatibility — detect incompatibility before it reaches a user.
 - **Must refuse:** to be a general-purpose runtime, and to return a confident answer when it is out of its depth.
@@ -794,7 +794,7 @@ Building these in name order wastes effort on low-value packages. Better to go b
 - **Must refuse:** to be a general-purpose runtime, and to return a confident answer when it is out of its depth.
 - **Proven by:** a test asserting a specific value, bound or contradiction — not that the function ran.
 
-### `mem20webassemblycomponentlabz`
+### `mem20labz`
 
 - **Should be:** WebAssembly component — a sandboxed component that runs the same everywhere.
 - **Must refuse:** to be a general-purpose runtime, and to return a confident answer when it is out of its depth.
@@ -1206,7 +1206,7 @@ Building these in name order wastes effort on low-value packages. Better to go b
 - **Must refuse:** to be a general-purpose runtime, and to return a confident answer when it is out of its depth.
 - **Proven by:** a test asserting a specific value, bound or contradiction — not that the function ran.
 
-### `mem20remoteexperimentlabz`
+### `mem20labz`
 
 - **Should be:** remote experiment — run an experiment live with a stop condition decided in advance.
 - **Must refuse:** to be a general-purpose runtime, and to return a confident answer when it is out of its depth.
@@ -1282,7 +1282,7 @@ These names do not state a capability the audit can pin down. Give each a one-li
 - **Must refuse:** to be a general-purpose runtime, and to return a confident answer when it is out of its depth.
 - **Proven by:** a test asserting a specific value, bound or contradiction — not that the function ran.
 
-### `mem20neuromorphiceventlabz`
+### `mem20labz`
 
 - **Should be:** neuromorphiceventlab — The name does not state a capability this audit can pin down. Either give it a one-line purpose or fold it into a sibling that already does the job honestly..
 - **Must refuse:** to be a general-purpose runtime, and to return a confident answer when it is out of its depth.
@@ -1334,7 +1334,7 @@ These names do not state a capability the audit can pin down. Give each a one-li
 - **Must refuse:** to be a general-purpose runtime, and to return a confident answer when it is out of its depth.
 - **Proven by:** a test asserting a specific value, bound or contradiction — not that the function ran.
 
-### `mem20modelgenomelabz`
+### `mem20labz`
 
 - **Should be:** model genome — describe a model by its measured traits so a good one can be found again.
 - **Must refuse:** to be a general-purpose runtime, and to return a confident answer when it is out of its depth.
@@ -1494,7 +1494,7 @@ These names do not state a capability the audit can pin down. Give each a one-li
 - **Must refuse:** to be a general-purpose runtime, and to return a confident answer when it is out of its depth.
 - **Proven by:** a test asserting a specific value, bound or contradiction — not that the function ran.
 
-### `mem20executabledesignstresslabz`
+### `mem20labz`
 
 - **Should be:** executable design — a design that either runs or is wrong, with no third state.
 - **Must refuse:** to be a general-purpose runtime, and to return a confident answer when it is out of its depth.

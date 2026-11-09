@@ -99,7 +99,7 @@ A machine-readable map of this monorepo so an agent can find the right subsystem
 | `mem20dynamicquestrewardcomposerz` | 333 | 0 | - | RM-206 — Dynamic Quest Reward Composer |
 | `mem20edgetocloudintelligencecontinuumz` | 333 | 0 | - | RM-214 — Edge-to-Cloud Intelligence Continuum |
 | `mem20simz` | 333 | 0 | - | RM-203 — Ethical Incentive Simulator |
-| `mem20executabledesignstresslabz` | 333 | 0 | - | RM-221 — Executable Design Stress Lab |
+| `mem20labz` | 333 | 0 | - | RM-221 — Executable Design Stress Lab |
 | `mem20freestackambientcomputingfabricz` | 333 | 0 | - | RM-211 — FreeStack Ambient Computing Fabric |
 | `mem20simz` | 333 | 0 | - | RM-231 — Game Balance Simulator |
 | `mem20pipez` | 333 | 0 | - | RM-245 — Gameplay Systems, Data and Balance Pipeline |
@@ -170,7 +170,7 @@ A machine-readable map of this monorepo so an agent can find the right subsystem
 | `mem20memorytimemachinez` | 263 | 0 | - | RM-023 — Memory Time Machine |
 | `mem20mixedinitiativefocusenginez` | 263 | 0 | - | RM-035 — Mixed-Initiative Focus Engine |
 | `mem20modalitybridgez` | 263 | 0 | - | RM-064 — Modality Bridge |
-| `mem20modelgenomelabz` | 263 | 0 | - | RM-061 — Model Genome Lab |
+| `mem20labz` | 263 | 0 | - | RM-061 — Model Genome Lab |
 | `mem20modelsleepandwakesystemz` | 263 | 0 | - | RM-066 — Model Sleep and Wake System |
 | `mem20multibrandswarmz` | 263 | 0 | - | RM-016 — Multi-Brand Swarm |
 | `mem20multimodaltaskcapturez` | 263 | 0 | - | RM-037 — Multimodal Task Capture |
@@ -190,7 +190,7 @@ A machine-readable map of this monorepo so an agent can find the right subsystem
 | `mem20twinz` | 263 | 0 | - | RM-081 — Real-Time Business Twin |
 | `mem20realtimeeventautopilotz` | 263 | 0 | - | RM-058 — Real-Time Event Autopilot |
 | `mem20realtimeteampresencez` | 263 | 0 | - | RM-039 — Real-Time Team Presence |
-| `mem20remoteexperimentlabz` | 263 | 0 | - | RM-049 — Remote Experiment Lab |
+| `mem20labz` | 263 | 0 | - | RM-049 — Remote Experiment Lab |
 | `mem20resourceexchangemarketz` | 263 | 0 | - | RM-085 — Resource Exchange Market |
 | `mem20revenueleakhunterz` | 263 | 0 | - | RM-089 — Revenue Leak Hunter |
 | `mem20reversibleexecutiongraphz` | 263 | 0 | - | RM-052 — Reversible Execution Graph |
@@ -257,7 +257,7 @@ A machine-readable map of this monorepo so an agent can find the right subsystem
 | `mem20completionconfidenceenginez` | 9 | 0 | `mem20completionconfidenceenginez` | Estimate whether work is truly usable rather than merely marked complete |
 | `mem20conflictdeescalationassistantz` | 9 | 0 | `mem20conflictdeescalationassistantz` | Offer neutral reframing, timing suggestions, and shared-fact checks during tense exchanges |
 | `mem20contextawarelearningcoachz` | 9 | 0 | `mem20contextawarelearningcoachz` | Build lessons around the user actual work, mistakes, and interests |
-| `mem20continuouscompatibilitylabz` | 9 | 0 | `mem20continuouscompatibilitylabz` | Continuously test modules against current and future interface versions |
+| `mem20labz` | 9 | 0 | `mem20labz` | Continuously test modules against current and future interface versions |
 | `mem20continuousimprovementloopz` | 9 | 0 | `mem20continuousimprovementloopz` | Convert observed failures and friction into ranked executable improvement experiments |
 | `mem20conversationalactiondesktopz` | 9 | 0 | `mem20conversationalactiondesktopz` | Let conversation directly create, operate, and rearrange applications and workflows |
 | `mem20creativetrendradarz` | 9 | 0 | `mem20creativetrendradarz` | Detect emerging visual, interaction, music, and cultural patterns without blindly copying them |
@@ -265,7 +265,7 @@ A machine-readable map of this monorepo so an agent can find the right subsystem
 | `mem20crosslanguagerefactorenginez` | 9 | 0 | `mem20crosslanguagerefactorenginez` | Move behavior across Python, Rust, TypeScript, C#, and WebAssembly interfaces |
 | `mem20dailydecisioncopilotz` | 9 | 0 | `mem20dailydecisioncopilotz` | Prioritize actions from goals, obligations, energy, time, and current context |
 | `mem20databaseautopilotz` | 9 | 0 | `mem20databaseautopilotz` | Tune indexes, partitions, caching, compaction, and query plans from live workload behavior |
-| `mem20dependencymutationlabz` | 9 | 0 | `mem20dependencymutationlabz` | Simulate upgrades, removals, and provider changes against the complete application graph |
+| `mem20labz` | 9 | 0 | `mem20labz` | Simulate upgrades, removals, and provider changes against the complete application graph |
 | `mem20deviceenrollmentautopilotz` | 9 | 0 | `mem20deviceenrollmentautopilotz` | Securely recognize, enroll, provision, and validate new devices |
 | `mem20emotionsensitivemessagerouterz` | 9 | 0 | `mem20emotionsensitivemessagerouterz` | Detect likely emotional stakes and adapt timing, channel, and escalation |
 | `mem20eventshaperouterz` | 9 | 0 | `mem20eventshaperouterz` | Route and transform events according to semantic meaning and version compatibility |
@@ -290,7 +290,7 @@ A machine-readable map of this monorepo so an agent can find the right subsystem
 | `mem20multimodaldatanormalizerz` | 9 | 0 | `mem20multimodaldatanormalizerz` | Turn text, images, audio, video, and sensor streams into linked structured objects |
 | `mem20multimodalunderstandingcorez` | 9 | 0 | `mem20multimodalunderstandingcorez` | Reason across speech, screens, images, video, files, and spatial context |
 | `mem20musicvisualsynchronizerz` | 9 | 0 | `mem20musicvisualsynchronizerz` | Generate and align motion, lighting, UI, and effects to live audio structure |
-| `mem20neuromorphiceventlabz` | 9 | 0 | `mem20neuromorphiceventlabz` | Prototype sparse event-driven processing for sensors, agents, and low-power devices |
+| `mem20labz` | 9 | 0 | `mem20labz` | Prototype sparse event-driven processing for sensors, agents, and low-power devices |
 | `mem20offlineappdeliveryz` | 9 | 0 | `mem20offlineappdeliveryz` | Distribute and update applications through local peers, removable media, or delayed sync |
 | `mem20simz` | 9 | 0 | `mem20simz` | Replay past operational state and test alternate routing choices |
 | `mem20outcomeverificationruntimez` | 9 | 0 | `mem20outcomeverificationruntimez` | Run real functional scenarios and verify the intended user result occurred |
@@ -325,7 +325,7 @@ A machine-readable map of this monorepo so an agent can find the right subsystem
 | `mem20universaldatatranslatorz` | 9 | 0 | `mem20universaldatatranslatorz` | Map records, events, documents, and objects between incompatible systems |
 | `mem20simz` | 9 | 0 | `mem20simz` | Model how different users attempt tasks and where they fail or abandon |
 | `mem20voicetoactionswitchboardz` | 9 | 0 | `mem20voicetoactionswitchboardz` | Convert spoken requests into routed tasks, calls, device actions, and agent missions |
-| `mem20webassemblycomponentlabz` | 9 | 0 | `mem20webassemblycomponentlabz` | Run language-neutral components with explicit interfaces and strong isolation |
+| `mem20labz` | 9 | 0 | `mem20labz` | Run language-neutral components with explicit interfaces and strong isolation |
 | `mem20studioz` | 9 | 0 | `mem20studioz` | Use browser-accessible GPUs for local visualization, simulation, and AI compute |
 
 ## Engine / service (un-prefixed by design)
@@ -411,7 +411,7 @@ mem20communitypulseenginez = mem20communitypulseenginez.core:cli
 mem20completionconfidenceenginez = mem20completionconfidenceenginez.core:cli
 mem20conflictdeescalationassistantz = mem20conflictdeescalationassistantz.core:cli
 mem20contextawarelearningcoachz = mem20contextawarelearningcoachz.core:cli
-mem20continuouscompatibilitylabz = mem20continuouscompatibilitylabz.core:cli
+mem20labz = mem20labz.core:cli
 mem20continuousimprovementloopz = mem20continuousimprovementloopz.core:cli
 mem20-control = mem20controlz.__main__:main
 mem20conversationalactiondesktopz = mem20conversationalactiondesktopz.core:cli
@@ -426,7 +426,7 @@ mem20crosslanguagerefactorenginez = mem20crosslanguagerefactorenginez.core:cli
 fs-cv = mem20cviz.cli:main
 mem20dailydecisioncopilotz = mem20dailydecisioncopilotz.core:cli
 mem20databaseautopilotz = mem20databaseautopilotz.core:cli
-mem20dependencymutationlabz = mem20dependencymutationlabz.core:cli
+mem20labz = mem20labz.core:cli
 mem20deviceenrollmentautopilotz = mem20deviceenrollmentautopilotz.core:cli
 mem20-dream = mem20dreamz.__main__:main
 mem20dynamicphasereplannerz = mem20dynamicphasereplannerz.core:cli
@@ -475,7 +475,7 @@ mem20multimodaldatanormalizerz = mem20multimodaldatanormalizerz.core:cli
 mem20multimodalunderstandingcorez = mem20multimodalunderstandingcorez.core:cli
 mem20musicvisualsynchronizerz = mem20musicvisualsynchronizerz.core:cli
 mem20nearbydevicemeshz = mem20nearbydevicemeshz.runtime:main
-mem20neuromorphiceventlabz = mem20neuromorphiceventlabz.core:cli
+mem20labz = mem20labz.core:cli
 mem20ocaskz = mem20ocaskz.cli:main
 mem20officez = mem20officez.cli:main
 mem20offlineappdeliveryz = mem20offlineappdeliveryz.core:cli
@@ -536,7 +536,7 @@ mem20simz = mem20simz.core:cli
 mem20verify = mem20verify.cli:main
 mem20voicetoactionswitchboardz = mem20voicetoactionswitchboardz.core:cli
 mem20wasmz = mem20wasmz.core:cli
-mem20webassemblycomponentlabz = mem20webassemblycomponentlabz.core:cli
+mem20labz = mem20labz.core:cli
 mem20studioz = mem20studioz.core:cli
 mem20webgpuz = mem20webgpuz.core:cli
 mem20yetiz = mem20yetiz.cli:main

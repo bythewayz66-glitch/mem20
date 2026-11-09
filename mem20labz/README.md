@@ -1,4 +1,6 @@
-# mem20labz — crew runtime
+# mem20labz — crew runtime (unified lab subsystem)
+
+Unified lab subsystem consolidating experimental/lab runtimes under `mem20labz/labs/`.
 
 mem20 laboratory runtime.
 
@@ -8,15 +10,15 @@ Reviewed packages grouped here for joint integration under the
 package-review rulings:
 
 - `mem20autonomoussaleslaboratoryz`
-- `mem20continuouscompatibilitylabz`
+- `mem20labz`
 - `mem20twinz`
-- `mem20dependencymutationlabz`
-- `mem20executabledesignstresslabz`
-- `mem20modelgenomelabz`
-- `mem20neuromorphiceventlabz`
+- `mem20labz`
+- `mem20labz`
+- `mem20labz`
+- `mem20labz`
 - `mem20simz`
-- `mem20remoteexperimentlabz`
-- `mem20webassemblycomponentlabz`
+- `mem20labz`
+- `mem20labz`
 
 ## Status
 

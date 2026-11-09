@@ -41,9 +41,9 @@ def outcomesimulation_signal() -> Dict[str, Any]:
 def remoteexperiment_signal() -> Dict[str, Any]:
     def run():
         try:
-            from mem20remoteexperimentlabz.domain import create_experiment, run as run_exp, experiment_health
+            from mem20labz.domain import create_experiment, run as run_exp, experiment_health
         except Exception:
-            from mem20remoteexperimentlabz.mem20remoteexperimentlabz.domain import create_experiment, run as run_exp, experiment_health
+            from mem20labz.mem20labz.domain import create_experiment, run as run_exp, experiment_health
         exp = create_experiment("labz-probe", {"kind": "smoke"})
         try:
             ran = run_exp(exp, lambda p: {"result": "ok", "params": p})
@@ -52,27 +52,27 @@ def remoteexperiment_signal() -> Dict[str, Any]:
         exps = [ran] if isinstance(ran, dict) else [exp]
         health = experiment_health(exps)
         return {"experiment": exp, "health": health}
-    return _safe("mem20remoteexperimentlabz", run)
+    return _safe("mem20labz", run)
 
 
 def designstress_signal() -> Dict[str, Any]:
     def run():
         try:
-            from mem20executabledesignstresslabz.domain import bottleneck_analysis, design_verdict
+            from mem20labz.domain import bottleneck_analysis, design_verdict
         except Exception:
-            from mem20executabledesignstresslabz.mem20executabledesignstresslabz.domain import bottleneck_analysis, design_verdict
+            from mem20labz.mem20labz.domain import bottleneck_analysis, design_verdict
         analysis = bottleneck_analysis({"components": [], "flows": []})
         verdict = design_verdict({"components": [], "flows": [], "risks": []})
         return {"analysis": analysis, "verdict": verdict}
-    return _safe("mem20executabledesignstresslabz", run)
+    return _safe("mem20labz", run)
 
 
 def modelgenome_signal() -> Dict[str, Any]:
     def run():
         try:
-            from mem20modelgenomelabz.domain import create_genome, mutate, fitness
+            from mem20labz.domain import create_genome, mutate, fitness
         except Exception:
-            from mem20modelgenomelabz.mem20modelgenomelabz.domain import create_genome, mutate, fitness
+            from mem20labz.mem20labz.domain import create_genome, mutate, fitness
         g = create_genome({"model": "labz-probe", "layers": 1})
         mg = mutate(g, rate=0.1)
         try:
@@ -83,7 +83,7 @@ def modelgenome_signal() -> Dict[str, Any]:
             except Exception as e:
                 fit = {"error": f"{type(e).__name__}: {e}"}
         return {"genome": g, "mutated": mg is not None, "fitness": fit}
-    return _safe("mem20modelgenomelabz", run)
+    return _safe("mem20labz", run)
 
 
 def customerdigitaltwin_signal() -> Dict[str, Any]:

@@ -167,7 +167,7 @@ Every remaining subsystem owned by a wave-1 or wave-2 agent. Focus areas:
 | mem20-frontends | `mem20controlz`, `mem20facez`, `mem20realtimeteampresencez`, `mem20ambient*` |
 | Mem20-Perl-Expert | `mem20langz`, `mem20modalitybridgez`, `mem20intentcompilerz`, `mem20intenttomissioncompilerz` |
 | Mem20-Ruby-Expert | `mem20agentz_sdk`, SDK packaging |
-| Mem20 Benchmark Dataset Builder | `mem20benchmarkz`, `mem20syntheticevaluatorarenaz`, `mem20executabledesignstresslabz` |
+| Mem20 Benchmark Dataset Builder | `mem20benchmarkz`, `mem20syntheticevaluatorarenaz`, `mem20labz` |
 | Experiment Tracker | `mem20twinz`, `mem20twinz`, `mem20simz` |
 | mem20 GTM Team Lead | `mem20offergenomeenginez`, `mem20offerassemblyfabricz`, `mem20customerlifecycleenginez` |
 

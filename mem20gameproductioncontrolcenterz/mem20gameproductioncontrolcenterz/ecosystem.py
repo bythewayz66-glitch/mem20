@@ -61,13 +61,13 @@ def capability_forge_status(payload: Dict[str, Any] = None) -> Dict[str, Any]:
 def resilience_assessment(project: Dict[str, Any] = None) -> Dict[str, Any]:
     """Use design stress lab to assess production resilience and recovery."""
     def run():
-        from mem20executabledesignstresslabz.domain import resilience_score, recovery_time
+        from mem20labz.domain import resilience_score, recovery_time
         pr = project or {}
         checks = pr.get("checks") or [{"ok": not pr.get("scope_creep", False)}, {"ok": pr.get("budget_ratio", 1.0) <= 1.0}, {"ok": pr.get("team_size", 5) >= 3}]
         score = resilience_score(checks)
         rec = recovery_time({"redundancy": int(pr.get("redundancy", 1)), "type": "schedule-slip"})
         return {"resilience_score": score, "estimated_recovery": rec, "checks": len(checks)}
-    return _safe("mem20executabledesignstresslabz", run)
+    return _safe("mem20labz", run)
 
 def asset_animation_pipeline(assets: Dict[str, Any] = None) -> Dict[str, Any]:
     """Use rigging/animation pipeline to assess asset production readiness."""

@@ -1,2 +1,0 @@
-# Executable Design Stress Lab (RM-221, #308) — implementation plan
-Preserve legacy domain API and existing CAPABILITY/Engine/CLI behavior (10-scenario `simulate` passes). Enrich `qa` operation with real stress testing (stress_test/resilience/bottlenecks/recovery/design_verdict) and 6 unique peer signals (different from #300-#307): `mem20simz`, `mem20adversarialqacrewz`, `mem20universalhealthnervoussystemz`, `mem20syntheticevaluatorarenaz`, `mem20remoteexperimentlabz`, `mem20intentcompilerz`. `/doctor`, web cockpit, README fenced example, docs/app, gateway/toolchest. 7/7.

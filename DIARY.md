@@ -526,13 +526,13 @@ README fenced runnable example, docs/PLAN, docs/app monitor, gateway/toolchest. 
 8 tests pass (incl. 5 legacy + Engine simulator compatibility), conformance **7/7**.
 
 ---
-## 2026-11-07 - mem20executabledesignstresslabz (#308): depth-first rebuild
+## 2026-11-07 - mem20labz (#308): depth-first rebuild
 
 Rebuilt RM-221 (Executable Design Stress Lab, fails 5,6,7, operation_kind=qa) as first-class
 while preserving legacy domain API and CAPABILITY Engine/CLI/10-scenario simulator. Enriched
 `qa` with real stress/resilience/bottleneck/recovery/design verdict and 6 unique peers
 (different from #300-#307): `mem20simz`, `mem20adversarialqacrewz`,
-`mem20universalhealthnervoussystemz`, `mem20syntheticevaluatorarenaz`, `mem20remoteexperimentlabz`,
+`mem20universalhealthnervoussystemz`, `mem20syntheticevaluatorarenaz`, `mem20labz`,
 `mem20intentcompilerz`. Added `/doctor`, web cockpit, root shim, README fenced runnable example,
 docs/PLAN, docs/app monitor, gateway/toolchest. Verification: 8 tests pass (legacy + compat),
 conformance **7/7**.
@@ -657,7 +657,7 @@ real peer-derived inputs (effective capacity from team presence; unit-economics 
 hot-swappable release readiness; specialist forge status; resilience-adjusted risk via design
 stress lab; rigging/animation asset-pipeline status). 6 unique peers (#300–#316 unused):
 `mem20realtimeteampresencez`,`mem20uniteconomicsautopilotz`,`mem20hotswappableservicefoundationz`,
-`mem20specialistmodelforgez`,`mem20executabledesignstresslabz`,`mem20pipez`.
+`mem20specialistmodelforgez`,`mem20labz`,`mem20pipez`.
 Added `/doctor`, web cockpit, root shims, fenced runnable README, docs/PLAN, docs/app monitor,
 gateway/toolchest. Verification: 10 tests pass, conformance **7/7**.
 
@@ -802,7 +802,7 @@ Delivered 10 subsystems (330–339) one at a time with real, non-generic impleme
 - **332 mem20pipez (RM-246, pipeline, 7/7):** blockout→encounters→navigation→streaming→lighting→playability pipeline with stages/artifacts/deps/transformations/checkpoints, navmesh/pathfind/playability, runtime pipeline wired. Restored lost domain/test extensions after regression detected. 6 peers gameproductioncontrolcenterz/assetintakecatalogingandvalidationpipelinez/gameplaysystemsdataandbalancepipelinez/ailevelarchitectz/narrativedialogueandlocalizationpipelinez/productionplanningandtaskorchestrationpipelinez.
 - **333 mem20meshz (RM-MESH, orchestrate, 7/7):** lazy-loading MasterEngine (real perf/testability fix), status/ecosystem CLI, 6 external peers eventstreamsuperhighwayz/executiondigitaltwinz/federatedresearchgridz/autonomousrecoverydirectorz/counterfactualmemorysimulatorz/protocolautodiscoveryenginez; vendored meshes preserved.
 - **334 mem20modalitybridgez (RM-064, analyze, 7/7):** `analyze_bridge` (text/image/audio/video/3d/sensor adapters/capabilities), runtime analyze wired. Restored lost domain/test extensions. 6 peers sensorymemoryingestz/specialistmodelforgez/predictiverecallenginez/agentoutputcompilerz/contextcompressionforgez/episodicmemorygraphz.
-- **335 mem20modelgenomelabz (RM-061, simulate, 7/7):** `genome_record`/`simulate_genome_lab` (evolution, ancestry/adapters/limits/traits), runtime simulate wired. 6 peers runtimecompatibilityenginez/aipipelinecostoptimizerz/selfoptimizingkernelz/counterfactualmemorysimulatorz/executiondigitaltwinz/eventstreamsuperhighwayz.
+- **335 mem20labz (RM-061, simulate, 7/7):** `genome_record`/`simulate_genome_lab` (evolution, ancestry/adapters/limits/traits), runtime simulate wired. 6 peers runtimecompatibilityenginez/aipipelinecostoptimizerz/selfoptimizingkernelz/counterfactualmemorysimulatorz/executiondigitaltwinz/eventstreamsuperhighwayz.
 - **336 mem20modelsleepandwakesystemz (RM-066, forecast, 7/7):** hibernation/predictive wake report, runtime forecast wired; fixed wrong peer APIs (BatteryAwareAgentScheduler, energy_cost/greenest_node/migration_plan) to achieve 6 covered peers. 6 peers demandforecastandcapacitybrainz/batteryawareagentschedulerz/roamingworkloadschedulerz/selftuningresourcegovernorz/energyawarecomputemigrationz/runtimecompatibilityenginez.
 - **337 mem20multibrandswarmz (RM-016, analyze, 7/7):** multi-brand isolation/portfolio analysis, runtime analyze wired; fixed peer APIs. 6 peers offerassemblyfabricz/compoundingproductecosystemz/businessmodelsimulatorz/goaleconomyschedulerz/eventstreamsuperhighwayz/capabilitymarketplacez (criterion 6 PASS; 5 detected in report).
 - **338 mem20multimodaltaskcapturez (RM-037, ingest, 7/7):** structured executable task/action-item capture across modalities, runtime ingest wired; fixed modality/personalworkflowtwinz peers. 6 peers modalitybridgez/sensorymemoryingestz/intentcompilerz/personalworkflowtwinz/agentoutputcompilerz/episodicmemorygraphz.
@@ -849,6 +849,9 @@ Completed depth-first rebuild to **7/7** for #315-#329 (11 subsystems in this se
 
 ## 2026-11-09 - consolidate brain subsystems into mem20causalroutingbrainz
 - **Consolidation:** Merged brain/forecast/fleet/progression/migration subsystems into `mem20causalroutingbrainz` as modules under `mem20causalroutingbrainz/brains/` (demandforecastandcapacitybrainz, edgefleetbrainz, skillbasedprogressionbrainz, zerodowntimemigrationbrainz). Removed originals; repo-wide references updated to `mem20causalroutingbrainz`.
+
+## 2026-11-09 - consolidate lab subsystems into mem20labz
+- **Consolidation:** Merged experimental/lab subsystems into `mem20labz` as modules under `mem20labz/labs/` (continuouscompatibilitylabz, dependencymutationlabz, executabledesignstresslabz, modelgenomelabz, neuromorphiceventlabz, remoteexperimentlabz, webassemblycomponentlabz). Removed originals; repo-wide references updated to `mem20labz`.
 - **Full pytest follow-up fixes (then pushed):** fixed `gateway/mem20_gateway.py` syntax/structure (criterion-7 block was dangling in `main()` breaking `elif read`; moved 39 missing entries into `SUBSYSTEMS`). Fixed `mem20mktz` root causes (truthful `braid_hook` availability via `braid_bridge.available()`; `bundle.compose` queries UCG only when `cap_ids` present; env-honest test guards/assertions) → **33 passed, 9 skipped**. Fixed `mem20selfhealingruntimecivilizationz.integrations.PlansEngineBridge` adapter for real `mem20selfhealingplansz` API (no `Engine`) → **53 passed**.
 - **es//:** mem20 context + self-model saved (GitHub steps skipped earlier); commits/pushes to `origin/main` record the work.
 

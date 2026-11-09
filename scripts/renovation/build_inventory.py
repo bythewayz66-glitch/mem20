@@ -182,7 +182,7 @@ OVERRIDES = {
     # benchmark / experiment
     "mem20benchmarkz": "Mem20 Benchmark Dataset Builder",
     "mem20syntheticevaluatorarenaz": "Mem20 Benchmark Dataset Builder",
-    "mem20executabledesignstresslabz": "Mem20 Benchmark Dataset Builder",
+    "mem20labz": "Mem20 Benchmark Dataset Builder",
     "mem20twinz": "Experiment Tracker",
     "mem20twinz": "Experiment Tracker",
     "mem20simz": "Experiment Tracker",

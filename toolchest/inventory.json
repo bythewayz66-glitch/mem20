@@ -2871,20 +2871,20 @@
       }
     },
     {
-      "id": "cli:mem20continuouscompatibilitylabz",
+      "id": "cli:mem20labz",
       "kind": "cli",
-      "name": "mem20continuouscompatibilitylabz",
+      "name": "mem20labz",
       "category": "cli",
       "subcategory": "mem20",
-      "description": "mem20continuouscompatibilitylabz \u00b7 runs with /opt/mem20/.venv/bin/python",
-      "source": "/opt/mem20/.venv/bin/mem20continuouscompatibilitylabz",
+      "description": "mem20labz \u00b7 runs with /opt/mem20/.venv/bin/python",
+      "source": "/opt/mem20/.venv/bin/mem20labz",
       "runtime_status": "ok",
       "runtime_detail": "script in /opt/mem20/.venv/bin",
       "checks": [
         {
           "check": "path exists",
           "ok": true,
-          "detail": "/opt/mem20/.venv/bin/mem20continuouscompatibilitylabz"
+          "detail": "/opt/mem20/.venv/bin/mem20labz"
         },
         {
           "check": "executable",
@@ -2899,7 +2899,7 @@
         "executable": true,
         "size": 193,
         "symlink": false,
-        "resolved_target": "/opt/mem20/.venv/bin/mem20continuouscompatibilitylabz"
+        "resolved_target": "/opt/mem20/.venv/bin/mem20labz"
       }
     },
     {
@@ -3479,20 +3479,20 @@
       }
     },
     {
-      "id": "cli:mem20dependencymutationlabz",
+      "id": "cli:mem20labz",
       "kind": "cli",
-      "name": "mem20dependencymutationlabz",
+      "name": "mem20labz",
       "category": "cli",
       "subcategory": "mem20",
-      "description": "mem20dependencymutationlabz \u00b7 runs with /opt/mem20/.venv/bin/python",
-      "source": "/opt/mem20/.venv/bin/mem20dependencymutationlabz",
+      "description": "mem20labz \u00b7 runs with /opt/mem20/.venv/bin/python",
+      "source": "/opt/mem20/.venv/bin/mem20labz",
       "runtime_status": "ok",
       "runtime_detail": "script in /opt/mem20/.venv/bin",
       "checks": [
         {
           "check": "path exists",
           "ok": true,
-          "detail": "/opt/mem20/.venv/bin/mem20dependencymutationlabz"
+          "detail": "/opt/mem20/.venv/bin/mem20labz"
         },
         {
           "check": "executable",
@@ -3507,7 +3507,7 @@
         "executable": true,
         "size": 188,
         "symlink": false,
-        "resolved_target": "/opt/mem20/.venv/bin/mem20dependencymutationlabz"
+        "resolved_target": "/opt/mem20/.venv/bin/mem20labz"
       }
     },
     {
@@ -4087,20 +4087,20 @@
       }
     },
     {
-      "id": "cli:mem20executabledesignstresslabz",
+      "id": "cli:mem20labz",
       "kind": "cli",
-      "name": "mem20executabledesignstresslabz",
+      "name": "mem20labz",
       "category": "cli",
       "subcategory": "mem20",
-      "description": "mem20executabledesignstresslabz \u00b7 runs with /opt/mem20/.venv/bin/python",
-      "source": "/opt/mem20/.venv/bin/mem20executabledesignstresslabz",
+      "description": "mem20labz \u00b7 runs with /opt/mem20/.venv/bin/python",
+      "source": "/opt/mem20/.venv/bin/mem20labz",
       "runtime_status": "ok",
       "runtime_detail": "script in /opt/mem20/.venv/bin",
       "checks": [
         {
           "check": "path exists",
           "ok": true,
-          "detail": "/opt/mem20/.venv/bin/mem20executabledesignstresslabz"
+          "detail": "/opt/mem20/.venv/bin/mem20labz"
         },
         {
           "check": "executable",
@@ -4115,7 +4115,7 @@
         "executable": true,
         "size": 197,
         "symlink": false,
-        "resolved_target": "/opt/mem20/.venv/bin/mem20executabledesignstresslabz"
+        "resolved_target": "/opt/mem20/.venv/bin/mem20labz"
       }
     },
     {
@@ -5943,20 +5943,20 @@
       }
     },
     {
-      "id": "cli:mem20modelgenomelabz",
+      "id": "cli:mem20labz",
       "kind": "cli",
-      "name": "mem20modelgenomelabz",
+      "name": "mem20labz",
       "category": "cli",
       "subcategory": "mem20",
-      "description": "mem20modelgenomelabz \u00b7 runs with /opt/mem20/.venv/bin/python",
-      "source": "/opt/mem20/.venv/bin/mem20modelgenomelabz",
+      "description": "mem20labz \u00b7 runs with /opt/mem20/.venv/bin/python",
+      "source": "/opt/mem20/.venv/bin/mem20labz",
       "runtime_status": "ok",
       "runtime_detail": "script in /opt/mem20/.venv/bin",
       "checks": [
         {
           "check": "path exists",
           "ok": true,
-          "detail": "/opt/mem20/.venv/bin/mem20modelgenomelabz"
+          "detail": "/opt/mem20/.venv/bin/mem20labz"
         },
         {
           "check": "executable",
@@ -5971,7 +5971,7 @@
         "executable": true,
         "size": 186,
         "symlink": false,
-        "resolved_target": "/opt/mem20/.venv/bin/mem20modelgenomelabz"
+        "resolved_target": "/opt/mem20/.venv/bin/mem20labz"
       }
     },
     {
@@ -6359,20 +6359,20 @@
       }
     },
     {
-      "id": "cli:mem20neuromorphiceventlabz",
+      "id": "cli:mem20labz",
       "kind": "cli",
-      "name": "mem20neuromorphiceventlabz",
+      "name": "mem20labz",
       "category": "cli",
       "subcategory": "mem20",
-      "description": "mem20neuromorphiceventlabz \u00b7 runs with /opt/mem20/.venv/bin/python",
-      "source": "/opt/mem20/.venv/bin/mem20neuromorphiceventlabz",
+      "description": "mem20labz \u00b7 runs with /opt/mem20/.venv/bin/python",
+      "source": "/opt/mem20/.venv/bin/mem20labz",
       "runtime_status": "ok",
       "runtime_detail": "script in /opt/mem20/.venv/bin",
       "checks": [
         {
           "check": "path exists",
           "ok": true,
-          "detail": "/opt/mem20/.venv/bin/mem20neuromorphiceventlabz"
+          "detail": "/opt/mem20/.venv/bin/mem20labz"
         },
         {
           "check": "executable",
@@ -6387,7 +6387,7 @@
         "executable": true,
         "size": 187,
         "symlink": false,
-        "resolved_target": "/opt/mem20/.venv/bin/mem20neuromorphiceventlabz"
+        "resolved_target": "/opt/mem20/.venv/bin/mem20labz"
       }
     },
     {
@@ -7767,20 +7767,20 @@
       }
     },
     {
-      "id": "cli:mem20remoteexperimentlabz",
+      "id": "cli:mem20labz",
       "kind": "cli",
-      "name": "mem20remoteexperimentlabz",
+      "name": "mem20labz",
       "category": "cli",
       "subcategory": "mem20",
-      "description": "mem20remoteexperimentlabz \u00b7 runs with /opt/mem20/.venv/bin/python",
-      "source": "/opt/mem20/.venv/bin/mem20remoteexperimentlabz",
+      "description": "mem20labz \u00b7 runs with /opt/mem20/.venv/bin/python",
+      "source": "/opt/mem20/.venv/bin/mem20labz",
       "runtime_status": "ok",
       "runtime_detail": "script in /opt/mem20/.venv/bin",
       "checks": [
         {
           "check": "path exists",
           "ok": true,
-          "detail": "/opt/mem20/.venv/bin/mem20remoteexperimentlabz"
+          "detail": "/opt/mem20/.venv/bin/mem20labz"
         },
         {
           "check": "executable",
@@ -7795,7 +7795,7 @@
         "executable": true,
         "size": 191,
         "symlink": false,
-        "resolved_target": "/opt/mem20/.venv/bin/mem20remoteexperimentlabz"
+        "resolved_target": "/opt/mem20/.venv/bin/mem20labz"
       }
     },
     {
@@ -9655,20 +9655,20 @@
       }
     },
     {
-      "id": "cli:mem20webassemblycomponentlabz",
+      "id": "cli:mem20labz",
       "kind": "cli",
-      "name": "mem20webassemblycomponentlabz",
+      "name": "mem20labz",
       "category": "cli",
       "subcategory": "mem20",
-      "description": "mem20webassemblycomponentlabz \u00b7 runs with /opt/mem20/.venv/bin/python",
-      "source": "/opt/mem20/.venv/bin/mem20webassemblycomponentlabz",
+      "description": "mem20labz \u00b7 runs with /opt/mem20/.venv/bin/python",
+      "source": "/opt/mem20/.venv/bin/mem20labz",
       "runtime_status": "ok",
       "runtime_detail": "script in /opt/mem20/.venv/bin",
       "checks": [
         {
           "check": "path exists",
           "ok": true,
-          "detail": "/opt/mem20/.venv/bin/mem20webassemblycomponentlabz"
+          "detail": "/opt/mem20/.venv/bin/mem20labz"
         },
         {
           "check": "executable",
@@ -9683,7 +9683,7 @@
         "executable": true,
         "size": 190,
         "symlink": false,
-        "resolved_target": "/opt/mem20/.venv/bin/mem20webassemblycomponentlabz"
+        "resolved_target": "/opt/mem20/.venv/bin/mem20labz"
       }
     },
     {
@@ -15112,25 +15112,25 @@
       }
     },
     {
-      "id": "subsystem:mem20continuouscompatibilitylabz",
+      "id": "subsystem:mem20labz",
       "kind": "subsystem",
-      "name": "mem20continuouscompatibilitylabz",
+      "name": "mem20labz",
       "category": "other",
       "subcategory": "native-subsystem",
       "description": "Continuously test modules against current and future interface versions",
-      "source": "/opt/mem20/mem20continuouscompatibilitylabz/pyproject.toml",
+      "source": "/opt/mem20/mem20labz/pyproject.toml",
       "runtime_status": "ok",
-      "runtime_detail": "pkg=mem20continuouscompatibilitylabz v1.0.0; installed 1.0.0 via root-venv; importable=False (1 modules checked); scripts=1 declared, 1 on PATH",
+      "runtime_detail": "pkg=mem20labz v1.0.0; installed 1.0.0 via root-venv; importable=False (1 modules checked); scripts=1 declared, 1 on PATH",
       "checks": [
         {
           "check": "pyproject present",
           "ok": true,
-          "detail": "/opt/mem20/mem20continuouscompatibilitylabz/pyproject.toml"
+          "detail": "/opt/mem20/mem20labz/pyproject.toml"
         },
         {
           "check": "name declared",
           "ok": true,
-          "detail": "mem20continuouscompatibilitylabz"
+          "detail": "mem20labz"
         },
         {
           "check": "description present",
@@ -15150,17 +15150,17 @@
         {
           "check": "import",
           "ok": false,
-          "detail": "mem20continuouscompatibilitylabz=n"
+          "detail": "mem20labz=n"
         }
       ],
       "meta": {
-        "pkg_name": "mem20continuouscompatibilitylabz",
+        "pkg_name": "mem20labz",
         "version": "1.0.0",
-        "pyproject": "/opt/mem20/mem20continuouscompatibilitylabz/pyproject.toml",
+        "pyproject": "/opt/mem20/mem20labz/pyproject.toml",
         "entry_points": [
           {
-            "console": "mem20continuouscompatibilitylabz",
-            "target": "mem20continuouscompatibilitylabz.core:cli",
+            "console": "mem20labz",
+            "target": "mem20labz.core:cli",
             "on_path": true
           }
         ],
@@ -15172,7 +15172,7 @@
         },
         "importable": [
           {
-            "name": "mem20continuouscompatibilitylabz",
+            "name": "mem20labz",
             "importable": false
           }
         ],
@@ -16627,25 +16627,25 @@
       }
     },
     {
-      "id": "subsystem:mem20dependencymutationlabz",
+      "id": "subsystem:mem20labz",
       "kind": "subsystem",
-      "name": "mem20dependencymutationlabz",
+      "name": "mem20labz",
       "category": "other",
       "subcategory": "native-subsystem",
       "description": "Simulate upgrades, removals, and provider changes against the complete application graph",
-      "source": "/opt/mem20/mem20dependencymutationlabz/pyproject.toml",
+      "source": "/opt/mem20/mem20labz/pyproject.toml",
       "runtime_status": "ok",
-      "runtime_detail": "pkg=mem20dependencymutationlabz v1.0.0; installed 1.0.0 via root-venv; importable=False (1 modules checked); scripts=1 declared, 1 on PATH",
+      "runtime_detail": "pkg=mem20labz v1.0.0; installed 1.0.0 via root-venv; importable=False (1 modules checked); scripts=1 declared, 1 on PATH",
       "checks": [
         {
           "check": "pyproject present",
           "ok": true,
-          "detail": "/opt/mem20/mem20dependencymutationlabz/pyproject.toml"
+          "detail": "/opt/mem20/mem20labz/pyproject.toml"
         },
         {
           "check": "name declared",
           "ok": true,
-          "detail": "mem20dependencymutationlabz"
+          "detail": "mem20labz"
         },
         {
           "check": "description present",
@@ -16665,17 +16665,17 @@
         {
           "check": "import",
           "ok": false,
-          "detail": "mem20dependencymutationlabz=n"
+          "detail": "mem20labz=n"
         }
       ],
       "meta": {
-        "pkg_name": "mem20dependencymutationlabz",
+        "pkg_name": "mem20labz",
         "version": "1.0.0",
-        "pyproject": "/opt/mem20/mem20dependencymutationlabz/pyproject.toml",
+        "pyproject": "/opt/mem20/mem20labz/pyproject.toml",
         "entry_points": [
           {
-            "console": "mem20dependencymutationlabz",
-            "target": "mem20dependencymutationlabz.core:cli",
+            "console": "mem20labz",
+            "target": "mem20labz.core:cli",
             "on_path": true
           }
         ],
@@ -16687,7 +16687,7 @@
         },
         "importable": [
           {
-            "name": "mem20dependencymutationlabz",
+            "name": "mem20labz",
             "importable": false
           }
         ],
@@ -17993,25 +17993,25 @@
       }
     },
     {
-      "id": "subsystem:mem20executabledesignstresslabz",
+      "id": "subsystem:mem20labz",
       "kind": "subsystem",
-      "name": "mem20executabledesignstresslabz",
+      "name": "mem20labz",
       "category": "other",
       "subcategory": "native-subsystem",
       "description": "Executable Design Stress Lab (RM-221): simulated design/player/production/technical stress tests with resilience and QA peer signals",
-      "source": "/opt/mem20/mem20executabledesignstresslabz/pyproject.toml",
+      "source": "/opt/mem20/mem20labz/pyproject.toml",
       "runtime_status": "ok",
-      "runtime_detail": "pkg=mem20executabledesignstresslabz v1.0.0; installed 1.0.0 via root-venv; importable=True (1 modules checked); scripts=1 declared, 1 on PATH",
+      "runtime_detail": "pkg=mem20labz v1.0.0; installed 1.0.0 via root-venv; importable=True (1 modules checked); scripts=1 declared, 1 on PATH",
       "checks": [
         {
           "check": "pyproject present",
           "ok": true,
-          "detail": "/opt/mem20/mem20executabledesignstresslabz/pyproject.toml"
+          "detail": "/opt/mem20/mem20labz/pyproject.toml"
         },
         {
           "check": "name declared",
           "ok": true,
-          "detail": "mem20executabledesignstresslabz"
+          "detail": "mem20labz"
         },
         {
           "check": "description present",
@@ -18031,17 +18031,17 @@
         {
           "check": "import",
           "ok": true,
-          "detail": "mem20executabledesignstresslabz=y"
+          "detail": "mem20labz=y"
         }
       ],
       "meta": {
-        "pkg_name": "mem20executabledesignstresslabz",
+        "pkg_name": "mem20labz",
         "version": "1.0.0",
-        "pyproject": "/opt/mem20/mem20executabledesignstresslabz/pyproject.toml",
+        "pyproject": "/opt/mem20/mem20labz/pyproject.toml",
         "entry_points": [
           {
-            "console": "mem20executabledesignstresslabz",
-            "target": "mem20executabledesignstresslabz.runtime:main",
+            "console": "mem20labz",
+            "target": "mem20labz.runtime:main",
             "on_path": true
           }
         ],
@@ -18053,7 +18053,7 @@
         },
         "importable": [
           {
-            "name": "mem20executabledesignstresslabz",
+            "name": "mem20labz",
             "importable": true
           }
         ],
@@ -22230,25 +22230,25 @@
       }
     },
     {
-      "id": "subsystem:mem20modelgenomelabz",
+      "id": "subsystem:mem20labz",
       "kind": "subsystem",
-      "name": "mem20modelgenomelabz",
+      "name": "mem20labz",
       "category": "other",
       "subcategory": "native-subsystem",
-      "description": "mem20modelgenomelabz first-class module",
-      "source": "/opt/mem20/mem20modelgenomelabz/pyproject.toml",
+      "description": "mem20labz first-class module",
+      "source": "/opt/mem20/mem20labz/pyproject.toml",
       "runtime_status": "ok",
-      "runtime_detail": "pkg=mem20modelgenomelabz v1.0.0; installed 1.0.0 via root-venv; importable=False (1 modules checked); scripts=1 declared, 1 on PATH",
+      "runtime_detail": "pkg=mem20labz v1.0.0; installed 1.0.0 via root-venv; importable=False (1 modules checked); scripts=1 declared, 1 on PATH",
       "checks": [
         {
           "check": "pyproject present",
           "ok": true,
-          "detail": "/opt/mem20/mem20modelgenomelabz/pyproject.toml"
+          "detail": "/opt/mem20/mem20labz/pyproject.toml"
         },
         {
           "check": "name declared",
           "ok": true,
-          "detail": "mem20modelgenomelabz"
+          "detail": "mem20labz"
         },
         {
           "check": "description present",
@@ -22268,17 +22268,17 @@
         {
           "check": "import",
           "ok": false,
-          "detail": "mem20modelgenomelabz=n"
+          "detail": "mem20labz=n"
         }
       ],
       "meta": {
-        "pkg_name": "mem20modelgenomelabz",
+        "pkg_name": "mem20labz",
         "version": "1.0.0",
-        "pyproject": "/opt/mem20/mem20modelgenomelabz/pyproject.toml",
+        "pyproject": "/opt/mem20/mem20labz/pyproject.toml",
         "entry_points": [
           {
-            "console": "mem20modelgenomelabz",
-            "target": "mem20modelgenomelabz.runtime:main",
+            "console": "mem20labz",
+            "target": "mem20labz.runtime:main",
             "on_path": true
           }
         ],
@@ -22290,7 +22290,7 @@
         },
         "importable": [
           {
-            "name": "mem20modelgenomelabz",
+            "name": "mem20labz",
             "importable": false
           }
         ],
@@ -23114,25 +23114,25 @@
       }
     },
     {
-      "id": "subsystem:mem20neuromorphiceventlabz",
+      "id": "subsystem:mem20labz",
       "kind": "subsystem",
-      "name": "mem20neuromorphiceventlabz",
+      "name": "mem20labz",
       "category": "other",
       "subcategory": "native-subsystem",
       "description": "Prototype sparse event-driven processing for sensors, agents, and low-power devices",
-      "source": "/opt/mem20/mem20neuromorphiceventlabz/pyproject.toml",
+      "source": "/opt/mem20/mem20labz/pyproject.toml",
       "runtime_status": "ok",
-      "runtime_detail": "pkg=mem20neuromorphiceventlabz v1.0.0; installed 1.0.0 via root-venv; importable=False (1 modules checked); scripts=1 declared, 1 on PATH",
+      "runtime_detail": "pkg=mem20labz v1.0.0; installed 1.0.0 via root-venv; importable=False (1 modules checked); scripts=1 declared, 1 on PATH",
       "checks": [
         {
           "check": "pyproject present",
           "ok": true,
-          "detail": "/opt/mem20/mem20neuromorphiceventlabz/pyproject.toml"
+          "detail": "/opt/mem20/mem20labz/pyproject.toml"
         },
         {
           "check": "name declared",
           "ok": true,
-          "detail": "mem20neuromorphiceventlabz"
+          "detail": "mem20labz"
         },
         {
           "check": "description present",
@@ -23152,17 +23152,17 @@
         {
           "check": "import",
           "ok": false,
-          "detail": "mem20neuromorphiceventlabz=n"
+          "detail": "mem20labz=n"
         }
       ],
       "meta": {
-        "pkg_name": "mem20neuromorphiceventlabz",
+        "pkg_name": "mem20labz",
         "version": "1.0.0",
-        "pyproject": "/opt/mem20/mem20neuromorphiceventlabz/pyproject.toml",
+        "pyproject": "/opt/mem20/mem20labz/pyproject.toml",
         "entry_points": [
           {
-            "console": "mem20neuromorphiceventlabz",
-            "target": "mem20neuromorphiceventlabz.core:cli",
+            "console": "mem20labz",
+            "target": "mem20labz.core:cli",
             "on_path": true
           }
         ],
@@ -23174,7 +23174,7 @@
         },
         "importable": [
           {
-            "name": "mem20neuromorphiceventlabz",
+            "name": "mem20labz",
             "importable": false
           }
         ],
@@ -26191,25 +26191,25 @@
       }
     },
     {
-      "id": "subsystem:mem20remoteexperimentlabz",
+      "id": "subsystem:mem20labz",
       "kind": "subsystem",
-      "name": "mem20remoteexperimentlabz",
+      "name": "mem20labz",
       "category": "other",
       "subcategory": "native-subsystem",
       "description": "Remote Experiment Lab with 6 peers, HTTP cockpit, MCP",
-      "source": "/opt/mem20/mem20remoteexperimentlabz/pyproject.toml",
+      "source": "/opt/mem20/mem20labz/pyproject.toml",
       "runtime_status": "ok",
-      "runtime_detail": "pkg=mem20remoteexperimentlabz v1.0.0; installed 1.0.0 via root-venv; importable=False (1 modules checked); scripts=1 declared, 1 on PATH",
+      "runtime_detail": "pkg=mem20labz v1.0.0; installed 1.0.0 via root-venv; importable=False (1 modules checked); scripts=1 declared, 1 on PATH",
       "checks": [
         {
           "check": "pyproject present",
           "ok": true,
-          "detail": "/opt/mem20/mem20remoteexperimentlabz/pyproject.toml"
+          "detail": "/opt/mem20/mem20labz/pyproject.toml"
         },
         {
           "check": "name declared",
           "ok": true,
-          "detail": "mem20remoteexperimentlabz"
+          "detail": "mem20labz"
         },
         {
           "check": "description present",
@@ -26229,17 +26229,17 @@
         {
           "check": "import",
           "ok": false,
-          "detail": "mem20remoteexperimentlabz=n"
+          "detail": "mem20labz=n"
         }
       ],
       "meta": {
-        "pkg_name": "mem20remoteexperimentlabz",
+        "pkg_name": "mem20labz",
         "version": "1.0.0",
-        "pyproject": "/opt/mem20/mem20remoteexperimentlabz/pyproject.toml",
+        "pyproject": "/opt/mem20/mem20labz/pyproject.toml",
         "entry_points": [
           {
-            "console": "mem20remoteexperimentlabz",
-            "target": "mem20remoteexperimentlabz.runtime:main",
+            "console": "mem20labz",
+            "target": "mem20labz.runtime:main",
             "on_path": true
           }
         ],
@@ -26251,7 +26251,7 @@
         },
         "importable": [
           {
-            "name": "mem20remoteexperimentlabz",
+            "name": "mem20labz",
             "importable": false
           }
         ],
@@ -30424,25 +30424,25 @@
       }
     },
     {
-      "id": "subsystem:mem20webassemblycomponentlabz",
+      "id": "subsystem:mem20labz",
       "kind": "subsystem",
-      "name": "mem20webassemblycomponentlabz",
+      "name": "mem20labz",
       "category": "other",
       "subcategory": "native-subsystem",
       "description": "Run language-neutral components with explicit interfaces and strong isolation",
-      "source": "/opt/mem20/mem20webassemblycomponentlabz/pyproject.toml",
+      "source": "/opt/mem20/mem20labz/pyproject.toml",
       "runtime_status": "ok",
-      "runtime_detail": "pkg=mem20webassemblycomponentlabz v1.0.0; installed 1.0.0 via root-venv; importable=False (1 modules checked); scripts=1 declared, 1 on PATH",
+      "runtime_detail": "pkg=mem20labz v1.0.0; installed 1.0.0 via root-venv; importable=False (1 modules checked); scripts=1 declared, 1 on PATH",
       "checks": [
         {
           "check": "pyproject present",
           "ok": true,
-          "detail": "/opt/mem20/mem20webassemblycomponentlabz/pyproject.toml"
+          "detail": "/opt/mem20/mem20labz/pyproject.toml"
         },
         {
           "check": "name declared",
           "ok": true,
-          "detail": "mem20webassemblycomponentlabz"
+          "detail": "mem20labz"
         },
         {
           "check": "description present",
@@ -30462,17 +30462,17 @@
         {
           "check": "import",
           "ok": false,
-          "detail": "mem20webassemblycomponentlabz=n"
+          "detail": "mem20labz=n"
         }
       ],
       "meta": {
-        "pkg_name": "mem20webassemblycomponentlabz",
+        "pkg_name": "mem20labz",
         "version": "1.0.0",
-        "pyproject": "/opt/mem20/mem20webassemblycomponentlabz/pyproject.toml",
+        "pyproject": "/opt/mem20/mem20labz/pyproject.toml",
         "entry_points": [
           {
-            "console": "mem20webassemblycomponentlabz",
-            "target": "mem20webassemblycomponentlabz.core:cli",
+            "console": "mem20labz",
+            "target": "mem20labz.core:cli",
             "on_path": true
           }
         ],
@@ -30484,7 +30484,7 @@
         },
         "importable": [
           {
-            "name": "mem20webassemblycomponentlabz",
+            "name": "mem20labz",
             "importable": false
           }
         ],

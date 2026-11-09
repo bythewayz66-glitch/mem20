@@ -172,9 +172,9 @@ SUBSYSTEMS = {
         "entry": "python -m mem20modelsleepandwakesystemz execute '{\"models\":[{\"id\":\"m1\",\"state\":\"awake\",\"last_activity\":0}],\"idle_threshold\":1}'",
         "owner": "mem20-webdev", "wave": 2,
     },
-    "mem20modelgenomelabz": {
+    "mem20labz": {
         "purpose": "Model Genome Lab (RM-061,#335): model genomes/capabilities/traits/limits/adapters/ancestry; evolution+6 peer integrations",
-        "entry": "python -m mem20modelgenomelabz execute '{\"population\":4,\"generations\":2,\"objective\":{\"quality\":1.0}}'",
+        "entry": "python -m mem20labz execute '{\"population\":4,\"generations\":2,\"objective\":{\"quality\":1.0}}'",
         "owner": "mem20-webdev", "wave": 2,
     },
     "mem20modalitybridgez": {
@@ -273,9 +273,9 @@ SUBSYSTEMS = {
         "owner": "mem20-webdev",
         "wave": 2,
     },
-    "mem20executabledesignstresslabz": {
+    "mem20labz": {
         "purpose": "Executable Design Stress Lab (RM-221): simulated design/production/technical stress tests with resilience, adversarial QA, and experiment peer signals",
-        "entry": "python -m mem20executabledesignstresslabz simulate",
+        "entry": "python -m mem20labz simulate",
         "owner": "mem20-webdev",
         "wave": 2,
     },
@@ -618,9 +618,9 @@ SUBSYSTEMS = {
         "owner": "mem20-webdev",
         "wave": 2,
     },
-    "mem20remoteexperimentlabz": {
+    "mem20labz": {
         "purpose": "Run reproducible experiments across device classes and collect live metrics",
-        "entry": "python -m mem20remoteexperimentlabz simulate",
+        "entry": "python -m mem20labz simulate",
         "owner": "mem20-webdev",
         "wave": 2,
     },

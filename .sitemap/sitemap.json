@@ -4058,12 +4058,12 @@
       "code_lines": 9,
       "dependencies": [],
       "description": "Continuously test modules against current and future interface versions",
-      "dir": "mem20continuouscompatibilitylabz",
+      "dir": "mem20labz",
       "docs": [
-        "mem20continuouscompatibilitylabz/README.md"
+        "mem20labz/README.md"
       ],
       "entry_points": {
-        "mem20continuouscompatibilitylabz": "mem20continuouscompatibilitylabz.core:cli"
+        "mem20labz": "mem20labz.core:cli"
       },
       "file_count": 9,
       "keywords": [],
@@ -4086,13 +4086,13 @@
         "core",
         "run"
       ],
-      "name": "mem20continuouscompatibilitylabz",
+      "name": "mem20labz",
       "packaged": true,
       "readme_summary": "RM-130 \u2014 Continuous Compatibility Lab",
       "readme_text": "# rm-130 \u2014 continuous compatibility lab\n\n**owner:** judy  \n**lane:** software engineering intelligence and repair\n\n## outcome\ncontinuously test modules against current and future interface versions\n\n## breakthrough\necosystem upgrades stop being surprise integration events\n\nthis package implements the locally executable/non-human portion of this off record lab roadmap on a shared, zero-dependency runtime substrate. it includes typed/versioned roadmap validation, sqlite wal state + event history, resumable/idempotent jobs, cancellation/timeouts/quotas, deterministic recovery, adaptive mode decisions with confidence/alternatives/bottlenecks/explanations, feedback tuning, cli + typed client + http api + browser command surface + event stream, local/hybrid/cloud peer execution, conflict-safe lww synchronization, caching, backpressure/failover, metrics, simulator scenarios, benchmark tooling, safety gating, and a rollback manifest.\n\nthe domain engine for this package is keyed specifically to rm-130 and produces deterministic executable results for the roadmap's core operation using only local standard-library code. external hardware, proprietary models, production credentials, live third-party services, and deployment authorization are intentionally not fabricated; those remain environment-bound integration points.\n\n## run\n```bash\npython run.py inspect\npython run.py run '{\"text\":\"demo\",\"cache\":false}'\npython run.py simulate\npython run.py benchmark --runs 5\npython run.py serve --port 8765\n```\n\nopen `http://127.0.0.1:8765/` for the live command surface.\n",
       "requires_python": ">=3.11",
       "subdirs": [
-        "mem20continuouscompatibilitylabz"
+        "mem20labz"
       ],
       "test_files": 0,
       "version": "1.0.0"
@@ -5189,12 +5189,12 @@
       "code_lines": 9,
       "dependencies": [],
       "description": "Simulate upgrades, removals, and provider changes against the complete application graph",
-      "dir": "mem20dependencymutationlabz",
+      "dir": "mem20labz",
       "docs": [
-        "mem20dependencymutationlabz/README.md"
+        "mem20labz/README.md"
       ],
       "entry_points": {
-        "mem20dependencymutationlabz": "mem20dependencymutationlabz.core:cli"
+        "mem20labz": "mem20labz.core:cli"
       },
       "file_count": 9,
       "keywords": [],
@@ -5217,13 +5217,13 @@
         "core",
         "run"
       ],
-      "name": "mem20dependencymutationlabz",
+      "name": "mem20labz",
       "packaged": true,
       "readme_summary": "RM-124 \u2014 Dependency Mutation Lab",
       "readme_text": "# rm-124 \u2014 dependency mutation lab\n\n**owner:** judy  \n**lane:** software engineering intelligence and repair\n\n## outcome\nsimulate upgrades, removals, and provider changes against the complete application graph\n\n## breakthrough\ndependency risk is measured before production breaks\n\nthis package implements the locally executable/non-human portion of this off record lab roadmap on a shared, zero-dependency runtime substrate. it includes typed/versioned roadmap validation, sqlite wal state + event history, resumable/idempotent jobs, cancellation/timeouts/quotas, deterministic recovery, adaptive mode decisions with confidence/alternatives/bottlenecks/explanations, feedback tuning, cli + typed client + http api + browser command surface + event stream, local/hybrid/cloud peer execution, conflict-safe lww synchronization, caching, backpressure/failover, metrics, simulator scenarios, benchmark tooling, safety gating, and a rollback manifest.\n\nthe domain engine for this package is keyed specifically to rm-124 and produces deterministic executable results for the roadmap's core operation using only local standard-library code. external hardware, proprietary models, production credentials, live third-party services, and deployment authorization are intentionally not fabricated; those remain environment-bound integration points.\n\n## run\n```bash\npython run.py inspect\npython run.py run '{\"text\":\"demo\",\"cache\":false}'\npython run.py simulate\npython run.py benchmark --runs 5\npython run.py serve --port 8765\n```\n\nopen `http://127.0.0.1:8765/` for the live command surface.\n",
       "requires_python": ">=3.11",
       "subdirs": [
-        "mem20dependencymutationlabz"
+        "mem20labz"
       ],
       "test_files": 0,
       "version": "1.0.0"
@@ -6074,9 +6074,9 @@
       "code_lines": 333,
       "dependencies": [],
       "description": "",
-      "dir": "mem20executabledesignstresslabz",
+      "dir": "mem20labz",
       "docs": [
-        "mem20executabledesignstresslabz/README.md"
+        "mem20labz/README.md"
       ],
       "entry_points": {},
       "file_count": 10,
@@ -6099,13 +6099,13 @@
         "installer",
         "runtime"
       ],
-      "name": "mem20executabledesignstresslabz",
+      "name": "mem20labz",
       "packaged": false,
       "readme_summary": "RM-221 \u2014 Executable Design Stress Lab",
       "readme_text": "# rm-221 \u2014 executable design stress lab\n\n**outcome:** convert a gdd or concept into an executable design graph and run simulated player, production, and technical stress tests\n\n**breakthrough:** game ideas fail cheaply in simulation instead of expensively in production\n\nthis package is the machine-executable local implementation derived from the supplied off record lab roadmap. it includes versioned typed state, sqlite wal persistence, event history/snapshots, sdk crud/subscription, resumable idempotent jobs, cancellation, retries/timeouts/quotas/backpressure, deterministic replica reconciliation, local/hybrid/cloud placement/failover, roadmap-specific `qa` logic, decision confidence/explanations, feedback, cli, http console/api, safety guards, simulator, benchmark/metrics, and rollback-capable installer.\n\nnamed live product surfaces, real provider/device credentials, production traffic, and governed freestack deployment remain target-environment integration and are not claimed complete.\n",
       "requires_python": null,
       "subdirs": [
-        "mem20executabledesignstresslabz"
+        "mem20labz"
       ],
       "test_files": 0,
       "version": null
@@ -8068,7 +8068,7 @@
       "name": "mem20labz",
       "packaged": true,
       "readme_summary": "mem20labz \u2014 crew runtime",
-      "readme_text": "# mem20labz \u2014 crew runtime\n\nmem20 laboratory runtime.\n\n## members (10)\n\nreviewed packages grouped here for joint integration under the\npackage-review rulings:\n\n- `mem20autonomoussaleslaboratoryz`\n- `mem20continuouscompatibilitylabz`\n- `mem20twinz`\n- `mem20dependencymutationlabz`\n- `mem20executabledesignstresslabz`\n- `mem20modelgenomelabz`\n- `mem20neuromorphiceventlabz`\n- `mem20simz`\n- `mem20remoteexperimentlabz`\n- `mem20webassemblycomponentlabz`\n\n## status\n\nskeleton slice: registry, cli (`--version`, `--members`), hermetic\ntests. member wiring arrives in the integration phase.\n",
+      "readme_text": "# mem20labz \u2014 crew runtime\n\nmem20 laboratory runtime.\n\n## members (10)\n\nreviewed packages grouped here for joint integration under the\npackage-review rulings:\n\n- `mem20autonomoussaleslaboratoryz`\n- `mem20labz`\n- `mem20twinz`\n- `mem20labz`\n- `mem20labz`\n- `mem20labz`\n- `mem20labz`\n- `mem20simz`\n- `mem20labz`\n- `mem20labz`\n\n## status\n\nskeleton slice: registry, cli (`--version`, `--members`), hermetic\ntests. member wiring arrives in the integration phase.\n",
       "requires_python": ">=3.11",
       "subdirs": [
         "mem20labz",
@@ -8981,9 +8981,9 @@
       "code_lines": 263,
       "dependencies": [],
       "description": "",
-      "dir": "mem20modelgenomelabz",
+      "dir": "mem20labz",
       "docs": [
-        "mem20modelgenomelabz/README.md"
+        "mem20labz/README.md"
       ],
       "entry_points": {},
       "file_count": 8,
@@ -9005,13 +9005,13 @@
         "capability",
         "runtime"
       ],
-      "name": "mem20modelgenomelabz",
+      "name": "mem20labz",
       "packaged": false,
       "readme_summary": "RM-061 \u2014 Model Genome Lab",
       "readme_text": "# rm-061 \u2014 model genome lab\n\noutcome: describe models through capabilities, behavior traits, limits, adapters, and evaluation ancestry\n\nbreakthrough: models become composable evolving assets instead of opaque files\n\nmachine-executable local runtime includes versioned state, sqlite wal persistence, events, sdk crud, resumable/idempotent jobs, retries/timeouts/quotas, recovery, `simulate` operation logic, decision explanations, feedback, cli, http console/api, mesh selection/failover, simulator, benchmark, metrics, and opt-in signature mode.\n",
       "requires_python": null,
       "subdirs": [
-        "mem20modelgenomelabz"
+        "mem20labz"
       ],
       "test_files": 0,
       "version": null
@@ -9592,12 +9592,12 @@
       "code_lines": 9,
       "dependencies": [],
       "description": "Prototype sparse event-driven processing for sensors, agents, and low-power devices",
-      "dir": "mem20neuromorphiceventlabz",
+      "dir": "mem20labz",
       "docs": [
-        "mem20neuromorphiceventlabz/README.md"
+        "mem20labz/README.md"
       ],
       "entry_points": {
-        "mem20neuromorphiceventlabz": "mem20neuromorphiceventlabz.core:cli"
+        "mem20labz": "mem20labz.core:cli"
       },
       "file_count": 9,
       "keywords": [],
@@ -9620,13 +9620,13 @@
         "core",
         "run"
       ],
-      "name": "mem20neuromorphiceventlabz",
+      "name": "mem20labz",
       "packaged": true,
       "readme_summary": "RM-106 \u2014 Neuromorphic Event Lab",
       "readme_text": "# rm-106 \u2014 neuromorphic event lab\n\n**owner:** otherstack  \n**lane:** experimental and incompatible technology incubator\n\n## outcome\nprototype sparse event-driven processing for sensors, agents, and low-power devices\n\n## breakthrough\nfreestack experiments with computation that reacts only when something changes\n\nthis package implements the locally executable/non-human portion of this off record lab roadmap on a shared, zero-dependency runtime substrate. it includes typed/versioned roadmap validation, sqlite wal state + event history, resumable/idempotent jobs, cancellation/timeouts/quotas, deterministic recovery, adaptive mode decisions with confidence/alternatives/bottlenecks/explanations, feedback tuning, cli + typed client + http api + browser command surface + event stream, local/hybrid/cloud peer execution, conflict-safe lww synchronization, caching, backpressure/failover, metrics, simulator scenarios, benchmark tooling, safety gating, and a rollback manifest.\n\nthe domain engine for this package is keyed specifically to rm-106 and produces deterministic executable results for the roadmap's core operation using only local standard-library code. external hardware, proprietary models, production credentials, live third-party services, and deployment authorization are intentionally not fabricated; those remain environment-bound integration points.\n\n## run\n```bash\npython run.py inspect\npython run.py run '{\"text\":\"demo\",\"cache\":false}'\npython run.py simulate\npython run.py benchmark --runs 5\npython run.py serve --port 8765\n```\n\nopen `http://127.0.0.1:8765/` for the live command surface.\n",
       "requires_python": ">=3.11",
       "subdirs": [
-        "mem20neuromorphiceventlabz"
+        "mem20labz"
       ],
       "test_files": 0,
       "version": "1.0.0"
@@ -11732,9 +11732,9 @@
       "code_lines": 263,
       "dependencies": [],
       "description": "",
-      "dir": "mem20remoteexperimentlabz",
+      "dir": "mem20labz",
       "docs": [
-        "mem20remoteexperimentlabz/README.md"
+        "mem20labz/README.md"
       ],
       "entry_points": {},
       "file_count": 8,
@@ -11756,13 +11756,13 @@
         "capability",
         "runtime"
       ],
-      "name": "mem20remoteexperimentlabz",
+      "name": "mem20labz",
       "packaged": false,
       "readme_summary": "RM-049 \u2014 Remote Experiment Lab",
       "readme_text": "# rm-049 \u2014 remote experiment lab\n\noutcome: run reproducible experiments across device classes and collect live metrics\n\nbreakthrough: testing real hardware becomes a programmable service\n\nmachine-executable local runtime includes versioned state, sqlite wal persistence, events, sdk crud, resumable/idempotent jobs, retries/timeouts/quotas, recovery, `simulate` operation logic, decision explanations, feedback, cli, http console/api, mesh selection/failover, simulator, benchmark, metrics, and opt-in signature mode.\n",
       "requires_python": null,
       "subdirs": [
-        "mem20remoteexperimentlabz"
+        "mem20labz"
       ],
       "test_files": 0,
       "version": null
@@ -14575,12 +14575,12 @@
       "code_lines": 9,
       "dependencies": [],
       "description": "Run language-neutral components with explicit interfaces and strong isolation",
-      "dir": "mem20webassemblycomponentlabz",
+      "dir": "mem20labz",
       "docs": [
-        "mem20webassemblycomponentlabz/README.md"
+        "mem20labz/README.md"
       ],
       "entry_points": {
-        "mem20webassemblycomponentlabz": "mem20webassemblycomponentlabz.core:cli"
+        "mem20labz": "mem20labz.core:cli"
       },
       "file_count": 9,
       "keywords": [],
@@ -14603,13 +14603,13 @@
         "core",
         "run"
       ],
-      "name": "mem20webassemblycomponentlabz",
+      "name": "mem20labz",
       "packaged": true,
       "readme_summary": "RM-101 \u2014 WebAssembly Component Lab",
       "readme_text": "# rm-101 \u2014 webassembly component lab\n\n**owner:** otherstack  \n**lane:** experimental and incompatible technology incubator\n\n## outcome\nrun language-neutral components with explicit interfaces and strong isolation\n\n## breakthrough\nfreestack gains a portable plugin future beyond python packages\n\nthis package implements the locally executable/non-human portion of this off record lab roadmap on a shared, zero-dependency runtime substrate. it includes typed/versioned roadmap validation, sqlite wal state + event history, resumable/idempotent jobs, cancellation/timeouts/quotas, deterministic recovery, adaptive mode decisions with confidence/alternatives/bottlenecks/explanations, feedback tuning, cli + typed client + http api + browser command surface + event stream, local/hybrid/cloud peer execution, conflict-safe lww synchronization, caching, backpressure/failover, metrics, simulator scenarios, benchmark tooling, safety gating, and a rollback manifest.\n\nthe domain engine for this package is keyed specifically to rm-101 and produces deterministic executable results for the roadmap's core operation using only local standard-library code. external hardware, proprietary models, production credentials, live third-party services, and deployment authorization are intentionally not fabricated; those remain environment-bound integration points.\n\n## run\n```bash\npython run.py inspect\npython run.py run '{\"text\":\"demo\",\"cache\":false}'\npython run.py simulate\npython run.py benchmark --runs 5\npython run.py serve --port 8765\n```\n\nopen `http://127.0.0.1:8765/` for the live command surface.\n",
       "requires_python": ">=3.11",
       "subdirs": [
-        "mem20webassemblycomponentlabz"
+        "mem20labz"
       ],
       "test_files": 0,
       "version": "1.0.0"

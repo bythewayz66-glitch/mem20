@@ -111,7 +111,7 @@ same tools are present. A non-empty symmetric difference aborts generation.
 | 79 | `mem20realtimeeventautopilotz` | 2 | `realtimeeventautopilotz_*` | `mcp/tools/mem20realtimeeventautopilotz_tools.py` |
 | 80 | `mem20realtimeteampresencez` | 2 | `realtimeteampresencez_*` | `mcp/tools/mem20realtimeteampresencez_tools.py` |
 | 81 | `mem20realworldimpactrewardsz` | 2 | `realworldimpactrewardsz_*` | `mcp/tools/mem20realworldimpactrewardsz_tools.py` |
-| 82 | `mem20remoteexperimentlabz` | 2 | `remoteexperimentlabz_*` | `mcp/tools/mem20remoteexperimentlabz_tools.py` |
+| 82 | `mem20labz` | 2 | `remoteexperimentlabz_*` | `mcp/tools/mem20labz_tools.py` |
 | 83 | `mem20resourceexchangemarketz` | 2 | `resourceexchangemarketz_*` | `mcp/tools/mem20resourceexchangemarketz_tools.py` |
 | 84 | `mem20revenueleakhunterz` | 2 | `revenueleakhunterz_*` | `mcp/tools/mem20revenueleakhunterz_tools.py` |
 | 85 | `mem20rewardforgez` | 2 | `rewardforgez_*` | `mcp/tools/mem20rewardforgez_tools.py` |

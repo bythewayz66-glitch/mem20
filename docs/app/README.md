@@ -99,7 +99,7 @@ Static page for **mem20pipez** (#339). - Page: `docs/app/narrativedialogueandloc
 Static page for **mem20modelsleepandwakesystemz** (RM-066,#336). - Page: `docs/app/modelsleepandwakesystemz/index.html` - Conformance: `.../conformance.py mem20modelsleepandwakesystemz`
 
 ## Model Genome Lab (`modelgenomelabz/`)
-Static page for **mem20modelgenomelabz** (RM-061,#335). - Page: `docs/app/modelgenomelabz/index.html` - Conformance: `.../conformance.py mem20modelgenomelabz`
+Static page for **mem20labz** (RM-061,#335). - Page: `docs/app/modelgenomelabz/index.html` - Conformance: `.../conformance.py mem20labz`
 
 ## Modality Bridge (`modalitybridgez/`)
 Static page for **mem20modalitybridgez** (RM-064,#334). - Page: `docs/app/modalitybridgez/index.html` - Conformance: `.../conformance.py mem20modalitybridgez`
@@ -229,7 +229,7 @@ PYTHONPATH=/opt/mem20 python3 -m mem20pipez serve --port 8789
 [`design-stress-lab/index.html`](design-stress-lab/index.html) — static monitor for RM-221 (#308). Reads `/spec`/`/metrics`/`/doctor` (`?api=`).
 
 ```bash
-PYTHONPATH=/opt/mem20 python3 -m mem20executabledesignstresslabz serve --port 8788
+PYTHONPATH=/opt/mem20 python3 -m mem20labz serve --port 8788
 ```
 
 ## Ethical Incentive Simulator monitor (`ethical-incentive-simulator/`)
@@ -355,7 +355,7 @@ served by the fleet process itself at its root URL.
 - [Real-Time Event Autopilot monitor](realtimeeventautopilotz/index.html) — `PYTHONPATH=/opt/mem20 /opt/mem20/.venv/bin/python -m mem20realtimeeventautopilotz serve --port 8812`
 - [Real-Time Team Presence monitor](realtimeteampresencez/index.html) — `PYTHONPATH=/opt/mem20 /opt/mem20/.venv/bin/python -m mem20realtimeteampresencez serve --port 8813`
 - [Real-World Impact Rewards monitor](realworldimpactrewardsz/index.html) — `PYTHONPATH=/opt/mem20 /opt/mem20/.venv/bin/python -m mem20realworldimpactrewardsz serve --port 8814`
-- [Remote Experiment Lab monitor](remoteexperimentlabz/index.html) — `PYTHONPATH=/opt/mem20 /opt/mem20/.venv/bin/python -m mem20remoteexperimentlabz serve --port 8815`
+- [Remote Experiment Lab monitor](remoteexperimentlabz/index.html) — `PYTHONPATH=/opt/mem20 /opt/mem20/.venv/bin/python -m mem20labz serve --port 8815`
 - [Resource Exchange Market monitor](resourceexchangemarketz/index.html) — `PYTHONPATH=/opt/mem20 /opt/mem20/.venv/bin/python -m mem20resourceexchangemarketz serve --port 8816`
 - [Revenue Leak Hunter monitor](revenueleakhunterz/index.html) — `PYTHONPATH=/opt/mem20 /opt/mem20/.venv/bin/python -m mem20revenueleakhunterz serve --port 8817`
 - [Reward Forge monitor](rewardforgez/index.html) — `PYTHONPATH=/opt/mem20 /opt/mem20/.venv/bin/python -m mem20rewardforgez serve --port 8818`

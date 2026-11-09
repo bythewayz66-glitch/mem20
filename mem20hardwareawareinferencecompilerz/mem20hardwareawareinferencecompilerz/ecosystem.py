@@ -27,12 +27,12 @@ def modality_context(payload=None) -> Dict[str, Any]:
 
 def model_variants(payload=None) -> Dict[str, Any]:
     def run():
-        from mem20modelgenomelabz.domain import create_genome, fitness, mutate
+        from mem20labz.domain import create_genome, fitness, mutate
         g = create_genome({"layers": 12, "dtype": "fp16"})
         f = fitness(g, {"target_latency": 1.0})
         m = mutate(g, rate=0.1, seed=1)
         return {"genome": g is not None, "fitness": f, "mutated": m is not None}
-    return _safe("mem20modelgenomelabz", run)
+    return _safe("mem20labz", run)
 
 def personal_adaptation(payload=None) -> Dict[str, Any]:
     def run():

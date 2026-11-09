@@ -16,7 +16,7 @@ Preserves legacy domain API and CAPABILITY Engine/CLI/10-scenario simulator. `ma
 | `mem20instantappsynthesisz` | `validate_spec`,`scaffold` | synthesizes instant-trial scaffolds |
 | `mem20securecomputecapsulesz` | `create_capsule`,`capsule_health` | validates secure trial execution |
 | `mem20runtimepromptoptimizerz` | `tokenize`,`compress`,`optimize` | optimizes listing discovery queries |
-| `mem20assetremixstudioz` | `remix_variants`,`transform_asset` | produces capability/asset variants |
+| `mem20studioz` | `remix_variants`,`transform_asset` | produces capability/asset variants |
 
 ## Runnable example (verified)
 ```bash

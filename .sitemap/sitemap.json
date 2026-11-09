@@ -1705,9 +1705,9 @@
       "code_lines": 333,
       "dependencies": [],
       "description": "",
-      "dir": "mem20aigamestudiobuilderz",
+      "dir": "mem20studioz",
       "docs": [
-        "mem20aigamestudiobuilderz/README.md"
+        "mem20studioz/README.md"
       ],
       "entry_points": {},
       "file_count": 10,
@@ -1730,13 +1730,13 @@
         "installer",
         "runtime"
       ],
-      "name": "mem20aigamestudiobuilderz",
+      "name": "mem20studioz",
       "packaged": false,
       "readme_summary": "RM-222 \u2014 AI Game Studio Builder",
       "readme_text": "# rm-222 \u2014 ai game studio builder\n\n**outcome:** create configurable crews of design, code, art, audio, production, and qa agents\n\n**breakthrough:** a solo developer can operate a software-defined studio\n\nthis package is the machine-executable local implementation derived from the supplied off record lab roadmap. it includes versioned typed state, sqlite wal persistence, event history/snapshots, sdk crud/subscription, resumable idempotent jobs, cancellation, retries/timeouts/quotas/backpressure, deterministic replica reconciliation, local/hybrid/cloud placement/failover, roadmap-specific `qa` logic, decision confidence/explanations, feedback, cli, http console/api, safety guards, simulator, benchmark/metrics, and rollback-capable installer.\n\nnamed live product surfaces, real provider/device credentials, production traffic, and governed freestack deployment remain target-environment integration and are not claimed complete.\n",
       "requires_python": null,
       "subdirs": [
-        "mem20aigamestudiobuilderz"
+        "mem20studioz"
       ],
       "test_files": 0,
       "version": null
@@ -1831,9 +1831,9 @@
       "code_lines": 333,
       "dependencies": [],
       "description": "",
-      "dir": "mem20aiproductionstudiooperatingsystemz",
+      "dir": "mem20studioz",
       "docs": [
-        "mem20aiproductionstudiooperatingsystemz/README.md"
+        "mem20studioz/README.md"
       ],
       "entry_points": {},
       "file_count": 10,
@@ -1856,13 +1856,13 @@
         "installer",
         "runtime"
       ],
-      "name": "mem20aiproductionstudiooperatingsystemz",
+      "name": "mem20studioz",
       "packaged": false,
       "readme_summary": "RM-236 \u2014 AI Production Studio Operating System",
       "readme_text": "# rm-236 \u2014 ai production studio operating system\n\n**outcome:** unify crew creation, memory, generation, compilation, testing, deployment, and optimization\n\n**breakthrough:** a complete ai-native production environment becomes a freestack flagship\n\nthis package is the machine-executable local implementation derived from the supplied off record lab roadmap. it includes versioned typed state, sqlite wal persistence, event history/snapshots, sdk crud/subscription, resumable idempotent jobs, cancellation, retries/timeouts/quotas/backpressure, deterministic replica reconciliation, local/hybrid/cloud placement/failover, roadmap-specific `search` logic, decision confidence/explanations, feedback, cli, http console/api, safety guards, simulator, benchmark/metrics, and rollback-capable installer.\n\nnamed live product surfaces, real provider/device credentials, production traffic, and governed freestack deployment remain target-environment integration and are not claimed complete.\n",
       "requires_python": null,
       "subdirs": [
-        "mem20aiproductionstudiooperatingsystemz"
+        "mem20studioz"
       ],
       "test_files": 0,
       "version": null
@@ -2270,12 +2270,12 @@
       "code_lines": 9,
       "dependencies": [],
       "description": "Decompose approved assets into reusable style, shape, motion, and material primitives",
-      "dir": "mem20assetremixstudioz",
+      "dir": "mem20studioz",
       "docs": [
-        "mem20assetremixstudioz/README.md"
+        "mem20studioz/README.md"
       ],
       "entry_points": {
-        "mem20assetremixstudioz": "mem20assetremixstudioz.core:cli"
+        "mem20studioz": "mem20studioz.core:cli"
       },
       "file_count": 9,
       "keywords": [],
@@ -2298,13 +2298,13 @@
         "core",
         "run"
       ],
-      "name": "mem20assetremixstudioz",
+      "name": "mem20studioz",
       "packaged": true,
       "readme_summary": "RM-133 \u2014 Asset Remix Studio",
       "readme_text": "# rm-133 \u2014 asset remix studio\n\n**owner:** jammee  \n**lane:** creative production, media, brand, and experience design\n\n## outcome\ndecompose approved assets into reusable style, shape, motion, and material primitives\n\n## breakthrough\nexisting creative work becomes a generative building kit\n\nthis package implements the locally executable/non-human portion of this off record lab roadmap on a shared, zero-dependency runtime substrate. it includes typed/versioned roadmap validation, sqlite wal state + event history, resumable/idempotent jobs, cancellation/timeouts/quotas, deterministic recovery, adaptive mode decisions with confidence/alternatives/bottlenecks/explanations, feedback tuning, cli + typed client + http api + browser command surface + event stream, local/hybrid/cloud peer execution, conflict-safe lww synchronization, caching, backpressure/failover, metrics, simulator scenarios, benchmark tooling, safety gating, and a rollback manifest.\n\nthe domain engine for this package is keyed specifically to rm-133 and produces deterministic executable results for the roadmap's core operation using only local standard-library code. external hardware, proprietary models, production credentials, live third-party services, and deployment authorization are intentionally not fabricated; those remain environment-bound integration points.\n\n## run\n```bash\npython run.py inspect\npython run.py run '{\"text\":\"demo\",\"cache\":false}'\npython run.py simulate\npython run.py benchmark --runs 5\npython run.py serve --port 8765\n```\n\nopen `http://127.0.0.1:8765/` for the live command surface.\n",
       "requires_python": ">=3.11",
       "subdirs": [
-        "mem20assetremixstudioz"
+        "mem20studioz"
       ],
       "test_files": 0,
       "version": "1.0.0"
@@ -11165,12 +11165,12 @@
       "code_lines": 9,
       "dependencies": [],
       "description": "Design and simulate new lightweight protocols for agents, devices, and components",
-      "dir": "mem20protocolinventionstudioz",
+      "dir": "mem20studioz",
       "docs": [
-        "mem20protocolinventionstudioz/README.md"
+        "mem20studioz/README.md"
       ],
       "entry_points": {
-        "mem20protocolinventionstudioz": "mem20protocolinventionstudioz.core:cli"
+        "mem20studioz": "mem20studioz.core:cli"
       },
       "file_count": 9,
       "keywords": [],
@@ -11193,13 +11193,13 @@
         "core",
         "run"
       ],
-      "name": "mem20protocolinventionstudioz",
+      "name": "mem20studioz",
       "packaged": true,
       "readme_summary": "RM-109 \u2014 Protocol Invention Studio",
       "readme_text": "# rm-109 \u2014 protocol invention studio\n\n**owner:** otherstack  \n**lane:** experimental and incompatible technology incubator\n\n## outcome\ndesign and simulate new lightweight protocols for agents, devices, and components\n\n## breakthrough\nfreestack can create standards rather than only consume them\n\nthis package implements the locally executable/non-human portion of this off record lab roadmap on a shared, zero-dependency runtime substrate. it includes typed/versioned roadmap validation, sqlite wal state + event history, resumable/idempotent jobs, cancellation/timeouts/quotas, deterministic recovery, adaptive mode decisions with confidence/alternatives/bottlenecks/explanations, feedback tuning, cli + typed client + http api + browser command surface + event stream, local/hybrid/cloud peer execution, conflict-safe lww synchronization, caching, backpressure/failover, metrics, simulator scenarios, benchmark tooling, safety gating, and a rollback manifest.\n\nthe domain engine for this package is keyed specifically to rm-109 and produces deterministic executable results for the roadmap's core operation using only local standard-library code. external hardware, proprietary models, production credentials, live third-party services, and deployment authorization are intentionally not fabricated; those remain environment-bound integration points.\n\n## run\n```bash\npython run.py inspect\npython run.py run '{\"text\":\"demo\",\"cache\":false}'\npython run.py simulate\npython run.py benchmark --runs 5\npython run.py serve --port 8765\n```\n\nopen `http://127.0.0.1:8765/` for the live command surface.\n",
       "requires_python": ">=3.11",
       "subdirs": [
-        "mem20protocolinventionstudioz"
+        "mem20studioz"
       ],
       "test_files": 0,
       "version": "1.0.0"
@@ -13590,7 +13590,7 @@
       "name": "mem20studioz",
       "packaged": true,
       "readme_summary": "mem20studioz \u2014 crew runtime",
-      "readme_text": "# mem20studioz \u2014 crew runtime\n\nmem20 studio runtime.\n\n## members (5)\n\nreviewed packages grouped here for joint integration under the\npackage-review rulings:\n\n- `mem20aigamestudiobuilderz`\n- `mem20aiproductionstudiooperatingsystemz`\n- `mem20assetremixstudioz`\n- `mem20protocolinventionstudioz`\n- `mem20webgpucomputestudioz`\n\n## status\n\nskeleton slice: registry, cli (`--version`, `--members`), hermetic\ntests. member wiring arrives in the integration phase.\n",
+      "readme_text": "# mem20studioz \u2014 crew runtime\n\nmem20 studio runtime.\n\n## members (5)\n\nreviewed packages grouped here for joint integration under the\npackage-review rulings:\n\n- `mem20studioz`\n- `mem20studioz`\n- `mem20studioz`\n- `mem20studioz`\n- `mem20studioz`\n\n## status\n\nskeleton slice: registry, cli (`--version`, `--members`), hermetic\ntests. member wiring arrives in the integration phase.\n",
       "requires_python": ">=3.11",
       "subdirs": [
         "mem20studioz",
@@ -14620,12 +14620,12 @@
       "code_lines": 9,
       "dependencies": [],
       "description": "Use browser-accessible GPUs for local visualization, simulation, and AI compute",
-      "dir": "mem20webgpucomputestudioz",
+      "dir": "mem20studioz",
       "docs": [
-        "mem20webgpucomputestudioz/README.md"
+        "mem20studioz/README.md"
       ],
       "entry_points": {
-        "mem20webgpucomputestudioz": "mem20webgpucomputestudioz.core:cli"
+        "mem20studioz": "mem20studioz.core:cli"
       },
       "file_count": 9,
       "keywords": [],
@@ -14648,13 +14648,13 @@
         "core",
         "run"
       ],
-      "name": "mem20webgpucomputestudioz",
+      "name": "mem20studioz",
       "packaged": true,
       "readme_summary": "RM-102 \u2014 WebGPU Compute Studio",
       "readme_text": "# rm-102 \u2014 webgpu compute studio\n\n**owner:** otherstack  \n**lane:** experimental and incompatible technology incubator\n\n## outcome\nuse browser-accessible gpus for local visualization, simulation, and ai compute\n\n## breakthrough\npowerful acceleration becomes available without native installers\n\nthis package implements the locally executable/non-human portion of this off record lab roadmap on a shared, zero-dependency runtime substrate. it includes typed/versioned roadmap validation, sqlite wal state + event history, resumable/idempotent jobs, cancellation/timeouts/quotas, deterministic recovery, adaptive mode decisions with confidence/alternatives/bottlenecks/explanations, feedback tuning, cli + typed client + http api + browser command surface + event stream, local/hybrid/cloud peer execution, conflict-safe lww synchronization, caching, backpressure/failover, metrics, simulator scenarios, benchmark tooling, safety gating, and a rollback manifest.\n\nthe domain engine for this package is keyed specifically to rm-102 and produces deterministic executable results for the roadmap's core operation using only local standard-library code. external hardware, proprietary models, production credentials, live third-party services, and deployment authorization are intentionally not fabricated; those remain environment-bound integration points.\n\n## run\n```bash\npython run.py inspect\npython run.py run '{\"text\":\"demo\",\"cache\":false}'\npython run.py simulate\npython run.py benchmark --runs 5\npython run.py serve --port 8765\n```\n\nopen `http://127.0.0.1:8765/` for the live command surface.\n",
       "requires_python": ">=3.11",
       "subdirs": [
-        "mem20webgpucomputestudioz"
+        "mem20studioz"
       ],
       "test_files": 0,
       "version": "1.0.0"

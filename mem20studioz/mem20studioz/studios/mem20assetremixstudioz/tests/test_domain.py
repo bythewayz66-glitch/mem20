@@ -1,5 +1,5 @@
 import importlib
-MOD="mem20assetremixstudioz"
+MOD="mem20studioz"
 def _m(): return importlib.import_module(MOD+".domain")
 def test_remix():
     m=_m(); r=m.remix([{"id":"a","metadata":{"x":1}}],["grayscale"]); assert "checksum" in r

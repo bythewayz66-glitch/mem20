@@ -57,9 +57,9 @@ mem20agentoutputcompilerz,python,7,421,1,True,True,0,0,Mem20-Perl-Expert,2,feat/
 mem20pipez,python,7,418,1,True,True,0,0,Slides Assistant,3,feat/4.0-slides-assistant-mem20pipez
 mem20ailevelarchitectz,python,7,417,1,True,True,0,0,mem20-sybsystems,2,feat/4.0-mem20-sybsystems-mem20ailevelarchitectz
 mem20pipez,python,7,416,1,True,True,0,0,Pricing Analyst,3,feat/4.0-pricing-analyst-mem20pipez
-mem20aigamestudiobuilderz,python,7,414,1,True,True,0,0,Webpage Developer,2,feat/4.0-webpage-developer-mem20aigamestudiobuilderz
+mem20studioz,python,7,414,1,True,True,0,0,Webpage Developer,2,feat/4.0-webpage-developer-mem20studioz
 mem20pipez,python,7,414,1,True,True,0,0,Mem20 Benchmark Dataset Builder,2,feat/4.0-mem20-benchmark-dataset-builder-mem20pipez
-mem20aiproductionstudiooperatingsystemz,python,6,412,0,True,True,0,0,Webpage Developer,2,feat/4.0-webpage-developer-mem20aiproductionstudiooperatingsystemz
+mem20studioz,python,6,412,0,True,True,0,0,Webpage Developer,2,feat/4.0-webpage-developer-mem20studioz
 mem20gameproductioncontrolcenterz,python,7,411,1,True,True,0,0,UX Researcher,3,feat/4.0-ux-researcher-mem20gameproductioncontrolcenterz
 mem20collectivemodelintelligencez,python,7,406,1,True,True,0,0,AI Engineer,2,feat/4.0-ai-engineer-mem20collectivemodelintelligencez
 mem20communitychallengeenginez,python,7,401,1,True,True,0,0,Growth Hacker,3,feat/4.0-growth-hacker-mem20communitychallengeenginez
@@ -204,7 +204,7 @@ mem20biz,python,5,121,2,True,True,0,0,mem20-webdev,2,feat/4.0-mem20-webdev-mem20
 mem20batteryawareagentschedulerz,python,6,114,2,True,False,1,0,mem20-sybsystems,2,feat/4.0-mem20-sybsystems-mem20batteryawareagentschedulerz
 mem20crdtcollaborationenginez,python,6,111,2,True,False,1,0,mem20-frontends,2,feat/4.0-mem20-frontends-mem20crdtcollaborationenginez
 mem20prioritycollisionresolverz,python,6,94,2,True,False,1,0,mem20 Orchestrator,2,feat/4.0-mem20-orchestrator-mem20prioritycollisionresolverz
-mem20assetremixstudioz,python,7,91,1,True,True,1,0,Webpage Developer,2,feat/4.0-webpage-developer-mem20assetremixstudioz
+mem20studioz,python,7,91,1,True,True,1,0,Webpage Developer,2,feat/4.0-webpage-developer-mem20studioz
 mem20ambientdevicecompanionz,python,7,83,1,True,True,1,0,mem20-frontends,2,feat/4.0-mem20-frontends-mem20ambientdevicecompanionz
 mem20simz,python,7,82,1,True,True,1,0,Experiment Tracker,2,feat/4.0-experiment-tracker-mem20simz
 mem20asynccollaborationcapsulesz,python,7,80,1,True,True,1,0,Mem20 Benchmark Dataset Builder,2,feat/4.0-mem20-benchmark-dataset-builder-mem20asynccollaborationcapsulesz

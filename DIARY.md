@@ -545,8 +545,8 @@ first-class while preserving legacy domain API (`concept_score`,`scope_estimate`
 `risk_assessment`,`pipeline_stage`) — used as a peer by #307 — and preserving CAPABILITY
 Engine/CLI/10-scenario simulator. Enriched `graph` with real concept/scope analysis and 6 unique
 peer signals (different from #300-#308) for explicit scope requests: `mem20gameproductioncontrolcenterz`,
-`mem20aiproductionstudiooperatingsystemz`,`mem20simz`,`mem20autonomoussoftwarefoundryz`,
-`mem20aigamestudiobuilderz`,`mem20autonomousmicrosaasfoundryz`. Legacy graph fields
+`mem20studioz`,`mem20simz`,`mem20autonomoussoftwarefoundryz`,
+`mem20studioz`,`mem20autonomousmicrosaasfoundryz`. Legacy graph fields
 `nodes/edges/degree/hubs` preserved; peer enrichment gated to avoid 5s Engine timeout on generic
 simulator payloads. Added `/doctor`, web cockpit, compat/root shims, README fenced runnable example,
 docs/PLAN, docs/app monitor, gateway/toolchest. Safe peer fix: `mem20autonomousmicrosaasfoundryz.idea_ranking`
@@ -670,7 +670,7 @@ transaction,marketplace_health`) and Engine/CLI/simulator. `match` remains backw
 generic demand/supply; marketplace payloads produce composed results (health/search/match/transaction)
 enriched by 6 unique peer integrations: `mem20offerassemblyfabricz`,`mem20offergenomeenginez`,
 `mem20instantappsynthesisz`,`mem20securecomputecapsulesz`,`mem20runtimepromptoptimizerz`,
-`mem20assetremixstudioz`. Transaction marked `trial_ready` when trial synthesis + secure capsule
+`mem20studioz`. Transaction marked `trial_ready` when trial synthesis + secure capsule
 checks pass. Added `/doctor`, web cockpit, root shims, fenced runnable README, docs/PLAN, docs/app
 monitor, gateway/toolchest. Verification: 9 tests pass, conformance **7/7**.
 
@@ -843,6 +843,9 @@ Completed depth-first rebuild to **7/7** for #315-#329 (11 subsystems in this se
 
 ## 2026-11-09 - consolidate twin subsystems into mem20twinz
 - **Consolidation:** Merged twin/digital-twin subsystems into `mem20twinz` as modules under `mem20twinz/twins/` (customerdigitaltwinlabz, executiondigitaltwinz, humansatisfactiontwinz, integrationdigitaltwinz, personalworkflowtwinz, playermotivationtwinz, realtimebusinesstwinz). Removed originals; repo-wide references updated to `mem20twinz`.
+
+## 2026-11-09 - consolidate studio subsystems into mem20studioz
+- **Consolidation:** Merged studio/build/production subsystems into `mem20studioz` as modules under `mem20studioz/studios/` (aigamestudiobuilderz, aiproductionstudiooperatingsystemz, assetremixstudioz, protocolinventionstudioz, webgpucomputestudioz). Removed originals; repo-wide references updated to `mem20studioz`.
 - **Full pytest follow-up fixes (then pushed):** fixed `gateway/mem20_gateway.py` syntax/structure (criterion-7 block was dangling in `main()` breaking `elif read`; moved 39 missing entries into `SUBSYSTEMS`). Fixed `mem20mktz` root causes (truthful `braid_hook` availability via `braid_bridge.available()`; `bundle.compose` queries UCG only when `cap_ids` present; env-honest test guards/assertions) → **33 passed, 9 skipped**. Fixed `mem20selfhealingruntimecivilizationz.integrations.PlansEngineBridge` adapter for real `mem20selfhealingplansz` API (no `Engine`) → **53 passed**.
 - **es//:** mem20 context + self-model saved (GitHub steps skipped earlier); commits/pushes to `origin/main` record the work.
 

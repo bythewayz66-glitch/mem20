@@ -1,6 +1,6 @@
 # mem20studioz — Studioz (Studio Runtime)
 
-First-class mem20 crew runtime for studio pipelines with **6 peers**, SQLite WAL runtime, CLI, JSON HTTP API, served web cockpit, docs/app monitor, and real MCP tools. Core APIs preserved (`estate_context` superset, `MEMBERS`/`__version__`, legacy `--members/--version`).
+Unified studio subsystem consolidating all studio/build/production runtimes under `mem20studioz/studios/`. First-class mem20 crew runtime for studio pipelines with **6 peers**, SQLite WAL runtime, CLI, JSON HTTP API, served web cockpit, docs/app monitor, and real MCP tools. Core APIs preserved (`estate_context` superset, `MEMBERS`/`__version__`, legacy `--members/--version`).
 
 ## Peers (6)
 `mem20pipez`, `mem20pipez`, `mem20pipez`, `mem20eventstreamsuperhighwayz`, `mem20capabilitymarketplacez`, `mem20autonomousworkcellsz`.

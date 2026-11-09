@@ -17,16 +17,16 @@ def production_control(concept: Mapping[str, Any] = None) -> Dict[str, Any]:
         return {"sprint_plan": plan, "milestone_status": ms, "risk_score": risk}
     return _safe("mem20gameproductioncontrolcenterz", run)
 
-# 2) mem20aiproductionstudiooperatingsystemz - scheduling/resource/milestones
+# 2) mem20studioz - scheduling/resource/milestones
 def studio_ops(concept: Mapping[str, Any] = None) -> Dict[str, Any]:
     def run():
-        from mem20aiproductionstudiooperatingsystemz.domain import schedule_projects, resource_allocation, studio_health
+        from mem20studioz.domain import schedule_projects, resource_allocation, studio_health
         projects = [{"id": "p1", "effort": 10, "priority": 1}]
         sched = schedule_projects(projects, capacity=20)
         alloc = resource_allocation({"eng": 10, "art": 5}, [{"id": "d1", "resource": "eng", "amount": 5, "priority": 1}])
         health = studio_health(projects, 20)
         return {"schedule": sched, "allocation": alloc, "studio_health": health}
-    return _safe("mem20aiproductionstudiooperatingsystemz", run)
+    return _safe("mem20studioz", run)
 
 # 3) mem20simz - product/growth feasibility
 def growth_feasibility(concept: Mapping[str, Any] = None) -> Dict[str, Any]:
@@ -49,16 +49,16 @@ def software_foundry(concept: Mapping[str, Any] = None) -> Dict[str, Any]:
         return {"tasks": tasks, "estimate_effort": est, "deploy_decision": dep}
     return _safe("mem20autonomoussoftwarefoundryz", run)
 
-# 5) mem20aigamestudiobuilderz - game project scaffold/validation
+# 5) mem20studioz - game project scaffold/validation
 def game_studio(concept: Mapping[str, Any] = None) -> Dict[str, Any]:
     def run():
-        from mem20aigamestudiobuilderz.domain import scaffold_project, build_config, validate_project
+        from mem20studioz.domain import scaffold_project, build_config, validate_project
         c = dict(concept or {"name": "concept", "genre": "action", "features": ["f1"]})
         proj = scaffold_project(c.get("name", "concept"), genre=c.get("genre", "action"), engine=c.get("engine", "unity"))
         cfg = build_config(proj if isinstance(proj, dict) else {"name": c.get("name", "concept")}, platform="pc")
         val = validate_project(proj if isinstance(proj, dict) else {"name": c.get("name", "concept"), "genre": "action"})
         return {"project": proj, "build_config": cfg, "validate": val}
-    return _safe("mem20aigamestudiobuilderz", run)
+    return _safe("mem20studioz", run)
 
 # 6) mem20autonomousmicrosaasfoundryz - idea scoring/MVP/revenue
 def microsaas_foundry(concept: Mapping[str, Any] = None) -> Dict[str, Any]:

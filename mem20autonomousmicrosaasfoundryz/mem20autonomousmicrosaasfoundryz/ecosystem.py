@@ -9,7 +9,7 @@ from typing import Mapping, Sequence
 
 __all__ = ["economics", "demand_signal", "build_schedule", "launch_pipeline", "content_quality", "capability_routing", "probe"]
 _REPO_ROOT = pathlib.Path(__file__).resolve().parents[2]
-_PROJECTS = ("mem20simz","mem20demandforecastandcapacitybrainz","mem20aiproductionstudiooperatingsystemz","mem20autonomoussaleslaboratoryz","mem20loreragcontentgeneratorz","mem20capabilitymarketplacez")
+_PROJECTS = ("mem20simz","mem20demandforecastandcapacitybrainz","mem20studioz","mem20autonomoussaleslaboratoryz","mem20loreragcontentgeneratorz","mem20capabilitymarketplacez")
 
 def _bootstrap():
     for name in reversed(_PROJECTS):
@@ -41,15 +41,15 @@ def demand_signal(observations: Sequence[float]) -> dict:
 
 def build_schedule(features: Sequence[str], capacity:int=3) -> dict:
     try:
-        from mem20aiproductionstudiooperatingsystemz.domain import resource_allocation, schedule_projects, studio_health
+        from mem20studioz.domain import resource_allocation, schedule_projects, studio_health
         projects=[{"id":f,"effort":1} for f in (features or ["core","auth","billing"])]
         sched=schedule_projects(projects, capacity)
         alloc=resource_allocation({f"slot-{i}":1 for i in range(max(1,capacity))}, [{"id":p["id"],"resource":"slot-0","amount":1,"priority":0} for p in projects])
         health=studio_health(projects, capacity)
         amap=alloc.get("allocations",alloc) if isinstance(alloc,dict) else {}
-        return {"ok":True,"subsystem":"mem20aiproductionstudiooperatingsystemz","scheduled":len(sched) if isinstance(sched,list) else 0,"allocated":sum(1 for v in (amap.values() if isinstance(amap,dict) else []) if v),"health":float(health) if isinstance(health,(int,float)) else health}
+        return {"ok":True,"subsystem":"mem20studioz","scheduled":len(sched) if isinstance(sched,list) else 0,"allocated":sum(1 for v in (amap.values() if isinstance(amap,dict) else []) if v),"health":float(health) if isinstance(health,(int,float)) else health}
     except Exception as exc:  # noqa: BLE001
-        return {"ok":False,"subsystem":"mem20aiproductionstudiooperatingsystemz","error":f"{type(exc).__name__}: {exc}"}
+        return {"ok":False,"subsystem":"mem20studioz","error":f"{type(exc).__name__}: {exc}"}
 
 def launch_pipeline(leads: Sequence[Mapping]) -> dict:
     try:

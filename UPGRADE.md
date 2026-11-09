@@ -248,7 +248,7 @@ Building these in name order wastes effort on low-value packages. Better to go b
 - **Must refuse:** to be a general-purpose runtime, and to return a confident answer when it is out of its depth.
 - **Proven by:** a test asserting a specific value, bound or contradiction — not that the function ran.
 
-### `mem20aigamestudiobuilderz`
+### `mem20studioz`
 
 - **Should be:** AI game studio — produce a playable game, not a design document.
 - **Must refuse:** to be a general-purpose runtime, and to return a confident answer when it is out of its depth.
@@ -800,7 +800,7 @@ Building these in name order wastes effort on low-value packages. Better to go b
 - **Must refuse:** to be a general-purpose runtime, and to return a confident answer when it is out of its depth.
 - **Proven by:** a test asserting a specific value, bound or contradiction — not that the function ran.
 
-### `mem20webgpucomputestudioz`
+### `mem20studioz`
 
 - **Should be:** WebGPU compute — real GPU work in the browser, with a CPU fallback that is honest.
 - **Must refuse:** to be a general-purpose runtime, and to return a confident answer when it is out of its depth.
@@ -892,7 +892,7 @@ Building these in name order wastes effort on low-value packages. Better to go b
 - **Must refuse:** to be a general-purpose runtime, and to return a confident answer when it is out of its depth.
 - **Proven by:** a test asserting a specific value, bound or contradiction — not that the function ran.
 
-### `mem20assetremixstudioz`
+### `mem20studioz`
 
 - **Should be:** asset pipeline — produce assets under a real budget, not an aspiration.
 - **Must refuse:** to be a general-purpose runtime, and to return a confident answer when it is out of its depth.
@@ -1408,7 +1408,7 @@ These names do not state a capability the audit can pin down. Give each a one-li
 
 **What this family is for.** Producing work with a voice. Each must hold consistency across many outputs, which is a testable property rather than an opinion.
 
-### `mem20aiproductionstudiooperatingsystemz`
+### `mem20studioz`
 
 - **Should be:** production operating system — run a whole production line with one honest state view.
 - **Must refuse:** to be a general-purpose runtime, and to return a confident answer when it is out of its depth.
@@ -1438,7 +1438,7 @@ These names do not state a capability the audit can pin down. Give each a one-li
 - **Must refuse:** to be a general-purpose runtime, and to return a confident answer when it is out of its depth.
 - **Proven by:** a test asserting a specific value, bound or contradiction — not that the function ran.
 
-### `mem20protocolinventionstudioz`
+### `mem20studioz`
 
 - **Should be:** protocol invention — design a protocol and show it cannot be trivially broken.
 - **Must refuse:** to be a general-purpose runtime, and to return a confident answer when it is out of its depth.

@@ -1,10 +1,10 @@
-"""Tests for mem20aiproductionstudiooperatingsystemz."""
+"""Tests for mem20studioz."""
 from __future__ import annotations
 
 import tempfile
 import unittest
 
-from mem20aiproductionstudiooperatingsystemz.domain import critical_path, estate_context, milestone_progress, resource_allocation, schedule_projects, studio_health
+from mem20studioz.domain import critical_path, estate_context, milestone_progress, resource_allocation, schedule_projects, studio_health
 
 
 class TestStudioOS(unittest.TestCase):

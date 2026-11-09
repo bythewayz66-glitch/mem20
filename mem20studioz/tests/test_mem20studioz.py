@@ -15,7 +15,7 @@ class TestBranding(unittest.TestCase):
         import mem20studioz as pkg
         self.assertTrue(pkg.MEMBERS)
         self.assertEqual(len(pkg.MEMBERS), 5)
-        self.assertIn("mem20aigamestudiobuilderz", pkg.MEMBERS)
+        self.assertIn("mem20studioz", pkg.MEMBERS)
 
 
 class TestCli(unittest.TestCase):

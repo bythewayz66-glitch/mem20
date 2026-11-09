@@ -666,7 +666,7 @@ SUBSYSTEMS = {
     "mem20ambientdevicecompanionz": {"purpose": "Ambient device companion (context sensing, proactive suggestions, routines)","entry":"python -m mem20ambientdevicecompanionz --help","owner":"mem20-renovation","wave":4},
     "mem20ambientteamradioz": {"purpose": "Ambient team radio (channels, messaging, routing, activity)","entry":"python -m mem20ambientteamradioz --help","owner":"mem20-renovation","wave":4},
     "mem20simz": {"purpose": "Architecture simulation sandbox (load, scaling, cost, bottlenecks, chaos)","entry":"python -m mem20simz --help","owner":"mem20-renovation","wave":4},
-    "mem20assetremixstudioz": {"purpose": "Asset remix studio (remix, transform, export, blend, variants)","entry":"python -m mem20assetremixstudioz --help","owner":"mem20-renovation","wave":4},
+    "mem20studioz": {"purpose": "Asset remix studio (remix, transform, export, blend, variants)","entry":"python -m mem20studioz --help","owner":"mem20-renovation","wave":4},
     "mem20asynccollaborationcapsulesz": {"purpose": "Async collaboration capsules (changes, sync, merge, checksums)","entry":"python -m mem20asynccollaborationcapsulesz --help","owner":"mem20-renovation","wave":4},
     "mem20autonomoustrafficcontrollerz": {"purpose": "Autonomous traffic controller (token/leaky bucket throttling)","entry":"python -m mem20autonomoustrafficcontrollerz --help","owner":"mem20-renovation","wave":4},
     "mem20batteryawareagentschedulerz": {"purpose": "Battery-aware agent scheduler (energy-aware scheduling)","entry":"python -m mem20batteryawareagentschedulerz --help","owner":"mem20-renovation","wave":4},

@@ -1,6 +1,6 @@
 # mem20twinz — Twinz (Twin Runtime)
 
-First-class mem20 crew runtime for digital twins with **6 peers**, SQLite WAL runtime, CLI, JSON HTTP API, served web cockpit, docs/app monitor, and real MCP tools. Core APIs preserved (`estate_context` superset, `MEMBERS`/`__version__`, legacy `--members/--version`).
+Unified twin subsystem consolidating all twin/digital-twin runtimes under `mem20twinz/twins/`. First-class mem20 crew runtime for digital twins with **6 peers**, SQLite WAL runtime, CLI, JSON HTTP API, served web cockpit, docs/app monitor, and real MCP tools. Core APIs preserved (`estate_context` superset, `MEMBERS`/`__version__`, legacy `--members/--version`).
 
 ## Peers (6)
 `mem20twinz`, `mem20twinz`, `mem20simz`, `mem20eventstreamsuperhighwayz`, `mem20capabilitymarketplacez`, `mem20causalroutingbrainz`.

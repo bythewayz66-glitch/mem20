@@ -33,7 +33,7 @@
     "mem20ambientdevicecompanionz": 1,
     "mem20ambientteamradioz": 1,
     "mem20simz": 1,
-    "mem20assetremixstudioz": 1,
+    "mem20studioz": 1,
     "mem20asynccollaborationcapsulesz": 1,
     "mem20pipez": 4,
     "mem20autonomousdealdeskz": 3,
@@ -164,7 +164,7 @@
     "mem20ambientdevicecompanionz",
     "mem20ambientteamradioz",
     "mem20simz",
-    "mem20assetremixstudioz",
+    "mem20studioz",
     "mem20asynccollaborationcapsulesz",
     "mem20pipez",
     "mem20autonomousdealdeskz",
@@ -1462,9 +1462,9 @@
       "tools": 1
     },
     {
-      "domain": "mem20assetremixstudioz",
+      "domain": "mem20studioz",
       "modules": [
-        "mcp/tools/mem20assetremixstudioz_tools.py"
+        "mcp/tools/mem20studioz_tools.py"
       ],
       "prefixes": [
         "assetremixstudioz_*"

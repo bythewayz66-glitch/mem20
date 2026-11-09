@@ -1,6 +1,6 @@
 # mem20simz — Simz (Simulator Runtime)
 
-First-class mem20 crew runtime for simulators with **6 peers**, SQLite WAL runtime, CLI, JSON HTTP API, served web cockpit, docs/app monitor, and real MCP tools. Core APIs preserved (`estate_context` superset, `MEMBERS`/`__version__`, legacy `--members/--version`).
+Unified simulation subsystem consolidating all simulator/simulation runtimes under `mem20simz/sims/`. First-class mem20 crew runtime for simulators with **6 peers**, SQLite WAL runtime, CLI, JSON HTTP API, served web cockpit, docs/app monitor, and real MCP tools. Core APIs preserved (`estate_context` superset, `MEMBERS`/`__version__`, legacy `--members/--version`).
 
 ## Peers (6)
 `mem20simz`, `mem20twinz`, `mem20causalroutingbrainz`, `mem20eventstreamsuperhighwayz`, `mem20capabilitymarketplacez`, `mem20faultcontainmentcellsz`.

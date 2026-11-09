@@ -25,7 +25,7 @@ __all__ = [
 _REPO_ROOT = pathlib.Path(__file__).resolve().parents[2]
 _PROJECTS = (
     "mem20pipez",
-    "mem20aiproductionstudiooperatingsystemz",
+    "mem20studioz",
     "mem20loreragcontentgeneratorz",
     "mem20livemodelfusionz",
     "mem20pipez",
@@ -80,7 +80,7 @@ def asset_intake_plan(assets: Sequence[Mapping]) -> dict:
 def production_schedule(stages: Sequence[Mapping], capacity: int = 4) -> dict:
     """Schedule pipeline stages against studio capacity."""
     try:
-        from mem20aiproductionstudiooperatingsystemz.domain import (
+        from mem20studioz.domain import (
             resource_allocation,
             schedule_projects,
             studio_health,
@@ -95,7 +95,7 @@ def production_schedule(stages: Sequence[Mapping], capacity: int = 4) -> dict:
         alloc_map = allocation.get("allocations", allocation) if isinstance(allocation, dict) else allocation
         return {
             "ok": True,
-            "subsystem": "mem20aiproductionstudiooperatingsystemz",
+            "subsystem": "mem20studioz",
             "scheduled": len(schedule) if isinstance(schedule, list) else len(projects),
             "allocated": sum(1 for v in (alloc_map.values() if isinstance(alloc_map, dict) else []) if v),
             "health": float(health) if isinstance(health, (int, float)) else health,
@@ -103,7 +103,7 @@ def production_schedule(stages: Sequence[Mapping], capacity: int = 4) -> dict:
     except Exception as exc:  # noqa: BLE001
         return {
             "ok": False,
-            "subsystem": "mem20aiproductionstudiooperatingsystemz",
+            "subsystem": "mem20studioz",
             "error": f"{type(exc).__name__}: {exc}",
         }
 

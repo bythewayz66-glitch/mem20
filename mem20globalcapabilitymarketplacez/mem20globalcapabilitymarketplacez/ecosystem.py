@@ -63,12 +63,12 @@ def optimize_listing_query(query: str = "capability") -> Dict[str, Any]:
 def remix_variants(listing: Dict[str, Any] = None) -> Dict[str, Any]:
     """Produce capability/asset variants for marketplace listings."""
     def run():
-        from mem20assetremixstudioz.domain import remix_variants, transform_asset
+        from mem20studioz.domain import remix_variants, transform_asset
         asset = listing or {"id": "cap-1", "type": "workflow"}
         vars_ = remix_variants(asset, count=2)
         tr = transform_asset(asset, {"op": "tag", "value": "portable"})
         return {"variants": vars_, "transformed": tr is not None}
-    return _safe("mem20assetremixstudioz", run)
+    return _safe("mem20studioz", run)
 
 def marketplace_enrich(payload: Dict[str, Any]) -> Dict[str, Any]:
     """Compose meaningful marketplace enrichment using legacy domain + 6 peer integrations."""

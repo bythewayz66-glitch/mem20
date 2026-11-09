@@ -1,7 +1,7 @@
 import importlib
 import tempfile
 
-MOD = "mem20aigamestudiobuilderz"
+MOD = "mem20studioz"
 
 
 def _m():

@@ -148,7 +148,7 @@ same tools are present. A non-empty symmetric difference aborts generation.
 | 116 | `mem20ambientdevicecompanionz` | 1 | `ambientdevicecompanionz_*` | `mcp/tools/mem20ambientdevicecompanionz_tools.py` |
 | 117 | `mem20ambientteamradioz` | 1 | `ambientteamradioz_*` | `mcp/tools/mem20ambientteamradioz_tools.py` |
 | 118 | `mem20simz` | 1 | `architecturesimulationsandboxz_*` | `mcp/tools/mem20simz_tools.py` |
-| 119 | `mem20assetremixstudioz` | 1 | `assetremixstudioz_*` | `mcp/tools/mem20assetremixstudioz_tools.py` |
+| 119 | `mem20studioz` | 1 | `assetremixstudioz_*` | `mcp/tools/mem20studioz_tools.py` |
 | 120 | `mem20asynccollaborationcapsulesz` | 1 | `asynccollaborationcapsulesz_*` | `mcp/tools/mem20asynccollaborationcapsulesz_tools.py` |
 | 121 | `mem20autonomoustrafficcontrollerz` | 1 | `autonomoustrafficcontrollerz_*` | `mcp/tools/mem20autonomoustrafficcontrollerz_tools.py` |
 | 122 | `mem20batteryawareagentschedulerz` | 1 | `batteryawareagentschedulerz_*` | `mcp/tools/mem20batteryawareagentschedulerz_tools.py` |

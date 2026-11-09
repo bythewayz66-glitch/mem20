@@ -1431,20 +1431,20 @@
       }
     },
     {
-      "id": "cli:mem20aigamestudiobuilderz",
+      "id": "cli:mem20studioz",
       "kind": "cli",
-      "name": "mem20aigamestudiobuilderz",
+      "name": "mem20studioz",
       "category": "cli",
       "subcategory": "mem20",
-      "description": "mem20aigamestudiobuilderz \u00b7 runs with /opt/mem20/.venv/bin/python",
-      "source": "/opt/mem20/.venv/bin/mem20aigamestudiobuilderz",
+      "description": "mem20studioz \u00b7 runs with /opt/mem20/.venv/bin/python",
+      "source": "/opt/mem20/.venv/bin/mem20studioz",
       "runtime_status": "ok",
       "runtime_detail": "script in /opt/mem20/.venv/bin",
       "checks": [
         {
           "check": "path exists",
           "ok": true,
-          "detail": "/opt/mem20/.venv/bin/mem20aigamestudiobuilderz"
+          "detail": "/opt/mem20/.venv/bin/mem20studioz"
         },
         {
           "check": "executable",
@@ -1459,7 +1459,7 @@
         "executable": true,
         "size": 191,
         "symlink": false,
-        "resolved_target": "/opt/mem20/.venv/bin/mem20aigamestudiobuilderz"
+        "resolved_target": "/opt/mem20/.venv/bin/mem20studioz"
       }
     },
     {
@@ -1559,20 +1559,20 @@
       }
     },
     {
-      "id": "cli:mem20aiproductionstudiooperatingsystemz",
+      "id": "cli:mem20studioz",
       "kind": "cli",
-      "name": "mem20aiproductionstudiooperatingsystemz",
+      "name": "mem20studioz",
       "category": "cli",
       "subcategory": "mem20",
-      "description": "mem20aiproductionstudiooperatingsystemz \u00b7 runs with /opt/mem20/.venv/bin/python",
-      "source": "/opt/mem20/.venv/bin/mem20aiproductionstudiooperatingsystemz",
+      "description": "mem20studioz \u00b7 runs with /opt/mem20/.venv/bin/python",
+      "source": "/opt/mem20/.venv/bin/mem20studioz",
       "runtime_status": "ok",
       "runtime_detail": "script in /opt/mem20/.venv/bin",
       "checks": [
         {
           "check": "path exists",
           "ok": true,
-          "detail": "/opt/mem20/.venv/bin/mem20aiproductionstudiooperatingsystemz"
+          "detail": "/opt/mem20/.venv/bin/mem20studioz"
         },
         {
           "check": "executable",
@@ -1587,7 +1587,7 @@
         "executable": true,
         "size": 205,
         "symlink": false,
-        "resolved_target": "/opt/mem20/.venv/bin/mem20aiproductionstudiooperatingsystemz"
+        "resolved_target": "/opt/mem20/.venv/bin/mem20studioz"
       }
     },
     {
@@ -7351,20 +7351,20 @@
       }
     },
     {
-      "id": "cli:mem20protocolinventionstudioz",
+      "id": "cli:mem20studioz",
       "kind": "cli",
-      "name": "mem20protocolinventionstudioz",
+      "name": "mem20studioz",
       "category": "cli",
       "subcategory": "mem20",
-      "description": "mem20protocolinventionstudioz \u00b7 runs with /opt/mem20/.venv/bin/python",
-      "source": "/opt/mem20/.venv/bin/mem20protocolinventionstudioz",
+      "description": "mem20studioz \u00b7 runs with /opt/mem20/.venv/bin/python",
+      "source": "/opt/mem20/.venv/bin/mem20studioz",
       "runtime_status": "ok",
       "runtime_detail": "script in /opt/mem20/.venv/bin",
       "checks": [
         {
           "check": "path exists",
           "ok": true,
-          "detail": "/opt/mem20/.venv/bin/mem20protocolinventionstudioz"
+          "detail": "/opt/mem20/.venv/bin/mem20studioz"
         },
         {
           "check": "executable",
@@ -7379,7 +7379,7 @@
         "executable": true,
         "size": 190,
         "symlink": false,
-        "resolved_target": "/opt/mem20/.venv/bin/mem20protocolinventionstudioz"
+        "resolved_target": "/opt/mem20/.venv/bin/mem20studioz"
       }
     },
     {
@@ -9687,20 +9687,20 @@
       }
     },
     {
-      "id": "cli:mem20webgpucomputestudioz",
+      "id": "cli:mem20studioz",
       "kind": "cli",
-      "name": "mem20webgpucomputestudioz",
+      "name": "mem20studioz",
       "category": "cli",
       "subcategory": "mem20",
-      "description": "mem20webgpucomputestudioz \u00b7 runs with /opt/mem20/.venv/bin/python",
-      "source": "/opt/mem20/.venv/bin/mem20webgpucomputestudioz",
+      "description": "mem20studioz \u00b7 runs with /opt/mem20/.venv/bin/python",
+      "source": "/opt/mem20/.venv/bin/mem20studioz",
       "runtime_status": "ok",
       "runtime_detail": "script in /opt/mem20/.venv/bin",
       "checks": [
         {
           "check": "path exists",
           "ok": true,
-          "detail": "/opt/mem20/.venv/bin/mem20webgpucomputestudioz"
+          "detail": "/opt/mem20/.venv/bin/mem20studioz"
         },
         {
           "check": "executable",
@@ -9715,7 +9715,7 @@
         "executable": true,
         "size": 186,
         "symlink": false,
-        "resolved_target": "/opt/mem20/.venv/bin/mem20webgpucomputestudioz"
+        "resolved_target": "/opt/mem20/.venv/bin/mem20studioz"
       }
     },
     {
@@ -11602,25 +11602,25 @@
       }
     },
     {
-      "id": "subsystem:mem20aigamestudiobuilderz",
+      "id": "subsystem:mem20studioz",
       "kind": "subsystem",
-      "name": "mem20aigamestudiobuilderz",
+      "name": "mem20studioz",
       "category": "other",
       "subcategory": "native-subsystem",
-      "description": "mem20aigamestudiobuilderz first-class module",
-      "source": "/opt/mem20/mem20aigamestudiobuilderz/pyproject.toml",
+      "description": "mem20studioz first-class module",
+      "source": "/opt/mem20/mem20studioz/pyproject.toml",
       "runtime_status": "ok",
-      "runtime_detail": "pkg=mem20aigamestudiobuilderz v1.0.0; installed 1.0.0 via root-venv; importable=False (1 modules checked); scripts=1 declared, 1 on PATH",
+      "runtime_detail": "pkg=mem20studioz v1.0.0; installed 1.0.0 via root-venv; importable=False (1 modules checked); scripts=1 declared, 1 on PATH",
       "checks": [
         {
           "check": "pyproject present",
           "ok": true,
-          "detail": "/opt/mem20/mem20aigamestudiobuilderz/pyproject.toml"
+          "detail": "/opt/mem20/mem20studioz/pyproject.toml"
         },
         {
           "check": "name declared",
           "ok": true,
-          "detail": "mem20aigamestudiobuilderz"
+          "detail": "mem20studioz"
         },
         {
           "check": "description present",
@@ -11640,17 +11640,17 @@
         {
           "check": "import",
           "ok": false,
-          "detail": "mem20aigamestudiobuilderz=n"
+          "detail": "mem20studioz=n"
         }
       ],
       "meta": {
-        "pkg_name": "mem20aigamestudiobuilderz",
+        "pkg_name": "mem20studioz",
         "version": "1.0.0",
-        "pyproject": "/opt/mem20/mem20aigamestudiobuilderz/pyproject.toml",
+        "pyproject": "/opt/mem20/mem20studioz/pyproject.toml",
         "entry_points": [
           {
-            "console": "mem20aigamestudiobuilderz",
-            "target": "mem20aigamestudiobuilderz.runtime:main",
+            "console": "mem20studioz",
+            "target": "mem20studioz.runtime:main",
             "on_path": true
           }
         ],
@@ -11662,7 +11662,7 @@
         },
         "importable": [
           {
-            "name": "mem20aigamestudiobuilderz",
+            "name": "mem20studioz",
             "importable": false
           }
         ],
@@ -11806,25 +11806,25 @@
       }
     },
     {
-      "id": "subsystem:mem20aiproductionstudiooperatingsystemz",
+      "id": "subsystem:mem20studioz",
       "kind": "subsystem",
-      "name": "mem20aiproductionstudiooperatingsystemz",
+      "name": "mem20studioz",
       "category": "other",
       "subcategory": "native-subsystem",
-      "description": "mem20aiproductionstudiooperatingsystemz first-class module",
-      "source": "/opt/mem20/mem20aiproductionstudiooperatingsystemz/pyproject.toml",
+      "description": "mem20studioz first-class module",
+      "source": "/opt/mem20/mem20studioz/pyproject.toml",
       "runtime_status": "ok",
-      "runtime_detail": "pkg=mem20aiproductionstudiooperatingsystemz v1.0.0; installed 1.0.0 via root-venv; importable=False (1 modules checked); scripts=1 declared, 1 on PATH",
+      "runtime_detail": "pkg=mem20studioz v1.0.0; installed 1.0.0 via root-venv; importable=False (1 modules checked); scripts=1 declared, 1 on PATH",
       "checks": [
         {
           "check": "pyproject present",
           "ok": true,
-          "detail": "/opt/mem20/mem20aiproductionstudiooperatingsystemz/pyproject.toml"
+          "detail": "/opt/mem20/mem20studioz/pyproject.toml"
         },
         {
           "check": "name declared",
           "ok": true,
-          "detail": "mem20aiproductionstudiooperatingsystemz"
+          "detail": "mem20studioz"
         },
         {
           "check": "description present",
@@ -11844,17 +11844,17 @@
         {
           "check": "import",
           "ok": false,
-          "detail": "mem20aiproductionstudiooperatingsystemz=n"
+          "detail": "mem20studioz=n"
         }
       ],
       "meta": {
-        "pkg_name": "mem20aiproductionstudiooperatingsystemz",
+        "pkg_name": "mem20studioz",
         "version": "1.0.0",
-        "pyproject": "/opt/mem20/mem20aiproductionstudiooperatingsystemz/pyproject.toml",
+        "pyproject": "/opt/mem20/mem20studioz/pyproject.toml",
         "entry_points": [
           {
-            "console": "mem20aiproductionstudiooperatingsystemz",
-            "target": "mem20aiproductionstudiooperatingsystemz.runtime:main",
+            "console": "mem20studioz",
+            "target": "mem20studioz.runtime:main",
             "on_path": true
           }
         ],
@@ -11866,7 +11866,7 @@
         },
         "importable": [
           {
-            "name": "mem20aiproductionstudiooperatingsystemz",
+            "name": "mem20studioz",
             "importable": false
           }
         ],
@@ -12462,25 +12462,25 @@
       }
     },
     {
-      "id": "subsystem:mem20assetremixstudioz",
+      "id": "subsystem:mem20studioz",
       "kind": "subsystem",
-      "name": "mem20assetremixstudioz",
+      "name": "mem20studioz",
       "category": "other",
       "subcategory": "native-subsystem",
-      "description": "mem20assetremixstudioz first-class module",
-      "source": "/opt/mem20/mem20assetremixstudioz/pyproject.toml",
+      "description": "mem20studioz first-class module",
+      "source": "/opt/mem20/mem20studioz/pyproject.toml",
       "runtime_status": "ok",
-      "runtime_detail": "pkg=mem20assetremixstudioz v1.0.0; installed 1.0.0 via root-venv; importable=False (1 modules checked); scripts=0 declared, 0 on PATH",
+      "runtime_detail": "pkg=mem20studioz v1.0.0; installed 1.0.0 via root-venv; importable=False (1 modules checked); scripts=0 declared, 0 on PATH",
       "checks": [
         {
           "check": "pyproject present",
           "ok": true,
-          "detail": "/opt/mem20/mem20assetremixstudioz/pyproject.toml"
+          "detail": "/opt/mem20/mem20studioz/pyproject.toml"
         },
         {
           "check": "name declared",
           "ok": true,
-          "detail": "mem20assetremixstudioz"
+          "detail": "mem20studioz"
         },
         {
           "check": "description present",
@@ -12500,13 +12500,13 @@
         {
           "check": "import",
           "ok": false,
-          "detail": "mem20assetremixstudioz=n"
+          "detail": "mem20studioz=n"
         }
       ],
       "meta": {
-        "pkg_name": "mem20assetremixstudioz",
+        "pkg_name": "mem20studioz",
         "version": "1.0.0",
-        "pyproject": "/opt/mem20/mem20assetremixstudioz/pyproject.toml",
+        "pyproject": "/opt/mem20/mem20studioz/pyproject.toml",
         "entry_points": [],
         "dependencies": [],
         "installed": {
@@ -12516,7 +12516,7 @@
         },
         "importable": [
           {
-            "name": "mem20assetremixstudioz",
+            "name": "mem20studioz",
             "importable": false
           }
         ],
@@ -25307,25 +25307,25 @@
       }
     },
     {
-      "id": "subsystem:mem20protocolinventionstudioz",
+      "id": "subsystem:mem20studioz",
       "kind": "subsystem",
-      "name": "mem20protocolinventionstudioz",
+      "name": "mem20studioz",
       "category": "other",
       "subcategory": "native-subsystem",
       "description": "Design and simulate new lightweight protocols for agents, devices, and components",
-      "source": "/opt/mem20/mem20protocolinventionstudioz/pyproject.toml",
+      "source": "/opt/mem20/mem20studioz/pyproject.toml",
       "runtime_status": "ok",
-      "runtime_detail": "pkg=mem20protocolinventionstudioz v1.0.0; installed 1.0.0 via root-venv; importable=False (1 modules checked); scripts=1 declared, 1 on PATH",
+      "runtime_detail": "pkg=mem20studioz v1.0.0; installed 1.0.0 via root-venv; importable=False (1 modules checked); scripts=1 declared, 1 on PATH",
       "checks": [
         {
           "check": "pyproject present",
           "ok": true,
-          "detail": "/opt/mem20/mem20protocolinventionstudioz/pyproject.toml"
+          "detail": "/opt/mem20/mem20studioz/pyproject.toml"
         },
         {
           "check": "name declared",
           "ok": true,
-          "detail": "mem20protocolinventionstudioz"
+          "detail": "mem20studioz"
         },
         {
           "check": "description present",
@@ -25345,17 +25345,17 @@
         {
           "check": "import",
           "ok": false,
-          "detail": "mem20protocolinventionstudioz=n"
+          "detail": "mem20studioz=n"
         }
       ],
       "meta": {
-        "pkg_name": "mem20protocolinventionstudioz",
+        "pkg_name": "mem20studioz",
         "version": "1.0.0",
-        "pyproject": "/opt/mem20/mem20protocolinventionstudioz/pyproject.toml",
+        "pyproject": "/opt/mem20/mem20studioz/pyproject.toml",
         "entry_points": [
           {
-            "console": "mem20protocolinventionstudioz",
-            "target": "mem20protocolinventionstudioz.core:cli",
+            "console": "mem20studioz",
+            "target": "mem20studioz.core:cli",
             "on_path": true
           }
         ],
@@ -25367,7 +25367,7 @@
         },
         "importable": [
           {
-            "name": "mem20protocolinventionstudioz",
+            "name": "mem20studioz",
             "importable": false
           }
         ],
@@ -30492,25 +30492,25 @@
       }
     },
     {
-      "id": "subsystem:mem20webgpucomputestudioz",
+      "id": "subsystem:mem20studioz",
       "kind": "subsystem",
-      "name": "mem20webgpucomputestudioz",
+      "name": "mem20studioz",
       "category": "other",
       "subcategory": "native-subsystem",
       "description": "Use browser-accessible GPUs for local visualization, simulation, and AI compute",
-      "source": "/opt/mem20/mem20webgpucomputestudioz/pyproject.toml",
+      "source": "/opt/mem20/mem20studioz/pyproject.toml",
       "runtime_status": "ok",
-      "runtime_detail": "pkg=mem20webgpucomputestudioz v1.0.0; installed 1.0.0 via root-venv; importable=False (1 modules checked); scripts=1 declared, 1 on PATH",
+      "runtime_detail": "pkg=mem20studioz v1.0.0; installed 1.0.0 via root-venv; importable=False (1 modules checked); scripts=1 declared, 1 on PATH",
       "checks": [
         {
           "check": "pyproject present",
           "ok": true,
-          "detail": "/opt/mem20/mem20webgpucomputestudioz/pyproject.toml"
+          "detail": "/opt/mem20/mem20studioz/pyproject.toml"
         },
         {
           "check": "name declared",
           "ok": true,
-          "detail": "mem20webgpucomputestudioz"
+          "detail": "mem20studioz"
         },
         {
           "check": "description present",
@@ -30530,17 +30530,17 @@
         {
           "check": "import",
           "ok": false,
-          "detail": "mem20webgpucomputestudioz=n"
+          "detail": "mem20studioz=n"
         }
       ],
       "meta": {
-        "pkg_name": "mem20webgpucomputestudioz",
+        "pkg_name": "mem20studioz",
         "version": "1.0.0",
-        "pyproject": "/opt/mem20/mem20webgpucomputestudioz/pyproject.toml",
+        "pyproject": "/opt/mem20/mem20studioz/pyproject.toml",
         "entry_points": [
           {
-            "console": "mem20webgpucomputestudioz",
-            "target": "mem20webgpucomputestudioz.core:cli",
+            "console": "mem20studioz",
+            "target": "mem20studioz.core:cli",
             "on_path": true
           }
         ],
@@ -30552,7 +30552,7 @@
         },
         "importable": [
           {
-            "name": "mem20webgpucomputestudioz",
+            "name": "mem20studioz",
             "importable": false
           }
         ],

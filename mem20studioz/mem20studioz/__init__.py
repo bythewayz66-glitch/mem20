@@ -10,11 +10,11 @@ from __future__ import annotations
 __version__ = "0.1.0"
 
 MEMBERS = (
-    "mem20aigamestudiobuilderz",
-    "mem20aiproductionstudiooperatingsystemz",
-    "mem20assetremixstudioz",
-    "mem20protocolinventionstudioz",
-    "mem20webgpucomputestudioz",
+    "mem20studioz",
+    "mem20studioz",
+    "mem20studioz",
+    "mem20studioz",
+    "mem20studioz",
 )
 
 __all__ = ["__version__", "MEMBERS"]

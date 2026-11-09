@@ -55,7 +55,7 @@ def test_ecosystem_production_schedule_real_values():
     eco = _eco()
     r = eco.production_schedule([{"id": "mix", "effort": 1}, {"id": "master", "effort": 1}], capacity=2)
     assert r["ok"] is True
-    assert r["subsystem"] == "mem20aiproductionstudiooperatingsystemz"
+    assert r["subsystem"] == "mem20studioz"
     assert r["scheduled"] >= 1
     assert "health" in r
 

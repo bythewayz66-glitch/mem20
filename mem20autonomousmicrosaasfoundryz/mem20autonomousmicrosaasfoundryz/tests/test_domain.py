@@ -14,7 +14,7 @@ def test_ecosystem_economics_real_values():
 def test_ecosystem_demand_signal_real_values():
     r=_eco().demand_signal([20,25,22,30,28]); assert r["ok"] and r["subsystem"]=="mem20demandforecastandcapacitybrainz"; assert r["point"] is not None
 def test_ecosystem_build_schedule_real_values():
-    r=_eco().build_schedule(["core","auth"]); assert r["ok"] and r["subsystem"]=="mem20aiproductionstudiooperatingsystemz"; assert "scheduled" in r
+    r=_eco().build_schedule(["core","auth"]); assert r["ok"] and r["subsystem"]=="mem20studioz"; assert "scheduled" in r
 def test_ecosystem_launch_pipeline_real_values():
     r=_eco().launch_pipeline([]); assert r["ok"] and r["subsystem"]=="mem20autonomoussaleslaboratoryz"; assert "pipeline_value" in r
 def test_ecosystem_content_quality_real_values():

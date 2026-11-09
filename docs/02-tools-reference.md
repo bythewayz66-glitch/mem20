@@ -1,7 +1,7 @@
 # mem20 MCP Tools Reference
 
 > Reference for the MCP tool surface, organised by domain. The live server exposes
-> **311 tools across 39 domains** (generated from the live `tools/list` response;
+> **487 tools across 129 domains** (generated from the live `tools/list` response;
 > see [surface.json](surface.json) and [TOOL-DOMAINS.md](TOOL-DOMAINS.md)). The
 > sections below document the core subset in detail, so a section heading counts
 > the tools listed under it, not the whole domain.

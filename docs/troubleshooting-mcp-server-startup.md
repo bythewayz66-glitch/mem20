@@ -660,4 +660,4 @@ echo "All checks passed."
 | Health endpoint unreachable | Curled too early, port taken, or disabled | `MEM20_HEALTH_PORT=9090`; check the `WARNING … could not bind` line |
 | Server exits 0 immediately | stdin EOF under stdio transport | `mcp/stdio_guardian.py`, or `MEM20_TRANSPORT=http` |
 | `Error: No search dependencies installed` | `faiss`/`sentence-transformers` absent | `pip install faiss-cpu sentence-transformers` |
-| Fewer than 311 tools | A tool module failed to import | `MEM20_LOG_LEVEL=DEBUG python3 ./launcher.py` |
+| Fewer than 487 tools | A tool module failed to import | `MEM20_LOG_LEVEL=DEBUG python3 ./launcher.py` |

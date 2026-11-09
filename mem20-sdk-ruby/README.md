@@ -117,7 +117,7 @@ ruby -Ilib examples/quickstart.rb
 - Transport: **stdio**, one JSON-RPC 2.0 message per line.
 - Handshake: `initialize` → `notifications/initialized`, then `tools/list` / `tools/call`.
 - Protocol revision: **`2025-06-18`**, as negotiated in `initialize`.
-- The server registers **311 tools across 39 domains**. `docs/surface.json` is the
+- The server registers **487 tools across 129 domains**. `docs/surface.json` is the
   authoritative manifest: `scripts/surface_manifest.py` generates it from a live
   `tools/list` response and cross-checks it against the AST catalog in
   `web/src/data/tools.json`, refusing to emit unless the two are identical sets.
@@ -164,7 +164,7 @@ Run workflow* with `dry_run` left on (the default).
 The results below were produced by running the suite and a live round-trip against
 the mem20 server on a Kali Linux host with Ruby 3.3.8. That host has since been
 retired and no longer exists; the measurements stand as recorded. The surface has
-since been re-verified to **311 tools across 39 domains** (see
+since been re-verified to **487 tools across 129 domains** (see
 [`docs/EVIDENCE.md`](docs/EVIDENCE.md) § 0). The raw command output is reproduced
 in [`docs/EVIDENCE.md`](docs/EVIDENCE.md).
 
@@ -175,7 +175,7 @@ in [`docs/EVIDENCE.md`](docs/EVIDENCE.md).
 | `rubocop` | 19 files inspected, **no offenses detected** |
 | `gem build mem20-sdk.gemspec` | mem20-sdk **0.2.0** built |
 | `require "mem20"` (installed gem) | loads mem20-sdk 0.2.0 |
-| live stdio round-trip | protocol **2025-06-18**, stored token recalled (surface re-verified: **311 tools**) |
+| live stdio round-trip | protocol **2025-06-18**, stored token recalled (surface re-verified: **487 tools**) |
 
 The round-trip stores a distinctive token with `memory_store` and reads it back with
 `memory_recall` against the real server; the recorded run recovered the token in

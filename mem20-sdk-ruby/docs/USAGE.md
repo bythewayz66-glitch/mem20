@@ -37,7 +37,7 @@ puts Mem20::Client.text(recall)
 `tags:` accepts an `Array` (the SDK joins it into the comma-separated form the server
 expects) or a pre-formatted `String`.
 
-## Call any of the 311 tools
+## Call any of the 487 tools
 
 ```ruby
 # By name — works for every registered tool, even ones with no binding yet.

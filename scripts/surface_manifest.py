@@ -56,7 +56,7 @@ CURRENT_DOCS = (
 RETIRED = (
     ("257 / 26", "retired — predates the `lie_*` domain and undercounted `memory_*`"),
     ("268 / 26", "retired — counted `mcp/tools/` only, omitting the root-level tool modules"),
-    ("270 / 27", "retired — earlier 27-domain taxonomy; the surface has since grown to 39 domains"),
+    ("270 / 27", "retired — earlier 27-domain taxonomy; the surface has since grown to 129 domains"),
     ("306 / 38", "retired — the pre-temporal surface: 306 tools before the five `temporal_*` tools landed"),
     ("306 / 39", "retired — a mismatched pair: 306 was the pre-temporal tool count, 39 the post-temporal domain count"),
 )

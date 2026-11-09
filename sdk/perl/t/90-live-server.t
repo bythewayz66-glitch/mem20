@@ -66,8 +66,8 @@ subtest 'the live surface matches what this SDK was compiled against' => sub {
 
     is( $surface->{tools}, $Mem20::Version::SURFACE_TOOL_COUNT,
         "tools/list returns $Mem20::Version::SURFACE_TOOL_COUNT tools" );
-    is( $surface->{expected_tools}, 311, 'SDK constant is 311' );
-    is( $surface->{domains}, 39, 'SDK constant says 39 domain modules' );
+    is( $surface->{expected_tools}, 487, 'SDK constant is 487' );
+    is( $surface->{domains}, 129, 'SDK constant says 129 domain modules' );
     is( $surface->{ok}, 1, 'surface check passes' );
 
     my $names = $client->tool_names;
@@ -75,7 +75,7 @@ subtest 'the live surface matches what this SDK was compiled against' => sub {
         'every advertised tool name is unique' );
 
     # Spot-check that the domain families are actually present, so the count
-    # cannot be satisfied by 311 copies of nothing.
+    # cannot be satisfied by the expected count of unrelated tools.
     ok( $client->can('memory_store'),      'memory domain bound' );
     ok( $client->can('cog_plan'),          'cognitive domain bound' );
     ok( $client->can('job_status'),        'inline job domain bound' );

@@ -316,7 +316,7 @@ sweep(document)})();</script>
       <span class="chip">13 snapshots on launch day</span>
       <span class="chip">Attribution: per-utm_content</span>
       <span class="chip amber">Adversarial 0.000 disclosed</span>
-      <span class="chip hot">Surface 311 tools / 39 domains</span>
+      <span class="chip hot">Surface 487 tools / 129 domains</span>
       <span class="chip">No vanity metrics</span>
       <span class="chip" id="repoChip">repo: bythewayz66-glitch/mem20</span>
     </div>
@@ -673,7 +673,7 @@ sweep(document)})();</script>
 
   <!-- ============ TOOL SURFACE ============ -->
   <section id="surface">
-    <div class="sec-head"><span class="sec-num">07</span><h2>Tool surface &mdash; 311 tools / 39 domains</h2></div>
+    <div class="sec-head"><span class="sec-num">07</span><h2>Tool surface &mdash; 487 tools / 129 domains</h2></div>
     <p class="sec-sub">
       The live surface <code>main</code> actually serves, generated from the server's JSON-RPC
       <code>tools/list</code> response by <code>scripts/surface_manifest.py</code> and cross-checked
@@ -691,11 +691,11 @@ sweep(document)})();</script>
         <table>
           <thead><tr><th>Source of truth</th><th>Carries</th><th>Role</th></tr></thead>
           <tbody>
-            <tr><td><code>scripts/surface_manifest.py</code></td><td>311 tools / 39 domains</td><td>reads live <code>tools/list</code>, regenerates the manifest; <code>--check</code> fails CI on drift</td></tr>
-            <tr><td><code>docs/surface.json</code></td><td>311 tools / 39 domains</td><td>machine-readable surface manifest</td></tr>
+            <tr><td><code>scripts/surface_manifest.py</code></td><td>487 tools / 129 domains</td><td>reads live <code>tools/list</code>, regenerates the manifest; <code>--check</code> fails CI on drift</td></tr>
+            <tr><td><code>docs/surface.json</code></td><td>487 tools / 129 domains</td><td>machine-readable surface manifest</td></tr>
             <tr><td><code>verify_mcp.py</code></td><td>311 (pinned default)</td><td>live <code>tools/list</code> handshake &mdash; CI fails on any drift</td></tr>
-            <tr><td><code>README.md</code></td><td>311 tools / 39 domains</td><td>public documentation surface</td></tr>
-            <tr><td><code>docs/index.html</code></td><td>311 tools / 39 domains</td><td>launch page this dashboard accompanies</td></tr>
+            <tr><td><code>README.md</code></td><td>487 tools / 129 domains</td><td>public documentation surface</td></tr>
+            <tr><td><code>docs/index.html</code></td><td>487 tools / 129 domains</td><td>launch page this dashboard accompanies</td></tr>
             <tr><td><code>docs/finance/inputs.json</code></td><td>311 / 39, prior 257 / 26</td><td>finance model input, records the retirement</td></tr>
             <tr><td><code>CHANGELOG.md</code></td><td>historical entries</td><td>dated record of each count correction</td></tr>
           </tbody>

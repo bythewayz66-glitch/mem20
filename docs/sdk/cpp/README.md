@@ -1,14 +1,14 @@
 # mem20 C++ SDK
 
 > **Status:** first-class (`mem20_sdk` 0.1.0) · **Server baseline:** `mem20` 3.1.2  
-> **Tool surface:** **311 tools across 39 domains** (`mem20::surface::summary()`)  
+> **Tool surface:** **487 tools across 129 domains** (`mem20::surface::summary()`)  
 > **Implementation:** [`sdk/cpp/`](../../../sdk/cpp/) · **Canonical repo:** https://github.com/bythewayz66-glitch/mem20  
 > **License:** MIT
 
 Library headers, sources, CMake, and tests live under **`sdk/cpp/`**.  
 This directory keeps protocol docs, API reference, and the `store_recall_audit` example.
 
-The server this release was verified against advertises **311 tools across 39
+The server this release was verified against advertises **487 tools across 39
 domains** over `tools/list`. The figure is stated in exactly one place in code —
 `include/mem20/surface.hpp`, where `static_assert`s pin it — and is
 cross-checked against `docs/surface.json` (generated from a live `tools/list` by

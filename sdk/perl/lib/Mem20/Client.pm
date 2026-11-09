@@ -730,7 +730,7 @@ list or a single hashref. Alias: C<call_tool>.
 advertisement, cached after the first call.
 
 =item C<verify_surface> - compare the live tool count with the count this SDK
-was built against (311 across 39 domains). Returns C<ok>, C<tools>,
+was built against (487 across 129 domains). Returns C<ok>, C<tools>,
 C<expected_tools>, C<domains>, C<server_version>.
 
 =item C<< memory_store(%args) >> - store a grounded fact. C<content> and

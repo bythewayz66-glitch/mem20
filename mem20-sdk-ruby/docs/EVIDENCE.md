@@ -9,7 +9,7 @@ a Kali Linux host against the mem20 server; nothing here is estimated.
 - Canonical repo: `github.com/bythewayz66-glitch/mem20` @ `main` (MIT)
 - Server: mem20-mcp, release `v2.1.0rc2` (0.2.0 capture), protocol `2025-06-18`
 
-> **Surface re-verified 2026-11-07: the live surface is now 311 tools across 39
+> **Surface re-verified 2026-11-07: the live surface is now 487 tools across 39
 > domains.** The capture below is kept verbatim as the historical record of the
 > 0.2.0 run. The current count and its measurement are in section 0.
 
@@ -26,7 +26,7 @@ FIRST_8: ['memory_store', 'memory_recall', 'memory_probe', 'memory_reason', 'mem
 RESULT: PASS
 ```
 
-The surface is **311 tools across 39 domains**. `docs/surface.json` is the
+The surface is **487 tools across 129 domains**. `docs/surface.json` is the
 authoritative manifest: `scripts/surface_manifest.py` refuses to emit unless the
 live `tools/list` names and the AST catalog are identical sets. A static `grep`
 of `self.tools["..."] =` is **not** authoritative — a name can be assigned more

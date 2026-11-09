@@ -26,8 +26,8 @@
 // scripts/surface_manifest.py; the two collections must be identical or the
 // generator refuses to emit. Both land on 311 tools across 39 domains.
 //
-//   live `tools/list` distinct names                        311   -> kToolCount
-//   distinct owning domain modules (after documented folds)  39   -> kDomainCount
+//   live `tools/list` distinct names                        487   -> kToolCount
+//   distinct owning domain modules (after documented folds) 129   -> kDomainCount
 //
 // Every tool belongs to exactly one domain, so the domain half is the whole
 // surface: kDomainTools == kToolCount and there is no separate infra layer.
@@ -50,39 +50,41 @@ namespace surface {
 inline constexpr const char* kServerVersion = "3.1.2";
 
 // --- tool count -------------------------------------------------------------
-// Distinct tool names a fresh `tools/list` returns: 311.
-inline constexpr std::size_t kToolCount = 311;
+// Distinct tool names a fresh `tools/list` returns: 487.
+inline constexpr std::size_t kToolCount = 487;
 
 // The two halves. Every tool belongs to a domain, so the domain half is the
 // whole surface and the transport/infra layer is empty.
-inline constexpr std::size_t kDomainTools = 311;  // registered by the 39 domains
+inline constexpr std::size_t kDomainTools = 487;  // registered by the 129 domains
 inline constexpr std::size_t kA2aLayerTools = 0;  // a2a is a domain in v3.1.2
 inline constexpr std::size_t kInfraTools = 0;     // job_* is a domain in v3.1.2
 
 // --- domain count -----------------------------------------------------------
-// Distinct owning domain modules after the documented folds = 39.
-inline constexpr std::size_t kDomainCount = 39;
+// Distinct owning domain modules after the documented folds = 129.
+inline constexpr std::size_t kDomainCount = 129;
 
 // --- retired figures --------------------------------------------------------
 // Kept only so the guards can prove the SDK never re-publishes them. 257/26
 // predates the lie_* domain; 268/26 counted mcp/tools/ modules only and missed
 // the root-level domain modules; 270/27 was the pre-temporal surface; 272/27
 // was the wave-1 surface before the temporal_* tools and the domain split;
-// 306/38 was the pre-temporal count.
+// 306/38 was the pre-temporal count; 311/39 was the pre-full-install surface.
 inline constexpr std::size_t kRetiredToolCount = 257;
 inline constexpr std::size_t kRetiredDomainCount = 26;
 inline constexpr std::size_t kRetiredToolCountV3 = 270;
 inline constexpr std::size_t kRetiredToolCountV4 = 272;
 inline constexpr std::size_t kRetiredToolCountV5 = 306;
+inline constexpr std::size_t kRetiredToolCountV6 = 311;
+inline constexpr std::size_t kRetiredDomainCountV2 = 39;
 
 // --- invariants -------------------------------------------------------------
 // The derivation must reconcile, and the source-level recount must land on the
 // same total. If any number above is edited without its counterpart, this stops
 // the build instead of shipping a drifting figure.
-static_assert(kDomainCount == 39, "39 distinct owning domain modules");
-static_assert(kToolCount == 311, "distinct tools advertised by tools/list");
+static_assert(kDomainCount == 129, "129 distinct owning domain modules");
+static_assert(kToolCount == 487, "distinct tools advertised by tools/list");
 static_assert(kDomainTools + kA2aLayerTools + kInfraTools == kToolCount,
-              "311 domain tools + 0 a2a + 0 infra = 311");
+              "487 domain tools + 0 a2a + 0 infra = 487");
 static_assert(kToolCount != kRetiredToolCount,
               "257 is retired; do not re-publish it");
 static_assert(kToolCount != kRetiredToolCountV3,
@@ -91,10 +93,14 @@ static_assert(kToolCount != kRetiredToolCountV4,
               "272 is retired; do not re-publish it");
 static_assert(kToolCount != kRetiredToolCountV5,
               "306 is retired; do not re-publish it");
+static_assert(kToolCount != kRetiredToolCountV6,
+              "311 is retired; do not re-publish it");
 static_assert(kDomainCount != kRetiredDomainCount,
               "26 is retired; do not re-publish it");
+static_assert(kDomainCount != kRetiredDomainCountV2,
+              "39 is retired; do not re-publish it");
 
-// "311 tools across 39 domains" -- the one-line form the docs must match.
+// "487 tools across 129 domains" -- the one-line form the docs must match.
 inline std::string summary() {
   return std::to_string(kToolCount) + " tools across " +
          std::to_string(kDomainCount) + " domains";

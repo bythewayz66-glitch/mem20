@@ -2,7 +2,7 @@
 
 > **Correction — 2026-11-07.** The tool-surface figure in this record and on
 > slides 01, 02, 04 and 13 was **270 tools / 27 domains**. That was the live
-> surface at the `2ea44922` cut; it is now **311 tools / 39 domains**, read from
+> surface at the `2ea44922` cut; it is now **487 tools / 129 domains**, read from
 > `docs/surface.json` (generated from the live JSON-RPC `tools/list` response)
 > and cross-checked against the AST catalog with 0 symmetric difference. The
 > slides and the deck index have been corrected in place; the dated tables

@@ -155,7 +155,7 @@ returning a `ListToolsResult`.
 `ToolDescriptor` in the SDK captures `name`, `title`, `description`, and the raw
 `inputSchema` (kept as JSON so unknown/future fields survive round-trips).
 
-The baseline surface is **311 tools across 39 domains**. Both figures are *measured*,
+The baseline surface is **487 tools across 129 domains**. Both figures are *measured*,
 not quoted — `docs/surface.json` is generated from a live `tools/list` response by
 `scripts/surface_manifest.py` and cross-checked against the AST catalog in
 `web/src/data/tools.json` (the two collections must be identical or the generator
@@ -163,11 +163,11 @@ refuses to emit). Reproduce it from the repo root:
 
 ```bash
 python3 scripts/surface_manifest.py --check
-# -> OK: surface is 311 tools / 39 domains
+# -> OK: surface is 487 tools / 129 domains
 ```
 
 Every tool belongs to exactly one domain, so the **39 distinct owning domain
-modules** account for all 311 tools. The domain table is in `docs/TOOL-DOMAINS.md`.
+modules** account for all 487 tools. The domain table is in `docs/TOOL-DOMAINS.md`.
 
 > Treat the count as a moving target: tool *names* are the authority. The SDK resolves a
 > tool by exact name from `tools/list` and never invents one, so a server whose surface

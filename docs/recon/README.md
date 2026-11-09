@@ -31,7 +31,7 @@ suggested-fix text, so the list stays compact while remaining self-describing.
 
 The canonical tool/domain count is read from `docs/surface.json` (generated from
 the live JSON-RPC `tools/list` response). At the recorded HEAD it is
-**311 tools / 39 domains**. Retired count bands are
+**487 tools / 129 domains**. Retired count bands are
 `257/258/259/260/265/268/270/306` tools and `26/27/38` domains.
 
 ## Regenerate

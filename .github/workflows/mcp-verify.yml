@@ -41,10 +41,10 @@ jobs:
 
       - name: Verify the MCP handshake and tool count
         env:
-          # 311 is the live surface measured by `python3 scripts/surface_manifest.py
+          # 487 is the live surface measured by `python3 scripts/surface_manifest.py
           # --check`: JSON-RPC tools/list, cross-checked against the AST catalog.
           # Bump this whenever a merged subsystem registers a new MCP tool.
-          MEM20_EXPECTED_TOOLS: "311"
+          MEM20_EXPECTED_TOOLS: "487"
           PYTHONUNBUFFERED: "1"
         run: python ./verify_mcp.py
 

@@ -364,7 +364,7 @@ If your primary subsystem is in the live sweep (§1.4 check returns a hit), take
 | Mem20 Content Creator | `docs/gtm/messaging-house-2026-11-07.md` | `docs/gtm-messaging-2026-11-07` | `docs/gtm/**` |
 | Slides Assistant | `docs/gtm/deck-source-2026-11-07.md` — committed deck source | `docs/gtm-deck-source-2026-11-07` | `docs/gtm/**` |
 | Mem20-naration | `docs/media/narration-script-2026-11-07.md` — 60–90 s script + shot list | `docs/media-narration-2026-11-07` | `docs/media/**` |
-| mem20 GTM Team Lead | `docs/gtm/launch-copy-2026-11-07.md` — copy reconciled to the live 311/39 pin | `docs/gtm-launch-copy-2026-11-07` | `docs/gtm/**` |
+| mem20 GTM Team Lead | `docs/gtm/launch-copy-2026-11-07.md` — copy reconciled to the live 487/129 pin | `docs/gtm-launch-copy-2026-11-07` | `docs/gtm/**` |
 | Server Builder | `docs/ops/runtime-compat-matrix-2026-11-07.md` | `docs/ops-runtime-matrix-2026-11-07` | `docs/ops/**` |
 | AI Engineer | `docs/benchmarks/memory-engine-contract-2026-11-07.md` | `docs/memory-contract-2026-11-07` | `docs/benchmarks/**` |
 | Super Agent | `docs/ops/verification-matrix-2026-11-07.md` | `docs/ops-verification-matrix-2026-11-07` | `docs/ops/**` |
@@ -392,7 +392,7 @@ wait indefinitely for one member.
 
 ## 6. House numbers (carried, for consistency in every contribution)
 
-- **311 tools across 39 domains** — live pin, read from `docs/surface.json`. The retired bands
+- **487 tools across 129 domains** — live pin, read from `docs/surface.json`. The retired bands
   (`257/26`, `268/26`, `270/27`, `306/38`) must not reappear in any new copy.
 - **TAM $1.28B / SAM $282M / SOM $1.68M**
 - **Blended ACV $14,000**

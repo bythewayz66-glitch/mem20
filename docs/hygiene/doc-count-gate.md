@@ -3,7 +3,7 @@
 **Owner:** mem20-docuguard · **Gate:** `scripts/ops/check-doc-counts.py` · **CI:** `.github/workflows/doc-counts.yml`
 
 The tool surface has moved several times — **257 → 258-260 → 265 → 268 → 270 →
-306 → 311 tools** and **26 → 27 → 38 → 39 domains**. Every move left prose
+306 → 487 tools** and **26 → 27 → 38 → 129 domains**. Every move left prose
 behind that still presents the old number as *current*. This gate is the
 mechanical backstop: it scans the live-doc surface for a retired band and fails
 the run.
@@ -26,7 +26,7 @@ the run.
 | tools | `257`, `258`, `259`, `260`, `265`, `268`, `270`, `306` |
 | domains | `26`, `27`, `38` |
 
-The live pin is whatever `docs/surface.json` says (currently **311 tools / 39
+The live pin is whatever `docs/surface.json` says (currently **487 tools / 39
 domains**). A retired band is a violation **only** when it is attached to
 *tools* / *domains* (or a `tools/domains` pair), so a bare number in geometry,
 a version string or a line number is never a false positive.
@@ -64,7 +64,7 @@ every exemption is auditable by eye:
 Example — both lines pass:
 
 ```text
-The server exposes 311 tools across 39 domains.      # live pin
+The server exposes 487 tools across 129 domains.      # live pin
 The retired 270 / 27 pair is history.                # marker on the line
 ```
 

@@ -52,8 +52,8 @@ previous repo location.
 
 | # | Claim | Source path | Verified by |
 |---|---|---|---|
-| T1 | The surface is **311 tools** | measured, not quoted: `docs/surface.json` (generated from a live `tools/list` by `scripts/surface_manifest.py`) declares 311, and `tools/list` over stdio returns 311 unique names | live introspection |
-| T2 | The 311 tools span **39 domains** | `docs/surface.json` `domains` = 39, cross-checked against the AST catalog in `web/src/data/tools.json`; the two collections must be identical or the generator refuses to emit. Table: `docs/TOOL-DOMAINS.md` | source read + live count |
+| T1 | The surface is **487 tools** | measured, not quoted: `docs/surface.json` (generated from a live `tools/list` by `scripts/surface_manifest.py`) declares 311, and `tools/list` over stdio returns 311 unique names | live introspection |
+| T2 | The 487 tools span **129 domains** | `docs/surface.json` `domains` = 39, cross-checked against the AST catalog in `web/src/data/tools.json`; the two collections must be identical or the generator refuses to emit. Table: `docs/TOOL-DOMAINS.md` | source read + live count |
 | T4 | `serverInfo` is `{"name": "mem20-mcp", "version": ""}`; `protocolVersion` negotiates to `2025-06-18` | live `initialize` result over stdio | live introspection |
 | T3 | Server tool modules: `mcp/memory_tools.py`, `enhanced_memory_tools.py`, `cognitive_tools.py`, `thought_process.py`, `roadmap_tools.py`, `tools/world_tools.py`, `tools/braid_tools.py`, `tools/blender_tools.py`, `tools/unity_tools.py`, `tools/integration_tools.py` | `README.md` § Transport/protocol | file read |
 
@@ -126,7 +126,7 @@ repo documentation itself:
 
 > **Superseded:** the `257 tools · 26 domains` figures in the rows above are the values
 > *as corrected in that earlier pass*, not the current surface. The live surface at the
-> commit pinned above is **311 tools across 39 domains** (T1/T2). The table is kept as a
+> commit pinned above is **487 tools across 129 domains** (T1/T2). The table is kept as a
 > change record and is not itself a current claim.
 
 Remaining `JaysonAIOnline/*` mentions are **intentional**: `CANONICAL.md` deliberately

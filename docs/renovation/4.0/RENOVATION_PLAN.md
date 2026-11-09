@@ -258,7 +258,7 @@ mem20 4.0 ships when **all** of the following hold, each backed by a check run a
 3. Every subsystem's branch merged to `main` via PR; zero unmerged 4.0 branches.
 4. `VERSION` = `4.0.0`, `CHANGELOG.md` has a 4.0.0 section, tag `v4.0.0` cut at the release commit.
 5. `docs/renovation/4.0/SUBSTRATE.md` public APIs still match what subsystems import (no drift).
-6. Root `README.md` tool count reconciled to the measured value (house number is **311 tools / 39 domains**
+6. Root `README.md` tool count reconciled to the measured value (house number is **487 tools / 129 domains**
    as of 2026-11-07, read from `docs/surface.json`; the retired 257/26 and 270/27 bands must not
    reappear — Server Builder owns the reconciliation).
 
@@ -266,7 +266,7 @@ mem20 4.0 ships when **all** of the following hold, each backed by a check run a
 
 ## 9. House numbers (carried, for consistency in all 4.0 copy)
 
-- **311 tools across 39 domains** — house number as of 2026-11-07, read from `docs/surface.json`
+- **487 tools across 129 domains** — house number as of 2026-11-07, read from `docs/surface.json`
   (generated from the live JSON-RPC `tools/list` response) and cross-checked against the AST
   catalog with 0 symmetric difference. The retired bands (257/26, 268/26, 270/27, 306/38) must not
   reappear in 4.0 copy; `docs/TOOL-DOMAINS.md` is the authoritative mapping.

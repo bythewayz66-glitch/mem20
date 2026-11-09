@@ -1,7 +1,7 @@
 {
   "cross_check": {
-    "ast_domains": 39,
-    "ast_tools": 311,
+    "ast_domains": 129,
+    "ast_tools": 487,
     "only_ast": [],
     "only_live": []
   },
@@ -20,6 +20,7 @@
     "design": 8,
     "dev": 9,
     "dreamz": 4,
+    "edgefleet": 8,
     "filesystem": 10,
     "finance": 8,
     "integration": 3,
@@ -28,6 +29,95 @@
     "kilnz": 4,
     "lie": 10,
     "marketing": 9,
+    "mem20alternativedatabaseplaygroundz": 1,
+    "mem20ambientdevicecompanionz": 1,
+    "mem20ambientteamradioz": 1,
+    "mem20architecturesimulationsandboxz": 1,
+    "mem20assetremixstudioz": 1,
+    "mem20asynccollaborationcapsulesz": 1,
+    "mem20audiovoiceandmusicpipelinez": 4,
+    "mem20autonomousdealdeskz": 3,
+    "mem20autonomousmicrosaasfoundryz": 2,
+    "mem20autonomousrecoverydirectorz": 2,
+    "mem20autonomoussaleslaboratoryz": 2,
+    "mem20autonomoussoftwarefoundryz": 2,
+    "mem20autonomoustrafficcontrollerz": 1,
+    "mem20autonomousworkcellsz": 2,
+    "mem20batteryawareagentschedulerz": 1,
+    "mem20businessmodelsimulatorz": 2,
+    "mem20causalroutingbrainz": 2,
+    "mem20collectivemodelintelligencez": 2,
+    "mem20communitychallengeenginez": 2,
+    "mem20compoundingproductecosystemz": 2,
+    "mem20contextcompressionforgez": 2,
+    "mem20counterfactualmemorysimulatorz": 2,
+    "mem20crdtcollaborationenginez": 1,
+    "mem20crossplatformmicrokernelz": 2,
+    "mem20crossproductloyaltygraphz": 2,
+    "mem20customerdigitaltwinlabz": 2,
+    "mem20customerlifecycleenginez": 2,
+    "mem20datalocalityoptimizerz": 2,
+    "mem20deterministicconfigurationgraphz": 2,
+    "mem20devicecapabilitycompilerz": 2,
+    "mem20dynamicnarrativeenginez": 2,
+    "mem20dynamicphasereplannerz": 1,
+    "mem20dynamicquestrewardcomposerz": 2,
+    "mem20dynamicskillgraphz": 2,
+    "mem20milestoneriskpredictorz": 1,
+    "mem20offerassemblyfabricz": 2,
+    "mem20offergenomeenginez": 2,
+    "mem20opportunityradarz": 2,
+    "mem20outcomesimulationlabz": 2,
+    "mem20personalautomationcanvasz": 2,
+    "mem20personalcognitivesearchz": 2,
+    "mem20personalmodelevolutionz": 2,
+    "mem20personalworkflowtwinz": 2,
+    "mem20pipelinez": 2,
+    "mem20planetarybatchfabricz": 2,
+    "mem20playermotivationtwinz": 2,
+    "mem20predictiverecallenginez": 2,
+    "mem20prioritycollisionresolverz": 1,
+    "mem20productionplanningandtaskorchestrationpipelinez": 2,
+    "mem20productledgrowthsimulatorz": 2,
+    "mem20protocolautodiscoveryenginez": 2,
+    "mem20realitytosoftwarecompilerz": 2,
+    "mem20realtimebusinesstwinz": 2,
+    "mem20realtimeeventautopilotz": 2,
+    "mem20realtimeteampresencez": 2,
+    "mem20realworldimpactrewardsz": 2,
+    "mem20remoteexperimentlabz": 2,
+    "mem20resourceexchangemarketz": 2,
+    "mem20revenueleakhunterz": 2,
+    "mem20rewardforgez": 2,
+    "mem20rigginganimationandmotionpipelinez": 2,
+    "mem20roamingworkloadschedulerz": 2,
+    "mem20runtimecompatibilityenginez": 2,
+    "mem20runtimepromptoptimizerz": 2,
+    "mem20secretslessworkloadidentityz": 2,
+    "mem20securecomputecapsulesz": 2,
+    "mem20selfhealingplansz": 2,
+    "mem20selfoptimizingkernelz": 2,
+    "mem20selftuningresourcegovernorz": 2,
+    "mem20selfz": 2,
+    "mem20sensorymemoryingestz": 2,
+    "mem20servicebundlingenginez": 2,
+    "mem20simz": 2,
+    "mem20skillbasedprogressionbrainz": 2,
+    "mem20skillmemorytransferz": 2,
+    "mem20spatialcommanduniversez": 2,
+    "mem20specialistmodelforgez": 2,
+    "mem20speculativeworkflowenginez": 2,
+    "mem20studioz": 2,
+    "mem20styleguideagentz": 2,
+    "mem20syntheticevaluatorarenaz": 2,
+    "mem20twinz": 2,
+    "mem20uniteconomicsautopilotz": 2,
+    "mem20universalhealthnervoussystemz": 2,
+    "mem20universalintegrationcompilerz": 2,
+    "mem20visualagentblackboardz": 2,
+    "mem20visualdataflowcomposerz": 2,
+    "mem20zerodowntimemigrationbrainz": 1,
+    "mem20zerotouchnodeswarmz": 2,
     "memory": 55,
     "ops": 3,
     "procedural": 6,
@@ -61,6 +151,7 @@
     "design",
     "dev",
     "dreamz",
+    "edgefleet",
     "filesystem",
     "finance",
     "integration",
@@ -69,6 +160,95 @@
     "kilnz",
     "lie",
     "marketing",
+    "mem20alternativedatabaseplaygroundz",
+    "mem20ambientdevicecompanionz",
+    "mem20ambientteamradioz",
+    "mem20architecturesimulationsandboxz",
+    "mem20assetremixstudioz",
+    "mem20asynccollaborationcapsulesz",
+    "mem20audiovoiceandmusicpipelinez",
+    "mem20autonomousdealdeskz",
+    "mem20autonomousmicrosaasfoundryz",
+    "mem20autonomousrecoverydirectorz",
+    "mem20autonomoussaleslaboratoryz",
+    "mem20autonomoussoftwarefoundryz",
+    "mem20autonomoustrafficcontrollerz",
+    "mem20autonomousworkcellsz",
+    "mem20batteryawareagentschedulerz",
+    "mem20businessmodelsimulatorz",
+    "mem20causalroutingbrainz",
+    "mem20collectivemodelintelligencez",
+    "mem20communitychallengeenginez",
+    "mem20compoundingproductecosystemz",
+    "mem20contextcompressionforgez",
+    "mem20counterfactualmemorysimulatorz",
+    "mem20crdtcollaborationenginez",
+    "mem20crossplatformmicrokernelz",
+    "mem20crossproductloyaltygraphz",
+    "mem20customerdigitaltwinlabz",
+    "mem20customerlifecycleenginez",
+    "mem20datalocalityoptimizerz",
+    "mem20deterministicconfigurationgraphz",
+    "mem20devicecapabilitycompilerz",
+    "mem20dynamicnarrativeenginez",
+    "mem20dynamicphasereplannerz",
+    "mem20dynamicquestrewardcomposerz",
+    "mem20dynamicskillgraphz",
+    "mem20milestoneriskpredictorz",
+    "mem20offerassemblyfabricz",
+    "mem20offergenomeenginez",
+    "mem20opportunityradarz",
+    "mem20outcomesimulationlabz",
+    "mem20personalautomationcanvasz",
+    "mem20personalcognitivesearchz",
+    "mem20personalmodelevolutionz",
+    "mem20personalworkflowtwinz",
+    "mem20pipelinez",
+    "mem20planetarybatchfabricz",
+    "mem20playermotivationtwinz",
+    "mem20predictiverecallenginez",
+    "mem20prioritycollisionresolverz",
+    "mem20productionplanningandtaskorchestrationpipelinez",
+    "mem20productledgrowthsimulatorz",
+    "mem20protocolautodiscoveryenginez",
+    "mem20realitytosoftwarecompilerz",
+    "mem20realtimebusinesstwinz",
+    "mem20realtimeeventautopilotz",
+    "mem20realtimeteampresencez",
+    "mem20realworldimpactrewardsz",
+    "mem20remoteexperimentlabz",
+    "mem20resourceexchangemarketz",
+    "mem20revenueleakhunterz",
+    "mem20rewardforgez",
+    "mem20rigginganimationandmotionpipelinez",
+    "mem20roamingworkloadschedulerz",
+    "mem20runtimecompatibilityenginez",
+    "mem20runtimepromptoptimizerz",
+    "mem20secretslessworkloadidentityz",
+    "mem20securecomputecapsulesz",
+    "mem20selfhealingplansz",
+    "mem20selfoptimizingkernelz",
+    "mem20selftuningresourcegovernorz",
+    "mem20selfz",
+    "mem20sensorymemoryingestz",
+    "mem20servicebundlingenginez",
+    "mem20simz",
+    "mem20skillbasedprogressionbrainz",
+    "mem20skillmemorytransferz",
+    "mem20spatialcommanduniversez",
+    "mem20specialistmodelforgez",
+    "mem20speculativeworkflowenginez",
+    "mem20studioz",
+    "mem20styleguideagentz",
+    "mem20syntheticevaluatorarenaz",
+    "mem20twinz",
+    "mem20uniteconomicsautopilotz",
+    "mem20universalhealthnervoussystemz",
+    "mem20universalintegrationcompilerz",
+    "mem20visualagentblackboardz",
+    "mem20visualdataflowcomposerz",
+    "mem20zerodowntimemigrationbrainz",
+    "mem20zerotouchnodeswarmz",
     "memory",
     "ops",
     "procedural",
@@ -87,7 +267,7 @@
     "webscraping",
     "world"
   ],
-  "domains": 39,
+  "domains": 129,
   "domains_detail": [
     {
       "domain": "memory",
@@ -262,6 +442,16 @@
       "tools": 8
     },
     {
+      "domain": "edgefleet",
+      "modules": [
+        "mcp/tools/edgefleet_tools.py"
+      ],
+      "prefixes": [
+        "edgefleet_*"
+      ],
+      "tools": 8
+    },
+    {
       "domain": "finance",
       "modules": [
         "mcp/tools/finance_tools.py"
@@ -412,6 +602,16 @@
       "tools": 4
     },
     {
+      "domain": "mem20audiovoiceandmusicpipelinez",
+      "modules": [
+        "mcp/tools/mem20audiovoiceandmusicpipelinez_tools.py"
+      ],
+      "prefixes": [
+        "audiovoiceandmusicpipelinez_*"
+      ],
+      "tools": 4
+    },
+    {
       "domain": "roadmap",
       "modules": [
         "mcp/roadmap_tools.py"
@@ -442,6 +642,16 @@
       "tools": 3
     },
     {
+      "domain": "mem20autonomousdealdeskz",
+      "modules": [
+        "mcp/tools/mem20autonomousdealdeskz_tools.py"
+      ],
+      "prefixes": [
+        "autonomousdealdeskz_*"
+      ],
+      "tools": 3
+    },
+    {
       "domain": "ops",
       "modules": [
         "mcp/tools/ops_tools.py"
@@ -462,6 +672,746 @@
       "tools": 2
     },
     {
+      "domain": "mem20autonomousmicrosaasfoundryz",
+      "modules": [
+        "mcp/tools/mem20autonomousmicrosaasfoundryz_tools.py"
+      ],
+      "prefixes": [
+        "autonomousmicrosaasfoundryz_*"
+      ],
+      "tools": 2
+    },
+    {
+      "domain": "mem20autonomousrecoverydirectorz",
+      "modules": [
+        "mcp/tools/mem20autonomousrecoverydirectorz_tools.py"
+      ],
+      "prefixes": [
+        "autonomousrecoverydirectorz_*"
+      ],
+      "tools": 2
+    },
+    {
+      "domain": "mem20autonomoussaleslaboratoryz",
+      "modules": [
+        "mcp/tools/mem20autonomoussaleslaboratoryz_tools.py"
+      ],
+      "prefixes": [
+        "autonomoussaleslaboratoryz_*"
+      ],
+      "tools": 2
+    },
+    {
+      "domain": "mem20autonomoussoftwarefoundryz",
+      "modules": [
+        "mcp/tools/mem20autonomoussoftwarefoundryz_tools.py"
+      ],
+      "prefixes": [
+        "autonomoussoftwarefoundryz_*"
+      ],
+      "tools": 2
+    },
+    {
+      "domain": "mem20autonomousworkcellsz",
+      "modules": [
+        "mcp/tools/mem20autonomousworkcellsz_tools.py"
+      ],
+      "prefixes": [
+        "autonomousworkcellsz_*"
+      ],
+      "tools": 2
+    },
+    {
+      "domain": "mem20businessmodelsimulatorz",
+      "modules": [
+        "mcp/tools/mem20businessmodelsimulatorz_tools.py"
+      ],
+      "prefixes": [
+        "businessmodelsimulatorz_*"
+      ],
+      "tools": 2
+    },
+    {
+      "domain": "mem20causalroutingbrainz",
+      "modules": [
+        "mcp/tools/mem20causalroutingbrainz_tools.py"
+      ],
+      "prefixes": [
+        "causalroutingbrainz_*"
+      ],
+      "tools": 2
+    },
+    {
+      "domain": "mem20collectivemodelintelligencez",
+      "modules": [
+        "mcp/tools/mem20collectivemodelintelligencez_tools.py"
+      ],
+      "prefixes": [
+        "collectivemodelintelligencez_*"
+      ],
+      "tools": 2
+    },
+    {
+      "domain": "mem20communitychallengeenginez",
+      "modules": [
+        "mcp/tools/mem20communitychallengeenginez_tools.py"
+      ],
+      "prefixes": [
+        "communitychallengeenginez_*"
+      ],
+      "tools": 2
+    },
+    {
+      "domain": "mem20compoundingproductecosystemz",
+      "modules": [
+        "mcp/tools/mem20compoundingproductecosystemz_tools.py"
+      ],
+      "prefixes": [
+        "compoundingproductecosystemz_*"
+      ],
+      "tools": 2
+    },
+    {
+      "domain": "mem20contextcompressionforgez",
+      "modules": [
+        "mcp/tools/mem20contextcompressionforgez_tools.py"
+      ],
+      "prefixes": [
+        "contextcompressionforgez_*"
+      ],
+      "tools": 2
+    },
+    {
+      "domain": "mem20counterfactualmemorysimulatorz",
+      "modules": [
+        "mcp/tools/mem20counterfactualmemorysimulatorz_tools.py"
+      ],
+      "prefixes": [
+        "counterfactualmemorysimulatorz_*"
+      ],
+      "tools": 2
+    },
+    {
+      "domain": "mem20crossplatformmicrokernelz",
+      "modules": [
+        "mcp/tools/mem20crossplatformmicrokernelz_tools.py"
+      ],
+      "prefixes": [
+        "crossplatformmicrokernelz_*"
+      ],
+      "tools": 2
+    },
+    {
+      "domain": "mem20crossproductloyaltygraphz",
+      "modules": [
+        "mcp/tools/mem20crossproductloyaltygraphz_tools.py"
+      ],
+      "prefixes": [
+        "crossproductloyaltygraphz_*"
+      ],
+      "tools": 2
+    },
+    {
+      "domain": "mem20customerdigitaltwinlabz",
+      "modules": [
+        "mcp/tools/mem20customerdigitaltwinlabz_tools.py"
+      ],
+      "prefixes": [
+        "customerdigitaltwinlabz_*"
+      ],
+      "tools": 2
+    },
+    {
+      "domain": "mem20customerlifecycleenginez",
+      "modules": [
+        "mcp/tools/mem20customerlifecycleenginez_tools.py"
+      ],
+      "prefixes": [
+        "customerlifecycleenginez_*"
+      ],
+      "tools": 2
+    },
+    {
+      "domain": "mem20datalocalityoptimizerz",
+      "modules": [
+        "mcp/tools/mem20datalocalityoptimizerz_tools.py"
+      ],
+      "prefixes": [
+        "datalocalityoptimizerz_*"
+      ],
+      "tools": 2
+    },
+    {
+      "domain": "mem20deterministicconfigurationgraphz",
+      "modules": [
+        "mcp/tools/mem20deterministicconfigurationgraphz_tools.py"
+      ],
+      "prefixes": [
+        "deterministicconfigurationgraphz_*"
+      ],
+      "tools": 2
+    },
+    {
+      "domain": "mem20devicecapabilitycompilerz",
+      "modules": [
+        "mcp/tools/mem20devicecapabilitycompilerz_tools.py"
+      ],
+      "prefixes": [
+        "devicecapabilitycompilerz_*"
+      ],
+      "tools": 2
+    },
+    {
+      "domain": "mem20dynamicnarrativeenginez",
+      "modules": [
+        "mcp/tools/mem20dynamicnarrativeenginez_tools.py"
+      ],
+      "prefixes": [
+        "dynamicnarrativeenginez_*"
+      ],
+      "tools": 2
+    },
+    {
+      "domain": "mem20dynamicquestrewardcomposerz",
+      "modules": [
+        "mcp/tools/mem20dynamicquestrewardcomposerz_tools.py"
+      ],
+      "prefixes": [
+        "dynamicquestrewardcomposerz_*"
+      ],
+      "tools": 2
+    },
+    {
+      "domain": "mem20dynamicskillgraphz",
+      "modules": [
+        "mcp/tools/mem20dynamicskillgraphz_tools.py"
+      ],
+      "prefixes": [
+        "dynamicskillgraphz_*"
+      ],
+      "tools": 2
+    },
+    {
+      "domain": "mem20offerassemblyfabricz",
+      "modules": [
+        "mcp/tools/mem20offerassemblyfabricz_tools.py"
+      ],
+      "prefixes": [
+        "offerassemblyfabricz_*"
+      ],
+      "tools": 2
+    },
+    {
+      "domain": "mem20offergenomeenginez",
+      "modules": [
+        "mcp/tools/mem20offergenomeenginez_tools.py"
+      ],
+      "prefixes": [
+        "offergenomeenginez_*"
+      ],
+      "tools": 2
+    },
+    {
+      "domain": "mem20opportunityradarz",
+      "modules": [
+        "mcp/tools/mem20opportunityradarz_tools.py"
+      ],
+      "prefixes": [
+        "opportunityradarz_*"
+      ],
+      "tools": 2
+    },
+    {
+      "domain": "mem20outcomesimulationlabz",
+      "modules": [
+        "mcp/tools/mem20outcomesimulationlabz_tools.py"
+      ],
+      "prefixes": [
+        "outcomesimulationlabz_*"
+      ],
+      "tools": 2
+    },
+    {
+      "domain": "mem20personalautomationcanvasz",
+      "modules": [
+        "mcp/tools/mem20personalautomationcanvasz_tools.py"
+      ],
+      "prefixes": [
+        "personalautomationcanvasz_*"
+      ],
+      "tools": 2
+    },
+    {
+      "domain": "mem20personalcognitivesearchz",
+      "modules": [
+        "mcp/tools/mem20personalcognitivesearchz_tools.py"
+      ],
+      "prefixes": [
+        "personalcognitivesearchz_*"
+      ],
+      "tools": 2
+    },
+    {
+      "domain": "mem20personalmodelevolutionz",
+      "modules": [
+        "mcp/tools/mem20personalmodelevolutionz_tools.py"
+      ],
+      "prefixes": [
+        "personalmodelevolutionz_*"
+      ],
+      "tools": 2
+    },
+    {
+      "domain": "mem20personalworkflowtwinz",
+      "modules": [
+        "mcp/tools/mem20personalworkflowtwinz_tools.py"
+      ],
+      "prefixes": [
+        "personalworkflowtwinz_*"
+      ],
+      "tools": 2
+    },
+    {
+      "domain": "mem20pipelinez",
+      "modules": [
+        "mcp/tools/mem20pipelinez_tools.py"
+      ],
+      "prefixes": [
+        "pipelinez_*"
+      ],
+      "tools": 2
+    },
+    {
+      "domain": "mem20planetarybatchfabricz",
+      "modules": [
+        "mcp/tools/mem20planetarybatchfabricz_tools.py"
+      ],
+      "prefixes": [
+        "planetarybatchfabricz_*"
+      ],
+      "tools": 2
+    },
+    {
+      "domain": "mem20playermotivationtwinz",
+      "modules": [
+        "mcp/tools/mem20playermotivationtwinz_tools.py"
+      ],
+      "prefixes": [
+        "playermotivationtwinz_*"
+      ],
+      "tools": 2
+    },
+    {
+      "domain": "mem20predictiverecallenginez",
+      "modules": [
+        "mcp/tools/mem20predictiverecallenginez_tools.py"
+      ],
+      "prefixes": [
+        "predictiverecallenginez_*"
+      ],
+      "tools": 2
+    },
+    {
+      "domain": "mem20productionplanningandtaskorchestrationpipelinez",
+      "modules": [
+        "mcp/tools/mem20productionplanningandtaskorchestrationpipelinez_tools.py"
+      ],
+      "prefixes": [
+        "productionplanningandtaskorchestrationpipelinez_*"
+      ],
+      "tools": 2
+    },
+    {
+      "domain": "mem20productledgrowthsimulatorz",
+      "modules": [
+        "mcp/tools/mem20productledgrowthsimulatorz_tools.py"
+      ],
+      "prefixes": [
+        "productledgrowthsimulatorz_*"
+      ],
+      "tools": 2
+    },
+    {
+      "domain": "mem20protocolautodiscoveryenginez",
+      "modules": [
+        "mcp/tools/mem20protocolautodiscoveryenginez_tools.py"
+      ],
+      "prefixes": [
+        "protocolautodiscoveryenginez_*"
+      ],
+      "tools": 2
+    },
+    {
+      "domain": "mem20realitytosoftwarecompilerz",
+      "modules": [
+        "mcp/tools/mem20realitytosoftwarecompilerz_tools.py"
+      ],
+      "prefixes": [
+        "realitytosoftwarecompilerz_*"
+      ],
+      "tools": 2
+    },
+    {
+      "domain": "mem20realtimebusinesstwinz",
+      "modules": [
+        "mcp/tools/mem20realtimebusinesstwinz_tools.py"
+      ],
+      "prefixes": [
+        "realtimebusinesstwinz_*"
+      ],
+      "tools": 2
+    },
+    {
+      "domain": "mem20realtimeeventautopilotz",
+      "modules": [
+        "mcp/tools/mem20realtimeeventautopilotz_tools.py"
+      ],
+      "prefixes": [
+        "realtimeeventautopilotz_*"
+      ],
+      "tools": 2
+    },
+    {
+      "domain": "mem20realtimeteampresencez",
+      "modules": [
+        "mcp/tools/mem20realtimeteampresencez_tools.py"
+      ],
+      "prefixes": [
+        "realtimeteampresencez_*"
+      ],
+      "tools": 2
+    },
+    {
+      "domain": "mem20realworldimpactrewardsz",
+      "modules": [
+        "mcp/tools/mem20realworldimpactrewardsz_tools.py"
+      ],
+      "prefixes": [
+        "realworldimpactrewardsz_*"
+      ],
+      "tools": 2
+    },
+    {
+      "domain": "mem20remoteexperimentlabz",
+      "modules": [
+        "mcp/tools/mem20remoteexperimentlabz_tools.py"
+      ],
+      "prefixes": [
+        "remoteexperimentlabz_*"
+      ],
+      "tools": 2
+    },
+    {
+      "domain": "mem20resourceexchangemarketz",
+      "modules": [
+        "mcp/tools/mem20resourceexchangemarketz_tools.py"
+      ],
+      "prefixes": [
+        "resourceexchangemarketz_*"
+      ],
+      "tools": 2
+    },
+    {
+      "domain": "mem20revenueleakhunterz",
+      "modules": [
+        "mcp/tools/mem20revenueleakhunterz_tools.py"
+      ],
+      "prefixes": [
+        "revenueleakhunterz_*"
+      ],
+      "tools": 2
+    },
+    {
+      "domain": "mem20rewardforgez",
+      "modules": [
+        "mcp/tools/mem20rewardforgez_tools.py"
+      ],
+      "prefixes": [
+        "rewardforgez_*"
+      ],
+      "tools": 2
+    },
+    {
+      "domain": "mem20rigginganimationandmotionpipelinez",
+      "modules": [
+        "mcp/tools/mem20rigginganimationandmotionpipelinez_tools.py"
+      ],
+      "prefixes": [
+        "rigginganimationandmotionpipelinez_*"
+      ],
+      "tools": 2
+    },
+    {
+      "domain": "mem20roamingworkloadschedulerz",
+      "modules": [
+        "mcp/tools/mem20roamingworkloadschedulerz_tools.py"
+      ],
+      "prefixes": [
+        "roamingworkloadschedulerz_*"
+      ],
+      "tools": 2
+    },
+    {
+      "domain": "mem20runtimecompatibilityenginez",
+      "modules": [
+        "mcp/tools/mem20runtimecompatibilityenginez_tools.py"
+      ],
+      "prefixes": [
+        "runtimecompatibilityenginez_*"
+      ],
+      "tools": 2
+    },
+    {
+      "domain": "mem20runtimepromptoptimizerz",
+      "modules": [
+        "mcp/tools/mem20runtimepromptoptimizerz_tools.py"
+      ],
+      "prefixes": [
+        "runtimepromptoptimizerz_*"
+      ],
+      "tools": 2
+    },
+    {
+      "domain": "mem20secretslessworkloadidentityz",
+      "modules": [
+        "mcp/tools/mem20secretslessworkloadidentityz_tools.py"
+      ],
+      "prefixes": [
+        "secretslessworkloadidentityz_*"
+      ],
+      "tools": 2
+    },
+    {
+      "domain": "mem20securecomputecapsulesz",
+      "modules": [
+        "mcp/tools/mem20securecomputecapsulesz_tools.py"
+      ],
+      "prefixes": [
+        "securecomputecapsulesz_*"
+      ],
+      "tools": 2
+    },
+    {
+      "domain": "mem20selfhealingplansz",
+      "modules": [
+        "mcp/tools/mem20selfhealingplansz_tools.py"
+      ],
+      "prefixes": [
+        "selfhealingplansz_*"
+      ],
+      "tools": 2
+    },
+    {
+      "domain": "mem20selfoptimizingkernelz",
+      "modules": [
+        "mcp/tools/mem20selfoptimizingkernelz_tools.py"
+      ],
+      "prefixes": [
+        "selfoptimizingkernelz_*"
+      ],
+      "tools": 2
+    },
+    {
+      "domain": "mem20selftuningresourcegovernorz",
+      "modules": [
+        "mcp/tools/mem20selftuningresourcegovernorz_tools.py"
+      ],
+      "prefixes": [
+        "selftuningresourcegovernorz_*"
+      ],
+      "tools": 2
+    },
+    {
+      "domain": "mem20selfz",
+      "modules": [
+        "mcp/tools/mem20selfz_tools.py"
+      ],
+      "prefixes": [
+        "selfz_*"
+      ],
+      "tools": 2
+    },
+    {
+      "domain": "mem20sensorymemoryingestz",
+      "modules": [
+        "mcp/tools/mem20sensorymemoryingestz_tools.py"
+      ],
+      "prefixes": [
+        "sensorymemoryingestz_*"
+      ],
+      "tools": 2
+    },
+    {
+      "domain": "mem20servicebundlingenginez",
+      "modules": [
+        "mcp/tools/mem20servicebundlingenginez_tools.py"
+      ],
+      "prefixes": [
+        "servicebundlingenginez_*"
+      ],
+      "tools": 2
+    },
+    {
+      "domain": "mem20simz",
+      "modules": [
+        "mcp/tools/mem20simz_tools.py"
+      ],
+      "prefixes": [
+        "simz_*"
+      ],
+      "tools": 2
+    },
+    {
+      "domain": "mem20skillbasedprogressionbrainz",
+      "modules": [
+        "mcp/tools/mem20skillbasedprogressionbrainz_tools.py"
+      ],
+      "prefixes": [
+        "skillbasedprogressionbrainz_*"
+      ],
+      "tools": 2
+    },
+    {
+      "domain": "mem20skillmemorytransferz",
+      "modules": [
+        "mcp/tools/mem20skillmemorytransferz_tools.py"
+      ],
+      "prefixes": [
+        "skillmemorytransferz_*"
+      ],
+      "tools": 2
+    },
+    {
+      "domain": "mem20spatialcommanduniversez",
+      "modules": [
+        "mcp/tools/mem20spatialcommanduniversez_tools.py"
+      ],
+      "prefixes": [
+        "spatialcommanduniversez_*"
+      ],
+      "tools": 2
+    },
+    {
+      "domain": "mem20specialistmodelforgez",
+      "modules": [
+        "mcp/tools/mem20specialistmodelforgez_tools.py"
+      ],
+      "prefixes": [
+        "specialistmodelforgez_*"
+      ],
+      "tools": 2
+    },
+    {
+      "domain": "mem20speculativeworkflowenginez",
+      "modules": [
+        "mcp/tools/mem20speculativeworkflowenginez_tools.py"
+      ],
+      "prefixes": [
+        "speculativeworkflowenginez_*"
+      ],
+      "tools": 2
+    },
+    {
+      "domain": "mem20studioz",
+      "modules": [
+        "mcp/tools/mem20studioz_tools.py"
+      ],
+      "prefixes": [
+        "studioz_*"
+      ],
+      "tools": 2
+    },
+    {
+      "domain": "mem20styleguideagentz",
+      "modules": [
+        "mcp/tools/mem20styleguideagentz_tools.py"
+      ],
+      "prefixes": [
+        "styleguideagentz_*"
+      ],
+      "tools": 2
+    },
+    {
+      "domain": "mem20syntheticevaluatorarenaz",
+      "modules": [
+        "mcp/tools/mem20syntheticevaluatorarenaz_tools.py"
+      ],
+      "prefixes": [
+        "syntheticevaluatorarenaz_*"
+      ],
+      "tools": 2
+    },
+    {
+      "domain": "mem20twinz",
+      "modules": [
+        "mcp/tools/mem20twinz_tools.py"
+      ],
+      "prefixes": [
+        "twinz_*"
+      ],
+      "tools": 2
+    },
+    {
+      "domain": "mem20uniteconomicsautopilotz",
+      "modules": [
+        "mcp/tools/mem20uniteconomicsautopilotz_tools.py"
+      ],
+      "prefixes": [
+        "uniteconomicsautopilotz_*"
+      ],
+      "tools": 2
+    },
+    {
+      "domain": "mem20universalhealthnervoussystemz",
+      "modules": [
+        "mcp/tools/mem20universalhealthnervoussystemz_tools.py"
+      ],
+      "prefixes": [
+        "universalhealthnervoussystemz_*"
+      ],
+      "tools": 2
+    },
+    {
+      "domain": "mem20universalintegrationcompilerz",
+      "modules": [
+        "mcp/tools/mem20universalintegrationcompilerz_tools.py"
+      ],
+      "prefixes": [
+        "universalintegrationcompilerz_*"
+      ],
+      "tools": 2
+    },
+    {
+      "domain": "mem20visualagentblackboardz",
+      "modules": [
+        "mcp/tools/mem20visualagentblackboardz_tools.py"
+      ],
+      "prefixes": [
+        "visualagentblackboardz_*"
+      ],
+      "tools": 2
+    },
+    {
+      "domain": "mem20visualdataflowcomposerz",
+      "modules": [
+        "mcp/tools/mem20visualdataflowcomposerz_tools.py"
+      ],
+      "prefixes": [
+        "visualdataflowcomposerz_*"
+      ],
+      "tools": 2
+    },
+    {
+      "domain": "mem20zerotouchnodeswarmz",
+      "modules": [
+        "mcp/tools/mem20zerotouchnodeswarmz_tools.py"
+      ],
+      "prefixes": [
+        "zerotouchnodeswarmz_*"
+      ],
+      "tools": 2
+    },
+    {
       "domain": "toolchest",
       "modules": [
         "mcp/tools/toolchest_tools.py"
@@ -470,6 +1420,136 @@
         "toolchest_*"
       ],
       "tools": 2
+    },
+    {
+      "domain": "mem20alternativedatabaseplaygroundz",
+      "modules": [
+        "mcp/tools/mem20alternativedatabaseplaygroundz_tools.py"
+      ],
+      "prefixes": [
+        "alternativedatabaseplaygroundz_*"
+      ],
+      "tools": 1
+    },
+    {
+      "domain": "mem20ambientdevicecompanionz",
+      "modules": [
+        "mcp/tools/mem20ambientdevicecompanionz_tools.py"
+      ],
+      "prefixes": [
+        "ambientdevicecompanionz_*"
+      ],
+      "tools": 1
+    },
+    {
+      "domain": "mem20ambientteamradioz",
+      "modules": [
+        "mcp/tools/mem20ambientteamradioz_tools.py"
+      ],
+      "prefixes": [
+        "ambientteamradioz_*"
+      ],
+      "tools": 1
+    },
+    {
+      "domain": "mem20architecturesimulationsandboxz",
+      "modules": [
+        "mcp/tools/mem20architecturesimulationsandboxz_tools.py"
+      ],
+      "prefixes": [
+        "architecturesimulationsandboxz_*"
+      ],
+      "tools": 1
+    },
+    {
+      "domain": "mem20assetremixstudioz",
+      "modules": [
+        "mcp/tools/mem20assetremixstudioz_tools.py"
+      ],
+      "prefixes": [
+        "assetremixstudioz_*"
+      ],
+      "tools": 1
+    },
+    {
+      "domain": "mem20asynccollaborationcapsulesz",
+      "modules": [
+        "mcp/tools/mem20asynccollaborationcapsulesz_tools.py"
+      ],
+      "prefixes": [
+        "asynccollaborationcapsulesz_*"
+      ],
+      "tools": 1
+    },
+    {
+      "domain": "mem20autonomoustrafficcontrollerz",
+      "modules": [
+        "mcp/tools/mem20autonomoustrafficcontrollerz_tools.py"
+      ],
+      "prefixes": [
+        "autonomoustrafficcontrollerz_*"
+      ],
+      "tools": 1
+    },
+    {
+      "domain": "mem20batteryawareagentschedulerz",
+      "modules": [
+        "mcp/tools/mem20batteryawareagentschedulerz_tools.py"
+      ],
+      "prefixes": [
+        "batteryawareagentschedulerz_*"
+      ],
+      "tools": 1
+    },
+    {
+      "domain": "mem20crdtcollaborationenginez",
+      "modules": [
+        "mcp/tools/mem20crdtcollaborationenginez_tools.py"
+      ],
+      "prefixes": [
+        "crdtcollaborationenginez_*"
+      ],
+      "tools": 1
+    },
+    {
+      "domain": "mem20dynamicphasereplannerz",
+      "modules": [
+        "mcp/tools/mem20dynamicphasereplannerz_tools.py"
+      ],
+      "prefixes": [
+        "dynamicphasereplannerz_*"
+      ],
+      "tools": 1
+    },
+    {
+      "domain": "mem20milestoneriskpredictorz",
+      "modules": [
+        "mcp/tools/mem20milestoneriskpredictorz_tools.py"
+      ],
+      "prefixes": [
+        "milestoneriskpredictorz_*"
+      ],
+      "tools": 1
+    },
+    {
+      "domain": "mem20prioritycollisionresolverz",
+      "modules": [
+        "mcp/tools/mem20prioritycollisionresolverz_tools.py"
+      ],
+      "prefixes": [
+        "prioritycollisionresolverz_*"
+      ],
+      "tools": 1
+    },
+    {
+      "domain": "mem20zerodowntimemigrationbrainz",
+      "modules": [
+        "mcp/tools/mem20zerodowntimemigrationbrainz_tools.py"
+      ],
+      "prefixes": [
+        "zerodowntimemigrationbrainz_*"
+      ],
+      "tools": 1
     },
     {
       "domain": "rm052",
@@ -494,7 +1574,7 @@
   ],
   "schema": 1,
   "source": "tools/list via launcher.py; domains and modules from the AST catalog generated by web/scripts/extract-tools.py",
-  "tools": 311,
+  "tools": 487,
   "unwired_tools": [
     "gateway_admission",
     "gateway_provenance",

@@ -79,7 +79,7 @@ Both live at `/sites/b5d558be-…`, verified by fetching back and re-grepping th
 
 ## 5. Standing corrections carried forward
 
-- **House numbers:** 311 tools / 39 domains (257/26, 268/26 and 270/27 are retired). TAM $1.28B / SAM $282M / SOM $1.68M; blended ACV $14,000.
+- **House numbers:** 487 tools / 129 domains (257/26, 268/26 and 270/27 are retired). TAM $1.28B / SAM $282M / SOM $1.68M; blended ACV $14,000.
 - **Directly measured this run:** the live JSON-RPC `tools/list` surface is **311** tools across **39** domains, cross-checked against the AST catalog with 0 symmetric difference (`docs/surface.json`, `docs/TOOL-DOMAINS.md`). The live surface is authoritative.
 - **The retired `jaysonai.online` zone** is NXDOMAIN on Cloudflare **and** Google DoH (Status 3) with the zone's own SOA in Authority while the apex returns Status 0 — a **missing record, not propagation**. The zone is retired; no record is to be created.
 - **The retired publish host** is unreachable: errno 113 on 2222/9900, timeout on 22/80/443. The publish gate does not answer. Unreachable from this sandbox ≠ powered off.

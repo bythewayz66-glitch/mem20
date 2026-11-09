@@ -16,6 +16,7 @@ dependencies = []
 mem20enginez = "mem20enginez.runtime:main"
 
 [tool.setuptools]
+package-dir = {"mem20enginez" = "."}
 packages = ["mem20enginez", "mem20enginez.mem20enginez"]
 
 [tool.setuptools.package-data]

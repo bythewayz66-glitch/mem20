@@ -128,13 +128,13 @@ client = Mem20.client
 puts client.transport.initialize_session.protocol_version  # "2025-06-18"
 puts client.tool_names.size                                 # 311
 puts client.tools.dig("tools").size                        # 311
-puts Mem20::Surface.summary                                 # 311 tools across 39 domains
+puts Mem20::Surface.summary                                 # 487 tools across 129 domains
 puts client.healthy?                                       # true when :8080/health answers 200
 
 client.close
 ```
 
-The live surface is **311 tools across 39 domains**. `docs/surface.json` is the
+The live surface is **487 tools across 129 domains**. `docs/surface.json` is the
 authoritative manifest: `scripts/surface_manifest.py` generates it from a live
 `tools/list` response and cross-checks it against the AST catalog in
 `web/src/data/tools.json`. `Mem20::Surface` encodes those numbers and

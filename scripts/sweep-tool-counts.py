@@ -10,7 +10,7 @@ generated from the live JSON-RPC `tools/list` response by
 
     python3 scripts/surface_manifest.py --write
 
-At v3.1.2 that file declares 311 tools across 39 domains.
+At v3.1.2 that file declares 487 tools across 129 domains.
 
 # Retired bands this sweep rewrites
 

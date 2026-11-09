@@ -26,20 +26,36 @@
     "note": "stamps rows appended to the reconciliation ledger. Fixed values, not clock reads, so regenerating the model is idempotent and the CI drift check stays green. Run 3 re-runs the model with the branch rebased onto main 45445f48."
   },
   "tool_surface": {
-    "tools": 311,
-    "domains": 39,
-    "previous_tools": 257,
-    "previous_domains": 26,
-    "authority": "live JSON-RPC tools/list, generated into docs/surface.json by scripts/surface_manifest.py; CI .github/workflows/mcp-verify.yml pins 311; docs/TOOL-DOMAINS.md carries 311/39",
+    "tools": 487,
+    "domains": 129,
+    "previous_tools": 311,
+    "previous_domains": 39,
+    "authority": "live JSON-RPC tools/list, generated into docs/surface.json by scripts/surface_manifest.py; CI .github/workflows/mcp-verify.yml pins 487; docs/TOOL-DOMAINS.md carries 487/129",
     "asserted_on_every_run": true,
     "owner_of_migration": "Webpage Developer (P1)",
-    "note": "270/27 and 257/26 are retired for the finance model. They survive only as stated prior values in the corrections register."
+    "note": "311/39 and 257/26 are retired for the finance model. They survive only as stated prior values in the corrections register."
   },
   "tier_ladder": [
-    {"tier": "Team", "acv_usd": 6000, "share": 0.72},
-    {"tier": "Business", "acv_usd": 18000, "share": 0.12},
-    {"tier": "Scale", "acv_usd": 36000, "share": 0.12},
-    {"tier": "Enterprise", "acv_usd": 80000, "share": 0.04}
+    {
+      "tier": "Team",
+      "acv_usd": 6000,
+      "share": 0.72
+    },
+    {
+      "tier": "Business",
+      "acv_usd": 18000,
+      "share": 0.12
+    },
+    {
+      "tier": "Scale",
+      "acv_usd": 36000,
+      "share": 0.12
+    },
+    {
+      "tier": "Enterprise",
+      "acv_usd": 80000,
+      "share": 0.04
+    }
   ],
   "unit_cost_and_funnel": {
     "hosting_cost_per_account_usd": 1880,
@@ -48,7 +64,11 @@
     "self_serve_share": 0.45,
     "sales_led_share": 0.55,
     "recognition_factor": 0.55,
-    "ramp_accounts": [40, 80, 120]
+    "ramp_accounts": [
+      40,
+      80,
+      120
+    ]
   },
   "repo_state": {
     "full_name": "bythewayz66-glitch/mem20",
@@ -87,7 +107,7 @@
     "outbound_touches_base": 32,
     "assist_touches_per_signal": 4,
     "outbound_touches_floor": 8,
-    "close_rate_base": 0.40,
+    "close_rate_base": 0.4,
     "close_rate_per_signal": 0.005,
     "cost_per_touch_usd": 210,
     "stars_for_inbound": 100,

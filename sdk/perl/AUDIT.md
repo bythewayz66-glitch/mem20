@@ -1,17 +1,17 @@
 # Perl SDK surface audit — mem20 3.1.2 @ main (2026-11-07)
 
-Scope: `sdk/perl/` only. Target surface **311 tools across 39 domains**.
+Scope: `sdk/perl/` only. Target surface **487 tools across 129 domains**.
 
 Everything below was observed by running the server, not by reading its docs.
 Reproduce with the commands quoted in each section.
 
-## 1. The surface: 311 tools, 39 domains
+## 1. The surface: 487 tools, 129 domains
 
 The surface figure is read from `docs/surface.json`, which
 `scripts/surface_manifest.py` generates from a live `tools/list` response and
 cross-checks against the AST catalog in `web/src/data/tools.json` -- the two
 collections must be identical or the generator refuses to emit. Both land on
-**311 tools across 39 domains**.
+**487 tools across 129 domains**.
 
 ```
 initialize -> {"protocolVersion":"2025-06-18","serverInfo":{"name":"mem20-mcp","version":""}}
@@ -147,7 +147,7 @@ stored one fact
 recall returned:
 [2026-10-27T02:02:51] project (pri=normal) [observed]
    prod runs build 4127
-surface: 311 tools (SDK compiled for 311), 39 domains, ok=1
+surface: 487 tools (SDK compiled for 311), 129 domains, ok=1
 ```
 
 The live suite asserts the 311 count, a `memory_store`->`memory_recall` round

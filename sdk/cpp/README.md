@@ -7,12 +7,12 @@
 | Version | 0.1.0 |
 | Protocol | JSON-RPC 2.0 / stdio, MCP `2025-06-18` |
 | Server baseline | 3.1.2 |
-| Tool surface | **311 tools across 39 domains** |
+| Tool surface | **487 tools across 129 domains** |
 | Partition safety | `GroundedMemory` vs `SimulatedMemory` types |
 
 ## Tool surface
 
-The server this release was verified against advertises **311 tools across 39
+The server this release was verified against advertises **487 tools across 39
 domains** over `tools/list`. That figure is stated in exactly one place in code
 — `include/mem20/surface.hpp` — where `static_assert`s pin it, and it is
 cross-checked against `docs/surface.json`, which `scripts/surface_manifest.py`
@@ -25,7 +25,7 @@ to emit).
 
 mem20::surface::kToolCount;    // 311
 mem20::surface::kDomainCount;  // 39
-mem20::surface::summary();     // "311 tools across 39 domains"
+mem20::surface::summary();     // "487 tools across 129 domains"
 ```
 
 Two guards keep it honest: `surface_docs` greps this README and

@@ -118,7 +118,7 @@ fails immediately and leaves the previous good value in place.
 
 ## Calling tools
 
-Three routes to the same **311-tool surface across 39 domains** (verified live
+Three routes to the same **487-tool surface across 129 domains** (verified live
 against mem20 3.1.2 — see `AUDIT.md`):
 
 ```perl
@@ -135,7 +135,7 @@ $client->memory_status;
 $client->cog_plan(goal => 'ship the 3.0 baseline');
 ```
 
-`verify_surface` compares the live `tools/list` count with the 311/39 this
+`verify_surface` compares the live `tools/list` count with the 487/129 this
 release was built and tested against:
 
 ```perl

@@ -21,13 +21,13 @@ our $PROTOCOL_VERSION = '2025-06-18';
 # web/src/data/tools.json -- the two collections must be identical or the
 # generator refuses to emit. The domain table is in docs/TOOL-DOMAINS.md.
 #
-# Bucketing the 311 tool NAMES by their first `_` component yields more buckets
-# than there are domains, which is why the domain figure must come from
+# Bucketing tool NAMES by their first `_` component yields more buckets than
+# there are domains, which is why the domain figure must come from
 # registration and never from string-splitting tool names.
 #
-# Verified by a live tools/list round trip; see sdk/perl/AUDIT.md.
-our $SURFACE_TOOL_COUNT   = 311;
-our $SURFACE_DOMAIN_COUNT = 39;
+# Verified by a live tools/list round trip against the full installed server.
+our $SURFACE_TOOL_COUNT   = 487;
+our $SURFACE_DOMAIN_COUNT = 129;
 
 1;
 __END__
@@ -52,10 +52,10 @@ version independently.
 in the C<initialize> handshake.
 
 =item C<$Mem20::Version::SURFACE_TOOL_COUNT> - tools the SDK is compiled
-against (311), used by C<< Mem20::Client->verify_surface >>.
+against (487), used by C<< Mem20::Client->verify_surface >>.
 
 =item C<$Mem20::Version::SURFACE_DOMAIN_COUNT> - domain modules the server
-registers (39). This is a registration count, B<not> a count of tool-name
+registers (129). This is a registration count, B<not> a count of tool-name
 prefixes; those are two different numbers.
 
 =back

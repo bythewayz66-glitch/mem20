@@ -12,13 +12,13 @@ module Mem20
   # `scripts/surface_manifest.py` generates from a live `tools/list` response
   # and cross-checks against the AST catalog in `web/src/data/tools.json` --
   # the two collections must be identical or the generator refuses to emit.
-  # Both land on 311 tools across 39 domains.
+  # Both land on 487 tools across 129 domains.
   #
   # Earlier revisions published three different values (257 / 268 / 270) for
   # the same surface because the domain half and the total were conflated.
   # `job_status` / `job_wait` used to be counted as transport "infra" outside
   # any domain; in the current taxonomy `job` is a domain of its own, so every
-  # tool belongs to exactly one of the 39 domains and there is no separate
+  # tool belongs to exactly one of the 129 domains and there is no separate
   # infra layer.
   module Surface
     # Number of domain mixin modules that register at least one tool.

@@ -41,7 +41,7 @@ documentation. Where an older number was wrong, the correction is noted.
 
 | Metric | Verified value | How measured |
 |---|---|---|
-| MCP tools | **311** | live JSON-RPC `tools/list` (generated in `docs/surface.json`) |
+| MCP tools | **487** | live JSON-RPC `tools/list` (generated in `docs/surface.json`) |
 | MCP tool modules | **44** | `ls mcp/tools/*.py \| wc -l` |
 | Subsystems (sitemap) | **340** | `.sitemap/sitemap.json` → `totals.subsystems` |
 | Subsystem directories | **297** | `ls -d mem20*/` |
@@ -212,7 +212,7 @@ mem20/
 ├── mcp/                  # MCP server — a SCRIPT DIR, not a package
 │   ├── mcp_server.py     # entry point (from server import main)
 │   ├── server.py         # JSON-RPC dispatch, health endpoint
-│   └── tools/            # 44 modules; 311 tools with the root mixins
+│   └── tools/            # 44 modules; 487 tools with the root mixins
 ├── mem20*/               # ~297 independently packaged subsystems
 ├── benchmarks/
 │   └── corpora/          # v2 (2,000 records) and v3 (122,178 records)

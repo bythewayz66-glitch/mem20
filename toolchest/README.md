@@ -7,7 +7,7 @@ PATH, and the mem20 native subsystems under the checkout root — and produces o
 machine-readable manifest: `inventory.json`.
 
 It is a **registry, not a guess**: MCP entries come from actually instantiating
-`Mem20MCPServer` (311 real tools), CLI entries are binned binaries that are
+`Mem20MCPServer` (487 real tools), CLI entries are binned binaries that are
 classified (`elf | script | symlink | broken-symlink`), and subsystem entries
 record declared vs. actually-installed state per pyproject, with real
 `importlib` import checks and on-disk PATH verification.

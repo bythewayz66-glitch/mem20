@@ -14,7 +14,7 @@ RSpec.describe Mem20::Surface do
 
   it "counts the job tools as a domain, not as infra" do
     # `job_status` / `job_wait` used to be transport "infra" outside any domain;
-    # in the current taxonomy `job` is one of the 39 domains, so nothing is
+    # in the current taxonomy `job` is one of the 129 domains, so nothing is
     # registered outside a domain.
     expect(described_class::INFRA_TOOLS).to eq([])
   end
@@ -24,7 +24,7 @@ RSpec.describe Mem20::Surface do
   end
 
   it "summarises the surface so a reader cannot mistake a subtotal for the total" do
-    expect(described_class.summary).to eq("311 tools across 39 domains")
+    expect(described_class.summary).to eq("487 tools across 129 domains")
   end
 
   # The regression this guards: the README, docs/USAGE.md, docs/EVIDENCE.md and

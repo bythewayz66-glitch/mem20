@@ -22,7 +22,7 @@ sentence-transformers>=2.2.0
 # on a clean clone (httpx: mem20agentz, mem20corez, mem20googlez, mem20gamez;
 # PyYAML: mem20crewz, mem20mktz, mem20owebz, mem20rpgz, mem20unitiz, mem20yetiz;
 # stripe: mem20shopz).
-httpx>=0.28
+httpx>=0.28.1
 PyYAML>=6.0.3
 stripe>=16.1
 

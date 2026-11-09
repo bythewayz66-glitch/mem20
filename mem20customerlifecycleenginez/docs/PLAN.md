@@ -7,7 +7,7 @@ Customer lifecycle engine (lifecycle_stage, transition, retention_probability, l
 - `mem20simz` — economic/LTV context
 - `mem20autonomoussaleslaboratoryz` — pipeline/segment signal
 - `mem20crossproductloyaltygraphz` — loyalty/upsell context
-- `mem20demandforecastandcapacitybrainz` — demand signal
+- `mem20causalroutingbrainz` — demand signal
 - `mem20eventstreamsuperhighwayz` — lifecycle event stream
 - `mem20acquisitionandpartnershipscoutz` — growth/partnership fit
 

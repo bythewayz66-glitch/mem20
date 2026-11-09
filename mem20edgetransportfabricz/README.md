@@ -3,7 +3,7 @@
 **Outcome:** move bounded data and commands across intermittently connected nodes.  
 **Breakthrough:** devices and remote sites remain integrated even with poor connectivity.
 
-This subsystem is a real, first-class transport control plane: typed domain logic (legacy-compatible primitives + advanced fabric model), a durable SQLite WAL state plane, a service that owns topology/admission/routing/reservations/reroute, cross-subsystem judgements from six **unique** peers (a different set from `mem20edgefleetbrainz` #300 and `mem20edgetocloudintelligencecontinuumz` #301), a CLI, a JSON HTTP API, a served operator cockpit, and a `docs/app` monitor.
+This subsystem is a real, first-class transport control plane: typed domain logic (legacy-compatible primitives + advanced fabric model), a durable SQLite WAL state plane, a service that owns topology/admission/routing/reservations/reroute, cross-subsystem judgements from six **unique** peers (a different set from `mem20causalroutingbrainz` #300 and `mem20edgetocloudintelligencecontinuumz` #301), a CLI, a JSON HTTP API, a served operator cockpit, and a `docs/app` monitor.
 
 ## What it does
 

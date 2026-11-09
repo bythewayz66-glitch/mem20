@@ -4,7 +4,7 @@ import pathlib,sys
 from typing import Mapping,Sequence
 __all__=["swarm_workers","capability_routing","work_events","cell_containment","focus_priority","capacity_forecast","probe"]
 _REPO_ROOT=pathlib.Path(__file__).resolve().parents[2]
-_PROJECTS=("mem20zerotouchnodeswarmz","mem20capabilitymarketplacez","mem20eventstreamsuperhighwayz","mem20faultcontainmentcellsz","mem20mixedinitiativefocusenginez","mem20demandforecastandcapacitybrainz")
+_PROJECTS=("mem20zerotouchnodeswarmz","mem20capabilitymarketplacez","mem20eventstreamsuperhighwayz","mem20faultcontainmentcellsz","mem20mixedinitiativefocusenginez","mem20causalroutingbrainz")
 def _bootstrap():
     for name in reversed(_PROJECTS):
         p=str(_REPO_ROOT/name)
@@ -60,12 +60,12 @@ def focus_priority(context:Mapping)->dict:
 
 def capacity_forecast(observations:Sequence[float], capacity:int=4)->dict:
     try:
-        from mem20demandforecastandcapacitybrainz.domain import DemandForecastAndCapacityBrain
+        from mem20causalroutingbrainz.domain import DemandForecastAndCapacityBrain
         b=DemandForecastAndCapacityBrain(alpha=0.3,window=max(5,len(observations) or 5))
         for v in (observations or [2,3,3,4,3]): b.observe(v)
         fc=b.forecast(steps=1); headroom=b.capacity_for(capacity)
-        return {"ok":True,"subsystem":"mem20demandforecastandcapacitybrainz","point":fc.get("point"),"headroom":headroom}
-    except Exception as exc: return {"ok":False,"subsystem":"mem20demandforecastandcapacitybrainz","error":f"{type(exc).__name__}: {exc}"}
+        return {"ok":True,"subsystem":"mem20causalroutingbrainz","point":fc.get("point"),"headroom":headroom}
+    except Exception as exc: return {"ok":False,"subsystem":"mem20causalroutingbrainz","error":f"{type(exc).__name__}: {exc}"}
 
 def probe()->dict:
     checks={"swarm_workers":swarm_workers({"id":"t1"}),"capability_routing":capability_routing("task-1",["cpu","io"]),"work_events":work_events("work.enqueued",{"task":"t1"}),"cell_containment":cell_containment("cell-a"),"focus_priority":focus_priority({"priority":1,"distractions":0}),"capacity_forecast":capacity_forecast([2,3,4,3])}

@@ -1,6 +1,6 @@
 """Cross-subsystem peer adapters for the edge transport fabric.
 
-Six UNIQUE peers (different set from mem20edgefleetbrainz #300 and
+Six UNIQUE peers (different set from mem20causalroutingbrainz #300 and
 mem20edgetocloudintelligencecontinuumz #301), chosen for transport/fabric
 concerns. All calls are real, fail-open (errors reported, never hidden), and
 exercised on covered lines.

@@ -3,7 +3,7 @@
 First-class mem20 subsystem for customer lifecycle modeling (stages, transitions, retention probability, lifetime value, segmentation) with **6 subsystem-specific peers**, a SQLite WAL event runtime, CLI, JSON HTTP API, a served web cockpit, docs/app monitor, and real MCP tools. Core public API is preserved.
 
 ## Peers (6, job-fitting)
-`mem20simz` (economic/LTV context), `mem20autonomoussaleslaboratoryz` (pipeline/segment signal), `mem20crossproductloyaltygraphz` (loyalty/upsell context), `mem20demandforecastandcapacitybrainz` (demand signal), `mem20eventstreamsuperhighwayz` (lifecycle event stream), `mem20acquisitionandpartnershipscoutz` (growth/partnership fit). Each adapter calls real APIs and returns computed results; failures surface as `{"ok": false, "error": "..."}` (reported, not swallowed).
+`mem20simz` (economic/LTV context), `mem20autonomoussaleslaboratoryz` (pipeline/segment signal), `mem20crossproductloyaltygraphz` (loyalty/upsell context), `mem20causalroutingbrainz` (demand signal), `mem20eventstreamsuperhighwayz` (lifecycle event stream), `mem20acquisitionandpartnershipscoutz` (growth/partnership fit). Each adapter calls real APIs and returns computed results; failures surface as `{"ok": false, "error": "..."}` (reported, not swallowed).
 
 ## Python API (runnable)
 ```python

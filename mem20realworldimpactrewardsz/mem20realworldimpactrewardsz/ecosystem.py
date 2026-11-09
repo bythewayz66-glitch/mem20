@@ -4,7 +4,7 @@ import pathlib,sys
 from typing import Mapping,Sequence
 __all__=["quest_rewards","loyalty_impact","lifecycle_value","impact_events","reward_routing","impact_forecast","probe"]
 _REPO_ROOT=pathlib.Path(__file__).resolve().parents[2]
-_PROJECTS=("mem20dynamicquestrewardcomposerz","mem20crossproductloyaltygraphz","mem20customerlifecycleenginez","mem20eventstreamsuperhighwayz","mem20capabilitymarketplacez","mem20demandforecastandcapacitybrainz")
+_PROJECTS=("mem20dynamicquestrewardcomposerz","mem20crossproductloyaltygraphz","mem20customerlifecycleenginez","mem20eventstreamsuperhighwayz","mem20capabilitymarketplacez","mem20causalroutingbrainz")
 def _bootstrap():
     for name in reversed(_PROJECTS):
         p=str(_REPO_ROOT/name)
@@ -42,11 +42,11 @@ def reward_routing(key:str,caps:Sequence[str])->dict:
     except Exception as exc: return {"ok":False,"subsystem":"mem20capabilitymarketplacez","error":f"{type(exc).__name__}: {exc}"}
 def impact_forecast(obs:Sequence[float])->dict:
     try:
-        from mem20demandforecastandcapacitybrainz.domain import DemandForecastAndCapacityBrain
+        from mem20causalroutingbrainz.domain import DemandForecastAndCapacityBrain
         b=DemandForecastAndCapacityBrain(alpha=0.3,window=max(5,len(obs) or 5))
         for v in (obs or [1,2,2,3]): b.observe(v)
-        return {"ok":True,"subsystem":"mem20demandforecastandcapacitybrainz","point":b.forecast(1).get("point")}
-    except Exception as exc: return {"ok":False,"subsystem":"mem20demandforecastandcapacitybrainz","error":f"{type(exc).__name__}: {exc}"}
+        return {"ok":True,"subsystem":"mem20causalroutingbrainz","point":b.forecast(1).get("point")}
+    except Exception as exc: return {"ok":False,"subsystem":"mem20causalroutingbrainz","error":f"{type(exc).__name__}: {exc}"}
 def probe()->dict:
     checks={"quest_rewards":quest_rewards(1.0),"loyalty_impact":loyalty_impact("u",1.0),"lifecycle_value":lifecycle_value(),"impact_events":impact_events("i",{}),"reward_routing":reward_routing("k",["r"]),"impact_forecast":impact_forecast([1,2,3])}
     return {"ok":all(v.get("ok") for v in checks.values()),"checks":checks}

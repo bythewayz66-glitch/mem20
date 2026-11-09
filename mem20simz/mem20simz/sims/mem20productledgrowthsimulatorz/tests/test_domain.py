@@ -11,7 +11,7 @@ def test_eco_biz(): r=_eco().business_economics(100,10); assert r["ok"] and r["s
 def test_eco_lifecycle(): r=_eco().lifecycle_retention(); assert r["ok"] and r["subsystem"]=="mem20customerlifecycleenginez"
 def test_eco_pipeline(): r=_eco().pipeline_conversion(); assert r["ok"] and r["subsystem"]=="mem20autonomoussaleslaboratoryz"
 def test_eco_loyalty(): r=_eco().loyalty_expansion(); assert r["ok"] and r["subsystem"]=="mem20crossproductloyaltygraphz"
-def test_eco_forecast(): r=_eco().growth_forecast([100,120]); assert r["ok"] and r["subsystem"]=="mem20demandforecastandcapacitybrainz"
+def test_eco_forecast(): r=_eco().growth_forecast([100,120]); assert r["ok"] and r["subsystem"]=="mem20causalroutingbrainz"
 def test_eco_events(): r=_eco().funnel_events("f",{}); assert r["ok"] and r["subsystem"]=="mem20eventstreamsuperhighwayz"
 def test_report_and_probe():
     m=_m(); rep=m.plg_report(); assert rep["viral_k"]==0.2 and len(rep["peers"])==6

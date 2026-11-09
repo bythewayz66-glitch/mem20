@@ -8,7 +8,7 @@ def test_load(): assert _m().node_load([{"id":"n","load":3}])["n"]==3
 def test_health(): h=_m().scheduler_health([{"load":1},{"load":2}]); assert h["total_load"]==3
 def test_eco_swarm(): r=_eco().node_swarm(); assert r["ok"] and r["subsystem"]=="mem20zerotouchnodeswarmz"
 def test_eco_workcell(): r=_eco().workcell_queue({"id":"w"}); assert r["ok"] and r["subsystem"]=="mem20autonomousworkcellsz"
-def test_eco_forecast(): r=_eco().capacity_forecast([1,2]); assert r["ok"] and r["subsystem"]=="mem20demandforecastandcapacitybrainz"
+def test_eco_forecast(): r=_eco().capacity_forecast([1,2]); assert r["ok"] and r["subsystem"]=="mem20causalroutingbrainz"
 def test_eco_events(): r=_eco().schedule_events("s",{}); assert r["ok"] and r["subsystem"]=="mem20eventstreamsuperhighwayz"
 def test_eco_contain(): r=_eco().migration_containment("w"); assert r["ok"] and r["subsystem"]=="mem20faultcontainmentcellsz"
 def test_eco_route(): r=_eco().scheduler_routing("k",["s"]); assert r["ok"] and r["subsystem"]=="mem20capabilitymarketplacez"

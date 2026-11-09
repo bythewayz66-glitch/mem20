@@ -57,7 +57,7 @@
   were byte-identical to the other agent's staged work, so no content was lost
   or reverted.
 
-- 2026-11-07: Building #300 (`mem20edgefleetbrainz`) exposed a real defect in
+- 2026-11-07: Building #300 (`mem20causalroutingbrainz`) exposed a real defect in
   `mem20energyawarecomputemigrationz.greenest_node`: it built `(cost, node)`
   tuples and called `sort()`, so two identical machines with equal cost tried to
   compare the node dicts and raised `TypeError: '<' not supported between

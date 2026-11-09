@@ -11,7 +11,7 @@ def test_eco_stream(): r=_eco().stream_compressed("x",{}); assert r["ok"] and r[
 def test_eco_summary(): r=_eco().summary_quality("x"); assert r["ok"] and r["subsystem"]=="mem20loreragcontentgeneratorz"
 def test_eco_focus(): r=_eco().focus_retention({"priority":1,"distractions":0}); assert r["ok"] and r["subsystem"]=="mem20mixedinitiativefocusenginez"
 def test_eco_strategy(): r=_eco().strategy_routing("k",["e"]); assert r["ok"] and r["subsystem"]=="mem20capabilitymarketplacez"
-def test_eco_budget(): r=_eco().budget_forecast([200,300],1000); assert r["ok"] and r["subsystem"]=="mem20demandforecastandcapacitybrainz"
+def test_eco_budget(): r=_eco().budget_forecast([200,300],1000); assert r["ok"] and r["subsystem"]=="mem20causalroutingbrainz"
 def test_eco_keep(): r=_eco().keep_routing({"r":1},{"r":1}); assert r["ok"] and r["subsystem"]=="mem20causalroutingbrainz"
 def test_report_and_probe():
     m=_m(); rep=m.compression_report(); assert rep["compression_ratio"]<=1 and len(rep["peers"])==6

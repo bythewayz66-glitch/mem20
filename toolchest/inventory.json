@@ -3447,20 +3447,20 @@
       }
     },
     {
-      "id": "cli:mem20demandforecastandcapacitybrainz",
+      "id": "cli:mem20causalroutingbrainz",
       "kind": "cli",
-      "name": "mem20demandforecastandcapacitybrainz",
+      "name": "mem20causalroutingbrainz",
       "category": "cli",
       "subcategory": "mem20",
-      "description": "mem20demandforecastandcapacitybrainz \u00b7 runs with /opt/mem20/.venv/bin/python",
-      "source": "/opt/mem20/.venv/bin/mem20demandforecastandcapacitybrainz",
+      "description": "mem20causalroutingbrainz \u00b7 runs with /opt/mem20/.venv/bin/python",
+      "source": "/opt/mem20/.venv/bin/mem20causalroutingbrainz",
       "runtime_status": "ok",
       "runtime_detail": "script in /opt/mem20/.venv/bin",
       "checks": [
         {
           "check": "path exists",
           "ok": true,
-          "detail": "/opt/mem20/.venv/bin/mem20demandforecastandcapacitybrainz"
+          "detail": "/opt/mem20/.venv/bin/mem20causalroutingbrainz"
         },
         {
           "check": "executable",
@@ -3475,7 +3475,7 @@
         "executable": true,
         "size": 194,
         "symlink": false,
-        "resolved_target": "/opt/mem20/.venv/bin/mem20demandforecastandcapacitybrainz"
+        "resolved_target": "/opt/mem20/.venv/bin/mem20causalroutingbrainz"
       }
     },
     {
@@ -3735,20 +3735,20 @@
       }
     },
     {
-      "id": "cli:mem20edgefleetbrainz",
+      "id": "cli:mem20causalroutingbrainz",
       "kind": "cli",
-      "name": "mem20edgefleetbrainz",
+      "name": "mem20causalroutingbrainz",
       "category": "cli",
       "subcategory": "mem20",
-      "description": "mem20edgefleetbrainz \u00b7 runs with /opt/mem20/.venv/bin/python",
-      "source": "/opt/mem20/.venv/bin/mem20edgefleetbrainz",
+      "description": "mem20causalroutingbrainz \u00b7 runs with /opt/mem20/.venv/bin/python",
+      "source": "/opt/mem20/.venv/bin/mem20causalroutingbrainz",
       "runtime_status": "ok",
       "runtime_detail": "script in /opt/mem20/.venv/bin",
       "checks": [
         {
           "check": "path exists",
           "ok": true,
-          "detail": "/opt/mem20/.venv/bin/mem20edgefleetbrainz"
+          "detail": "/opt/mem20/.venv/bin/mem20causalroutingbrainz"
         },
         {
           "check": "executable",
@@ -3763,7 +3763,7 @@
         "executable": true,
         "size": 186,
         "symlink": false,
-        "resolved_target": "/opt/mem20/.venv/bin/mem20edgefleetbrainz"
+        "resolved_target": "/opt/mem20/.venv/bin/mem20causalroutingbrainz"
       }
     },
     {
@@ -8695,20 +8695,20 @@
       }
     },
     {
-      "id": "cli:mem20skillbasedprogressionbrainz",
+      "id": "cli:mem20causalroutingbrainz",
       "kind": "cli",
-      "name": "mem20skillbasedprogressionbrainz",
+      "name": "mem20causalroutingbrainz",
       "category": "cli",
       "subcategory": "mem20",
-      "description": "mem20skillbasedprogressionbrainz \u00b7 runs with /opt/mem20/.venv/bin/python",
-      "source": "/opt/mem20/.venv/bin/mem20skillbasedprogressionbrainz",
+      "description": "mem20causalroutingbrainz \u00b7 runs with /opt/mem20/.venv/bin/python",
+      "source": "/opt/mem20/.venv/bin/mem20causalroutingbrainz",
       "runtime_status": "ok",
       "runtime_detail": "script in /opt/mem20/.venv/bin",
       "checks": [
         {
           "check": "path exists",
           "ok": true,
-          "detail": "/opt/mem20/.venv/bin/mem20skillbasedprogressionbrainz"
+          "detail": "/opt/mem20/.venv/bin/mem20causalroutingbrainz"
         },
         {
           "check": "executable",
@@ -8723,7 +8723,7 @@
         "executable": true,
         "size": 198,
         "symlink": false,
-        "resolved_target": "/opt/mem20/.venv/bin/mem20skillbasedprogressionbrainz"
+        "resolved_target": "/opt/mem20/.venv/bin/mem20causalroutingbrainz"
       }
     },
     {
@@ -9815,20 +9815,20 @@
       }
     },
     {
-      "id": "cli:mem20zerodowntimemigrationbrainz",
+      "id": "cli:mem20causalroutingbrainz",
       "kind": "cli",
-      "name": "mem20zerodowntimemigrationbrainz",
+      "name": "mem20causalroutingbrainz",
       "category": "cli",
       "subcategory": "mem20",
-      "description": "mem20zerodowntimemigrationbrainz \u00b7 runs with /opt/mem20/.venv/bin/python",
-      "source": "/opt/mem20/.venv/bin/mem20zerodowntimemigrationbrainz",
+      "description": "mem20causalroutingbrainz \u00b7 runs with /opt/mem20/.venv/bin/python",
+      "source": "/opt/mem20/.venv/bin/mem20causalroutingbrainz",
       "runtime_status": "ok",
       "runtime_detail": "script in /opt/mem20/.venv/bin",
       "checks": [
         {
           "check": "path exists",
           "ok": true,
-          "detail": "/opt/mem20/.venv/bin/mem20zerodowntimemigrationbrainz"
+          "detail": "/opt/mem20/.venv/bin/mem20causalroutingbrainz"
         },
         {
           "check": "executable",
@@ -9843,7 +9843,7 @@
         "executable": true,
         "size": 193,
         "symlink": false,
-        "resolved_target": "/opt/mem20/.venv/bin/mem20zerodowntimemigrationbrainz"
+        "resolved_target": "/opt/mem20/.venv/bin/mem20causalroutingbrainz"
       }
     },
     {
@@ -16559,25 +16559,25 @@
       }
     },
     {
-      "id": "subsystem:mem20demandforecastandcapacitybrainz",
+      "id": "subsystem:mem20causalroutingbrainz",
       "kind": "subsystem",
-      "name": "mem20demandforecastandcapacitybrainz",
+      "name": "mem20causalroutingbrainz",
       "category": "other",
       "subcategory": "native-subsystem",
       "description": "Demand Forecast and Capacity Brain \u2014 forecast demand and plan capacity.",
-      "source": "/opt/mem20/mem20demandforecastandcapacitybrainz/pyproject.toml",
+      "source": "/opt/mem20/mem20causalroutingbrainz/pyproject.toml",
       "runtime_status": "ok",
-      "runtime_detail": "pkg=mem20demandforecastandcapacitybrainz v0.1.0; installed 0.1.0 via root-venv; importable=False (1 modules checked); scripts=1 declared, 1 on PATH",
+      "runtime_detail": "pkg=mem20causalroutingbrainz v0.1.0; installed 0.1.0 via root-venv; importable=False (1 modules checked); scripts=1 declared, 1 on PATH",
       "checks": [
         {
           "check": "pyproject present",
           "ok": true,
-          "detail": "/opt/mem20/mem20demandforecastandcapacitybrainz/pyproject.toml"
+          "detail": "/opt/mem20/mem20causalroutingbrainz/pyproject.toml"
         },
         {
           "check": "name declared",
           "ok": true,
-          "detail": "mem20demandforecastandcapacitybrainz"
+          "detail": "mem20causalroutingbrainz"
         },
         {
           "check": "description present",
@@ -16597,17 +16597,17 @@
         {
           "check": "import",
           "ok": false,
-          "detail": "mem20demandforecastandcapacitybrainz=n"
+          "detail": "mem20causalroutingbrainz=n"
         }
       ],
       "meta": {
-        "pkg_name": "mem20demandforecastandcapacitybrainz",
+        "pkg_name": "mem20causalroutingbrainz",
         "version": "0.1.0",
-        "pyproject": "/opt/mem20/mem20demandforecastandcapacitybrainz/pyproject.toml",
+        "pyproject": "/opt/mem20/mem20causalroutingbrainz/pyproject.toml",
         "entry_points": [
           {
-            "console": "mem20demandforecastandcapacitybrainz",
-            "target": "mem20demandforecastandcapacitybrainz:main",
+            "console": "mem20causalroutingbrainz",
+            "target": "mem20causalroutingbrainz:main",
             "on_path": true
           }
         ],
@@ -16619,7 +16619,7 @@
         },
         "importable": [
           {
-            "name": "mem20demandforecastandcapacitybrainz",
+            "name": "mem20causalroutingbrainz",
             "importable": false
           }
         ],
@@ -17241,25 +17241,25 @@
       }
     },
     {
-      "id": "subsystem:mem20edgefleetbrainz",
+      "id": "subsystem:mem20causalroutingbrainz",
       "kind": "subsystem",
-      "name": "mem20edgefleetbrainz",
+      "name": "mem20causalroutingbrainz",
       "category": "other",
       "subcategory": "native-subsystem",
       "description": "Edge Fleet Brain: one capability-aware fleet over heterogeneous hardware",
-      "source": "/opt/mem20/mem20edgefleetbrainz/pyproject.toml",
+      "source": "/opt/mem20/mem20causalroutingbrainz/pyproject.toml",
       "runtime_status": "ok",
-      "runtime_detail": "pkg=mem20edgefleetbrainz v1.0.0; installed 1.0.0 via root-venv; importable=False (1 modules checked); scripts=1 declared, 1 on PATH",
+      "runtime_detail": "pkg=mem20causalroutingbrainz v1.0.0; installed 1.0.0 via root-venv; importable=False (1 modules checked); scripts=1 declared, 1 on PATH",
       "checks": [
         {
           "check": "pyproject present",
           "ok": true,
-          "detail": "/opt/mem20/mem20edgefleetbrainz/pyproject.toml"
+          "detail": "/opt/mem20/mem20causalroutingbrainz/pyproject.toml"
         },
         {
           "check": "name declared",
           "ok": true,
-          "detail": "mem20edgefleetbrainz"
+          "detail": "mem20causalroutingbrainz"
         },
         {
           "check": "description present",
@@ -17279,17 +17279,17 @@
         {
           "check": "import",
           "ok": false,
-          "detail": "mem20edgefleetbrainz=n"
+          "detail": "mem20causalroutingbrainz=n"
         }
       ],
       "meta": {
-        "pkg_name": "mem20edgefleetbrainz",
+        "pkg_name": "mem20causalroutingbrainz",
         "version": "1.0.0",
-        "pyproject": "/opt/mem20/mem20edgefleetbrainz/pyproject.toml",
+        "pyproject": "/opt/mem20/mem20causalroutingbrainz/pyproject.toml",
         "entry_points": [
           {
-            "console": "mem20edgefleetbrainz",
-            "target": "mem20edgefleetbrainz.runtime:main",
+            "console": "mem20causalroutingbrainz",
+            "target": "mem20causalroutingbrainz.runtime:main",
             "on_path": true
           }
         ],
@@ -17301,7 +17301,7 @@
         },
         "importable": [
           {
-            "name": "mem20edgefleetbrainz",
+            "name": "mem20causalroutingbrainz",
             "importable": false
           }
         ],
@@ -28375,25 +28375,25 @@
       }
     },
     {
-      "id": "subsystem:mem20skillbasedprogressionbrainz",
+      "id": "subsystem:mem20causalroutingbrainz",
       "kind": "subsystem",
-      "name": "mem20skillbasedprogressionbrainz",
+      "name": "mem20causalroutingbrainz",
       "category": "other",
       "subcategory": "native-subsystem",
       "description": "Skill-Based Progression Brain with 6 peers, HTTP cockpit, MCP",
-      "source": "/opt/mem20/mem20skillbasedprogressionbrainz/pyproject.toml",
+      "source": "/opt/mem20/mem20causalroutingbrainz/pyproject.toml",
       "runtime_status": "ok",
-      "runtime_detail": "pkg=mem20skillbasedprogressionbrainz v1.0.0; installed 1.0.0 via root-venv; importable=False (1 modules checked); scripts=1 declared, 1 on PATH",
+      "runtime_detail": "pkg=mem20causalroutingbrainz v1.0.0; installed 1.0.0 via root-venv; importable=False (1 modules checked); scripts=1 declared, 1 on PATH",
       "checks": [
         {
           "check": "pyproject present",
           "ok": true,
-          "detail": "/opt/mem20/mem20skillbasedprogressionbrainz/pyproject.toml"
+          "detail": "/opt/mem20/mem20causalroutingbrainz/pyproject.toml"
         },
         {
           "check": "name declared",
           "ok": true,
-          "detail": "mem20skillbasedprogressionbrainz"
+          "detail": "mem20causalroutingbrainz"
         },
         {
           "check": "description present",
@@ -28413,17 +28413,17 @@
         {
           "check": "import",
           "ok": false,
-          "detail": "mem20skillbasedprogressionbrainz=n"
+          "detail": "mem20causalroutingbrainz=n"
         }
       ],
       "meta": {
-        "pkg_name": "mem20skillbasedprogressionbrainz",
+        "pkg_name": "mem20causalroutingbrainz",
         "version": "1.0.0",
-        "pyproject": "/opt/mem20/mem20skillbasedprogressionbrainz/pyproject.toml",
+        "pyproject": "/opt/mem20/mem20causalroutingbrainz/pyproject.toml",
         "entry_points": [
           {
-            "console": "mem20skillbasedprogressionbrainz",
-            "target": "mem20skillbasedprogressionbrainz.runtime:main",
+            "console": "mem20causalroutingbrainz",
+            "target": "mem20causalroutingbrainz.runtime:main",
             "on_path": true
           }
         ],
@@ -28435,7 +28435,7 @@
         },
         "importable": [
           {
-            "name": "mem20skillbasedprogressionbrainz",
+            "name": "mem20causalroutingbrainz",
             "importable": false
           }
         ],
@@ -30767,25 +30767,25 @@
       }
     },
     {
-      "id": "subsystem:mem20zerodowntimemigrationbrainz",
+      "id": "subsystem:mem20causalroutingbrainz",
       "kind": "subsystem",
-      "name": "mem20zerodowntimemigrationbrainz",
+      "name": "mem20causalroutingbrainz",
       "category": "other",
       "subcategory": "native-subsystem",
       "description": "Plan, simulate, execute, verify, and reverse complex data migrations",
-      "source": "/opt/mem20/mem20zerodowntimemigrationbrainz/pyproject.toml",
+      "source": "/opt/mem20/mem20causalroutingbrainz/pyproject.toml",
       "runtime_status": "ok",
-      "runtime_detail": "pkg=mem20zerodowntimemigrationbrainz v1.0.0; installed 1.0.0 via root-venv; importable=False (1 modules checked); scripts=1 declared, 1 on PATH",
+      "runtime_detail": "pkg=mem20causalroutingbrainz v1.0.0; installed 1.0.0 via root-venv; importable=False (1 modules checked); scripts=1 declared, 1 on PATH",
       "checks": [
         {
           "check": "pyproject present",
           "ok": true,
-          "detail": "/opt/mem20/mem20zerodowntimemigrationbrainz/pyproject.toml"
+          "detail": "/opt/mem20/mem20causalroutingbrainz/pyproject.toml"
         },
         {
           "check": "name declared",
           "ok": true,
-          "detail": "mem20zerodowntimemigrationbrainz"
+          "detail": "mem20causalroutingbrainz"
         },
         {
           "check": "description present",
@@ -30805,17 +30805,17 @@
         {
           "check": "import",
           "ok": false,
-          "detail": "mem20zerodowntimemigrationbrainz=n"
+          "detail": "mem20causalroutingbrainz=n"
         }
       ],
       "meta": {
-        "pkg_name": "mem20zerodowntimemigrationbrainz",
+        "pkg_name": "mem20causalroutingbrainz",
         "version": "1.0.0",
-        "pyproject": "/opt/mem20/mem20zerodowntimemigrationbrainz/pyproject.toml",
+        "pyproject": "/opt/mem20/mem20causalroutingbrainz/pyproject.toml",
         "entry_points": [
           {
-            "console": "mem20zerodowntimemigrationbrainz",
-            "target": "mem20zerodowntimemigrationbrainz.core:cli",
+            "console": "mem20causalroutingbrainz",
+            "target": "mem20causalroutingbrainz.core:cli",
             "on_path": true
           }
         ],
@@ -30827,7 +30827,7 @@
         },
         "importable": [
           {
-            "name": "mem20zerodowntimemigrationbrainz",
+            "name": "mem20causalroutingbrainz",
             "importable": false
           }
         ],

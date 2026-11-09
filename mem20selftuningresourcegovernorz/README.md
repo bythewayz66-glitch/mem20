@@ -3,7 +3,7 @@
 First-class mem20 subsystem for self-tuning resource governance (govern/adjust_quota/governor_health) with **6 peers**, SQLite WAL runtime, CLI, JSON HTTP API, served web cockpit, docs/app monitor, and real MCP tools. Core API preserved.
 
 ## Peers (6)
-`mem20demandforecastandcapacitybrainz`, `mem20causalroutingbrainz`, `mem20faultcontainmentcellsz`, `mem20eventstreamsuperhighwayz`, `mem20capabilitymarketplacez`, `mem20autonomousrecoverydirectorz`.
+`mem20causalroutingbrainz`, `mem20causalroutingbrainz`, `mem20faultcontainmentcellsz`, `mem20eventstreamsuperhighwayz`, `mem20capabilitymarketplacez`, `mem20autonomousrecoverydirectorz`.
 
 ## Python API (runnable)
 ```python

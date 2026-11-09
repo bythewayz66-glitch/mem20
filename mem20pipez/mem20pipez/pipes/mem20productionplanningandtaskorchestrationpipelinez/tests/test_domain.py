@@ -8,7 +8,7 @@ def test_bottleneck(): b=_m().bottleneck([{"id":"a","effort":1},{"id":"b","effor
 def test_health(): h=_m().pipeline_health([{"status":"done"},{}]); assert h["progress"]==0.5
 def test_eco_workcells(): r=_eco().workcells({"id":"t1"}); assert r["ok"] and r["subsystem"]=="mem20autonomousworkcellsz"
 def test_eco_swarm(): r=_eco().node_swarm(); assert r["ok"] and r["subsystem"]=="mem20zerotouchnodeswarmz"
-def test_eco_cap(): r=_eco().capacity_plan([5,6]); assert r["ok"] and r["subsystem"]=="mem20demandforecastandcapacitybrainz"
+def test_eco_cap(): r=_eco().capacity_plan([5,6]); assert r["ok"] and r["subsystem"]=="mem20causalroutingbrainz"
 def test_eco_contain(): r=_eco().task_containment("t1"); assert r["ok"] and r["subsystem"]=="mem20faultcontainmentcellsz"
 def test_eco_events(): r=_eco().orchestration_events("o",{}); assert r["ok"] and r["subsystem"]=="mem20eventstreamsuperhighwayz"
 def test_eco_route(): r=_eco().capability_routing("k",["o"]); assert r["ok"] and r["subsystem"]=="mem20capabilitymarketplacez"

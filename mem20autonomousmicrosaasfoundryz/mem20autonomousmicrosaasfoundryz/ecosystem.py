@@ -9,7 +9,7 @@ from typing import Mapping, Sequence
 
 __all__ = ["economics", "demand_signal", "build_schedule", "launch_pipeline", "content_quality", "capability_routing", "probe"]
 _REPO_ROOT = pathlib.Path(__file__).resolve().parents[2]
-_PROJECTS = ("mem20simz","mem20demandforecastandcapacitybrainz","mem20studioz","mem20autonomoussaleslaboratoryz","mem20loreragcontentgeneratorz","mem20capabilitymarketplacez")
+_PROJECTS = ("mem20simz","mem20causalroutingbrainz","mem20studioz","mem20autonomoussaleslaboratoryz","mem20loreragcontentgeneratorz","mem20capabilitymarketplacez")
 
 def _bootstrap():
     for name in reversed(_PROJECTS):
@@ -31,13 +31,13 @@ def economics(users:int, price:float, fixed:float=200.0, variable:float=1.0) -> 
 
 def demand_signal(observations: Sequence[float]) -> dict:
     try:
-        from mem20demandforecastandcapacitybrainz.domain import DemandForecastAndCapacityBrain
+        from mem20causalroutingbrainz.domain import DemandForecastAndCapacityBrain
         brain=DemandForecastAndCapacityBrain(alpha=0.3, window=max(5,len(observations) or 5))
         for v in (observations or [20,25,22,30,28]): brain.observe(v)
         fc=brain.forecast(steps=1)
-        return {"ok":True,"subsystem":"mem20demandforecastandcapacitybrainz","point":fc.get("point"),"high":fc.get("high"),"n":fc.get("n")}
+        return {"ok":True,"subsystem":"mem20causalroutingbrainz","point":fc.get("point"),"high":fc.get("high"),"n":fc.get("n")}
     except Exception as exc:  # noqa: BLE001
-        return {"ok":False,"subsystem":"mem20demandforecastandcapacitybrainz","error":f"{type(exc).__name__}: {exc}"}
+        return {"ok":False,"subsystem":"mem20causalroutingbrainz","error":f"{type(exc).__name__}: {exc}"}
 
 def build_schedule(features: Sequence[str], capacity:int=3) -> dict:
     try:

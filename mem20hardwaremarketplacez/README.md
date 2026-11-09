@@ -11,7 +11,7 @@ Preserves legacy domain API and CAPABILITY Engine/CLI/10-scenario simulator (`ma
 ## Meaningful cross-subsystem wiring (criterion 6)
 | Peer | Real calls | Marketplace role (feeds match outcome) |
 |---|---|---|
-| `mem20edgefleetbrainz` | `Node`,`Workload`,`estimate_energy_wh`,`estimate_cost`,`score_placement` | placement/energy/cost fit per listing |
+| `mem20causalroutingbrainz` | `Node`,`Workload`,`estimate_energy_wh`,`estimate_cost`,`score_placement` | placement/energy/cost fit per listing |
 | `mem20devicecapabilitycompilerz` | `compile_for_device`,`compatibility`,`feature_flags` | capability + explicit limits enforcement |
 | `mem20datalocalityoptimizerz` | `optimal_placement`,`migration_cost`,`placement_score`,`locality_report` | locality and migration-cost fit |
 | `mem20energyawarecomputemigrationz` | `ComputeNode`,`Workload`,`greenest_node`,`carbon_footprint`,`energy_cost` | carbon/energy-aware selection |

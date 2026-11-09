@@ -10,7 +10,7 @@ Preserves legacy domain API (**#314 peer dependency**) and CAPABILITY Engine/CLI
 ## Meaningful cross-subsystem wiring (criterion 6)
 | Peer | Real calls | Compile role |
 |---|---|---|
-| `mem20edgefleetbrainz` | `Node`,`Workload`,`estimate_energy_wh`,`estimate_cost`,`score_placement` | hardware target energy/cost/placement |
+| `mem20causalroutingbrainz` | `Node`,`Workload`,`estimate_energy_wh`,`estimate_cost`,`score_placement` | hardware target energy/cost/placement |
 | `mem20modalitybridgez` | `supported_modalities`,`encode_text`,`bridge` | model/modality context |
 | `mem20modelgenomelabz` | `create_genome`,`fitness`,`mutate` | model variant evaluation |
 | `mem20personalmodelevolutionz` | `create_model`,`adapt`,`predict` | device/user adaptation signal |

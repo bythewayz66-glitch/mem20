@@ -24,7 +24,7 @@ def _hw_to_node(hw: Dict[str, Any]):
 
 def fleet_fit(listing: Dict[str, Any], workload: Dict[str, Any]) -> Dict[str, Any]:
     def run():
-        from mem20edgefleetbrainz.domain import Node, Workload, estimate_energy_wh, estimate_cost, score_placement
+        from mem20causalroutingbrainz.domain import Node, Workload, estimate_energy_wh, estimate_cost, score_placement
         hw = _hw_to_node(listing.get("hardware_spec") or listing)
         wl_req = workload or {}
         node = Node(node_id=str(listing.get("seller") or listing.get("id") or "node"), **hw)
@@ -35,7 +35,7 @@ def fleet_fit(listing: Dict[str, Any], workload: Dict[str, Any]) -> Dict[str, An
         score = float(getattr(sp, "total", sp.get("total", 0.0) if isinstance(sp, dict) else 0.0))
         return {"placement_score": score, "energy_wh": estimate_energy_wh(node, wl), "cost": estimate_cost(node, wl),
                 "feasible": bool(getattr(sp, "feasible", True))}
-    return _safe("mem20edgefleetbrainz", run)
+    return _safe("mem20causalroutingbrainz", run)
 
 def capability_fit(listing: Dict[str, Any], workload: Dict[str, Any]) -> Dict[str, Any]:
     def run():

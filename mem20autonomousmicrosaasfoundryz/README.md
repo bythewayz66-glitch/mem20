@@ -12,7 +12,7 @@ First-class mem20 subsystem for micro-SaaS founding: score ideas, generate MVP s
 | peer | real functions | role |
 |---|---|---|
 | `mem20simz` | `revenue,profit,margin,scenario_sim` | economics/margin/scenarios |
-| `mem20demandforecastandcapacitybrainz` | `DemandForecastAndCapacityBrain` | demand forecast signal |
+| `mem20causalroutingbrainz` | `DemandForecastAndCapacityBrain` | demand forecast signal |
 | `mem20studioz` | `schedule_projects,resource_allocation,studio_health` | MVP build scheduling |
 | `mem20autonomoussaleslaboratoryz` | `pipeline_value,conversion_probability,segment_leads` | launch pipeline/leads |
 | `mem20loreragcontentgeneratorz` | `generate,rank_adapters,quality_score` | landing/content quality |

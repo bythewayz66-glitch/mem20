@@ -3,7 +3,7 @@
 First-class mem20 subsystem for compounding product ecosystems (synergies, network value, compound growth, ecosystem health, cross-sell matrix) with **6 product-ecosystem peers**, SQLite WAL runtime, CLI, JSON HTTP API, served cockpit, docs/app, and real MCP tools.
 
 ## Peers (6)
-`mem20crossproductloyaltygraphz`, `mem20customerlifecycleenginez`, `mem20simz`, `mem20autonomoussaleslaboratoryz`, `mem20demandforecastandcapacitybrainz`, `mem20acquisitionandpartnershipscoutz`.
+`mem20crossproductloyaltygraphz`, `mem20customerlifecycleenginez`, `mem20simz`, `mem20autonomoussaleslaboratoryz`, `mem20causalroutingbrainz`, `mem20acquisitionandpartnershipscoutz`.
 
 ## Python API (runnable)
 ```python

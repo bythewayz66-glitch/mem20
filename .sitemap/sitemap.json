@@ -5147,9 +5147,9 @@
       "code_lines": 369,
       "dependencies": [],
       "description": "",
-      "dir": "mem20demandforecastandcapacitybrainz",
+      "dir": "mem20causalroutingbrainz",
       "docs": [
-        "mem20demandforecastandcapacitybrainz/README.md"
+        "mem20causalroutingbrainz/README.md"
       ],
       "entry_points": {},
       "file_count": 11,
@@ -5172,13 +5172,13 @@
         "domain",
         "runtime"
       ],
-      "name": "mem20demandforecastandcapacitybrainz",
+      "name": "mem20causalroutingbrainz",
       "packaged": false,
       "readme_summary": "RM-088 \u2014 Demand Forecast and Capacity Brain",
       "readme_text": "# rm-088 \u2014 demand forecast and capacity brain\n\noutcome: predict workload and pre-position resources before spikes occur\n\nbreakthrough: service quality stays high without permanent overprovisioning\n\nmachine-executable local runtime includes versioned state, sqlite wal persistence, events, sdk crud, resumable/idempotent jobs, retries/timeouts/quotas, recovery, `forecast` operation logic, decision explanations, feedback, cli, http console/api, mesh selection/failover, simulator, benchmark, metrics, and opt-in signature mode.\n",
       "requires_python": null,
       "subdirs": [
-        "mem20demandforecastandcapacitybrainz"
+        "mem20causalroutingbrainz"
       ],
       "test_files": 1,
       "version": null
@@ -5603,9 +5603,9 @@
       "code_lines": 263,
       "dependencies": [],
       "description": "",
-      "dir": "mem20edgefleetbrainz",
+      "dir": "mem20causalroutingbrainz",
       "docs": [
-        "mem20edgefleetbrainz/README.md"
+        "mem20causalroutingbrainz/README.md"
       ],
       "entry_points": {},
       "file_count": 8,
@@ -5627,13 +5627,13 @@
         "capability",
         "runtime"
       ],
-      "name": "mem20edgefleetbrainz",
+      "name": "mem20causalroutingbrainz",
       "packaged": false,
       "readme_summary": "RM-041 \u2014 Edge Fleet Brain",
       "readme_text": "# rm-041 \u2014 edge fleet brain\n\noutcome: coordinate heterogeneous computers, phones, servers, and appliances as one capability-aware fleet\n\nbreakthrough: idle hardware becomes an intelligent private compute cloud\n\nmachine-executable local runtime includes versioned state, sqlite wal persistence, events, sdk crud, resumable/idempotent jobs, retries/timeouts/quotas, recovery, `schedule` operation logic, decision explanations, feedback, cli, http console/api, mesh selection/failover, simulator, benchmark, metrics, and opt-in signature mode.\n",
       "requires_python": null,
       "subdirs": [
-        "mem20edgefleetbrainz"
+        "mem20causalroutingbrainz"
       ],
       "test_files": 0,
       "version": null
@@ -12807,7 +12807,7 @@
       "name": "mem20selfz",
       "packaged": true,
       "readme_summary": "mem20selfz \u2014 crew runtime",
-      "readme_text": "# mem20selfz \u2014 crew runtime\n\nmem20 self-healing, self-tuning, forecasting and optimization runtime.\n\n## members (16)\n\nreviewed packages grouped here for joint integration under the\npackage-review rulings:\n\n- `mem20pipez`\n- `mem20pipez`\n- `mem20buildsequenceoptimizerz`\n- `mem20datalocalityoptimizerz`\n- `mem20demandforecastandcapacitybrainz`\n- `mem20milestoneriskpredictorz`\n- `mem20qualityriskforecasterz`\n- `mem20quantuminspiredoptimizerz`\n- `mem20releasereadinesspredictorz`\n- `mem20runtimepromptoptimizerz`\n- `mem20selfhealingconnectormeshz`\n- `mem20selfhealingplansz`\n- `mem20selfhealingruntimecivilizationz`\n- `mem20selfoptimizingkernelz`\n- `mem20selfrepairingtestfactoryz`\n- `mem20selftuningresourcegovernorz`\n\n## status\n\nskeleton slice: registry, cli (`--version`, `--members`), hermetic\ntests. member wiring arrives in the integration phase.\n",
+      "readme_text": "# mem20selfz \u2014 crew runtime\n\nmem20 self-healing, self-tuning, forecasting and optimization runtime.\n\n## members (16)\n\nreviewed packages grouped here for joint integration under the\npackage-review rulings:\n\n- `mem20pipez`\n- `mem20pipez`\n- `mem20buildsequenceoptimizerz`\n- `mem20datalocalityoptimizerz`\n- `mem20causalroutingbrainz`\n- `mem20milestoneriskpredictorz`\n- `mem20qualityriskforecasterz`\n- `mem20quantuminspiredoptimizerz`\n- `mem20releasereadinesspredictorz`\n- `mem20runtimepromptoptimizerz`\n- `mem20selfhealingconnectormeshz`\n- `mem20selfhealingplansz`\n- `mem20selfhealingruntimecivilizationz`\n- `mem20selfoptimizingkernelz`\n- `mem20selfrepairingtestfactoryz`\n- `mem20selftuningresourcegovernorz`\n\n## status\n\nskeleton slice: registry, cli (`--version`, `--members`), hermetic\ntests. member wiring arrives in the integration phase.\n",
       "requires_python": ">=3.11",
       "subdirs": [
         "mem20selfz",
@@ -13212,9 +13212,9 @@
       "code_lines": 333,
       "dependencies": [],
       "description": "",
-      "dir": "mem20skillbasedprogressionbrainz",
+      "dir": "mem20causalroutingbrainz",
       "docs": [
-        "mem20skillbasedprogressionbrainz/README.md"
+        "mem20causalroutingbrainz/README.md"
       ],
       "entry_points": {},
       "file_count": 10,
@@ -13237,13 +13237,13 @@
         "installer",
         "runtime"
       ],
-      "name": "mem20skillbasedprogressionbrainz",
+      "name": "mem20causalroutingbrainz",
       "packaged": false,
       "readme_summary": "RM-208 \u2014 Skill-Based Progression Brain",
       "readme_text": "# rm-208 \u2014 skill-based progression brain\n\n**outcome:** advance users according to demonstrated capability rather than time spent\n\n**breakthrough:** progression reflects real growth\n\nthis package is the machine-executable local implementation derived from the supplied off record lab roadmap. it includes versioned typed state, sqlite wal persistence, event history/snapshots, sdk crud/subscription, resumable idempotent jobs, cancellation, retries/timeouts/quotas/backpressure, deterministic replica reconciliation, local/hybrid/cloud placement/failover, roadmap-specific `progression` logic, decision confidence/explanations, feedback, cli, http console/api, safety guards, simulator, benchmark/metrics, and rollback-capable installer.\n\nnamed live product surfaces, real provider/device credentials, production traffic, and governed freestack deployment remain target-environment integration and are not claimed complete.\n",
       "requires_python": null,
       "subdirs": [
-        "mem20skillbasedprogressionbrainz"
+        "mem20causalroutingbrainz"
       ],
       "test_files": 0,
       "version": null
@@ -14808,12 +14808,12 @@
       "code_lines": 111,
       "dependencies": [],
       "description": "Plan, simulate, execute, verify, and reverse complex data migrations",
-      "dir": "mem20zerodowntimemigrationbrainz",
+      "dir": "mem20causalroutingbrainz",
       "docs": [
-        "mem20zerodowntimemigrationbrainz/README.md"
+        "mem20causalroutingbrainz/README.md"
       ],
       "entry_points": {
-        "mem20zerodowntimemigrationbrainz": "mem20zerodowntimemigrationbrainz.core:cli"
+        "mem20causalroutingbrainz": "mem20causalroutingbrainz.core:cli"
       },
       "file_count": 12,
       "keywords": [],
@@ -14837,13 +14837,13 @@
         "domain",
         "run"
       ],
-      "name": "mem20zerodowntimemigrationbrainz",
+      "name": "mem20causalroutingbrainz",
       "packaged": true,
       "readme_summary": "RM-165 \u2014 Zero-Downtime Migration Brain",
       "readme_text": "# rm-165 \u2014 zero-downtime migration brain\n\n**owner:** kimberly  \n**lane:** schema, data shape, database, and information transformation\n\n## outcome\nplan, simulate, execute, verify, and reverse complex data migrations\n\n## breakthrough\nlarge schema changes become ordinary online operations\n\nthis package implements the locally executable/non-human portion of this off record lab roadmap on a shared, zero-dependency runtime substrate. it includes typed/versioned roadmap validation, sqlite wal state + event history, resumable/idempotent jobs, cancellation/timeouts/quotas, deterministic recovery, adaptive mode decisions with confidence/alternatives/bottlenecks/explanations, feedback tuning, cli + typed client + http api + browser command surface + event stream, local/hybrid/cloud peer execution, conflict-safe lww synchronization, caching, backpressure/failover, metrics, simulator scenarios, benchmark tooling, safety gating, and a rollback manifest.\n\nthe domain engine for this package is keyed specifically to rm-165 and produces deterministic executable results for the roadmap's core operation using only local standard-library code. external hardware, proprietary models, production credentials, live third-party services, and deployment authorization are intentionally not fabricated; those remain environment-bound integration points.\n\n## run\n```bash\npython run.py inspect\npython run.py run '{\"text\":\"demo\",\"cache\":false}'\npython run.py simulate\npython run.py benchmark --runs 5\npython run.py serve --port 8765\n```\n\nopen `http://127.0.0.1:8765/` for the live command surface.\n",
       "requires_python": ">=3.11",
       "subdirs": [
-        "mem20zerodowntimemigrationbrainz"
+        "mem20causalroutingbrainz"
       ],
       "test_files": 1,
       "version": "1.0.0"

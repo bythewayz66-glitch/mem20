@@ -1,11 +1,11 @@
 """Cross-subsystem wiring for mem20edgetocloudintelligencecontinuumz (criterion 6).
 
-Six fleet/continuum peers, all different from mem20edgefleetbrainz's set:
+Six fleet/continuum peers, all different from mem20causalroutingbrainz's set:
 
 1. mem20federatedresearchgridz — federated task distribution across tiers
 2. mem20pipez — cost-aware pipeline/placement economics
 3. mem20edgetransportfabricz — transport path, QoS, bandwidth allocation
-4. mem20zerodowntimemigrationbrainz — zero-downtime migration verification
+4. mem20causalroutingbrainz — zero-downtime migration verification
 5. mem20globalcapabilitymarketplacez — capability discovery/matching
 6. mem20resourceexchangemarketz — resource pricing/market signals
 
@@ -23,7 +23,7 @@ _PROJECTS = (
     "mem20federatedresearchgridz",
     "mem20pipez",
     "mem20edgetransportfabricz",
-    "mem20zerodowntimemigrationbrainz",
+    "mem20causalroutingbrainz",
     "mem20globalcapabilitymarketplacez",
     "mem20resourceexchangemarketz",
 )
@@ -147,7 +147,7 @@ def transport_plan(targets: Sequence[Mapping[str, Any]], source_id: str | None, 
 
 def migration_semantics(workload: Mapping[str, Any], feasible: bool) -> dict:
     try:
-        from mem20zerodowntimemigrationbrainz.domain import (
+        from mem20causalroutingbrainz.domain import (
             ZeroDowntimeMigrationBrain, MigrationNotVerified,
         )
 
@@ -160,15 +160,15 @@ def migration_semantics(workload: Mapping[str, Any], feasible: bool) -> dict:
         _ = brain.read("state")
         try:
             report = brain.verify_and_cutover()
-            return {"ok": True, "subsystem": "mem20zerodowntimemigrationbrainz",
+            return {"ok": True, "subsystem": "mem20causalroutingbrainz",
                     "phase": report["phase"], "verified": report["verified"], "rolled_back": brain.rolled_back}
         except MigrationNotVerified as exc:
             brain.rollback()
-            return {"ok": True, "subsystem": "mem20zerodowntimemigrationbrainz",
+            return {"ok": True, "subsystem": "mem20causalroutingbrainz",
                     "phase": "rollback", "verified": False, "rolled_back": brain.rolled_back,
                     "reason": str(exc)}
     except Exception as exc:  # noqa: BLE001
-        return {"ok": False, "subsystem": "mem20zerodowntimemigrationbrainz", "error": f"{type(exc).__name__}: {exc}"}
+        return {"ok": False, "subsystem": "mem20causalroutingbrainz", "error": f"{type(exc).__name__}: {exc}"}
 
 
 def capability_market(targets: Sequence[Mapping[str, Any]], workload: Mapping[str, Any]) -> dict:
@@ -225,7 +225,7 @@ def probe() -> dict:
         "mem20federatedresearchgridz": federated_plan([], {"workload_id": "probe", "cpu": 1}),
         "mem20pipez": cost_plan([], {"workload_id": "probe", "cpu": 1, "duration_s": 60}),
         "mem20edgetransportfabricz": transport_plan([], None, None, {"workload_id": "probe", "max_latency_ms": 100, "priority": 50, "size_mb": 1}),
-        "mem20zerodowntimemigrationbrainz": migration_semantics({"workload_id": "probe"}, True),
+        "mem20causalroutingbrainz": migration_semantics({"workload_id": "probe"}, True),
         "mem20globalcapabilitymarketplacez": capability_market([], {"workload_id": "probe", "required_capabilities": ["compute"]}),
         "mem20resourceexchangemarketz": resource_market([], {"workload_id": "probe", "cpu": 1}),
     }

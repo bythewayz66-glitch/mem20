@@ -300,7 +300,7 @@ cannot drift apart.
 
 ```bash
 # start the subsystem that owns the state plane
-PYTHONPATH=/opt/mem20 python3 -m mem20edgefleetbrainz --store /tmp/fleet.db serve --port 8771
+PYTHONPATH=/opt/mem20 python3 -m mem20causalroutingbrainz --store /tmp/fleet.db serve --port 8771
 
 # open the monitor against it (also accepts ?api=http://host:port)
 python3 -m http.server 8000 --directory docs/app
@@ -372,7 +372,7 @@ served by the fleet process itself at its root URL.
 - [Sensory Memory Ingest monitor](sensorymemoryingestz/index.html) — `PYTHONPATH=/opt/mem20 /opt/mem20/.venv/bin/python -m mem20sensorymemoryingestz serve --port 8829`
 - [Service Bundling Engine monitor](servicebundlingenginez/index.html) — `PYTHONPATH=/opt/mem20 /opt/mem20/.venv/bin/python -m mem20servicebundlingenginez serve --port 8830`
 - [Simz monitor](simz/index.html) — `PYTHONPATH=/opt/mem20 /opt/mem20/.venv/bin/python -m mem20simz serve --port 8831`
-- [Skill-Based Progression Brain monitor](skillbasedprogressionbrainz/index.html) — `PYTHONPATH=/opt/mem20 /opt/mem20/.venv/bin/python -m mem20skillbasedprogressionbrainz serve --port 8832`
+- [Skill-Based Progression Brain monitor](skillbasedprogressionbrainz/index.html) — `PYTHONPATH=/opt/mem20 /opt/mem20/.venv/bin/python -m mem20causalroutingbrainz serve --port 8832`
 - [Skill Memory Transfer monitor](skillmemorytransferz/index.html) — `PYTHONPATH=/opt/mem20 /opt/mem20/.venv/bin/python -m mem20skillmemorytransferz serve --port 8833`
 - [Spatial Command Universe monitor](spatialcommanduniversez/index.html) — `PYTHONPATH=/opt/mem20 /opt/mem20/.venv/bin/python -m mem20spatialcommanduniversez serve --port 8834`
 - [Specialist Model Forge monitor](specialistmodelforgez/index.html) — `PYTHONPATH=/opt/mem20 /opt/mem20/.venv/bin/python -m mem20specialistmodelforgez serve --port 8835`

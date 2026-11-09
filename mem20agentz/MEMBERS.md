@@ -5,7 +5,7 @@ in their own top-level directories and are smoke-verified there:
 
 - `mem20crossdevicesessioncontinuityz`
 - `mem20devicecapabilitycompilerz`
-- `mem20edgefleetbrainz`
+- `mem20causalroutingbrainz`
 - `mem20edgetocloudintelligencecontinuumz`
 - `mem20livecodeknowledgegraphz`
 - `mem20multibrandswarmz`

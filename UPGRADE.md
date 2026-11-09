@@ -60,7 +60,7 @@ Building these in name order wastes effort on low-value packages. Better to go b
 - **Must refuse:** to be a general-purpose runtime, and to return a confident answer when it is out of its depth.
 - **Proven by:** a test asserting a specific value, bound or contradiction — not that the function ran.
 
-### `mem20edgefleetbrainz`
+### `mem20causalroutingbrainz`
 
 - **Should be:** edge fleet — manage a fleet whose nodes are unreliable by definition.
 - **Must refuse:** to be a general-purpose runtime, and to return a confident answer when it is out of its depth.
@@ -448,7 +448,7 @@ Building these in name order wastes effort on low-value packages. Better to go b
 - **Must refuse:** to be a general-purpose runtime, and to return a confident answer when it is out of its depth.
 - **Proven by:** a test asserting a specific value, bound or contradiction — not that the function ran.
 
-### `mem20demandforecastandcapacitybrainz`
+### `mem20causalroutingbrainz`
 
 - **Should be:** demand forecast — predict demand with an interval, and be honest when the data is thin.
 - **Must refuse:** to be a general-purpose runtime, and to return a confident answer when it is out of its depth.
@@ -572,7 +572,7 @@ Building these in name order wastes effort on low-value packages. Better to go b
 - **Must refuse:** to be a general-purpose runtime, and to return a confident answer when it is out of its depth.
 - **Proven by:** a test asserting a specific value, bound or contradiction — not that the function ran.
 
-### `mem20zerodowntimemigrationbrainz`
+### `mem20causalroutingbrainz`
 
 - **Should be:** zero-downtime change — swap a live component with no dropped request.
 - **Must refuse:** to be a general-purpose runtime, and to return a confident answer when it is out of its depth.
@@ -1230,7 +1230,7 @@ Building these in name order wastes effort on low-value packages. Better to go b
 - **Must refuse:** to be a general-purpose runtime, and to return a confident answer when it is out of its depth.
 - **Proven by:** a test asserting a specific value, bound or contradiction — not that the function ran.
 
-### `mem20skillbasedprogressionbrainz`
+### `mem20causalroutingbrainz`
 
 - **Should be:** skill progression — progress that reflects measured skill, not time served.
 - **Must refuse:** to be a general-purpose runtime, and to return a confident answer when it is out of its depth.

@@ -4,7 +4,7 @@ import pathlib,sys
 from typing import Mapping,Sequence
 __all__=["causal_routing","scenario_events","recovery_paths","healing_alternatives","demand_scenarios","scenario_routing","probe"]
 _REPO_ROOT=pathlib.Path(__file__).resolve().parents[2]
-_PROJECTS=("mem20causalroutingbrainz","mem20eventstreamsuperhighwayz","mem20autonomousrecoverydirectorz","mem20selfhealingplansz","mem20demandforecastandcapacitybrainz","mem20capabilitymarketplacez")
+_PROJECTS=("mem20causalroutingbrainz","mem20eventstreamsuperhighwayz","mem20autonomousrecoverydirectorz","mem20selfhealingplansz","mem20causalroutingbrainz","mem20capabilitymarketplacez")
 def _bootstrap():
     for name in reversed(_PROJECTS):
         p=str(_REPO_ROOT/name)
@@ -35,11 +35,11 @@ def healing_alternatives(steps:Sequence[str])->dict:
     except Exception as exc: return {"ok":False,"subsystem":"mem20selfhealingplansz","error":f"{type(exc).__name__}: {exc}"}
 def demand_scenarios(observations:Sequence[float])->dict:
     try:
-        from mem20demandforecastandcapacitybrainz.domain import DemandForecastAndCapacityBrain
+        from mem20causalroutingbrainz.domain import DemandForecastAndCapacityBrain
         b=DemandForecastAndCapacityBrain(alpha=0.3,window=max(5,len(observations) or 5))
         for v in (observations or [10,12,11,13,14]): b.observe(v)
-        return {"ok":True,"subsystem":"mem20demandforecastandcapacitybrainz","point":b.forecast(1).get("point")}
-    except Exception as exc: return {"ok":False,"subsystem":"mem20demandforecastandcapacitybrainz","error":f"{type(exc).__name__}: {exc}"}
+        return {"ok":True,"subsystem":"mem20causalroutingbrainz","point":b.forecast(1).get("point")}
+    except Exception as exc: return {"ok":False,"subsystem":"mem20causalroutingbrainz","error":f"{type(exc).__name__}: {exc}"}
 def scenario_routing(key:str,caps:Sequence[str])->dict:
     try:
         from mem20capabilitymarketplacez.domain import CapabilityMarketplace

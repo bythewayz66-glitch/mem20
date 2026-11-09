@@ -4,7 +4,7 @@ import pathlib,sys
 from typing import Mapping,Sequence
 __all__=["content_outreach","spam_guardrail","demand_timing","experiment_events","deal_handoff","channel_routing","probe"]
 _REPO_ROOT=pathlib.Path(__file__).resolve().parents[2]
-_PROJECTS=("mem20loreragcontentgeneratorz","mem20antiexploitationrewardshieldz","mem20demandforecastandcapacitybrainz","mem20eventstreamsuperhighwayz","mem20autonomousdealdeskz","mem20capabilitymarketplacez")
+_PROJECTS=("mem20loreragcontentgeneratorz","mem20antiexploitationrewardshieldz","mem20causalroutingbrainz","mem20eventstreamsuperhighwayz","mem20autonomousdealdeskz","mem20capabilitymarketplacez")
 def _bootstrap():
     for name in reversed(_PROJECTS):
         p=str(_REPO_ROOT/name)
@@ -33,12 +33,12 @@ def spam_guardrail(send_attempt:float, state:Mapping, approved:bool)->dict:
 
 def demand_timing(observations:Sequence[float])->dict:
     try:
-        from mem20demandforecastandcapacitybrainz.domain import DemandForecastAndCapacityBrain
+        from mem20causalroutingbrainz.domain import DemandForecastAndCapacityBrain
         b=DemandForecastAndCapacityBrain(alpha=0.3,window=max(5,len(observations) or 5))
         for v in (observations or [5,6,8,7,9]): b.observe(v)
         fc=b.forecast(steps=1)
-        return {"ok":True,"subsystem":"mem20demandforecastandcapacitybrainz","point":fc.get("point"),"high":fc.get("high"),"n":fc.get("n")}
-    except Exception as exc: return {"ok":False,"subsystem":"mem20demandforecastandcapacitybrainz","error":f"{type(exc).__name__}: {exc}"}
+        return {"ok":True,"subsystem":"mem20causalroutingbrainz","point":fc.get("point"),"high":fc.get("high"),"n":fc.get("n")}
+    except Exception as exc: return {"ok":False,"subsystem":"mem20causalroutingbrainz","error":f"{type(exc).__name__}: {exc}"}
 
 def experiment_events(name:str, payload:Mapping)->dict:
     try:

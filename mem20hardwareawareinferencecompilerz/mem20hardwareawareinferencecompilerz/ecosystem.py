@@ -10,11 +10,11 @@ def _safe(name, fn):
 
 def fleet_target(payload=None) -> Dict[str, Any]:
     def run():
-        from mem20edgefleetbrainz.domain import Node, Workload, estimate_energy_wh, estimate_cost, score_placement
+        from mem20causalroutingbrainz.domain import Node, Workload, estimate_energy_wh, estimate_cost, score_placement
         node = Node(node_id="edge-gpu", cpu_cores=8, memory_gb=16.0, gpu_count=1, latency_ms=2.0)
         wl = Workload(workload_id="infer", cpu=2.0, memory_gb=4.0, gpu=1, duration_s=60.0)
         return {"energy_wh": estimate_energy_wh(node, wl), "cost": estimate_cost(node, wl), "placement": score_placement(node, wl).total if hasattr(score_placement(node, wl), 'total') else None}
-    return _safe("mem20edgefleetbrainz", run)
+    return _safe("mem20causalroutingbrainz", run)
 
 def modality_context(payload=None) -> Dict[str, Any]:
     def run():

@@ -41,7 +41,7 @@ def test_transport_plan_returns_route_qos_allocation_health():
 
 def test_migration_semantics_verified_and_rollback():
     ok = ecosystem.migration_semantics(sample_workload(), feasible=True)
-    assert ok["ok"] and ok["subsystem"] == "mem20zerodowntimemigrationbrainz"
+    assert ok["ok"] and ok["subsystem"] == "mem20causalroutingbrainz"
     assert ok["phase"] == "cutover" and ok["verified"] is True
     bad = ecosystem.migration_semantics(sample_workload(), feasible=False)
     assert bad["ok"] and bad["phase"] == "rollback" and bad["rolled_back"] is True

@@ -3,7 +3,7 @@
 First-class mem20 subsystem for predictive recall (predict next items, recall scoring, prefetch, cache hit rate) with **6 peers**, SQLite WAL runtime, CLI, JSON HTTP API, served web cockpit, docs/app monitor, and real MCP tools. Core API preserved.
 
 ## Peers (6)
-`mem20causalroutingbrainz`, `mem20contextcompressionforgez`, `mem20eventstreamsuperhighwayz`, `mem20mixedinitiativefocusenginez`, `mem20capabilitymarketplacez`, `mem20demandforecastandcapacitybrainz`.
+`mem20causalroutingbrainz`, `mem20contextcompressionforgez`, `mem20eventstreamsuperhighwayz`, `mem20mixedinitiativefocusenginez`, `mem20capabilitymarketplacez`, `mem20causalroutingbrainz`.
 
 ## Python API (runnable)
 ```python

@@ -7,7 +7,7 @@ def test_govern_release(): a=_m().govern({"c":100},{"c":10},{"c":0.8}); assert a
 def test_adjust_up(): assert _m().adjust_quota("c",100,0.9)==120.0
 def test_adjust_down(): assert _m().adjust_quota("c",100,0.2)==80.0
 def test_health(): h=_m().governor_health({"c":100},{"c":90}); assert h["overloaded"]==1
-def test_eco_forecast(): r=_eco().demand_forecast([1,2]); assert r["ok"] and r["subsystem"]=="mem20demandforecastandcapacitybrainz"
+def test_eco_forecast(): r=_eco().demand_forecast([1,2]); assert r["ok"] and r["subsystem"]=="mem20causalroutingbrainz"
 def test_eco_causal(): r=_eco().causal_tuning({"u":1},{"u":1}); assert r["ok"] and r["subsystem"]=="mem20causalroutingbrainz"
 def test_eco_contain(): r=_eco().tuning_containment("g"); assert r["ok"] and r["subsystem"]=="mem20faultcontainmentcellsz"
 def test_eco_events(): r=_eco().governor_events("g",{}); assert r["ok"] and r["subsystem"]=="mem20eventstreamsuperhighwayz"

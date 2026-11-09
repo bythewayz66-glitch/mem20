@@ -11,14 +11,14 @@ def _safe(name:str,fn:Callable[[],Dict[str,Any]])->Dict[str,Any]:
 
 def demand_forecast_signal(ctx:Mapping[str,Any])->Dict[str,Any]:
  def run():
-  try: from mem20demandforecastandcapacitybrainz.domain import DemandForecastAndCapacityBrain
-  except Exception: from mem20demandforecastandcapacitybrainz.mem20demandforecastandcapacitybrainz.domain import DemandForecastAndCapacityBrain
+  try: from mem20causalroutingbrainz.domain import DemandForecastAndCapacityBrain
+  except Exception: from mem20causalroutingbrainz.mem20causalroutingbrainz.domain import DemandForecastAndCapacityBrain
   b=DemandForecastAndCapacityBrain()
   if hasattr(b,"forecast"): fc=b.forecast({"series":[1,2,3,4],"steps":2})
   elif hasattr(b,"predict"): fc=b.predict({"series":[1,2,3,4]})
   else: fc={"brain":type(b).__name__}
   return {"forecast":fc}
- return _safe("mem20demandforecastandcapacitybrainz", run)
+ return _safe("mem20causalroutingbrainz", run)
 
 def battery_schedule_signal(ctx:Mapping[str,Any])->Dict[str,Any]:
  def run():

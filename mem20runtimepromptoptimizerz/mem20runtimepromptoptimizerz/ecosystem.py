@@ -4,7 +4,7 @@ import pathlib,sys
 from typing import Mapping,Sequence
 __all__=["context_compression","causal_routing","capability_routing","prompt_events","optimize_containment","cost_forecast","probe"]
 _REPO_ROOT=pathlib.Path(__file__).resolve().parents[2]
-_PROJECTS=("mem20contextcompressionforgez","mem20causalroutingbrainz","mem20capabilitymarketplacez","mem20eventstreamsuperhighwayz","mem20faultcontainmentcellsz","mem20demandforecastandcapacitybrainz")
+_PROJECTS=("mem20contextcompressionforgez","mem20causalroutingbrainz","mem20capabilitymarketplacez","mem20eventstreamsuperhighwayz","mem20faultcontainmentcellsz","mem20causalroutingbrainz")
 def _bootstrap():
     for name in reversed(_PROJECTS):
         p=str(_REPO_ROOT/name)
@@ -43,11 +43,11 @@ def optimize_containment(pid:str)->dict:
     except Exception as exc: return {"ok":False,"subsystem":"mem20faultcontainmentcellsz","error":f"{type(exc).__name__}: {exc}"}
 def cost_forecast(obs:Sequence[float])->dict:
     try:
-        from mem20demandforecastandcapacitybrainz.domain import DemandForecastAndCapacityBrain
+        from mem20causalroutingbrainz.domain import DemandForecastAndCapacityBrain
         b=DemandForecastAndCapacityBrain(alpha=0.3,window=max(5,len(obs) or 5))
         for v in (obs or [10,9,8]): b.observe(v)
-        return {"ok":True,"subsystem":"mem20demandforecastandcapacitybrainz","point":b.forecast(1).get("point")}
-    except Exception as exc: return {"ok":False,"subsystem":"mem20demandforecastandcapacitybrainz","error":f"{type(exc).__name__}: {exc}"}
+        return {"ok":True,"subsystem":"mem20causalroutingbrainz","point":b.forecast(1).get("point")}
+    except Exception as exc: return {"ok":False,"subsystem":"mem20causalroutingbrainz","error":f"{type(exc).__name__}: {exc}"}
 def probe()->dict:
     checks={"context_compression":context_compression("hello world prompt"),"causal_routing":causal_routing({"q":1},{"q":1}),"capability_routing":capability_routing("k",["o"]),"prompt_events":prompt_events("p",{}),"optimize_containment":optimize_containment("p1"),"cost_forecast":cost_forecast([10,9])}
     return {"ok":all(v.get("ok") for v in checks.values()),"checks":checks}

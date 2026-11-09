@@ -11,7 +11,7 @@ def test_be(): assert _m().break_even(1000,10,6)==250
 def test_scenario(): s=_m().scenario_sim(100,10,500,3,0.1,3); assert len(s)==3 and s[-1]["units"]>100
 def test_sens(): s=_m().sensitivity(10,100,500,3); assert "base" in s and "up" in s
 
-def test_ecosystem_demand_signal(): r=_eco().demand_signal([50,55,60]); assert r["ok"] and r["subsystem"]=="mem20demandforecastandcapacitybrainz"; assert r["point"] is not None
+def test_ecosystem_demand_signal(): r=_eco().demand_signal([50,55,60]); assert r["ok"] and r["subsystem"]=="mem20causalroutingbrainz"; assert r["point"] is not None
 def test_ecosystem_counterfactual(): r=_eco().counterfactual_scenarios({"price":10},{"effect":0.1}); assert r["ok"] and r["subsystem"]=="mem20simz"
 def test_ecosystem_partnership_synergy(): r=_eco().partnership_synergy({"revenue":100,"markets":["saas"],"tech":["py"]},{"revenue":200,"markets":["saas"],"tech":["py"]}); assert r["ok"] and r["subsystem"]=="mem20acquisitionandpartnershipscoutz"; assert "synergy" in r
 def test_ecosystem_lifecycle_value(): r=_eco().lifecycle_value({"tenure_months":6,"spend":100}); assert r["ok"] and r["subsystem"]=="mem20customerlifecycleenginez"

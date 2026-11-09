@@ -102,7 +102,7 @@
     "mem20sensorymemoryingestz": 2,
     "mem20servicebundlingenginez": 2,
     "mem20simz": 2,
-    "mem20skillbasedprogressionbrainz": 2,
+    "mem20causalroutingbrainz": 2,
     "mem20skillmemorytransferz": 2,
     "mem20spatialcommanduniversez": 2,
     "mem20specialistmodelforgez": 2,
@@ -116,7 +116,7 @@
     "mem20universalintegrationcompilerz": 2,
     "mem20visualagentblackboardz": 2,
     "mem20visualdataflowcomposerz": 2,
-    "mem20zerodowntimemigrationbrainz": 1,
+    "mem20causalroutingbrainz": 1,
     "mem20zerotouchnodeswarmz": 2,
     "memory": 55,
     "ops": 3,
@@ -233,7 +233,7 @@
     "mem20sensorymemoryingestz",
     "mem20servicebundlingenginez",
     "mem20simz",
-    "mem20skillbasedprogressionbrainz",
+    "mem20causalroutingbrainz",
     "mem20skillmemorytransferz",
     "mem20spatialcommanduniversez",
     "mem20specialistmodelforgez",
@@ -247,7 +247,7 @@
     "mem20universalintegrationcompilerz",
     "mem20visualagentblackboardz",
     "mem20visualdataflowcomposerz",
-    "mem20zerodowntimemigrationbrainz",
+    "mem20causalroutingbrainz",
     "mem20zerotouchnodeswarmz",
     "memory",
     "ops",
@@ -1262,9 +1262,9 @@
       "tools": 2
     },
     {
-      "domain": "mem20skillbasedprogressionbrainz",
+      "domain": "mem20causalroutingbrainz",
       "modules": [
-        "mcp/tools/mem20skillbasedprogressionbrainz_tools.py"
+        "mcp/tools/mem20causalroutingbrainz_tools.py"
       ],
       "prefixes": [
         "skillbasedprogressionbrainz_*"
@@ -1542,9 +1542,9 @@
       "tools": 1
     },
     {
-      "domain": "mem20zerodowntimemigrationbrainz",
+      "domain": "mem20causalroutingbrainz",
       "modules": [
-        "mcp/tools/mem20zerodowntimemigrationbrainz_tools.py"
+        "mcp/tools/mem20causalroutingbrainz_tools.py"
       ],
       "prefixes": [
         "zerodowntimemigrationbrainz_*"

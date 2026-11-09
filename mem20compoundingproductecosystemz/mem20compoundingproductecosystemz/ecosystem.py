@@ -4,7 +4,7 @@ import pathlib,sys
 from typing import Mapping,Sequence
 __all__=["loyalty_graph","lifecycle_value","growth_economics","pipeline_signal","demand_signal","partnership_synergy","probe"]
 _REPO_ROOT=pathlib.Path(__file__).resolve().parents[2]
-_PROJECTS=("mem20crossproductloyaltygraphz","mem20customerlifecycleenginez","mem20simz","mem20autonomoussaleslaboratoryz","mem20demandforecastandcapacitybrainz","mem20acquisitionandpartnershipscoutz")
+_PROJECTS=("mem20crossproductloyaltygraphz","mem20customerlifecycleenginez","mem20simz","mem20autonomoussaleslaboratoryz","mem20causalroutingbrainz","mem20acquisitionandpartnershipscoutz")
 def _bootstrap():
     for name in reversed(_PROJECTS):
         p=str(_REPO_ROOT/name)
@@ -44,11 +44,11 @@ def pipeline_signal(value:float)->dict:
 
 def demand_signal(observations:Sequence[float])->dict:
     try:
-        from mem20demandforecastandcapacitybrainz.domain import DemandForecastAndCapacityBrain
+        from mem20causalroutingbrainz.domain import DemandForecastAndCapacityBrain
         b=DemandForecastAndCapacityBrain(alpha=0.3,window=max(5,len(observations) or 5))
         for v in (observations or [100,110,120,115,130]): b.observe(v)
-        fc=b.forecast(steps=1); return {"ok":True,"subsystem":"mem20demandforecastandcapacitybrainz","point":fc.get("point")}
-    except Exception as exc: return {"ok":False,"subsystem":"mem20demandforecastandcapacitybrainz","error":f"{type(exc).__name__}: {exc}"}
+        fc=b.forecast(steps=1); return {"ok":True,"subsystem":"mem20causalroutingbrainz","point":fc.get("point")}
+    except Exception as exc: return {"ok":False,"subsystem":"mem20causalroutingbrainz","error":f"{type(exc).__name__}: {exc}"}
 
 def partnership_synergy()->dict:
     try:

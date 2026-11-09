@@ -3,7 +3,7 @@
 First-class mem20 subsystem for context compression (lossy/ratio compression, extractive summary, compression ratio, key terms, token-budget forging) with **6 context-compression peers**, SQLite WAL runtime, CLI, JSON HTTP API, served cockpit, docs/app, and real MCP tools.
 
 ## Peers (6)
-`mem20eventstreamsuperhighwayz`, `mem20loreragcontentgeneratorz`, `mem20mixedinitiativefocusenginez`, `mem20capabilitymarketplacez`, `mem20demandforecastandcapacitybrainz`, `mem20causalroutingbrainz`.
+`mem20eventstreamsuperhighwayz`, `mem20loreragcontentgeneratorz`, `mem20mixedinitiativefocusenginez`, `mem20capabilitymarketplacez`, `mem20causalroutingbrainz`, `mem20causalroutingbrainz`.
 
 ## Python API (runnable)
 ```python

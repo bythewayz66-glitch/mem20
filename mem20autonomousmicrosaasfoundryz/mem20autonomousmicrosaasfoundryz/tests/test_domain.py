@@ -12,7 +12,7 @@ def test_rank(): m=_m(); r=m.idea_ranking([{"market_size":100,"competition":2,"e
 def test_ecosystem_economics_real_values():
     r=_eco().economics(100,9.0); assert r["ok"] and r["subsystem"]=="mem20simz"; assert "margin" in r
 def test_ecosystem_demand_signal_real_values():
-    r=_eco().demand_signal([20,25,22,30,28]); assert r["ok"] and r["subsystem"]=="mem20demandforecastandcapacitybrainz"; assert r["point"] is not None
+    r=_eco().demand_signal([20,25,22,30,28]); assert r["ok"] and r["subsystem"]=="mem20causalroutingbrainz"; assert r["point"] is not None
 def test_ecosystem_build_schedule_real_values():
     r=_eco().build_schedule(["core","auth"]); assert r["ok"] and r["subsystem"]=="mem20studioz"; assert "scheduled" in r
 def test_ecosystem_launch_pipeline_real_values():

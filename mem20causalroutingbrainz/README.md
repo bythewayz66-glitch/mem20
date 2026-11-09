@@ -1,4 +1,6 @@
-# mem20causalroutingbrainz — Causal Routing Brain
+# mem20causalroutingbrainz — Causal Routing Brain (Unified)
+
+Unified brain subsystem consolidating brain/forecast/fleet/migration/progression runtimes under `mem20causalroutingbrainz/brains/`.
 
 First-class mem20 subsystem for causal routing decisions (average treatment effect, weighted causal routing scores, confounder adjustment, intervention value, causal graph construction) with **6 causal-routing-specific estate peers** (unique set), SQLite WAL runtime, CLI, JSON HTTP API, served cockpit, docs/app integration, and real MCP tools.
 

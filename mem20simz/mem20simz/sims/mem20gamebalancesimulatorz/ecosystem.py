@@ -21,11 +21,11 @@ def _safe(name: str, fn: Callable[[], Dict[str, Any]]):
 
 def skill_progression(payload=None) -> Dict[str, Any]:
     def run():
-        from mem20skillbasedprogressionbrainz.domain import gain_xp, level, progression_health
+        from mem20causalroutingbrainz.domain import gain_xp, level, progression_health
         p = {"xp": int((payload or {}).get("xp", 120)), "skills": []}
         gain_xp(p, int((payload or {}).get("xp_gain", 50)))
         return {"level": level(p), "health": progression_health(p)}
-    return _safe("mem20skillbasedprogressionbrainz", run)
+    return _safe("mem20causalroutingbrainz", run)
 
 
 def player_motivation(payload=None) -> Dict[str, Any]:

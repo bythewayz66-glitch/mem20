@@ -7,7 +7,7 @@ First-class mem20 subsystem for sales experiments: score leads, generate outreac
 |---|---|---|
 | `mem20loreragcontentgeneratorz` | `generate,rank_adapters,quality_score` | approved outreach content/quality |
 | `mem20antiexploitationrewardshieldz` | `RewardShield` evaluate/exploit_ratio | anti-spam/guardrail corroboration |
-| `mem20demandforecastandcapacitybrainz` | `DemandForecastAndCapacityBrain` | demand/timing signal |
+| `mem20causalroutingbrainz` | `DemandForecastAndCapacityBrain` | demand/timing signal |
 | `mem20eventstreamsuperhighwayz` | `create_stream,publish,throughput` | experiment events |
 | `mem20autonomousdealdeskz` | `price_deal,approval_required,negotiate_round` | deal handoff/pricing context |
 | `mem20capabilitymarketplacez` | `CapabilityMarketplace` add/locate/distribution | channel/capability routing |

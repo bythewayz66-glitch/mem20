@@ -1,7 +1,7 @@
-"""mem20edgefleetbrainz MCP tools — capability-aware fleet control surface.
+"""mem20causalroutingbrainz MCP tools — capability-aware fleet control surface.
 
 Exposes the Edge Fleet Brain (RM-041) to MCP hosts. Tools call the real
-:class:`mem20edgefleetbrainz.service.FleetService` over a SQLite state plane.
+:class:`mem20causalroutingbrainz.service.FleetService` over a SQLite state plane.
 
 The subsystem import is lazy and guarded: tool registration never imports the
 fleet package, and a missing or broken install is reported by the handler
@@ -28,10 +28,10 @@ _DEFAULT_STORE = os.path.expanduser("~/.mem20/edgefleet/fleet.db")
 
 def _fleet_service(store_path: str | None = None):
     """Import and construct the fleet service, preferring the project directory."""
-    project = os.path.join(_REPO_ROOT, "mem20edgefleetbrainz")
+    project = os.path.join(_REPO_ROOT, "mem20causalroutingbrainz")
     if project not in sys.path:
         sys.path.insert(0, project)
-    from mem20edgefleetbrainz.service import FleetService  # type: ignore[import-not-found]
+    from mem20causalroutingbrainz.service import FleetService  # type: ignore[import-not-found]
 
     path = store_path or os.environ.get("MEM20_EDGEFLEET_STORE") or _DEFAULT_STORE
     return FleetService(Path(path).expanduser())
@@ -164,7 +164,7 @@ class EdgeFleetToolsMixin:
     # ------------------------------------------------------------- handlers
     def _edgefleet_error(self, exc: Exception) -> str:
         return _dumps({"ok": False, "error": f"{type(exc).__name__}: {exc}",
-                        "subsystem": "mem20edgefleetbrainz"})
+                        "subsystem": "mem20causalroutingbrainz"})
 
     async def _edgefleet_status(self, args: Dict[str, Any]) -> str:
         try:

@@ -46,7 +46,7 @@ def test_ecosystem_economics_real_values():
 def test_ecosystem_demand_signal_real_values():
     eco = _eco()
     r = eco.demand_signal([10, 12, 11, 13, 14])
-    assert r["ok"] is True and r["subsystem"] == "mem20demandforecastandcapacitybrainz"
+    assert r["ok"] is True and r["subsystem"] == "mem20causalroutingbrainz"
     assert r["point"] is not None and r["n"] >= 3
 
 

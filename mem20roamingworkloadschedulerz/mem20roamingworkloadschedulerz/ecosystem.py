@@ -4,7 +4,7 @@ import pathlib,sys
 from typing import Mapping,Sequence
 __all__=["node_swarm","workcell_queue","capacity_forecast","schedule_events","migration_containment","scheduler_routing","probe"]
 _REPO_ROOT=pathlib.Path(__file__).resolve().parents[2]
-_PROJECTS=("mem20zerotouchnodeswarmz","mem20autonomousworkcellsz","mem20demandforecastandcapacitybrainz","mem20eventstreamsuperhighwayz","mem20faultcontainmentcellsz","mem20capabilitymarketplacez")
+_PROJECTS=("mem20zerotouchnodeswarmz","mem20autonomousworkcellsz","mem20causalroutingbrainz","mem20eventstreamsuperhighwayz","mem20faultcontainmentcellsz","mem20capabilitymarketplacez")
 def _bootstrap():
     for name in reversed(_PROJECTS):
         p=str(_REPO_ROOT/name)
@@ -26,11 +26,11 @@ def workcell_queue(task:Mapping)->dict:
     except Exception as exc: return {"ok":False,"subsystem":"mem20autonomousworkcellsz","error":f"{type(exc).__name__}: {exc}"}
 def capacity_forecast(loads:Sequence[float])->dict:
     try:
-        from mem20demandforecastandcapacitybrainz.domain import DemandForecastAndCapacityBrain
+        from mem20causalroutingbrainz.domain import DemandForecastAndCapacityBrain
         b=DemandForecastAndCapacityBrain(alpha=0.3,window=max(5,len(loads) or 5))
         for v in (loads or [1,2,2]): b.observe(v)
-        return {"ok":True,"subsystem":"mem20demandforecastandcapacitybrainz","point":b.forecast(1).get("point")}
-    except Exception as exc: return {"ok":False,"subsystem":"mem20demandforecastandcapacitybrainz","error":f"{type(exc).__name__}: {exc}"}
+        return {"ok":True,"subsystem":"mem20causalroutingbrainz","point":b.forecast(1).get("point")}
+    except Exception as exc: return {"ok":False,"subsystem":"mem20causalroutingbrainz","error":f"{type(exc).__name__}: {exc}"}
 def schedule_events(name:str,payload:Mapping)->dict:
     try:
         from mem20eventstreamsuperhighwayz.domain import create_stream,publish,throughput

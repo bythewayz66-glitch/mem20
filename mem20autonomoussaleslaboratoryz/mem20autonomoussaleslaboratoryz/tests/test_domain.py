@@ -9,7 +9,7 @@ def test_pipeline(): assert _m().pipeline_value([{"deal_value":1000,"budget":200
 def test_segment(): assert "hot" in _m().segment_leads([{"budget":2000,"authority":True,"need":True,"timeline_days":10}])
 def test_ecosystem_content_outreach(): r=_eco().content_outreach("hello"); assert r["ok"] and r["subsystem"]=="mem20loreragcontentgeneratorz"
 def test_ecosystem_spam_guardrail(): r=_eco().spam_guardrail(1.0,{"consent":True},True); assert r["ok"] and r["subsystem"]=="mem20antiexploitationrewardshieldz"
-def test_ecosystem_demand_timing(): r=_eco().demand_timing([5,6,7]); assert r["ok"] and r["subsystem"]=="mem20demandforecastandcapacitybrainz"
+def test_ecosystem_demand_timing(): r=_eco().demand_timing([5,6,7]); assert r["ok"] and r["subsystem"]=="mem20causalroutingbrainz"
 def test_ecosystem_experiment_events(): r=_eco().experiment_events("x",{"a":1}); assert r["ok"] and r["subsystem"]=="mem20eventstreamsuperhighwayz"
 def test_ecosystem_deal_handoff(): r=_eco().deal_handoff({"price":100},{"volume":5}); assert r["ok"] and r["subsystem"]=="mem20autonomousdealdeskz" and "price" in r
 def test_ecosystem_channel_routing(): r=_eco().channel_routing("l",["email","chat"]); assert r["ok"] and r["subsystem"]=="mem20capabilitymarketplacez"

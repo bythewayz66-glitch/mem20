@@ -45,7 +45,7 @@ Chosen for autonomous workcell execution (worker placement, routing, telemetry, 
 | `mem20eventstreamsuperhighwayz` | `create_stream`, `publish`, `throughput` | publish workcell events and report stream throughput |
 | `mem20faultcontainmentcellsz` | `FaultContainmentCells`, `CircuitOpen`, `call` | isolate cell execution behind a circuit breaker (open reported, not fatal) |
 | `mem20mixedinitiativefocusenginez` | `focus_score`, `focus_health`, `take_over`, `suggest` | prioritize/focus work; indicate takeover and suggestions |
-| `mem20demandforecastandcapacitybrainz` | `DemandForecastAndCapacityBrain` (`observe`/`forecast`/`capacity_for`) | forecast load and compute headroom vs cell capacity |
+| `mem20causalroutingbrainz` | `DemandForecastAndCapacityBrain` (`observe`/`forecast`/`capacity_for`) | forecast load and compute headroom vs cell capacity |
 
 ## Python API (runnable)
 

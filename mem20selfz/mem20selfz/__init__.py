@@ -14,7 +14,7 @@ MEMBERS = (
     "mem20pipez",
     "mem20buildsequenceoptimizerz",
     "mem20datalocalityoptimizerz",
-    "mem20demandforecastandcapacitybrainz",
+    "mem20causalroutingbrainz",
     "mem20milestoneriskpredictorz",
     "mem20qualityriskforecasterz",
     "mem20quantuminspiredoptimizerz",

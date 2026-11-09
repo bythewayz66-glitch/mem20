@@ -11,7 +11,7 @@ def _pkg_meta():
         from . import MEMBERS, __version__
         return MEMBERS, __version__
     except Exception:
-        MEMBERS=("mem20pipez","mem20pipez","mem20buildsequenceoptimizerz","mem20datalocalityoptimizerz","mem20demandforecastandcapacitybrainz","mem20milestoneriskpredictorz","mem20qualityriskforecasterz","mem20quantuminspiredoptimizerz","mem20releasereadinesspredictorz","mem20runtimepromptoptimizerz","mem20selfhealingconnectormeshz","mem20selfhealingplansz","mem20selfhealingruntimecivilizationz","mem20selfoptimizingkernelz","mem20selfrepairingtestfactoryz","mem20selftuningresourcegovernorz")
+        MEMBERS=("mem20pipez","mem20pipez","mem20buildsequenceoptimizerz","mem20datalocalityoptimizerz","mem20causalroutingbrainz","mem20milestoneriskpredictorz","mem20qualityriskforecasterz","mem20quantuminspiredoptimizerz","mem20releasereadinesspredictorz","mem20runtimepromptoptimizerz","mem20selfhealingconnectormeshz","mem20selfhealingplansz","mem20selfhealingruntimecivilizationz","mem20selfoptimizingkernelz","mem20selfrepairingtestfactoryz","mem20selftuningresourcegovernorz")
         return MEMBERS, "0.1.0"
 MEMBERS, __version__ = _pkg_meta()
 _WEB_DIR=Path(__file__).resolve().parent/"web"; _CT={".html":"text/html; charset=utf-8",".js":"text/javascript; charset=utf-8",".css":"text/css; charset=utf-8",".json":"application/json"}

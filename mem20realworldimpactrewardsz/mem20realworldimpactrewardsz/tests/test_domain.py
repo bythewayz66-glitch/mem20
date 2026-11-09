@@ -11,7 +11,7 @@ def test_eco_loyalty(): r=_eco().loyalty_impact("u",1.0); assert r["ok"] and r["
 def test_eco_lifecycle(): r=_eco().lifecycle_value(); assert r["ok"] and r["subsystem"]=="mem20customerlifecycleenginez"
 def test_eco_events(): r=_eco().impact_events("i",{}); assert r["ok"] and r["subsystem"]=="mem20eventstreamsuperhighwayz"
 def test_eco_route(): r=_eco().reward_routing("k",["r"]); assert r["ok"] and r["subsystem"]=="mem20capabilitymarketplacez"
-def test_eco_forecast(): r=_eco().impact_forecast([1,2]); assert r["ok"] and r["subsystem"]=="mem20demandforecastandcapacitybrainz"
+def test_eco_forecast(): r=_eco().impact_forecast([1,2]); assert r["ok"] and r["subsystem"]=="mem20causalroutingbrainz"
 def test_report_and_probe():
     m=_m(); rep=m.impact_report(); assert rep["leaderboard"][0]["user"]=="alice" and len(rep["peers"])==6
     for k,v in rep["peers"].items(): assert v["ok"] is True,(k,v.get("error"))

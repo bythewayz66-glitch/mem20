@@ -11,7 +11,7 @@ def test_eco_causal(): r=_eco().causal_routing({"x":1},{"x":1}); assert r["ok"] 
 def test_eco_events(): r=_eco().scenario_events("x",{}); assert r["ok"] and r["subsystem"]=="mem20eventstreamsuperhighwayz"
 def test_eco_recovery(): r=_eco().recovery_paths("s"); assert r["ok"] and r["subsystem"]=="mem20autonomousrecoverydirectorz"
 def test_eco_healing(): r=_eco().healing_alternatives(["r"]); assert r["ok"] and r["subsystem"]=="mem20selfhealingplansz"
-def test_eco_demand(): r=_eco().demand_scenarios([10,12]); assert r["ok"] and r["subsystem"]=="mem20demandforecastandcapacitybrainz"
+def test_eco_demand(): r=_eco().demand_scenarios([10,12]); assert r["ok"] and r["subsystem"]=="mem20causalroutingbrainz"
 def test_eco_routing(): r=_eco().scenario_routing("k",["s"]); assert r["ok"] and r["subsystem"]=="mem20capabilitymarketplacez"
 def test_report_and_probe():
     m=_m(); rep=m.counterfactual_report(); assert rep["outcome_probability"]>0 and len(rep["peers"])==6

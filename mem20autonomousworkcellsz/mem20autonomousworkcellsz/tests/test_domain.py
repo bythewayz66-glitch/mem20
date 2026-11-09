@@ -18,7 +18,7 @@ def test_ecosystem_capability_routing(): r=_eco().capability_routing("k",["cpu"]
 def test_ecosystem_work_events(): r=_eco().work_events("x",{"a":1}); assert r["ok"] and r["subsystem"]=="mem20eventstreamsuperhighwayz"; assert r["published"]==1
 def test_ecosystem_cell_containment(): r=_eco().cell_containment("c"); assert r["ok"] and r["subsystem"]=="mem20faultcontainmentcellsz"
 def test_ecosystem_focus_priority(): r=_eco().focus_priority({"priority":1,"distractions":0}); assert r["ok"] and r["subsystem"]=="mem20mixedinitiativefocusenginez"; assert "score" in r
-def test_ecosystem_capacity_forecast(): r=_eco().capacity_forecast([2,3,4],4); assert r["ok"] and r["subsystem"]=="mem20demandforecastandcapacitybrainz"; assert r["point"] is not None
+def test_ecosystem_capacity_forecast(): r=_eco().capacity_forecast([2,3,4],4); assert r["ok"] and r["subsystem"]=="mem20causalroutingbrainz"; assert r["point"] is not None
 
 def test_workcell_report_and_probe():
     m=_m(); rep=m.workcell_report(); assert rep["processed"] is True and len(rep["peers"])==6

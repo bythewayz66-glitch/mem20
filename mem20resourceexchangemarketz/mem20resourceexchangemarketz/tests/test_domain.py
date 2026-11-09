@@ -9,7 +9,7 @@ def test_health(): h=_m().market_health([{"available":True},{"available":False}]
 def test_eco_route(): r=_eco().market_routing("k",["t"]); assert r["ok"] and r["subsystem"]=="mem20capabilitymarketplacez"
 def test_eco_events(): r=_eco().trade_events("t",{}); assert r["ok"] and r["subsystem"]=="mem20eventstreamsuperhighwayz"
 def test_eco_contain(): r=_eco().trade_containment("t"); assert r["ok"] and r["subsystem"]=="mem20faultcontainmentcellsz"
-def test_eco_price(): r=_eco().demand_pricing([1,2]); assert r["ok"] and r["subsystem"]=="mem20demandforecastandcapacitybrainz"
+def test_eco_price(): r=_eco().demand_pricing([1,2]); assert r["ok"] and r["subsystem"]=="mem20causalroutingbrainz"
 def test_eco_econ(): r=_eco().trade_economics(10,4); assert r["ok"] and r["subsystem"]=="mem20simz"
 def test_eco_loyalty(): r=_eco().participant_loyalty(["a","b"]); assert r["ok"] and r["subsystem"]=="mem20crossproductloyaltygraphz"
 def test_report_and_probe():

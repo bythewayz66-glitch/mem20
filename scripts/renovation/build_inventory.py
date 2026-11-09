@@ -142,7 +142,7 @@ OVERRIDES = {
     "mem20pipez": "GitHub Repo Assistant",
     "mem20reversibleexecutiongraphz": "GitHub Repo Assistant",
     "mem20deterministicconfigurationgraphz": "GitHub Repo Assistant",
-    "mem20zerodowntimemigrationbrainz": "GitHub Repo Assistant",
+    "mem20causalroutingbrainz": "GitHub Repo Assistant",
     # self-healing / scheduling
     "mem20selfhealingruntimecivilizationz": "mem20-sybsystems",
     "mem20universalhealthnervoussystemz": "mem20-sybsystems",

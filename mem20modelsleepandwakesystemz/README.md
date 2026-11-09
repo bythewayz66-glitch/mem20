@@ -6,7 +6,7 @@
 ## 1st-class implementation
 - **Domain:** `track_activity/should_sleep/sleep/wake/sleep_health` (legacy) plus `plan_hibernation`, `predictive_wake_schedule`, `sleepwake_report`.
 - **Runtime:** `forecast` wired to sleep/wake report + 6 peer signals (+ forecast series).
-- **Ecosystem (6 peers, unique set):** `mem20demandforecastandcapacitybrainz`, `mem20batteryawareagentschedulerz`, `mem20roamingworkloadschedulerz`, `mem20selftuningresourcegovernorz`, `mem20energyawarecomputemigrationz`, `mem20runtimecompatibilityenginez`.
+- **Ecosystem (6 peers, unique set):** `mem20causalroutingbrainz`, `mem20batteryawareagentschedulerz`, `mem20roamingworkloadschedulerz`, `mem20selftuningresourcegovernorz`, `mem20energyawarecomputemigrationz`, `mem20runtimecompatibilityenginez`.
 
 ## Runnable example (verified)
 ```bash

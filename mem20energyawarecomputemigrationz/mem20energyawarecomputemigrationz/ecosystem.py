@@ -48,10 +48,10 @@ def data_locality(data: Mapping[str, Any], nodes: Sequence[Mapping[str, Any]], s
         return {"best_node": best, "placement_score": score, "migration_cost": mcost, "locality_report": report}
     return _safe("mem20datalocalityoptimizerz", run)
 
-# 4) mem20demandforecastandcapacitybrainz - capacity forecast for targets
+# 4) mem20causalroutingbrainz - capacity forecast for targets
 def capacity_forecast(observations: Sequence[float], steps: int = 1) -> Dict[str, Any]:
     def run():
-        from mem20demandforecastandcapacitybrainz.domain import DemandForecastAndCapacityBrain
+        from mem20causalroutingbrainz.domain import DemandForecastAndCapacityBrain
         brain = DemandForecastAndCapacityBrain(alpha=0.3, window=50)
         for v in (observations or [1.0, 1.1, 0.9, 1.2]):
             brain.observe(float(v))
@@ -62,7 +62,7 @@ def capacity_forecast(observations: Sequence[float], steps: int = 1) -> Dict[str
             try: cap = brain.capacity_for(0.99)
             except Exception as e: cap = {"error": str(e)}
         return {"forecast": fc, "residual_sigma": sigma, "capacity": cap, "n": len(brain.observations)}
-    return _safe("mem20demandforecastandcapacitybrainz", run)
+    return _safe("mem20causalroutingbrainz", run)
 
 # 5) mem20goaleconomyschedulerz - prioritize migrations by value/cost
 def goal_priority(goals: Sequence[Mapping[str, Any]], budget: float = 10.0) -> Dict[str, Any]:

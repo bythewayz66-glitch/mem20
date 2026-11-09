@@ -23,7 +23,7 @@ and remote sites remain integrated even with poor connectivity.
 5. `mem20autonomousrecoverydirectorz.domain` — `triage`/`rollback_plan`/`remediate`/`recovery_time`/`health_after`.
 6. `mem20eventstreamsuperhighwayz.domain` — `create_stream/publish/subscribe/consume/throughput/lag` telemetry.
 
-This set is intentionally different from mem20edgefleetbrainz (#300) and
+This set is intentionally different from mem20causalroutingbrainz (#300) and
 mem20edgetocloudintelligencecontinuumz (#301).
 
 ## Compatibility

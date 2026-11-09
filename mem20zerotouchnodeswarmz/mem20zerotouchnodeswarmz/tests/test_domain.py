@@ -67,7 +67,7 @@ def test_estate_context_real_integrations(tmp_path):
     assert ctx["sitemap_skips_cache"] is True
 
 def test_eco_scheduler(): r=_eco().workload_scheduler(); assert r["ok"] and r["subsystem"]=="mem20roamingworkloadschedulerz"
-def test_eco_fleet(): r=_eco().edge_fleet(); assert r["ok"] and r["subsystem"]=="mem20edgefleetbrainz"
+def test_eco_fleet(): r=_eco().edge_fleet(); assert r["ok"] and r["subsystem"]=="mem20causalroutingbrainz"
 def test_eco_routing(): r=_eco().swarm_routing("k",["s"]); assert r["ok"] and r["subsystem"]=="mem20capabilitymarketplacez"
 def test_eco_events(): r=_eco().swarm_events("s",{}); assert r["ok"] and r["subsystem"]=="mem20eventstreamsuperhighwayz"
 def test_eco_contain(): r=_eco().swarm_containment("s"); assert r["ok"] and r["subsystem"]=="mem20faultcontainmentcellsz"

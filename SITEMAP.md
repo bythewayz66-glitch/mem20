@@ -72,7 +72,7 @@ A machine-readable map of this monorepo so an agent can find the right subsystem
 | `mem20crisisresponsemeshz` | 385 | 1 | `mem20crisisresponsemeshz` | Crisis Response Mesh |
 | `mem20-sdk-typescript` | 375 | 0 | - | @mem20/sdk (TypeScript) |
 | `mem20faultcontainmentcellsz` | 373 | 1 | - | RM-093 — Fault Containment Cells |
-| `mem20demandforecastandcapacitybrainz` | 369 | 1 | - | RM-088 — Demand Forecast and Capacity Brain |
+| `mem20causalroutingbrainz` | 369 | 1 | - | RM-088 — Demand Forecast and Capacity Brain |
 | `mem20webhooksupernetworkz` | 366 | 1 | - | RM-078 — Webhook Supernetwork |
 | `mem20nearbydevicemeshz` | 362 | 1 | `mem20nearbydevicemeshz` | Nearby Device Mesh — discover and combine trusted local devices over short-range and local networks |
 | `mem20adaptiveforgettingenginez` | 356 | 1 | - | mem20adaptiveforgettingenginez |
@@ -120,7 +120,7 @@ A machine-readable map of this monorepo so an agent can find the right subsystem
 | `mem20pipez` | 333 | 0 | - | RM-242 — Rigging, Animation and Motion Pipeline |
 | `mem20runtimepromptoptimizerz` | 333 | 0 | - | RM-234 — Runtime Prompt Optimizer |
 | `mem20selfhealingruntimecivilizationz` | 333 | 0 | - | RM-217 — Self-Healing Runtime Civilization |
-| `mem20skillbasedprogressionbrainz` | 333 | 0 | - | RM-208 — Skill-Based Progression Brain |
+| `mem20causalroutingbrainz` | 333 | 0 | - | RM-208 — Skill-Based Progression Brain |
 | `mem20spatialcommanduniversez` | 333 | 0 | - | RM-216 — Spatial Command Universe |
 | `mem20styleguideagentz` | 333 | 0 | - | RM-228 — Style Guide Agent |
 | `mem20pipez` | 333 | 0 | - | RM-239 — Version Control, Large-Asset and Recovery Pipeline |
@@ -149,7 +149,7 @@ A machine-readable map of this monorepo so an agent can find the right subsystem
 | `mem20deterministicconfigurationgraphz` | 263 | 0 | - | RM-092 — Deterministic Configuration Graph |
 | `mem20devicecapabilitycompilerz` | 263 | 0 | - | RM-046 — Device Capability Compiler |
 | `mem20dynamicskillgraphz` | 263 | 0 | - | RM-033 — Dynamic Skill Graph |
-| `mem20edgefleetbrainz` | 263 | 0 | - | RM-041 — Edge Fleet Brain |
+| `mem20causalroutingbrainz` | 263 | 0 | - | RM-041 — Edge Fleet Brain |
 | `mem20edgetransportfabricz` | 263 | 0 | - | RM-077 — Edge Transport Fabric |
 | `mem20energyawarecomputemigrationz` | 263 | 0 | - | RM-047 — Energy-Aware Compute Migration |
 | `mem20energyawarefoundationz` | 263 | 0 | - | RM-098 — Energy-Aware Foundation |
@@ -220,7 +220,7 @@ A machine-readable map of this monorepo so an agent can find the right subsystem
 | `mem20adapz` | 122 | 1 | `mem20adapz` | mem20 adaptive systems runtime — consolidated adaptive organs. |
 | `mem20enginez` | 115 | 1 | `mem20enginez` | mem20 engine runtime — crew runtime grouping reviewed packages for joint integration. |
 | `mem20dynamicphasereplannerz` | 114 | 1 | `mem20dynamicphasereplannerz` | Recompute the remaining work when results, resources, or priorities change |
-| `mem20zerodowntimemigrationbrainz` | 111 | 1 | `mem20zerodowntimemigrationbrainz` | Plan, simulate, execute, verify, and reverse complex data migrations |
+| `mem20causalroutingbrainz` | 111 | 1 | `mem20causalroutingbrainz` | Plan, simulate, execute, verify, and reverse complex data migrations |
 | `mem20fabricz` | 108 | 1 | `mem20fabricz` | mem20 integration fabric runtime — crew runtime grouping reviewed packages for joint integration. |
 | `mem20milestoneriskpredictorz` | 103 | 1 | `mem20milestoneriskpredictorz` | Forecast likely delay and failure points from dependency and runtime signals |
 | `mem20selfz` | 101 | 1 | `mem20selfz` | mem20 self-healing, self-tuning, forecasting and optimization runtime — crew runtime grouping reviewed packages for joint integration. |
@@ -540,7 +540,7 @@ mem20webassemblycomponentlabz = mem20webassemblycomponentlabz.core:cli
 mem20studioz = mem20studioz.core:cli
 mem20webgpuz = mem20webgpuz.core:cli
 mem20yetiz = mem20yetiz.cli:main
-mem20zerodowntimemigrationbrainz = mem20zerodowntimemigrationbrainz.core:cli
+mem20causalroutingbrainz = mem20causalroutingbrainz.core:cli
 fs-microapp = mem20zimr.cli:main
 toolchest = toolchest.cli:main
 ```

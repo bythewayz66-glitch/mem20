@@ -3,7 +3,7 @@
 First-class mem20 subsystem for real-world impact rewards (record impact, compute rewards, leaderboards) with **6 peers**, SQLite WAL runtime, CLI, JSON HTTP API, served web cockpit, docs/app monitor, and real MCP tools. Core API preserved.
 
 ## Peers (6)
-`mem20dynamicquestrewardcomposerz`, `mem20crossproductloyaltygraphz`, `mem20customerlifecycleenginez`, `mem20eventstreamsuperhighwayz`, `mem20capabilitymarketplacez`, `mem20demandforecastandcapacitybrainz`.
+`mem20dynamicquestrewardcomposerz`, `mem20crossproductloyaltygraphz`, `mem20customerlifecycleenginez`, `mem20eventstreamsuperhighwayz`, `mem20capabilitymarketplacez`, `mem20causalroutingbrainz`.
 
 ## Python API (runnable)
 ```python

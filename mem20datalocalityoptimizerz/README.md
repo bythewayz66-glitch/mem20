@@ -3,7 +3,7 @@
 First-class mem20 subsystem for data locality optimization (placement scoring, optimal placement, migration cost, locality reporting, rebalance) with **6 peers**, SQLite WAL runtime, CLI, JSON HTTP API, served web cockpit, docs/app monitor, and real MCP tools. Core API preserved.
 
 ## Peers (6)
-`mem20zerotouchnodeswarmz`, `mem20eventstreamsuperhighwayz`, `mem20faultcontainmentcellsz`, `mem20universalhealthnervoussystemz`, `mem20capabilitymarketplacez`, `mem20demandforecastandcapacitybrainz`.
+`mem20zerotouchnodeswarmz`, `mem20eventstreamsuperhighwayz`, `mem20faultcontainmentcellsz`, `mem20universalhealthnervoussystemz`, `mem20capabilitymarketplacez`, `mem20causalroutingbrainz`.
 
 ## Python API (runnable)
 ```python

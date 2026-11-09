@@ -10,7 +10,7 @@ def test_segments(): s=_m().segment_customers([{"id":"a","days_since_signup":3,"
 def test_eco_biz(): r=_eco().business_value(100); assert r["ok"] and r["subsystem"]=="mem20simz"
 def test_eco_pipeline(): r=_eco().pipeline_signal(100); assert r["ok"] and r["subsystem"]=="mem20autonomoussaleslaboratoryz"
 def test_eco_loyalty(): r=_eco().loyalty_context(["core"]); assert r["ok"] and r["subsystem"]=="mem20crossproductloyaltygraphz"
-def test_eco_demand(): r=_eco().demand_signal([10,12]); assert r["ok"] and r["subsystem"]=="mem20demandforecastandcapacitybrainz"
+def test_eco_demand(): r=_eco().demand_signal([10,12]); assert r["ok"] and r["subsystem"]=="mem20causalroutingbrainz"
 def test_eco_events(): r=_eco().lifecycle_events("e",{}); assert r["ok"] and r["subsystem"]=="mem20eventstreamsuperhighwayz"
 def test_eco_growth(): r=_eco().growth_partnerships(); assert r["ok"] and r["subsystem"]=="mem20acquisitionandpartnershipscoutz"
 def test_report_and_probe():

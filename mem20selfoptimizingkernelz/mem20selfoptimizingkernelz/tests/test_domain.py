@@ -7,7 +7,7 @@ def test_score(): assert _m().score({"a":2},{"a":3})==6
 def test_search(): r=_m().search({"x":[1,2]},{"x":1},5,seed=0); assert r["score"] in (1,2)
 def test_health(): assert _m().kernel_health({"a":1})["params"]==1
 def test_eco_causal(): r=_eco().causal_tuning({"s":1},{"s":1}); assert r["ok"] and r["subsystem"]=="mem20causalroutingbrainz"
-def test_eco_forecast(): r=_eco().demand_forecast([1,2]); assert r["ok"] and r["subsystem"]=="mem20demandforecastandcapacitybrainz"
+def test_eco_forecast(): r=_eco().demand_forecast([1,2]); assert r["ok"] and r["subsystem"]=="mem20causalroutingbrainz"
 def test_eco_cf(): r=_eco().counterfactual_eval({"score":1}); assert r["ok"] and r["subsystem"]=="mem20simz"
 def test_eco_events(): r=_eco().tuning_events("t",{}); assert r["ok"] and r["subsystem"]=="mem20eventstreamsuperhighwayz"
 def test_eco_route(): r=_eco().kernel_routing("k",["o"]); assert r["ok"] and r["subsystem"]=="mem20capabilitymarketplacez"

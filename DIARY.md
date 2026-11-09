@@ -353,7 +353,7 @@ Verification: all 14 gate logs end with `EXIT=0` and seven PASS rows; all 14
 issues are CLOSED on GitHub after the pushes.
 
 ---
-## 2026-11-07 - mem20edgefleetbrainz (#300): depth-first rebuild
+## 2026-11-07 - mem20causalroutingbrainz (#300): depth-first rebuild
 
 Replaced the shallow template fix for RM-041 with a real subsystem. The
 template approach (fenced README block, one smoke test, `estate_context()`,
@@ -392,10 +392,10 @@ identical machines tied on cost because `list.sort()` compared the node dicts.
 The peer now breaks ties by node id.
 
 Verification (this commit, 31e09731):
-- `pytest mem20edgefleetbrainz -q` -> 77 passed.
+- `pytest mem20causalroutingbrainz -q` -> 77 passed.
 - `simulate` -> 6/6 scenarios; `doctor` -> all six peers reachable.
 - `benchmark --iterations 20` over 12 nodes -> 5,098 ops/sec, p50 0.196 ms.
-- `scripts/renovation/conformance.py mem20edgefleetbrainz` -> 7/7, six
+- `scripts/renovation/conformance.py mem20causalroutingbrainz` -> 7/7, six
   cross-modules imported and called on covered lines.
 
 Stopped here for owner evaluation of #300 before starting #301.
@@ -443,7 +443,7 @@ Verification:
 ## 2026-11-07 - mem20energyawarecomputemigrationz (#303): depth-first rebuild
 
 Rebuilt RM-047 (Energy-Aware Compute Migration, fails criterion 5,7) as a real
-first-class subsystem. Preserved legacy domain API for `mem20edgefleetbrainz`
+first-class subsystem. Preserved legacy domain API for `mem20causalroutingbrainz`
 (`energy_cost`, `migrate_decision`, `carbon_footprint`, `greenest_node` with
 deterministic tie-break by node id, `migration_plan`) and extended with
 `ComputeNode`/`Workload`, feasibility, battery/thermal/renewable-aware scoring,
@@ -452,7 +452,7 @@ deterministic tie-break by node id, `migration_plan`) and extended with
 Delivered: SQLite WAL `store`, `ecosystem` with 6 **unique** peers (different
 from #300/#301/#302) — `mem20batteryawareagentschedulerz`,
 `mem20energyawarefoundationz`, `mem20datalocalityoptimizerz`,
-`mem20demandforecastandcapacitybrainz`, `mem20goaleconomyschedulerz`,
+`mem20causalroutingbrainz`, `mem20goaleconomyschedulerz`,
 `mem20planetarybatchfabricz`; `service` (plan/migrate/status/doctor with peer
 signals), `runtime` CLI+JSON HTTP+cockpit, `web/`, project `tests/`, `docs/PLAN.md`,
 comprehensive README, `docs/app/energy-migration/` monitor, gateway/toolchest.
@@ -626,7 +626,7 @@ Rebuilt RM-231 (Game Balance Simulator, fails 5,6,7, operation_kind=progression)
 while preserving legacy domain API (`dps,ttk,economy_balance,difficulty_curve,balance_check,win_rate`)
 used by #307 and preserving CAPABILITY Engine/CLI/10-scenario simulator. Enriched progression
 operation (gated by explicit balance/simulation flags) with combat/economy/progression balance
-analysis and 6 unique peer signals (different from #300–#314): `mem20skillbasedprogressionbrainz`,
+analysis and 6 unique peer signals (different from #300–#314): `mem20causalroutingbrainz`,
 `mem20twinz`,`mem20ailevelarchitectz`,`mem20communitychallengeenginez`,
 `mem20skillmemorytransferz`,`mem20realworldimpactrewardsz`. Added `/doctor`, web cockpit, root
 shims, fenced runnable README, docs/PLAN, docs/app monitor, gateway/toolchest. Verification:
@@ -717,7 +717,7 @@ Rebuilt RM-048 (Hardware Marketplace, fails 5,6,7, operation_kind=match) preserv
 and Engine/CLI/10-scenario simulator. `match` provides meaningful marketplace matching for
 `listings`/`workloads` payloads (fleet placement/energy/cost, capability + explicit limits,
 locality/migration, carbon/energy, swarm availability, scheduler fit) and preserves generic
-demand/supply match. 6 peers: `mem20edgefleetbrainz, mem20devicecapabilitycompilerz,
+demand/supply match. 6 peers: `mem20causalroutingbrainz, mem20devicecapabilitycompilerz,
 mem20datalocalityoptimizerz, mem20energyawarecomputemigrationz, mem20zerotouchnodeswarmz,
 mem20roamingworkloadschedulerz`. `/doctor`, web, root shims, fenced README, docs/PLAN, docs/app
 monitor, gateway/toolchest. 9 tests pass.
@@ -846,6 +846,9 @@ Completed depth-first rebuild to **7/7** for #315-#329 (11 subsystems in this se
 
 ## 2026-11-09 - consolidate studio subsystems into mem20studioz
 - **Consolidation:** Merged studio/build/production subsystems into `mem20studioz` as modules under `mem20studioz/studios/` (aigamestudiobuilderz, aiproductionstudiooperatingsystemz, assetremixstudioz, protocolinventionstudioz, webgpucomputestudioz). Removed originals; repo-wide references updated to `mem20studioz`.
+
+## 2026-11-09 - consolidate brain subsystems into mem20causalroutingbrainz
+- **Consolidation:** Merged brain/forecast/fleet/progression/migration subsystems into `mem20causalroutingbrainz` as modules under `mem20causalroutingbrainz/brains/` (demandforecastandcapacitybrainz, edgefleetbrainz, skillbasedprogressionbrainz, zerodowntimemigrationbrainz). Removed originals; repo-wide references updated to `mem20causalroutingbrainz`.
 - **Full pytest follow-up fixes (then pushed):** fixed `gateway/mem20_gateway.py` syntax/structure (criterion-7 block was dangling in `main()` breaking `elif read`; moved 39 missing entries into `SUBSYSTEMS`). Fixed `mem20mktz` root causes (truthful `braid_hook` availability via `braid_bridge.available()`; `bundle.compose` queries UCG only when `cap_ids` present; env-honest test guards/assertions) → **33 passed, 9 skipped**. Fixed `mem20selfhealingruntimecivilizationz.integrations.PlansEngineBridge` adapter for real `mem20selfhealingplansz` API (no `Engine`) → **53 passed**.
 - **es//:** mem20 context + self-model saved (GitHub steps skipped earlier); commits/pushes to `origin/main` record the work.
 

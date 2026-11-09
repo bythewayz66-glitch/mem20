@@ -4,7 +4,7 @@ import pathlib, sys
 from typing import Mapping, Sequence
 __all__=["node_topology","placement_events","placement_containment","node_health","placement_routing","capacity_forecast","probe"]
 _REPO_ROOT=pathlib.Path(__file__).resolve().parents[2]
-_PROJECTS=("mem20zerotouchnodeswarmz","mem20eventstreamsuperhighwayz","mem20faultcontainmentcellsz","mem20universalhealthnervoussystemz","mem20capabilitymarketplacez","mem20demandforecastandcapacitybrainz")
+_PROJECTS=("mem20zerotouchnodeswarmz","mem20eventstreamsuperhighwayz","mem20faultcontainmentcellsz","mem20universalhealthnervoussystemz","mem20capabilitymarketplacez","mem20causalroutingbrainz")
 def _bootstrap():
     for name in reversed(_PROJECTS):
         p=str(_REPO_ROOT/name)
@@ -48,11 +48,11 @@ def placement_routing(key:str,strategies:Sequence[str])->dict:
     except Exception as exc: return {"ok":False,"subsystem":"mem20capabilitymarketplacez","error":f"{type(exc).__name__}: {exc}"}
 def capacity_forecast(usage:Sequence[float])->dict:
     try:
-        from mem20demandforecastandcapacitybrainz.domain import DemandForecastAndCapacityBrain
+        from mem20causalroutingbrainz.domain import DemandForecastAndCapacityBrain
         b=DemandForecastAndCapacityBrain(alpha=0.3,window=max(5,len(usage) or 5))
         for v in (usage or [20,25,22,28,30]): b.observe(v)
-        return {"ok":True,"subsystem":"mem20demandforecastandcapacitybrainz","point":b.forecast(1).get("point")}
-    except Exception as exc: return {"ok":False,"subsystem":"mem20demandforecastandcapacitybrainz","error":f"{type(exc).__name__}: {exc}"}
+        return {"ok":True,"subsystem":"mem20causalroutingbrainz","point":b.forecast(1).get("point")}
+    except Exception as exc: return {"ok":False,"subsystem":"mem20causalroutingbrainz","error":f"{type(exc).__name__}: {exc}"}
 def probe()->dict:
     checks={"node_topology":node_topology([{"id":"n1"}]),"placement_events":placement_events("p",{}),"placement_containment":placement_containment("n1"),"node_health":node_health(["n1"]),"placement_routing":placement_routing("k",["latency"]),"capacity_forecast":capacity_forecast([20,25])}
     return {"ok":all(v.get("ok") for v in checks.values()),"checks":checks}

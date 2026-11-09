@@ -128,7 +128,7 @@ same tools are present. A non-empty symmetric difference aborts generation.
 | 96 | `mem20sensorymemoryingestz` | 2 | `sensorymemoryingestz_*` | `mcp/tools/mem20sensorymemoryingestz_tools.py` |
 | 97 | `mem20servicebundlingenginez` | 2 | `servicebundlingenginez_*` | `mcp/tools/mem20servicebundlingenginez_tools.py` |
 | 98 | `mem20simz` | 2 | `simz_*` | `mcp/tools/mem20simz_tools.py` |
-| 99 | `mem20skillbasedprogressionbrainz` | 2 | `skillbasedprogressionbrainz_*` | `mcp/tools/mem20skillbasedprogressionbrainz_tools.py` |
+| 99 | `mem20causalroutingbrainz` | 2 | `skillbasedprogressionbrainz_*` | `mcp/tools/mem20causalroutingbrainz_tools.py` |
 | 100 | `mem20skillmemorytransferz` | 2 | `skillmemorytransferz_*` | `mcp/tools/mem20skillmemorytransferz_tools.py` |
 | 101 | `mem20spatialcommanduniversez` | 2 | `spatialcommanduniversez_*` | `mcp/tools/mem20spatialcommanduniversez_tools.py` |
 | 102 | `mem20specialistmodelforgez` | 2 | `specialistmodelforgez_*` | `mcp/tools/mem20specialistmodelforgez_tools.py` |
@@ -156,7 +156,7 @@ same tools are present. A non-empty symmetric difference aborts generation.
 | 124 | `mem20dynamicphasereplannerz` | 1 | `dynamicphasereplannerz_*` | `mcp/tools/mem20dynamicphasereplannerz_tools.py` |
 | 125 | `mem20milestoneriskpredictorz` | 1 | `milestoneriskpredictorz_*` | `mcp/tools/mem20milestoneriskpredictorz_tools.py` |
 | 126 | `mem20prioritycollisionresolverz` | 1 | `prioritycollisionresolverz_*` | `mcp/tools/mem20prioritycollisionresolverz_tools.py` |
-| 127 | `mem20zerodowntimemigrationbrainz` | 1 | `zerodowntimemigrationbrainz_*` | `mcp/tools/mem20zerodowntimemigrationbrainz_tools.py` |
+| 127 | `mem20causalroutingbrainz` | 1 | `zerodowntimemigrationbrainz_*` | `mcp/tools/mem20causalroutingbrainz_tools.py` |
 | 128 | `rm052` | 1 | `graph_*` | `mcp/tools/rm052_tools.py` |
 | 129 | `rm239` | 1 | `vcs_*` | `mcp/tools/rm239_tools.py` |
 | — | **total** | **487** | | |

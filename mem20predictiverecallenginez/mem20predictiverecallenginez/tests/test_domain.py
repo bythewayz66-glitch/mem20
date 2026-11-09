@@ -12,7 +12,7 @@ def test_eco_compress(): r=_eco().context_compression("history"); assert r["ok"]
 def test_eco_events(): r=_eco().recall_events("r",{}); assert r["ok"] and r["subsystem"]=="mem20eventstreamsuperhighwayz"
 def test_eco_focus(): r=_eco().focus_context({"priority":1}); assert r["ok"] and r["subsystem"]=="mem20mixedinitiativefocusenginez"
 def test_eco_route(): r=_eco().capability_routing("k",["r"]); assert r["ok"] and r["subsystem"]=="mem20capabilitymarketplacez"
-def test_eco_demand(): r=_eco().demand_forecast([1,2,3]); assert r["ok"] and r["subsystem"]=="mem20demandforecastandcapacitybrainz"
+def test_eco_demand(): r=_eco().demand_forecast([1,2,3]); assert r["ok"] and r["subsystem"]=="mem20causalroutingbrainz"
 def test_report_and_probe():
     m=_m(); rep=m.recall_report(); assert rep["predictions"][0]=="a" and len(rep["peers"])==6
     for k,v in rep["peers"].items(): assert v["ok"] is True,(k,v.get("error"))

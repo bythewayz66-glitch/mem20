@@ -9,8 +9,8 @@ This is a real tool, not a template generator: it reports actual state and only
 makes narrow, explicit edits when --fix-gateway or --fix-toolchest is passed.
 
 Usage:
-  python scripts/renovation/register_subsystem.py mem20edgefleetbrainz
-  python scripts/renovation/register_subsystem.py mem20edgefleetbrainz --conformance
+  python scripts/renovation/register_subsystem.py mem20causalroutingbrainz
+  python scripts/renovation/register_subsystem.py mem20causalroutingbrainz --conformance
 """
 
 from __future__ import annotations
@@ -122,7 +122,7 @@ def check_package(name: str) -> dict:
 
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("name", help="subsystem name, e.g. mem20edgefleetbrainz")
+    parser.add_argument("name", help="subsystem name, e.g. mem20causalroutingbrainz")
     parser.add_argument("--conformance", action="store_true", help="run conformance gate")
     parser.add_argument("--json", action="store_true", help="emit JSON report")
     args = parser.parse_args(argv)

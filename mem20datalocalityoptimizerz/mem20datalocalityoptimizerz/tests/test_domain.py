@@ -17,7 +17,7 @@ def test_eco_events(): r=_eco().placement_events("x",{}); assert r["ok"] and r["
 def test_eco_contain(): r=_eco().placement_containment("n1"); assert r["ok"] and r["subsystem"]=="mem20faultcontainmentcellsz"
 def test_eco_health(): r=_eco().node_health(["n1"]); assert r["ok"] and r["subsystem"]=="mem20universalhealthnervoussystemz"
 def test_eco_route(): r=_eco().placement_routing("k",["latency"]); assert r["ok"] and r["subsystem"]=="mem20capabilitymarketplacez"
-def test_eco_cap(): r=_eco().capacity_forecast([20,25]); assert r["ok"] and r["subsystem"]=="mem20demandforecastandcapacitybrainz"
+def test_eco_cap(): r=_eco().capacity_forecast([20,25]); assert r["ok"] and r["subsystem"]=="mem20causalroutingbrainz"
 def test_report_and_probe():
     m=_m(); rep=m.placement_report(); assert len(rep["assignments"])>0 and len(rep["peers"])==6
     for k,v in rep["peers"].items(): assert v["ok"] is True,(k,v.get("error"))

@@ -1,4 +1,4 @@
-"""mem20zerodowntimemigrationbrainz MCP tools."""
+"""mem20causalroutingbrainz MCP tools."""
 from __future__ import annotations
 import json,os,sys
 from typing import Any,Dict
@@ -6,15 +6,15 @@ try: import mcp_types as mt; MCP_SDK_AVAILABLE=True
 except ImportError: MCP_SDK_AVAILABLE=False; mt=None  # type: ignore
 _REPO_ROOT=os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 def _load():
-    p=os.path.join(_REPO_ROOT,"mem20zerodowntimemigrationbrainz")
+    p=os.path.join(_REPO_ROOT,"mem20causalroutingbrainz")
     if p not in sys.path: sys.path.insert(0,p)
-    import mem20zerodowntimemigrationbrainz.domain as domain  # type: ignore
+    import mem20causalroutingbrainz.domain as domain  # type: ignore
     return domain
 def _d(v): return json.dumps(v,indent=2,default=str)
 class ZeroDowntimeMigrationBrainzToolsMixin:
     def register_zerodowntimemigrationbrainz_tools(self):
         if not MCP_SDK_AVAILABLE: return
-        self.tools["zerodowntimemigrationbrainz_status"]=mt.Tool(name="zerodowntimemigrationbrainz_status",title="Zero-Downtime Migration Brain Status",description="Real status/health from mem20zerodowntimemigrationbrainz domain.",inputSchema={"type":"object","properties":{}})
+        self.tools["zerodowntimemigrationbrainz_status"]=mt.Tool(name="zerodowntimemigrationbrainz_status",title="Zero-Downtime Migration Brain Status",description="Real status/health from mem20causalroutingbrainz domain.",inputSchema={"type":"object","properties":{}})
     async def _zerodowntimemigrationbrainz_status(self,args:Dict[str,Any])->str:
         try:
             d=_load()

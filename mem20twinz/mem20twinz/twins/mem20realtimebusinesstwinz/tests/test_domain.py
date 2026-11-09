@@ -8,7 +8,7 @@ def test_alerts(): t=_m().create_twin("x"); _m().update_kpi(t,"c",0.2); a=_m().c
 def test_scenario(): t=_m().create_twin("x"); _m().update_kpi(t,"r",10); s=_m().scenario(t,{"r":15}); assert s["delta"]["r"]==5
 def test_health(): t=_m().create_twin("x"); assert _m().twin_health(t)["fresh"] is True
 def test_eco_biz(): r=_eco().business_scenarios(100); assert r["ok"] and r["subsystem"]=="mem20simz"
-def test_eco_forecast(): r=_eco().kpi_forecast([10,12]); assert r["ok"] and r["subsystem"]=="mem20demandforecastandcapacitybrainz"
+def test_eco_forecast(): r=_eco().kpi_forecast([10,12]); assert r["ok"] and r["subsystem"]=="mem20causalroutingbrainz"
 def test_eco_events(): r=_eco().kpi_events("k",{}); assert r["ok"] and r["subsystem"]=="mem20eventstreamsuperhighwayz"
 def test_eco_health(): r=_eco().health_alerts(["k"]); assert r["ok"] and r["subsystem"]=="mem20universalhealthnervoussystemz"
 def test_eco_cf(): r=_eco().counterfactual_scenarios({"r":100}); assert r["ok"] and r["subsystem"]=="mem20simz"

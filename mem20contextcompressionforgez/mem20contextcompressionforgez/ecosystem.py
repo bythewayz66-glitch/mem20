@@ -4,7 +4,7 @@ import pathlib,sys
 from typing import Mapping,Sequence
 __all__=["stream_compressed","summary_quality","focus_retention","strategy_routing","budget_forecast","keep_routing","probe"]
 _REPO_ROOT=pathlib.Path(__file__).resolve().parents[2]
-_PROJECTS=("mem20eventstreamsuperhighwayz","mem20loreragcontentgeneratorz","mem20mixedinitiativefocusenginez","mem20capabilitymarketplacez","mem20demandforecastandcapacitybrainz","mem20causalroutingbrainz")
+_PROJECTS=("mem20eventstreamsuperhighwayz","mem20loreragcontentgeneratorz","mem20mixedinitiativefocusenginez","mem20capabilitymarketplacez","mem20causalroutingbrainz","mem20causalroutingbrainz")
 def _bootstrap():
     for name in reversed(_PROJECTS):
         p=str(_REPO_ROOT/name)
@@ -38,11 +38,11 @@ def strategy_routing(key:str,caps:Sequence[str])->dict:
     except Exception as exc: return {"ok":False,"subsystem":"mem20capabilitymarketplacez","error":f"{type(exc).__name__}: {exc}"}
 def budget_forecast(observations:Sequence[float],budget:int=1000)->dict:
     try:
-        from mem20demandforecastandcapacitybrainz.domain import DemandForecastAndCapacityBrain
+        from mem20causalroutingbrainz.domain import DemandForecastAndCapacityBrain
         b=DemandForecastAndCapacityBrain(alpha=0.3,window=max(5,len(observations) or 5))
         for v in (observations or [200,300,250,400,350]): b.observe(v)
-        fc=b.forecast(steps=1); return {"ok":True,"subsystem":"mem20demandforecastandcapacitybrainz","point":fc.get("point"),"headroom":b.capacity_for(budget)}
-    except Exception as exc: return {"ok":False,"subsystem":"mem20demandforecastandcapacitybrainz","error":f"{type(exc).__name__}: {exc}"}
+        fc=b.forecast(steps=1); return {"ok":True,"subsystem":"mem20causalroutingbrainz","point":fc.get("point"),"headroom":b.capacity_for(budget)}
+    except Exception as exc: return {"ok":False,"subsystem":"mem20causalroutingbrainz","error":f"{type(exc).__name__}: {exc}"}
 def keep_routing(features:Mapping,weights:Mapping)->dict:
     try:
         from mem20causalroutingbrainz.domain import route_by_cause

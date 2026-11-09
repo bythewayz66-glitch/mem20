@@ -30,11 +30,11 @@
     "mem20crossruntimeeventlatticez",
     "mem20twinz",
     "mem20customerlifecycleenginez",
-    "mem20demandforecastandcapacitybrainz",
+    "mem20causalroutingbrainz",
     "mem20deterministicconfigurationgraphz",
     "mem20devicecapabilitycompilerz",
     "mem20dynamicskillgraphz",
-    "mem20edgefleetbrainz",
+    "mem20causalroutingbrainz",
     "mem20edgetransportfabricz",
     "mem20energyawarecomputemigrationz",
     "mem20energyawarefoundationz",
@@ -199,7 +199,7 @@
     "mem20voicetoactionswitchboardz",
     "mem20webassemblycomponentlabz",
     "mem20studioz",
-    "mem20zerodowntimemigrationbrainz"
+    "mem20causalroutingbrainz"
    ]
   },
   {
@@ -245,7 +245,7 @@
     "mem20pipez",
     "mem20runtimepromptoptimizerz",
     "mem20selfhealingruntimecivilizationz",
-    "mem20skillbasedprogressionbrainz",
+    "mem20causalroutingbrainz",
     "mem20spatialcommanduniversez",
     "mem20styleguideagentz",
     "mem20pipez",

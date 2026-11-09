@@ -24,7 +24,7 @@ __all__ = [
 _REPO_ROOT = pathlib.Path(__file__).resolve().parents[2]
 _PROJECTS = (
     "mem20simz",
-    "mem20demandforecastandcapacitybrainz",
+    "mem20causalroutingbrainz",
     "mem20acquisitionandpartnershipscoutz",
     "mem20antiexploitationrewardshieldz",
     "mem20capabilitymarketplacez",
@@ -71,7 +71,7 @@ def economics_model(units: int, price: float, fixed: float, variable: float) -> 
 def demand_signal(observations: Sequence[float]) -> dict:
     """Forecast demand/capacity signal for pricing and volume terms."""
     try:
-        from mem20demandforecastandcapacitybrainz.domain import DemandForecastAndCapacityBrain
+        from mem20causalroutingbrainz.domain import DemandForecastAndCapacityBrain
 
         brain = DemandForecastAndCapacityBrain(alpha=0.3, window=max(5, len(observations) or 5))
         for v in (observations or [10, 12, 11, 13]):
@@ -80,14 +80,14 @@ def demand_signal(observations: Sequence[float]) -> dict:
         cap = brain.capacity_for(service_level=0.95)
         return {
             "ok": True,
-            "subsystem": "mem20demandforecastandcapacitybrainz",
+            "subsystem": "mem20causalroutingbrainz",
             "point": fc.get("point"),
             "high": fc.get("high"),
             "capacity_headroom": cap,
             "n": fc.get("n"),
         }
     except Exception as exc:  # noqa: BLE001
-        return {"ok": False, "subsystem": "mem20demandforecastandcapacitybrainz", "error": f"{type(exc).__name__}: {exc}"}
+        return {"ok": False, "subsystem": "mem20causalroutingbrainz", "error": f"{type(exc).__name__}: {exc}"}
 
 
 def partnership_fit(acquirer: Mapping, target: Mapping) -> dict:

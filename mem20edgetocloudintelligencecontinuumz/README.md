@@ -3,7 +3,7 @@
 **Outcome:** run one workload fluidly across local devices, private servers, peers, and paid clouds.  
 **Breakthrough:** compute placement becomes invisible, resilient, and cost-aware.
 
-This subsystem is a real, first-class continuum control plane: typed domain logic, a durable SQLite WAL state plane, a service that owns placement/dispatch/failover, cross-subsystem judgements from six **unique** peers (a different set from `mem20edgefleetbrainz`), a CLI, a JSON HTTP API, a served operator cockpit, and a `docs/app` monitor.
+This subsystem is a real, first-class continuum control plane: typed domain logic, a durable SQLite WAL state plane, a service that owns placement/dispatch/failover, cross-subsystem judgements from six **unique** peers (a different set from `mem20causalroutingbrainz`), a CLI, a JSON HTTP API, a served operator cockpit, and a `docs/app` monitor.
 
 ## What it does
 
@@ -25,14 +25,14 @@ This subsystem is a real, first-class continuum control plane: typed domain logi
 
 ## Unique cross-subsystem wiring (criterion 6)
 
-**Rule:** the ≥5 cross-module peers must be a **different set on each subsystem** (no reused template). This subsystem uses a continuum-specific set, different from `mem20edgefleetbrainz`:
+**Rule:** the ≥5 cross-module peers must be a **different set on each subsystem** (no reused template). This subsystem uses a continuum-specific set, different from `mem20causalroutingbrainz`:
 
 | Peer | Real calls used | What it contributes |
 |---|---|---|
 | `mem20federatedresearchgridz` | `register_node`, `distribute_task`, `federated_round`, `grid_health` | Federated task distribution/health across continuum tiers |
 | `mem20pipez` | `stage_cost`, `pipeline_cost`, `bottleneck`, `optimize_throughput`, `cost_breakdown` | Cost-aware pipeline/placement economics |
 | `mem20edgetransportfabricz` | `route_path`, `qos_class`, `allocate_bandwidth`, `transport_health` | Transport path, QoS class, bandwidth allocation/health |
-| `mem20zerodowntimemigrationbrainz` | `ZeroDowntimeMigrationBrain.begin`, `write/read`, `verify_and_cutover`/rollback semantics | Verified zero-downtime migration semantics (refuse unverified cutover) |
+| `mem20causalroutingbrainz` | `ZeroDowntimeMigrationBrain.begin`, `write/read`, `verify_and_cutover`/rollback semantics | Verified zero-downtime migration semantics (refuse unverified cutover) |
 | `mem20globalcapabilitymarketplacez` | `list_capability`, `search_marketplace`, `match`, `transaction`, `marketplace_health` | Capability discovery/matching across tiers/providers |
 | `mem20resourceexchangemarketz` | `list_resource`, `buy`, `price_history`, `market_health` | Resource pricing/market signals |
 
@@ -117,7 +117,7 @@ Errors are JSON with real status codes (400 validation, 404 missing, 409 conflic
 
 - SQLite WAL state plane with version checks/conflict errors, append-only placements/events, idempotent submissions, and snapshots/restore.
 - Placement enforces capability, privacy zone, capacity, max latency, and max cost; infeasible results include bottlenecks.
-- Failover produces explicit plans; migration semantics are checked via `mem20zerodowntimemigrationbrainz` and refuse unverified cutover / report rollback.
+- Failover produces explicit plans; migration semantics are checked via `mem20causalroutingbrainz` and refuse unverified cutover / report rollback.
 - Cross-subsystem failures are reported as `ok:false` signals; they do not fabricate placement success.
 
 ## Tests

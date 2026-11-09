@@ -12,7 +12,7 @@ def test_eco_causal(): r=_eco().causal_routing({"q":1},{"q":1}); assert r["ok"] 
 def test_eco_route(): r=_eco().capability_routing("k",["o"]); assert r["ok"] and r["subsystem"]=="mem20capabilitymarketplacez"
 def test_eco_events(): r=_eco().prompt_events("p",{}); assert r["ok"] and r["subsystem"]=="mem20eventstreamsuperhighwayz"
 def test_eco_contain(): r=_eco().optimize_containment("p"); assert r["ok"] and r["subsystem"]=="mem20faultcontainmentcellsz"
-def test_eco_forecast(): r=_eco().cost_forecast([10,9]); assert r["ok"] and r["subsystem"]=="mem20demandforecastandcapacitybrainz"
+def test_eco_forecast(): r=_eco().cost_forecast([10,9]); assert r["ok"] and r["subsystem"]=="mem20causalroutingbrainz"
 def test_report_and_probe():
     m=_m(); rep=m.prompt_report(); assert rep["score"]>0 and len(rep["peers"])==6
     for k,v in rep["peers"].items(): assert v["ok"] is True,(k,v.get("error"))

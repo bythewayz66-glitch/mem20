@@ -432,9 +432,9 @@ SUBSYSTEMS = {
         "owner": "mem20-renovation",
         "wave": 3,
     },
-    "mem20edgefleetbrainz": {
+    "mem20causalroutingbrainz": {
         "purpose": "Coordinate heterogeneous computers, phones, servers and appliances as one capability-aware fleet",
-        "entry": "python -m mem20edgefleetbrainz status",
+        "entry": "python -m mem20causalroutingbrainz status",
         "owner": "hsp2",
         "wave": 2,
     },
@@ -516,9 +516,9 @@ SUBSYSTEMS = {
         "owner": "mem20-webdev",
         "wave": 2,
     },
-    "mem20skillbasedprogressionbrainz": {
+    "mem20causalroutingbrainz": {
         "purpose": "Advance users according to demonstrated capability rather than time spent",
-        "entry": "python -m mem20skillbasedprogressionbrainz simulate",
+        "entry": "python -m mem20causalroutingbrainz simulate",
         "owner": "mem20-webdev",
         "wave": 2,
     },
@@ -674,7 +674,7 @@ SUBSYSTEMS = {
     "mem20dynamicphasereplannerz": {"purpose": "Dynamic phase replanner (adaptive phase planning)","entry":"python -m mem20dynamicphasereplannerz --help","owner":"mem20-renovation","wave":4},
     "mem20milestoneriskpredictorz": {"purpose": "Milestone risk predictor (schedule/risk forecasting)","entry":"python -m mem20milestoneriskpredictorz --help","owner":"mem20-renovation","wave":4},
     "mem20prioritycollisionresolverz": {"purpose": "Priority collision resolver (conflict/priority arbitration)","entry":"python -m mem20prioritycollisionresolverz --help","owner":"mem20-renovation","wave":4},
-    "mem20zerodowntimemigrationbrainz": {"purpose": "Zero-downtime migration brain (verified migration orchestration)","entry":"python -m mem20zerodowntimemigrationbrainz --help","owner":"mem20-renovation","wave":4},
+    "mem20causalroutingbrainz": {"purpose": "Zero-downtime migration brain (verified migration orchestration)","entry":"python -m mem20causalroutingbrainz --help","owner":"mem20-renovation","wave":4},
 }
 
 

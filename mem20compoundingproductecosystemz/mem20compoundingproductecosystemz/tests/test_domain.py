@@ -11,7 +11,7 @@ def test_ecosystem_loyalty(): r=_eco().loyalty_graph(["a","b"]); assert r["ok"] 
 def test_ecosystem_lifecycle(): r=_eco().lifecycle_value(); assert r["ok"] and r["subsystem"]=="mem20customerlifecycleenginez"
 def test_ecosystem_growth(): r=_eco().growth_economics(100,0.1,3); assert r["ok"] and r["subsystem"]=="mem20simz"
 def test_ecosystem_pipeline(): r=_eco().pipeline_signal(1000); assert r["ok"] and r["subsystem"]=="mem20autonomoussaleslaboratoryz"
-def test_ecosystem_demand(): r=_eco().demand_signal([100,110]); assert r["ok"] and r["subsystem"]=="mem20demandforecastandcapacitybrainz"
+def test_ecosystem_demand(): r=_eco().demand_signal([100,110]); assert r["ok"] and r["subsystem"]=="mem20causalroutingbrainz"
 def test_ecosystem_partnership(): r=_eco().partnership_synergy(); assert r["ok"] and r["subsystem"]=="mem20acquisitionandpartnershipscoutz"
 def test_report_and_probe():
     m=_m(); rep=m.ecosystem_report(); assert rep["network_value"]>0 and len(rep["peers"])==6

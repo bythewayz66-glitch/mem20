@@ -4,7 +4,7 @@ import pathlib,sys
 from typing import Mapping,Sequence
 __all__=["workload_scheduler","edge_fleet","swarm_routing","swarm_events","swarm_containment","recovery_director","probe"]
 _REPO_ROOT=pathlib.Path(__file__).resolve().parents[2]
-_PROJECTS=("mem20roamingworkloadschedulerz","mem20edgefleetbrainz","mem20capabilitymarketplacez","mem20eventstreamsuperhighwayz","mem20faultcontainmentcellsz","mem20autonomousrecoverydirectorz")
+_PROJECTS=("mem20roamingworkloadschedulerz","mem20causalroutingbrainz","mem20capabilitymarketplacez","mem20eventstreamsuperhighwayz","mem20faultcontainmentcellsz","mem20autonomousrecoverydirectorz")
 def _bootstrap():
     for name in reversed(_PROJECTS):
         p=str(_REPO_ROOT/name)
@@ -19,13 +19,13 @@ def workload_scheduler()->dict:
     except Exception as exc: return {"ok":False,"subsystem":"mem20roamingworkloadschedulerz","error":f"{type(exc).__name__}: {exc}"}
 def edge_fleet()->dict:
     try:
-        from mem20edgefleetbrainz.ecosystem import probe as p
-        r=p(); return {"ok":bool(r.get("ok",True)),"subsystem":"mem20edgefleetbrainz","probe":r is not None}
+        from mem20causalroutingbrainz.ecosystem import probe as p
+        r=p(); return {"ok":bool(r.get("ok",True)),"subsystem":"mem20causalroutingbrainz","probe":r is not None}
     except Exception:
         try:
-            from mem20edgefleetbrainz.domain import fleet_health
-            r=fleet_health([],[]); return {"ok":True,"subsystem":"mem20edgefleetbrainz","health":r is not None}
-        except Exception as exc: return {"ok":False,"subsystem":"mem20edgefleetbrainz","error":f"{type(exc).__name__}: {exc}"}
+            from mem20causalroutingbrainz.domain import fleet_health
+            r=fleet_health([],[]); return {"ok":True,"subsystem":"mem20causalroutingbrainz","health":r is not None}
+        except Exception as exc: return {"ok":False,"subsystem":"mem20causalroutingbrainz","error":f"{type(exc).__name__}: {exc}"}
 def swarm_routing(key:str,caps:Sequence[str])->dict:
     try:
         from mem20capabilitymarketplacez.domain import CapabilityMarketplace

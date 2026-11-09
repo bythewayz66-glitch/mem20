@@ -13,13 +13,13 @@ renewable availability. The fleet optimizes both performance and energy use.
   idempotency, snapshots/restore.
 - `ecosystem.py`: 6 unique peers (different from #300/#301/#302):
   `mem20batteryawareagentschedulerz`, `mem20energyawarefoundationz`,
-  `mem20datalocalityoptimizerz`, `mem20demandforecastandcapacitybrainz`,
+  `mem20datalocalityoptimizerz`, `mem20causalroutingbrainz`,
   `mem20goaleconomyschedulerz`, `mem20planetarybatchfabricz`.
 - `service.py`/`runtime.py`/`web/`: plan/migrate/status/doctor, CLI, JSON HTTP,
   cockpit, 400/404/409 mapping.
 
 ## Compatibility
-Preserves domain API used by `mem20edgefleetbrainz` (`greenest_node` tie-break fix retained).
+Preserves domain API used by `mem20causalroutingbrainz` (`greenest_node` tie-break fix retained).
 
 ## Verification
 `pytest mem20energyawarecomputemigrationz/tests -q`, `simulate` 9/9, `doctor` 6/6, conformance 7/7.

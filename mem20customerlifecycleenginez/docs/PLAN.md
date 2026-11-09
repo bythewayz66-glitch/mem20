@@ -4,7 +4,7 @@
 Customer lifecycle engine (lifecycle_stage, transition, retention_probability, lifetime_value, segment_customers) with estate reporting.
 
 ## Peers (6, job-fitting, different set)
-- `mem20businessmodelsimulatorz` — economic/LTV context
+- `mem20simz` — economic/LTV context
 - `mem20autonomoussaleslaboratoryz` — pipeline/segment signal
 - `mem20crossproductloyaltygraphz` — loyalty/upsell context
 - `mem20demandforecastandcapacitybrainz` — demand signal

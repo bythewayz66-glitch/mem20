@@ -3,7 +3,7 @@
 First-class mem20 subsystem for customer digital twins (build twin, simulate behavior, predict churn, recommend action, twin accuracy) with **6 peers**, SQLite WAL runtime, CLI, JSON HTTP API, served cockpit, docs/app, and real MCP tools. Core API preserved.
 
 ## Peers (6)
-`mem20customerlifecycleenginez`, `mem20counterfactualmemorysimulatorz`, `mem20demandforecastandcapacitybrainz`, `mem20crossproductloyaltygraphz`, `mem20eventstreamsuperhighwayz`, `mem20capabilitymarketplacez`.
+`mem20customerlifecycleenginez`, `mem20simz`, `mem20demandforecastandcapacitybrainz`, `mem20crossproductloyaltygraphz`, `mem20eventstreamsuperhighwayz`, `mem20capabilitymarketplacez`.
 
 ## Python API (runnable)
 ```python

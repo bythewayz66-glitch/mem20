@@ -3,7 +3,7 @@
 First-class mem20 subsystem for cross-product loyalty graphs (edges, degree, centrality, recommendations, loyalty score) with **6 peers**, SQLite WAL runtime, CLI, JSON HTTP API, served cockpit, docs/app, and real MCP tools. Core API preserved.
 
 ## Peers (6)
-`mem20customerlifecycleenginez`, `mem20businessmodelsimulatorz`, `mem20autonomoussaleslaboratoryz`, `mem20communitychallengeenginez`, `mem20eventstreamsuperhighwayz`, `mem20capabilitymarketplacez`.
+`mem20customerlifecycleenginez`, `mem20simz`, `mem20autonomoussaleslaboratoryz`, `mem20communitychallengeenginez`, `mem20eventstreamsuperhighwayz`, `mem20capabilitymarketplacez`.
 
 ## Python API (runnable)
 ```python

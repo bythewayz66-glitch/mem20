@@ -8,7 +8,7 @@ def test_churn(): assert 0<=_m().predict_churn({"behavior":{"engagement":0.5,"re
 def test_action(): assert _m().recommend_action({"ltv":2000,"behavior":{"engagement":0.9,"recency_days":1}})=="upsell"
 def test_accuracy(): assert 0<=_m().twin_accuracy({"behavior":{"engagement":0.5}},{"churned":False})<=1
 def test_eco_lifecycle(): r=_eco().lifecycle_signal({"tenure_months":1,"spend":10}); assert r["ok"] and r["subsystem"]=="mem20customerlifecycleenginez"
-def test_eco_cf(): r=_eco().counterfactual_scenarios({"engagement":0.5}); assert r["ok"] and r["subsystem"]=="mem20counterfactualmemorysimulatorz"
+def test_eco_cf(): r=_eco().counterfactual_scenarios({"engagement":0.5}); assert r["ok"] and r["subsystem"]=="mem20simz"
 def test_eco_demand(): r=_eco().demand_signal([1,2,3]); assert r["ok"] and r["subsystem"]=="mem20demandforecastandcapacitybrainz"
 def test_eco_loyalty(): r=_eco().loyalty_context(["core"]); assert r["ok"] and r["subsystem"]=="mem20crossproductloyaltygraphz"
 def test_eco_events(): r=_eco().twin_events("e",{}); assert r["ok"] and r["subsystem"]=="mem20eventstreamsuperhighwayz"

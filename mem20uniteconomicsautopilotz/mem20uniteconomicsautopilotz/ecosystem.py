@@ -4,7 +4,7 @@ import pathlib,sys
 from typing import Mapping,Sequence
 __all__=["revenue_check","plg_sim","business_model","economics_events","economics_routing","economics_health_peer","probe"]
 _REPO_ROOT=pathlib.Path(__file__).resolve().parents[2]
-_PROJECTS=("mem20revenueleakhunterz","mem20productledgrowthsimulatorz","mem20businessmodelsimulatorz","mem20eventstreamsuperhighwayz","mem20capabilitymarketplacez","mem20universalhealthnervoussystemz")
+_PROJECTS=("mem20revenueleakhunterz","mem20simz","mem20simz","mem20eventstreamsuperhighwayz","mem20capabilitymarketplacez","mem20universalhealthnervoussystemz")
 def _bootstrap():
     for name in reversed(_PROJECTS):
         p=str(_REPO_ROOT/name)
@@ -19,18 +19,18 @@ def revenue_check()->dict:
     except Exception as exc: return {"ok":False,"subsystem":"mem20revenueleakhunterz","error":f"{type(exc).__name__}: {exc}"}
 def plg_sim()->dict:
     try:
-        from mem20productledgrowthsimulatorz.domain import simulate
-        r=simulate({"users":100,"churn":0.1}, seed=0); return {"ok":True,"subsystem":"mem20productledgrowthsimulatorz","simulated":r is not None}
-    except Exception as exc: return {"ok":False,"subsystem":"mem20productledgrowthsimulatorz","error":f"{type(exc).__name__}: {exc}"}
+        from mem20simz.domain import simulate
+        r=simulate({"users":100,"churn":0.1}, seed=0); return {"ok":True,"subsystem":"mem20simz","simulated":r is not None}
+    except Exception as exc: return {"ok":False,"subsystem":"mem20simz","error":f"{type(exc).__name__}: {exc}"}
 def business_model()->dict:
     try:
-        from mem20businessmodelsimulatorz.domain import probe as p
-        r=p(); return {"ok":bool(r.get("ok",True)),"subsystem":"mem20businessmodelsimulatorz","probe":r is not None}
+        from mem20simz.domain import probe as p
+        r=p(); return {"ok":bool(r.get("ok",True)),"subsystem":"mem20simz","probe":r is not None}
     except Exception:
         try:
-            from mem20businessmodelsimulatorz.domain import simulate_model
-            r=simulate_model({"revenue":100,"cost":60}); return {"ok":True,"subsystem":"mem20businessmodelsimulatorz","simulated":r is not None}
-        except Exception as exc: return {"ok":False,"subsystem":"mem20businessmodelsimulatorz","error":f"{type(exc).__name__}: {exc}"}
+            from mem20simz.domain import simulate_model
+            r=simulate_model({"revenue":100,"cost":60}); return {"ok":True,"subsystem":"mem20simz","simulated":r is not None}
+        except Exception as exc: return {"ok":False,"subsystem":"mem20simz","error":f"{type(exc).__name__}: {exc}"}
 def economics_events(name:str,payload:Mapping)->dict:
     try:
         from mem20eventstreamsuperhighwayz.domain import create_stream,publish,throughput

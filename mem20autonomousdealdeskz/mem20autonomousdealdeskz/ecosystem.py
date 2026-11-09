@@ -23,7 +23,7 @@ __all__ = [
 
 _REPO_ROOT = pathlib.Path(__file__).resolve().parents[2]
 _PROJECTS = (
-    "mem20businessmodelsimulatorz",
+    "mem20simz",
     "mem20demandforecastandcapacitybrainz",
     "mem20acquisitionandpartnershipscoutz",
     "mem20antiexploitationrewardshieldz",
@@ -49,7 +49,7 @@ _bootstrap()
 def economics_model(units: int, price: float, fixed: float, variable: float) -> dict:
     """Model deal economics (margin/profit/scenario)."""
     try:
-        from mem20businessmodelsimulatorz.domain import margin, profit, revenue, scenario_sim
+        from mem20simz.domain import margin, profit, revenue, scenario_sim
 
         rev = revenue(units, price)
         cst = fixed + variable * units
@@ -58,14 +58,14 @@ def economics_model(units: int, price: float, fixed: float, variable: float) -> 
         scenarios = scenario_sim(max(1, units), price, fixed, variable, growth=0.05, periods=2)
         return {
             "ok": True,
-            "subsystem": "mem20businessmodelsimulatorz",
+            "subsystem": "mem20simz",
             "revenue": rev,
             "profit": prof,
             "margin": mar,
             "scenario_periods": len(scenarios),
         }
     except Exception as exc:  # noqa: BLE001
-        return {"ok": False, "subsystem": "mem20businessmodelsimulatorz", "error": f"{type(exc).__name__}: {exc}"}
+        return {"ok": False, "subsystem": "mem20simz", "error": f"{type(exc).__name__}: {exc}"}
 
 
 def demand_signal(observations: Sequence[float]) -> dict:

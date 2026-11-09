@@ -8,7 +8,7 @@ def test_normalize(): assert _m().normalize([0,10])==[0.0,1.0]
 def test_health(): assert _m().reward_health([1,3])["mean"]==2.0
 def test_eco_quest(): r=_eco().quest_reward_shapes(); assert r["ok"] and r["subsystem"]=="mem20dynamicquestrewardcomposerz"
 def test_eco_impact(): r=_eco().impact_rewards(); assert r["ok"] and r["subsystem"]=="mem20realworldimpactrewardsz"
-def test_eco_cf(): r=_eco().counterfactual_shaping({"r":1}); assert r["ok"] and r["subsystem"]=="mem20counterfactualmemorysimulatorz"
+def test_eco_cf(): r=_eco().counterfactual_shaping({"r":1}); assert r["ok"] and r["subsystem"]=="mem20simz"
 def test_eco_events(): r=_eco().reward_events("r",{}); assert r["ok"] and r["subsystem"]=="mem20eventstreamsuperhighwayz"
 def test_eco_route(): r=_eco().reward_routing("k",["r"]); assert r["ok"] and r["subsystem"]=="mem20capabilitymarketplacez"
 def test_eco_causal(): r=_eco().causal_weighting({"r":1},{"r":1}); assert r["ok"] and r["subsystem"]=="mem20causalroutingbrainz"

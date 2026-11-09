@@ -4,7 +4,7 @@ import pathlib,sys
 from typing import Mapping,Sequence
 __all__=["revenue_economics","deal_pricing","leak_events","leak_containment","causal_analysis","hunter_routing","probe"]
 _REPO_ROOT=pathlib.Path(__file__).resolve().parents[2]
-_PROJECTS=("mem20businessmodelsimulatorz","mem20autonomousdealdeskz","mem20eventstreamsuperhighwayz","mem20faultcontainmentcellsz","mem20causalroutingbrainz","mem20capabilitymarketplacez")
+_PROJECTS=("mem20simz","mem20autonomousdealdeskz","mem20eventstreamsuperhighwayz","mem20faultcontainmentcellsz","mem20causalroutingbrainz","mem20capabilitymarketplacez")
 def _bootstrap():
     for name in reversed(_PROJECTS):
         p=str(_REPO_ROOT/name)
@@ -14,9 +14,9 @@ def _bootstrap():
 _bootstrap()
 def revenue_economics(revenue:float,cost:float)->dict:
     try:
-        from mem20businessmodelsimulatorz.domain import margin,profit
-        return {"ok":True,"subsystem":"mem20businessmodelsimulatorz","profit":profit(revenue,cost),"margin":margin(revenue,cost)}
-    except Exception as exc: return {"ok":False,"subsystem":"mem20businessmodelsimulatorz","error":f"{type(exc).__name__}: {exc}"}
+        from mem20simz.domain import margin,profit
+        return {"ok":True,"subsystem":"mem20simz","profit":profit(revenue,cost),"margin":margin(revenue,cost)}
+    except Exception as exc: return {"ok":False,"subsystem":"mem20simz","error":f"{type(exc).__name__}: {exc}"}
 def deal_pricing(amount:float)->dict:
     try:
         from mem20autonomousdealdeskz.domain import price_deal

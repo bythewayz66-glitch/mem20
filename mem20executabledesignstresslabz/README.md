@@ -11,7 +11,7 @@ Preserves legacy domain API and CAPABILITY-driven Engine/CLI; enriches `qa` exec
 ## Unique cross-subsystem wiring (criterion 6)
 | Peer | Real calls | Contribution |
 |---|---|---|
-| `mem20architecturesimulationsandboxz` | `simulate_load`,`scaling_recommendation`,`topology_cost`,`bottleneck_node`,`chaos_test` | architecture load/chaos/bottleneck simulation |
+| `mem20simz` | `simulate_load`,`scaling_recommendation`,`topology_cost`,`bottleneck_node`,`chaos_test` | architecture load/chaos/bottleneck simulation |
 | `mem20adversarialqacrewz` | `generate_adversarial_cases`,`mutation_score`,`fuzz_input`,`verdict`,`hash_case` | adversarial QA/fuzz/mutation stress |
 | `mem20universalhealthnervoussystemz` | `register_subsystem`,`check_all`,`overall`,`health_report` | health/resilience nervous system |
 | `mem20syntheticevaluatorarenaz` | `create_arena`,`evaluate`,`leaderboard`,`arena_health` | synthetic evaluation arena |

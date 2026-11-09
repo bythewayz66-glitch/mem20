@@ -10,7 +10,7 @@ Preserves legacy domain API and CAPABILITY Engine/CLI/10-scenario simulator. `se
 ## Meaningful cross-subsystem wiring (criterion 6)
 | Peer | Real calls | GOAP design role |
 |---|---|---|
-| `mem20ethicalincentivesimulatorz` | `fairness_score`,`simulate_incentives` | incentive alignment for actions/agents |
+| `mem20simz` | `fairness_score`,`simulate_incentives` | incentive alignment for actions/agents |
 | `mem20styleguideagentz` | `style_health`,`style_score` | design/spec quality checks |
 | `mem20humanagentcoworkcanvasz` | `create_canvas`,`add_item`,`canvas_summary` | human-agent design collaboration |
 | `mem20dynamicphasereplannerz` | `DynamicPhaseReplanner` (+ phase/order) | phase replanning structure |

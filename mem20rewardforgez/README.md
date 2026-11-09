@@ -3,7 +3,7 @@
 First-class mem20 subsystem for reward forging (linear rewards, shaping, normalization, reward health) with **6 peers**, SQLite WAL runtime, CLI, JSON HTTP API, served web cockpit, docs/app monitor, and real MCP tools. Core API preserved.
 
 ## Peers (6)
-`mem20dynamicquestrewardcomposerz`, `mem20realworldimpactrewardsz`, `mem20counterfactualmemorysimulatorz`, `mem20eventstreamsuperhighwayz`, `mem20capabilitymarketplacez`, `mem20causalroutingbrainz`.
+`mem20dynamicquestrewardcomposerz`, `mem20realworldimpactrewardsz`, `mem20simz`, `mem20eventstreamsuperhighwayz`, `mem20capabilitymarketplacez`, `mem20causalroutingbrainz`.
 
 ## Python API (runnable)
 ```python

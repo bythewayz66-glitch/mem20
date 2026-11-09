@@ -9,7 +9,7 @@ from typing import Mapping, Sequence
 
 __all__ = ["economics", "demand_signal", "build_schedule", "launch_pipeline", "content_quality", "capability_routing", "probe"]
 _REPO_ROOT = pathlib.Path(__file__).resolve().parents[2]
-_PROJECTS = ("mem20businessmodelsimulatorz","mem20demandforecastandcapacitybrainz","mem20aiproductionstudiooperatingsystemz","mem20autonomoussaleslaboratoryz","mem20loreragcontentgeneratorz","mem20capabilitymarketplacez")
+_PROJECTS = ("mem20simz","mem20demandforecastandcapacitybrainz","mem20aiproductionstudiooperatingsystemz","mem20autonomoussaleslaboratoryz","mem20loreragcontentgeneratorz","mem20capabilitymarketplacez")
 
 def _bootstrap():
     for name in reversed(_PROJECTS):
@@ -22,12 +22,12 @@ _bootstrap()
 
 def economics(users:int, price:float, fixed:float=200.0, variable:float=1.0) -> dict:
     try:
-        from mem20businessmodelsimulatorz.domain import margin, profit, revenue, scenario_sim
+        from mem20simz.domain import margin, profit, revenue, scenario_sim
         rev=revenue(users,price); cst=fixed+variable*users; prof=profit(rev,cst); mar=margin(rev,cst)
         scen=scenario_sim(max(1,users),price,fixed,variable,growth=0.1,periods=3)
-        return {"ok":True,"subsystem":"mem20businessmodelsimulatorz","revenue":rev,"profit":prof,"margin":mar,"scenario_periods":len(scen)}
+        return {"ok":True,"subsystem":"mem20simz","revenue":rev,"profit":prof,"margin":mar,"scenario_periods":len(scen)}
     except Exception as exc:  # noqa: BLE001
-        return {"ok":False,"subsystem":"mem20businessmodelsimulatorz","error":f"{type(exc).__name__}: {exc}"}
+        return {"ok":False,"subsystem":"mem20simz","error":f"{type(exc).__name__}: {exc}"}
 
 def demand_signal(observations: Sequence[float]) -> dict:
     try:

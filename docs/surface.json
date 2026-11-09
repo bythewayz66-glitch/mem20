@@ -32,7 +32,7 @@
     "mem20alternativedatabaseplaygroundz": 1,
     "mem20ambientdevicecompanionz": 1,
     "mem20ambientteamradioz": 1,
-    "mem20architecturesimulationsandboxz": 1,
+    "mem20simz": 1,
     "mem20assetremixstudioz": 1,
     "mem20asynccollaborationcapsulesz": 1,
     "mem20pipez": 4,
@@ -44,13 +44,13 @@
     "mem20autonomoustrafficcontrollerz": 1,
     "mem20autonomousworkcellsz": 2,
     "mem20batteryawareagentschedulerz": 1,
-    "mem20businessmodelsimulatorz": 2,
+    "mem20simz": 2,
     "mem20causalroutingbrainz": 2,
     "mem20collectivemodelintelligencez": 2,
     "mem20communitychallengeenginez": 2,
     "mem20compoundingproductecosystemz": 2,
     "mem20contextcompressionforgez": 2,
-    "mem20counterfactualmemorysimulatorz": 2,
+    "mem20simz": 2,
     "mem20crdtcollaborationenginez": 1,
     "mem20crossplatformmicrokernelz": 2,
     "mem20crossproductloyaltygraphz": 2,
@@ -67,7 +67,7 @@
     "mem20offerassemblyfabricz": 2,
     "mem20offergenomeenginez": 2,
     "mem20opportunityradarz": 2,
-    "mem20outcomesimulationlabz": 2,
+    "mem20simz": 2,
     "mem20personalautomationcanvasz": 2,
     "mem20personalcognitivesearchz": 2,
     "mem20personalmodelevolutionz": 2,
@@ -78,7 +78,7 @@
     "mem20predictiverecallenginez": 2,
     "mem20prioritycollisionresolverz": 1,
     "mem20pipez": 2,
-    "mem20productledgrowthsimulatorz": 2,
+    "mem20simz": 2,
     "mem20protocolautodiscoveryenginez": 2,
     "mem20realitytosoftwarecompilerz": 2,
     "mem20realtimebusinesstwinz": 2,
@@ -163,7 +163,7 @@
     "mem20alternativedatabaseplaygroundz",
     "mem20ambientdevicecompanionz",
     "mem20ambientteamradioz",
-    "mem20architecturesimulationsandboxz",
+    "mem20simz",
     "mem20assetremixstudioz",
     "mem20asynccollaborationcapsulesz",
     "mem20pipez",
@@ -175,13 +175,13 @@
     "mem20autonomoustrafficcontrollerz",
     "mem20autonomousworkcellsz",
     "mem20batteryawareagentschedulerz",
-    "mem20businessmodelsimulatorz",
+    "mem20simz",
     "mem20causalroutingbrainz",
     "mem20collectivemodelintelligencez",
     "mem20communitychallengeenginez",
     "mem20compoundingproductecosystemz",
     "mem20contextcompressionforgez",
-    "mem20counterfactualmemorysimulatorz",
+    "mem20simz",
     "mem20crdtcollaborationenginez",
     "mem20crossplatformmicrokernelz",
     "mem20crossproductloyaltygraphz",
@@ -198,7 +198,7 @@
     "mem20offerassemblyfabricz",
     "mem20offergenomeenginez",
     "mem20opportunityradarz",
-    "mem20outcomesimulationlabz",
+    "mem20simz",
     "mem20personalautomationcanvasz",
     "mem20personalcognitivesearchz",
     "mem20personalmodelevolutionz",
@@ -209,7 +209,7 @@
     "mem20predictiverecallenginez",
     "mem20prioritycollisionresolverz",
     "mem20pipez",
-    "mem20productledgrowthsimulatorz",
+    "mem20simz",
     "mem20protocolautodiscoveryenginez",
     "mem20realitytosoftwarecompilerz",
     "mem20realtimebusinesstwinz",
@@ -722,9 +722,9 @@
       "tools": 2
     },
     {
-      "domain": "mem20businessmodelsimulatorz",
+      "domain": "mem20simz",
       "modules": [
-        "mcp/tools/mem20businessmodelsimulatorz_tools.py"
+        "mcp/tools/mem20simz_tools.py"
       ],
       "prefixes": [
         "businessmodelsimulatorz_*"
@@ -782,9 +782,9 @@
       "tools": 2
     },
     {
-      "domain": "mem20counterfactualmemorysimulatorz",
+      "domain": "mem20simz",
       "modules": [
-        "mcp/tools/mem20counterfactualmemorysimulatorz_tools.py"
+        "mcp/tools/mem20simz_tools.py"
       ],
       "prefixes": [
         "counterfactualmemorysimulatorz_*"
@@ -922,9 +922,9 @@
       "tools": 2
     },
     {
-      "domain": "mem20outcomesimulationlabz",
+      "domain": "mem20simz",
       "modules": [
-        "mcp/tools/mem20outcomesimulationlabz_tools.py"
+        "mcp/tools/mem20simz_tools.py"
       ],
       "prefixes": [
         "outcomesimulationlabz_*"
@@ -1022,9 +1022,9 @@
       "tools": 2
     },
     {
-      "domain": "mem20productledgrowthsimulatorz",
+      "domain": "mem20simz",
       "modules": [
-        "mcp/tools/mem20productledgrowthsimulatorz_tools.py"
+        "mcp/tools/mem20simz_tools.py"
       ],
       "prefixes": [
         "productledgrowthsimulatorz_*"
@@ -1452,9 +1452,9 @@
       "tools": 1
     },
     {
-      "domain": "mem20architecturesimulationsandboxz",
+      "domain": "mem20simz",
       "modules": [
-        "mcp/tools/mem20architecturesimulationsandboxz_tools.py"
+        "mcp/tools/mem20simz_tools.py"
       ],
       "prefixes": [
         "architecturesimulationsandboxz_*"

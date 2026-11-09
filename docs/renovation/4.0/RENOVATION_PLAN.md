@@ -168,7 +168,7 @@ Every remaining subsystem owned by a wave-1 or wave-2 agent. Focus areas:
 | Mem20-Perl-Expert | `mem20langz`, `mem20modalitybridgez`, `mem20intentcompilerz`, `mem20intenttomissioncompilerz` |
 | Mem20-Ruby-Expert | `mem20agentz_sdk`, SDK packaging |
 | Mem20 Benchmark Dataset Builder | `mem20benchmarkz`, `mem20syntheticevaluatorarenaz`, `mem20executabledesignstresslabz` |
-| Experiment Tracker | `mem20twinz`, `mem20executiondigitaltwinz`, `mem20outcomesimulationlabz` |
+| Experiment Tracker | `mem20twinz`, `mem20executiondigitaltwinz`, `mem20simz` |
 | mem20 GTM Team Lead | `mem20offergenomeenginez`, `mem20offerassemblyfabricz`, `mem20customerlifecycleenginez` |
 
 ### Wave 3 — Long tail (51 subsystems, 8 agents)
@@ -177,8 +177,8 @@ Every remaining subsystem owned by a wave-1 or wave-2 agent. Focus areas:
 |---|---|
 | Market Research | `mem20opportunityradarz`, `mem20federatedresearchgridz`, `mem20acquisitionandpartnershipscoutz` |
 | Pricing Analyst | `mem20uniteconomicsautopilotz`, `mem20servicebundlingenginez`, `mem20resourceexchangemarketz` |
-| Finance Assistant | `mem20revenueleakhunterz`, `mem20businessmodelsimulatorz` |
-| Growth Hacker | `mem20productledgrowthsimulatorz`, `mem20crossproductloyaltygraphz`, `mem20communitychallengeenginez` |
+| Finance Assistant | `mem20revenueleakhunterz`, `mem20simz` |
+| Growth Hacker | `mem20simz`, `mem20crossproductloyaltygraphz`, `mem20communitychallengeenginez` |
 | Mem20 Content Creator | `mem20dynamicnarrativeenginez`, `mem20pipez`, `mem20styleguideagentz` |
 | Slides Assistant | `mem20pipez`, `mem20pipez`, `mem20pipez` |
 | UX Researcher | `mem20humanagentcoworkcanvasz`, `mem20personalworkflowtwinz`, `mem20playermotivationtwinz` |

@@ -4,7 +4,7 @@ import pathlib,sys
 from typing import Mapping,Sequence
 __all__=["capability_routing","artifact_recovery","build_events","deploy_containment","spec_quality","effort_economics","probe"]
 _REPO_ROOT=pathlib.Path(__file__).resolve().parents[2]
-_PROJECTS=("mem20capabilitymarketplacez","mem20pipez","mem20eventstreamsuperhighwayz","mem20faultcontainmentcellsz","mem20loreragcontentgeneratorz","mem20businessmodelsimulatorz")
+_PROJECTS=("mem20capabilitymarketplacez","mem20pipez","mem20eventstreamsuperhighwayz","mem20faultcontainmentcellsz","mem20loreragcontentgeneratorz","mem20simz")
 def _bootstrap():
     for name in reversed(_PROJECTS):
         p=str(_REPO_ROOT/name)
@@ -58,11 +58,11 @@ def spec_quality(prompt:str)->dict:
 
 def effort_economics(days:int, rate:float=500.0)->dict:
     try:
-        from mem20businessmodelsimulatorz.domain import margin,profit,revenue,scenario_sim
+        from mem20simz.domain import margin,profit,revenue,scenario_sim
         units=max(1,days); rev=revenue(units,rate); cst=units*rate*0.6; prof=profit(rev,cst); mar=margin(rev,cst)
         scen=scenario_sim(units,rate,cst*0.2,rate*0.1,growth=0.05,periods=2)
-        return {"ok":True,"subsystem":"mem20businessmodelsimulatorz","profit":prof,"margin":mar,"scenario_periods":len(scen)}
-    except Exception as exc: return {"ok":False,"subsystem":"mem20businessmodelsimulatorz","error":f"{type(exc).__name__}: {exc}"}
+        return {"ok":True,"subsystem":"mem20simz","profit":prof,"margin":mar,"scenario_periods":len(scen)}
+    except Exception as exc: return {"ok":False,"subsystem":"mem20simz","error":f"{type(exc).__name__}: {exc}"}
 
 def probe()->dict:
     checks={"capability_routing":capability_routing("build-1",["lint","test"]),"artifact_recovery":artifact_recovery("app"),"build_events":build_events("build.ok",{"id":"b1"}),"deploy_containment":deploy_containment("deploy"),"spec_quality":spec_quality("build api"),"effort_economics":effort_economics(6)}

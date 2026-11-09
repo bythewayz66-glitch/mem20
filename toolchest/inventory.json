@@ -1751,20 +1751,20 @@
       }
     },
     {
-      "id": "cli:mem20audiencereactionsimulatorz",
+      "id": "cli:mem20simz",
       "kind": "cli",
-      "name": "mem20audiencereactionsimulatorz",
+      "name": "mem20simz",
       "category": "cli",
       "subcategory": "mem20",
-      "description": "mem20audiencereactionsimulatorz \u00b7 runs with /opt/mem20/.venv/bin/python",
-      "source": "/opt/mem20/.venv/bin/mem20audiencereactionsimulatorz",
+      "description": "mem20simz \u00b7 runs with /opt/mem20/.venv/bin/python",
+      "source": "/opt/mem20/.venv/bin/mem20simz",
       "runtime_status": "ok",
       "runtime_detail": "script in /opt/mem20/.venv/bin",
       "checks": [
         {
           "check": "path exists",
           "ok": true,
-          "detail": "/opt/mem20/.venv/bin/mem20audiencereactionsimulatorz"
+          "detail": "/opt/mem20/.venv/bin/mem20simz"
         },
         {
           "check": "executable",
@@ -1779,7 +1779,7 @@
         "executable": true,
         "size": 192,
         "symlink": false,
-        "resolved_target": "/opt/mem20/.venv/bin/mem20audiencereactionsimulatorz"
+        "resolved_target": "/opt/mem20/.venv/bin/mem20simz"
       }
     },
     {
@@ -2391,20 +2391,20 @@
       }
     },
     {
-      "id": "cli:mem20businessmodelsimulatorz",
+      "id": "cli:mem20simz",
       "kind": "cli",
-      "name": "mem20businessmodelsimulatorz",
+      "name": "mem20simz",
       "category": "cli",
       "subcategory": "mem20",
-      "description": "mem20businessmodelsimulatorz \u00b7 runs with /opt/mem20/.venv/bin/python",
-      "source": "/opt/mem20/.venv/bin/mem20businessmodelsimulatorz",
+      "description": "mem20simz \u00b7 runs with /opt/mem20/.venv/bin/python",
+      "source": "/opt/mem20/.venv/bin/mem20simz",
       "runtime_status": "ok",
       "runtime_detail": "script in /opt/mem20/.venv/bin",
       "checks": [
         {
           "check": "path exists",
           "ok": true,
-          "detail": "/opt/mem20/.venv/bin/mem20businessmodelsimulatorz"
+          "detail": "/opt/mem20/.venv/bin/mem20simz"
         },
         {
           "check": "executable",
@@ -2419,7 +2419,7 @@
         "executable": true,
         "size": 194,
         "symlink": false,
-        "resolved_target": "/opt/mem20/.venv/bin/mem20businessmodelsimulatorz"
+        "resolved_target": "/opt/mem20/.venv/bin/mem20simz"
       }
     },
     {
@@ -2999,20 +2999,20 @@
       }
     },
     {
-      "id": "cli:mem20counterfactualmemorysimulatorz",
+      "id": "cli:mem20simz",
       "kind": "cli",
-      "name": "mem20counterfactualmemorysimulatorz",
+      "name": "mem20simz",
       "category": "cli",
       "subcategory": "mem20",
-      "description": "mem20counterfactualmemorysimulatorz \u00b7 runs with /opt/mem20/.venv/bin/python",
-      "source": "/opt/mem20/.venv/bin/mem20counterfactualmemorysimulatorz",
+      "description": "mem20simz \u00b7 runs with /opt/mem20/.venv/bin/python",
+      "source": "/opt/mem20/.venv/bin/mem20simz",
       "runtime_status": "ok",
       "runtime_detail": "script in /opt/mem20/.venv/bin",
       "checks": [
         {
           "check": "path exists",
           "ok": true,
-          "detail": "/opt/mem20/.venv/bin/mem20counterfactualmemorysimulatorz"
+          "detail": "/opt/mem20/.venv/bin/mem20simz"
         },
         {
           "check": "executable",
@@ -3027,7 +3027,7 @@
         "executable": true,
         "size": 201,
         "symlink": false,
-        "resolved_target": "/opt/mem20/.venv/bin/mem20counterfactualmemorysimulatorz"
+        "resolved_target": "/opt/mem20/.venv/bin/mem20simz"
       }
     },
     {
@@ -3991,20 +3991,20 @@
       }
     },
     {
-      "id": "cli:mem20ethicalincentivesimulatorz",
+      "id": "cli:mem20simz",
       "kind": "cli",
-      "name": "mem20ethicalincentivesimulatorz",
+      "name": "mem20simz",
       "category": "cli",
       "subcategory": "mem20",
-      "description": "mem20ethicalincentivesimulatorz \u00b7 runs with /opt/mem20/.venv/bin/python",
-      "source": "/opt/mem20/.venv/bin/mem20ethicalincentivesimulatorz",
+      "description": "mem20simz \u00b7 runs with /opt/mem20/.venv/bin/python",
+      "source": "/opt/mem20/.venv/bin/mem20simz",
       "runtime_status": "ok",
       "runtime_detail": "script in /opt/mem20/.venv/bin",
       "checks": [
         {
           "check": "path exists",
           "ok": true,
-          "detail": "/opt/mem20/.venv/bin/mem20ethicalincentivesimulatorz"
+          "detail": "/opt/mem20/.venv/bin/mem20simz"
         },
         {
           "check": "executable",
@@ -4019,7 +4019,7 @@
         "executable": true,
         "size": 197,
         "symlink": false,
-        "resolved_target": "/opt/mem20/.venv/bin/mem20ethicalincentivesimulatorz"
+        "resolved_target": "/opt/mem20/.venv/bin/mem20simz"
       }
     },
     {
@@ -4503,20 +4503,20 @@
       }
     },
     {
-      "id": "cli:mem20gamebalancesimulatorz",
+      "id": "cli:mem20simz",
       "kind": "cli",
-      "name": "mem20gamebalancesimulatorz",
+      "name": "mem20simz",
       "category": "cli",
       "subcategory": "mem20",
-      "description": "mem20gamebalancesimulatorz \u00b7 runs with /opt/mem20/.venv/bin/python",
-      "source": "/opt/mem20/.venv/bin/mem20gamebalancesimulatorz",
+      "description": "mem20simz \u00b7 runs with /opt/mem20/.venv/bin/python",
+      "source": "/opt/mem20/.venv/bin/mem20simz",
       "runtime_status": "ok",
       "runtime_detail": "script in /opt/mem20/.venv/bin",
       "checks": [
         {
           "check": "path exists",
           "ok": true,
-          "detail": "/opt/mem20/.venv/bin/mem20gamebalancesimulatorz"
+          "detail": "/opt/mem20/.venv/bin/mem20simz"
         },
         {
           "check": "executable",
@@ -4531,7 +4531,7 @@
         "executable": true,
         "size": 192,
         "symlink": false,
-        "resolved_target": "/opt/mem20/.venv/bin/mem20gamebalancesimulatorz"
+        "resolved_target": "/opt/mem20/.venv/bin/mem20simz"
       }
     },
     {
@@ -5463,20 +5463,20 @@
       }
     },
     {
-      "id": "cli:mem20lifescenariosimulatorz",
+      "id": "cli:mem20simz",
       "kind": "cli",
-      "name": "mem20lifescenariosimulatorz",
+      "name": "mem20simz",
       "category": "cli",
       "subcategory": "mem20",
-      "description": "mem20lifescenariosimulatorz \u00b7 runs with /opt/mem20/.venv/bin/python",
-      "source": "/opt/mem20/.venv/bin/mem20lifescenariosimulatorz",
+      "description": "mem20simz \u00b7 runs with /opt/mem20/.venv/bin/python",
+      "source": "/opt/mem20/.venv/bin/mem20simz",
       "runtime_status": "ok",
       "runtime_detail": "script in /opt/mem20/.venv/bin",
       "checks": [
         {
           "check": "path exists",
           "ok": true,
-          "detail": "/opt/mem20/.venv/bin/mem20lifescenariosimulatorz"
+          "detail": "/opt/mem20/.venv/bin/mem20simz"
         },
         {
           "check": "executable",
@@ -5491,7 +5491,7 @@
         "executable": true,
         "size": 188,
         "symlink": false,
-        "resolved_target": "/opt/mem20/.venv/bin/mem20lifescenariosimulatorz"
+        "resolved_target": "/opt/mem20/.venv/bin/mem20simz"
       }
     },
     {
@@ -6551,20 +6551,20 @@
       }
     },
     {
-      "id": "cli:mem20operationsreplaysimulatorz",
+      "id": "cli:mem20simz",
       "kind": "cli",
-      "name": "mem20operationsreplaysimulatorz",
+      "name": "mem20simz",
       "category": "cli",
       "subcategory": "mem20",
-      "description": "mem20operationsreplaysimulatorz \u00b7 runs with /opt/mem20/.venv/bin/python",
-      "source": "/opt/mem20/.venv/bin/mem20operationsreplaysimulatorz",
+      "description": "mem20simz \u00b7 runs with /opt/mem20/.venv/bin/python",
+      "source": "/opt/mem20/.venv/bin/mem20simz",
       "runtime_status": "ok",
       "runtime_detail": "script in /opt/mem20/.venv/bin",
       "checks": [
         {
           "check": "path exists",
           "ok": true,
-          "detail": "/opt/mem20/.venv/bin/mem20operationsreplaysimulatorz"
+          "detail": "/opt/mem20/.venv/bin/mem20simz"
         },
         {
           "check": "executable",
@@ -6579,7 +6579,7 @@
         "executable": true,
         "size": 192,
         "symlink": false,
-        "resolved_target": "/opt/mem20/.venv/bin/mem20operationsreplaysimulatorz"
+        "resolved_target": "/opt/mem20/.venv/bin/mem20simz"
       }
     },
     {
@@ -6647,20 +6647,20 @@
       }
     },
     {
-      "id": "cli:mem20outcomesimulationlabz",
+      "id": "cli:mem20simz",
       "kind": "cli",
-      "name": "mem20outcomesimulationlabz",
+      "name": "mem20simz",
       "category": "cli",
       "subcategory": "mem20",
-      "description": "mem20outcomesimulationlabz \u00b7 runs with /opt/mem20/.venv/bin/python",
-      "source": "/opt/mem20/.venv/bin/mem20outcomesimulationlabz",
+      "description": "mem20simz \u00b7 runs with /opt/mem20/.venv/bin/python",
+      "source": "/opt/mem20/.venv/bin/mem20simz",
       "runtime_status": "ok",
       "runtime_detail": "script in /opt/mem20/.venv/bin",
       "checks": [
         {
           "check": "path exists",
           "ok": true,
-          "detail": "/opt/mem20/.venv/bin/mem20outcomesimulationlabz"
+          "detail": "/opt/mem20/.venv/bin/mem20simz"
         },
         {
           "check": "executable",
@@ -6675,7 +6675,7 @@
         "executable": true,
         "size": 192,
         "symlink": false,
-        "resolved_target": "/opt/mem20/.venv/bin/mem20outcomesimulationlabz"
+        "resolved_target": "/opt/mem20/.venv/bin/mem20simz"
       }
     },
     {
@@ -7287,20 +7287,20 @@
       }
     },
     {
-      "id": "cli:mem20productledgrowthsimulatorz",
+      "id": "cli:mem20simz",
       "kind": "cli",
-      "name": "mem20productledgrowthsimulatorz",
+      "name": "mem20simz",
       "category": "cli",
       "subcategory": "mem20",
-      "description": "mem20productledgrowthsimulatorz \u00b7 runs with /opt/mem20/.venv/bin/python",
-      "source": "/opt/mem20/.venv/bin/mem20productledgrowthsimulatorz",
+      "description": "mem20simz \u00b7 runs with /opt/mem20/.venv/bin/python",
+      "source": "/opt/mem20/.venv/bin/mem20simz",
       "runtime_status": "ok",
       "runtime_detail": "script in /opt/mem20/.venv/bin",
       "checks": [
         {
           "check": "path exists",
           "ok": true,
-          "detail": "/opt/mem20/.venv/bin/mem20productledgrowthsimulatorz"
+          "detail": "/opt/mem20/.venv/bin/mem20simz"
         },
         {
           "check": "executable",
@@ -7315,7 +7315,7 @@
         "executable": true,
         "size": 197,
         "symlink": false,
-        "resolved_target": "/opt/mem20/.venv/bin/mem20productledgrowthsimulatorz"
+        "resolved_target": "/opt/mem20/.venv/bin/mem20simz"
       }
     },
     {
@@ -7959,20 +7959,20 @@
       }
     },
     {
-      "id": "cli:mem20roadmapsimulationtwinz",
+      "id": "cli:mem20simz",
       "kind": "cli",
-      "name": "mem20roadmapsimulationtwinz",
+      "name": "mem20simz",
       "category": "cli",
       "subcategory": "mem20",
-      "description": "mem20roadmapsimulationtwinz \u00b7 runs with /opt/mem20/.venv/bin/python",
-      "source": "/opt/mem20/.venv/bin/mem20roadmapsimulationtwinz",
+      "description": "mem20simz \u00b7 runs with /opt/mem20/.venv/bin/python",
+      "source": "/opt/mem20/.venv/bin/mem20simz",
       "runtime_status": "ok",
       "runtime_detail": "script in /opt/mem20/.venv/bin",
       "checks": [
         {
           "check": "path exists",
           "ok": true,
-          "detail": "/opt/mem20/.venv/bin/mem20roadmapsimulationtwinz"
+          "detail": "/opt/mem20/.venv/bin/mem20simz"
         },
         {
           "check": "executable",
@@ -7987,7 +7987,7 @@
         "executable": true,
         "size": 188,
         "symlink": false,
-        "resolved_target": "/opt/mem20/.venv/bin/mem20roadmapsimulationtwinz"
+        "resolved_target": "/opt/mem20/.venv/bin/mem20simz"
       }
     },
     {
@@ -9431,20 +9431,20 @@
       }
     },
     {
-      "id": "cli:mem20useracceptancesimulatorz",
+      "id": "cli:mem20simz",
       "kind": "cli",
-      "name": "mem20useracceptancesimulatorz",
+      "name": "mem20simz",
       "category": "cli",
       "subcategory": "mem20",
-      "description": "mem20useracceptancesimulatorz \u00b7 runs with /opt/mem20/.venv/bin/python",
-      "source": "/opt/mem20/.venv/bin/mem20useracceptancesimulatorz",
+      "description": "mem20simz \u00b7 runs with /opt/mem20/.venv/bin/python",
+      "source": "/opt/mem20/.venv/bin/mem20simz",
       "runtime_status": "ok",
       "runtime_detail": "script in /opt/mem20/.venv/bin",
       "checks": [
         {
           "check": "path exists",
           "ok": true,
-          "detail": "/opt/mem20/.venv/bin/mem20useracceptancesimulatorz"
+          "detail": "/opt/mem20/.venv/bin/mem20simz"
         },
         {
           "check": "executable",
@@ -9459,7 +9459,7 @@
         "executable": true,
         "size": 190,
         "symlink": false,
-        "resolved_target": "/opt/mem20/.venv/bin/mem20useracceptancesimulatorz"
+        "resolved_target": "/opt/mem20/.venv/bin/mem20simz"
       }
     },
     {
@@ -12332,25 +12332,25 @@
       }
     },
     {
-      "id": "subsystem:mem20architecturesimulationsandboxz",
+      "id": "subsystem:mem20simz",
       "kind": "subsystem",
-      "name": "mem20architecturesimulationsandboxz",
+      "name": "mem20simz",
       "category": "other",
       "subcategory": "native-subsystem",
-      "description": "mem20architecturesimulationsandboxz first-class module",
-      "source": "/opt/mem20/mem20architecturesimulationsandboxz/pyproject.toml",
+      "description": "mem20simz first-class module",
+      "source": "/opt/mem20/mem20simz/pyproject.toml",
       "runtime_status": "ok",
-      "runtime_detail": "pkg=mem20architecturesimulationsandboxz v1.0.0; installed 1.0.0 via root-venv; importable=False (1 modules checked); scripts=0 declared, 0 on PATH",
+      "runtime_detail": "pkg=mem20simz v1.0.0; installed 1.0.0 via root-venv; importable=False (1 modules checked); scripts=0 declared, 0 on PATH",
       "checks": [
         {
           "check": "pyproject present",
           "ok": true,
-          "detail": "/opt/mem20/mem20architecturesimulationsandboxz/pyproject.toml"
+          "detail": "/opt/mem20/mem20simz/pyproject.toml"
         },
         {
           "check": "name declared",
           "ok": true,
-          "detail": "mem20architecturesimulationsandboxz"
+          "detail": "mem20simz"
         },
         {
           "check": "description present",
@@ -12370,13 +12370,13 @@
         {
           "check": "import",
           "ok": false,
-          "detail": "mem20architecturesimulationsandboxz=n"
+          "detail": "mem20simz=n"
         }
       ],
       "meta": {
-        "pkg_name": "mem20architecturesimulationsandboxz",
+        "pkg_name": "mem20simz",
         "version": "1.0.0",
-        "pyproject": "/opt/mem20/mem20architecturesimulationsandboxz/pyproject.toml",
+        "pyproject": "/opt/mem20/mem20simz/pyproject.toml",
         "entry_points": [],
         "dependencies": [],
         "installed": {
@@ -12386,7 +12386,7 @@
         },
         "importable": [
           {
-            "name": "mem20architecturesimulationsandboxz",
+            "name": "mem20simz",
             "importable": false
           }
         ],
@@ -12654,25 +12654,25 @@
       }
     },
     {
-      "id": "subsystem:mem20audiencereactionsimulatorz",
+      "id": "subsystem:mem20simz",
       "kind": "subsystem",
-      "name": "mem20audiencereactionsimulatorz",
+      "name": "mem20simz",
       "category": "other",
       "subcategory": "native-subsystem",
       "description": "Test creative variants against modeled audience segments before publishing",
-      "source": "/opt/mem20/mem20audiencereactionsimulatorz/pyproject.toml",
+      "source": "/opt/mem20/mem20simz/pyproject.toml",
       "runtime_status": "ok",
-      "runtime_detail": "pkg=mem20audiencereactionsimulatorz v1.0.0; installed 1.0.0 via root-venv; importable=False (1 modules checked); scripts=1 declared, 1 on PATH",
+      "runtime_detail": "pkg=mem20simz v1.0.0; installed 1.0.0 via root-venv; importable=False (1 modules checked); scripts=1 declared, 1 on PATH",
       "checks": [
         {
           "check": "pyproject present",
           "ok": true,
-          "detail": "/opt/mem20/mem20audiencereactionsimulatorz/pyproject.toml"
+          "detail": "/opt/mem20/mem20simz/pyproject.toml"
         },
         {
           "check": "name declared",
           "ok": true,
-          "detail": "mem20audiencereactionsimulatorz"
+          "detail": "mem20simz"
         },
         {
           "check": "description present",
@@ -12692,17 +12692,17 @@
         {
           "check": "import",
           "ok": false,
-          "detail": "mem20audiencereactionsimulatorz=n"
+          "detail": "mem20simz=n"
         }
       ],
       "meta": {
-        "pkg_name": "mem20audiencereactionsimulatorz",
+        "pkg_name": "mem20simz",
         "version": "1.0.0",
-        "pyproject": "/opt/mem20/mem20audiencereactionsimulatorz/pyproject.toml",
+        "pyproject": "/opt/mem20/mem20simz/pyproject.toml",
         "entry_points": [
           {
-            "console": "mem20audiencereactionsimulatorz",
-            "target": "mem20audiencereactionsimulatorz.core:cli",
+            "console": "mem20simz",
+            "target": "mem20simz.core:cli",
             "on_path": true
           }
         ],
@@ -12714,7 +12714,7 @@
         },
         "importable": [
           {
-            "name": "mem20audiencereactionsimulatorz",
+            "name": "mem20simz",
             "importable": false
           }
         ],
@@ -14024,25 +14024,25 @@
       }
     },
     {
-      "id": "subsystem:mem20businessmodelsimulatorz",
+      "id": "subsystem:mem20simz",
       "kind": "subsystem",
-      "name": "mem20businessmodelsimulatorz",
+      "name": "mem20simz",
       "category": "other",
       "subcategory": "native-subsystem",
       "description": "Business model simulator with 6 estate peers, HTTP cockpit, MCP",
-      "source": "/opt/mem20/mem20businessmodelsimulatorz/pyproject.toml",
+      "source": "/opt/mem20/mem20simz/pyproject.toml",
       "runtime_status": "ok",
-      "runtime_detail": "pkg=mem20businessmodelsimulatorz v1.0.0; installed 1.0.0 via root-venv; importable=False (1 modules checked); scripts=1 declared, 1 on PATH",
+      "runtime_detail": "pkg=mem20simz v1.0.0; installed 1.0.0 via root-venv; importable=False (1 modules checked); scripts=1 declared, 1 on PATH",
       "checks": [
         {
           "check": "pyproject present",
           "ok": true,
-          "detail": "/opt/mem20/mem20businessmodelsimulatorz/pyproject.toml"
+          "detail": "/opt/mem20/mem20simz/pyproject.toml"
         },
         {
           "check": "name declared",
           "ok": true,
-          "detail": "mem20businessmodelsimulatorz"
+          "detail": "mem20simz"
         },
         {
           "check": "description present",
@@ -14062,17 +14062,17 @@
         {
           "check": "import",
           "ok": false,
-          "detail": "mem20businessmodelsimulatorz=n"
+          "detail": "mem20simz=n"
         }
       ],
       "meta": {
-        "pkg_name": "mem20businessmodelsimulatorz",
+        "pkg_name": "mem20simz",
         "version": "1.0.0",
-        "pyproject": "/opt/mem20/mem20businessmodelsimulatorz/pyproject.toml",
+        "pyproject": "/opt/mem20/mem20simz/pyproject.toml",
         "entry_points": [
           {
-            "console": "mem20businessmodelsimulatorz",
-            "target": "mem20businessmodelsimulatorz.runtime:main",
+            "console": "mem20simz",
+            "target": "mem20simz.runtime:main",
             "on_path": true
           }
         ],
@@ -14084,7 +14084,7 @@
         },
         "importable": [
           {
-            "name": "mem20businessmodelsimulatorz",
+            "name": "mem20simz",
             "importable": false
           }
         ],
@@ -15528,25 +15528,25 @@
       }
     },
     {
-      "id": "subsystem:mem20counterfactualmemorysimulatorz",
+      "id": "subsystem:mem20simz",
       "kind": "subsystem",
-      "name": "mem20counterfactualmemorysimulatorz",
+      "name": "mem20simz",
       "category": "other",
       "subcategory": "native-subsystem",
       "description": "Counterfactual Memory Simulator with 6 peers, HTTP cockpit, MCP",
-      "source": "/opt/mem20/mem20counterfactualmemorysimulatorz/pyproject.toml",
+      "source": "/opt/mem20/mem20simz/pyproject.toml",
       "runtime_status": "ok",
-      "runtime_detail": "pkg=mem20counterfactualmemorysimulatorz v1.0.0; installed 1.0.0 via root-venv; importable=False (1 modules checked); scripts=1 declared, 1 on PATH",
+      "runtime_detail": "pkg=mem20simz v1.0.0; installed 1.0.0 via root-venv; importable=False (1 modules checked); scripts=1 declared, 1 on PATH",
       "checks": [
         {
           "check": "pyproject present",
           "ok": true,
-          "detail": "/opt/mem20/mem20counterfactualmemorysimulatorz/pyproject.toml"
+          "detail": "/opt/mem20/mem20simz/pyproject.toml"
         },
         {
           "check": "name declared",
           "ok": true,
-          "detail": "mem20counterfactualmemorysimulatorz"
+          "detail": "mem20simz"
         },
         {
           "check": "description present",
@@ -15566,17 +15566,17 @@
         {
           "check": "import",
           "ok": false,
-          "detail": "mem20counterfactualmemorysimulatorz=n"
+          "detail": "mem20simz=n"
         }
       ],
       "meta": {
-        "pkg_name": "mem20counterfactualmemorysimulatorz",
+        "pkg_name": "mem20simz",
         "version": "1.0.0",
-        "pyproject": "/opt/mem20/mem20counterfactualmemorysimulatorz/pyproject.toml",
+        "pyproject": "/opt/mem20/mem20simz/pyproject.toml",
         "entry_points": [
           {
-            "console": "mem20counterfactualmemorysimulatorz",
-            "target": "mem20counterfactualmemorysimulatorz.runtime:main",
+            "console": "mem20simz",
+            "target": "mem20simz.runtime:main",
             "on_path": true
           }
         ],
@@ -15588,7 +15588,7 @@
         },
         "importable": [
           {
-            "name": "mem20counterfactualmemorysimulatorz",
+            "name": "mem20simz",
             "importable": false
           }
         ],
@@ -17789,25 +17789,25 @@
       }
     },
     {
-      "id": "subsystem:mem20ethicalincentivesimulatorz",
+      "id": "subsystem:mem20simz",
       "kind": "subsystem",
-      "name": "mem20ethicalincentivesimulatorz",
+      "name": "mem20simz",
       "category": "other",
       "subcategory": "native-subsystem",
       "description": "Ethical Incentive Simulator (RM-203): behavior/incentive simulation with fairness, harm/manipulation safeguards, and peer outcome/risk analysis",
-      "source": "/opt/mem20/mem20ethicalincentivesimulatorz/pyproject.toml",
+      "source": "/opt/mem20/mem20simz/pyproject.toml",
       "runtime_status": "ok",
-      "runtime_detail": "pkg=mem20ethicalincentivesimulatorz v1.0.0; installed 1.0.0 via root-venv; importable=True (1 modules checked); scripts=1 declared, 1 on PATH",
+      "runtime_detail": "pkg=mem20simz v1.0.0; installed 1.0.0 via root-venv; importable=True (1 modules checked); scripts=1 declared, 1 on PATH",
       "checks": [
         {
           "check": "pyproject present",
           "ok": true,
-          "detail": "/opt/mem20/mem20ethicalincentivesimulatorz/pyproject.toml"
+          "detail": "/opt/mem20/mem20simz/pyproject.toml"
         },
         {
           "check": "name declared",
           "ok": true,
-          "detail": "mem20ethicalincentivesimulatorz"
+          "detail": "mem20simz"
         },
         {
           "check": "description present",
@@ -17827,17 +17827,17 @@
         {
           "check": "import",
           "ok": true,
-          "detail": "mem20ethicalincentivesimulatorz=y"
+          "detail": "mem20simz=y"
         }
       ],
       "meta": {
-        "pkg_name": "mem20ethicalincentivesimulatorz",
+        "pkg_name": "mem20simz",
         "version": "1.0.0",
-        "pyproject": "/opt/mem20/mem20ethicalincentivesimulatorz/pyproject.toml",
+        "pyproject": "/opt/mem20/mem20simz/pyproject.toml",
         "entry_points": [
           {
-            "console": "mem20ethicalincentivesimulatorz",
-            "target": "mem20ethicalincentivesimulatorz.runtime:main",
+            "console": "mem20simz",
+            "target": "mem20simz.runtime:main",
             "on_path": true
           }
         ],
@@ -17849,7 +17849,7 @@
         },
         "importable": [
           {
-            "name": "mem20ethicalincentivesimulatorz",
+            "name": "mem20simz",
             "importable": true
           }
         ],
@@ -18879,25 +18879,25 @@
       }
     },
     {
-      "id": "subsystem:mem20gamebalancesimulatorz",
+      "id": "subsystem:mem20simz",
       "kind": "subsystem",
-      "name": "mem20gamebalancesimulatorz",
+      "name": "mem20simz",
       "category": "other",
       "subcategory": "native-subsystem",
       "description": "Game Balance Simulator (RM-231): combat/progression/economy simulation with 6 peer signals; legacy domain preserved (#307)",
-      "source": "/opt/mem20/mem20gamebalancesimulatorz/pyproject.toml",
+      "source": "/opt/mem20/mem20simz/pyproject.toml",
       "runtime_status": "ok",
-      "runtime_detail": "pkg=mem20gamebalancesimulatorz v1.0.0; installed 1.0.0 via root-venv; importable=True (1 modules checked); scripts=1 declared, 1 on PATH",
+      "runtime_detail": "pkg=mem20simz v1.0.0; installed 1.0.0 via root-venv; importable=True (1 modules checked); scripts=1 declared, 1 on PATH",
       "checks": [
         {
           "check": "pyproject present",
           "ok": true,
-          "detail": "/opt/mem20/mem20gamebalancesimulatorz/pyproject.toml"
+          "detail": "/opt/mem20/mem20simz/pyproject.toml"
         },
         {
           "check": "name declared",
           "ok": true,
-          "detail": "mem20gamebalancesimulatorz"
+          "detail": "mem20simz"
         },
         {
           "check": "description present",
@@ -18917,17 +18917,17 @@
         {
           "check": "import",
           "ok": true,
-          "detail": "mem20gamebalancesimulatorz=y"
+          "detail": "mem20simz=y"
         }
       ],
       "meta": {
-        "pkg_name": "mem20gamebalancesimulatorz",
+        "pkg_name": "mem20simz",
         "version": "1.0.0",
-        "pyproject": "/opt/mem20/mem20gamebalancesimulatorz/pyproject.toml",
+        "pyproject": "/opt/mem20/mem20simz/pyproject.toml",
         "entry_points": [
           {
-            "console": "mem20gamebalancesimulatorz",
-            "target": "mem20gamebalancesimulatorz.runtime:main",
+            "console": "mem20simz",
+            "target": "mem20simz.runtime:main",
             "on_path": true
           }
         ],
@@ -18939,7 +18939,7 @@
         },
         "importable": [
           {
-            "name": "mem20gamebalancesimulatorz",
+            "name": "mem20simz",
             "importable": true
           }
         ],
@@ -21074,25 +21074,25 @@
       }
     },
     {
-      "id": "subsystem:mem20lifescenariosimulatorz",
+      "id": "subsystem:mem20simz",
       "kind": "subsystem",
-      "name": "mem20lifescenariosimulatorz",
+      "name": "mem20simz",
       "category": "other",
       "subcategory": "native-subsystem",
       "description": "Model personal choices, schedules, budgets, tradeoffs, and likely downstream effects",
-      "source": "/opt/mem20/mem20lifescenariosimulatorz/pyproject.toml",
+      "source": "/opt/mem20/mem20simz/pyproject.toml",
       "runtime_status": "ok",
-      "runtime_detail": "pkg=mem20lifescenariosimulatorz v1.0.0; installed 1.0.0 via root-venv; importable=False (1 modules checked); scripts=1 declared, 1 on PATH",
+      "runtime_detail": "pkg=mem20simz v1.0.0; installed 1.0.0 via root-venv; importable=False (1 modules checked); scripts=1 declared, 1 on PATH",
       "checks": [
         {
           "check": "pyproject present",
           "ok": true,
-          "detail": "/opt/mem20/mem20lifescenariosimulatorz/pyproject.toml"
+          "detail": "/opt/mem20/mem20simz/pyproject.toml"
         },
         {
           "check": "name declared",
           "ok": true,
-          "detail": "mem20lifescenariosimulatorz"
+          "detail": "mem20simz"
         },
         {
           "check": "description present",
@@ -21112,17 +21112,17 @@
         {
           "check": "import",
           "ok": false,
-          "detail": "mem20lifescenariosimulatorz=n"
+          "detail": "mem20simz=n"
         }
       ],
       "meta": {
-        "pkg_name": "mem20lifescenariosimulatorz",
+        "pkg_name": "mem20simz",
         "version": "1.0.0",
-        "pyproject": "/opt/mem20/mem20lifescenariosimulatorz/pyproject.toml",
+        "pyproject": "/opt/mem20/mem20simz/pyproject.toml",
         "entry_points": [
           {
-            "console": "mem20lifescenariosimulatorz",
-            "target": "mem20lifescenariosimulatorz.core:cli",
+            "console": "mem20simz",
+            "target": "mem20simz.core:cli",
             "on_path": true
           }
         ],
@@ -21134,7 +21134,7 @@
         },
         "importable": [
           {
-            "name": "mem20lifescenariosimulatorz",
+            "name": "mem20simz",
             "importable": false
           }
         ],
@@ -23527,25 +23527,25 @@
       }
     },
     {
-      "id": "subsystem:mem20operationsreplaysimulatorz",
+      "id": "subsystem:mem20simz",
       "kind": "subsystem",
-      "name": "mem20operationsreplaysimulatorz",
+      "name": "mem20simz",
       "category": "other",
       "subcategory": "native-subsystem",
       "description": "Replay past operational state and test alternate routing choices",
-      "source": "/opt/mem20/mem20operationsreplaysimulatorz/pyproject.toml",
+      "source": "/opt/mem20/mem20simz/pyproject.toml",
       "runtime_status": "ok",
-      "runtime_detail": "pkg=mem20operationsreplaysimulatorz v1.0.0; installed 1.0.0 via root-venv; importable=False (1 modules checked); scripts=1 declared, 1 on PATH",
+      "runtime_detail": "pkg=mem20simz v1.0.0; installed 1.0.0 via root-venv; importable=False (1 modules checked); scripts=1 declared, 1 on PATH",
       "checks": [
         {
           "check": "pyproject present",
           "ok": true,
-          "detail": "/opt/mem20/mem20operationsreplaysimulatorz/pyproject.toml"
+          "detail": "/opt/mem20/mem20simz/pyproject.toml"
         },
         {
           "check": "name declared",
           "ok": true,
-          "detail": "mem20operationsreplaysimulatorz"
+          "detail": "mem20simz"
         },
         {
           "check": "description present",
@@ -23565,17 +23565,17 @@
         {
           "check": "import",
           "ok": false,
-          "detail": "mem20operationsreplaysimulatorz=n"
+          "detail": "mem20simz=n"
         }
       ],
       "meta": {
-        "pkg_name": "mem20operationsreplaysimulatorz",
+        "pkg_name": "mem20simz",
         "version": "1.0.0",
-        "pyproject": "/opt/mem20/mem20operationsreplaysimulatorz/pyproject.toml",
+        "pyproject": "/opt/mem20/mem20simz/pyproject.toml",
         "entry_points": [
           {
-            "console": "mem20operationsreplaysimulatorz",
-            "target": "mem20operationsreplaysimulatorz.core:cli",
+            "console": "mem20simz",
+            "target": "mem20simz.core:cli",
             "on_path": true
           }
         ],
@@ -23587,7 +23587,7 @@
         },
         "importable": [
           {
-            "name": "mem20operationsreplaysimulatorz",
+            "name": "mem20simz",
             "importable": false
           }
         ],
@@ -23804,25 +23804,25 @@
       }
     },
     {
-      "id": "subsystem:mem20outcomesimulationlabz",
+      "id": "subsystem:mem20simz",
       "kind": "subsystem",
-      "name": "mem20outcomesimulationlabz",
+      "name": "mem20simz",
       "category": "other",
       "subcategory": "native-subsystem",
       "description": "Outcome Simulation Lab with 6 peers, HTTP cockpit, MCP",
-      "source": "/opt/mem20/mem20outcomesimulationlabz/pyproject.toml",
+      "source": "/opt/mem20/mem20simz/pyproject.toml",
       "runtime_status": "ok",
-      "runtime_detail": "pkg=mem20outcomesimulationlabz v1.0.0; installed 1.0.0 via root-venv; importable=False (1 modules checked); scripts=1 declared, 1 on PATH",
+      "runtime_detail": "pkg=mem20simz v1.0.0; installed 1.0.0 via root-venv; importable=False (1 modules checked); scripts=1 declared, 1 on PATH",
       "checks": [
         {
           "check": "pyproject present",
           "ok": true,
-          "detail": "/opt/mem20/mem20outcomesimulationlabz/pyproject.toml"
+          "detail": "/opt/mem20/mem20simz/pyproject.toml"
         },
         {
           "check": "name declared",
           "ok": true,
-          "detail": "mem20outcomesimulationlabz"
+          "detail": "mem20simz"
         },
         {
           "check": "description present",
@@ -23842,17 +23842,17 @@
         {
           "check": "import",
           "ok": false,
-          "detail": "mem20outcomesimulationlabz=n"
+          "detail": "mem20simz=n"
         }
       ],
       "meta": {
-        "pkg_name": "mem20outcomesimulationlabz",
+        "pkg_name": "mem20simz",
         "version": "1.0.0",
-        "pyproject": "/opt/mem20/mem20outcomesimulationlabz/pyproject.toml",
+        "pyproject": "/opt/mem20/mem20simz/pyproject.toml",
         "entry_points": [
           {
-            "console": "mem20outcomesimulationlabz",
-            "target": "mem20outcomesimulationlabz.runtime:main",
+            "console": "mem20simz",
+            "target": "mem20simz.runtime:main",
             "on_path": true
           }
         ],
@@ -23864,7 +23864,7 @@
         },
         "importable": [
           {
-            "name": "mem20outcomesimulationlabz",
+            "name": "mem20simz",
             "importable": false
           }
         ],
@@ -25171,25 +25171,25 @@
       }
     },
     {
-      "id": "subsystem:mem20productledgrowthsimulatorz",
+      "id": "subsystem:mem20simz",
       "kind": "subsystem",
-      "name": "mem20productledgrowthsimulatorz",
+      "name": "mem20simz",
       "category": "other",
       "subcategory": "native-subsystem",
       "description": "Product-Led Growth Simulator with 6 peers, HTTP cockpit, MCP",
-      "source": "/opt/mem20/mem20productledgrowthsimulatorz/pyproject.toml",
+      "source": "/opt/mem20/mem20simz/pyproject.toml",
       "runtime_status": "ok",
-      "runtime_detail": "pkg=mem20productledgrowthsimulatorz v1.0.0; installed 1.0.0 via root-venv; importable=False (1 modules checked); scripts=1 declared, 1 on PATH",
+      "runtime_detail": "pkg=mem20simz v1.0.0; installed 1.0.0 via root-venv; importable=False (1 modules checked); scripts=1 declared, 1 on PATH",
       "checks": [
         {
           "check": "pyproject present",
           "ok": true,
-          "detail": "/opt/mem20/mem20productledgrowthsimulatorz/pyproject.toml"
+          "detail": "/opt/mem20/mem20simz/pyproject.toml"
         },
         {
           "check": "name declared",
           "ok": true,
-          "detail": "mem20productledgrowthsimulatorz"
+          "detail": "mem20simz"
         },
         {
           "check": "description present",
@@ -25209,17 +25209,17 @@
         {
           "check": "import",
           "ok": false,
-          "detail": "mem20productledgrowthsimulatorz=n"
+          "detail": "mem20simz=n"
         }
       ],
       "meta": {
-        "pkg_name": "mem20productledgrowthsimulatorz",
+        "pkg_name": "mem20simz",
         "version": "1.0.0",
-        "pyproject": "/opt/mem20/mem20productledgrowthsimulatorz/pyproject.toml",
+        "pyproject": "/opt/mem20/mem20simz/pyproject.toml",
         "entry_points": [
           {
-            "console": "mem20productledgrowthsimulatorz",
-            "target": "mem20productledgrowthsimulatorz.runtime:main",
+            "console": "mem20simz",
+            "target": "mem20simz.runtime:main",
             "on_path": true
           }
         ],
@@ -25231,7 +25231,7 @@
         },
         "importable": [
           {
-            "name": "mem20productledgrowthsimulatorz",
+            "name": "mem20simz",
             "importable": false
           }
         ],
@@ -26599,25 +26599,25 @@
       }
     },
     {
-      "id": "subsystem:mem20roadmapsimulationtwinz",
+      "id": "subsystem:mem20simz",
       "kind": "subsystem",
-      "name": "mem20roadmapsimulationtwinz",
+      "name": "mem20simz",
       "category": "other",
       "subcategory": "native-subsystem",
       "description": "Simulate schedule, staffing, failures, and changing assumptions across a roadmap",
-      "source": "/opt/mem20/mem20roadmapsimulationtwinz/pyproject.toml",
+      "source": "/opt/mem20/mem20simz/pyproject.toml",
       "runtime_status": "ok",
-      "runtime_detail": "pkg=mem20roadmapsimulationtwinz v1.0.0; installed 1.0.0 via root-venv; importable=False (1 modules checked); scripts=1 declared, 1 on PATH",
+      "runtime_detail": "pkg=mem20simz v1.0.0; installed 1.0.0 via root-venv; importable=False (1 modules checked); scripts=1 declared, 1 on PATH",
       "checks": [
         {
           "check": "pyproject present",
           "ok": true,
-          "detail": "/opt/mem20/mem20roadmapsimulationtwinz/pyproject.toml"
+          "detail": "/opt/mem20/mem20simz/pyproject.toml"
         },
         {
           "check": "name declared",
           "ok": true,
-          "detail": "mem20roadmapsimulationtwinz"
+          "detail": "mem20simz"
         },
         {
           "check": "description present",
@@ -26637,17 +26637,17 @@
         {
           "check": "import",
           "ok": false,
-          "detail": "mem20roadmapsimulationtwinz=n"
+          "detail": "mem20simz=n"
         }
       ],
       "meta": {
-        "pkg_name": "mem20roadmapsimulationtwinz",
+        "pkg_name": "mem20simz",
         "version": "1.0.0",
-        "pyproject": "/opt/mem20/mem20roadmapsimulationtwinz/pyproject.toml",
+        "pyproject": "/opt/mem20/mem20simz/pyproject.toml",
         "entry_points": [
           {
-            "console": "mem20roadmapsimulationtwinz",
-            "target": "mem20roadmapsimulationtwinz.core:cli",
+            "console": "mem20simz",
+            "target": "mem20simz.core:cli",
             "on_path": true
           }
         ],
@@ -26659,7 +26659,7 @@
         },
         "importable": [
           {
-            "name": "mem20roadmapsimulationtwinz",
+            "name": "mem20simz",
             "importable": false
           }
         ],
@@ -29948,25 +29948,25 @@
       }
     },
     {
-      "id": "subsystem:mem20useracceptancesimulatorz",
+      "id": "subsystem:mem20simz",
       "kind": "subsystem",
-      "name": "mem20useracceptancesimulatorz",
+      "name": "mem20simz",
       "category": "other",
       "subcategory": "native-subsystem",
       "description": "Model how different users attempt tasks and where they fail or abandon",
-      "source": "/opt/mem20/mem20useracceptancesimulatorz/pyproject.toml",
+      "source": "/opt/mem20/mem20simz/pyproject.toml",
       "runtime_status": "ok",
-      "runtime_detail": "pkg=mem20useracceptancesimulatorz v1.0.0; installed 1.0.0 via root-venv; importable=False (1 modules checked); scripts=1 declared, 1 on PATH",
+      "runtime_detail": "pkg=mem20simz v1.0.0; installed 1.0.0 via root-venv; importable=False (1 modules checked); scripts=1 declared, 1 on PATH",
       "checks": [
         {
           "check": "pyproject present",
           "ok": true,
-          "detail": "/opt/mem20/mem20useracceptancesimulatorz/pyproject.toml"
+          "detail": "/opt/mem20/mem20simz/pyproject.toml"
         },
         {
           "check": "name declared",
           "ok": true,
-          "detail": "mem20useracceptancesimulatorz"
+          "detail": "mem20simz"
         },
         {
           "check": "description present",
@@ -29986,17 +29986,17 @@
         {
           "check": "import",
           "ok": false,
-          "detail": "mem20useracceptancesimulatorz=n"
+          "detail": "mem20simz=n"
         }
       ],
       "meta": {
-        "pkg_name": "mem20useracceptancesimulatorz",
+        "pkg_name": "mem20simz",
         "version": "1.0.0",
-        "pyproject": "/opt/mem20/mem20useracceptancesimulatorz/pyproject.toml",
+        "pyproject": "/opt/mem20/mem20simz/pyproject.toml",
         "entry_points": [
           {
-            "console": "mem20useracceptancesimulatorz",
-            "target": "mem20useracceptancesimulatorz.core:cli",
+            "console": "mem20simz",
+            "target": "mem20simz.core:cli",
             "on_path": true
           }
         ],
@@ -30008,7 +30008,7 @@
         },
         "importable": [
           {
-            "name": "mem20useracceptancesimulatorz",
+            "name": "mem20simz",
             "importable": false
           }
         ],

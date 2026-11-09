@@ -15,7 +15,7 @@ MEMBERS = (
     "mem20integrationdigitaltwinz",
     "mem20playermotivationtwinz",
     "mem20realtimebusinesstwinz",
-    "mem20roadmapsimulationtwinz",
+    "mem20simz",
 )
 
 __all__ = ["__version__", "MEMBERS"]

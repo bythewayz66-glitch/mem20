@@ -123,7 +123,7 @@ later step verifiable; the three likely-in-flight agents land last.
 | 16 | Market Research | Market research | `mem20sensorz` to 7/7 conformance | `feat/4.0-market-research-mem20sensorz` |
 | 17 | Pricing Analyst | Pricing | `mem20liez` to 7/7 conformance | `feat/4.0-pricing-analyst-mem20liez` |
 | 18 | Finance Assistant | Finance | `mem20revenueleakhunterz` to 7/7 | `feat/4.0-finance-assistant-mem20revenueleakhunterz` |
-| 19 | Growth Hacker | Growth | `mem20productledgrowthsimulatorz` to 7/7 | `feat/4.0-growth-hacker-mem20productledgrowthsimulatorz` |
+| 19 | Growth Hacker | Growth | `mem20simz` to 7/7 | `feat/4.0-growth-hacker-mem20simz` |
 | 20 | Mem20 Content Creator | Content | `mem20ircz` to 7/7 conformance | `feat/4.0-mem20-content-creator-mem20ircz` |
 | 21 | Slides Assistant | Slides / media | `mem20yetiz` to 7/7 conformance | `feat/4.0-slides-assistant-mem20yetiz` |
 | 22 | Mem20-naration | Narration / demo | `mem20gamez` to 7/7 conformance | `feat/4.0-mem20-naration-mem20gamez` |
@@ -281,9 +281,9 @@ touch.** Anything outside the list is either frozen (§1) or someone else's laye
 
 ### Step 19 — Growth Hacker
 - **Domain:** growth.
-- **Contribution:** bring `mem20productledgrowthsimulatorz` to 7/7 conformance.
-- **Branch:** `feat/4.0-growth-hacker-mem20productledgrowthsimulatorz`
-- **Files:** `mem20productledgrowthsimulatorz/**` only.
+- **Contribution:** bring `mem20simz` to 7/7 conformance.
+- **Branch:** `feat/4.0-growth-hacker-mem20simz`
+- **Files:** `mem20simz/**` only.
 - **Evidence:** 40-char SHA + conformance exit 0.
 
 ### Step 20 — Mem20 Content Creator

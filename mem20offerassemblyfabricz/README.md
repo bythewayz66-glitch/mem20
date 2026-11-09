@@ -3,7 +3,7 @@
 First-class mem20 subsystem for offer assembly (create_offer/add_component/price_offer/publish/offer_health) with **6 peers**, SQLite WAL runtime, CLI, JSON HTTP API, served web cockpit, docs/app monitor, and real MCP tools. Core API preserved.
 
 ## Peers (6)
-`mem20autonomousdealdeskz`, `mem20servicebundlingenginez`, `mem20productledgrowthsimulatorz`, `mem20revenueleakhunterz`, `mem20eventstreamsuperhighwayz`, `mem20capabilitymarketplacez`.
+`mem20autonomousdealdeskz`, `mem20servicebundlingenginez`, `mem20simz`, `mem20revenueleakhunterz`, `mem20eventstreamsuperhighwayz`, `mem20capabilitymarketplacez`.
 
 ## CLI (runnable)
 ```bash

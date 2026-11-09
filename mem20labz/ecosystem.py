@@ -29,13 +29,13 @@ def _safe(name: str, fn: Callable[[], Dict[str, Any]]) -> Dict[str, Any]:
 def outcomesimulation_signal() -> Dict[str, Any]:
     def run():
         try:
-            from mem20outcomesimulationlabz.domain import simulate_once, summarize
+            from mem20simz.domain import simulate_once, summarize
         except Exception:
-            from mem20outcomesimulationlabz.mem20outcomesimulationlabz.domain import simulate_once, summarize
+            from mem20simz.mem20simz.domain import simulate_once, summarize
         sim = simulate_once({"baseline": 1.0, "noise": 0.1}, seed=1)
         summary = summarize([sim, simulate_once({"baseline": 1.0, "noise": 0.2}, seed=2)])
         return {"simulation": sim, "summary": summary}
-    return _safe("mem20outcomesimulationlabz", run)
+    return _safe("mem20simz", run)
 
 
 def remoteexperiment_signal() -> Dict[str, Any]:

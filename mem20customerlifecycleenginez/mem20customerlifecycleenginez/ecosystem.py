@@ -4,7 +4,7 @@ import pathlib,sys
 from typing import Mapping,Sequence
 __all__=["business_value","pipeline_signal","loyalty_context","demand_signal","lifecycle_events","growth_partnerships","probe"]
 _REPO_ROOT=pathlib.Path(__file__).resolve().parents[2]
-_PROJECTS=("mem20businessmodelsimulatorz","mem20autonomoussaleslaboratoryz","mem20crossproductloyaltygraphz","mem20demandforecastandcapacitybrainz","mem20eventstreamsuperhighwayz","mem20acquisitionandpartnershipscoutz")
+_PROJECTS=("mem20simz","mem20autonomoussaleslaboratoryz","mem20crossproductloyaltygraphz","mem20demandforecastandcapacitybrainz","mem20eventstreamsuperhighwayz","mem20acquisitionandpartnershipscoutz")
 def _bootstrap():
     for name in reversed(_PROJECTS):
         p=str(_REPO_ROOT/name)
@@ -14,9 +14,9 @@ def _bootstrap():
 _bootstrap()
 def business_value(ltv:float)->dict:
     try:
-        from mem20businessmodelsimulatorz.domain import margin,profit,revenue
-        r=revenue(max(1,int(ltv/10)),10.0); c=r*0.4; return {"ok":True,"subsystem":"mem20businessmodelsimulatorz","revenue":r,"profit":profit(r,c),"margin":margin(r,c)}
-    except Exception as exc: return {"ok":False,"subsystem":"mem20businessmodelsimulatorz","error":f"{type(exc).__name__}: {exc}"}
+        from mem20simz.domain import margin,profit,revenue
+        r=revenue(max(1,int(ltv/10)),10.0); c=r*0.4; return {"ok":True,"subsystem":"mem20simz","revenue":r,"profit":profit(r,c),"margin":margin(r,c)}
+    except Exception as exc: return {"ok":False,"subsystem":"mem20simz","error":f"{type(exc).__name__}: {exc}"}
 def pipeline_signal(ltv:float)->dict:
     try:
         from mem20autonomoussaleslaboratoryz.domain import pipeline_value,segment_leads

@@ -15,7 +15,7 @@ class TestBranding(unittest.TestCase):
         import mem20boxz as pkg
         self.assertTrue(pkg.MEMBERS)
         self.assertEqual(len(pkg.MEMBERS), 4)
-        self.assertIn("mem20architecturesimulationsandboxz", pkg.MEMBERS)
+        self.assertIn("mem20simz", pkg.MEMBERS)
 
 
 class TestCli(unittest.TestCase):

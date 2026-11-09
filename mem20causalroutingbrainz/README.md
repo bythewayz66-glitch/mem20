@@ -3,7 +3,7 @@
 First-class mem20 subsystem for causal routing decisions (average treatment effect, weighted causal routing scores, confounder adjustment, intervention value, causal graph construction) with **6 causal-routing-specific estate peers** (unique set), SQLite WAL runtime, CLI, JSON HTTP API, served cockpit, docs/app integration, and real MCP tools.
 
 ## Peers (6)
-`mem20counterfactualmemorysimulatorz` (counterfactual/compare/outcome_probability), `mem20eventstreamsuperhighwayz` (route events), `mem20capabilitymarketplacez` (route target capability), `mem20faultcontainmentcellsz` (failure/containment signal), `mem20universalhealthnervoussystemz` (health-aware routing), `mem20zerotouchnodeswarmz` (node targets/quorum). Failures reported, not fatal.
+`mem20simz` (counterfactual/compare/outcome_probability), `mem20eventstreamsuperhighwayz` (route events), `mem20capabilitymarketplacez` (route target capability), `mem20faultcontainmentcellsz` (failure/containment signal), `mem20universalhealthnervoussystemz` (health-aware routing), `mem20zerotouchnodeswarmz` (node targets/quorum). Failures reported, not fatal.
 
 ## Python API (runnable)
 ```python

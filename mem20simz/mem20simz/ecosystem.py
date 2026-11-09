@@ -4,7 +4,7 @@ import pathlib,sys
 from typing import Mapping,Sequence
 __all__=["counterfactual_sim","business_twin","causal_routing","sim_events","sim_routing","sim_containment","probe"]
 _REPO_ROOT=pathlib.Path(__file__).resolve().parents[2]
-_PROJECTS=("mem20counterfactualmemorysimulatorz","mem20realtimebusinesstwinz","mem20causalroutingbrainz","mem20eventstreamsuperhighwayz","mem20capabilitymarketplacez","mem20faultcontainmentcellsz")
+_PROJECTS=("mem20simz","mem20realtimebusinesstwinz","mem20causalroutingbrainz","mem20eventstreamsuperhighwayz","mem20capabilitymarketplacez","mem20faultcontainmentcellsz")
 def _bootstrap():
     for name in reversed(_PROJECTS):
         p=str(_REPO_ROOT/name)
@@ -14,9 +14,9 @@ def _bootstrap():
 _bootstrap()
 def counterfactual_sim(state:Mapping)->dict:
     try:
-        from mem20counterfactualmemorysimulatorz.domain import counterfactual,compare
-        o={"state":dict(state)}; cf=counterfactual(o,{"change":{"x":state.get("x",0)+1}}); return {"ok":True,"subsystem":"mem20counterfactualmemorysimulatorz","diff_keys":len(compare(o,cf))}
-    except Exception as exc: return {"ok":False,"subsystem":"mem20counterfactualmemorysimulatorz","error":f"{type(exc).__name__}: {exc}"}
+        from mem20simz.domain import counterfactual,compare
+        o={"state":dict(state)}; cf=counterfactual(o,{"change":{"x":state.get("x",0)+1}}); return {"ok":True,"subsystem":"mem20simz","diff_keys":len(compare(o,cf))}
+    except Exception as exc: return {"ok":False,"subsystem":"mem20simz","error":f"{type(exc).__name__}: {exc}"}
 def business_twin()->dict:
     try:
         from mem20realtimebusinesstwinz.domain import create_twin,twin_health

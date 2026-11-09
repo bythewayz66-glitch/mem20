@@ -9,7 +9,7 @@ def test_health(): assert 0<=_m().ecosystem_health([{"id":"a","value":1,"users":
 def test_matrix(): m=_m().cross_sell_matrix([{"id":"a","value":1,"users":[]},{"id":"b","value":1,"users":[]}]); assert "a" in m
 def test_ecosystem_loyalty(): r=_eco().loyalty_graph(["a","b"]); assert r["ok"] and r["subsystem"]=="mem20crossproductloyaltygraphz"
 def test_ecosystem_lifecycle(): r=_eco().lifecycle_value(); assert r["ok"] and r["subsystem"]=="mem20customerlifecycleenginez"
-def test_ecosystem_growth(): r=_eco().growth_economics(100,0.1,3); assert r["ok"] and r["subsystem"]=="mem20businessmodelsimulatorz"
+def test_ecosystem_growth(): r=_eco().growth_economics(100,0.1,3); assert r["ok"] and r["subsystem"]=="mem20simz"
 def test_ecosystem_pipeline(): r=_eco().pipeline_signal(1000); assert r["ok"] and r["subsystem"]=="mem20autonomoussaleslaboratoryz"
 def test_ecosystem_demand(): r=_eco().demand_signal([100,110]); assert r["ok"] and r["subsystem"]=="mem20demandforecastandcapacitybrainz"
 def test_ecosystem_partnership(): r=_eco().partnership_synergy(); assert r["ok"] and r["subsystem"]=="mem20acquisitionandpartnershipscoutz"

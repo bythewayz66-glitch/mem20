@@ -3,7 +3,7 @@
 First-class mem20 subsystem for offer genome evolution (create_genome/mutate/fitness/evolve) with **6 peers**, SQLite WAL runtime, CLI, JSON HTTP API, served web cockpit, docs/app monitor, and real MCP tools. Core API preserved.
 
 ## Peers (6)
-`mem20offerassemblyfabricz`, `mem20autonomousdealdeskz`, `mem20productledgrowthsimulatorz`, `mem20counterfactualmemorysimulatorz`, `mem20eventstreamsuperhighwayz`, `mem20capabilitymarketplacez`.
+`mem20offerassemblyfabricz`, `mem20autonomousdealdeskz`, `mem20simz`, `mem20simz`, `mem20eventstreamsuperhighwayz`, `mem20capabilitymarketplacez`.
 
 ## CLI (runnable)
 ```bash

@@ -10,7 +10,7 @@ from __future__ import annotations
 __version__ = "0.1.0"
 
 MEMBERS = (
-    "mem20architecturesimulationsandboxz",
+    "mem20simz",
     "mem20multiworldsandboxz",
     "mem20scopemutationsandboxz",
     "mem20spatialcomputingsandboxz",

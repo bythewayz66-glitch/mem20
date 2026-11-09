@@ -10,7 +10,7 @@ def test_eco_workcell(): r=_eco().workcell_execution({"id":"e"}); assert r["ok"]
 def test_eco_swarm(): r=_eco().node_swarm(); assert r["ok"] and r["subsystem"]=="mem20zerotouchnodeswarmz"
 def test_eco_events(): r=_eco().experiment_events("e",{}); assert r["ok"] and r["subsystem"]=="mem20eventstreamsuperhighwayz"
 def test_eco_contain(): r=_eco().run_containment("e"); assert r["ok"] and r["subsystem"]=="mem20faultcontainmentcellsz"
-def test_eco_cf(): r=_eco().scenario_compare({"s":1},{"s":2}); assert r["ok"] and r["subsystem"]=="mem20counterfactualmemorysimulatorz"
+def test_eco_cf(): r=_eco().scenario_compare({"s":1},{"s":2}); assert r["ok"] and r["subsystem"]=="mem20simz"
 def test_eco_route(): r=_eco().capability_routing("k",["e"]); assert r["ok"] and r["subsystem"]=="mem20capabilitymarketplacez"
 def test_report_and_probe():
     m=_m(); rep=m.experiment_report(); assert rep["best"]=="b" and len(rep["peers"])==6

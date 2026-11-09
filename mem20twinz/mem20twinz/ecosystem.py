@@ -4,7 +4,7 @@ import pathlib,sys
 from typing import Mapping,Sequence
 __all__=["execution_twin","business_twin","counterfactual_sim","twin_events","twin_routing","causal_routing","probe"]
 _REPO_ROOT=pathlib.Path(__file__).resolve().parents[2]
-_PROJECTS=("mem20executiondigitaltwinz","mem20realtimebusinesstwinz","mem20counterfactualmemorysimulatorz","mem20eventstreamsuperhighwayz","mem20capabilitymarketplacez","mem20causalroutingbrainz")
+_PROJECTS=("mem20executiondigitaltwinz","mem20realtimebusinesstwinz","mem20simz","mem20eventstreamsuperhighwayz","mem20capabilitymarketplacez","mem20causalroutingbrainz")
 def _bootstrap():
     for name in reversed(_PROJECTS):
         p=str(_REPO_ROOT/name)
@@ -24,9 +24,9 @@ def business_twin()->dict:
     except Exception as exc: return {"ok":False,"subsystem":"mem20realtimebusinesstwinz","error":f"{type(exc).__name__}: {exc}"}
 def counterfactual_sim()->dict:
     try:
-        from mem20counterfactualmemorysimulatorz.domain import counterfactual,compare
-        o={"x":1}; cf=counterfactual(o,{"change":{"x":2}}); return {"ok":True,"subsystem":"mem20counterfactualmemorysimulatorz","diff":len(compare(o,cf))}
-    except Exception as exc: return {"ok":False,"subsystem":"mem20counterfactualmemorysimulatorz","error":f"{type(exc).__name__}: {exc}"}
+        from mem20simz.domain import counterfactual,compare
+        o={"x":1}; cf=counterfactual(o,{"change":{"x":2}}); return {"ok":True,"subsystem":"mem20simz","diff":len(compare(o,cf))}
+    except Exception as exc: return {"ok":False,"subsystem":"mem20simz","error":f"{type(exc).__name__}: {exc}"}
 def twin_events(name:str,payload:Mapping)->dict:
     try:
         from mem20eventstreamsuperhighwayz.domain import create_stream,publish,throughput

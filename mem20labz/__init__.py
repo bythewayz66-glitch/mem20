@@ -16,7 +16,7 @@ MEMBERS = (
     "mem20executabledesignstresslabz",
     "mem20modelgenomelabz",
     "mem20neuromorphiceventlabz",
-    "mem20outcomesimulationlabz",
+    "mem20simz",
     "mem20remoteexperimentlabz",
     "mem20webassemblycomponentlabz",
 )

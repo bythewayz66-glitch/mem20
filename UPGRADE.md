@@ -330,13 +330,13 @@ Building these in name order wastes effort on low-value packages. Better to go b
 
 **What this family is for.** Running a scenario and reading a number. These are worthless if they produce a vibe instead of a measurement.
 
-### `mem20audiencereactionsimulatorz`
+### `mem20simz`
 
 - **Should be:** simulator — run a scenario and read a number, not a vibe.
 - **Must refuse:** to be a general-purpose runtime, and to return a confident answer when it is out of its depth.
 - **Proven by:** a test asserting a specific value, bound or contradiction — not that the function ran.
 
-### `mem20businessmodelsimulatorz`
+### `mem20simz`
 
 - **Should be:** simulator — run a scenario and read a number, not a vibe.
 - **Must refuse:** to be a general-purpose runtime, and to return a confident answer when it is out of its depth.
@@ -354,7 +354,7 @@ Building these in name order wastes effort on low-value packages. Better to go b
 - **Must refuse:** to be a general-purpose runtime, and to return a confident answer when it is out of its depth.
 - **Proven by:** a test asserting a specific value, bound or contradiction — not that the function ran.
 
-### `mem20gamebalancesimulatorz`
+### `mem20simz`
 
 - **Should be:** simulator — run a scenario and read a number, not a vibe.
 - **Must refuse:** to be a general-purpose runtime, and to return a confident answer when it is out of its depth.
@@ -372,7 +372,7 @@ Building these in name order wastes effort on low-value packages. Better to go b
 - **Must refuse:** to be a general-purpose runtime, and to return a confident answer when it is out of its depth.
 - **Proven by:** a test asserting a specific value, bound or contradiction — not that the function ran.
 
-### `mem20operationsreplaysimulatorz`
+### `mem20simz`
 
 - **Should be:** simulator — run a scenario and read a number, not a vibe.
 - **Must refuse:** to be a general-purpose runtime, and to return a confident answer when it is out of its depth.
@@ -390,7 +390,7 @@ Building these in name order wastes effort on low-value packages. Better to go b
 - **Must refuse:** to be a general-purpose runtime, and to return a confident answer when it is out of its depth.
 - **Proven by:** a test asserting a specific value, bound or contradiction — not that the function ran.
 
-### `mem20productledgrowthsimulatorz`
+### `mem20simz`
 
 - **Should be:** simulator — run a scenario and read a number, not a vibe.
 - **Must refuse:** to be a general-purpose runtime, and to return a confident answer when it is out of its depth.
@@ -408,7 +408,7 @@ Building these in name order wastes effort on low-value packages. Better to go b
 - **Must refuse:** to be a general-purpose runtime, and to return a confident answer when it is out of its depth.
 - **Proven by:** a test asserting a specific value, bound or contradiction — not that the function ran.
 
-### `mem20useracceptancesimulatorz`
+### `mem20simz`
 
 - **Should be:** simulator — run a scenario and read a number, not a vibe.
 - **Must refuse:** to be a general-purpose runtime, and to return a confident answer when it is out of its depth.
@@ -810,7 +810,7 @@ Building these in name order wastes effort on low-value packages. Better to go b
 
 **What this family is for.** retrieval, consolidation and recall over a store it does not own; what happened, when, in order — an event log with replay and branching; what would have followed from a different choice, scored for plausibility; anticipate what a query will need and prefetch it before it is asked
 
-### `mem20counterfactualmemorysimulatorz`
+### `mem20simz`
 
 - **Should be:** long-term memory — retrieval, consolidation and recall over a store it does not own.
 - **Must refuse:** to be a general-purpose runtime, and to return a confident answer when it is out of its depth.
@@ -1008,7 +1008,7 @@ Building these in name order wastes effort on low-value packages. Better to go b
 
 **What this family is for.** a model you can run and probe, not a diagram; a live model that tracks a real thing and is wrong when the thing changes; run plausible futures and show which decisions are robust across them; inject faults deliberately and prove the system degrades the way it claims
 
-### `mem20architecturesimulationsandboxz`
+### `mem20simz`
 
 - **Should be:** simulation — a model you can run and probe, not a diagram.
 - **Must refuse:** to be a general-purpose runtime, and to return a confident answer when it is out of its depth.
@@ -1038,7 +1038,7 @@ Building these in name order wastes effort on low-value packages. Better to go b
 - **Must refuse:** to be a general-purpose runtime, and to return a confident answer when it is out of its depth.
 - **Proven by:** a test asserting a specific value, bound or contradiction — not that the function ran.
 
-### `mem20lifescenariosimulatorz`
+### `mem20simz`
 
 - **Should be:** scenario simulation — run plausible futures and show which decisions are robust across them.
 - **Must refuse:** to be a general-purpose runtime, and to return a confident answer when it is out of its depth.
@@ -1050,13 +1050,13 @@ Building these in name order wastes effort on low-value packages. Better to go b
 - **Must refuse:** to be a general-purpose runtime, and to return a confident answer when it is out of its depth.
 - **Proven by:** a test asserting a specific value, bound or contradiction — not that the function ran.
 
-### `mem20outcomesimulationlabz`
+### `mem20simz`
 
 - **Should be:** simulation — a model you can run and probe, not a diagram.
 - **Must refuse:** to be a general-purpose runtime, and to return a confident answer when it is out of its depth.
 - **Proven by:** a test asserting a specific value, bound or contradiction — not that the function ran.
 
-### `mem20roadmapsimulationtwinz`
+### `mem20simz`
 
 - **Should be:** simulation — a model you can run and probe, not a diagram.
 - **Must refuse:** to be a general-purpose runtime, and to return a confident answer when it is out of its depth.
@@ -1488,7 +1488,7 @@ These names do not state a capability the audit can pin down. Give each a one-li
 - **Must refuse:** to be a general-purpose runtime, and to return a confident answer when it is out of its depth.
 - **Proven by:** a test asserting a specific value, bound or contradiction — not that the function ran.
 
-### `mem20ethicalincentivesimulatorz`
+### `mem20simz`
 
 - **Should be:** ethical incentives — make the profitable choice also the defensible one, then verify it is.
 - **Must refuse:** to be a general-purpose runtime, and to return a confident answer when it is out of its depth.

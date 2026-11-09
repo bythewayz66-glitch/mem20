@@ -513,13 +513,13 @@ with root shim. 6 unique peers (different from #300-#305): `mem20dynamicskillgra
 doctor 6/6, conformance **7/7**, register_subsystem PASS (MCP warn only).
 
 ---
-## 2026-11-07 - mem20ethicalincentivesimulatorz (#307): depth-first rebuild
+## 2026-11-07 - mem20simz (#307): depth-first rebuild
 
 Rebuilt RM-203 (Ethical Incentive Simulator, fails 5,6,7) as first-class while preserving
 legacy domain API and existing CAPABILITY-driven Engine/Store/SDK/CLI/HTTP behavior (10-scenario
 `simulate` still passes). Enriched `progression` with real ethical incentive simulation
 (fairness, harm/manipulation violations, aligned rewards, risk vs hard-safety threshold) and
-6 unique peers (different from #300-#306): `mem20outcomesimulationlabz`, `mem20gamebalancesimulatorz`,
+6 unique peers (different from #300-#306): `mem20simz`, `mem20simz`,
 `mem20executiondigitaltwinz`, `mem20dynamicquestrewardcomposerz`, `mem20rewardforgez`,
 `mem20pipez`. Added `/doctor` peer probe, web cockpit, root shim,
 README fenced runnable example, docs/PLAN, docs/app monitor, gateway/toolchest. Verification:
@@ -531,7 +531,7 @@ README fenced runnable example, docs/PLAN, docs/app monitor, gateway/toolchest. 
 Rebuilt RM-221 (Executable Design Stress Lab, fails 5,6,7, operation_kind=qa) as first-class
 while preserving legacy domain API and CAPABILITY Engine/CLI/10-scenario simulator. Enriched
 `qa` with real stress/resilience/bottleneck/recovery/design verdict and 6 unique peers
-(different from #300-#307): `mem20architecturesimulationsandboxz`, `mem20adversarialqacrewz`,
+(different from #300-#307): `mem20simz`, `mem20adversarialqacrewz`,
 `mem20universalhealthnervoussystemz`, `mem20syntheticevaluatorarenaz`, `mem20remoteexperimentlabz`,
 `mem20intentcompilerz`. Added `/doctor`, web cockpit, root shim, README fenced runnable example,
 docs/PLAN, docs/app monitor, gateway/toolchest. Verification: 8 tests pass (legacy + compat),
@@ -545,7 +545,7 @@ first-class while preserving legacy domain API (`concept_score`,`scope_estimate`
 `risk_assessment`,`pipeline_stage`) — used as a peer by #307 — and preserving CAPABILITY
 Engine/CLI/10-scenario simulator. Enriched `graph` with real concept/scope analysis and 6 unique
 peer signals (different from #300-#308) for explicit scope requests: `mem20gameproductioncontrolcenterz`,
-`mem20aiproductionstudiooperatingsystemz`,`mem20productledgrowthsimulatorz`,`mem20autonomoussoftwarefoundryz`,
+`mem20aiproductionstudiooperatingsystemz`,`mem20simz`,`mem20autonomoussoftwarefoundryz`,
 `mem20aigamestudiobuilderz`,`mem20autonomousmicrosaasfoundryz`. Legacy graph fields
 `nodes/edges/degree/hubs` preserved; peer enrichment gated to avoid 5s Engine timeout on generic
 simulator payloads. Added `/doctor`, web cockpit, compat/root shims, README fenced runnable example,
@@ -561,7 +561,7 @@ preserving legacy domain API (`create_twin`,`sync_twin`,`simulate`,`predict_outc
 by #307 and preserving CAPABILITY Engine/CLI/10-scenario simulator. Enriched `forecast` with real
 digital twin analysis (create/sync/simulate/predict/drift) and 6 unique peer signals (different from
 #300-#309) for explicit twin requests: `mem20personalworkflowtwinz`,`mem20integrationdigitaltwinz`,
-`mem20memorytimemachinez`,`mem20counterfactualmemorysimulatorz`,`mem20customerdigitaltwinlabz`,
+`mem20memorytimemachinez`,`mem20simz`,`mem20customerdigitaltwinlabz`,
 `mem20crossruntimeeventlatticez`. Peer enrichment gated for simulator/5s compatibility. Added
 `/doctor`, web cockpit, root shims, README fenced runnable example, docs/PLAN, docs/app monitor,
 gateway/toolchest. Verification: 9 tests pass (5 legacy + 4 new including 6-peer coverage),
@@ -620,7 +620,7 @@ root shims, fenced runnable README, docs/PLAN, docs/app monitor, gateway/toolche
 9 tests pass (5 legacy + 4 new), conformance **7/7**.
 
 ---
-## 2026-11-07 - mem20gamebalancesimulatorz (#315): depth-first rebuild
+## 2026-11-07 - mem20simz (#315): depth-first rebuild
 
 Rebuilt RM-231 (Game Balance Simulator, fails 5,6,7, operation_kind=progression) as first-class
 while preserving legacy domain API (`dps,ttk,economy_balance,difficulty_curve,balance_check,win_rate`)
@@ -640,7 +640,7 @@ as first-class while preserving legacy domain API (`collect_telemetry,aggregate_
 funnel_analysis,pipeline_report`) and CAPABILITY Engine/CLI/10-scenario simulator. Enriched
 progression (gated) with pipeline analysis and 6 unique peer signals (different from #300–#315):
 `mem20sensorymemoryingestz`,`mem20selfoptimizingkernelz`,`mem20realitytosoftwarecompilerz`,
-`mem20dynamicnarrativeenginez`,`mem20businessmodelsimulatorz`,`mem20goapagentdesignerz`. Added
+`mem20dynamicnarrativeenginez`,`mem20simz`,`mem20goapagentdesignerz`. Added
 `/doctor`, web cockpit, root shims, fenced runnable README, docs/PLAN, docs/app monitor,
 gateway/toolchest. Verification: 10 tests pass, conformance **7/7**.
 
@@ -694,7 +694,7 @@ Rebuilt RM-226 (GOAP Agent Designer, fails 5,6,7, operation_kind=search) preserv
 (`plan,action_cost,heuristic,validate_plan`) — compat preserved for #316 peer usage. `search`
 returns meaningful GOAP design (plan/validation/costs + incentives, style quality, cowork canvas,
 phase replanning, ecosystem value, collaboration capsule) for action/state payloads and preserves
-generic search. 6 peers: `mem20ethicalincentivesimulatorz,mem20styleguideagentz,
+generic search. 6 peers: `mem20simz,mem20styleguideagentz,
 mem20humanagentcoworkcanvasz,mem20dynamicphasereplannerz,mem20compoundingproductecosystemz,
 mem20asynccollaborationcapsulesz`. `/doctor`, web, root shims, fenced README, docs/PLAN, docs/app,
 gateway/toolchest. 8 tests pass, conformance **7/7**.
@@ -837,6 +837,9 @@ Completed depth-first rebuild to **7/7** for #315-#329 (11 subsystems in this se
 
 ## 2026-11-09 - consolidate all pipe subsystems into mem20pipez
 - **Consolidation:** Created `mem20pipez` as unified pipeline subsystem with all pipe runtimes copied as modules under `mem20pipez/pipes/`. Removed all pipe-named originals (`mem202dand3dartproductionoptimizationpipelinez`, `mem20aipipelinecostoptimizerz`, `mem20assetintakecatalogingandvalidationpipelinez`, `mem20audiovoiceandmusicpipelinez`, `mem20executablegameconceptandscopepipelinez`, `mem20gameplaysystemsdataandbalancepipelinez`, `mem20leveldesignworldbuildingandnavigationpipelinez`, `mem20narrativedialogueandlocalizationpipelinez`, `mem20pipelinez`, `mem20productionplanningandtaskorchestrationpipelinez`, `mem20realtimestyletransferpipelinez`, `mem20rigginganimationandmotionpipelinez`, `mem20securebuildtodevicepipelinez`, `mem20versioncontrollargeassetandrecoverypipelinez`). Repo-wide references updated to `mem20pipez`.
+
+## 2026-11-09 - consolidate simulation subsystems into mem20simz
+- **Consolidation:** Merged simulator/simulation-related subsystems into `mem20simz` as modules under `mem20simz/sims/` (architecturesimulationsandboxz, audiencereactionsimulatorz, businessmodelsimulatorz, counterfactualmemorysimulatorz, ethicalincentivesimulatorz, gamebalancesimulatorz, lifescenariosimulatorz, operationsreplaysimulatorz, outcomesimulationlabz, productledgrowthsimulatorz, roadmapsimulationtwinz, useracceptancesimulatorz). Removed originals; repo-wide references updated to `mem20simz`.
 - **Full pytest follow-up fixes (then pushed):** fixed `gateway/mem20_gateway.py` syntax/structure (criterion-7 block was dangling in `main()` breaking `elif read`; moved 39 missing entries into `SUBSYSTEMS`). Fixed `mem20mktz` root causes (truthful `braid_hook` availability via `braid_bridge.available()`; `bundle.compose` queries UCG only when `cap_ids` present; env-honest test guards/assertions) → **33 passed, 9 skipped**. Fixed `mem20selfhealingruntimecivilizationz.integrations.PlansEngineBridge` adapter for real `mem20selfhealingplansz` API (no `Engine`) → **53 passed**.
 - **es//:** mem20 context + self-model saved (GitHub steps skipped earlier); commits/pushes to `origin/main` record the work.
 
@@ -844,10 +847,10 @@ Completed depth-first rebuild to **7/7** for #315-#329 (11 subsystems in this se
 
 Reworked/verified subsystems #340–#350 (oldest→newest, 1 at a time) to full depth spec while preserving real core APIs. Each: 6 job-fitting peers (different combo, real imports+API calls, failures surfaced `{"ok":false,"error":...}`), `<report>()`/`probe()`/superset `estate_context()` (crew-runtime superset for #348), SQLite WAL runtime/EventStore, CLI `status|doctor|simulate|serve` + JSON HTTP API serving `web/`, `web/` + `docs/app/<topic>/index.html` + `docs/app/README.md` link, `docs/PLAN.md`, README with runnable fenced examples, real MCP tool + scoped `mcp/server.py`/`gateway/mem20_gateway.py` registration. Verified via `PYTHONPATH=/opt/mem20 timeout 300 .venv/bin/python -m pytest ... -q --noconftest -p no:cacheprovider` and runtime `status` ok/6 peers. Scoped commits only; `git fetch && git rebase --autostash origin/main && git push origin main` per commit.
 
-- **340 mem20offerassemblyfabricz** `9e6a1084` (13t, ok/6, price 8): peers `mem20autonomousdealdeskz, mem20servicebundlingenginez, mem20productledgrowthsimulatorz, mem20revenueleakhunterz, mem20eventstreamsuperhighwayz, mem20capabilitymarketplacez`; core `create_offer,add_component,price_offer,publish,offer_health,estate_context` superset.
-- **341 mem20offergenomeenginez** `743f1e5b` (12t, ok/6, pop 4): peers `mem20offerassemblyfabricz, mem20autonomousdealdeskz, mem20productledgrowthsimulatorz, mem20counterfactualmemorysimulatorz, mem20eventstreamsuperhighwayz, mem20capabilitymarketplacez`; core `create_genome,mutate,fitness,evolve,estate_context` superset.
-- **342 mem20opportunityradarz** `a93dc060` (13t, ok/6, scanned 1): peers `mem20autonomoussaleslaboratoryz, mem20productledgrowthsimulatorz, mem20causalroutingbrainz, mem20revenueleakhunterz, mem20eventstreamsuperhighwayz, mem20capabilitymarketplacez`; core `scan,score_opportunity,rank,alert,radar_health,estate_context` superset.
-- **343 mem20outcomesimulationlabz** `e8085c7a` (13t, ok/6, runs 20): peers `mem20counterfactualmemorysimulatorz, mem20realtimebusinesstwinz, mem20businessmodelsimulatorz, mem20eventstreamsuperhighwayz, mem20capabilitymarketplacez, mem20causalroutingbrainz`; core `simulate_once,monte_carlo,summarize,scenario_compare,risk_of_loss,estate_context` superset.
+- **340 mem20offerassemblyfabricz** `9e6a1084` (13t, ok/6, price 8): peers `mem20autonomousdealdeskz, mem20servicebundlingenginez, mem20simz, mem20revenueleakhunterz, mem20eventstreamsuperhighwayz, mem20capabilitymarketplacez`; core `create_offer,add_component,price_offer,publish,offer_health,estate_context` superset.
+- **341 mem20offergenomeenginez** `743f1e5b` (12t, ok/6, pop 4): peers `mem20offerassemblyfabricz, mem20autonomousdealdeskz, mem20simz, mem20simz, mem20eventstreamsuperhighwayz, mem20capabilitymarketplacez`; core `create_genome,mutate,fitness,evolve,estate_context` superset.
+- **342 mem20opportunityradarz** `a93dc060` (13t, ok/6, scanned 1): peers `mem20autonomoussaleslaboratoryz, mem20simz, mem20causalroutingbrainz, mem20revenueleakhunterz, mem20eventstreamsuperhighwayz, mem20capabilitymarketplacez`; core `scan,score_opportunity,rank,alert,radar_health,estate_context` superset.
+- **343 mem20simz** `e8085c7a` (13t, ok/6, runs 20): peers `mem20simz, mem20realtimebusinesstwinz, mem20simz, mem20eventstreamsuperhighwayz, mem20capabilitymarketplacez, mem20causalroutingbrainz`; core `simulate_once,monte_carlo,summarize,scenario_compare,risk_of_loss,estate_context` superset.
 - **344 mem20personalautomationcanvasz** `ebbea9a9` (13t, ok/6, completed): peers `mem20autonomousworkcellsz, mem20agentoutputcompilerz, mem20selfhealingplansz, mem20eventstreamsuperhighwayz, mem20capabilitymarketplacez, mem20causalroutingbrainz`; core `create_canvas,add_workflow,add_trigger,run_workflow,canvas_health,estate_context` superset.
 - **345 mem20personalcognitivesearchz** `ff590fd3` (13t, ok/6, hits 1): peers `mem20episodicmemorygraphz, mem20contextcompressionforgez, mem20predictiverecallenginez, mem20eventstreamsuperhighwayz, mem20capabilitymarketplacez, mem20agentoutputcompilerz`; core `index,query,rank,recall,search_health,estate_context` superset.
 - **346 mem20personalmodelevolutionz** `c63fce8b` (13t, ok/6, v2): peers `mem20collectivemodelintelligencez, mem20skillmemorytransferz, mem20episodicmemorygraphz, mem20eventstreamsuperhighwayz, mem20capabilitymarketplacez, mem20causalroutingbrainz`; core `create_model,adapt,predict,reset,evolution_health,estate_context` superset.

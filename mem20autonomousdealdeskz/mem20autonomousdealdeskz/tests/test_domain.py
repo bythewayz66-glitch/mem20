@@ -39,7 +39,7 @@ def test_health():
 def test_ecosystem_economics_real_values():
     eco = _eco()
     r = eco.economics_model(100, 10.0, 200.0, 2.0)
-    assert r["ok"] is True and r["subsystem"] == "mem20businessmodelsimulatorz"
+    assert r["ok"] is True and r["subsystem"] == "mem20simz"
     assert "margin" in r and "profit" in r and r["scenario_periods"] >= 1
 
 

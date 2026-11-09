@@ -18,10 +18,10 @@ def _safe(name: str, fn: Callable[[], Dict[str, Any]]):
     except Exception as e:
         return {"ok": False, "subsystem": name, "error": f"{type(e).__name__}: {e}"}
 
-# 1) mem20architecturesimulationsandboxz - load/chaos/bottleneck simulation
+# 1) mem20simz - load/chaos/bottleneck simulation
 def architecture_sim(topology: Mapping[str,Any]=None, rps: float=50) -> Dict[str,Any]:
     def run():
-        from mem20architecturesimulationsandboxz.domain import simulate_load, scaling_recommendation, topology_cost, bottleneck_node, chaos_test
+        from mem20simz.domain import simulate_load, scaling_recommendation, topology_cost, bottleneck_node, chaos_test
         topo = dict(topology or {"nodes":[{"id":"api","capacity":100},{"id":"db","capacity":80}], "edges":[{"from":"api","to":"db"}]})
         load = simulate_load(topo, rps=float(rps), duration_s=30)
         metrics = load if isinstance(load, list) else (load.get("nodes") or load.get("metrics") or []) if isinstance(load, dict) else []
@@ -30,7 +30,7 @@ def architecture_sim(topology: Mapping[str,Any]=None, rps: float=50) -> Dict[str
         bottleneck = bottleneck_node(metrics) if metrics else None
         chaos = chaos_test(topo, failure_rate=0.1, seed=0)
         return {"simulate_load": load, "scaling": scale, "topology_cost": cost, "bottleneck": bottleneck, "chaos_test": chaos}
-    return _safe("mem20architecturesimulationsandboxz", run)
+    return _safe("mem20simz", run)
 
 # 2) mem20adversarialqacrewz - adversarial cases/fuzz/mutation
 def adversarial_qa(spec: Mapping[str,Any]=None) -> Dict[str,Any]:

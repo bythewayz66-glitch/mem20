@@ -7,7 +7,7 @@ mem20 sandbox runtime.
 Reviewed packages grouped here for joint integration under the
 package-review rulings:
 
-- `mem20architecturesimulationsandboxz`
+- `mem20simz`
 - `mem20multiworldsandboxz`
 - `mem20scopemutationsandboxz`
 - `mem20spatialcomputingsandboxz`

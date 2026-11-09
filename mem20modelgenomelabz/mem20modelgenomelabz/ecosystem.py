@@ -36,11 +36,11 @@ def kernel_opt_signal(ctx: Mapping[str, Any]) -> Dict[str, Any]:
 
 def counterfactual_signal(ctx: Mapping[str, Any]) -> Dict[str, Any]:
     def run():
-        try: from mem20counterfactualmemorysimulatorz.domain import counterfactual, compare
-        except Exception: from mem20counterfactualmemorysimulatorz.mem20counterfactualmemorysimulatorz.domain import counterfactual, compare
+        try: from mem20simz.domain import counterfactual, compare
+        except Exception: from mem20simz.mem20simz.domain import counterfactual, compare
         cf=counterfactual({"genome":"a"},{"genome":"b"}); cmp=compare({"fitness":0.5},{"fitness":0.8})
         return {"counterfactual":cf,"compare":cmp}
-    return _safe("mem20counterfactualmemorysimulatorz", run)
+    return _safe("mem20simz", run)
 
 def execution_twin_signal(ctx: Mapping[str, Any]) -> Dict[str, Any]:
     def run():

@@ -231,9 +231,9 @@ SUBSYSTEMS = {
         "owner": "mem20-webdev",
         "wave": 2,
     },
-    "mem20gamebalancesimulatorz": {
+    "mem20simz": {
         "purpose": "Game Balance Simulator (RM-231, #315): combat/progression/economy simulation with 6 peer signals; legacy domain preserved (#307)",
-        "entry": "python -m mem20gamebalancesimulatorz simulate",
+        "entry": "python -m mem20simz simulate",
         "owner": "mem20-webdev",
         "wave": 2,
     },
@@ -279,9 +279,9 @@ SUBSYSTEMS = {
         "owner": "mem20-webdev",
         "wave": 2,
     },
-    "mem20ethicalincentivesimulatorz": {
+    "mem20simz": {
         "purpose": "Ethical Incentive Simulator (RM-203): incentive/fairness simulation with harm-manipulation safeguards and outcome/risk peer signals",
-        "entry": "python -m mem20ethicalincentivesimulatorz simulate",
+        "entry": "python -m mem20simz simulate",
         "owner": "mem20-webdev",
         "wave": 2,
     },
@@ -321,7 +321,7 @@ SUBSYSTEMS = {
     "mem20personalmodelevolutionz": {"purpose": "Personal Model Evolution with 6 peers, HTTP cockpit, MCP","entry":"python -m mem20personalmodelevolutionz status","owner":"mem20-renovation","wave":4},
     "mem20personalcognitivesearchz": {"purpose": "Personal Cognitive Search with 6 peers, HTTP cockpit, MCP","entry":"python -m mem20personalcognitivesearchz status","owner":"mem20-renovation","wave":4},
     "mem20personalautomationcanvasz": {"purpose": "Personal Automation Canvas with 6 peers, HTTP cockpit, MCP","entry":"python -m mem20personalautomationcanvasz status","owner":"mem20-renovation","wave":4},
-    "mem20outcomesimulationlabz": {"purpose": "Outcome Simulation Lab with 6 peers, HTTP cockpit, MCP","entry":"python -m mem20outcomesimulationlabz status","owner":"mem20-renovation","wave":4},
+    "mem20simz": {"purpose": "Outcome Simulation Lab with 6 peers, HTTP cockpit, MCP","entry":"python -m mem20simz status","owner":"mem20-renovation","wave":4},
     "mem20opportunityradarz": {"purpose": "Opportunity Radar with 6 peers, HTTP cockpit, MCP","entry":"python -m mem20opportunityradarz status","owner":"mem20-renovation","wave":4},
     "mem20offergenomeenginez": {"purpose": "Offer Genome Engine with 6 peers, HTTP cockpit, MCP","entry":"python -m mem20offergenomeenginez status","owner":"mem20-renovation","wave":4},
     "mem20offerassemblyfabricz": {"purpose": "Offer Assembly Fabric with 6 peers, HTTP cockpit, MCP","entry":"python -m mem20offerassemblyfabricz status","owner":"mem20-renovation","wave":4},
@@ -365,7 +365,7 @@ SUBSYSTEMS = {
     "mem20realtimebusinesstwinz": {"purpose": "Real-Time Business Twin with 6 peers, HTTP cockpit, MCP","entry":"python -m mem20realtimebusinesstwinz status","owner":"mem20-renovation","wave":4},
     "mem20realitytosoftwarecompilerz": {"purpose": "Reality-to-Software Compiler with 6 peers, HTTP cockpit, MCP","entry":"python -m mem20realitytosoftwarecompilerz status","owner":"mem20-renovation","wave":4},
     "mem20protocolautodiscoveryenginez": {"purpose": "Protocol Auto-Discovery Engine with 6 peers, HTTP cockpit, MCP","entry":"python -m mem20protocolautodiscoveryenginez status","owner":"mem20-renovation","wave":4},
-    "mem20productledgrowthsimulatorz": {"purpose": "Product-Led Growth Simulator with 6 peers, HTTP cockpit, MCP","entry":"python -m mem20productledgrowthsimulatorz status","owner":"mem20-renovation","wave":4},
+    "mem20simz": {"purpose": "Product-Led Growth Simulator with 6 peers, HTTP cockpit, MCP","entry":"python -m mem20simz status","owner":"mem20-renovation","wave":4},
     "mem20pipez": {"purpose": "Production Planning and Task Orchestration Pipeline with 6 peers, HTTP cockpit, MCP","entry":"python -m mem20pipez status","owner":"mem20-renovation","wave":4},
     "mem20predictiverecallenginez": {"purpose": "Predictive Recall Engine with 6 peers, HTTP cockpit, MCP","entry":"python -m mem20predictiverecallenginez status","owner":"mem20-renovation","wave":4},
     "mem20playermotivationtwinz": {"purpose": "Player Motivation Twin with 6 peers, HTTP cockpit, MCP","entry":"python -m mem20playermotivationtwinz status","owner":"mem20-renovation","wave":4},
@@ -384,9 +384,9 @@ SUBSYSTEMS = {
         "owner": "mem20-renovation",
         "wave": 3,
     },
-    "mem20counterfactualmemorysimulatorz": {
+    "mem20simz": {
         "purpose": "Counterfactual Memory Simulator with 6 peers, HTTP cockpit, MCP",
-        "entry": "python -m mem20counterfactualmemorysimulatorz status",
+        "entry": "python -m mem20simz status",
         "owner": "mem20-renovation",
         "wave": 3,
     },
@@ -414,9 +414,9 @@ SUBSYSTEMS = {
         "owner": "mem20-renovation",
         "wave": 3,
     },
-    "mem20businessmodelsimulatorz": {
+    "mem20simz": {
         "purpose": "Business model simulator (revenue/cost/margin/scenarios) with 6 estate peers, HTTP cockpit, MCP",
-        "entry": "python -m mem20businessmodelsimulatorz status",
+        "entry": "python -m mem20simz status",
         "owner": "mem20-renovation",
         "wave": 3,
     },
@@ -665,7 +665,7 @@ SUBSYSTEMS = {
     "mem20alternativedatabaseplaygroundz": {"purpose": "Alternative database playground (query planning, indexing, engine comparison)","entry":"python -m mem20alternativedatabaseplaygroundz --help","owner":"mem20-renovation","wave":4},
     "mem20ambientdevicecompanionz": {"purpose": "Ambient device companion (context sensing, proactive suggestions, routines)","entry":"python -m mem20ambientdevicecompanionz --help","owner":"mem20-renovation","wave":4},
     "mem20ambientteamradioz": {"purpose": "Ambient team radio (channels, messaging, routing, activity)","entry":"python -m mem20ambientteamradioz --help","owner":"mem20-renovation","wave":4},
-    "mem20architecturesimulationsandboxz": {"purpose": "Architecture simulation sandbox (load, scaling, cost, bottlenecks, chaos)","entry":"python -m mem20architecturesimulationsandboxz --help","owner":"mem20-renovation","wave":4},
+    "mem20simz": {"purpose": "Architecture simulation sandbox (load, scaling, cost, bottlenecks, chaos)","entry":"python -m mem20simz --help","owner":"mem20-renovation","wave":4},
     "mem20assetremixstudioz": {"purpose": "Asset remix studio (remix, transform, export, blend, variants)","entry":"python -m mem20assetremixstudioz --help","owner":"mem20-renovation","wave":4},
     "mem20asynccollaborationcapsulesz": {"purpose": "Async collaboration capsules (changes, sync, merge, checksums)","entry":"python -m mem20asynccollaborationcapsulesz --help","owner":"mem20-renovation","wave":4},
     "mem20autonomoustrafficcontrollerz": {"purpose": "Autonomous traffic controller (token/leaky bucket throttling)","entry":"python -m mem20autonomoustrafficcontrollerz --help","owner":"mem20-renovation","wave":4},

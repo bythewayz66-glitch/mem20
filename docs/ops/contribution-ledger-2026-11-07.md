@@ -41,7 +41,7 @@ behind the live head; the read-back log below is the authoritative sequence.
 | 16 | Market Research | `feat/4.0-market-research-mem20sensorz` | — | — | — |
 | 17 | Pricing Analyst | `feat/4.0-pricing-analyst-mem20liez` | — | — | — |
 | 18 | Finance Assistant | `feat/4.0-finance-assistant-mem20revenueleakhunterz` | — | — | — |
-| 19 | Growth Hacker | `feat/4.0-growth-hacker-mem20productledgrowthsimulatorz` | — | — | — |
+| 19 | Growth Hacker | `feat/4.0-growth-hacker-mem20simz` | — | — | — |
 | 20 | Mem20 Content Creator | `feat/4.0-mem20-content-creator-mem20ircz` | — | — | — |
 | 21 | Slides Assistant | `feat/4.0-slides-assistant-mem20yetiz` | — | — | — |
 | 22 | Mem20-naration | `feat/4.0-mem20-naration-mem20gamez` | — | — | — |

@@ -3,7 +3,7 @@
 First-class mem20 subsystem for unit economics (ltv/cac/payback/ratio) with **6 peers**, SQLite WAL runtime, CLI, JSON HTTP API, served web cockpit, docs/app monitor, and real MCP tools. Core API preserved.
 
 ## Peers (6)
-`mem20revenueleakhunterz`, `mem20productledgrowthsimulatorz`, `mem20businessmodelsimulatorz`, `mem20eventstreamsuperhighwayz`, `mem20capabilitymarketplacez`, `mem20universalhealthnervoussystemz`.
+`mem20revenueleakhunterz`, `mem20simz`, `mem20simz`, `mem20eventstreamsuperhighwayz`, `mem20capabilitymarketplacez`, `mem20universalhealthnervoussystemz`.
 
 ## CLI (runnable)
 ```bash

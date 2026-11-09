@@ -3,7 +3,7 @@
 First-class mem20 subsystem for service bundling (create/add/discount/health) with **6 peers**, SQLite WAL runtime, CLI, JSON HTTP API, served web cockpit, docs/app monitor, and real MCP tools. Core API preserved.
 
 ## Peers (6)
-`mem20autonomousdealdeskz`, `mem20productledgrowthsimulatorz`, `mem20capabilitymarketplacez`, `mem20eventstreamsuperhighwayz`, `mem20universalhealthnervoussystemz`, `mem20revenueleakhunterz`.
+`mem20autonomousdealdeskz`, `mem20simz`, `mem20capabilitymarketplacez`, `mem20eventstreamsuperhighwayz`, `mem20universalhealthnervoussystemz`, `mem20revenueleakhunterz`.
 
 ## Python API (runnable)
 ```python

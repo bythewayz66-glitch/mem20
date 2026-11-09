@@ -14,8 +14,8 @@ def test_estate_context_real_integrations(tmp_path):
 
 def test_eco_fabric(): r=_eco().offer_fabric(); assert r["ok"] and r["subsystem"]=="mem20offerassemblyfabricz"
 def test_eco_deal(): r=_eco().deal_desk(); assert r["ok"] and r["subsystem"]=="mem20autonomousdealdeskz"
-def test_eco_plg(): r=_eco().plg_sim(); assert r["ok"] and r["subsystem"]=="mem20productledgrowthsimulatorz"
-def test_eco_cf(): r=_eco().counterfactual(); assert r["ok"] and r["subsystem"]=="mem20counterfactualmemorysimulatorz"
+def test_eco_plg(): r=_eco().plg_sim(); assert r["ok"] and r["subsystem"]=="mem20simz"
+def test_eco_cf(): r=_eco().counterfactual(); assert r["ok"] and r["subsystem"]=="mem20simz"
 def test_eco_events(): r=_eco().genome_events("g",{}); assert r["ok"] and r["subsystem"]=="mem20eventstreamsuperhighwayz"
 def test_eco_route(): r=_eco().genome_routing("k",["g"]); assert r["ok"] and r["subsystem"]=="mem20capabilitymarketplacez"
 def test_report_and_probe():

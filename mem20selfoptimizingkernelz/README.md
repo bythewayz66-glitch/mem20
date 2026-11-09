@@ -3,7 +3,7 @@
 First-class mem20 subsystem for self-optimizing kernels (parameter optimization, scoring, search) with **6 peers**, SQLite WAL runtime, CLI, JSON HTTP API, served web cockpit, docs/app monitor, and real MCP tools. Core API preserved.
 
 ## Peers (6)
-`mem20causalroutingbrainz`, `mem20demandforecastandcapacitybrainz`, `mem20counterfactualmemorysimulatorz`, `mem20eventstreamsuperhighwayz`, `mem20capabilitymarketplacez`, `mem20faultcontainmentcellsz`.
+`mem20causalroutingbrainz`, `mem20demandforecastandcapacitybrainz`, `mem20simz`, `mem20eventstreamsuperhighwayz`, `mem20capabilitymarketplacez`, `mem20faultcontainmentcellsz`.
 
 ## Python API (runnable)
 ```python

@@ -28,11 +28,11 @@ def compounding_product_signal(ctx:Mapping[str,Any])->Dict[str,Any]:
 
 def business_model_signal(ctx:Mapping[str,Any])->Dict[str,Any]:
  def run():
-  try: from mem20businessmodelsimulatorz.domain import simulate_model, revenue, profit
-  except Exception: from mem20businessmodelsimulatorz.mem20businessmodelsimulatorz.domain import simulate_model, revenue, profit
+  try: from mem20simz.domain import simulate_model, revenue, profit
+  except Exception: from mem20simz.mem20simz.domain import simulate_model, revenue, profit
   sim=simulate_model({"price":10,"customers":100,"cost":3}); rev=revenue({"price":10,"customers":100}); prof=profit({"revenue":1000,"cost":300})
   return {"simulation":sim,"revenue":rev,"profit":prof}
- return _safe("mem20businessmodelsimulatorz", run)
+ return _safe("mem20simz", run)
 
 def goal_economy_signal(ctx:Mapping[str,Any])->Dict[str,Any]:
  def run():

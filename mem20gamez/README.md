@@ -126,4 +126,4 @@ own top-level directories and are smoke-verified there:
 - `mem20alternativedatabaseplaygroundz`
 - `mem20dynamicquestrewardcomposerz`
 - `mem20gameproductioncontrolcenterz`
-- `mem20operationsreplaysimulatorz`
+- `mem20simz`

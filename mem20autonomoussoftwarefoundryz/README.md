@@ -48,7 +48,7 @@ These peers were chosen for the *software foundry* job (build/tooling, versioned
 | `mem20eventstreamsuperhighwayz` | `create_stream`, `publish`, `throughput` | publish build/foundry events to a stream and report throughput |
 | `mem20faultcontainmentcellsz` | `FaultContainmentCells`, `CircuitOpen`, `call` | contain deploy execution behind a circuit breaker; open-circuit is reported, not fatal |
 | `mem20loreragcontentgeneratorz` | `generate`, `rank_adapters`, `quality_score` | assess/spec-generate quality for a build prompt and select/rank adapters |
-| `mem20businessmodelsimulatorz` | `revenue`, `profit`, `margin`, `scenario_sim` | model effort economics (profit/margin/scenario periods) for the estimated build |
+| `mem20simz` | `revenue`, `profit`, `margin`, `scenario_sim` | model effort economics (profit/margin/scenario periods) for the estimated build |
 
 ## Python API (runnable)
 

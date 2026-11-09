@@ -4,7 +4,7 @@ import pathlib,sys
 from typing import Mapping,Sequence
 __all__=["workcell_execution","node_swarm","experiment_events","run_containment","scenario_compare","capability_routing","probe"]
 _REPO_ROOT=pathlib.Path(__file__).resolve().parents[2]
-_PROJECTS=("mem20autonomousworkcellsz","mem20zerotouchnodeswarmz","mem20eventstreamsuperhighwayz","mem20faultcontainmentcellsz","mem20counterfactualmemorysimulatorz","mem20capabilitymarketplacez")
+_PROJECTS=("mem20autonomousworkcellsz","mem20zerotouchnodeswarmz","mem20eventstreamsuperhighwayz","mem20faultcontainmentcellsz","mem20simz","mem20capabilitymarketplacez")
 def _bootstrap():
     for name in reversed(_PROJECTS):
         p=str(_REPO_ROOT/name)
@@ -38,9 +38,9 @@ def run_containment(exp_id:str)->dict:
     except Exception as exc: return {"ok":False,"subsystem":"mem20faultcontainmentcellsz","error":f"{type(exc).__name__}: {exc}"}
 def scenario_compare(a:Mapping,b:Mapping)->dict:
     try:
-        from mem20counterfactualmemorysimulatorz.domain import compare
-        return {"ok":True,"subsystem":"mem20counterfactualmemorysimulatorz","diff_keys":len(compare(dict(a),dict(b)))}
-    except Exception as exc: return {"ok":False,"subsystem":"mem20counterfactualmemorysimulatorz","error":f"{type(exc).__name__}: {exc}"}
+        from mem20simz.domain import compare
+        return {"ok":True,"subsystem":"mem20simz","diff_keys":len(compare(dict(a),dict(b)))}
+    except Exception as exc: return {"ok":False,"subsystem":"mem20simz","error":f"{type(exc).__name__}: {exc}"}
 def capability_routing(key:str,caps:Sequence[str])->dict:
     try:
         from mem20capabilitymarketplacez.domain import CapabilityMarketplace

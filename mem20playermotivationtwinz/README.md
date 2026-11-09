@@ -3,7 +3,7 @@
 First-class mem20 subsystem for player motivation twins (motivation over time, events/updates, churn prediction, motivation segments, twin health) with **6 peers**, SQLite WAL runtime, CLI, JSON HTTP API, served web cockpit, docs/app monitor, and real MCP tools. Core API preserved.
 
 ## Peers (6)
-`mem20customerlifecycleenginez`, `mem20dynamicquestrewardcomposerz`, `mem20communitychallengeenginez`, `mem20counterfactualmemorysimulatorz`, `mem20eventstreamsuperhighwayz`, `mem20capabilitymarketplacez`.
+`mem20customerlifecycleenginez`, `mem20dynamicquestrewardcomposerz`, `mem20communitychallengeenginez`, `mem20simz`, `mem20eventstreamsuperhighwayz`, `mem20capabilitymarketplacez`.
 
 ## Python API (runnable)
 ```python

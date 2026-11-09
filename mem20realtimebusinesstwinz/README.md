@@ -3,7 +3,7 @@
 First-class mem20 subsystem for real-time business twins (live KPIs, threshold alerts, what-if scenarios, twin health) with **6 peers**, SQLite WAL runtime, CLI, JSON HTTP API, served web cockpit, docs/app monitor, and real MCP tools. Core API preserved.
 
 ## Peers (6)
-`mem20businessmodelsimulatorz`, `mem20demandforecastandcapacitybrainz`, `mem20eventstreamsuperhighwayz`, `mem20universalhealthnervoussystemz`, `mem20counterfactualmemorysimulatorz`, `mem20capabilitymarketplacez`.
+`mem20simz`, `mem20demandforecastandcapacitybrainz`, `mem20eventstreamsuperhighwayz`, `mem20universalhealthnervoussystemz`, `mem20simz`, `mem20capabilitymarketplacez`.
 
 ## Python API (runnable)
 ```python

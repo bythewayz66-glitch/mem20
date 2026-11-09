@@ -7,7 +7,7 @@
 ## 1st-class implementation
 - **Domain:** `create_genome/mutate/crossover/fitness/evolve` (legacy preserved) plus `genome_record`, `simulate_genome_lab` (population evolution, best genome, ancestry/adapters/limits/traits record).
 - **Runtime:** `simulate` wired to domain genome lab + 6 peer signals (also returns scenario projections).
-- **Ecosystem (6 peers, set differs from #330-334):** `mem20runtimecompatibilityenginez`, `mem20pipez`, `mem20selfoptimizingkernelz`, `mem20counterfactualmemorysimulatorz`, `mem20executiondigitaltwinz`, `mem20eventstreamsuperhighwayz`.
+- **Ecosystem (6 peers, set differs from #330-334):** `mem20runtimecompatibilityenginez`, `mem20pipez`, `mem20selfoptimizingkernelz`, `mem20simz`, `mem20executiondigitaltwinz`, `mem20eventstreamsuperhighwayz`.
 
 ## Runnable example (verified)
 ```bash

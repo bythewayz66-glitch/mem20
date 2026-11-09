@@ -4,7 +4,7 @@ import pathlib,sys
 from typing import Mapping,Sequence
 __all__=["causal_tuning","demand_forecast","counterfactual_eval","tuning_events","kernel_routing","tuning_containment","probe"]
 _REPO_ROOT=pathlib.Path(__file__).resolve().parents[2]
-_PROJECTS=("mem20causalroutingbrainz","mem20demandforecastandcapacitybrainz","mem20counterfactualmemorysimulatorz","mem20eventstreamsuperhighwayz","mem20capabilitymarketplacez","mem20faultcontainmentcellsz")
+_PROJECTS=("mem20causalroutingbrainz","mem20demandforecastandcapacitybrainz","mem20simz","mem20eventstreamsuperhighwayz","mem20capabilitymarketplacez","mem20faultcontainmentcellsz")
 def _bootstrap():
     for name in reversed(_PROJECTS):
         p=str(_REPO_ROOT/name)
@@ -26,9 +26,9 @@ def demand_forecast(obs:Sequence[float])->dict:
     except Exception as exc: return {"ok":False,"subsystem":"mem20demandforecastandcapacitybrainz","error":f"{type(exc).__name__}: {exc}"}
 def counterfactual_eval(state:Mapping)->dict:
     try:
-        from mem20counterfactualmemorysimulatorz.domain import counterfactual,compare
-        o={"state":dict(state)}; cf=counterfactual(o,{"change":{"score":state.get("score",0)+1}}); return {"ok":True,"subsystem":"mem20counterfactualmemorysimulatorz","diff_keys":len(compare(o,cf))}
-    except Exception as exc: return {"ok":False,"subsystem":"mem20counterfactualmemorysimulatorz","error":f"{type(exc).__name__}: {exc}"}
+        from mem20simz.domain import counterfactual,compare
+        o={"state":dict(state)}; cf=counterfactual(o,{"change":{"score":state.get("score",0)+1}}); return {"ok":True,"subsystem":"mem20simz","diff_keys":len(compare(o,cf))}
+    except Exception as exc: return {"ok":False,"subsystem":"mem20simz","error":f"{type(exc).__name__}: {exc}"}
 def tuning_events(name:str,payload:Mapping)->dict:
     try:
         from mem20eventstreamsuperhighwayz.domain import create_stream,publish,throughput

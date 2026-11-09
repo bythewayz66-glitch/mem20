@@ -10,10 +10,10 @@ def _safe(name, fn):
 
 def incentive_alignment(actions: List[Dict[str, Any]] = None) -> Dict[str, Any]:
     def run():
-        from mem20ethicalincentivesimulatorz.domain import fairness_score, simulate_incentives
+        from mem20simz.domain import fairness_score, simulate_incentives
         agents = [{"id": a.get("name", "a"), "reward": max(0.0, 1.0 - float(a.get("cost", 1)) * 0.1)} for a in (actions or [{"name": "move", "cost": 1}])]
         return {"fairness": fairness_score([ag["reward"] for ag in agents]), "simulation": simulate_incentives(agents, rounds=3)}
-    return _safe("mem20ethicalincentivesimulatorz", run)
+    return _safe("mem20simz", run)
 
 def style_quality(spec: Dict[str, Any] = None) -> Dict[str, Any]:
     def run():

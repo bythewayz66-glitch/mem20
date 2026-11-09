@@ -4,7 +4,7 @@ import pathlib,sys
 from typing import Mapping,Sequence
 __all__=["counterfactual_branch","causal_routing","workflow_events","workflow_routing","branch_containment","self_healing","probe"]
 _REPO_ROOT=pathlib.Path(__file__).resolve().parents[2]
-_PROJECTS=("mem20counterfactualmemorysimulatorz","mem20causalroutingbrainz","mem20eventstreamsuperhighwayz","mem20capabilitymarketplacez","mem20faultcontainmentcellsz","mem20selfhealingplansz")
+_PROJECTS=("mem20simz","mem20causalroutingbrainz","mem20eventstreamsuperhighwayz","mem20capabilitymarketplacez","mem20faultcontainmentcellsz","mem20selfhealingplansz")
 def _bootstrap():
     for name in reversed(_PROJECTS):
         p=str(_REPO_ROOT/name)
@@ -14,9 +14,9 @@ def _bootstrap():
 _bootstrap()
 def counterfactual_branch()->dict:
     try:
-        from mem20counterfactualmemorysimulatorz.domain import counterfactual,compare
-        o={"w":1}; cf=counterfactual(o,{"change":{"w":2}}); return {"ok":True,"subsystem":"mem20counterfactualmemorysimulatorz","diff":len(compare(o,cf))}
-    except Exception as exc: return {"ok":False,"subsystem":"mem20counterfactualmemorysimulatorz","error":f"{type(exc).__name__}: {exc}"}
+        from mem20simz.domain import counterfactual,compare
+        o={"w":1}; cf=counterfactual(o,{"change":{"w":2}}); return {"ok":True,"subsystem":"mem20simz","diff":len(compare(o,cf))}
+    except Exception as exc: return {"ok":False,"subsystem":"mem20simz","error":f"{type(exc).__name__}: {exc}"}
 def causal_routing(features:Mapping,weights:Mapping)->dict:
     try:
         from mem20causalroutingbrainz.domain import route_by_cause

@@ -4,7 +4,7 @@ import pathlib,sys
 from typing import Mapping,Sequence
 __all__=["deal_desk","bundle_engine","plg_sim","revenue_check","offer_events","offer_routing","probe"]
 _REPO_ROOT=pathlib.Path(__file__).resolve().parents[2]
-_PROJECTS=("mem20autonomousdealdeskz","mem20servicebundlingenginez","mem20productledgrowthsimulatorz","mem20revenueleakhunterz","mem20eventstreamsuperhighwayz","mem20capabilitymarketplacez")
+_PROJECTS=("mem20autonomousdealdeskz","mem20servicebundlingenginez","mem20simz","mem20revenueleakhunterz","mem20eventstreamsuperhighwayz","mem20capabilitymarketplacez")
 def _bootstrap():
     for name in reversed(_PROJECTS):
         p=str(_REPO_ROOT/name)
@@ -24,9 +24,9 @@ def bundle_engine()->dict:
     except Exception as exc: return {"ok":False,"subsystem":"mem20servicebundlingenginez","error":f"{type(exc).__name__}: {exc}"}
 def plg_sim()->dict:
     try:
-        from mem20productledgrowthsimulatorz.domain import probe as p
-        r=p(); return {"ok":bool(r.get("ok",True)),"subsystem":"mem20productledgrowthsimulatorz","probe":r is not None}
-    except Exception as exc: return {"ok":False,"subsystem":"mem20productledgrowthsimulatorz","error":f"{type(exc).__name__}: {exc}"}
+        from mem20simz.domain import probe as p
+        r=p(); return {"ok":bool(r.get("ok",True)),"subsystem":"mem20simz","probe":r is not None}
+    except Exception as exc: return {"ok":False,"subsystem":"mem20simz","error":f"{type(exc).__name__}: {exc}"}
 def revenue_check()->dict:
     try:
         from mem20revenueleakhunterz.domain import probe as p

@@ -4,7 +4,7 @@ import pathlib,sys
 from typing import Mapping,Sequence
 __all__=["quest_reward_shapes","impact_rewards","counterfactual_shaping","reward_events","reward_routing","causal_weighting","probe"]
 _REPO_ROOT=pathlib.Path(__file__).resolve().parents[2]
-_PROJECTS=("mem20dynamicquestrewardcomposerz","mem20realworldimpactrewardsz","mem20counterfactualmemorysimulatorz","mem20eventstreamsuperhighwayz","mem20capabilitymarketplacez","mem20causalroutingbrainz")
+_PROJECTS=("mem20dynamicquestrewardcomposerz","mem20realworldimpactrewardsz","mem20simz","mem20eventstreamsuperhighwayz","mem20capabilitymarketplacez","mem20causalroutingbrainz")
 def _bootstrap():
     for name in reversed(_PROJECTS):
         p=str(_REPO_ROOT/name)
@@ -24,9 +24,9 @@ def impact_rewards()->dict:
     except Exception as exc: return {"ok":False,"subsystem":"mem20realworldimpactrewardsz","error":f"{type(exc).__name__}: {exc}"}
 def counterfactual_shaping(state:Mapping)->dict:
     try:
-        from mem20counterfactualmemorysimulatorz.domain import counterfactual,compare
-        o={"state":dict(state)}; cf=counterfactual(o,{"change":{"bonus":1}}); return {"ok":True,"subsystem":"mem20counterfactualmemorysimulatorz","diff_keys":len(compare(o,cf))}
-    except Exception as exc: return {"ok":False,"subsystem":"mem20counterfactualmemorysimulatorz","error":f"{type(exc).__name__}: {exc}"}
+        from mem20simz.domain import counterfactual,compare
+        o={"state":dict(state)}; cf=counterfactual(o,{"change":{"bonus":1}}); return {"ok":True,"subsystem":"mem20simz","diff_keys":len(compare(o,cf))}
+    except Exception as exc: return {"ok":False,"subsystem":"mem20simz","error":f"{type(exc).__name__}: {exc}"}
 def reward_events(name:str,payload:Mapping)->dict:
     try:
         from mem20eventstreamsuperhighwayz.domain import create_stream,publish,throughput

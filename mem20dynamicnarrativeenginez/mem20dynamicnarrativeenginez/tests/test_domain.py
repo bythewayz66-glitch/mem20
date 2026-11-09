@@ -11,7 +11,7 @@ def test_eco_challenge(): r=_eco().challenge_hooks(); assert r["ok"] and r["subs
 def test_eco_compress(): r=_eco().context_compression("hello world story text"); assert r["ok"] and r["subsystem"]=="mem20contextcompressionforgez"
 def test_eco_focus(): r=_eco().focus_guidance({"goal":"x","priority":1}); assert r["ok"] and r["subsystem"]=="mem20mixedinitiativefocusenginez"
 def test_eco_route(): r=_eco().capability_routing("k",["s"]); assert r["ok"] and r["subsystem"]=="mem20capabilitymarketplacez"
-def test_eco_branch(): r=_eco().branching_scenarios({"c":1}); assert r["ok"] and r["subsystem"]=="mem20counterfactualmemorysimulatorz"
+def test_eco_branch(): r=_eco().branching_scenarios({"c":1}); assert r["ok"] and r["subsystem"]=="mem20simz"
 def test_report_and_probe():
     m=_m(); rep=m.narrative_report(); assert rep["state"]["current"] and len(rep["peers"])==6
     for k,v in rep["peers"].items(): assert v["ok"] is True,(k,v.get("error"))

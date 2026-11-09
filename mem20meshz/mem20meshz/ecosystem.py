@@ -72,14 +72,14 @@ def recovery_signal(mesh: Dict[str, Any]) -> Dict[str, Any]:
 def counterfactual_signal(mesh: Dict[str, Any]) -> Dict[str, Any]:
     def run():
         try:
-            from mem20counterfactualmemorysimulatorz.domain import counterfactual, compare, outcome_probability
+            from mem20simz.domain import counterfactual, compare, outcome_probability
         except Exception:
-            from mem20counterfactualmemorysimulatorz.mem20counterfactualmemorysimulatorz.domain import counterfactual, compare, outcome_probability
+            from mem20simz.mem20simz.domain import counterfactual, compare, outcome_probability
         cf = counterfactual({"s": 1}, {"s": 2})
         cmp = compare({"a": 1}, {"a": 2})
         prob = outcome_probability({"base_rate": 0.5}, {"effect": 0.1})
         return {"counterfactual": cf, "compare": cmp, "probability": prob}
-    return _safe("mem20counterfactualmemorysimulatorz", run)
+    return _safe("mem20simz", run)
 
 
 def protocol_discovery_signal(mesh: Dict[str, Any]) -> Dict[str, Any]:

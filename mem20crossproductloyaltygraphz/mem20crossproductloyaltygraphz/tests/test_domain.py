@@ -7,7 +7,7 @@ def test_cent(): g={}; _m().add_edge(g,"a","b"); _m().add_edge(g,"a","c"); asser
 def test_rec(): g={}; _m().add_edge(g,"a","b",1); r=_m().recommend_products(g,["a"],1); assert r[0]["product"]=="b"
 def test_score(): g={}; _m().add_edge(g,"a","b",2); assert _m().loyalty_score(["a"],g)==2.0
 def test_eco_lifecycle(): r=_eco().lifecycle_value(); assert r["ok"] and r["subsystem"]=="mem20customerlifecycleenginez"
-def test_eco_biz(): r=_eco().business_value(10,5); assert r["ok"] and r["subsystem"]=="mem20businessmodelsimulatorz"
+def test_eco_biz(): r=_eco().business_value(10,5); assert r["ok"] and r["subsystem"]=="mem20simz"
 def test_eco_pipeline(): r=_eco().pipeline_signal(); assert r["ok"] and r["subsystem"]=="mem20autonomoussaleslaboratoryz"
 def test_eco_challenge(): r=_eco().challenge_engagement(); assert r["ok"] and r["subsystem"]=="mem20communitychallengeenginez"
 def test_eco_events(): r=_eco().loyalty_events("x",{}); assert r["ok"] and r["subsystem"]=="mem20eventstreamsuperhighwayz"

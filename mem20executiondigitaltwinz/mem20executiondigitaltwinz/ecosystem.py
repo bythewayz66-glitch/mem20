@@ -50,15 +50,15 @@ def time_machine(state: Mapping[str, Any] = None) -> Dict[str, Any]:
     return _safe("mem20memorytimemachinez", run)
 
 
-# 4) mem20counterfactualmemorysimulatorz - counterfactual outcomes
+# 4) mem20simz - counterfactual outcomes
 def counterfactual_sim(model: Mapping[str, Any] = None) -> Dict[str, Any]:
     def run():
-        from mem20counterfactualmemorysimulatorz.domain import branch, counterfactual, compare, outcome_probability
+        from mem20simz.domain import branch, counterfactual, compare, outcome_probability
         m = dict(model or {'state': {'rev': 10}, 'history': []})
         alt = branch(m, {'rev': 12})
         cf = counterfactual(m, {'rev': 15})
         return {"branch": alt, "counterfactual": cf, "compare": compare(m, cf), "outcome_probability": outcome_probability(cf, 'rev')}
-    return _safe("mem20counterfactualmemorysimulatorz", run)
+    return _safe("mem20simz", run)
 
 
 # 5) mem20customerdigitaltwinlabz - behavior/churn/recommend

@@ -44,11 +44,11 @@ def narrative_system(payload=None) -> Dict[str, Any]:
 
 def economy_model(payload=None) -> Dict[str, Any]:
     def run():
-        from mem20businessmodelsimulatorz.domain import revenue, cost, profit, margin
+        from mem20simz.domain import revenue, cost, profit, margin
         rev = revenue(float((payload or {}).get("units", 10)), float((payload or {}).get("price", 5)))
         cst = cost(5, 2, int((payload or {}).get("units", 10)))
         return {"revenue": rev, "cost": cst, "profit": profit(rev, cst), "margin": margin(rev, cst)}
-    return _safe("mem20businessmodelsimulatorz", run)
+    return _safe("mem20simz", run)
 
 def goap_validation(payload=None) -> Dict[str, Any]:
     def run():

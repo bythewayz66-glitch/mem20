@@ -4,7 +4,7 @@ import pathlib,sys
 from typing import Mapping,Sequence
 __all__=["collective_intel","counterfactual_eval","output_compile","arena_events","arena_routing","arena_containment","probe"]
 _REPO_ROOT=pathlib.Path(__file__).resolve().parents[2]
-_PROJECTS=("mem20collectivemodelintelligencez","mem20counterfactualmemorysimulatorz","mem20agentoutputcompilerz","mem20eventstreamsuperhighwayz","mem20capabilitymarketplacez","mem20faultcontainmentcellsz")
+_PROJECTS=("mem20collectivemodelintelligencez","mem20simz","mem20agentoutputcompilerz","mem20eventstreamsuperhighwayz","mem20capabilitymarketplacez","mem20faultcontainmentcellsz")
 def _bootstrap():
     for name in reversed(_PROJECTS):
         p=str(_REPO_ROOT/name)
@@ -19,9 +19,9 @@ def collective_intel()->dict:
     except Exception as exc: return {"ok":False,"subsystem":"mem20collectivemodelintelligencez","error":f"{type(exc).__name__}: {exc}"}
 def counterfactual_eval()->dict:
     try:
-        from mem20counterfactualmemorysimulatorz.domain import counterfactual,compare
-        o={"s":1}; cf=counterfactual(o,{"change":{"s":2}}); return {"ok":True,"subsystem":"mem20counterfactualmemorysimulatorz","diff":len(compare(o,cf))}
-    except Exception as exc: return {"ok":False,"subsystem":"mem20counterfactualmemorysimulatorz","error":f"{type(exc).__name__}: {exc}"}
+        from mem20simz.domain import counterfactual,compare
+        o={"s":1}; cf=counterfactual(o,{"change":{"s":2}}); return {"ok":True,"subsystem":"mem20simz","diff":len(compare(o,cf))}
+    except Exception as exc: return {"ok":False,"subsystem":"mem20simz","error":f"{type(exc).__name__}: {exc}"}
 def output_compile()->dict:
     try:
         from mem20agentoutputcompilerz.domain import summarize

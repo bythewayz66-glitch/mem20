@@ -3,7 +3,7 @@
 First-class mem20 subsystem for remote experiment lab (create, run, compare, health) with **6 peers**, SQLite WAL runtime, CLI, JSON HTTP API, served web cockpit, docs/app monitor, and real MCP tools. Core API preserved.
 
 ## Peers (6)
-`mem20autonomousworkcellsz`, `mem20zerotouchnodeswarmz`, `mem20eventstreamsuperhighwayz`, `mem20faultcontainmentcellsz`, `mem20counterfactualmemorysimulatorz`, `mem20capabilitymarketplacez`.
+`mem20autonomousworkcellsz`, `mem20zerotouchnodeswarmz`, `mem20eventstreamsuperhighwayz`, `mem20faultcontainmentcellsz`, `mem20simz`, `mem20capabilitymarketplacez`.
 
 ## Python API (runnable)
 ```python

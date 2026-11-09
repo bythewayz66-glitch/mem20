@@ -3,7 +3,7 @@
 First-class mem20 subsystem for resource exchange markets (list/buy/price history/market health) with **6 peers**, SQLite WAL runtime, CLI, JSON HTTP API, served web cockpit, docs/app monitor, and real MCP tools. Core API preserved.
 
 ## Peers (6)
-`mem20capabilitymarketplacez`, `mem20eventstreamsuperhighwayz`, `mem20faultcontainmentcellsz`, `mem20demandforecastandcapacitybrainz`, `mem20businessmodelsimulatorz`, `mem20crossproductloyaltygraphz`.
+`mem20capabilitymarketplacez`, `mem20eventstreamsuperhighwayz`, `mem20faultcontainmentcellsz`, `mem20demandforecastandcapacitybrainz`, `mem20simz`, `mem20crossproductloyaltygraphz`.
 
 ## Python API (runnable)
 ```python

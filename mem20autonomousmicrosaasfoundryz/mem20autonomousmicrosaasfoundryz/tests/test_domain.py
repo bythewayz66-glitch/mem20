@@ -10,7 +10,7 @@ def test_revenue(): m=_m(); r=m.revenue_projection(100,10); assert r["mrr"]==100
 def test_rank(): m=_m(); r=m.idea_ranking([{"market_size":100,"competition":2,"effort":2},{"market_size":1000,"competition":1,"effort":1}]); assert len(r)==2
 
 def test_ecosystem_economics_real_values():
-    r=_eco().economics(100,9.0); assert r["ok"] and r["subsystem"]=="mem20businessmodelsimulatorz"; assert "margin" in r
+    r=_eco().economics(100,9.0); assert r["ok"] and r["subsystem"]=="mem20simz"; assert "margin" in r
 def test_ecosystem_demand_signal_real_values():
     r=_eco().demand_signal([20,25,22,30,28]); assert r["ok"] and r["subsystem"]=="mem20demandforecastandcapacitybrainz"; assert r["point"] is not None
 def test_ecosystem_build_schedule_real_values():

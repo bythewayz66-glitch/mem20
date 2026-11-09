@@ -3,7 +3,7 @@
 First-class mem20 subsystem for opportunity radar (scan/score_opportunity/rank/alert/radar_health) with **6 peers**, SQLite WAL runtime, CLI, JSON HTTP API, served web cockpit, docs/app monitor, and real MCP tools. Core API preserved.
 
 ## Peers (6)
-`mem20autonomoussaleslaboratoryz`, `mem20productledgrowthsimulatorz`, `mem20causalroutingbrainz`, `mem20revenueleakhunterz`, `mem20eventstreamsuperhighwayz`, `mem20capabilitymarketplacez`.
+`mem20autonomoussaleslaboratoryz`, `mem20simz`, `mem20causalroutingbrainz`, `mem20revenueleakhunterz`, `mem20eventstreamsuperhighwayz`, `mem20capabilitymarketplacez`.
 
 ## CLI (runnable)
 ```bash

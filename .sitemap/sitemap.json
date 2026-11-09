@@ -2183,12 +2183,12 @@
       "code_lines": 9,
       "dependencies": [],
       "description": "Execute proposed service boundaries and traffic patterns against synthetic load",
-      "dir": "mem20architecturesimulationsandboxz",
+      "dir": "mem20simz",
       "docs": [
-        "mem20architecturesimulationsandboxz/README.md"
+        "mem20simz/README.md"
       ],
       "entry_points": {
-        "mem20architecturesimulationsandboxz": "mem20architecturesimulationsandboxz.core:cli"
+        "mem20simz": "mem20simz.core:cli"
       },
       "file_count": 9,
       "keywords": [],
@@ -2211,13 +2211,13 @@
         "core",
         "run"
       ],
-      "name": "mem20architecturesimulationsandboxz",
+      "name": "mem20simz",
       "packaged": true,
       "readme_summary": "RM-127 \u2014 Architecture Simulation Sandbox",
       "readme_text": "# rm-127 \u2014 architecture simulation sandbox\n\n**owner:** judy  \n**lane:** software engineering intelligence and repair\n\n## outcome\nexecute proposed service boundaries and traffic patterns against synthetic load\n\n## breakthrough\narchitecture decisions can be tested like code\n\nthis package implements the locally executable/non-human portion of this off record lab roadmap on a shared, zero-dependency runtime substrate. it includes typed/versioned roadmap validation, sqlite wal state + event history, resumable/idempotent jobs, cancellation/timeouts/quotas, deterministic recovery, adaptive mode decisions with confidence/alternatives/bottlenecks/explanations, feedback tuning, cli + typed client + http api + browser command surface + event stream, local/hybrid/cloud peer execution, conflict-safe lww synchronization, caching, backpressure/failover, metrics, simulator scenarios, benchmark tooling, safety gating, and a rollback manifest.\n\nthe domain engine for this package is keyed specifically to rm-127 and produces deterministic executable results for the roadmap's core operation using only local standard-library code. external hardware, proprietary models, production credentials, live third-party services, and deployment authorization are intentionally not fabricated; those remain environment-bound integration points.\n\n## run\n```bash\npython run.py inspect\npython run.py run '{\"text\":\"demo\",\"cache\":false}'\npython run.py simulate\npython run.py benchmark --runs 5\npython run.py serve --port 8765\n```\n\nopen `http://127.0.0.1:8765/` for the live command surface.\n",
       "requires_python": ">=3.11",
       "subdirs": [
-        "mem20architecturesimulationsandboxz"
+        "mem20simz"
       ],
       "test_files": 0,
       "version": "1.0.0"
@@ -2411,12 +2411,12 @@
       "code_lines": 9,
       "dependencies": [],
       "description": "Test creative variants against modeled audience segments before publishing",
-      "dir": "mem20audiencereactionsimulatorz",
+      "dir": "mem20simz",
       "docs": [
-        "mem20audiencereactionsimulatorz/README.md"
+        "mem20simz/README.md"
       ],
       "entry_points": {
-        "mem20audiencereactionsimulatorz": "mem20audiencereactionsimulatorz.core:cli"
+        "mem20simz": "mem20simz.core:cli"
       },
       "file_count": 9,
       "keywords": [],
@@ -2439,13 +2439,13 @@
         "core",
         "run"
       ],
-      "name": "mem20audiencereactionsimulatorz",
+      "name": "mem20simz",
       "packaged": true,
       "readme_summary": "RM-139 \u2014 Audience Reaction Simulator",
       "readme_text": "# rm-139 \u2014 audience reaction simulator\n\n**owner:** jammee  \n**lane:** creative production, media, brand, and experience design\n\n## outcome\ntest creative variants against modeled audience segments before publishing\n\n## breakthrough\ncreative direction gains an experimental feedback loop\n\nthis package implements the locally executable/non-human portion of this off record lab roadmap on a shared, zero-dependency runtime substrate. it includes typed/versioned roadmap validation, sqlite wal state + event history, resumable/idempotent jobs, cancellation/timeouts/quotas, deterministic recovery, adaptive mode decisions with confidence/alternatives/bottlenecks/explanations, feedback tuning, cli + typed client + http api + browser command surface + event stream, local/hybrid/cloud peer execution, conflict-safe lww synchronization, caching, backpressure/failover, metrics, simulator scenarios, benchmark tooling, safety gating, and a rollback manifest.\n\nthe domain engine for this package is keyed specifically to rm-139 and produces deterministic executable results for the roadmap's core operation using only local standard-library code. external hardware, proprietary models, production credentials, live third-party services, and deployment authorization are intentionally not fabricated; those remain environment-bound integration points.\n\n## run\n```bash\npython run.py inspect\npython run.py run '{\"text\":\"demo\",\"cache\":false}'\npython run.py simulate\npython run.py benchmark --runs 5\npython run.py serve --port 8765\n```\n\nopen `http://127.0.0.1:8765/` for the live command surface.\n",
       "requires_python": ">=3.11",
       "subdirs": [
-        "mem20audiencereactionsimulatorz"
+        "mem20simz"
       ],
       "test_files": 0,
       "version": "1.0.0"
@@ -3301,7 +3301,7 @@
       "name": "mem20boxz",
       "packaged": true,
       "readme_summary": "mem20boxz \u2014 crew runtime",
-      "readme_text": "# mem20boxz \u2014 crew runtime\n\nmem20 sandbox runtime.\n\n## members (4)\n\nreviewed packages grouped here for joint integration under the\npackage-review rulings:\n\n- `mem20architecturesimulationsandboxz`\n- `mem20multiworldsandboxz`\n- `mem20scopemutationsandboxz`\n- `mem20spatialcomputingsandboxz`\n\n## status\n\nskeleton slice: registry, cli (`--version`, `--members`), hermetic\ntests. member wiring arrives in the integration phase.\n",
+      "readme_text": "# mem20boxz \u2014 crew runtime\n\nmem20 sandbox runtime.\n\n## members (4)\n\nreviewed packages grouped here for joint integration under the\npackage-review rulings:\n\n- `mem20simz`\n- `mem20multiworldsandboxz`\n- `mem20scopemutationsandboxz`\n- `mem20spatialcomputingsandboxz`\n\n## status\n\nskeleton slice: registry, cli (`--version`, `--members`), hermetic\ntests. member wiring arrives in the integration phase.\n",
       "requires_python": ">=3.11",
       "subdirs": [
         "mem20boxz",
@@ -3361,9 +3361,9 @@
       "code_lines": 263,
       "dependencies": [],
       "description": "",
-      "dir": "mem20businessmodelsimulatorz",
+      "dir": "mem20simz",
       "docs": [
-        "mem20businessmodelsimulatorz/README.md"
+        "mem20simz/README.md"
       ],
       "entry_points": {},
       "file_count": 8,
@@ -3385,13 +3385,13 @@
         "capability",
         "runtime"
       ],
-      "name": "mem20businessmodelsimulatorz",
+      "name": "mem20simz",
       "packaged": false,
       "readme_summary": "RM-090 \u2014 Business Model Simulator",
       "readme_text": "# rm-090 \u2014 business model simulator\n\noutcome: compare subscription, usage, marketplace, licensing, and service models under realistic scenarios\n\nbreakthrough: new monetization models can be evaluated before expensive implementation\n\nmachine-executable local runtime includes versioned state, sqlite wal persistence, events, sdk crud, resumable/idempotent jobs, retries/timeouts/quotas, recovery, `match` operation logic, decision explanations, feedback, cli, http console/api, mesh selection/failover, simulator, benchmark, metrics, and opt-in signature mode.\n",
       "requires_python": null,
       "subdirs": [
-        "mem20businessmodelsimulatorz"
+        "mem20simz"
       ],
       "test_files": 0,
       "version": null
@@ -4370,9 +4370,9 @@
       "code_lines": 263,
       "dependencies": [],
       "description": "",
-      "dir": "mem20counterfactualmemorysimulatorz",
+      "dir": "mem20simz",
       "docs": [
-        "mem20counterfactualmemorysimulatorz/README.md"
+        "mem20simz/README.md"
       ],
       "entry_points": {},
       "file_count": 8,
@@ -4394,13 +4394,13 @@
         "capability",
         "runtime"
       ],
-      "name": "mem20counterfactualmemorysimulatorz",
+      "name": "mem20simz",
       "packaged": false,
       "readme_summary": "RM-029 \u2014 Counterfactual Memory Simulator",
       "readme_text": "# rm-029 \u2014 counterfactual memory simulator\n\noutcome: create alternate histories from stored decisions and observed outcomes\n\nbreakthrough: users can explore what might have happened before acting again\n\nmachine-executable local runtime includes versioned state, sqlite wal persistence, events, sdk crud, resumable/idempotent jobs, retries/timeouts/quotas, recovery, `search` operation logic, decision explanations, feedback, cli, http console/api, mesh selection/failover, simulator, benchmark, metrics, and opt-in signature mode.\n",
       "requires_python": null,
       "subdirs": [
-        "mem20counterfactualmemorysimulatorz"
+        "mem20simz"
       ],
       "test_files": 0,
       "version": null
@@ -5946,9 +5946,9 @@
       "code_lines": 333,
       "dependencies": [],
       "description": "",
-      "dir": "mem20ethicalincentivesimulatorz",
+      "dir": "mem20simz",
       "docs": [
-        "mem20ethicalincentivesimulatorz/README.md"
+        "mem20simz/README.md"
       ],
       "entry_points": {},
       "file_count": 10,
@@ -5971,13 +5971,13 @@
         "installer",
         "runtime"
       ],
-      "name": "mem20ethicalincentivesimulatorz",
+      "name": "mem20simz",
       "packaged": false,
       "readme_summary": "RM-203 \u2014 Ethical Incentive Simulator",
       "readme_text": "# rm-203 \u2014 ethical incentive simulator\n\n**outcome:** simulate how incentives might change behavior, including harmful or exploitable outcomes\n\n**breakthrough:** teams can design motivation without accidentally manipulating users\n\nthis package is the machine-executable local implementation derived from the supplied off record lab roadmap. it includes versioned typed state, sqlite wal persistence, event history/snapshots, sdk crud/subscription, resumable idempotent jobs, cancellation, retries/timeouts/quotas/backpressure, deterministic replica reconciliation, local/hybrid/cloud placement/failover, roadmap-specific `progression` logic, decision confidence/explanations, feedback, cli, http console/api, safety guards, simulator, benchmark/metrics, and rollback-capable installer.\n\nnamed live product surfaces, real provider/device credentials, production traffic, and governed freestack deployment remain target-environment integration and are not claimed complete.\n",
       "requires_python": null,
       "subdirs": [
-        "mem20ethicalincentivesimulatorz"
+        "mem20simz"
       ],
       "test_files": 0,
       "version": null
@@ -6709,9 +6709,9 @@
       "code_lines": 333,
       "dependencies": [],
       "description": "",
-      "dir": "mem20gamebalancesimulatorz",
+      "dir": "mem20simz",
       "docs": [
-        "mem20gamebalancesimulatorz/README.md"
+        "mem20simz/README.md"
       ],
       "entry_points": {},
       "file_count": 10,
@@ -6734,13 +6734,13 @@
         "installer",
         "runtime"
       ],
-      "name": "mem20gamebalancesimulatorz",
+      "name": "mem20simz",
       "packaged": false,
       "readme_summary": "RM-231 \u2014 Game Balance Simulator",
       "readme_text": "# rm-231 \u2014 game balance simulator\n\n**outcome:** run large-scale simulations of combat, progression, economy, and player strategies\n\n**breakthrough:** balance decisions are supported by millions of synthetic playthroughs\n\nthis package is the machine-executable local implementation derived from the supplied off record lab roadmap. it includes versioned typed state, sqlite wal persistence, event history/snapshots, sdk crud/subscription, resumable idempotent jobs, cancellation, retries/timeouts/quotas/backpressure, deterministic replica reconciliation, local/hybrid/cloud placement/failover, roadmap-specific `progression` logic, decision confidence/explanations, feedback, cli, http console/api, safety guards, simulator, benchmark/metrics, and rollback-capable installer.\n\nnamed live product surfaces, real provider/device credentials, production traffic, and governed freestack deployment remain target-environment integration and are not claimed complete.\n",
       "requires_python": null,
       "subdirs": [
-        "mem20gamebalancesimulatorz"
+        "mem20simz"
       ],
       "test_files": 0,
       "version": null
@@ -6882,7 +6882,7 @@
       "name": "mem20gamez",
       "packaged": true,
       "readme_summary": "mem20gamez",
-      "readme_text": "# mem20gamez\n\n`mem20gamez` is mem20's native opengame-style reinforcement-learning package. it\ncontains executable torch agents, a deterministic in-package environment,\npotential-based reward shaping, performance-gated curriculum, prioritized\nreplay, independent multi-agent dqn training, and an optional live http server.\n\nno pretrained model, canned learning curve, random fallback environment, or\nmock learning loop is used.\n\n## verified capabilities\n\n| area | implemented behavior |\n|---|---|\n| `environment.py` | `tinygridworld-v0` uses a fixed-size one-hot canvas, active-grid difficulty, deterministic movement, optional wind, wall/step penalties, and separate termination/truncation signals. `gymnasiumenvironment` is a strict optional wrapper; unknown environments fail instead of falling back to synthetic behavior. |\n| `reward_shaper.py` | `potentialbasedshaper` implements `f = scale * (gamma * phi(s') - phi(s))`, forces terminal potential to zero, preserves the original reward, and rejects clipping that would break policy invariance. |\n| `curriculum.py` | adaptive difficulty advances or regresses from measured grid progress. it acts once per complete performance window and clamps difficulty to configured bounds. the fixed observation canvas keeps replay and network shapes compatible across stages. |\n| `replay_buffer.py` | a deterministic circular prioritized replay with exact-capacity eviction, proportional sampling, annealed importance weights, td-error priority updates, explicit exact-size batches, and shape-checked numpy outputs. |\n| `agents.py` | double dqn with a target network, prioritized replay, optional dueling head, hard or polyak target synchronization, plus reinforce, clipped ppo, and discrete sac gradient implementations. |\n| `trainer.py` | single-agent rollout/evaluation loops and interleaved multi-agent dqn. every multi-agent instance has its own environment, network, optimizer, target network, and replay buffer. |\n| `cli.py` | training, evaluation, multi-agent training, checkpointing, subsystem checks, and an aiohttp server exposing `/health`, `/reset`, `/act`, `/step`, and `/learn`. |\n\nthe behavioral suite proves finite real gradient updates for reinforce, ppo, and\nsac. the task-mastery learning assertion and the measured proof below use dqn,\nwhich is the package's fully exercised short-run benchmark.\n\n## measured dqn proof\n\ncommand:\n\n```bash\nmem20gamez train \\\n  --agent dqn \\\n  --env tinygridworld-v0 \\\n  --grid-size 4 \\\n  --episodes 80 \\\n  --eval-episodes 20 \\\n  --batch-size 32 \\\n  --update-every 1 \\\n  --lr 0.01 \\\n  --gamma 0.99 \\\n  --shape \\\n  --seed 7\n```\n\nobserved on the root venv with `torch 2.14.0+cpu`:\n\n```text\nbefore_mean_reward -9.730  before_success_rate 0.000\nafter_mean_reward   9.940  after_success_rate  1.000\nfirst_window_reward 9.576  last_window_reward 9.928\nfirst_window_loss   0.069549  last_window_loss 0.036290\nelapsed=6.20 sec\n```\n\nthose values come from the run itself. the agent learns the six-step optimal\nroute on the deterministic 4\u00d74 grid: goal reward `10.0` plus six step penalties\n`-0.01` equals `9.94`.\n\na separate two-agent 2\u00d72 run moved each agent from mean reward `-9.91` to\n`9.98`, with greedy success rate `1.00`, in `4.97 sec`.\n\na 40-episode curriculum run measured the expected 10-episode gates on the 4\u00d74\ncanvas: difficulty `0.25`, `0.50`, `0.75`, then `1.00` at episodes 10, 20, 30,\nand 40. runtime was `2.19 sec`.\n\n## install\n\nthe runtime requires python 3.11+, numpy, torch, pyyaml, and aiohttp.\n\n```bash\ncd /opt/mem20/mem20gamez\npython3 -m pip install -e .\npython3 -m pip install -e \".[dev]\"\n```\n\ninstall gymnasium only when external gym environments are needed:\n\n```bash\npython3 -m pip install -e \".[gym]\"\n```\n\n`tinygridworld-v0` needs no external environment package.\n\n## commands\n\n```bash\n# measured 4x4 dqn run\nmem20gamez train --agent dqn --env tinygridworld-v0 --grid-size 4 \\\n  --episodes 80 --eval-episodes 20 --batch-size 32 --update-every 1 \\\n  --lr 0.01 --gamma 0.99 --shape --seed 7\n\n# save a trained dqn checkpoint\nmem20gamez train --agent dqn --shape --checkpoint /tmp/mem20gamez-dqn.pt\n\n# independent, interleaved dqn agents\nmem20gamez multi --agents 2 --grid-size 2 --episodes 35 \\\n  --batch-size 8 --update-every 1 --lr 0.02 --gamma 0.95 --shape --seed 31\n\n# live dqn process\nmem20gamez serve --env tinygridworld-v0 --agent dqn --host 127.0.0.1 --port 8007\n\n# fast subsystem contract check\nmem20gamez test\n```\n\nthe packaged server is persisted as `mem20gamez.service`, enabled and started\nwith systemd, so it survives reboot rather than running as a floating process.\n\n## verification\n\n```bash\ncd /opt/mem20/mem20gamez\npython3 -m pytest -q\npython3 -m ruff check .\n```\n\ncurrent result: `29 passed`, and ruff reports `all checks passed!`.\n\n## managed members (package-review integration)\n\nsingle-purpose game organs grouped here by reference; they live in their\nown top-level directories and are smoke-verified there:\n\n- `mem20ailevelarchitectz`\n- `mem20alternativedatabaseplaygroundz`\n- `mem20dynamicquestrewardcomposerz`\n- `mem20gameproductioncontrolcenterz`\n- `mem20operationsreplaysimulatorz`\n",
+      "readme_text": "# mem20gamez\n\n`mem20gamez` is mem20's native opengame-style reinforcement-learning package. it\ncontains executable torch agents, a deterministic in-package environment,\npotential-based reward shaping, performance-gated curriculum, prioritized\nreplay, independent multi-agent dqn training, and an optional live http server.\n\nno pretrained model, canned learning curve, random fallback environment, or\nmock learning loop is used.\n\n## verified capabilities\n\n| area | implemented behavior |\n|---|---|\n| `environment.py` | `tinygridworld-v0` uses a fixed-size one-hot canvas, active-grid difficulty, deterministic movement, optional wind, wall/step penalties, and separate termination/truncation signals. `gymnasiumenvironment` is a strict optional wrapper; unknown environments fail instead of falling back to synthetic behavior. |\n| `reward_shaper.py` | `potentialbasedshaper` implements `f = scale * (gamma * phi(s') - phi(s))`, forces terminal potential to zero, preserves the original reward, and rejects clipping that would break policy invariance. |\n| `curriculum.py` | adaptive difficulty advances or regresses from measured grid progress. it acts once per complete performance window and clamps difficulty to configured bounds. the fixed observation canvas keeps replay and network shapes compatible across stages. |\n| `replay_buffer.py` | a deterministic circular prioritized replay with exact-capacity eviction, proportional sampling, annealed importance weights, td-error priority updates, explicit exact-size batches, and shape-checked numpy outputs. |\n| `agents.py` | double dqn with a target network, prioritized replay, optional dueling head, hard or polyak target synchronization, plus reinforce, clipped ppo, and discrete sac gradient implementations. |\n| `trainer.py` | single-agent rollout/evaluation loops and interleaved multi-agent dqn. every multi-agent instance has its own environment, network, optimizer, target network, and replay buffer. |\n| `cli.py` | training, evaluation, multi-agent training, checkpointing, subsystem checks, and an aiohttp server exposing `/health`, `/reset`, `/act`, `/step`, and `/learn`. |\n\nthe behavioral suite proves finite real gradient updates for reinforce, ppo, and\nsac. the task-mastery learning assertion and the measured proof below use dqn,\nwhich is the package's fully exercised short-run benchmark.\n\n## measured dqn proof\n\ncommand:\n\n```bash\nmem20gamez train \\\n  --agent dqn \\\n  --env tinygridworld-v0 \\\n  --grid-size 4 \\\n  --episodes 80 \\\n  --eval-episodes 20 \\\n  --batch-size 32 \\\n  --update-every 1 \\\n  --lr 0.01 \\\n  --gamma 0.99 \\\n  --shape \\\n  --seed 7\n```\n\nobserved on the root venv with `torch 2.14.0+cpu`:\n\n```text\nbefore_mean_reward -9.730  before_success_rate 0.000\nafter_mean_reward   9.940  after_success_rate  1.000\nfirst_window_reward 9.576  last_window_reward 9.928\nfirst_window_loss   0.069549  last_window_loss 0.036290\nelapsed=6.20 sec\n```\n\nthose values come from the run itself. the agent learns the six-step optimal\nroute on the deterministic 4\u00d74 grid: goal reward `10.0` plus six step penalties\n`-0.01` equals `9.94`.\n\na separate two-agent 2\u00d72 run moved each agent from mean reward `-9.91` to\n`9.98`, with greedy success rate `1.00`, in `4.97 sec`.\n\na 40-episode curriculum run measured the expected 10-episode gates on the 4\u00d74\ncanvas: difficulty `0.25`, `0.50`, `0.75`, then `1.00` at episodes 10, 20, 30,\nand 40. runtime was `2.19 sec`.\n\n## install\n\nthe runtime requires python 3.11+, numpy, torch, pyyaml, and aiohttp.\n\n```bash\ncd /opt/mem20/mem20gamez\npython3 -m pip install -e .\npython3 -m pip install -e \".[dev]\"\n```\n\ninstall gymnasium only when external gym environments are needed:\n\n```bash\npython3 -m pip install -e \".[gym]\"\n```\n\n`tinygridworld-v0` needs no external environment package.\n\n## commands\n\n```bash\n# measured 4x4 dqn run\nmem20gamez train --agent dqn --env tinygridworld-v0 --grid-size 4 \\\n  --episodes 80 --eval-episodes 20 --batch-size 32 --update-every 1 \\\n  --lr 0.01 --gamma 0.99 --shape --seed 7\n\n# save a trained dqn checkpoint\nmem20gamez train --agent dqn --shape --checkpoint /tmp/mem20gamez-dqn.pt\n\n# independent, interleaved dqn agents\nmem20gamez multi --agents 2 --grid-size 2 --episodes 35 \\\n  --batch-size 8 --update-every 1 --lr 0.02 --gamma 0.95 --shape --seed 31\n\n# live dqn process\nmem20gamez serve --env tinygridworld-v0 --agent dqn --host 127.0.0.1 --port 8007\n\n# fast subsystem contract check\nmem20gamez test\n```\n\nthe packaged server is persisted as `mem20gamez.service`, enabled and started\nwith systemd, so it survives reboot rather than running as a floating process.\n\n## verification\n\n```bash\ncd /opt/mem20/mem20gamez\npython3 -m pytest -q\npython3 -m ruff check .\n```\n\ncurrent result: `29 passed`, and ruff reports `all checks passed!`.\n\n## managed members (package-review integration)\n\nsingle-purpose game organs grouped here by reference; they live in their\nown top-level directories and are smoke-verified there:\n\n- `mem20ailevelarchitectz`\n- `mem20alternativedatabaseplaygroundz`\n- `mem20dynamicquestrewardcomposerz`\n- `mem20gameproductioncontrolcenterz`\n- `mem20simz`\n",
       "requires_python": ">=3.11",
       "subdirs": [
         "mem20gamez",
@@ -8068,7 +8068,7 @@
       "name": "mem20labz",
       "packaged": true,
       "readme_summary": "mem20labz \u2014 crew runtime",
-      "readme_text": "# mem20labz \u2014 crew runtime\n\nmem20 laboratory runtime.\n\n## members (10)\n\nreviewed packages grouped here for joint integration under the\npackage-review rulings:\n\n- `mem20autonomoussaleslaboratoryz`\n- `mem20continuouscompatibilitylabz`\n- `mem20customerdigitaltwinlabz`\n- `mem20dependencymutationlabz`\n- `mem20executabledesignstresslabz`\n- `mem20modelgenomelabz`\n- `mem20neuromorphiceventlabz`\n- `mem20outcomesimulationlabz`\n- `mem20remoteexperimentlabz`\n- `mem20webassemblycomponentlabz`\n\n## status\n\nskeleton slice: registry, cli (`--version`, `--members`), hermetic\ntests. member wiring arrives in the integration phase.\n",
+      "readme_text": "# mem20labz \u2014 crew runtime\n\nmem20 laboratory runtime.\n\n## members (10)\n\nreviewed packages grouped here for joint integration under the\npackage-review rulings:\n\n- `mem20autonomoussaleslaboratoryz`\n- `mem20continuouscompatibilitylabz`\n- `mem20customerdigitaltwinlabz`\n- `mem20dependencymutationlabz`\n- `mem20executabledesignstresslabz`\n- `mem20modelgenomelabz`\n- `mem20neuromorphiceventlabz`\n- `mem20simz`\n- `mem20remoteexperimentlabz`\n- `mem20webassemblycomponentlabz`\n\n## status\n\nskeleton slice: registry, cli (`--version`, `--members`), hermetic\ntests. member wiring arrives in the integration phase.\n",
       "requires_python": ">=3.11",
       "subdirs": [
         "mem20labz",
@@ -8227,12 +8227,12 @@
       "code_lines": 9,
       "dependencies": [],
       "description": "Model personal choices, schedules, budgets, tradeoffs, and likely downstream effects",
-      "dir": "mem20lifescenariosimulatorz",
+      "dir": "mem20simz",
       "docs": [
-        "mem20lifescenariosimulatorz/README.md"
+        "mem20simz/README.md"
       ],
       "entry_points": {
-        "mem20lifescenariosimulatorz": "mem20lifescenariosimulatorz.core:cli"
+        "mem20simz": "mem20simz.core:cli"
       },
       "file_count": 9,
       "keywords": [],
@@ -8255,13 +8255,13 @@
         "core",
         "run"
       ],
-      "name": "mem20lifescenariosimulatorz",
+      "name": "mem20simz",
       "packaged": true,
       "readme_summary": "RM-145 \u2014 Life Scenario Simulator",
       "readme_text": "# rm-145 \u2014 life scenario simulator\n\n**owner:** jayson  \n**lane:** personal intelligence and human capability experience\n\n## outcome\nmodel personal choices, schedules, budgets, tradeoffs, and likely downstream effects\n\n## breakthrough\nimportant decisions can be rehearsed privately before action\n\nthis package implements the locally executable/non-human portion of this off record lab roadmap on a shared, zero-dependency runtime substrate. it includes typed/versioned roadmap validation, sqlite wal state + event history, resumable/idempotent jobs, cancellation/timeouts/quotas, deterministic recovery, adaptive mode decisions with confidence/alternatives/bottlenecks/explanations, feedback tuning, cli + typed client + http api + browser command surface + event stream, local/hybrid/cloud peer execution, conflict-safe lww synchronization, caching, backpressure/failover, metrics, simulator scenarios, benchmark tooling, safety gating, and a rollback manifest.\n\nthe domain engine for this package is keyed specifically to rm-145 and produces deterministic executable results for the roadmap's core operation using only local standard-library code. external hardware, proprietary models, production credentials, live third-party services, and deployment authorization are intentionally not fabricated; those remain environment-bound integration points.\n\n## run\n```bash\npython run.py inspect\npython run.py run '{\"text\":\"demo\",\"cache\":false}'\npython run.py simulate\npython run.py benchmark --runs 5\npython run.py serve --port 8765\n```\n\nopen `http://127.0.0.1:8765/` for the live command surface.\n",
       "requires_python": ">=3.11",
       "subdirs": [
-        "mem20lifescenariosimulatorz"
+        "mem20simz"
       ],
       "test_files": 0,
       "version": "1.0.0"
@@ -9937,12 +9937,12 @@
       "code_lines": 9,
       "dependencies": [],
       "description": "Replay past operational state and test alternate routing choices",
-      "dir": "mem20operationsreplaysimulatorz",
+      "dir": "mem20simz",
       "docs": [
-        "mem20operationsreplaysimulatorz/README.md"
+        "mem20simz/README.md"
       ],
       "entry_points": {
-        "mem20operationsreplaysimulatorz": "mem20operationsreplaysimulatorz.core:cli"
+        "mem20simz": "mem20simz.core:cli"
       },
       "file_count": 9,
       "keywords": [],
@@ -9965,13 +9965,13 @@
         "core",
         "run"
       ],
-      "name": "mem20operationsreplaysimulatorz",
+      "name": "mem20simz",
       "packaged": true,
       "readme_summary": "RM-189 \u2014 Operations Replay Simulator",
       "readme_text": "# rm-189 \u2014 operations replay simulator\n\n**owner:** ariel  \n**lane:** mission dispatch, execution visibility, and real-time operations\n\n## outcome\nreplay past operational state and test alternate routing choices\n\n## breakthrough\ndispatch strategy improves from actual system behavior\n\nthis package implements the locally executable/non-human portion of this off record lab roadmap on a shared, zero-dependency runtime substrate. it includes typed/versioned roadmap validation, sqlite wal state + event history, resumable/idempotent jobs, cancellation/timeouts/quotas, deterministic recovery, adaptive mode decisions with confidence/alternatives/bottlenecks/explanations, feedback tuning, cli + typed client + http api + browser command surface + event stream, local/hybrid/cloud peer execution, conflict-safe lww synchronization, caching, backpressure/failover, metrics, simulator scenarios, benchmark tooling, safety gating, and a rollback manifest.\n\nthe domain engine for this package is keyed specifically to rm-189 and produces deterministic executable results for the roadmap's core operation using only local standard-library code. external hardware, proprietary models, production credentials, live third-party services, and deployment authorization are intentionally not fabricated; those remain environment-bound integration points.\n\n## run\n```bash\npython run.py inspect\npython run.py run '{\"text\":\"demo\",\"cache\":false}'\npython run.py simulate\npython run.py benchmark --runs 5\npython run.py serve --port 8765\n```\n\nopen `http://127.0.0.1:8765/` for the live command surface.\n",
       "requires_python": ">=3.11",
       "subdirs": [
-        "mem20operationsreplaysimulatorz"
+        "mem20simz"
       ],
       "test_files": 0,
       "version": "1.0.0"
@@ -10149,9 +10149,9 @@
       "code_lines": 263,
       "dependencies": [],
       "description": "",
-      "dir": "mem20outcomesimulationlabz",
+      "dir": "mem20simz",
       "docs": [
-        "mem20outcomesimulationlabz/README.md"
+        "mem20simz/README.md"
       ],
       "entry_points": {},
       "file_count": 8,
@@ -10173,13 +10173,13 @@
         "capability",
         "runtime"
       ],
-      "name": "mem20outcomesimulationlabz",
+      "name": "mem20simz",
       "packaged": false,
       "readme_summary": "RM-038 \u2014 Outcome Simulation Lab",
       "readme_text": "# rm-038 \u2014 outcome simulation lab\n\noutcome: simulate schedules, staffing, dependencies, and failure modes before committing work\n\nbreakthrough: teams test execution strategies before spending time or money\n\nmachine-executable local runtime includes versioned state, sqlite wal persistence, events, sdk crud, resumable/idempotent jobs, retries/timeouts/quotas, recovery, `simulate` operation logic, decision explanations, feedback, cli, http console/api, mesh selection/failover, simulator, benchmark, metrics, and opt-in signature mode.\n",
       "requires_python": null,
       "subdirs": [
-        "mem20outcomesimulationlabz"
+        "mem20simz"
       ],
       "test_files": 0,
       "version": null
@@ -11083,9 +11083,9 @@
       "code_lines": 263,
       "dependencies": [],
       "description": "",
-      "dir": "mem20productledgrowthsimulatorz",
+      "dir": "mem20simz",
       "docs": [
-        "mem20productledgrowthsimulatorz/README.md"
+        "mem20simz/README.md"
       ],
       "entry_points": {},
       "file_count": 8,
@@ -11107,13 +11107,13 @@
         "capability",
         "runtime"
       ],
-      "name": "mem20productledgrowthsimulatorz",
+      "name": "mem20simz",
       "packaged": false,
       "readme_summary": "RM-018 \u2014 Product-Led Growth Simulator",
       "readme_text": "# rm-018 \u2014 product-led growth simulator\n\noutcome: simulate referral loops, onboarding, activation, retention, and upgrade behavior\n\nbreakthrough: growth mechanics are tested in software before risking real customers\n\nmachine-executable local runtime includes versioned state, sqlite wal persistence, events, sdk crud, resumable/idempotent jobs, retries/timeouts/quotas, recovery, `forecast` operation logic, decision explanations, feedback, cli, http console/api, mesh selection/failover, simulator, benchmark, metrics, and opt-in signature mode.\n",
       "requires_python": null,
       "subdirs": [
-        "mem20productledgrowthsimulatorz"
+        "mem20simz"
       ],
       "test_files": 0,
       "version": null
@@ -11980,12 +11980,12 @@
       "code_lines": 9,
       "dependencies": [],
       "description": "Simulate schedule, staffing, failures, and changing assumptions across a roadmap",
-      "dir": "mem20roadmapsimulationtwinz",
+      "dir": "mem20simz",
       "docs": [
-        "mem20roadmapsimulationtwinz/README.md"
+        "mem20simz/README.md"
       ],
       "entry_points": {
-        "mem20roadmapsimulationtwinz": "mem20roadmapsimulationtwinz.core:cli"
+        "mem20simz": "mem20simz.core:cli"
       },
       "file_count": 9,
       "keywords": [],
@@ -12008,13 +12008,13 @@
         "core",
         "run"
       ],
-      "name": "mem20roadmapsimulationtwinz",
+      "name": "mem20simz",
       "packaged": true,
       "readme_summary": "RM-194 \u2014 Roadmap Simulation Twin",
       "readme_text": "# rm-194 \u2014 roadmap simulation twin\n\n**owner:** patricia  \n**lane:** executable planning, dependency modeling, and build sequencing\n\n## outcome\nsimulate schedule, staffing, failures, and changing assumptions across a roadmap\n\n## breakthrough\nteams can test execution strategies before committing\n\nthis package implements the locally executable/non-human portion of this off record lab roadmap on a shared, zero-dependency runtime substrate. it includes typed/versioned roadmap validation, sqlite wal state + event history, resumable/idempotent jobs, cancellation/timeouts/quotas, deterministic recovery, adaptive mode decisions with confidence/alternatives/bottlenecks/explanations, feedback tuning, cli + typed client + http api + browser command surface + event stream, local/hybrid/cloud peer execution, conflict-safe lww synchronization, caching, backpressure/failover, metrics, simulator scenarios, benchmark tooling, safety gating, and a rollback manifest.\n\nthe domain engine for this package is keyed specifically to rm-194 and produces deterministic executable results for the roadmap's core operation using only local standard-library code. external hardware, proprietary models, production credentials, live third-party services, and deployment authorization are intentionally not fabricated; those remain environment-bound integration points.\n\n## run\n```bash\npython run.py inspect\npython run.py run '{\"text\":\"demo\",\"cache\":false}'\npython run.py simulate\npython run.py benchmark --runs 5\npython run.py serve --port 8765\n```\n\nopen `http://127.0.0.1:8765/` for the live command surface.\n",
       "requires_python": ">=3.11",
       "subdirs": [
-        "mem20roadmapsimulationtwinz"
+        "mem20simz"
       ],
       "test_files": 0,
       "version": "1.0.0"
@@ -13144,7 +13144,7 @@
       "name": "mem20simz",
       "packaged": true,
       "readme_summary": "mem20simz \u2014 crew runtime",
-      "readme_text": "# mem20simz \u2014 crew runtime\n\nmem20 simulator runtime.\n\n## members (8)\n\nreviewed packages grouped here for joint integration under the\npackage-review rulings:\n\n- `mem20audiencereactionsimulatorz`\n- `mem20businessmodelsimulatorz`\n- `mem20counterfactualmemorysimulatorz`\n- `mem20ethicalincentivesimulatorz`\n- `mem20gamebalancesimulatorz`\n- `mem20lifescenariosimulatorz`\n- `mem20productledgrowthsimulatorz`\n- `mem20useracceptancesimulatorz`\n\n## status\n\nskeleton slice: registry, cli (`--version`, `--members`), hermetic\ntests. member wiring arrives in the integration phase.\n",
+      "readme_text": "# mem20simz \u2014 crew runtime\n\nmem20 simulator runtime.\n\n## members (8)\n\nreviewed packages grouped here for joint integration under the\npackage-review rulings:\n\n- `mem20simz`\n- `mem20simz`\n- `mem20simz`\n- `mem20simz`\n- `mem20simz`\n- `mem20simz`\n- `mem20simz`\n- `mem20simz`\n\n## status\n\nskeleton slice: registry, cli (`--version`, `--members`), hermetic\ntests. member wiring arrives in the integration phase.\n",
       "requires_python": ">=3.11",
       "subdirs": [
         "mem20simz",
@@ -13869,7 +13869,7 @@
       "name": "mem20twinz",
       "packaged": true,
       "readme_summary": "mem20twinz \u2014 crew runtime",
-      "readme_text": "# mem20twinz \u2014 crew runtime\n\nmem20 digital twin runtime.\n\n## members (6)\n\nreviewed packages grouped here for joint integration under the\npackage-review rulings:\n\n- `mem20executiondigitaltwinz`\n- `mem20humansatisfactiontwinz`\n- `mem20integrationdigitaltwinz`\n- `mem20playermotivationtwinz`\n- `mem20realtimebusinesstwinz`\n- `mem20roadmapsimulationtwinz`\n\n## status\n\nskeleton slice: registry, cli (`--version`, `--members`), hermetic\ntests. member wiring arrives in the integration phase.\n",
+      "readme_text": "# mem20twinz \u2014 crew runtime\n\nmem20 digital twin runtime.\n\n## members (6)\n\nreviewed packages grouped here for joint integration under the\npackage-review rulings:\n\n- `mem20executiondigitaltwinz`\n- `mem20humansatisfactiontwinz`\n- `mem20integrationdigitaltwinz`\n- `mem20playermotivationtwinz`\n- `mem20realtimebusinesstwinz`\n- `mem20simz`\n\n## status\n\nskeleton slice: registry, cli (`--version`, `--members`), hermetic\ntests. member wiring arrives in the integration phase.\n",
       "requires_python": ">=3.11",
       "subdirs": [
         "mem20twinz",
@@ -14253,12 +14253,12 @@
       "code_lines": 9,
       "dependencies": [],
       "description": "Model how different users attempt tasks and where they fail or abandon",
-      "dir": "mem20useracceptancesimulatorz",
+      "dir": "mem20simz",
       "docs": [
-        "mem20useracceptancesimulatorz/README.md"
+        "mem20simz/README.md"
       ],
       "entry_points": {
-        "mem20useracceptancesimulatorz": "mem20useracceptancesimulatorz.core:cli"
+        "mem20simz": "mem20simz.core:cli"
       },
       "file_count": 9,
       "keywords": [],
@@ -14281,13 +14281,13 @@
         "core",
         "run"
       ],
-      "name": "mem20useracceptancesimulatorz",
+      "name": "mem20simz",
       "packaged": true,
       "readme_summary": "RM-173 \u2014 User Acceptance Simulator",
       "readme_text": "# rm-173 \u2014 user acceptance simulator\n\n**owner:** mary  \n**lane:** completion, review, quality, and user-outcome validation\n\n## outcome\nmodel how different users attempt tasks and where they fail or abandon\n\n## breakthrough\nusability problems surface before release\n\nthis package implements the locally executable/non-human portion of this off record lab roadmap on a shared, zero-dependency runtime substrate. it includes typed/versioned roadmap validation, sqlite wal state + event history, resumable/idempotent jobs, cancellation/timeouts/quotas, deterministic recovery, adaptive mode decisions with confidence/alternatives/bottlenecks/explanations, feedback tuning, cli + typed client + http api + browser command surface + event stream, local/hybrid/cloud peer execution, conflict-safe lww synchronization, caching, backpressure/failover, metrics, simulator scenarios, benchmark tooling, safety gating, and a rollback manifest.\n\nthe domain engine for this package is keyed specifically to rm-173 and produces deterministic executable results for the roadmap's core operation using only local standard-library code. external hardware, proprietary models, production credentials, live third-party services, and deployment authorization are intentionally not fabricated; those remain environment-bound integration points.\n\n## run\n```bash\npython run.py inspect\npython run.py run '{\"text\":\"demo\",\"cache\":false}'\npython run.py simulate\npython run.py benchmark --runs 5\npython run.py serve --port 8765\n```\n\nopen `http://127.0.0.1:8765/` for the live command surface.\n",
       "requires_python": ">=3.11",
       "subdirs": [
-        "mem20useracceptancesimulatorz"
+        "mem20simz"
       ],
       "test_files": 0,
       "version": "1.0.0"

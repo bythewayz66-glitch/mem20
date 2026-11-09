@@ -6,7 +6,7 @@ def test_detect(): leaks=_m().detect_leaks([{"id":"a","amount":5}], {"a":10}); a
 def test_anomaly(): assert _m().anomaly_score([1,1,1,10]) > 0
 def test_recoverable(): assert _m().recoverable([{"delta":-5},{"delta":2}])==7.0
 def test_health(): assert _m().hunter_health([{"delta":1}])["leaks"]==1
-def test_eco_econ(): r=_eco().revenue_economics(100,60); assert r["ok"] and r["subsystem"]=="mem20businessmodelsimulatorz"
+def test_eco_econ(): r=_eco().revenue_economics(100,60); assert r["ok"] and r["subsystem"]=="mem20simz"
 def test_eco_deal(): r=_eco().deal_pricing(50); assert r["ok"] and r["subsystem"]=="mem20autonomousdealdeskz"
 def test_eco_events(): r=_eco().leak_events("l",{}); assert r["ok"] and r["subsystem"]=="mem20eventstreamsuperhighwayz"
 def test_eco_contain(): r=_eco().leak_containment("l"); assert r["ok"] and r["subsystem"]=="mem20faultcontainmentcellsz"

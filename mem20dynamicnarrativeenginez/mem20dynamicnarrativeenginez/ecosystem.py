@@ -4,7 +4,7 @@ import pathlib,sys
 from typing import Mapping,Sequence
 __all__=["narrative_events","challenge_hooks","context_compression","focus_guidance","capability_routing","branching_scenarios","probe"]
 _REPO_ROOT=pathlib.Path(__file__).resolve().parents[2]
-_PROJECTS=("mem20eventstreamsuperhighwayz","mem20communitychallengeenginez","mem20contextcompressionforgez","mem20mixedinitiativefocusenginez","mem20capabilitymarketplacez","mem20counterfactualmemorysimulatorz")
+_PROJECTS=("mem20eventstreamsuperhighwayz","mem20communitychallengeenginez","mem20contextcompressionforgez","mem20mixedinitiativefocusenginez","mem20capabilitymarketplacez","mem20simz")
 def _bootstrap():
     for name in reversed(_PROJECTS):
         p=str(_REPO_ROOT/name)
@@ -41,10 +41,10 @@ def capability_routing(key:str,caps:Sequence[str])->dict:
     except Exception as exc: return {"ok":False,"subsystem":"mem20capabilitymarketplacez","error":f"{type(exc).__name__}: {exc}"}
 def branching_scenarios(state:Mapping)->dict:
     try:
-        from mem20counterfactualmemorysimulatorz.domain import branch,counterfactual
+        from mem20simz.domain import branch,counterfactual
         mem={"state":dict(state) or {"chapter":1},"branch":0}; b=branch(mem,{"chapter":2}); cf=counterfactual(mem,{"change":{"ending":"alt"}})
-        return {"ok":True,"subsystem":"mem20counterfactualmemorysimulatorz","branch":b.get("branch"),"has_cf":bool(cf.get("state"))}
-    except Exception as exc: return {"ok":False,"subsystem":"mem20counterfactualmemorysimulatorz","error":f"{type(exc).__name__}: {exc}"}
+        return {"ok":True,"subsystem":"mem20simz","branch":b.get("branch"),"has_cf":bool(cf.get("state"))}
+    except Exception as exc: return {"ok":False,"subsystem":"mem20simz","error":f"{type(exc).__name__}: {exc}"}
 def probe()->dict:
     checks={"narrative_events":narrative_events("n",{}),"challenge_hooks":challenge_hooks(),"context_compression":context_compression("hello world story"),"focus_guidance":focus_guidance({"goal":"x","priority":1}),"capability_routing":capability_routing("k",["s"]),"branching_scenarios":branching_scenarios({"c":1})}
     return {"ok":all(v.get("ok") for v in checks.values()),"checks":checks}

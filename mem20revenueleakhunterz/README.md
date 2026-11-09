@@ -3,7 +3,7 @@
 First-class mem20 subsystem for revenue leak hunting (detect leaks, anomaly scoring, recoverable amounts) with **6 peers**, SQLite WAL runtime, CLI, JSON HTTP API, served web cockpit, docs/app monitor, and real MCP tools. Core API preserved.
 
 ## Peers (6)
-`mem20businessmodelsimulatorz`, `mem20autonomousdealdeskz`, `mem20eventstreamsuperhighwayz`, `mem20faultcontainmentcellsz`, `mem20causalroutingbrainz`, `mem20capabilitymarketplacez`.
+`mem20simz`, `mem20autonomousdealdeskz`, `mem20eventstreamsuperhighwayz`, `mem20faultcontainmentcellsz`, `mem20causalroutingbrainz`, `mem20capabilitymarketplacez`.
 
 ## Python API (runnable)
 ```python

@@ -4,7 +4,7 @@ import pathlib,sys
 from typing import Mapping,Sequence
 __all__=["market_routing","trade_events","trade_containment","demand_pricing","trade_economics","participant_loyalty","probe"]
 _REPO_ROOT=pathlib.Path(__file__).resolve().parents[2]
-_PROJECTS=("mem20capabilitymarketplacez","mem20eventstreamsuperhighwayz","mem20faultcontainmentcellsz","mem20demandforecastandcapacitybrainz","mem20businessmodelsimulatorz","mem20crossproductloyaltygraphz")
+_PROJECTS=("mem20capabilitymarketplacez","mem20eventstreamsuperhighwayz","mem20faultcontainmentcellsz","mem20demandforecastandcapacitybrainz","mem20simz","mem20crossproductloyaltygraphz")
 def _bootstrap():
     for name in reversed(_PROJECTS):
         p=str(_REPO_ROOT/name)
@@ -40,9 +40,9 @@ def demand_pricing(obs:Sequence[float])->dict:
     except Exception as exc: return {"ok":False,"subsystem":"mem20demandforecastandcapacitybrainz","error":f"{type(exc).__name__}: {exc}"}
 def trade_economics(revenue:float,cost:float)->dict:
     try:
-        from mem20businessmodelsimulatorz.domain import margin,profit
-        return {"ok":True,"subsystem":"mem20businessmodelsimulatorz","profit":profit(revenue,cost),"margin":margin(revenue,cost)}
-    except Exception as exc: return {"ok":False,"subsystem":"mem20businessmodelsimulatorz","error":f"{type(exc).__name__}: {exc}"}
+        from mem20simz.domain import margin,profit
+        return {"ok":True,"subsystem":"mem20simz","profit":profit(revenue,cost),"margin":margin(revenue,cost)}
+    except Exception as exc: return {"ok":False,"subsystem":"mem20simz","error":f"{type(exc).__name__}: {exc}"}
 def participant_loyalty(users:Sequence[str])->dict:
     try:
         from mem20crossproductloyaltygraphz.domain import add_edge,loyalty_score

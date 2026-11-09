@@ -4,7 +4,7 @@ import pathlib,sys
 from typing import Mapping,Sequence
 __all__=["lifecycle_signal","counterfactual_scenarios","demand_signal","loyalty_context","twin_events","capability_routing","probe"]
 _REPO_ROOT=pathlib.Path(__file__).resolve().parents[2]
-_PROJECTS=("mem20customerlifecycleenginez","mem20counterfactualmemorysimulatorz","mem20demandforecastandcapacitybrainz","mem20crossproductloyaltygraphz","mem20eventstreamsuperhighwayz","mem20capabilitymarketplacez")
+_PROJECTS=("mem20customerlifecycleenginez","mem20simz","mem20demandforecastandcapacitybrainz","mem20crossproductloyaltygraphz","mem20eventstreamsuperhighwayz","mem20capabilitymarketplacez")
 def _bootstrap():
     for name in reversed(_PROJECTS):
         p=str(_REPO_ROOT/name)
@@ -19,10 +19,10 @@ def lifecycle_signal(customer:Mapping)->dict:
     except Exception as exc: return {"ok":False,"subsystem":"mem20customerlifecycleenginez","error":f"{type(exc).__name__}: {exc}"}
 def counterfactual_scenarios(state:Mapping)->dict:
     try:
-        from mem20counterfactualmemorysimulatorz.domain import counterfactual,outcome_probability,compare
+        from mem20simz.domain import counterfactual,outcome_probability,compare
         orig={"state":dict(state),"base_rate":0.5}; cf=counterfactual(orig,{"change":{"engagement":0.8}}); diff=compare(orig,cf); prob=outcome_probability(orig,{"effect":0.2})
-        return {"ok":True,"subsystem":"mem20counterfactualmemorysimulatorz","diff_keys":len(diff),"outcome_probability":prob}
-    except Exception as exc: return {"ok":False,"subsystem":"mem20counterfactualmemorysimulatorz","error":f"{type(exc).__name__}: {exc}"}
+        return {"ok":True,"subsystem":"mem20simz","diff_keys":len(diff),"outcome_probability":prob}
+    except Exception as exc: return {"ok":False,"subsystem":"mem20simz","error":f"{type(exc).__name__}: {exc}"}
 def demand_signal(observations:Sequence[float])->dict:
     try:
         from mem20demandforecastandcapacitybrainz.domain import DemandForecastAndCapacityBrain

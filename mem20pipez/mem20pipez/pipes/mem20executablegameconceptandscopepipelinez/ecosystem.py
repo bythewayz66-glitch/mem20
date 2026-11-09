@@ -28,15 +28,15 @@ def studio_ops(concept: Mapping[str, Any] = None) -> Dict[str, Any]:
         return {"schedule": sched, "allocation": alloc, "studio_health": health}
     return _safe("mem20aiproductionstudiooperatingsystemz", run)
 
-# 3) mem20productledgrowthsimulatorz - product/growth feasibility
+# 3) mem20simz - product/growth feasibility
 def growth_feasibility(concept: Mapping[str, Any] = None) -> Dict[str, Any]:
     def run():
-        from mem20productledgrowthsimulatorz.domain import viral_coefficient, retention_curve, growth_score
+        from mem20simz.domain import viral_coefficient, retention_curve, growth_score
         v = viral_coefficient(2.0, 0.15)
         ret = retention_curve(1000, 0.1, periods=6)
         gs = growth_score({"viral_k": v if isinstance(v, (int, float)) else 0.3, "conversion": 0.2, "retention": 0.7})
         return {"viral_coefficient": v, "retention_curve": ret, "growth_score": gs}
-    return _safe("mem20productledgrowthsimulatorz", run)
+    return _safe("mem20simz", run)
 
 # 4) mem20autonomoussoftwarefoundryz - spec-to-tasks/effort/build
 def software_foundry(concept: Mapping[str, Any] = None) -> Dict[str, Any]:

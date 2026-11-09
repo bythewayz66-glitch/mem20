@@ -3,7 +3,7 @@
 First-class mem20 subsystem for synthetic evaluation arena (create_arena/evaluate/leaderboard/arena_health) with **6 peers**, SQLite WAL runtime, CLI, JSON HTTP API, served web cockpit, docs/app monitor, and real MCP tools. Core API preserved.
 
 ## Peers (6)
-`mem20collectivemodelintelligencez`, `mem20counterfactualmemorysimulatorz`, `mem20agentoutputcompilerz`, `mem20eventstreamsuperhighwayz`, `mem20capabilitymarketplacez`, `mem20faultcontainmentcellsz`.
+`mem20collectivemodelintelligencez`, `mem20simz`, `mem20agentoutputcompilerz`, `mem20eventstreamsuperhighwayz`, `mem20capabilitymarketplacez`, `mem20faultcontainmentcellsz`.
 
 ## CLI (runnable)
 ```bash

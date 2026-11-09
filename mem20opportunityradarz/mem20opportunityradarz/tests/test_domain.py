@@ -14,7 +14,7 @@ def test_estate_context_real_integrations(tmp_path):
     assert "inventory_keys" in ctx and isinstance(ctx["focus_score"], float) and ctx["sitemap_skips_cache"] is True
 
 def test_eco_sales(): r=_eco().sales_lab(); assert r["ok"] and r["subsystem"]=="mem20autonomoussaleslaboratoryz"
-def test_eco_plg(): r=_eco().plg_sim(); assert r["ok"] and r["subsystem"]=="mem20productledgrowthsimulatorz"
+def test_eco_plg(): r=_eco().plg_sim(); assert r["ok"] and r["subsystem"]=="mem20simz"
 def test_eco_causal(): r=_eco().causal_routing({"x":1},{"x":1}); assert r["ok"] and r["subsystem"]=="mem20causalroutingbrainz"
 def test_eco_revenue(): r=_eco().revenue_check(); assert r["ok"] and r["subsystem"]=="mem20revenueleakhunterz"
 def test_eco_events(): r=_eco().radar_events("r",{}); assert r["ok"] and r["subsystem"]=="mem20eventstreamsuperhighwayz"

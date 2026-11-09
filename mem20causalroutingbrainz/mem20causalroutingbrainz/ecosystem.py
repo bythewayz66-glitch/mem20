@@ -4,7 +4,7 @@ import pathlib,sys
 from typing import Mapping,Sequence
 __all__=["counterfactual_route","route_events","capability_target","failure_signal","health_signal","node_targets","probe"]
 _REPO_ROOT=pathlib.Path(__file__).resolve().parents[2]
-_PROJECTS=("mem20counterfactualmemorysimulatorz","mem20eventstreamsuperhighwayz","mem20capabilitymarketplacez","mem20faultcontainmentcellsz","mem20universalhealthnervoussystemz","mem20zerotouchnodeswarmz")
+_PROJECTS=("mem20simz","mem20eventstreamsuperhighwayz","mem20capabilitymarketplacez","mem20faultcontainmentcellsz","mem20universalhealthnervoussystemz","mem20zerotouchnodeswarmz")
 def _bootstrap():
     for name in reversed(_PROJECTS):
         p=str(_REPO_ROOT/name)
@@ -15,10 +15,10 @@ _bootstrap()
 
 def counterfactual_route(base:Mapping, action:Mapping)->dict:
     try:
-        from mem20counterfactualmemorysimulatorz.domain import compare, counterfactual, outcome_probability
+        from mem20simz.domain import compare, counterfactual, outcome_probability
         orig={"state":dict(base),"base_rate":0.5}; cf=counterfactual(orig,{"change":dict(action)}); comp=compare(orig,cf); prob=outcome_probability(orig,{"effect":float(action.get("effect",0.1))})
-        return {"ok":True,"subsystem":"mem20counterfactualmemorysimulatorz","diff_keys":len(comp) if isinstance(comp,dict) else 0,"outcome_probability":prob}
-    except Exception as exc: return {"ok":False,"subsystem":"mem20counterfactualmemorysimulatorz","error":f"{type(exc).__name__}: {exc}"}
+        return {"ok":True,"subsystem":"mem20simz","diff_keys":len(comp) if isinstance(comp,dict) else 0,"outcome_probability":prob}
+    except Exception as exc: return {"ok":False,"subsystem":"mem20simz","error":f"{type(exc).__name__}: {exc}"}
 
 def route_events(name:str,payload:Mapping)->dict:
     try:

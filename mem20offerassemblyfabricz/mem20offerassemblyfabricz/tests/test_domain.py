@@ -15,7 +15,7 @@ def test_estate_context_real_integrations(tmp_path):
 
 def test_eco_deal(): r=_eco().deal_desk(); assert r["ok"] and r["subsystem"]=="mem20autonomousdealdeskz"
 def test_eco_bundle(): r=_eco().bundle_engine(); assert r["ok"] and r["subsystem"]=="mem20servicebundlingenginez"
-def test_eco_plg(): r=_eco().plg_sim(); assert r["ok"] and r["subsystem"]=="mem20productledgrowthsimulatorz"
+def test_eco_plg(): r=_eco().plg_sim(); assert r["ok"] and r["subsystem"]=="mem20simz"
 def test_eco_revenue(): r=_eco().revenue_check(); assert r["ok"] and r["subsystem"]=="mem20revenueleakhunterz"
 def test_eco_events(): r=_eco().offer_events("o",{}); assert r["ok"] and r["subsystem"]=="mem20eventstreamsuperhighwayz"
 def test_eco_route(): r=_eco().offer_routing("k",["o"]); assert r["ok"] and r["subsystem"]=="mem20capabilitymarketplacez"

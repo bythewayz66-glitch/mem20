@@ -6,7 +6,7 @@
 ## 1st-class implementation
 - **Domain:** `create_swarm/add_agent/launch_campaign/cross_promote/swarm_health` (legacy) plus `analyze_swarm` producing brand isolation (distinct audiences/products), shared infrastructure, and portfolio/health.
 - **Runtime:** `analyze` wired to domain + 6 peer signals.
-- **Ecosystem (6 peers, unique set):** `mem20offerassemblyfabricz`, `mem20compoundingproductecosystemz`, `mem20businessmodelsimulatorz`, `mem20goaleconomyschedulerz`, `mem20eventstreamsuperhighwayz`, `mem20capabilitymarketplacez`.
+- **Ecosystem (6 peers, unique set):** `mem20offerassemblyfabricz`, `mem20compoundingproductecosystemz`, `mem20simz`, `mem20goaleconomyschedulerz`, `mem20eventstreamsuperhighwayz`, `mem20capabilitymarketplacez`.
 
 ## Runnable example (verified)
 ```bash

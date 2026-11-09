@@ -12,7 +12,7 @@ Autonomous deal desk: price deals, score terms, gate approvals, negotiate rounds
 - docs/app estate monitor + gateway SUBSYSTEMS entry.
 
 ## Peers (6)
-1. `mem20businessmodelsimulatorz` — economics (revenue/profit/margin/scenario).
+1. `mem20simz` — economics (revenue/profit/margin/scenario).
 2. `mem20demandforecastandcapacitybrainz` — demand forecast/capacity headroom.
 3. `mem20acquisitionandpartnershipscoutz` — strategic fit/ranking/synergy.
 4. `mem20antiexploitationrewardshieldz` — approval guardrail/corroboration.

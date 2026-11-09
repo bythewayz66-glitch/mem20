@@ -4,7 +4,7 @@ import pathlib,sys
 from typing import Mapping,Sequence
 __all__=["lifecycle_context","quest_motivation","challenge_engagement","motivation_scenarios","motivation_events","capability_routing","probe"]
 _REPO_ROOT=pathlib.Path(__file__).resolve().parents[2]
-_PROJECTS=("mem20customerlifecycleenginez","mem20dynamicquestrewardcomposerz","mem20communitychallengeenginez","mem20counterfactualmemorysimulatorz","mem20eventstreamsuperhighwayz","mem20capabilitymarketplacez")
+_PROJECTS=("mem20customerlifecycleenginez","mem20dynamicquestrewardcomposerz","mem20communitychallengeenginez","mem20simz","mem20eventstreamsuperhighwayz","mem20capabilitymarketplacez")
 def _bootstrap():
     for name in reversed(_PROJECTS):
         p=str(_REPO_ROOT/name)
@@ -29,10 +29,10 @@ def challenge_engagement()->dict:
     except Exception as exc: return {"ok":False,"subsystem":"mem20communitychallengeenginez","error":f"{type(exc).__name__}: {exc}"}
 def motivation_scenarios(motivation:float)->dict:
     try:
-        from mem20counterfactualmemorysimulatorz.domain import counterfactual,outcome_probability
+        from mem20simz.domain import counterfactual,outcome_probability
         orig={"state":{"motivation":motivation},"base_rate":0.5}; cf=counterfactual(orig,{"change":{"motivation":min(1.0,motivation+0.2)}}); prob=outcome_probability(orig,{"effect":0.1})
-        return {"ok":True,"subsystem":"mem20counterfactualmemorysimulatorz","cf_motivation":cf.get("state",{}).get("motivation"),"outcome_probability":prob}
-    except Exception as exc: return {"ok":False,"subsystem":"mem20counterfactualmemorysimulatorz","error":f"{type(exc).__name__}: {exc}"}
+        return {"ok":True,"subsystem":"mem20simz","cf_motivation":cf.get("state",{}).get("motivation"),"outcome_probability":prob}
+    except Exception as exc: return {"ok":False,"subsystem":"mem20simz","error":f"{type(exc).__name__}: {exc}"}
 def motivation_events(name:str,payload:Mapping)->dict:
     try:
         from mem20eventstreamsuperhighwayz.domain import create_stream,publish,throughput

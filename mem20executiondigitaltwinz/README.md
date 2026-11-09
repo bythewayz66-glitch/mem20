@@ -14,7 +14,7 @@ First-class `forecast` operation (CAPABILITY/Engine preserved) enriched with rea
 | `mem20personalworkflowtwinz` | `create_twin`,`observe`,`suggest_improvements`,`efficiency_score`,`twin_health` | workflow twin observation/improvement |
 | `mem20integrationdigitaltwinz` | `create_twin`,`sync`,`simulate`,`drift`,`health` | integration/system twin sync & simulation |
 | `mem20memorytimemachinez` | `rewind`,`replay`,`diff`,`timeline`,`checkpoint_series` | snapshot/time-machine replay & diff |
-| `mem20counterfactualmemorysimulatorz` | `branch`,`counterfactual`,`compare`,`outcome_probability` | counterfactual branches/outcomes |
+| `mem20simz` | `branch`,`counterfactual`,`compare`,`outcome_probability` | counterfactual branches/outcomes |
 | `mem20customerdigitaltwinlabz` | `build_twin`,`simulate_behavior`,`predict_churn`,`recommend_action` | behavior/churn/recommendation twin |
 | `mem20crossruntimeeventlatticez` | `emit`,`order_events`,`causal_link`,`lattice_merge`,`filter_by_type` | causal event lattice/ordering |
 

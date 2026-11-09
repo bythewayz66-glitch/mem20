@@ -10,7 +10,7 @@ def test_health(): h=_m().twin_health({"motivation":0.5,"history":[1,2]}); asser
 def test_eco_lifecycle(): r=_eco().lifecycle_context(); assert r["ok"] and r["subsystem"]=="mem20customerlifecycleenginez"
 def test_eco_quest(): r=_eco().quest_motivation(); assert r["ok"] and r["subsystem"]=="mem20dynamicquestrewardcomposerz"
 def test_eco_challenge(): r=_eco().challenge_engagement(); assert r["ok"] and r["subsystem"]=="mem20communitychallengeenginez"
-def test_eco_cf(): r=_eco().motivation_scenarios(0.5); assert r["ok"] and r["subsystem"]=="mem20counterfactualmemorysimulatorz"
+def test_eco_cf(): r=_eco().motivation_scenarios(0.5); assert r["ok"] and r["subsystem"]=="mem20simz"
 def test_eco_events(): r=_eco().motivation_events("m",{}); assert r["ok"] and r["subsystem"]=="mem20eventstreamsuperhighwayz"
 def test_eco_route(): r=_eco().capability_routing("k",["m"]); assert r["ok"] and r["subsystem"]=="mem20capabilitymarketplacez"
 def test_report_and_probe():

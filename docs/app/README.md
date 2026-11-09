@@ -173,7 +173,7 @@ PYTHONPATH=/opt/mem20 python3 -m mem20pipez serve --port 8796
 [`game-balance-simulator/index.html`](game-balance-simulator/index.html) — static monitor for RM-231 (#315). Reads `/spec`/`/metrics`/`/doctor` (`?api=`).
 
 ```bash
-PYTHONPATH=/opt/mem20 python3 -m mem20gamebalancesimulatorz serve --port 8795
+PYTHONPATH=/opt/mem20 python3 -m mem20simz serve --port 8795
 ```
 
 ## Ambient Computing Fabric monitor (`ambient-computing-fabric/`)
@@ -237,7 +237,7 @@ PYTHONPATH=/opt/mem20 python3 -m mem20executabledesignstresslabz serve --port 87
 [`ethical-incentive-simulator/index.html`](ethical-incentive-simulator/index.html) — static monitor for RM-203 (#307). Reads `/spec`/`/metrics`/`/doctor` (`?api=`).
 
 ```bash
-PYTHONPATH=/opt/mem20 python3 -m mem20ethicalincentivesimulatorz serve --port 8787
+PYTHONPATH=/opt/mem20 python3 -m mem20simz serve --port 8787
 ```
 
 ## Episodic Memory Graph monitor (`episodic-memory-graph/`)
@@ -329,12 +329,12 @@ served by the fleet process itself at its root URL.
 - [Autonomous Sales Laboratory monitor](autonomoussaleslaboratoryz/index.html) — `PYTHONPATH=/opt/mem20 /opt/mem20/.venv/bin/python -m mem20autonomoussaleslaboratoryz serve --port 8785`
 - [Autonomous Software Foundry monitor](autonomoussoftwarefoundryz/index.html) — `PYTHONPATH=/opt/mem20 /opt/mem20/.venv/bin/python -m mem20autonomoussoftwarefoundryz serve --port 8786`
 - [Autonomous Workcells monitor](autonomousworkcellsz/index.html) — `PYTHONPATH=/opt/mem20 /opt/mem20/.venv/bin/python -m mem20autonomousworkcellsz serve --port 8787`
-- [Business Model Simulator monitor](businessmodelsimulatorz/index.html) — `PYTHONPATH=/opt/mem20 /opt/mem20/.venv/bin/python -m mem20businessmodelsimulatorz serve --port 8788`
+- [Business Model Simulator monitor](businessmodelsimulatorz/index.html) — `PYTHONPATH=/opt/mem20 /opt/mem20/.venv/bin/python -m mem20simz serve --port 8788`
 - [Causal Routing Brain monitor](causalroutingbrainz/index.html) — `PYTHONPATH=/opt/mem20 /opt/mem20/.venv/bin/python -m mem20causalroutingbrainz serve --port 8789`
 - [Collective Model Intelligence monitor](collectivemodelintelligencez/index.html) — `PYTHONPATH=/opt/mem20 /opt/mem20/.venv/bin/python -m mem20collectivemodelintelligencez serve --port 8790`
 - [Community Challenge Engine monitor](communitychallengeenginez/index.html) — `PYTHONPATH=/opt/mem20 /opt/mem20/.venv/bin/python -m mem20communitychallengeenginez serve --port 8791`
 - [Compounding Product Ecosystem monitor](compoundingproductecosystemz/index.html) — `PYTHONPATH=/opt/mem20 /opt/mem20/.venv/bin/python -m mem20compoundingproductecosystemz serve --port 8792`
-- [Counterfactual Memory Simulator monitor](counterfactualmemorysimulatorz/index.html) — `PYTHONPATH=/opt/mem20 /opt/mem20/.venv/bin/python -m mem20counterfactualmemorysimulatorz serve --port 8794`
+- [Counterfactual Memory Simulator monitor](counterfactualmemorysimulatorz/index.html) — `PYTHONPATH=/opt/mem20 /opt/mem20/.venv/bin/python -m mem20simz serve --port 8794`
 - [Cross-Platform Microkernel monitor](crossplatformmicrokernelz/index.html) — `PYTHONPATH=/opt/mem20 /opt/mem20/.venv/bin/python -m mem20crossplatformmicrokernelz serve --port 8795`
 - [Cross-Product Loyalty Graph monitor](crossproductloyaltygraphz/index.html) — `PYTHONPATH=/opt/mem20 /opt/mem20/.venv/bin/python -m mem20crossproductloyaltygraphz serve --port 8796`
 - [Customer Digital Twin Lab monitor](customerdigitaltwinlabz/index.html) — `PYTHONPATH=/opt/mem20 /opt/mem20/.venv/bin/python -m mem20customerdigitaltwinlabz serve --port 8797`
@@ -348,7 +348,7 @@ served by the fleet process itself at its root URL.
 - [Player Motivation Twin monitor](playermotivationtwinz/index.html) — `PYTHONPATH=/opt/mem20 /opt/mem20/.venv/bin/python -m mem20playermotivationtwinz serve --port 8805`
 - [Predictive Recall Engine monitor](predictiverecallenginez/index.html) — `PYTHONPATH=/opt/mem20 /opt/mem20/.venv/bin/python -m mem20predictiverecallenginez serve --port 8806`
 - [Production Planning and Task Orchestration Pipeline monitor](productionplanningandtaskorchestrationpipelinez/index.html) — `PYTHONPATH=/opt/mem20 /opt/mem20/.venv/bin/python -m mem20pipez serve --port 8807`
-- [Product-Led Growth Simulator monitor](productledgrowthsimulatorz/index.html) — `PYTHONPATH=/opt/mem20 /opt/mem20/.venv/bin/python -m mem20productledgrowthsimulatorz serve --port 8808`
+- [Product-Led Growth Simulator monitor](productledgrowthsimulatorz/index.html) — `PYTHONPATH=/opt/mem20 /opt/mem20/.venv/bin/python -m mem20simz serve --port 8808`
 - [Protocol Auto-Discovery Engine monitor](protocolautodiscoveryenginez/index.html) — `PYTHONPATH=/opt/mem20 /opt/mem20/.venv/bin/python -m mem20protocolautodiscoveryenginez serve --port 8809`
 - [Reality-to-Software Compiler monitor](realitytosoftwarecompilerz/index.html) — `PYTHONPATH=/opt/mem20 /opt/mem20/.venv/bin/python -m mem20realitytosoftwarecompilerz serve --port 8810`
 - [Real-Time Business Twin monitor](realtimebusinesstwinz/index.html) — `PYTHONPATH=/opt/mem20 /opt/mem20/.venv/bin/python -m mem20realtimebusinesstwinz serve --port 8811`
@@ -389,7 +389,7 @@ served by the fleet process itself at its root URL.
 - [Offer Assembly Fabric monitor](offerassemblyfabricz/index.html) — `PYTHONPATH=/opt/mem20 /opt/mem20/.venv/bin/python -m mem20offerassemblyfabricz serve --port 8847`
 - [Offer Genome Engine monitor](offergenomeenginez/index.html) — `PYTHONPATH=/opt/mem20 /opt/mem20/.venv/bin/python -m mem20offergenomeenginez serve --port 8848`
 - [Opportunity Radar monitor](opportunityradarz/index.html) — `PYTHONPATH=/opt/mem20 /opt/mem20/.venv/bin/python -m mem20opportunityradarz serve --port 8849`
-- [Outcome Simulation Lab monitor](outcomesimulationlabz/index.html) — `PYTHONPATH=/opt/mem20 /opt/mem20/.venv/bin/python -m mem20outcomesimulationlabz serve --port 8850`
+- [Outcome Simulation Lab monitor](outcomesimulationlabz/index.html) — `PYTHONPATH=/opt/mem20 /opt/mem20/.venv/bin/python -m mem20simz serve --port 8850`
 - [Personal Automation Canvas monitor](personalautomationcanvasz/index.html) — `PYTHONPATH=/opt/mem20 /opt/mem20/.venv/bin/python -m mem20personalautomationcanvasz serve --port 8851`
 - [Personal Cognitive Search monitor](personalcognitivesearchz/index.html) — `PYTHONPATH=/opt/mem20 /opt/mem20/.venv/bin/python -m mem20personalcognitivesearchz serve --port 8852`
 - [Personal Model Evolution monitor](personalmodelevolutionz/index.html) — `PYTHONPATH=/opt/mem20 /opt/mem20/.venv/bin/python -m mem20personalmodelevolutionz serve --port 8853`

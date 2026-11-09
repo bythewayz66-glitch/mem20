@@ -12,7 +12,7 @@ def test_ecosystem_artifact_recovery(): r=_eco().artifact_recovery("app"); asser
 def test_ecosystem_build_events(): r=_eco().build_events("x",{"a":1}); assert r["ok"] and r["subsystem"]=="mem20eventstreamsuperhighwayz"
 def test_ecosystem_deploy_containment(): r=_eco().deploy_containment("deploy"); assert r["ok"] and r["subsystem"]=="mem20faultcontainmentcellsz"
 def test_ecosystem_spec_quality(): r=_eco().spec_quality("build"); assert r["ok"] and r["subsystem"]=="mem20loreragcontentgeneratorz"
-def test_ecosystem_effort_economics(): r=_eco().effort_economics(6); assert r["ok"] and r["subsystem"]=="mem20businessmodelsimulatorz"
+def test_ecosystem_effort_economics(): r=_eco().effort_economics(6); assert r["ok"] and r["subsystem"]=="mem20simz"
 def test_foundry_report_and_probe():
     m=_m(); rep=m.foundry_report(); assert rep["quality"]==1.0 and len(rep["peers"])==6
     for k,v in rep["peers"].items(): assert v["ok"] is True,(k,v.get("error"))

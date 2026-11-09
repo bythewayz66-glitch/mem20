@@ -4,7 +4,7 @@ import pathlib,sys
 from typing import Mapping,Sequence
 __all__=["offer_fabric","deal_desk","plg_sim","counterfactual","genome_events","genome_routing","probe"]
 _REPO_ROOT=pathlib.Path(__file__).resolve().parents[2]
-_PROJECTS=("mem20offerassemblyfabricz","mem20autonomousdealdeskz","mem20productledgrowthsimulatorz","mem20counterfactualmemorysimulatorz","mem20eventstreamsuperhighwayz","mem20capabilitymarketplacez")
+_PROJECTS=("mem20offerassemblyfabricz","mem20autonomousdealdeskz","mem20simz","mem20simz","mem20eventstreamsuperhighwayz","mem20capabilitymarketplacez")
 def _bootstrap():
     for name in reversed(_PROJECTS):
         p=str(_REPO_ROOT/name)
@@ -24,14 +24,14 @@ def deal_desk()->dict:
     except Exception as exc: return {"ok":False,"subsystem":"mem20autonomousdealdeskz","error":f"{type(exc).__name__}: {exc}"}
 def plg_sim()->dict:
     try:
-        from mem20productledgrowthsimulatorz.domain import probe as p
-        r=p(); return {"ok":bool(r.get("ok",True)),"subsystem":"mem20productledgrowthsimulatorz","probe":r is not None}
-    except Exception as exc: return {"ok":False,"subsystem":"mem20productledgrowthsimulatorz","error":f"{type(exc).__name__}: {exc}"}
+        from mem20simz.domain import probe as p
+        r=p(); return {"ok":bool(r.get("ok",True)),"subsystem":"mem20simz","probe":r is not None}
+    except Exception as exc: return {"ok":False,"subsystem":"mem20simz","error":f"{type(exc).__name__}: {exc}"}
 def counterfactual()->dict:
     try:
-        from mem20counterfactualmemorysimulatorz.domain import counterfactual as cf,compare
-        o={"price":10}; c=cf(o,{"change":{"price":12}}); return {"ok":True,"subsystem":"mem20counterfactualmemorysimulatorz","diff":len(compare(o,c))}
-    except Exception as exc: return {"ok":False,"subsystem":"mem20counterfactualmemorysimulatorz","error":f"{type(exc).__name__}: {exc}"}
+        from mem20simz.domain import counterfactual as cf,compare
+        o={"price":10}; c=cf(o,{"change":{"price":12}}); return {"ok":True,"subsystem":"mem20simz","diff":len(compare(o,c))}
+    except Exception as exc: return {"ok":False,"subsystem":"mem20simz","error":f"{type(exc).__name__}: {exc}"}
 def genome_events(name:str,payload:Mapping)->dict:
     try:
         from mem20eventstreamsuperhighwayz.domain import create_stream,publish,throughput

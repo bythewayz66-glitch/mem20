@@ -10,14 +10,14 @@ from __future__ import annotations
 __version__ = "0.1.0"
 
 MEMBERS = (
-    "mem20audiencereactionsimulatorz",
-    "mem20businessmodelsimulatorz",
-    "mem20counterfactualmemorysimulatorz",
-    "mem20ethicalincentivesimulatorz",
-    "mem20gamebalancesimulatorz",
-    "mem20lifescenariosimulatorz",
-    "mem20productledgrowthsimulatorz",
-    "mem20useracceptancesimulatorz",
+    "mem20simz",
+    "mem20simz",
+    "mem20simz",
+    "mem20simz",
+    "mem20simz",
+    "mem20simz",
+    "mem20simz",
+    "mem20simz",
 )
 
 __all__ = ["__version__", "MEMBERS"]

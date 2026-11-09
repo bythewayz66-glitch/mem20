@@ -98,10 +98,10 @@ A machine-readable map of this monorepo so an agent can find the right subsystem
 | `mem20dynamicnarrativeenginez` | 333 | 0 | - | RM-229 — Dynamic Narrative Engine |
 | `mem20dynamicquestrewardcomposerz` | 333 | 0 | - | RM-206 — Dynamic Quest Reward Composer |
 | `mem20edgetocloudintelligencecontinuumz` | 333 | 0 | - | RM-214 — Edge-to-Cloud Intelligence Continuum |
-| `mem20ethicalincentivesimulatorz` | 333 | 0 | - | RM-203 — Ethical Incentive Simulator |
+| `mem20simz` | 333 | 0 | - | RM-203 — Ethical Incentive Simulator |
 | `mem20executabledesignstresslabz` | 333 | 0 | - | RM-221 — Executable Design Stress Lab |
 | `mem20freestackambientcomputingfabricz` | 333 | 0 | - | RM-211 — FreeStack Ambient Computing Fabric |
-| `mem20gamebalancesimulatorz` | 333 | 0 | - | RM-231 — Game Balance Simulator |
+| `mem20simz` | 333 | 0 | - | RM-231 — Game Balance Simulator |
 | `mem20pipez` | 333 | 0 | - | RM-245 — Gameplay Systems, Data and Balance Pipeline |
 | `mem20gameproductioncontrolcenterz` | 333 | 0 | - | RM-233 — Game Production Control Center |
 | `mem20globalcapabilitymarketplacez` | 333 | 0 | - | RM-218 — Global Capability Marketplace |
@@ -136,11 +136,11 @@ A machine-readable map of this monorepo so an agent can find the right subsystem
 | `mem20autonomousrecoverydirectorz` | 263 | 0 | - | RM-060 — Autonomous Recovery Director |
 | `mem20autonomoussaleslaboratoryz` | 263 | 0 | - | RM-017 — Autonomous Sales Laboratory |
 | `mem20autonomousworkcellsz` | 263 | 0 | - | RM-034 — Autonomous Work Cells |
-| `mem20businessmodelsimulatorz` | 263 | 0 | - | RM-090 — Business Model Simulator |
+| `mem20simz` | 263 | 0 | - | RM-090 — Business Model Simulator |
 | `mem20causalroutingbrainz` | 263 | 0 | - | RM-054 — Causal Routing Brain |
 | `mem20compoundingproductecosystemz` | 263 | 0 | - | RM-020 — Compounding Product Ecosystem |
 | `mem20contextcompressionforgez` | 263 | 0 | - | RM-025 — Context Compression Forge |
-| `mem20counterfactualmemorysimulatorz` | 263 | 0 | - | RM-029 — Counterfactual Memory Simulator |
+| `mem20simz` | 263 | 0 | - | RM-029 — Counterfactual Memory Simulator |
 | `mem20crossplatformmicrokernelz` | 263 | 0 | - | RM-100 — Cross-Platform Microkernel |
 | `mem20crossruntimeeventlatticez` | 263 | 0 | - | RM-005 — Cross-Runtime Event Lattice |
 | `mem20customerdigitaltwinlabz` | 263 | 0 | - | RM-014 — Customer Digital Twin Lab |
@@ -178,14 +178,14 @@ A machine-readable map of this monorepo so an agent can find the right subsystem
 | `mem20offerassemblyfabricz` | 263 | 0 | - | RM-084 — Offer Assembly Fabric |
 | `mem20offergenomeenginez` | 263 | 0 | - | RM-013 — Offer Genome Engine |
 | `mem20opportunityradarz` | 263 | 0 | - | RM-011 — Opportunity Radar |
-| `mem20outcomesimulationlabz` | 263 | 0 | - | RM-038 — Outcome Simulation Lab |
+| `mem20simz` | 263 | 0 | - | RM-038 — Outcome Simulation Lab |
 | `mem20personalautomationcanvasz` | 263 | 0 | - | RM-008 — Personal Automation Canvas |
 | `mem20personalcognitivesearchz` | 263 | 0 | - | RM-030 — Personal Cognitive Search |
 | `mem20personalmodelevolutionz` | 263 | 0 | - | RM-069 — Personal Model Evolution |
 | `mem20personalworkflowtwinz` | 263 | 0 | - | RM-040 — Personal Workflow Twin |
 | `mem20planetarybatchfabricz` | 263 | 0 | - | RM-050 — Planetary Batch Fabric |
 | `mem20predictiverecallenginez` | 263 | 0 | - | RM-022 — Predictive Recall Engine |
-| `mem20productledgrowthsimulatorz` | 263 | 0 | - | RM-018 — Product-Led Growth Simulator |
+| `mem20simz` | 263 | 0 | - | RM-018 — Product-Led Growth Simulator |
 | `mem20protocolautodiscoveryenginez` | 263 | 0 | - | RM-072 — Protocol Autodiscovery Engine |
 | `mem20realtimebusinesstwinz` | 263 | 0 | - | RM-081 — Real-Time Business Twin |
 | `mem20realtimeeventautopilotz` | 263 | 0 | - | RM-058 — Real-Time Event Autopilot |
@@ -242,10 +242,10 @@ A machine-readable map of this monorepo so an agent can find the right subsystem
 | `mem20alternativedatabaseplaygroundz` | 9 | 0 | `mem20alternativedatabaseplaygroundz` | Benchmark graph, vector, time-series, columnar, and embedded databases against real workloads |
 | `mem20ambientdevicecompanionz` | 9 | 0 | `mem20ambientdevicecompanionz` | Move a live session between phone, desktop, headset, vehicle, and home devices |
 | `mem20ambientteamradioz` | 9 | 0 | `mem20ambientteamradioz` | Create lightweight always-available audio presence with intelligent interruption control |
-| `mem20architecturesimulationsandboxz` | 9 | 0 | `mem20architecturesimulationsandboxz` | Execute proposed service boundaries and traffic patterns against synthetic load |
+| `mem20simz` | 9 | 0 | `mem20simz` | Execute proposed service boundaries and traffic patterns against synthetic load |
 | `mem20assetremixstudioz` | 9 | 0 | `mem20assetremixstudioz` | Decompose approved assets into reusable style, shape, motion, and material primitives |
 | `mem20asynccollaborationcapsulesz` | 9 | 0 | `mem20asynccollaborationcapsulesz` | Package context, media, decisions, and executable actions into compact asynchronous handoffs |
-| `mem20audiencereactionsimulatorz` | 9 | 0 | `mem20audiencereactionsimulatorz` | Test creative variants against modeled audience segments before publishing |
+| `mem20simz` | 9 | 0 | `mem20simz` | Test creative variants against modeled audience segments before publishing |
 | `mem20autogeneratedprototypepathz` | 9 | 0 | `mem20autogeneratedprototypepathz` | Find the minimum executable slice that proves the riskiest assumption |
 | `mem20autonomouscodesurgeonz` | 9 | 0 | `mem20autonomouscodesurgeonz` | Diagnose and repair narrowly scoped defects with executable tests and reversible patches |
 | `mem20autonomousreviewswarmz` | 9 | 0 | `mem20autonomousreviewswarmz` | Run specialized reviewers against functionality, usability, performance, and edge cases |
@@ -277,7 +277,7 @@ A machine-readable map of this monorepo so an agent can find the right subsystem
 | `mem20humansatisfactiontwinz` | 9 | 0 | `mem20humansatisfactiontwinz` | Model satisfaction, trust, control, and cognitive load alongside technical metrics |
 | `mem20intenttoagentmatchmakerz` | 9 | 0 | `mem20intenttoagentmatchmakerz` | Match user requests to capable agents and tool combinations |
 | `mem20interactivecampaignbuilderz` | 9 | 0 | `mem20interactivecampaignbuilderz` | Create campaigns whose media and experiences react to audience behavior |
-| `mem20lifescenariosimulatorz` | 9 | 0 | `mem20lifescenariosimulatorz` | Model personal choices, schedules, budgets, tradeoffs, and likely downstream effects |
+| `mem20simz` | 9 | 0 | `mem20simz` | Model personal choices, schedules, budgets, tradeoffs, and likely downstream effects |
 | `mem20livecodeknowledgegraphz` | 9 | 0 | `mem20livecodeknowledgegraphz` | Maintain a continuously updated graph of symbols, calls, data ownership, and runtime behavior |
 | `mem20liveschemamorphingenginez` | 9 | 0 | `mem20liveschemamorphingenginez` | Evolve data structures while applications continue running |
 | `mem20locationawareworkrouterz` | 9 | 0 | `mem20locationawareworkrouterz` | Place physical and digital tasks according to geography, proximity, and local capability |
@@ -292,7 +292,7 @@ A machine-readable map of this monorepo so an agent can find the right subsystem
 | `mem20musicvisualsynchronizerz` | 9 | 0 | `mem20musicvisualsynchronizerz` | Generate and align motion, lighting, UI, and effects to live audio structure |
 | `mem20neuromorphiceventlabz` | 9 | 0 | `mem20neuromorphiceventlabz` | Prototype sparse event-driven processing for sensors, agents, and low-power devices |
 | `mem20offlineappdeliveryz` | 9 | 0 | `mem20offlineappdeliveryz` | Distribute and update applications through local peers, removable media, or delayed sync |
-| `mem20operationsreplaysimulatorz` | 9 | 0 | `mem20operationsreplaysimulatorz` | Replay past operational state and test alternate routing choices |
+| `mem20simz` | 9 | 0 | `mem20simz` | Replay past operational state and test alternate routing choices |
 | `mem20outcomeverificationruntimez` | 9 | 0 | `mem20outcomeverificationruntimez` | Run real functional scenarios and verify the intended user result occurred |
 | `mem20parallelworkstreamcomposerz` | 9 | 0 | `mem20parallelworkstreamcomposerz` | Split features into independent streams with precise merge points |
 | `mem20peertopeerappruntimez` | 9 | 0 | `mem20peertopeerappruntimez` | Build applications that synchronize and operate directly between trusted peers |
@@ -309,7 +309,7 @@ A machine-readable map of this monorepo so an agent can find the right subsystem
 | `mem20relationshipcontextgraphz` | 9 | 0 | `mem20relationshipcontextgraphz` | Track shared projects, commitments, preferences, and interaction history across contacts |
 | `mem20releasereadinesspredictorz` | 9 | 0 | `mem20releasereadinesspredictorz` | Forecast whether a candidate build can survive expected load, usage, and failure conditions |
 | `mem20remotedevicerepairz` | 9 | 0 | `mem20remotedevicerepairz` | Diagnose configuration, storage, network, and application faults and apply bounded fixes |
-| `mem20roadmapsimulationtwinz` | 9 | 0 | `mem20roadmapsimulationtwinz` | Simulate schedule, staffing, failures, and changing assumptions across a roadmap |
+| `mem20simz` | 9 | 0 | `mem20simz` | Simulate schedule, staffing, failures, and changing assumptions across a roadmap |
 | `mem20runtimebugpredictionenginez` | 9 | 0 | `mem20runtimebugpredictionenginez` | Predict likely failures from code paths, telemetry, and recent changes |
 | `mem20safepatchsynthesisz` | 9 | 0 | `mem20safepatchsynthesisz` | Generate minimal patches constrained by tests, interfaces, and blast-radius limits |
 | `mem20scopemutationsandboxz` | 9 | 0 | `mem20scopemutationsandboxz` | Apply proposed additions or cuts and calculate downstream impact immediately |
@@ -323,7 +323,7 @@ A machine-readable map of this monorepo so an agent can find the right subsystem
 | `mem20syntheticdataforgez` | 9 | 0 | `mem20syntheticdataforgez` | Generate realistic non-production datasets that preserve useful distributions and edge cases |
 | `mem20universalcompaniondevicesdkz` | 9 | 0 | `mem20universalcompaniondevicesdkz` | Expose devices and sensors through a stable cross-platform capability API |
 | `mem20universaldatatranslatorz` | 9 | 0 | `mem20universaldatatranslatorz` | Map records, events, documents, and objects between incompatible systems |
-| `mem20useracceptancesimulatorz` | 9 | 0 | `mem20useracceptancesimulatorz` | Model how different users attempt tasks and where they fail or abandon |
+| `mem20simz` | 9 | 0 | `mem20simz` | Model how different users attempt tasks and where they fail or abandon |
 | `mem20voicetoactionswitchboardz` | 9 | 0 | `mem20voicetoactionswitchboardz` | Convert spoken requests into routed tasks, calls, device actions, and agent missions |
 | `mem20webassemblycomponentlabz` | 9 | 0 | `mem20webassemblycomponentlabz` | Run language-neutral components with explicit interfaces and strong isolation |
 | `mem20webgpucomputestudioz` | 9 | 0 | `mem20webgpucomputestudioz` | Use browser-accessible GPUs for local visualization, simulation, and AI compute |
@@ -386,11 +386,11 @@ mem20alternativedatabaseplaygroundz = mem20alternativedatabaseplaygroundz.core:c
 mem20ambientdevicecompanionz = mem20ambientdevicecompanionz.core:cli
 mem20ambientteamradioz = mem20ambientteamradioz.core:cli
 mem20-api-health = mem20api.cli:main
-mem20architecturesimulationsandboxz = mem20architecturesimulationsandboxz.core:cli
+mem20simz = mem20simz.core:cli
 mem20assetremixstudioz = mem20assetremixstudioz.core:cli
 mem20assistz = mem20assistz.cli:main
 mem20asynccollaborationcapsulesz = mem20asynccollaborationcapsulesz.core:cli
-mem20audiencereactionsimulatorz = mem20audiencereactionsimulatorz.core:cli
+mem20simz = mem20simz.core:cli
 mem20autogeneratedprototypepathz = mem20autogeneratedprototypepathz.core:cli
 mem20autonomouscodesurgeonz = mem20autonomouscodesurgeonz.core:cli
 mem20autonomousreviewswarmz = mem20autonomousreviewswarmz.core:cli
@@ -458,7 +458,7 @@ kiln = mem20kilnz.cli:main
 mem20kilnz = mem20kilnz.cli:main
 mem20labz = mem20labz.cli:main
 fs-lie = mem20liez.cli:main
-mem20lifescenariosimulatorz = mem20lifescenariosimulatorz.core:cli
+mem20simz = mem20simz.core:cli
 mem20livecodeknowledgegraphz = mem20livecodeknowledgegraphz.core:cli
 mem20liveschemamorphingenginez = mem20liveschemamorphingenginez.core:cli
 mem20locationawareworkrouterz = mem20locationawareworkrouterz.core:cli
@@ -480,7 +480,7 @@ mem20ocaskz = mem20ocaskz.cli:main
 mem20officez = mem20officez.cli:main
 mem20offlineappdeliveryz = mem20offlineappdeliveryz.core:cli
 mem20offlineresiliencemeshz = mem20offlineresiliencemeshz.runtime:main
-mem20operationsreplaysimulatorz = mem20operationsreplaysimulatorz.core:cli
+mem20simz = mem20simz.core:cli
 fs = mem20ops.fleet:main
 fs-ops = mem20ops.cli:main
 mem20orcaz = mem20orcaz.cli:main
@@ -503,7 +503,7 @@ mem20pipez = mem20pipez.core:cli
 mem20relationshipcontextgraphz = mem20relationshipcontextgraphz.core:cli
 mem20releasereadinesspredictorz = mem20releasereadinesspredictorz.core:cli
 mem20remotedevicerepairz = mem20remotedevicerepairz.core:cli
-mem20roadmapsimulationtwinz = mem20roadmapsimulationtwinz.core:cli
+mem20simz = mem20simz.core:cli
 mem20rpgz = mem20rpgz.cli:main
 mem20runtimebugpredictionenginez = mem20runtimebugpredictionenginez.core:cli
 mem20safepatchsynthesisz = mem20safepatchsynthesisz.core:cli
@@ -532,7 +532,7 @@ mem20unikitz = mem20unikitz.cli:main
 mem20unitiz = mem20unitiz.cli:main
 mem20universalcompaniondevicesdkz = mem20universalcompaniondevicesdkz.core:cli
 mem20universaldatatranslatorz = mem20universaldatatranslatorz.core:cli
-mem20useracceptancesimulatorz = mem20useracceptancesimulatorz.core:cli
+mem20simz = mem20simz.core:cli
 mem20verify = mem20verify.cli:main
 mem20voicetoactionswitchboardz = mem20voicetoactionswitchboardz.core:cli
 mem20wasmz = mem20wasmz.core:cli

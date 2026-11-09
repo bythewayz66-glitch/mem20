@@ -4,7 +4,7 @@ import pathlib,sys
 from typing import Mapping,Sequence
 __all__=["business_scenarios","kpi_forecast","kpi_events","health_alerts","counterfactual_scenarios","capability_routing","probe"]
 _REPO_ROOT=pathlib.Path(__file__).resolve().parents[2]
-_PROJECTS=("mem20businessmodelsimulatorz","mem20demandforecastandcapacitybrainz","mem20eventstreamsuperhighwayz","mem20universalhealthnervoussystemz","mem20counterfactualmemorysimulatorz","mem20capabilitymarketplacez")
+_PROJECTS=("mem20simz","mem20demandforecastandcapacitybrainz","mem20eventstreamsuperhighwayz","mem20universalhealthnervoussystemz","mem20simz","mem20capabilitymarketplacez")
 def _bootstrap():
     for name in reversed(_PROJECTS):
         p=str(_REPO_ROOT/name)
@@ -14,9 +14,9 @@ def _bootstrap():
 _bootstrap()
 def business_scenarios(revenue:float)->dict:
     try:
-        from mem20businessmodelsimulatorz.domain import margin,profit
-        c=revenue*0.6; return {"ok":True,"subsystem":"mem20businessmodelsimulatorz","profit":profit(revenue,c),"margin":margin(revenue,c)}
-    except Exception as exc: return {"ok":False,"subsystem":"mem20businessmodelsimulatorz","error":f"{type(exc).__name__}: {exc}"}
+        from mem20simz.domain import margin,profit
+        c=revenue*0.6; return {"ok":True,"subsystem":"mem20simz","profit":profit(revenue,c),"margin":margin(revenue,c)}
+    except Exception as exc: return {"ok":False,"subsystem":"mem20simz","error":f"{type(exc).__name__}: {exc}"}
 def kpi_forecast(obs:Sequence[float])->dict:
     try:
         from mem20demandforecastandcapacitybrainz.domain import DemandForecastAndCapacityBrain
@@ -38,10 +38,10 @@ def health_alerts(components:Sequence[str])->dict:
     except Exception as exc: return {"ok":False,"subsystem":"mem20universalhealthnervoussystemz","error":f"{type(exc).__name__}: {exc}"}
 def counterfactual_scenarios(state:Mapping)->dict:
     try:
-        from mem20counterfactualmemorysimulatorz.domain import counterfactual,compare
+        from mem20simz.domain import counterfactual,compare
         orig={"state":dict(state) or {"rev":100}}; cf=counterfactual(orig,{"change":{"rev":120}}); diff=compare(orig,cf)
-        return {"ok":True,"subsystem":"mem20counterfactualmemorysimulatorz","diff_keys":len(diff)}
-    except Exception as exc: return {"ok":False,"subsystem":"mem20counterfactualmemorysimulatorz","error":f"{type(exc).__name__}: {exc}"}
+        return {"ok":True,"subsystem":"mem20simz","diff_keys":len(diff)}
+    except Exception as exc: return {"ok":False,"subsystem":"mem20simz","error":f"{type(exc).__name__}: {exc}"}
 def capability_routing(key:str,caps:Sequence[str])->dict:
     try:
         from mem20capabilitymarketplacez.domain import CapabilityMarketplace

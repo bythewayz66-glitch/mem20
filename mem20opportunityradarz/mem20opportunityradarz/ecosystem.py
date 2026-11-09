@@ -4,7 +4,7 @@ import pathlib,sys
 from typing import Mapping,Sequence
 __all__=["sales_lab","plg_sim","causal_routing","revenue_check","radar_events","radar_routing","probe"]
 _REPO_ROOT=pathlib.Path(__file__).resolve().parents[2]
-_PROJECTS=("mem20autonomoussaleslaboratoryz","mem20productledgrowthsimulatorz","mem20causalroutingbrainz","mem20revenueleakhunterz","mem20eventstreamsuperhighwayz","mem20capabilitymarketplacez")
+_PROJECTS=("mem20autonomoussaleslaboratoryz","mem20simz","mem20causalroutingbrainz","mem20revenueleakhunterz","mem20eventstreamsuperhighwayz","mem20capabilitymarketplacez")
 def _bootstrap():
     for name in reversed(_PROJECTS):
         p=str(_REPO_ROOT/name)
@@ -19,9 +19,9 @@ def sales_lab()->dict:
     except Exception as exc: return {"ok":False,"subsystem":"mem20autonomoussaleslaboratoryz","error":f"{type(exc).__name__}: {exc}"}
 def plg_sim()->dict:
     try:
-        from mem20productledgrowthsimulatorz.domain import probe as p
-        r=p(); return {"ok":bool(r.get("ok",True)),"subsystem":"mem20productledgrowthsimulatorz","probe":r is not None}
-    except Exception as exc: return {"ok":False,"subsystem":"mem20productledgrowthsimulatorz","error":f"{type(exc).__name__}: {exc}"}
+        from mem20simz.domain import probe as p
+        r=p(); return {"ok":bool(r.get("ok",True)),"subsystem":"mem20simz","probe":r is not None}
+    except Exception as exc: return {"ok":False,"subsystem":"mem20simz","error":f"{type(exc).__name__}: {exc}"}
 def causal_routing(features:Mapping,weights:Mapping)->dict:
     try:
         from mem20causalroutingbrainz.domain import route_by_cause

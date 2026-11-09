@@ -11,7 +11,7 @@ First-class mem20 subsystem for micro-SaaS founding: score ideas, generate MVP s
 ## Peers (6, subsystem-specific)
 | peer | real functions | role |
 |---|---|---|
-| `mem20businessmodelsimulatorz` | `revenue,profit,margin,scenario_sim` | economics/margin/scenarios |
+| `mem20simz` | `revenue,profit,margin,scenario_sim` | economics/margin/scenarios |
 | `mem20demandforecastandcapacitybrainz` | `DemandForecastAndCapacityBrain` | demand forecast signal |
 | `mem20aiproductionstudiooperatingsystemz` | `schedule_projects,resource_allocation,studio_health` | MVP build scheduling |
 | `mem20autonomoussaleslaboratoryz` | `pipeline_value,conversion_probability,segment_leads` | launch pipeline/leads |

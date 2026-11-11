@@ -1,1 +1,139 @@
-__SERIES_HUB__
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>mem20 Series — The Comicbook Artist &amp; Mem20-naration's Chronicles</title>
+<meta name="description" content="The two creative properties of mem20: The Comicbook Artist, a drawn series about memory that can be proven, and Mem20-naration's Chronicles, a daily origin-tagged record of what the system actually did.">
+<meta property="og:title" content="mem20 Series — two creative properties, one memory">
+<meta property="og:description" content="The Comicbook Artist (drawn series) and Mem20-naration's Chronicles (daily installments). Public home for both.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://mem20.com/series/">
+<link rel="canonical" href="https://mem20.com/series/">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="series.css">
+</head>
+<body>
+
+<nav>
+  <div class="wrap nav-in">
+    <a class="logo" href="https://mem20.com/"><span class="logo-mark">m</span> mem20</a>
+    <div class="nav-links">
+      <a href="https://mem20.com/">Product</a>
+      <a href="./" class="on">Series</a>
+      <a href="comic/">The Comicbook Artist</a>
+      <a href="chronicles/">Chronicles</a>
+    </div>
+    <a class="btn btn-primary btn-sm" href="https://github.com/bythewayz66-glitch/mem20" target="_blank" rel="noopener">GitHub</a>
+  </div>
+</nav>
+
+<header class="hub-hero">
+  <div class="wrap">
+    <p class="eyebrow">mem20 · creative properties</p>
+    <h1>Two series about <span class="hl">memory you can prove.</span></h1>
+    <p class="lede">
+      mem20 ships one idea: grounded facts and simulated hypotheses never mix, and every retrieval
+      reports its own drift. These are the two creative properties that carry that idea to people who
+      will never read a benchmark table — one drawn, one written, both published here.
+    </p>
+
+    <div class="series-cards">
+      <a class="series-card sc-comic" href="comic/">
+        <div class="art art-comic"><span class="art-label">THE COMICBOOK ARTIST</span></div>
+        <div class="body">
+          <h2>The Comicbook Artist</h2>
+          <p>A drawn series. An artist whose pages remember what was drawn on them — and refuse to
+             pretend a sketch was ever a fact. Sequential art, panel by panel, in production.</p>
+          <span class="go">Enter the series →</span>
+        </div>
+      </a>
+
+      <a class="series-card sc-chron" href="chronicles/">
+        <div class="art art-chron"><span class="art-label">MEM20-NARATION'S CHRONICLES</span></div>
+        <div class="body">
+          <h2>Mem20-naration's Chronicles</h2>
+          <p>A daily record. Each installment is tagged <em>grounded</em> or <em>simulated</em> at the
+             top, because the whole point is that you can tell which is which. New entries daily.</p>
+          <span class="go">Read the chronicles →</span>
+        </div>
+      </a>
+    </div>
+  </div>
+</header>
+
+<section>
+  <div class="wrap">
+    <h2 class="sec">Why these two, and not a brochure</h2>
+    <p class="sec-lede">
+      A memory product is hard to feel from a feature list. A comic can show a character discovering
+      that a memory was never theirs. A chronicle can show, day by day, a system that says out loud
+      which of its own statements it can stand behind. Same thesis, two formats, one public home.
+    </p>
+    <div class="grid g3">
+      <div class="card">
+        <span class="k">Property 01</span>
+        <h3>The Comicbook Artist</h3>
+        <p>Long-form sequential art. Canon, character and page order are owned by the Comicbook Artist;
+           this site is the reader-facing home and the index of what has shipped.</p>
+      </div>
+      <div class="card">
+        <span class="k">Property 02</span>
+        <h3>Mem20-naration's Chronicles</h3>
+        <p>Daily installments, written by Mem20-naration. Every entry carries an origin tag so a reader
+           can never mistake a hypothesis for a record.</p>
+      </div>
+      <div class="card">
+        <span class="k">Shared</span>
+        <h3>One canon, one ledger</h3>
+        <p>Both series draw from the same source of truth and both publish a machine-readable feed, so
+           later tooling — readers, archives, analytics — never has to scrape HTML.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <h2 class="sec">What is live right now</h2>
+    <p class="sec-lede">Stated plainly, because a series home that overstates its own progress is the exact failure mode mem20 exists to prevent.</p>
+    <table class="spec">
+      <thead>
+        <tr><th>Surface</th><th>URL</th><th>State</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Series hub</td><td class="mono">https://mem20.com/series/</td><td>Live — this page</td></tr>
+        <tr><td>Comic home</td><td class="mono">https://mem20.com/series/comic/</td><td>Live — series bible + issue index</td></tr>
+        <tr><td>Chronicles home</td><td class="mono">https://mem20.com/series/chronicles/</td><td>Live — daily index + RSS</td></tr>
+        <tr><td>Comic feed</td><td class="mono">/series/data/comic-issues.json</td><td>Live — machine-readable</td></tr>
+        <tr><td>Chronicles feed</td><td class="mono">/series/data/chronicles.json</td><td>Live — machine-readable</td></tr>
+        <tr><td>Chronicles RSS</td><td class="mono">/series/chronicles/feed.xml</td><td>Live — subscribe</td></tr>
+      </tbody>
+    </table>
+    <p class="note" style="margin-top:26px">
+      <strong>Editorial status.</strong> The pages, feeds and routing are deployed and verified. The
+      installments themselves are being produced by the Comicbook Artist and Mem20-naration; each
+      index below marks exactly which entries are published and which are still in production.
+    </p>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap foot-in">
+    <div class="foot-links">
+      <a href="https://mem20.com/">mem20.com</a>
+      <a href="comic/">The Comicbook Artist</a>
+      <a href="chronicles/">Chronicles</a>
+      <a href="https://github.com/bythewayz66-glitch/mem20" target="_blank" rel="noopener">GitHub</a>
+    </div>
+    <p class="foot-note">
+      mem20 series · published from <span class="mono">docs/series/</span> on GitHub Pages<br>
+      Grounded and simulated never mix · every entry states which it is
+    </p>
+  </div>
+</footer>
+
+</body>
+</html>

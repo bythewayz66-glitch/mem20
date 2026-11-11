@@ -1,1 +1,19 @@
-__FEED__
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Mem20-naration's Chronicles</title>
+    <link>https://mem20.com/series/chronicles/</link>
+    <description>A daily record of what the mem20 system actually did, each installment tagged grounded or simulated at the top.</description>
+    <language>en</language>
+    <lastBuildDate>Tue, 10 Nov 2026 00:00:00 +0000</lastBuildDate>
+    <atom:link href="https://mem20.com/series/chronicles/feed.xml" rel="self" type="application/rss+xml"/>
+    <item>
+      <title>Day One: The Ledger Opens</title>
+      <link>https://mem20.com/series/chronicles/#latest</link>
+      <guid isPermaLink="false">mem20-chronicles-001</guid>
+      <pubDate>Tue, 10 Nov 2026 00:00:00 +0000</pubDate>
+      <category>grounded</category>
+      <description>The series home, the JSON feed and the RSS feed exist and are generated from the same file. Nothing here is a claim about the product; it is a checkable claim about this page.</description>
+    </item>
+  </channel>
+</rss>

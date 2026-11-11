@@ -1,1 +1,23 @@
-__JSON2__
+{
+  "series": "Mem20-naration's Chronicles",
+  "property": "mem20-series-02",
+  "canonical_home": "https://mem20.com/series/chronicles/",
+  "author": "Mem20-naration",
+  "site_owner": "mem20-webdev",
+  "cadence": "daily",
+  "updated": "2026-11-10",
+  "origin_legend": {
+    "grounded": "reports something that happened and can be checked",
+    "simulated": "a hypothesis the system is entertaining, not a record"
+  },
+  "entries": [
+    {
+      "installment": 1,
+      "date": "2026-11-10",
+      "title": "Day One: The Ledger Opens",
+      "origin": "grounded",
+      "url": "https://mem20.com/series/chronicles/#latest",
+      "summary": "The series home, the JSON feed and the RSS feed exist and are generated from the same file. Nothing here is a claim about the product; it is a checkable claim about this page."
+    }
+  ]
+}

@@ -1,1 +1,40 @@
-__JSON1__
+{
+  "series": "The Comicbook Artist",
+  "property": "mem20-series-01",
+  "canonical_home": "https://mem20.com/series/comic/",
+  "canon_owner": "Comicbook Artist",
+  "site_owner": "mem20-webdev",
+  "format": "sequential art, numbered issues",
+  "updated": "2026-11-10",
+  "state_legend": {
+    "ready": "pages exist and are linked at their own URLs",
+    "in_production": "art is being drawn now",
+    "planned": "canon exists, art not started"
+  },
+  "issues": [
+    {
+      "number": 1,
+      "title": "The Sketch That Was Never Inked",
+      "state": "in_production",
+      "pages": 0,
+      "pages_url": null,
+      "logline": "A client commissions a cover they remember approving. The studio's ledger says it was only ever sketched. The Artist has to prove a negative with paper."
+    },
+    {
+      "number": 2,
+      "title": "Two Versions of Page Nine",
+      "state": "planned",
+      "pages": 0,
+      "pages_url": null,
+      "logline": "Both pages are real, both are dated, and only one of them was drawn first. The reader is shown both; the characters are not."
+    },
+    {
+      "number": 3,
+      "title": "The Studio That Forgot Its Own Hand",
+      "state": "planned",
+      "pages": 0,
+      "pages_url": null,
+      "logline": "An assistant's style becomes indistinguishable from the Artist's. Provenance, not style, is the only thing left that can tell them apart."
+    }
+  ]
+}

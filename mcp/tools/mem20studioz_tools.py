@@ -1,1 +1,31 @@
-IiIibWVtMjBzdHVkaW96IE1DUCB0b29scy4iIiIKZnJvbSBfX2Z1dHVyZV9fIGltcG9ydCBhbm5vdGF0aW9ucwppbXBvcnQganNvbixvcyxzeXMKZnJvbSB0eXBpbmcgaW1wb3J0IEFueSxEaWN0CnRyeTogaW1wb3J0IG1jcF90eXBlcyBhcyBtdDsgTUNQX1NES19BVkFJTEFCTEU9VHJ1ZQpleGNlcHQgSW1wb3J0RXJyb3I6IE1DUF9TREtfQVZBSUxBQkxFPUZhbHNlOyBtdD1Ob25lICAjIHR5cGU6IGlnbm9yZQpfUkVQT19ST09UPW9zLnBhdGguZGlybmFtZShvcy5wYXRoLmRpcm5hbWUob3MucGF0aC5kaXJuYW1lKG9zLnBhdGguYWJzcGF0aChfX2ZpbGVfXykpKSkKZGVmIF9sb2FkKCk6CiAgICBwPW9zLnBhdGguam9pbihfUkVQT19ST09ULCJtZW0yMHN0dWRpb3oiKQogICAgaWYgcCBub3QgaW4gc3lzLnBhdGg6IHN5cy5wYXRoLmluc2VydCgwLHApCiAgICBpbXBvcnQgbWVtMjBzdHVkaW96LmRvbWFpbiBhcyBkb21haW4gICMgdHlwZTogaWdub3JlCiAgICByZXR1cm4gZG9tYWluCmRlZiBfZCh2KTogcmV0dXJuIGpzb24uZHVtcHModixpbmRlbnQ9MixkZWZhdWx0PXN0cikKY2xhc3MgU3R1ZGlvelRvb2xzTWl4aW46CiAgICBkZWYgcmVnaXN0ZXJfc3R1ZGlvel90b29scyhzZWxmKToKICAgICAgICBpZiBub3QgTUNQX1NES19BVkFJTEFCTEU6IHJldHVybgogICAgICAgIHNlbGYudG9vbHNbInN0dWRpb3pfc3RhdHVzIl09bXQuVG9vbChuYW1lPSJzdHVkaW96X3N0YXR1cyIsdGl0bGU9IlN0dWRpb3ogU3RhdHVzIixkZXNjcmlwdGlvbj0iUmVwb3J0IHdpdGggNiBwZWVyIGp1ZGdlbWVudHMuIixpbnB1dFNjaGVtYT17InR5cGUiOiJvYmplY3QiLCJwcm9wZXJ0aWVzIjp7fX0pCiAgICAgICAgc2VsZi50b29sc1sic3R1ZGlvel9kb2N0b3IiXT1tdC5Ub29sKG5hbWU9InN0dWRpb3pfZG9jdG9yIix0aXRsZT0iU3R1ZGlveiBEb2N0b3IiLGRlc2NyaXB0aW9uPSJQcm9iZSA2IHBlZXJzLiIsaW5wdXRTY2hlbWE9eyJ0eXBlIjoib2JqZWN0IiwicHJvcGVydGllcyI6e319KQogICAgYXN5bmMgZGVmIF9zdHVkaW96X3N0YXR1cyhzZWxmLGFyZ3M6RGljdFtzdHIsQW55XSktPnN0cjoKICAgICAgICB0cnk6IHJldHVybiBfZChfbG9hZCgpLnN0dWRpb19yZXBvcnQoKSkKICAgICAgICBleGNlcHQgRXhjZXB0aW9uIGFzIGU6IHJldHVybiBfZCh7Im9rIjpGYWxzZSwiZXJyb3IiOnN0cihlKX0pCiAgICBhc3luYyBkZWYgX3N0dWRpb3pfZG9jdG9yKHNlbGYsYXJnczpEaWN0W3N0cixBbnldKS0+c3RyOgoKICAgICAgICB0cnk6IHJldHVybiBfZChfbG9hZCgpLnByb2JlKCkpCiAgICAgICAgZXhjZXB0IEV4Y2VwdGlvbiBhcyBlOiByZXR1cm4gX2QoeyJvayI6RmFsc2UsImVycm9yIjpzdHIoZSl9KQoKIyAtLS0gY29tcGF0aWJpbGl0eSByZS1leHBvcnRzIC0tLQojIFRoZSAyMDI2LTExLTA5IGNvbnNvbGlkYXRpb24gd2F2ZSBtb3ZlZCB0aGVzZSBjbGFzc2VzIGludG8gdGhlaXIgb3duCiMgcGVyLXN1YnN5c3RlbSBtb2R1bGVzLiBtY3Avc2VydmVyLnB5IHN0aWxsIGltcG9ydHMgdGhlbSBmcm9tIGhlcmUsIHNvCiMgdGhleSBhcmUgcmUtZXhwb3J0ZWQgYXQgbW9kdWxlIGxldmVsIHRvIGtlZXAgdGhlIHNlcnZlciBpbXBvcnRhYmxlCiMgd2l0aG91dCBkcm9wcGluZyBhbnkgbWl4aW4gZnJvbSBNZW0yME1DUFNlcnZlcidzIGJhc2VzLgpmcm9tIHRvb2xzLm1lbTIwYXNzZXRyZW1peHN0dWRpb3pfdG9vbHMgaW1wb3J0IEFzc2V0UmVtaXhTdHVkaW96VG9vbHNNaXhp bgo=
+"""mem20studioz MCP tools."""
+from __future__ import annotations
+import json,os,sys
+from typing import Any,Dict
+try: import mcp_types as mt; MCP_SDK_AVAILABLE=True
+except ImportError: MCP_SDK_AVAILABLE=False; mt=None  # type: ignore
+_REPO_ROOT=os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+def _load():
+    p=os.path.join(_REPO_ROOT,"mem20studioz")
+    if p not in sys.path: sys.path.insert(0,p)
+    import mem20studioz.domain as domain  # type: ignore
+    return domain
+def _d(v): return json.dumps(v,indent=2,default=str)
+class StudiozToolsMixin:
+    def register_studioz_tools(self):
+        if not MCP_SDK_AVAILABLE: return
+        self.tools["studioz_status"]=mt.Tool(name="studioz_status",title="Studioz Status",description="Report with 6 peer judgements.",inputSchema={"type":"object","properties":{}})
+        self.tools["studioz_doctor"]=mt.Tool(name="studioz_doctor",title="Studioz Doctor",description="Probe 6 peers.",inputSchema={"type":"object","properties":{}})
+    async def _studioz_status(self,args:Dict[str,Any])->str:
+        try: return _d(_load().studio_report())
+        except Exception as e: return _d({"ok":False,"error":str(e)})
+    async def _studioz_doctor(self,args:Dict[str,Any])->str:
+        try: return _d(_load().probe())
+        except Exception as e: return _d({"ok":False,"error":str(e)})
+
+# --- compatibility re-exports ---
+# The 2026-11-09 consolidation wave moved these classes into their own
+# per-subsystem modules. mcp/server.py still imports them from here, so
+# they are re-exported at module level to keep the server importable
+# without dropping any mixin from Mem20MCPServer's bases.
+from tools.mem20assetremixstudioz_tools import AssetRemixStudiozToolsMixin

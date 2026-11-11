@@ -2,6 +2,8 @@
 
 **A trusted, auditable memory + world-model layer for agents.**
 
+[Product](https://mem20.com/) · [Series](https://mem20.com/series/) · [The Comicbook Artist](https://mem20.com/series/comic/) · [Chronicles](https://mem20.com/series/chronicles/) · [GitHub](https://github.com/bythewayz66-glitch/mem20) · [PyPI](https://pypi.org/project/mem20-ce/)
+
 mem20 gives an agent something it does not otherwise have: a memory that survives the
 session, records *why* it believes what it believes, and can be audited after the fact.
 It ships as an MCP server (JSON-RPC 2.0 over stdio) plus a large estate of independently

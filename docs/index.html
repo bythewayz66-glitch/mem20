@@ -1,1 +1,212 @@
-__HOME__
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>mem20 — auditable agent memory</title>
+<meta name="description" content="mem20 is a trusted, auditable memory and world-model layer for agents. Grounded facts and simulated hypotheses never mix, and every retrieval reports its own drift.">
+<meta property="og:title" content="mem20 — auditable agent memory">
+<meta property="og:description" content="A memory that survives the session, records why it believes what it believes, and can be audited after the fact.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://mem20.com/">
+<link rel="canonical" href="https://mem20.com/">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="series/series.css">
+<style>
+  /* landing-page-only additions; everything else comes from series/series.css */
+  .hero{padding:88px 0 72px;position:relative;overflow:hidden}
+  .hero::before{content:"";position:absolute;inset:-40% 30% 40% -20%;background:radial-gradient(circle at 30% 40%,rgba(47,212,196,.13),transparent 62%);pointer-events:none}
+  .hero .wrap{position:relative}
+  .hero h1{font-size:clamp(34px,5.2vw,60px);max-width:19ch;margin-bottom:22px}
+  .hl{background:linear-gradient(100deg,var(--accent) 0%,var(--accent-2) 100%);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+  .hero .lede{font-size:clamp(16px,1.6vw,19px);color:var(--text-2);max-width:64ch;margin-bottom:32px}
+  .cta{display:flex;flex-wrap:wrap;gap:12px;margin-bottom:44px}
+  .facts{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--line);border:1px solid var(--line);border-radius:var(--radius);overflow:hidden}
+  .fact{background:var(--surface);padding:20px 22px}
+  .fact .v{font-family:'Space Grotesk',sans-serif;font-size:22px;font-weight:600;letter-spacing:-.02em;margin-bottom:4px}
+  .fact .l{font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+  .split{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+  .panel{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:26px}
+  .panel.grounded{border-left:3px solid var(--accent)}
+  .panel.simulated{border-left:3px solid var(--amber)}
+  .panel h3{font-size:16px;margin-bottom:10px;display:flex;align-items:center;gap:9px}
+  .panel p{color:var(--text-2);font-size:14.5px}
+  .tag{font-family:'IBM Plex Mono',monospace;font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;padding:3px 8px;border-radius:5px}
+  .tag.g{color:var(--accent);background:rgba(47,212,196,.1);border:1px solid rgba(47,212,196,.35)}
+  .tag.s{color:var(--amber);background:var(--amber-bg);border:1px solid rgba(245,184,65,.35)}
+  .series-strip{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+  .s-card{display:block;background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:26px;transition:border-color .18s ease,transform .18s ease}
+  .s-card:hover{border-color:var(--line-2);transform:translateY(-2px)}
+  .s-card .k{font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.12em;text-transform:uppercase;margin-bottom:10px}
+  .s-card.c .k{color:var(--comic)}
+  .s-card.h .k{color:var(--chron)}
+  .s-card h3{font-size:19px;margin-bottom:8px}
+  .s-card p{color:var(--text-2);font-size:14.5px;margin-bottom:14px}
+  .s-card .go{font-family:'Space Grotesk',sans-serif;font-size:13.5px;font-weight:600;color:var(--accent)}
+  pre.code{background:var(--bg-2);border:1px solid var(--line);border-radius:var(--radius-sm);padding:18px 20px;overflow-x:auto;font-size:13px;line-height:1.7;color:var(--text-2)}
+  pre.code .c{color:var(--muted)}
+  pre.code .a{color:var(--accent)}
+  .note{background:var(--surface);border:1px solid var(--line);border-left:3px solid var(--accent);border-radius:var(--radius-sm);padding:18px 22px;color:var(--text-2);font-size:14.5px}
+  .note strong{color:var(--text)}
+  @media(max-width:900px){
+    .facts{grid-template-columns:repeat(2,1fr)}
+    .split,.series-strip{grid-template-columns:1fr}
+    .g3{grid-template-columns:1fr}
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="wrap nav-in">
+    <a class="logo" href="./"><span class="logo-mark">m</span> mem20</a>
+    <div class="nav-links">
+      <a href="./" class="on">Product</a>
+      <a href="series/">Series</a>
+      <a href="series/comic/">The Comicbook Artist</a>
+      <a href="series/chronicles/">Chronicles</a>
+    </div>
+    <a class="btn btn-primary btn-sm" href="https://github.com/bythewayz66-glitch/mem20" target="_blank" rel="noopener">GitHub</a>
+  </div>
+</nav>
+
+<header class="hero">
+  <div class="wrap">
+    <p class="eyebrow">auditable agent memory</p>
+    <h1>A memory that can <span class="hl">prove what it knows.</span></h1>
+    <p class="lede">
+      mem20 gives an agent something it does not otherwise have: a memory that survives the session,
+      records <em>why</em> it believes what it believes, and can be audited after the fact.
+      Grounded facts and simulated hypotheses never mix — and every retrieval reports its own drift.
+    </p>
+    <div class="cta">
+      <a class="btn btn-primary" href="https://github.com/bythewayz66-glitch/mem20">Read the source</a>
+      <a class="btn btn-ghost" href="series/">See the series →</a>
+    </div>
+    <div class="facts">
+      <div class="fact"><div class="v">v3.1.2</div><div class="l">Version</div></div>
+      <div class="fact"><div class="v">Apache-2.0</div><div class="l">License</div></div>
+      <div class="fact"><div class="v">MCP / stdio</div><div class="l">Transport</div></div>
+      <div class="fact"><div class="v">Python 3.10+</div><div class="l">Runtime</div></div>
+    </div>
+  </div>
+</header>
+
+<section>
+  <div class="wrap">
+    <h2 class="sec">The one rule</h2>
+    <p class="sec-lede">
+      Most agent memory is a single undifferentiated pile: a guess and a fact look identical once they
+      are both embedded. mem20 keeps them apart at the storage layer, so the distinction survives
+      retrieval, summarisation and time.
+    </p>
+    <div class="split">
+      <div class="panel grounded">
+        <h3><span class="tag g">grounded</span> What was observed</h3>
+        <p>Written from a real event, a real document, a real tool result. Carries its provenance and
+           can be re-checked against the source. This is the only class of memory mem20 will assert
+           as true.</p>
+      </div>
+      <div class="panel simulated">
+        <h3><span class="tag s">simulated</span> What was inferred</h3>
+        <p>Written by a model reasoning about what might be the case. Useful, and never presented as
+           fact. It stays labelled, so a later reader — human or agent — can tell which is which.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <h2 class="sec">Three layers, in dependency order</h2>
+    <p class="sec-lede">A durable substrate, a protocol surface, and a large estate of independently packaged capability modules.</p>
+    <div class="grid g3">
+      <div class="card">
+        <span class="k">Layer 01</span>
+        <h3>Memory engine</h3>
+        <p>Global memory, ledger and vector store. The durable substrate — everything else is a view
+           onto it.</p>
+      </div>
+      <div class="card">
+        <span class="k">Layer 02</span>
+        <h3>MCP server</h3>
+        <p>Exposes the engine and the wider estate as MCP tools over stdio, with an HTTP
+           health/metrics endpoint.</p>
+      </div>
+      <div class="card">
+        <span class="k">Layer 03</span>
+        <h3>Subsystems</h3>
+        <p>Independently packaged capability modules, each with its own <span class="mono">pyproject.toml</span>
+           and its own tests.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <h2 class="sec">Run it</h2>
+    <p class="sec-lede">From a git checkout. The server starts, logs its health endpoint, and speaks JSON-RPC 2.0 over stdio.</p>
+<pre class="code"><span class="c"># clone and install</span>
+git clone https://github.com/bythewayz66-glitch/mem20.git
+cd mem20
+python3 -m venv .venv
+.venv/bin/pip install -r requirements.txt
+
+<span class="c"># start the MCP server</span>
+MEM20_STORE_PATH="$HOME/.mem20/store" .venv/bin/python mcp/mcp_server.py</pre>
+    <p class="note" style="margin-top:22px">
+      <strong>On the numbers.</strong> The repository publishes its own measured figures — tool count,
+      subsystem count, corpus size, code lines — in <span class="mono">README.md</span>, together with a
+      table of corrections to numbers that were previously published and wrong. We would rather point
+      you at the measurement than restate a claim here that we cannot re-derive.
+    </p>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <h2 class="sec">Two series, one thesis</h2>
+    <p class="sec-lede">
+      A memory product is hard to feel from a feature list. So mem20 also publishes two creative
+      properties that carry the same idea to people who will never read a benchmark table.
+    </p>
+    <div class="series-strip">
+      <a class="s-card c" href="series/comic/">
+        <div class="k">Property 01 · drawn</div>
+        <h3>The Comicbook Artist</h3>
+        <p>An artist whose pages remember what was drawn on them — and refuse to pretend a sketch was
+           ever a fact. Sequential art, panel by panel.</p>
+        <span class="go">Enter the series →</span>
+      </a>
+      <a class="s-card h" href="series/chronicles/">
+        <div class="k">Property 02 · written</div>
+        <h3>Mem20-naration's Chronicles</h3>
+        <p>A daily record. Each installment is tagged grounded or simulated at the top, because the
+           whole point is that you can tell which is which.</p>
+        <span class="go">Read the chronicles →</span>
+      </a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap foot-in">
+    <div class="foot-links">
+      <a href="./">mem20.com</a>
+      <a href="series/">Series</a>
+      <a href="series/comic/">The Comicbook Artist</a>
+      <a href="series/chronicles/">Chronicles</a>
+      <a href="https://github.com/bythewayz66-glitch/mem20" target="_blank" rel="noopener">GitHub</a>
+    </div>
+    <p class="foot-note">
+      mem20 · auditable agent memory · Apache-2.0<br>
+      Grounded and simulated never mix · every entry states which it is
+    </p>
+  </div>
+</footer>
+
+</body>
+</html>

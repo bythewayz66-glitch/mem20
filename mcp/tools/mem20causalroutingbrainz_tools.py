@@ -22,3 +22,11 @@ class CausalRoutingBrainToolsMixin:
     async def _causalroutingbrainz_doctor(self,args:Dict[str,Any])->str:
         try: return _d(_load().probe())
         except Exception as e: return _d({"ok":False,"error":f"{type(e).__name__}: {e}"})
+
+# --- compatibility re-exports ---
+# The 2026-11-09 consolidation wave moved these classes into their own
+# per-subsystem modules. mcp/server.py still imports them from here, so
+# they are re-exported at module level to keep the server importable
+# without dropping any mixin from Mem20MCPServer's bases.
+from tools.mem20zerodowntimemigrationbrainz_tools import ZeroDowntimeMigrationBrainzToolsMixin
+from tools.mem20skillbasedprogressionbrainz_tools import SkillBasedProgressionBrainToolsMixin

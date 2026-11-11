@@ -32,10 +32,10 @@
     "mem20alternativedatabaseplaygroundz": 1,
     "mem20ambientdevicecompanionz": 1,
     "mem20ambientteamradioz": 1,
-    "mem20simz": 1,
-    "mem20studioz": 1,
+    "mem20architecturesimulationsandboxz": 1,
+    "mem20assetremixstudioz": 1,
     "mem20asynccollaborationcapsulesz": 1,
-    "mem20pipez": 4,
+    "mem20audiovoiceandmusicpipelinez": 4,
     "mem20autonomousdealdeskz": 3,
     "mem20autonomousmicrosaasfoundryz": 2,
     "mem20autonomousrecoverydirectorz": 2,
@@ -44,17 +44,17 @@
     "mem20autonomoustrafficcontrollerz": 1,
     "mem20autonomousworkcellsz": 2,
     "mem20batteryawareagentschedulerz": 1,
-    "mem20simz": 2,
+    "mem20businessmodelsimulatorz": 2,
     "mem20causalroutingbrainz": 2,
     "mem20collectivemodelintelligencez": 2,
     "mem20communitychallengeenginez": 2,
     "mem20compoundingproductecosystemz": 2,
-    "mem20rewardforgez": 2,
-    "mem20simz": 2,
+    "mem20contextcompressionforgez": 2,
+    "mem20counterfactualmemorysimulatorz": 2,
     "mem20crdtcollaborationenginez": 1,
     "mem20crossplatformmicrokernelz": 2,
     "mem20crossproductloyaltygraphz": 2,
-    "mem20twinz": 2,
+    "mem20customerdigitaltwinlabz": 2,
     "mem20customerlifecycleenginez": 2,
     "mem20datalocalityoptimizerz": 2,
     "mem20deterministicconfigurationgraphz": 2,
@@ -67,29 +67,29 @@
     "mem20offerassemblyfabricz": 2,
     "mem20offergenomeenginez": 2,
     "mem20opportunityradarz": 2,
-    "mem20simz": 2,
+    "mem20outcomesimulationlabz": 2,
     "mem20personalautomationcanvasz": 2,
     "mem20personalcognitivesearchz": 2,
     "mem20personalmodelevolutionz": 2,
-    "mem20twinz": 2,
-    "mem20pipez": 2,
+    "mem20personalworkflowtwinz": 2,
+    "mem20pipelinez": 2,
     "mem20planetarybatchfabricz": 2,
-    "mem20twinz": 2,
+    "mem20playermotivationtwinz": 2,
     "mem20predictiverecallenginez": 2,
     "mem20prioritycollisionresolverz": 1,
-    "mem20pipez": 2,
-    "mem20simz": 2,
+    "mem20productionplanningandtaskorchestrationpipelinez": 2,
+    "mem20productledgrowthsimulatorz": 2,
     "mem20protocolautodiscoveryenginez": 2,
     "mem20realitytosoftwarecompilerz": 2,
-    "mem20twinz": 2,
+    "mem20realtimebusinesstwinz": 2,
     "mem20realtimeeventautopilotz": 2,
     "mem20realtimeteampresencez": 2,
     "mem20realworldimpactrewardsz": 2,
-    "mem20labz": 2,
+    "mem20remoteexperimentlabz": 2,
     "mem20resourceexchangemarketz": 2,
     "mem20revenueleakhunterz": 2,
     "mem20rewardforgez": 2,
-    "mem20pipez": 2,
+    "mem20rigginganimationandmotionpipelinez": 2,
     "mem20roamingworkloadschedulerz": 2,
     "mem20runtimecompatibilityenginez": 2,
     "mem20runtimepromptoptimizerz": 2,
@@ -102,10 +102,10 @@
     "mem20sensorymemoryingestz": 2,
     "mem20servicebundlingenginez": 2,
     "mem20simz": 2,
-    "mem20causalroutingbrainz": 2,
+    "mem20skillbasedprogressionbrainz": 2,
     "mem20skillmemorytransferz": 2,
     "mem20spatialcommanduniversez": 2,
-    "mem20rewardforgez": 2,
+    "mem20specialistmodelforgez": 2,
     "mem20speculativeworkflowenginez": 2,
     "mem20studioz": 2,
     "mem20styleguideagentz": 2,
@@ -116,7 +116,7 @@
     "mem20universalintegrationcompilerz": 2,
     "mem20visualagentblackboardz": 2,
     "mem20visualdataflowcomposerz": 2,
-    "mem20causalroutingbrainz": 1,
+    "mem20zerodowntimemigrationbrainz": 1,
     "mem20zerotouchnodeswarmz": 2,
     "memory": 55,
     "ops": 3,
@@ -163,10 +163,10 @@
     "mem20alternativedatabaseplaygroundz",
     "mem20ambientdevicecompanionz",
     "mem20ambientteamradioz",
-    "mem20simz",
-    "mem20studioz",
+    "mem20architecturesimulationsandboxz",
+    "mem20assetremixstudioz",
     "mem20asynccollaborationcapsulesz",
-    "mem20pipez",
+    "mem20audiovoiceandmusicpipelinez",
     "mem20autonomousdealdeskz",
     "mem20autonomousmicrosaasfoundryz",
     "mem20autonomousrecoverydirectorz",
@@ -175,17 +175,17 @@
     "mem20autonomoustrafficcontrollerz",
     "mem20autonomousworkcellsz",
     "mem20batteryawareagentschedulerz",
-    "mem20simz",
+    "mem20businessmodelsimulatorz",
     "mem20causalroutingbrainz",
     "mem20collectivemodelintelligencez",
     "mem20communitychallengeenginez",
     "mem20compoundingproductecosystemz",
-    "mem20rewardforgez",
-    "mem20simz",
+    "mem20contextcompressionforgez",
+    "mem20counterfactualmemorysimulatorz",
     "mem20crdtcollaborationenginez",
     "mem20crossplatformmicrokernelz",
     "mem20crossproductloyaltygraphz",
-    "mem20twinz",
+    "mem20customerdigitaltwinlabz",
     "mem20customerlifecycleenginez",
     "mem20datalocalityoptimizerz",
     "mem20deterministicconfigurationgraphz",
@@ -198,29 +198,29 @@
     "mem20offerassemblyfabricz",
     "mem20offergenomeenginez",
     "mem20opportunityradarz",
-    "mem20simz",
+    "mem20outcomesimulationlabz",
     "mem20personalautomationcanvasz",
     "mem20personalcognitivesearchz",
     "mem20personalmodelevolutionz",
-    "mem20twinz",
-    "mem20pipez",
+    "mem20personalworkflowtwinz",
+    "mem20pipelinez",
     "mem20planetarybatchfabricz",
-    "mem20twinz",
+    "mem20playermotivationtwinz",
     "mem20predictiverecallenginez",
     "mem20prioritycollisionresolverz",
-    "mem20pipez",
-    "mem20simz",
+    "mem20productionplanningandtaskorchestrationpipelinez",
+    "mem20productledgrowthsimulatorz",
     "mem20protocolautodiscoveryenginez",
     "mem20realitytosoftwarecompilerz",
-    "mem20twinz",
+    "mem20realtimebusinesstwinz",
     "mem20realtimeeventautopilotz",
     "mem20realtimeteampresencez",
     "mem20realworldimpactrewardsz",
-    "mem20labz",
+    "mem20remoteexperimentlabz",
     "mem20resourceexchangemarketz",
     "mem20revenueleakhunterz",
     "mem20rewardforgez",
-    "mem20pipez",
+    "mem20rigginganimationandmotionpipelinez",
     "mem20roamingworkloadschedulerz",
     "mem20runtimecompatibilityenginez",
     "mem20runtimepromptoptimizerz",
@@ -233,10 +233,10 @@
     "mem20sensorymemoryingestz",
     "mem20servicebundlingenginez",
     "mem20simz",
-    "mem20causalroutingbrainz",
+    "mem20skillbasedprogressionbrainz",
     "mem20skillmemorytransferz",
     "mem20spatialcommanduniversez",
-    "mem20rewardforgez",
+    "mem20specialistmodelforgez",
     "mem20speculativeworkflowenginez",
     "mem20studioz",
     "mem20styleguideagentz",
@@ -247,7 +247,7 @@
     "mem20universalintegrationcompilerz",
     "mem20visualagentblackboardz",
     "mem20visualdataflowcomposerz",
-    "mem20causalroutingbrainz",
+    "mem20zerodowntimemigrationbrainz",
     "mem20zerotouchnodeswarmz",
     "memory",
     "ops",
@@ -602,9 +602,9 @@
       "tools": 4
     },
     {
-      "domain": "mem20pipez",
+      "domain": "mem20audiovoiceandmusicpipelinez",
       "modules": [
-        "mcp/tools/mem20pipez_tools.py"
+        "mcp/tools/mem20audiovoiceandmusicpipelinez_tools.py"
       ],
       "prefixes": [
         "audiovoiceandmusicpipelinez_*"
@@ -722,9 +722,9 @@
       "tools": 2
     },
     {
-      "domain": "mem20simz",
+      "domain": "mem20businessmodelsimulatorz",
       "modules": [
-        "mcp/tools/mem20simz_tools.py"
+        "mcp/tools/mem20businessmodelsimulatorz_tools.py"
       ],
       "prefixes": [
         "businessmodelsimulatorz_*"
@@ -772,9 +772,9 @@
       "tools": 2
     },
     {
-      "domain": "mem20rewardforgez",
+      "domain": "mem20contextcompressionforgez",
       "modules": [
-        "mcp/tools/mem20rewardforgez_tools.py"
+        "mcp/tools/mem20contextcompressionforgez_tools.py"
       ],
       "prefixes": [
         "contextcompressionforgez_*"
@@ -782,9 +782,9 @@
       "tools": 2
     },
     {
-      "domain": "mem20simz",
+      "domain": "mem20counterfactualmemorysimulatorz",
       "modules": [
-        "mcp/tools/mem20simz_tools.py"
+        "mcp/tools/mem20counterfactualmemorysimulatorz_tools.py"
       ],
       "prefixes": [
         "counterfactualmemorysimulatorz_*"
@@ -812,9 +812,9 @@
       "tools": 2
     },
     {
-      "domain": "mem20twinz",
+      "domain": "mem20customerdigitaltwinlabz",
       "modules": [
-        "mcp/tools/mem20twinz_tools.py"
+        "mcp/tools/mem20customerdigitaltwinlabz_tools.py"
       ],
       "prefixes": [
         "customerdigitaltwinlabz_*"
@@ -922,9 +922,9 @@
       "tools": 2
     },
     {
-      "domain": "mem20simz",
+      "domain": "mem20outcomesimulationlabz",
       "modules": [
-        "mcp/tools/mem20simz_tools.py"
+        "mcp/tools/mem20outcomesimulationlabz_tools.py"
       ],
       "prefixes": [
         "outcomesimulationlabz_*"
@@ -962,9 +962,9 @@
       "tools": 2
     },
     {
-      "domain": "mem20twinz",
+      "domain": "mem20personalworkflowtwinz",
       "modules": [
-        "mcp/tools/mem20twinz_tools.py"
+        "mcp/tools/mem20personalworkflowtwinz_tools.py"
       ],
       "prefixes": [
         "personalworkflowtwinz_*"
@@ -972,9 +972,9 @@
       "tools": 2
     },
     {
-      "domain": "mem20pipez",
+      "domain": "mem20pipelinez",
       "modules": [
-        "mcp/tools/mem20pipez_tools.py"
+        "mcp/tools/mem20pipelinez_tools.py"
       ],
       "prefixes": [
         "pipelinez_*"
@@ -992,9 +992,9 @@
       "tools": 2
     },
     {
-      "domain": "mem20twinz",
+      "domain": "mem20playermotivationtwinz",
       "modules": [
-        "mcp/tools/mem20twinz_tools.py"
+        "mcp/tools/mem20playermotivationtwinz_tools.py"
       ],
       "prefixes": [
         "playermotivationtwinz_*"
@@ -1012,9 +1012,9 @@
       "tools": 2
     },
     {
-      "domain": "mem20pipez",
+      "domain": "mem20productionplanningandtaskorchestrationpipelinez",
       "modules": [
-        "mcp/tools/mem20pipez_tools.py"
+        "mcp/tools/mem20productionplanningandtaskorchestrationpipelinez_tools.py"
       ],
       "prefixes": [
         "productionplanningandtaskorchestrationpipelinez_*"
@@ -1022,9 +1022,9 @@
       "tools": 2
     },
     {
-      "domain": "mem20simz",
+      "domain": "mem20productledgrowthsimulatorz",
       "modules": [
-        "mcp/tools/mem20simz_tools.py"
+        "mcp/tools/mem20productledgrowthsimulatorz_tools.py"
       ],
       "prefixes": [
         "productledgrowthsimulatorz_*"
@@ -1052,9 +1052,9 @@
       "tools": 2
     },
     {
-      "domain": "mem20twinz",
+      "domain": "mem20realtimebusinesstwinz",
       "modules": [
-        "mcp/tools/mem20twinz_tools.py"
+        "mcp/tools/mem20realtimebusinesstwinz_tools.py"
       ],
       "prefixes": [
         "realtimebusinesstwinz_*"
@@ -1092,9 +1092,9 @@
       "tools": 2
     },
     {
-      "domain": "mem20labz",
+      "domain": "mem20remoteexperimentlabz",
       "modules": [
-        "mcp/tools/mem20labz_tools.py"
+        "mcp/tools/mem20remoteexperimentlabz_tools.py"
       ],
       "prefixes": [
         "remoteexperimentlabz_*"
@@ -1132,9 +1132,9 @@
       "tools": 2
     },
     {
-      "domain": "mem20pipez",
+      "domain": "mem20rigginganimationandmotionpipelinez",
       "modules": [
-        "mcp/tools/mem20pipez_tools.py"
+        "mcp/tools/mem20rigginganimationandmotionpipelinez_tools.py"
       ],
       "prefixes": [
         "rigginganimationandmotionpipelinez_*"
@@ -1262,9 +1262,9 @@
       "tools": 2
     },
     {
-      "domain": "mem20causalroutingbrainz",
+      "domain": "mem20skillbasedprogressionbrainz",
       "modules": [
-        "mcp/tools/mem20causalroutingbrainz_tools.py"
+        "mcp/tools/mem20skillbasedprogressionbrainz_tools.py"
       ],
       "prefixes": [
         "skillbasedprogressionbrainz_*"
@@ -1292,9 +1292,9 @@
       "tools": 2
     },
     {
-      "domain": "mem20rewardforgez",
+      "domain": "mem20specialistmodelforgez",
       "modules": [
-        "mcp/tools/mem20rewardforgez_tools.py"
+        "mcp/tools/mem20specialistmodelforgez_tools.py"
       ],
       "prefixes": [
         "specialistmodelforgez_*"
@@ -1452,9 +1452,9 @@
       "tools": 1
     },
     {
-      "domain": "mem20simz",
+      "domain": "mem20architecturesimulationsandboxz",
       "modules": [
-        "mcp/tools/mem20simz_tools.py"
+        "mcp/tools/mem20architecturesimulationsandboxz_tools.py"
       ],
       "prefixes": [
         "architecturesimulationsandboxz_*"
@@ -1462,9 +1462,9 @@
       "tools": 1
     },
     {
-      "domain": "mem20studioz",
+      "domain": "mem20assetremixstudioz",
       "modules": [
-        "mcp/tools/mem20studioz_tools.py"
+        "mcp/tools/mem20assetremixstudioz_tools.py"
       ],
       "prefixes": [
         "assetremixstudioz_*"
@@ -1542,9 +1542,9 @@
       "tools": 1
     },
     {
-      "domain": "mem20causalroutingbrainz",
+      "domain": "mem20zerodowntimemigrationbrainz",
       "modules": [
-        "mcp/tools/mem20causalroutingbrainz_tools.py"
+        "mcp/tools/mem20zerodowntimemigrationbrainz_tools.py"
       ],
       "prefixes": [
         "zerodowntimemigrationbrainz_*"

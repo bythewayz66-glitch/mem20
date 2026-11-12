@@ -152,9 +152,9 @@ mem20-health   # probes /health
 |----------|---------|---------|
 | `MEM20_STORE_PATH` | `~/.mem20/store` | Memory engine module + store location |
 | `MEM20_COG_PATH` | (mem20 `cog/` dir) | Cognitive engine location |
-| `MEM20_LLM_BASE_URL` | `https://integrate.api.nvidia.com/v1` | LLM chat-completions base URL |
-| `MEM20_LLM_MODEL` | (project default) | Model name |
-| `NVAPI_KEY` / `NVIDIA_API_KEY` / `MEM20_LLM_API_KEY` | — | LLM bearer token (required) |
+| `MEM20_LLM_BASE_URL` | `https://text.pollinations.ai/openai` | LLM chat-completions base URL (keyless) |
+| `MEM20_LLM_MODEL` | `gpt-oss-20b` | Model name |
+| `MEM20_LLM_API_KEY` / `NVAPI_KEY` / `NVIDIA_API_KEY` | — | Optional bearer token (only needed for keyed providers) |
 | `MEM20_ENV_FILE` | — | Optional `.env` to load API keys from |
 | `MEM20_HEALTH_PORT` | `8080` | HTTP health endpoint port |
 | `MEM20_HEALTH_DISABLE` | — | Set to `1` to disable HTTP health endpoint |
@@ -164,7 +164,18 @@ mem20-health   # probes /health
 
 ### LLM Configuration
 
-mem20 requires an OpenAI-compatible LLM endpoint. Default is NVIDIA NIM:
+mem20 needs **no API key**. The default endpoint is keyless Pollinations
+(`gpt-oss-20b`, free tier ≈ 1 reply/45s/IP) with a keyless local Ollama
+fallback chain (`qwen2.5-coder:0.5b`, `gemma3:1b` on `http://localhost:11434/v1`).
+Vision runs offline via local moondream2; embeddings via local MiniLM.
+
+```bash
+# Nothing to configure - keyless by default:
+python -c "import llm; print(llm.chat([{'role':'user','content':'hi'}]))"
+```
+
+To pin a specific provider, override the endpoint (a key is then optional
+depending on the provider):
 
 ```bash
 export MEM20_LLM_BASE_URL="https://integrate.api.nvidia.com/v1"

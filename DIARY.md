@@ -875,3 +875,15 @@ Reworked/verified subsystems #340–#350 (oldest→newest, 1 at a time) to full 
 - **350 mem20twinz** (CLOSED, prior `9962c809`) **verified compliant, no rework**: 12t pass, status ok/6 (`capability_routing,challenge_engagement,lifecycle_context,motivation_events,motivation_scenarios,quest_motivation`); core preserved (`create_twin,update,predict_churn,motivation_segments,twin_health,motivation_report,probe,estate_context`).
 
 **es//:** All touched #340-349 work already committed/pushed (and #350 verified/commented). DIARY/failures updated and pushed in this wrap-up. Unrelated staged/unstaged/untracked files (others’ work, e.g. intenttomissioncompilerz/labz/meshz/modalitybridgez/modelgenomelabz/leveldesign* docs/app mixed, etc.) left untouched (unstaged/restored from accidental staging risk). mem20 context/self-model save-back tools not available in this environment/Code Mode catalog; no direct mem20 access used.
+
+## 2026-11-11 — keyless rewire: exact commands
+- Root LLM keyless: `python -c "import llm; print(llm.chat([{'role':'user','content':'hi'}]))"` → pollinations gpt-oss-20b reply (no key, no env).
+- Vision (offline): `llm.chat([{"role":"user","content":"describe"}], images=["/tmp/opencode/vision-smoke.png"])` → local moondream answer (no `model=`, no key).
+- Tests, one package at a time (`cd <pkg> && /root/.venv/bin/python -m pytest tests -q`): root 174P; dreamz 157P; agentz 164P/1S/8 pre-existing F; kilnz 83P/19F/184E (=baseline); owebz 23P; gamez 63P; crewz 64P; rpgz 43P.
+- gamez live: `python -c` with `v21.chat_role("systems supervisor","Reply with exactly GAMEZ-SMOKE-OK")` → `GAMEZ-SMOKE-OK` (6.3s); `v21.orchestrator_chat([...])` → `ORCH-SMOKE-OK` (56.8s); `v21.vision_chat("/tmp/opencode/vision-smoke.png","...")` → description (646.7s). NIM model + no key → `RuntimeError` (honest).
+- crewz live: `python -c` with `CogBrain().propose(...)` → `{'action':'final','final':'CREWZ-SMOKE-OK'}` (5.8s).
+- rpgz live: `python - <<'EOF'` asyncio `chat_completion("http://127.0.0.1:4000", ...)` → `'RPGZ-SMOKE-OK\n'` (8.5s, after freeing CPU).
+- Gateway checks: `curl -s http://127.0.0.1:4000/health` → `{"status":"ok","routes":61,"keyed":6}`; `curl -s http://127.0.0.1:8080/health` → 200; `curl -s -o /dev/null -w '%{http_code}' http://127.0.0.1:3000/` → 200.
+- Service restarts: `systemctl restart mcp-server mem20-chat mem20-dreamer`; verify `systemctl is-active <u>` + `ss -tlnp | grep pid=<MainPID>`.
+- Ollama diagnostics (read-only): `ss -tnp | grep 11434` (found client PID 233583 = `mem20dreamz idle`), `curl -s http://127.0.0.1:11434/api/ps` (models + ctx + expires_at), `journalctl -u ollama --since "18:10"` (3m/2m/500 timeouts), `uptime`, `ps -C llama-server`.
+- Doc updates: `docs/03-installation.md` + `docs/05-complete-tools-reference.md` LLM env table/example now keyless-first (Pollinations default, key optional).

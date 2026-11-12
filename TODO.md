@@ -39,3 +39,17 @@
 - [x] sitemap now indexes extra roots (/sb by default, --extra-root / --no-extra-roots) — evidence: 43 sitemap tests, pre-existing 22 unchanged
 - [x] mem20 CLIs resolvable from a default PATH (systemd/cron/script contexts) — evidence: 36/36 resolve+run from `env -i PATH=/root/.local/bin:/usr/bin:/bin`, 17 tests, mem20-path-links.service restores them after deletion
 - [ ] blue-hydra.service + searxng.service have non-existent ExecStart paths (pre-existing, dated 2026-08-18, both inactive) — NOT mine, not touched, needs an owner decision
+
+## 2026-11-11 — keyless LLM rewire
+- [x] Root llm.py keyless (pollinations default, ollama fallback, local moondream/MiniLM/espeak/faster-whisper) — evidence: 174 tests, 7 live paths
+- [x] mem20dreamz keyless panel + judge — evidence: 157 tests, live dream smoke log
+- [x] mem20agentz keyless-first providers — evidence: 164P/1S, 8 pre-existing F only
+- [x] mem20kilnz keyless provider candidates — evidence: baseline unchanged (19F/83P/184E), zero regressions
+- [x] mem20owebz keyless routes + bridge yaml — evidence: 23 tests, live gateway fast → gemma3:1b
+- [x] mem20gamez v21 keyless roles/workers/vision — evidence: 63 tests (10 new), live chat/orchestrator/vision
+- [x] mem20crewz verified keyless by inheritance — evidence: 64 tests, live propose
+- [x] mem20rpgz verified keyless gateway client — evidence: 43 tests, live 8.5s after CPU freed
+- [x] Services restarted on keyless config (mcp-server, mem20-chat, mem20-gateway, mem20-dreamer) — evidence: active, PPID=1, ports 8080/8082/3000/4000 healthy
+- [ ] 5 keyless providers as requested — only 3 chat entries verified (pollinations, ollama-qwen, ollama-gemma) + local vision/embed/TTS/ASR; more requires pulling bigger Ollama models (owner decision)
+- [ ] mem20kilnz live engine verification — engine source dir missing from disk (pre-existing, like mem20oreo)
+- [ ] mem20dreamz idle loop saturates the box (4×180s concurrent calls) — consider a throttle/cadence limit (design decision, not done)

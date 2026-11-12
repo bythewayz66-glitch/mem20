@@ -13,6 +13,7 @@ import unittest
 
 from mem20owebz.config import (
     DEFAULT_BASES,
+    KEYLESS_PROVIDERS,
     ModelConfig,
     Route,
     build_upstream_url,
@@ -234,6 +235,72 @@ class TestGatewayRouting(unittest.TestCase):
         gw = ModelGateway(self._cfg(), client=FakeClient())
         with self.assertRaises(GatewayError):
             _run(gw.chat_completions({"model": "nope"}))
+
+
+class TestKeylessReality(unittest.TestCase):
+    """2026-11-11 rewire: with an empty secrets home the gateway must still
+    serve real (keyless) providers, and must not lie that they are keyed."""
+
+    KEY_ENVS = ("GEMINI_API_KEY", "GROQ_API_KEY", "DEEPSEEK_API_KEY",
+                "OPENAI_API_KEY", "NVIDIA_API_KEY")
+
+    def setUp(self):
+        for k in self.KEY_ENVS:
+            os.environ.pop(k, None)
+
+    def test_keyless_providers_have_bases(self):
+        self.assertEqual(DEFAULT_BASES["pollinations"], "https://text.pollinations.ai/openai")
+        self.assertEqual(DEFAULT_BASES["ollama"], "http://localhost:11434/v1")
+
+    def test_route_available_without_key_for_keyless_provider(self):
+        r = Route(alias="ollama/gemma3:1b", upstream_model="ollama/gemma3:1b",
+                  provider="ollama")
+        self.assertEqual(r.key(), "")
+        self.assertTrue(r.available())
+        keyed = Route(alias="groq/x", upstream_model="groq/zx",
+                      key_env="GROQ_API_KEY", provider="groq")
+        self.assertFalse(keyed.available())
+
+    def test_real_config_keyless_routes_usable_with_no_keys(self):
+        cfg = parse_config(CONFIG)
+        usable = {r.display_name() for r in cfg.keyed()}
+        for alias in ("fast", "balanced", "strong",
+                      "pollinations/gpt-oss-20b", "ollama/gemma3:1b",
+                      "ollama/qwen2.5-coder:0.5b"):
+            self.assertIn(alias, usable, alias)
+        # keyed-only aliases stay honestly absent
+        self.assertNotIn("groq/llama-3.3-70b", usable)
+
+    def test_gateway_picks_keyless_member_with_no_keys(self):
+        cfg = parse_config(CONFIG)
+        gw = ModelGateway(cfg, client=FakeClient())
+        picks = gw._pick("fast")
+        self.assertTrue(picks)
+        self.assertEqual(picks[0].upstream_model, "ollama/gemma3:1b")
+
+    def test_keyless_proxy_sends_no_authorization_header(self):
+        cfg = parse_config(CONFIG)
+        script = [FakeResponse({"choices": [{"message": {"content": "local ok"}}]})]
+        client = FakeClient(script)
+        gw = ModelGateway(cfg, client=client)
+        body = {"model": "ollama/gemma3:1b",
+                "messages": [{"role": "user", "content": "yo"}]}
+        out = _run(gw.chat_completions(body))
+        self.assertEqual(out["choices"][0]["message"]["content"], "local ok")
+        url, headers, payload = client.calls[0]
+        self.assertEqual(url, "http://localhost:11434/v1/chat/completions")
+        self.assertNotIn("Authorization", headers)
+        self.assertEqual(payload["model"], "gemma3:1b")
+
+    def test_pollinations_url_shape(self):
+        r = Route(alias="pollinations/gpt-oss-20b",
+                  upstream_model="pollinations/gpt-oss-20b",
+                  provider="pollinations")
+        self.assertEqual(
+            build_upstream_url(upstream_base(r), r),
+            "https://text.pollinations.ai/openai/chat/completions")
+        self.assertIn(r.provider, KEYLESS_PROVIDERS)
+        self.assertTrue(r.available())
 
 
 class _MakeFail:

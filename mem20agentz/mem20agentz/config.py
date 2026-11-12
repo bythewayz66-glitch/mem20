@@ -23,8 +23,10 @@ CONFIG_ENV = "MEM20AGENTZ_CONFIG"
 DEFAULTS: dict[str, Any] = {
     "default_profile": "mem20",
     "model": {
-        "provider": "nvidia",
-        "model": "nvidia/nemotron-3-ultra-550b-a55b",
+        # Keyless default (2026-11-11): pollinations answers with no API key
+        # (~1 reply/45s/IP on the free tier). The estate has no provider keys.
+        "provider": "pollinations",
+        "model": "gpt-oss-20b",
         "timeout_s": 900,
     },
     "approvals": "auto",

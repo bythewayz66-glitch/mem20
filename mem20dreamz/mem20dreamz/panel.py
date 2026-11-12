@@ -5,30 +5,27 @@ spot *systematic* rather than random, because every member can be confidently
 wrong in the same direction and agreement gets laundered into consensus.
 Different training lineages have genuinely different blind spots.
 
-Everything in ``PANEL`` was verified to actually answer, on this host, with a real
-call. Model ids and context windows were read from provider endpoints rather than
-guessed, because a wrong id is an instant 404 and a panelist that silently never
-replies is indistinguishable from one with nothing to say.
+Everything in ``PANEL`` was verified to actually answer, on this host, with a
+real call. Model ids and context windows were read from provider endpoints
+rather than guessed, because a wrong id is an instant 404 and a panelist that
+silently never replies is indistinguishable from one with nothing to say.
 
-FUNDING REALITY, stated plainly. Of the provider keys in the estate secrets, only
-two serve a completion today: Cohere and Groq. Everything else was tested by
-calling it, not by reading its catalog:
+KEYLESS REALITY, stated plainly (2026-11-11). The estate secrets file is gone
+and with it every provider key, so only keyless surfaces can serve a
+completion. Verified by calling them, not by reading a catalog:
 
-* OpenRouter - ``total_credits=0``
-* Gemini / Google - quota exceeded (429), and 2.5-pro is closed to new users
-* DeepSeek direct - 402 insufficient balance
-* xAI - 403, team has no credits
-* Mistral - 401 invalid key
-* HuggingFace - monthly credits depleted
-* Azure - 404 on every api-version tried
-* NVIDIA NIM - key valid and /models returns 82 ids, but **none are callable**:
-  404 "Function not found", 410 gone, and deepseek-v4.1-flash times out at 180s.
-  NIM lists what NVIDIA hosts in general, not what is deployed for this account.
+* Pollinations - ``https://text.pollinations.ai/openai``, ``gpt-oss-20b``;
+  answered a real prompt in ~5s. Free tier is rate-limited to roughly one
+  reply per 45s per IP (HTTP 402 FREE_LIMIT), so exactly one member rides it.
+* Ollama, local - ``http://localhost:11434/v1``; ``qwen2.5-coder:0.5b`` and
+  ``gemma3:1b`` both answered. Context 32768 each, read from ``/api/show``,
+  not guessed. CPU-bound and slow, but uncapped and free.
 
-So the rule is satisfied *literally* - eight distinct models, verified answering -
-but *family* diversity is narrower than the rule deserves, being dominated by
-Cohere and Groq's open-weight line. Funding one more provider widens it, and
-noting that a provider's catalog is not evidence of callability is half of why.
+Keyed providers (cohere, groq) stay in PROVIDERS/KEY_ENV so a deployment that
+obtains real keys can widen the panel without code changes; on this host they
+are honestly unfunded and excluded. The distinct-model rule survives the
+smaller roster: gpt-oss-20b, gemma3:1b and qwen2.5-coder:0.5b are three
+different training lineages across two providers.
 
 Where a context window is an estimate it says so, because that number decides how
 much lineage each panelist can actually read.
@@ -44,10 +41,25 @@ from .estate import ESTATE_ROOT
 sys.path.insert(0, ESTATE_ROOT)
 import llm
 
+POLLINATIONS = "https://text.pollinations.ai/openai"
+OLLAMA = "http://localhost:11434/v1"
 COHERE = "https://api.cohere.com/compatibility/v1"
 GROQ = "https://api.groq.com/openai/v1"
 
-KEY_ENV = {"cohere": "COHERE_API_KEY", "groq": "GROQ_API_KEY"}
+#: Every provider the panel knows how to reach, with its base URL and its key
+#: requirement. ``key_env=None`` means the provider needs no key at all -
+#: that is the whole basis of the 2026-11-11 keyless rewire.
+PROVIDERS: dict[str, dict[str, Any]] = {
+    "pollinations": {"base": POLLINATIONS, "key_env": None},
+    "ollama-qwen": {"base": OLLAMA, "key_env": None},
+    "ollama-gemma": {"base": OLLAMA, "key_env": None},
+    "cohere": {"base": COHERE, "key_env": "COHERE_API_KEY"},
+    "groq": {"base": GROQ, "key_env": "GROQ_API_KEY"},
+}
+
+#: Keyed providers only - keyless members never consult this map.
+KEY_ENV = {name: spec["key_env"]
+           for name, spec in PROVIDERS.items() if spec["key_env"]}
 
 VERIFIED = "verified"
 ESTIMATE = "conservative-estimate"
@@ -66,80 +78,66 @@ class Panelist:
     notes: str = ""
 
     def resolved_base(self) -> str:
-        return {"cohere": COHERE, "groq": GROQ}.get(self.provider, COHERE)
+        spec = PROVIDERS.get(self.provider)
+        if spec is None:
+            raise PanelConfigError(
+                f"unknown provider {self.provider!r}: every panel member must "
+                "name a provider that exists in PROVIDERS"
+            )
+        return spec["base"]
 
 
-# One member per model id. Verified answering on 2026-09-26.
+# One member per model id. All three verified answering keyless on this host
+# on 2026-11-11 (pollinations gpt-oss-20b ~5s; local Ollama models immediately).
 PANEL: tuple[Panelist, ...] = (
     Panelist(
-        role="ux_architect",
-        provider="groq",
-        model="openai/gpt-oss-120b",
-        context=131_072,
+        role="systems_inventor",
+        provider="pollinations",
+        model="gpt-oss-20b",
+        context=32_768,
+        context_source=ESTIMATE,
         focus=(
-            "information architecture, interaction, and legibility: can a first-time "
-            "visitor tell what this is, what it costs, and can the next person work on it"
+            "what capability, tool or runtime this needs that does not exist "
+            "yet, and the smallest real version of it"
+        ),
+        temperature=0.85,
+        notes=(
+            "remote keyless proxy; ~1 reply/45s/IP (HTTP 402 FREE_LIMIT), so "
+            "exactly one member rides it. Context through the proxy is an "
+            "estimate - gpt-oss-20b natively serves 131k, but the free tier "
+            "has not been probed for its real cap"
         ),
     ),
     Panelist(
-        role="performance",
-        provider="cohere",
-        model="command-a-plus-05-2026",
-        context=256_000,
-        focus="latency, payload, render and query budgets - anything that would make it feel cheap",
-    ),
-    Panelist(
-        role="security",
-        provider="cohere",
-        model="command-a-03-2025",
-        context=128_000,
-        focus="abuse paths, auth, input handling, what an attacker does with this surface",
-    ),
-    Panelist(
-        role="accessibility",
-        provider="cohere",
-        model="c4ai-aya-expanse-32b",
-        context=128_000,
-        focus="keyboard paths, contrast, focus order, screen-reader semantics, motion",
-        notes="aya is a genuinely different training lineage from the command line",
+        role="skeptic",
+        provider="ollama-gemma",
+        model="gemma3:1b",
+        context=32_768,
+        context_source=VERIFIED,
+        focus=(
+            "attack the premise. Is this the right thing to be building? "
+            "Argue the opposite."
+        ),
+        temperature=0.6,
+        notes=(
+            "local CPU, keyless; general lineage, contrarian by instruction. "
+            "0.6 not 0.9: verified 2026-11-11 by repeated calls, gemma3:1b at "
+            "0.9 drifted into Chinese on ~1/3 of replies ('失望', '了解') - "
+            "wrong-language output that the verdict parsers cannot read"
+        ),
     ),
     Panelist(
         role="product",
-        provider="groq",
-        model="qwen/qwen3.6-27b",
+        provider="ollama-qwen",
+        model="qwen2.5-coder:0.5b",
         context=32_768,
-        focus="whether this is the right product, scope discipline, and what is missing that nobody asked for",
+        context_source=VERIFIED,
+        focus=(
+            "whether this is the right product, scope discipline, and what is "
+            "missing that nobody asked for"
+        ),
         temperature=0.8,
-    ),
-    Panelist(
-        role="conversion",
-        provider="cohere",
-        model="command-a-reasoning-08-2025",
-        context=256_000,
-        focus="the path from arriving to acting, and exactly where it leaks",
-    ),
-    # Standing roles, not phases. The skeptic's dissent is recorded even when
-    # overruled, so a lost argument stays visible.
-    Panelist(
-        role="skeptic",
-        provider="groq",
-        model="allam-2-7b",
-        context=8_192,
-        focus="attack the premise. Is this the right thing to be building? Argue the opposite.",
-        temperature=0.9,
-        notes="smallest context in the panel, so it reads a fitted digest; contrarian by instruction",
-    ),
-    # This slot used to be 'maintainability' on gpt-oss-20b, which is the same
-    # family as gpt-oss-120b and so bought almost no independent judgement. The
-    # slot now earns its keep on invention, and legibility is folded into the
-    # ux_architect's focus above.
-    Panelist(
-        role="systems_inventor",
-        provider="groq",
-        model="openai/gpt-oss-20b",
-        context=32_768,
-        focus="what capability, tool or runtime this needs that does not exist yet, and the smallest real version of it",
-        temperature=0.85,
+        notes="local CPU, keyless; the code lineage, and the smallest writer on the panel",
     ),
 )
 
@@ -148,22 +146,8 @@ CRITIC_ROLES = tuple(p.role for p in PANEL if p.role not in {"skeptic", "systems
 GATING_ROLES = CRITIC_ROLES + ("skeptic",)
 
 
-#: Providers present in the estate secrets that the panel cannot use today, and
-#: why. Recorded explicitly so the roster can never understate what is excluded.
-EXCLUDED_PROVIDERS = {
-    "openrouter": "total_credits=0",
-    "gemini": "quota exceeded (429); 2.5-pro closed to new users",
-    "deepseek": "402 insufficient balance",
-    "xai": "403 team has no credits",
-    "mistral": "401 invalid key",
-    "huggingface": "monthly credits depleted",
-    "azure": "404 on every api-version tried",
-    "nvidia": "key valid, /models returns 82, but none callable (404/410/timeout)",
-}
-
-
 def _key_for(provider: str) -> str:
-    """Whether a provider is funded, resolved through llm.
+    """Whether a KEYED provider is funded, resolved through llm.
 
     This used to read ``os.environ`` directly, which worked only by accident:
     ``llm`` published the entire secrets file into the process environment at
@@ -173,8 +157,25 @@ def _key_for(provider: str) -> str:
     the estate - this function found nothing and ``panel()`` returned an empty
     list. A funded check that silently reports "nobody" is the worst possible
     failure for a panel whose whole job is to notice it has lost a member.
+
+    Keyless providers (``key_env=None``) have no key to find and return "".
     """
-    return llm.env_value(KEY_ENV.get(provider, ""))
+    env = PROVIDERS.get(provider, {}).get("key_env")
+    if not env:
+        return ""
+    return llm.env_value(env)
+
+
+def _usable(provider: str) -> bool:
+    """A provider is usable when it needs no key, or its key is funded.
+
+    An unknown provider is never usable - the roster validation exists so
+    that case fails loudly instead of silently dropping a member.
+    """
+    spec = PROVIDERS.get(provider)
+    if spec is None:
+        return False
+    return not spec["key_env"] or bool(_key_for(provider))
 
 
 class PanelConfigError(RuntimeError):
@@ -182,13 +183,15 @@ class PanelConfigError(RuntimeError):
 
 
 def assert_roster_valid() -> None:
-    """Fail loudly on a duplicated model.
+    """Fail loudly on a duplicated model or an unresolvable provider.
 
     This previously deduplicated silently, which quietly removed
     ``systems_inventor`` from the panel because it shared a model with
     ``performance`` - the invention register stayed empty and nothing said why.
     A missing panelist is indistinguishable from one with nothing to say, which
-    is the exact failure this engine is supposed to avoid, so it raises.
+    is the exact failure this engine is supposed to avoid, so it raises. The
+    provider check exists for the same reason: a provider typo would otherwise
+    drop the member at call time instead of at config time.
     """
     ids = [m.model for m in PANEL]
     dupes = sorted({m for m in ids if ids.count(m) > 1})
@@ -198,12 +201,20 @@ def assert_roster_valid() -> None:
             f"distinct-model rule violated: {', '.join(dupes)} assigned to multiple "
             f"roles ({', '.join(roles)}). Every panel member needs its own model."
         )
+    unknown = sorted({m.provider for m in PANEL if m.provider not in PROVIDERS})
+    if unknown:
+        raise PanelConfigError(
+            f"unknown provider(s): {', '.join(unknown)}. Every panel member "
+            "must name a provider that exists in PROVIDERS."
+        )
 
 
 def panel() -> list[Panelist]:
-    """Panelists with a funded key. The roster is validated, never quietly trimmed."""
+    """Usable panelists: keyless providers always, keyed providers when funded.
+
+    The roster is validated, never quietly trimmed."""
     assert_roster_valid()
-    return [m for m in PANEL if _key_for(m.provider)]
+    return [m for m in PANEL if _usable(m.provider)]
 
 
 def by_role(role: str) -> Panelist | None:
@@ -219,11 +230,11 @@ def roster_status() -> dict[str, Any]:
     """What the panel will actually be, and honestly why anything is missing."""
     assert_roster_valid()
     members = panel()
-    funded = {m.provider for m in members}
+    providers = {m.provider for m in members}
     return {
         "panel_size": len(members),
         "distinct_models": len({m.model for m in members}),
-        "distinct_providers": len(funded),
+        "distinct_providers": len(providers),
         "distinct_model_rule": "enforced: one member per model id",
         "members": [
             {
@@ -237,10 +248,15 @@ def roster_status() -> dict[str, Any]:
             }
             for m in members
         ],
-        "excluded_providers": EXCLUDED_PROVIDERS,
+        "unfunded_providers": {
+            name: "keyed; no key in the estate (secrets file removed 2026-11-11)"
+            for name in KEY_ENV if not _key_for(name)
+        },
         "caveat": (
-            "only Cohere and Groq serve completions today; family diversity is narrower "
-            "than the distinct-model rule deserves. A provider's catalog is not evidence "
-            "of callability - NVIDIA lists 82 models and answers none of them."
+            "keyless reality 2026-11-11: pollinations (remote, ~1 reply/45s/IP) "
+            "and local Ollama (qwen2.5-coder:0.5b, gemma3:1b) are the only usable "
+            "providers; every keyed provider is unfunded on this host. Family "
+            "diversity is narrower than the distinct-model rule deserves - three "
+            "lineages across two providers."
         ),
     }

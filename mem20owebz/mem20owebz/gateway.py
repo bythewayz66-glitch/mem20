@@ -65,12 +65,13 @@ class ModelGateway:
     # ---- routing ----------------------------------------------------------
 
     def _available(self, alias: str) -> list[Route]:
-        """Member routes for an alias that have a real key, respecting cooldown."""
+        """Member routes for an alias that are usable (real key or keyless
+        provider), respecting cooldown."""
         group = self.cfg.group(alias)
         out = []
         now = time.time()
         for r in group:
-            if not r.key():
+            if not r.available():
                 continue
             if self.cooldown_until.get(r.alias, 0) > now:
                 continue
@@ -78,8 +79,8 @@ class ModelGateway:
         return out
 
     def _pick(self, alias: str) -> list[Route]:
-        """Candidate list (ordered) for an alias: its keyed members, then the
-        keyed members of each declared group fallback."""
+        """Candidate list (ordered) for an alias: its usable members, then the
+        usable members of each declared group fallback."""
         candidates: list[Route] = list(self._available(alias))
         for fb in self.cfg.group_fallbacks(alias):
             for r in self._available(fb):
@@ -87,7 +88,7 @@ class ModelGateway:
                     candidates.append(r)
         if not candidates and alias not in ("fast", "balanced", "strong"):
             r = self.cfg.route(alias)
-            if r and r.key():
+            if r and r.available():
                 candidates = [r]
         return candidates
 

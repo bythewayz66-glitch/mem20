@@ -670,15 +670,13 @@ def _score_candidate(
 #: 7B skeptic, the incumbent won every contest regardless of candidate quality.
 #: A judge that cannot tell two artifacts apart returns "incumbent stands" every
 #: time, which looks like convergence and is actually blindness.
+#: Local-first (2026-11-11): pollinations is rate-limited to ~1 reply/45s/IP,
+#: and the judge fires right after writer calls - a pollinations judge would
+#: hit HTTP 402 FREE_LIMIT, report "judge unavailable" and freeze the dream.
 JUDGE_PREFERENCE = (
-    "command-a-plus-05-2026",
-    "command-a-reasoning-08-2025",
-    "openai/gpt-oss-120b",
-    "c4ai-aya-expanse-32b",
-    "command-a-03-2025",
-    "qwen/qwen3.6-27b",
-    "openai/gpt-oss-20b",
-    "allam-2-7b",
+    "gemma3:1b",
+    "qwen2.5-coder:0.5b",
+    "gpt-oss-20b",
 )
 
 

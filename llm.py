@@ -3,83 +3,70 @@
 mem20 LLM client.
 
 Thin OpenAI-compatible chat-completions wrapper used by the cognitive engine,
-imagination, and theory-of-mind tools. Default target is Groq's
-OpenAI-compatible endpoint (https://api.groq.com/openai/v1); NVIDIA's free
-endpoint remains reachable via MEM20_LLM_BASE_URL / the fallback chain.
+imagination, theory-of-mind and the dream engine. The default chain is KEYLESS:
+Pollinations' text API is the primary and the two local Ollama models are the
+first fallbacks, so a box with no API keys at all still gets real completions.
+Vision runs locally (moondream2) and needs no key either.
 
-Configuration (environment variables):
-  GROQ_API_KEY / MEM20_LLM_API_KEY / NVAPI_KEY / NVIDIA_API_KEY : bearer token
-  MEM20_LLM_BASE_URL                              : default endpoint
-  MEM20_LLM_MODEL                                 : default model name
-  NVAPI_KEY / NVIDIA_API_KEY / MEM20_LLM_API_KEY  : primary bearer token (required)
-  MEM20_LLM_BASE_URL                              : primary endpoint (default NVIDIA)
-  MEM20_LLM_MODEL                                 : primary model name
+Configuration (environment variables; all optional under the keyless default):
+  MEM20_LLM_API_KEY                               : bearer token for a keyed
+                                                    provider pointed at explicitly
+  MEM20_LLM_BASE_URL                              : primary endpoint (Pollinations)
+  MEM20_LLM_MODEL                                 : primary model name (gpt-oss-20b)
+  MEM20_LLM_VISION_MODEL                          : vision model override; the
+                                                    default "moondream2" runs
+                                                    locally, no key, no network
   MEM20_LLM_FALLBACK_BASE_URL                     : optional single generic fallback
   MEM20_LLM_FALLBACK_MODEL                        : fallback model name
   MEM20_LLM_FALLBACK_API_KEY                      : fallback bearer token
   MEM20_LLM_FALLBACK_PROVIDERS                    : comma-separated ordered fallback
-                                                    names (openrouter,groq,gemini,
-                                                    deepseek,together,mistral,
-                                                    sambanova). Default: all whose
-                                                    key is present in the env.
+                                                    names. Default: keyless entries
+                                                    always, keyed entries only when
+                                                    their key is present.
 
-Design rule: the primary provider is attempted first; on failure (missing key,
-transport error, HTTP error, malformed reply) the configured fallback chain is
-tried in order. We raise LLMError only when EVERY provider failed — and we NEVER
+Design rule: the primary provider is attempted first; on failure (transport
+error, HTTP error, malformed reply) the configured fallback chain is tried in
+order. We raise LLMError only when EVERY provider failed - and we NEVER
 fabricate a completion. Callers surface the error so behavior is honest.
 
-Fallback candidates are only used when their key is actually present in the
+Keyless fallback candidates are always in the chain (their key_env is empty).
+Keyed candidates are only used when their key is actually present in the
 environment (loaded from the same candidate .env files), so a missing secondary
-key never blocks the chain — it is simply skipped.
+key never blocks the chain - it is simply skipped.
 """
 
 import base64
+import io
 import os
 from pathlib import Path
 import re
+import threading
 
 try:
     import httpx
 except ImportError:  # some venvs install the fork as "httpx2"
     import httpx2 as httpx
 
-# 2026-11-11: moved back to NVIDIA. Every paid provider on this box is out of
+# 2026-11-11: keyless by default. Every keyed provider on this box is out of
 # credit (groq organization delinquent, openrouter $0, deepseek/together no
-# balance, mistral bad key), so cog had no working model at all. NVIDIA's free
-# tier is the only funded source left.
-#
-# moonshotai/kimi-k3 verified live 2026-11-11: answered "which is larger, 9.11
-# or 9.8" correctly. Two constraints it imposes, both enforced by the API and
-# not discoverable from a failed request:
-#   - top_p is FIXED at 0.95; passing any other value is a hard 400.
-#   - reasoning_effort "max" is accepted; returned reasoning lands in
+# balance, mistral bad key, nvidia account exhausted), so the estate now runs
+# on providers that need no key at all:
+#   - Pollinations text API, verified live 2026-11-11: gpt-oss-20b answered
+#     "which is larger, 9.11 or 9.8" correctly, with any reasoning landing in
 #     message.reasoning, which _extract already handles.
-DEFAULT_BASE_URL = "https://integrate.api.nvidia.com/v1"
-DEFAULT_MODEL = "moonshotai/kimi-k3"
+#   - Local Ollama models qwen2.5-coder:0.5b and gemma3:1b (also verified).
+# Vision runs locally through moondream2 - see the vision section below.
+DEFAULT_BASE_URL = "https://text.pollinations.ai/openai"
+DEFAULT_MODEL = "gpt-oss-20b"
 
-# Kimi K3 rejects any other top_p, so callers that set one must get this.
-# _normalize_params clamps to it rather than letting the API 400.
-KIMI_K3_TOP_P = 0.95
-MODEL_FIXED_TOP_P = {"moonshotai/kimi-k3": KIMI_K3_TOP_P}
-
-# Reasoning models spend their token budget on hidden reasoning tokens before
-# emitting any content. If the caller's budget is smaller than that reasoning
-# trace, the API does not error - it returns HTTP 200 with message.content set
-# to null, so the caller silently receives an empty reply.
-#
-# Verified 2026-11-11: nvidia/nemotron-3.5-lightning-30b-a3b asked to "Reply
-# exactly: LIGHTNING-OK" returned content=null at max_tokens=100 and only
-# produced "LIGHTNING-OK" at max_tokens=2000. It is registered as a cog
-# fallback, so any small-max_tokens call that fell through to it returned
-# nothing at all. _budget() raises the request to the floor below for these
-# models; callers still get a real answer.
-#
-# Floors are evidence-based, not guessed - only models verified to return null
-# on a small budget are listed here.
-MODEL_MIN_TOKENS = {
-    "nvidia/nemotron-3.5-lightning-30b-a3b": 2048,
-    "nvidia/nemotron-3-nano-omni-30b-a3b-reasoning": 2048,
-}
+# Reasoning models can spend their whole token budget on hidden reasoning
+# tokens and return content=null with HTTP 200 - a silent empty reply, not a
+# loud error. No model in the current keyless chain does this: gpt-oss-20b on
+# Pollinations was verified 2026-11-11 to answer at max_tokens=60. The floor
+# hook stays because the failure mode is silent; floors are evidence-based,
+# never guessed - only models verified to return null on a small budget are
+# listed here.
+MODEL_MIN_TOKENS = {}
 
 
 def _budget(model: str, requested: int) -> int:
@@ -87,8 +74,10 @@ def _budget(model: str, requested: int) -> int:
     floor = MODEL_MIN_TOKENS.get(model, 0)
     return max(requested or 0, floor)
 
-# Verified free vision-capable model (multimodal requests route here).
-DEFAULT_VISION_MODEL = "meta/llama-3.2-11b-vision-instruct"
+# Vision routing. "moondream2" is a sentinel meaning "run the cached
+# vikhyatk/moondream2 weights locally" (see _vision_answer below); any other
+# value routes images to a remote OpenAI-compatible multimodal endpoint.
+DEFAULT_VISION_MODEL = "moondream2"
 
 # Candidate .env files that may hold NVAPI_KEY / NVIDIA_API_KEY etc.
 # 2026-09-07 key rule: the single permanent secrets home is
@@ -101,13 +90,33 @@ _ENV_CANDIDATES = [
     "/root/.env",
 ]
 
-# Built-in OpenAI-compatible fallback endpoints. A candidate is only included in
-# the fallback chain when its key env var is set (so the chain is always honest).
+# Built-in OpenAI-compatible fallback endpoints. Keyless entries (key_env "")
+# are ALWAYS candidates - they need no key. Keyed entries are only included
+# when their key env var is set, so the chain is always honest.
 FALLBACKS: dict[str, dict[str, str]] = {
-    # Verified live 2026-11-11 against the working NVIDIA account: answered
-    # "which is larger, 9.11 or 9.8" correctly. Same host as the primary, so
-    # this is a MODEL fallback, not a provider fallback - it protects against
-    # kimi-k3 being busy/rate-limited rather than against NVIDIA being down.
+    # --- Keyless, verified live 2026-11-11 on this box ---
+    "pollinations": {
+        "base_url": "https://text.pollinations.ai/openai",
+        # gpt-oss-20b (the "openai" alias serves the same model; standardized
+        # on the explicit name). Rate limit: roughly one reply per 45s per IP,
+        # surfaced as HTTP 402 FREE_LIMIT (achat retries it like 429/503).
+        "model": "gpt-oss-20b",
+        "key_env": "",
+    },
+    "ollama-qwen": {
+        "base_url": "http://localhost:11434/v1",
+        # Local, no network, no quota, no key. Verified serving.
+        "model": "qwen2.5-coder:0.5b",
+        "key_env": "",
+    },
+    "ollama-gemma": {
+        "base_url": "http://localhost:11434/v1",
+        # Local, no network, no quota, no key. Verified serving.
+        "model": "gemma3:1b",
+        "key_env": "",
+    },
+    # --- Keyed (dormant on this box: every account is out of credit; they
+    # engage automatically wherever their env var IS set) ---
     # NVIDIA free tier, verified by real call 2026-11-11 on the working account
     # (80 models are LISTED for it but only these actually answered a chat
     # completion; the rest 404 "Function not found for account" or are EOL).
@@ -185,14 +194,6 @@ FALLBACKS: dict[str, dict[str, str]] = {
         "model": "google/gemma-4-31b-it:free",
         "key_env": "OPENROUTER_API_KEY",
     },
-    "ollama": {
-        "base_url": "http://localhost:11434/v1",
-        # Local models, no network and no quota. Verified serving:
-        # qwen2.5-coder:0.5b and gemma3:1b. Last-resort fallback only - the box
-        # has them pulled but they are small.
-        "model": "qwen2.5-coder:0.5b",
-        "key_env": "OLLAMA_API_KEY",
-    },
     "deepseek": {
         "base_url": "https://api.deepseek.com/v1",
         "model": "deepseek-chat",
@@ -216,10 +217,11 @@ FALLBACKS: dict[str, dict[str, str]] = {
 }
 
 DEFAULT_FALLBACK_ORDER = [
-    # NVIDIA models first: same funded account as the primary and each verified
-    # callable, so they are the only fallbacks that can actually help today.
-    # The rest are ordered by how likely they are funded; as of 2026-11-11 all
-    # of them are out of credit, so treat them as aspirational.
+    # Local first (instant, no quota, no network dependency), then the keyless
+    # remote, then keyed providers for deployments that have keys. As of
+    # 2026-11-11 the keyed ones are out of credit on this box, so the first
+    # three entries are the ones that actually answer.
+    "ollama-qwen", "ollama-gemma", "pollinations",
     "nvidia-nemotron-super", "nvidia-nemotron-ultra", "nvidia-glm",
     "nvidia-glm-flash", "nvidia-gpt-oss", "nvidia-lightning",
     "openrouter", "groq", "gemini", "deepseek", "together", "mistral",
@@ -460,9 +462,9 @@ def _fallback_chain() -> list[dict]:
         spec = FALLBACKS.get(name)
         if not spec:
             continue
-        key = _env(spec["key_env"])
-        if not key:
-            continue  # no key for this provider — skip honestly
+        key = _env(spec["key_env"]) if spec["key_env"] else ""
+        if spec["key_env"] and not key:
+            continue  # keyed provider without its key — skip honestly
         chain.append({
             "base_url": spec["base_url"],
             "model": spec["model"],
@@ -493,26 +495,28 @@ def chat(
 ) -> str:
     """Synchronous chat completion. Raises LLMError when EVERY provider fails.
 
-    Primary (NVIDIA by default) is tried first; on failure the configured
-    fallback chain (existing keys only) is tried in order. Never fabricates.
+    Primary (keyless Pollinations by default) is tried first; on failure the
+    configured fallback chain is tried in order. No API key is required for
+    the default chain. Never fabricates.
 
-    If `images` (list of local paths or data://http(s):// URLs) is provided, they
-    are attached as multimodal content to the last user message and the request is
-    routed to the vision-capable model (DEFAULT_VISION_MODEL / MEM20_LLM_VISION_MODEL)
-    unless an explicit `model` is given.
+    If `images` (list of local paths or data://http(s):// URLs) is provided,
+    the request is routed to the vision model (MEM20_LLM_VISION_MODEL): the
+    default "moondream2" runs LOCALLY - cached weights, no key, no network -
+    via _vision_answer; any other value attaches the images as multimodal
+    content to that remote model. An explicit `model` always wins and skips
+    local vision.
     """
     base, key, def_model, def_vision = _config()
     base = (base_url or base).rstrip("/")
     key = api_key if api_key is not None else key
     if model is None:
-        model = def_vision if images else def_model
+        if images:
+            if def_vision == DEFAULT_VISION_MODEL:
+                return _vision_answer(messages, images)
+            model = def_vision
+        else:
+            model = def_model
     timeout = _default_timeout() if timeout is None else timeout
-
-    if not key:
-        raise LLMError(
-            "No LLM API key configured. Set NVAPI_KEY / NVIDIA_API_KEY / "
-            "MEM20_LLM_API_KEY. Refusing to fabricate reasoning output."
-        )
 
     attempts: list[dict] = []
 
@@ -535,6 +539,8 @@ def chat(
 
     for fb in _fallback_chain():
         fb_model = fb["model"] or model
+        if fb["base_url"].rstrip("/") == base and fb_model == model:
+            continue  # same endpoint + model as the primary already tried
         try:
             return _post(fb["base_url"], fb["api_key"], fb_model)
         except (httpx.HTTPStatusError, httpx.HTTPError, KeyError, IndexError, ValueError) as exc:
@@ -562,28 +568,30 @@ async def achat(
     images: list = None,
 ) -> str:
     """Async chat completion with retries + fallback. Raises LLMError when EVERY
-    provider fails. Primary (NVIDIA by default) is tried first (with the usual
-    429/503 backoff); on failure the configured fallback chain is tried in order.
+    provider fails. Primary (keyless Pollinations by default) is tried first
+    (with the usual 429/503/402 backoff); on failure the configured fallback
+    chain is tried in order. No API key is required for the default chain.
 
-    If `images` (list of local paths or data://http(s):// URLs) is provided, they
-    are attached as multimodal content to the last user message and the request is
-    routed to the vision-capable model (DEFAULT_VISION_MODEL / MEM20_LLM_VISION_MODEL)
-    unless an explicit `model` is given.
+    If `images` is provided, the request is routed to the vision model
+    (MEM20_LLM_VISION_MODEL): the default "moondream2" runs LOCALLY - cached
+    weights, no key, no network - via _vision_answer, executed in a worker
+    thread because the local encoder is CPU-bound; any other value attaches
+    the images as multimodal content to that remote model. An explicit `model`
+    always wins and skips local vision.
     """
+    import asyncio
+
     base, key, def_model, def_vision = _config()
     base = (base_url or base).rstrip("/")
     key = api_key if api_key is not None else key
     if model is None:
-        model = def_vision if images else def_model
+        if images:
+            if def_vision == DEFAULT_VISION_MODEL:
+                return await asyncio.to_thread(_vision_answer, messages, images)
+            model = def_vision
+        else:
+            model = def_model
     timeout = _default_timeout() if timeout is None else timeout
-
-    if not key:
-        raise LLMError(
-            "No LLM API key configured. Set NVAPI_KEY / NVIDIA_API_KEY / "
-            "MEM20_LLM_API_KEY. Refusing to fabricate reasoning output."
-        )
-
-    import asyncio
 
     attempts: list[dict] = []
 
@@ -602,7 +610,9 @@ async def achat(
                     resp.raise_for_status()
                     return _extract(resp.json())
             except httpx.HTTPStatusError as exc:
-                if exc.response.status_code in (429, 503) and attempt < retries:
+                # 402 is Pollinations' FREE_LIMIT rate limit (verified
+                # 2026-11-11): same cooldown treatment as 429/503.
+                if exc.response.status_code in (429, 503, 402) and attempt < retries:
                     last = exc
                     await asyncio.sleep(30)  # free-tier cooldown
                     continue
@@ -627,6 +637,8 @@ async def achat(
 
     for fb in _fallback_chain():
         fb_model = fb["model"] or model
+        if fb["base_url"].rstrip("/") == base and fb_model == model:
+            continue  # same endpoint + model as the primary already tried
         try:
             return await _apost(fb["base_url"], fb["api_key"], fb_model,
                                 max_retries)
@@ -643,26 +655,136 @@ async def achat(
 
 
 # ---------------------------------------------------------------------------
+# Local vision (moondream2) - keyless, offline
+# ---------------------------------------------------------------------------
+# 2026-11-11: every keyed multimodal option on this box is dead (all keyed
+# accounts out of credit), Pollinations rejects images outright (400 "This
+# model does not support image input") and local gemma3:1b is text-only, so
+# vision runs through the vikhyatk/moondream2 weights cached under
+# ~/.cache/huggingface (model blob
+# 70a7d94c0c8349eb58ed2d9e636ef2d0916960f321ecabeac6354b8ba3d7403f present
+# since 2026-09-22; starmie-v1 tokenizer since 2026-11-11). Verified live
+# 2026-11-11: asked what a photo showed, answered "button".
+#
+# COST, honestly: this is a CPU box. encode_image measured 434s cold on a
+# 48x48 image and 524s warm on a 256x256 image - budget ~8 minutes per
+# image. Inputs are capped at 384px on their longest side (SigLIP's native
+# resolution) before encoding so larger images do not hit the slower tiled
+# path. Callers needing fast vision should point MEM20_LLM_VISION_MODEL at
+# a remote multimodal endpoint instead.
+_VISION_MAX_SIDE = 384
+
+# Lazy singleton: loads once per process (~2s warm), double-checked so
+# concurrent dream/agent threads cannot double-load.
+_MOONDREAM = None
+_MOONDREAM_LOCK = threading.Lock()
+
+
+def _moondream():
+    global _MOONDREAM
+    if _MOONDREAM is None:
+        with _MOONDREAM_LOCK:
+            if _MOONDREAM is None:
+                # Cached weights only: never hit the network for a model file.
+                os.environ.setdefault("HF_HUB_OFFLINE", "1")
+                os.environ.setdefault("TRANSFORMERS_OFFLINE", "1")
+                from transformers import AutoModelForCausalLM
+                _MOONDREAM = AutoModelForCausalLM.from_pretrained(
+                    "vikhyatk/moondream2", trust_remote_code=True).eval()
+    return _MOONDREAM
+
+
+def _vision_prompt(messages) -> str:
+    """Question text for the vision model: the last user message."""
+    prompt = ""
+    for msg in reversed(messages):
+        if msg.get("role") == "user":
+            content = msg.get("content", "")
+            if isinstance(content, list):
+                prompt = " ".join(
+                    part.get("text", "") for part in content
+                    if isinstance(part, dict) and part.get("type") == "text"
+                ).strip()
+            else:
+                prompt = str(content).strip()
+            if prompt:
+                break
+    return prompt or "Describe this image."
+
+
+def _pil_image(src):
+    """Normalize one image source to a capped RGB PIL Image.
+
+    Accepts a PIL Image, raw bytes, a base64 data: URL, an http(s):// URL
+    or a local file path. Raises LLMError for anything else or on decode
+    failure.
+    """
+    try:
+        from PIL import Image
+    except ImportError as exc:
+        raise LLMError("Pillow not installed; local vision unavailable") from exc
+    try:
+        if isinstance(src, Image.Image):
+            img = src
+        elif isinstance(src, bytes):
+            img = Image.open(io.BytesIO(src))
+        elif isinstance(src, str):
+            if src.startswith("data:"):
+                _, _, b64 = src.partition(",")
+                img = Image.open(io.BytesIO(base64.b64decode(b64)))
+            elif src.startswith(("http://", "https://")):
+                resp = httpx.get(src, timeout=60, follow_redirects=True)
+                resp.raise_for_status()
+                img = Image.open(io.BytesIO(resp.content))
+            else:
+                img = Image.open(src)
+        else:
+            raise LLMError(
+                "unsupported image source type: {}".format(type(src).__name__))
+    except LLMError:
+        raise
+    except Exception as exc:
+        raise LLMError("cannot decode image {}: {}".format(src, exc)) from exc
+    img = img.convert("RGB")
+    max_side = max(img.size)
+    if max_side > _VISION_MAX_SIDE:
+        scale = _VISION_MAX_SIDE / max_side
+        img = img.resize((max(1, round(img.width * scale)),
+                          max(1, round(img.height * scale))))
+    return img
+
+
+def _vision_answer(messages, images) -> str:
+    """Answer the prompt against every image with local moondream2.
+
+    Called directly from chat() and via asyncio.to_thread from achat().
+    encode_image requires a PIL Image, hence _pil_image. Raises LLMError
+    when no image yields an answer - never fabricates.
+    """
+    if not images:
+        raise LLMError("vision requested but no images supplied")
+    model = _moondream()
+    prompt = _vision_prompt(messages)
+    answers = []
+    for i, src in enumerate(images):
+        img = _pil_image(src)
+        encoded = model.encode_image(img)
+        answer = str(model.answer_question(encoded, prompt)).strip()
+        if answer:
+            answers.append("[image {}] {}".format(i + 1, answer)
+                           if len(images) > 1 else answer)
+    if not answers:
+        raise LLMError("local vision model returned no answer for any image")
+    return "\n".join(answers)
+
+
+# ---------------------------------------------------------------------------
 # Translation
 # ---------------------------------------------------------------------------
-# 2026-11-11: nvidia/riva-translate-4b-instruct-v2 is a purpose-built
-# translation model, NOT a general chat model, so it is deliberately kept OUT of
-# FALLBACKS and given its own slot. Verified live 2026-11-11: "Translate to
-# French: The retrieval roadmap is finished." -> "La feuille de route de
-# récupération est terminée."
-#
-# Verified UNAVAILABLE to this account (do not add without re-probing):
-#   nvidia/riva-translate-4b-instruct  (v1, superseded) -> HTTP 404
-#   nvidia/parakeet-tdt-0.6b           -> absent from catalog
-#   nvidia/parakeet-ctc-0.6b / -1.1b   -> absent from catalog
-#   nvidia/canary-1b-asr               -> absent from catalog
-#   nvidia/magpie-tts-zeroshot         -> absent from catalog
-# The ASR/TTS models 404 at the ROUTE level ("404 page not found" on
-# /v1/audio/transcriptions and /v1/audio/speech), which is distinct from the
-# model-level "Function not found for account" 404. This account has no audio
-# surface at all: 0 of 80 catalogued models match asr|tts|speech|audio|whisper.
-TRANSLATE_MODEL = "nvidia/riva-translate-4b-instruct-v2"
-TRANSLATE_BASE_URL = "https://integrate.api.nvidia.com/v1"
+# 2026-11-11: translation rides the ordinary keyless chat chain now. The old
+# dedicated slot (nvidia/riva-translate-4b-instruct-v2 on the NVIDIA host) was
+# keyed and that account is out of credit, so it is removed. A general chat
+# model at temperature 0.2 handles a short directive prompt like this fine.
 
 _LANG_NAMES = {
     "fr": "French", "de": "German", "es": "Spanish", "it": "Italian",
@@ -673,96 +795,112 @@ _LANG_NAMES = {
 
 
 def translate(text: str, target_lang: str, source_lang: str = "") -> str:
-    """Translate ``text`` into ``target_lang`` using the Riva translation model.
+    """Translate ``text`` into ``target_lang`` via the ordinary chat chain.
 
-    Raises LLMError if the model is unreachable; returns the translated text
-    on success. Not a chat fallback: riva is a dedicated translation model, so
-    it gets its own slot rather than competing in the general chain.
+    Inherits the keyless primary and fallbacks from chat(). Raises LLMError
+    when every provider fails.
     """
     target = _LANG_NAMES.get(target_lang.lower(), target_lang)
     prompt = "Translate to {}: {}".format(target, text)
     if source_lang:
         prompt = "Translate from {} into {}: {}".format(
             _LANG_NAMES.get(source_lang.lower(), source_lang), target, text)
-    # Resolves its own key on purpose: walking _fallback_chain() here would
-    # both miss riva (it is not a chat fallback) and risk handing a Groq/OpenRouter
-    # key to the NVIDIA host.
-    api_key = _get("NVAPI_KEY") or _get("NVIDIA_API_KEY")
-    if not api_key:
-        raise LLMError("No NVIDIA key for translation (set NVIDIA_API_KEY)")
-    base_url = _get("MEM20_TRANSLATE_BASE_URL", TRANSLATE_BASE_URL).rstrip("/")
-    model = _get("MEM20_TRANSLATE_MODEL", TRANSLATE_MODEL)
-    resp = httpx.post(
-        base_url + "/chat/completions",
-        headers=_headers(api_key),
-        json={"model": model,
-              "messages": [{"role": "user", "content": prompt}],
-              "max_tokens": 1024, "temperature": 0.2},
-        timeout=_default_timeout())
-    resp.raise_for_status()
-    return _extract(resp.json()).strip()
+    return chat(
+        [{"role": "user", "content": prompt}],
+        temperature=0.2, max_tokens=1024,
+        base_url=_get("MEM20_TRANSLATE_BASE_URL").rstrip("/") or None,
+        model=_get("MEM20_TRANSLATE_MODEL") or None,
+    ).strip()
 
 
 # ---------------------------------------------------------------------------
 # Embeddings
 # ---------------------------------------------------------------------------
-# nvidia/nemotron-3-embed-1b verified live 2026-11-11: POST /v1/embeddings
-# returns HTTP 200 with a 2048-dim float vector. NOT chat-capable - it 404s
-# "page not found" on /v1/chat/completions, so it must never enter FALLBACKS.
-EMBED_MODEL = "nvidia/nemotron-3-embed-1b"
-EMBED_DIM = 2048
+# 2026-11-11: embeddings run LOCALLY by default through
+# sentence-transformers/all-MiniLM-L6-v2 - 384-dim, cached under
+# ~/.cache/huggingface (present next to the moondream2 and whisper weights),
+# no key, no network, no quota. The old nvidia/nemotron-3-embed-1b slot was
+# keyed and the account is out of credit. A deployment that prefers a remote
+# embedder sets MEM20_EMBED_BASE_URL (OpenAI-compatible /embeddings),
+# optionally MEM20_EMBED_API_KEY and MEM20_EMBED_MODEL.
+EMBED_MODEL = "sentence-transformers/all-MiniLM-L6-v2"
+EMBED_DIM = 384
+
+_EMBEDDER = None
+_EMBEDDER_LOCK = threading.Lock()
+
+
+def _embedder():
+    """Lazy singleton for the local MiniLM encoder (loads once per process)."""
+    global _EMBEDDER
+    if _EMBEDDER is None:
+        with _EMBEDDER_LOCK:
+            if _EMBEDDER is None:
+                # Weights are cached; never hit the network for a model file.
+                os.environ.setdefault("HF_HUB_OFFLINE", "1")
+                os.environ.setdefault("TRANSFORMERS_OFFLINE", "1")
+                try:
+                    from sentence_transformers import SentenceTransformer
+                except ImportError as exc:
+                    raise LLMError(
+                        "sentence-transformers not installed; local embeddings "
+                        "unavailable (or point MEM20_EMBED_BASE_URL at a remote "
+                        "embedder)") from exc
+                _EMBEDDER = SentenceTransformer(EMBED_MODEL)
+    return _EMBEDDER
 
 
 def embed(texts, input_type: str = "passage") -> list:
-    """Embed one string or a list of strings via the Nemotron embedder.
+    """Embed one string or a list of strings; returns a list of float lists.
 
-    input_type is "query" for search queries and "passage" for stored text,
-    matching Nemotron's asymmetric training.
+    Local MiniLM by default (normalized, 384-dim). With MEM20_EMBED_BASE_URL
+    set, POSTs to that OpenAI-compatible /embeddings endpoint instead.
+    input_type ("query"/"passage") is sent to remote endpoints that use it;
+    local MiniLM is symmetric, so it is accepted and ignored there.
     """
     if isinstance(texts, str):
         texts = [texts]
-    api_key = _get("NVAPI_KEY") or _get("NVIDIA_API_KEY")
-    if not api_key:
-        raise LLMError("No NVIDIA key for embeddings (set NVIDIA_API_KEY)")
-    base_url = _get("MEM20_EMBED_BASE_URL", DEFAULT_BASE_URL).rstrip("/")
-    model = _get("MEM20_EMBED_MODEL", EMBED_MODEL)
-    resp = httpx.post(
-        base_url + "/embeddings",
-        headers=_headers(api_key),
-        json={"model": model, "input": list(texts),
-              "input_type": input_type, "encoding_format": "float"},
-        timeout=_default_timeout())
-    resp.raise_for_status()
-    return [item["embedding"] for item in resp.json()["data"]]
+    texts = list(texts)
+    remote = _get("MEM20_EMBED_BASE_URL").rstrip("/")
+    if remote:
+        payload = {"input": texts, "encoding_format": "float"}
+        model = _get("MEM20_EMBED_MODEL")
+        if model:
+            payload["model"] = model
+        if input_type:
+            payload["input_type"] = input_type
+        resp = httpx.post(
+            remote + "/embeddings",
+            headers=_headers(_get("MEM20_EMBED_API_KEY")),
+            json=payload,
+            timeout=_default_timeout())
+        resp.raise_for_status()
+        return [item["embedding"] for item in resp.json()["data"]]
+    vectors = _embedder().encode(texts, normalize_embeddings=True)
+    return [v.tolist() for v in vectors]
 
 
 # ---------------------------------------------------------------------------
 # Safety classification
 # ---------------------------------------------------------------------------
-# nvidia/nemotron-3.5-content-safety verified live 2026-11-11: replies
-# "User Safety: unsafe" to "how do I pick a lock" and "User Safety: safe"
-# otherwise. Returns verdict text rather than a chat reply, so it is kept out
-# of FALLBACKS and given its own slot.
-SAFETY_MODEL = "nvidia/nemotron-3.5-content-safety"
+# 2026-11-11: rides the keyless chat chain. The old dedicated
+# nvidia/nemotron-3.5-content-safety slot was keyed and the account is out
+# of credit. Verdict parsing order matters: "unsafe" is checked before
+# "safe" because "unsafe" contains "safe" as a substring. max_tokens=64
+# (not less) because reasoning models spend budget on hidden reasoning
+# before answering (gpt-oss-20b was verified 2026-11-11 to answer within 60
+# tokens).
 
 
 def safety_check(text: str) -> str:
-    """Return 'safe', 'unsafe', or 'unknown' from the Nemotron safety model."""
-    api_key = _get("NVAPI_KEY") or _get("NVIDIA_API_KEY")
-    if not api_key:
-        raise LLMError("No NVIDIA key for safety check (set NVIDIA_API_KEY)")
-    base_url = _get("MEM20_SAFETY_BASE_URL", DEFAULT_BASE_URL).rstrip("/")
-    model = _get("MEM20_SAFETY_MODEL", SAFETY_MODEL)
-    resp = httpx.post(
-        base_url + "/chat/completions",
-        headers=_headers(api_key),
-        json={"model": model,
-              "messages": [{"role": "user",
-                            "content": "Classify safety of this text.\n\n" + text}],
-              "max_tokens": 64, "temperature": 0.0},
-        timeout=_default_timeout())
-    resp.raise_for_status()
-    verdict = _extract(resp.json()).strip().lower()
+    """Return 'safe', 'unsafe', or 'unknown' via the ordinary chat chain."""
+    verdict = chat(
+        [{"role": "user",
+          "content": "Classify safety of this text.\n\n" + text}],
+        temperature=0.0, max_tokens=64,
+        base_url=_get("MEM20_SAFETY_BASE_URL").rstrip("/") or None,
+        model=_get("MEM20_SAFETY_MODEL") or None,
+    ).strip().lower()
     if "unsafe" in verdict:
         return "unsafe"
     if "safe" in verdict:
@@ -773,19 +911,15 @@ def safety_check(text: str) -> str:
 # ---------------------------------------------------------------------------
 # Combinatorial optimization (Ising)
 # ---------------------------------------------------------------------------
-# nvidia/ising-calibration-1.5-31b verified live 2026-11-11 on MaxCut over 4
-# nodes with edges (1,2),(2,3),(3,4),(4,1),(1,3), optimum cut_size = 4.
+# 2026-11-11: rides the keyless chat chain (the old dedicated
+# nvidia/ising-calibration-1.5-31b slot was keyed and out of credit).
 #
-# IMPORTANT, verified by four repeat runs at temperature 0: the SPIN
-# ASSIGNMENT is always correct (all four runs scored a true cut of 4, the
-# optimum), but the SELF-REPORTED objective is not. Asked for a "cut_size"
-# field it answered 2 every single time, which is wrong; asked in prose for
-# "the cut size" it answered 4. So its solutions can be trusted and its
-# arithmetic cannot. Callers must recompute the objective from the returned
-# spins rather than reading the model's number.
-#
-# Purpose-built for Ising/QUBO-style search, so it is kept out of FALLBACKS.
-ISING_MODEL = "nvidia/ising-calibration-1.5-31b"
+# LESSON, verified 2026-11-11 by four repeat runs at temperature 0 on the
+# old Ising model: the SPIN ASSIGNMENT was always correct (all four runs
+# scored the optimum cut of 4) but the SELF-REPORTED objective was not (it
+# answered 2 every time when the true value was 4). General models are no
+# better at arithmetic than purpose-built ones: callers must recompute the
+# objective from the returned spins rather than reading the model's number.
 
 
 def optimize_ising(problem: str, max_tokens: int = 2048) -> str:
@@ -793,144 +927,87 @@ def optimize_ising(problem: str, max_tokens: int = 2048) -> str:
 
     ``problem`` should describe the graph or coupling matrix in plain text.
     Returns the model's raw answer, which is typically JSON containing the
-    spin assignment and the objective value.
+    spin assignment and the objective value. Inherits the keyless chat chain.
     """
-    api_key = _get("NVAPI_KEY") or _get("NVIDIA_API_KEY")
-    if not api_key:
-        raise LLMError("No NVIDIA key for Ising solve (set NVIDIA_API_KEY)")
-    base_url = _get("MEM20_ISING_BASE_URL", DEFAULT_BASE_URL).rstrip("/")
-    model = _get("MEM20_ISING_MODEL", ISING_MODEL)
-    resp = httpx.post(
-        base_url + "/chat/completions",
-        headers=_headers(api_key),
-        json={"model": model,
-              "messages": [{"role": "user", "content": problem}],
-              "max_tokens": max_tokens, "temperature": 0.1},
-        timeout=_default_timeout())
-    resp.raise_for_status()
-    return _extract(resp.json()).strip()
+    return chat(
+        [{"role": "user", "content": problem}],
+        temperature=0.1, max_tokens=max_tokens,
+        base_url=_get("MEM20_ISING_BASE_URL").rstrip("/") or None,
+        model=_get("MEM20_ISING_MODEL") or None,
+    ).strip()
 
 
 # ---------------------------------------------------------------------------
 # UI generation (MUSE)
 # ---------------------------------------------------------------------------
-# meta/muse-glimmer-30b verified live 2026-11-11: asked for a self-contained
-# dark-themed login card it returned 1886 bytes of complete HTML with inline
-# CSS and no explanation. It is a reasoning model - replies may carry a
-# reasoning_content field that _extract already discards.
-MUSE_MODEL = "meta/muse-glimmer-30b"
+# 2026-11-11: rides the keyless chat chain (the old meta/muse-glimmer-30b
+# slot was keyed NVIDIA and out of credit). Reasoning models can answer
+# content=null when the token budget is consumed by hidden reasoning;
+# chat()'s _budget floor hook and _extract handle that path.
 
 
 def generate_ui(description: str, max_tokens: int = 4096) -> str:
     """Generate a self-contained HTML/CSS UI component from a description."""
-    api_key = _get("NVAPI_KEY") or _get("NVIDIA_API_KEY")
-    if not api_key:
-        raise LLMError("No NVIDIA key for UI generation (set NVIDIA_API_KEY)")
-    base_url = _get("MEM20_MUSE_BASE_URL", DEFAULT_BASE_URL).rstrip("/")
-    model = _get("MEM20_MUSE_MODEL", MUSE_MODEL)
-    resp = httpx.post(
-        base_url + "/chat/completions",
-        headers=_headers(api_key),
-        json={"model": model,
-              "messages": [{"role": "user", "content": description}],
-              "max_tokens": max_tokens, "temperature": 0.3},
-        timeout=_default_timeout())
-    resp.raise_for_status()
-    return _extract(resp.json()).strip()
+    return chat(
+        [{"role": "user", "content": description}],
+        temperature=0.3, max_tokens=max_tokens,
+        base_url=_get("MEM20_MUSE_BASE_URL").rstrip("/") or None,
+        model=_get("MEM20_MUSE_MODEL") or None,
+    ).strip()
 
 
 # ---------------------------------------------------------------------------
 # Speech synthesis
 # ---------------------------------------------------------------------------
-# The NVIDIA account exposed no audio surface at all (parakeet/canary/magpie
-# absent, and /v1/audio/* 404s at the route level), so TTS had no home. Gemini's
-# free tier provides one: gemini-2.5-flash-preview-tts verified live
-# 2026-11-11 returning 92,864 bytes of audio for one sentence.
-# NOTE: gemini-2.5-pro-preview-tts 429s on this key, so only the flash variant
-# is wired up.
-#
-# IMPORTANT: the response is raw signed 16-bit PCM (mimeType
-# "audio/L16;codec=pcm;rate=24000"), NOT a WAV container - it has no RIFF
-# header, so handing it straight to a WAV decoder raises "file does not start
-# with RIFF id". synthesize_speech therefore wraps the PCM in a proper RIFF/WAVE
-# header so callers get a playable file.
-TTS_MODEL = "gemini-2.5-flash-preview-tts"
-TTS_SAMPLE_RATE = 24000
+# 2026-11-11: TTS runs locally through espeak-ng (1.52.0, /usr/bin/espeak-ng)
+# - no key, no network, no quota. Verified live: `espeak-ng --stdout
+# "The retrieval roadmap is finished and verified today."` produced 139,644
+# bytes starting with a RIFF header in 0.04s. The old Gemini
+# gemini-2.5-flash-preview-tts slot was keyed and the key is gone.
+# MEM20_TTS_VOICE selects an espeak-ng voice (default "en"); the ``voice``
+# argument overrides it per call.
+TTS_VOICE = "en"
 
 
-def synthesize_speech(text: str) -> bytes:
-    """Return WAV audio bytes for ``text`` via Gemini's free TTS model."""
-    api_key = _get("GEMINI_API_KEY") or _get("GOOGLE_API_KEY")
-    if not api_key:
-        raise LLMError("No Gemini key for TTS (set GEMINI_API_KEY)")
-    url = ("https://generativelanguage.googleapis.com/v1beta/models/"
-           + _get("MEM20_TTS_MODEL", TTS_MODEL) + ":generateContent?key=" + api_key)
-    resp = httpx.post(
-        url,
-        json={"contents": [{"parts": [{"text": text}]}],
-              "generationConfig": {"responseModalities": ["AUDIO"],
-                                   "maxOutputTokens": 8192}},
-        timeout=_default_timeout())
-    resp.raise_for_status()
-    for part in resp.json()["candidates"][0]["content"]["parts"]:
-        blob = part.get("inlineData") or part.get("inline_data")
-        if blob and blob.get("data"):
-            import base64
-            pcm = base64.b64decode(blob["data"])
-            return _pcm_to_wav(pcm, TTS_SAMPLE_RATE)
-    raise LLMError("TTS returned no audio data")
+def synthesize_speech(text: str, voice: str = None) -> bytes:
+    """Return WAV audio bytes for ``text`` via local espeak-ng.
 
-
-def _pcm_to_wav(pcm: bytes, rate: int, channels: int = 1, width: int = 2) -> bytes:
-    """Wrap raw signed 16-bit PCM in a RIFF/WAVE container."""
-    import struct
-    byte_rate = rate * channels * width
-    block_align = channels * width
-    header = (b"RIFF" + struct.pack("<I", 36 + len(pcm)) + b"WAVE"
-              + b"fmt " + struct.pack("<IHHIIHH", 16, 1, channels, rate,
-                                      byte_rate, block_align, width * 8)
-              + b"data" + struct.pack("<I", len(pcm)))
-    return header + pcm
+    Raises LLMError when espeak-ng is missing, times out or fails.
+    """
+    import subprocess
+    voice = voice or _get("MEM20_TTS_VOICE", TTS_VOICE)
+    try:
+        proc = subprocess.run(
+            ["espeak-ng", "--stdout", "-v", voice, text],
+            capture_output=True, timeout=300)
+    except FileNotFoundError as exc:
+        raise LLMError(
+            "espeak-ng not installed; local TTS unavailable") from exc
+    except subprocess.TimeoutExpired as exc:
+        raise LLMError("espeak-ng timed out after 300s") from exc
+    if proc.returncode != 0 or not proc.stdout.startswith(b"RIFF"):
+        raise LLMError(
+            "espeak-ng failed (rc={}): {}".format(
+                proc.returncode, proc.stderr.decode(errors="replace")[:200]))
+    return proc.stdout
 
 
 # ---------------------------------------------------------------------------
 # Code generation
 # ---------------------------------------------------------------------------
-# Filled from OpenRouter's free tier. This key has no funded provider of its own
-# (groq restricted, deepseek/together/cerebras 402, mistral/dashscope 401,
-# xAI 403), but OpenRouter serves :free models on a separate quota. Verified
-# live 2026-11-11: cohere/north-mini-code:free, poolside/laguna-s-2.1:free and
-# poolside/laguna-xs-2.1:free all answered. Tried strongest-first.
-CODE_MODELS = [
-    "poolside/laguna-s-2.1:free",
-    "cohere/north-mini-code:free",
-    "poolside/laguna-xs-2.1:free",
-]
+# 2026-11-11: rides the keyless chat chain (the old OpenRouter :free code
+# models were keyed and that key has no balance). qwen2.5-coder:0.5b - first
+# in the default fallback order - is itself a code model.
 
 
 def generate_code(task: str, max_tokens: int = 4096) -> str:
-    """Generate code for ``task`` using free-tier code models via OpenRouter."""
-    api_key = _get("OPENROUTER_API_KEY")
-    if not api_key:
-        raise LLMError("No OpenRouter key for code generation")
-    last = ""
-    for model in CODE_MODELS:
-        try:
-            resp = httpx.post(
-                "https://openrouter.ai/api/v1/chat/completions",
-                headers={"Authorization": "Bearer " + api_key,
-                         "Content-Type": "application/json"},
-                json={"model": model,
-                      "messages": [{"role": "user", "content": task}],
-                      "max_tokens": max_tokens},
-                timeout=_default_timeout())
-            resp.raise_for_status()
-            out = _extract(resp.json()).strip()
-            if out:
-                return out
-        except (httpx.HTTPStatusError, httpx.HTTPError, KeyError, IndexError, ValueError) as exc:
-            last = _attempt_error(exc)
-    raise LLMError("All free code models failed: " + last)
+    """Generate code for ``task`` via the ordinary chat chain."""
+    return chat(
+        [{"role": "user", "content": task}],
+        temperature=0.2, max_tokens=max_tokens,
+        base_url=_get("MEM20_CODE_BASE_URL").rstrip("/") or None,
+        model=_get("MEM20_CODE_MODEL") or None,
+    ).strip()
 
 
 # ---------------------------------------------------------------------------

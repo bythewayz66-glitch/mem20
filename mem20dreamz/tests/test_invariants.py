@@ -293,11 +293,14 @@ def test_panel_finds_its_keys_without_anything_publishing_them(monkeypatch):
     provider keys, so the suite stays green on a machine with no secrets. A
     live-key check would only prove the host is funded, not that the lookup is
     correct; the unfunded counterpart below covers the negative case.
+
+    2026-11-11: the roster itself is keyless, so those members are usable with
+    nothing funded at all - which is the point of the keyless rewire.
     """
     from mem20dreamz import panel as panel_mod
 
     env_to_provider = {env: provider for provider, env in panel_mod.KEY_ENV.items()}
-    assert env_to_provider, "the roster should name provider key variables"
+    assert env_to_provider, "the panel should name keyed provider key variables"
     seen = []
 
     def fake_env_value(name, default=""):
@@ -308,7 +311,12 @@ def test_panel_finds_its_keys_without_anything_publishing_them(monkeypatch):
     for provider, name in panel_mod.KEY_ENV.items():
         assert panel_mod._key_for(provider) == f"funded-{name}"
     assert seen, "the panel must ask llm for each key"
-    assert {m.provider for m in panel_mod.panel()} == set(panel_mod.KEY_ENV)
+    # keyless members never need a key
+    for provider in ("pollinations", "ollama-qwen", "ollama-gemma"):
+        assert panel_mod._key_for(provider) == ""
+        assert panel_mod._usable(provider) is True
+    assert {m.provider for m in panel_mod.panel()} == {
+        "pollinations", "ollama-qwen", "ollama-gemma"}
 
 
 def test_an_unfunded_provider_is_reported_as_unfunded(monkeypatch):
@@ -317,7 +325,28 @@ def test_an_unfunded_provider_is_reported_as_unfunded(monkeypatch):
 
     monkeypatch.setattr(panel_mod.llm, "env_value", lambda name, default="": "")
     assert panel_mod._key_for("cohere") == ""
-    assert panel_mod.panel() == []
+    assert panel_mod._usable("cohere") is False, "keyed provider with no key is unusable"
+    assert panel_mod._usable("no-such-provider") is False, "unknown provider is never usable"
+    # the live roster is keyless, so it is fully usable with nothing funded
+    assert len(panel_mod.panel()) == len(panel_mod.PANEL)
+
+
+def test_a_roster_provider_that_does_not_resolve_fails_loudly(monkeypatch):
+    """A provider typo must fail at config time, not drop the member silently.
+
+    That drop-at-call-time is the empty-panel failure mode this module exists
+    to prevent: a member that can never reply is indistinguishable from one
+    with nothing to say.
+    """
+    from mem20dreamz import panel as panel_mod
+
+    rogue = panel_mod.Panelist(
+        role="ghost", provider="nonexistent", model="ghost-model",
+        context=1000, focus="x")
+    monkeypatch.setattr(panel_mod, "PANEL", (rogue,))
+    with pytest.raises(panel_mod.PanelConfigError) as exc:
+        panel_mod.panel()
+    assert "unknown provider" in str(exc.value)
 
 
 def test_the_panel_never_publishes_secrets_into_the_environment():

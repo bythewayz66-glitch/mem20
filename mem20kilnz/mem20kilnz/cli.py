@@ -134,9 +134,9 @@ def cmd_budgets(args) -> int:
 
 
 def _note_missing_credential() -> None:
-    if not _secrets.engine_env().get("KILN_API_KEY"):
+    if not _secrets.engine_env().get("KILN_API_BASE"):
         print(
-            "note: no LLM credential found in "
+            "note: no LLM endpoint resolved from "
             f"{_secrets.SECRETS_PATH}; the engine will use its built-in "
             "English and DSL agent, which handles simple shapes. Set "
             "KILNZ_API_KEY (or OPENAI_API_KEY) in the secrets file for briefs "

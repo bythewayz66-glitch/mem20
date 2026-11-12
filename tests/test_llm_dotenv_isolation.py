@@ -20,6 +20,7 @@ import json
 import os
 import subprocess
 import sys
+import tempfile
 import textwrap
 from pathlib import Path
 
@@ -67,23 +68,50 @@ def test_importing_llm_does_not_publish_secrets_into_the_environment():
 def test_llm_still_finds_its_provider_key_in_the_file():
     """The point of the fix is *not* to stop llm reading the file.
 
-    It reads the file, it just keeps the values to itself.
+    It reads the file, it just keeps the values to itself. The estate is
+    de-keyed (no /opt/mem20/secrets/.env), so this seeds a controlled
+    temp file via MEM20_ENV_FILE - one of llm's own documented candidate
+    paths - and verifies the values resolve through the private map.
+    The subprocess pops the overlapping env vars BEFORE importing llm so
+    the result is independent of whatever earlier tests leaked into this
+    pytest process's environment.
     """
-    report = _run_in_subprocess(
-        """
-        import json, llm
-        base, key, model, vision_model = llm._config()
-        print(json.dumps({
-            "has_key": bool(key),
-            "base_is_configured": bool(base),
-            "model": model,
-            "vision_model": vision_model,
-        }))
-        """
-    )
-    assert report["has_key"] is True, "llm must still resolve its provider key from the secrets file"
+    with tempfile.NamedTemporaryFile("w", suffix=".env",
+                                      delete=False) as fh:
+        fh.write("MEM20_LLM_API_KEY=from-the-file\n"
+                 "MEM20_LLM_MODEL=file-model\n")
+    path = fh.name
+    saved = os.environ.get("MEM20_ENV_FILE")
+    os.environ["MEM20_ENV_FILE"] = path
+    try:
+        report = _run_in_subprocess(
+            """
+            import json, os
+            for var in ("NVAPI_KEY", "NVIDIA_API_KEY", "MEM20_LLM_API_KEY",
+                        "MEM20_LLM_MODEL", "MEM20_LLM_BASE_URL"):
+                os.environ.pop(var, None)
+            import llm
+            base, key, model, vision_model = llm._config()
+            print(json.dumps({
+                "has_key": bool(key),
+                "key": key,
+                "base_is_configured": bool(base),
+                "model": model,
+                "vision_model": vision_model,
+            }))
+            """
+        )
+    finally:
+        if saved is None:
+            os.environ.pop("MEM20_ENV_FILE", None)
+        else:
+            os.environ["MEM20_ENV_FILE"] = saved
+        os.unlink(path)
+    assert report["key"] == "from-the-file", \
+        "llm must resolve its provider key from the env file"
+    assert report["has_key"] is True
     assert report["base_is_configured"] is True
-    assert report["model"], "a model must still resolve"
+    assert report["model"] == "file-model"
     assert report["vision_model"], "a vision model must still resolve"
 
 
@@ -101,18 +129,37 @@ def test_a_real_environment_value_wins_over_the_file():
 
 
 def test_the_file_is_still_consulted_for_values_absent_from_the_environment():
-    report = _run_in_subprocess(
-        """
-        import json, os
-        os.environ.pop("GROQ_API_KEY", None)
-        import llm
-        print(json.dumps({
-            "resolved_nonempty": bool(llm._get("GROQ_API_KEY")),
-            # And the value is genuinely not in the environment.
-            "in_environment": "GROQ_API_KEY" in os.environ,
-        }))
-        """
-    )
+    """Same property as above, for a value that ONLY exists in the file.
+
+    GROQ_API_KEY is popped in the subprocess before import so the result
+    does not depend on leaked state from other test modules.
+    """
+    with tempfile.NamedTemporaryFile("w", suffix=".env",
+                                      delete=False) as fh:
+        fh.write("GROQ_API_KEY=from-the-file\n")
+    path = fh.name
+    saved = os.environ.get("MEM20_ENV_FILE")
+    os.environ["MEM20_ENV_FILE"] = path
+    try:
+        report = _run_in_subprocess(
+            """
+            import json, os
+            os.environ.pop("GROQ_API_KEY", None)
+            os.environ.pop("GROQ_API_KEYS", None)
+            import llm
+            print(json.dumps({
+                "resolved_nonempty": bool(llm._get("GROQ_API_KEY")),
+                # And the value is genuinely not in the environment.
+                "in_environment": "GROQ_API_KEY" in os.environ,
+            }))
+            """
+        )
+    finally:
+        if saved is None:
+            os.environ.pop("MEM20_ENV_FILE", None)
+        else:
+            os.environ["MEM20_ENV_FILE"] = saved
+        os.unlink(path)
     assert report["resolved_nonempty"] is True
     assert report["in_environment"] is False, "the value must be read, not published"
 

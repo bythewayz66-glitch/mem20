@@ -4613,9 +4613,9 @@ sudo systemctl status mem20
 |----------|---------|---------|
 | `MEM20_STORE_PATH` | `~/.mem20/store` | Memory engine + store location |
 | `MEM20_COG_PATH` | mem20 `cog/` dir | Cognitive engine location |
-| `MEM20_LLM_BASE_URL` | `https://integrate.api.nvidia.com/v1` | LLM endpoint |
-| `MEM20_LLM_MODEL` | project default | Model name |
-| `NVAPI_KEY` / `NVIDIA_API_KEY` | — | LLM bearer token |
+| `MEM20_LLM_BASE_URL` | `https://text.pollinations.ai/openai` | LLM endpoint (keyless) |
+| `MEM20_LLM_MODEL` | `gpt-oss-20b` | Model name |
+| `MEM20_LLM_API_KEY` / `NVAPI_KEY` / `NVIDIA_API_KEY` | — | Optional bearer token (keyed providers only) |
 | `MEM20_HEALTH_PORT` | `8080` | HTTP health endpoint port |
 | `MEM20_LOG_LEVEL` | `INFO` | Logging level |
 | `MEM20_BLENDER_EXECUTABLE` | — | Path to Blender |

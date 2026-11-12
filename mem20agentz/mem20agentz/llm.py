@@ -19,7 +19,31 @@ from typing import Any, Optional
 import httpx
 
 # Well-known OpenAI-compatible endpoints. Always overridable in config.
-KNOWN_PROVIDERS: dict[str, dict[str, str]] = {
+#
+# Keyless reality (2026-11-11): the estate has no provider keys, so the
+# keyless entries come FIRST and are the defaults everywhere a provider name
+# is chosen implicitly. All three were verified to answer on this host with
+# a real, unauthenticated completion: gpt-oss-20b via the pollinations proxy
+# (~5s, ~1 reply/45s/IP on the free tier) and the local Ollama models
+# (http://localhost:11434/v1, CPU-bound but uncapped). Keyed entries stay in
+# the catalog for deployments that obtain real keys - config naming them
+# still works unchanged.
+KNOWN_PROVIDERS: dict[str, dict[str, Optional[str]]] = {
+    "pollinations": {
+        "base_url": "https://text.pollinations.ai/openai",
+        "model": "gpt-oss-20b",
+        "key_env": None,
+    },
+    "ollama-qwen": {
+        "base_url": "http://localhost:11434/v1",
+        "model": "qwen2.5-coder:0.5b",
+        "key_env": None,
+    },
+    "ollama-gemma": {
+        "base_url": "http://localhost:11434/v1",
+        "model": "gemma3:1b",
+        "key_env": None,
+    },
     "nvidia": {
         "base_url": "https://integrate.api.nvidia.com/v1",
         "model": "nvidia/nemotron-3-ultra-550b-a55b",
@@ -109,7 +133,9 @@ def providers_from_config(config: Any) -> list[Provider]:
     if providers:
         return providers
     legacy = config.model if config else {}
-    name = str(legacy.get("provider", "nvidia") or "nvidia")
+    # Keyless default: no provider key exists on this host, so an implicitly
+    # named provider must be one that answers without a key.
+    name = str(legacy.get("provider", "pollinations") or "pollinations")
     known = KNOWN_PROVIDERS.get(name, {})
     base = os.environ.get("MEM20_LLM_BASE_URL",
                           known.get("base_url", "")).rstrip("/")
@@ -182,6 +208,18 @@ class AllProvidersFailed(Exception):
         self.errors = errors
 
 
+def _is_keyless(provider: "Provider") -> bool:
+    """True when KNOWN_PROVIDERS declares this provider needs no key at all.
+
+    Only known keyless names qualify. An unknown or keyed name under a keyring
+    keeps the paywall guard (skipped while unfunded) rather than silently
+    sending an unauthenticated request to an endpoint someone configured by
+    hand - "free" is a property of the provider, not of the caller's optimism.
+    """
+    known = KNOWN_PROVIDERS.get(provider.name)
+    return bool(known) and not known.get("key_env")
+
+
 class Router:
     """Ordered fallback across providers, keying via a KeyRing."""
 
@@ -208,7 +246,7 @@ class Router:
             retried = False
             while True:
                 api_key, source = None, None
-                if self.keyring is not None:
+                if self.keyring is not None and not _is_keyless(provider):
                     api_key, source = self.keyring.get(provider.name,
                                                        provider.api_key)
                     if api_key is None:

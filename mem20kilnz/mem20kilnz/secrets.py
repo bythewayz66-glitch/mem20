@@ -12,9 +12,16 @@ from pathlib import Path
 
 SECRETS_PATH = Path(os.environ.get("KILNZ_SECRETS", "/opt/mem20/secrets/.env"))
 
-#: OpenAI-compatible providers, in the estate's resolution order. Groq is the
-#: primary and NVIDIA the fallback, per the standing mem20 provider policy.
+#: OpenAI-compatible providers, in the estate's resolution order.
+#
+# Keyless reality (2026-11-11): the estate secrets file is gone, so the first
+# entry must answer with no credential at all. Pollinations does (verified by
+# a real, unauthenticated completion on this host, ~5s, ~1 reply/45s/IP on the
+# free tier) and is therefore the primary. An empty env_key means the provider
+# needs no key; keyed entries follow as the catalog for deployments that
+# obtain real keys, and xAI stays disallowed.
 PROVIDERS: tuple[tuple[str, str, str, str], ...] = (
+    ("pollinations", "", "https://text.pollinations.ai/openai", "gpt-oss-20b"),
     ("groq", "GROQ_API_KEY", "https://api.groq.com/openai/v1", "openai/gpt-oss-120b"),
     ("nvidia", "NVIDIA_API_KEY", "https://integrate.api.nvidia.com/v1",
      "meta/llama-3.3-70b-instruct"),
@@ -80,11 +87,12 @@ def llm_config() -> dict[str, str]:
     """Resolve an OpenAI-compatible endpoint for the engine's agent.
 
     The engine speaks the OpenAI `/chat/completions` shape, so any compatible
-    provider works. Resolution order is the estate's standing provider policy
-    (Groq primary, NVIDIA fallback, xAI disallowed) rather than a hope that
-    `OPENAI_API_KEY` happens to exist. Only keys that are actually present are
-    returned, so the caller can name the missing credential instead of sending
-    an empty one.
+    provider works. Resolution order is keyless-first (pollinations needs no
+    credential; xAI disallowed), then keyed providers for deployments that
+    have real keys. Only keys that are actually present are returned, so the
+    caller can name the missing credential instead of sending an empty one —
+    except keyless providers, which are returned with no key at all because
+    that is the honest configuration for them.
     """
     explicit_key = get("KILNZ_API_KEY") or get("OPENAI_API_KEY")  # noqa: E501
     explicit_base = get("KILNZ_API_BASE") or get("OPENAI_API_BASE") or get("OPENAI_BASE_URL")
@@ -101,9 +109,13 @@ def llm_config() -> dict[str, str]:
     for name, env_key, base, model in PROVIDERS:
         if name in DISALLOWED:
             continue
-        key = loaded.get(env_key)
-        if not key:
-            continue
+        if env_key:
+            key = loaded.get(env_key)
+            if not key:
+                continue
+        else:
+            # keyless provider: no key to find, none to send
+            key = ""
         cfg = {"KILN_API_KEY": key, "KILN_API_BASE": base, "KILN_MODEL": model}
         override = get("KILNZ_MODEL")
         if override:
@@ -133,7 +145,8 @@ def provider_candidates() -> list[dict]:
             {
                 "provider": name,
                 "key_name": env_key,
-                "configured": bool(loaded.get(env_key)),
+                "configured": (env_key == "") or bool(loaded.get(env_key)),
+                "keyless": env_key == "",
                 "base": base,
                 "model": model,
             }

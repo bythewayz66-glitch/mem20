@@ -66,7 +66,18 @@ DEFAULT_BASES = {
     "cerebras": "https://api.cerebras.ai/v1",
     "fireworks_ai": "https://api.fireworks.ai/v1",
     "huggingface": "https://api-inference.huggingface.co",
+    # keyless reality (2026-11-11): these two answer with NO credential at
+    # all, verified by real completions on this host (pollinations ~5s remote,
+    # free-tier ~1 reply/45s/IP; ollama local qwen2.5-coder:0.5b + gemma3:1b,
+    # context 32768 each). They keep the gateway usable with an empty secrets
+    # home, which is the estate's current state.
+    "pollinations": "https://text.pollinations.ai/openai",
+    "ollama": "http://localhost:11434/v1",
 }
+
+#: Providers that need no API key — a route on one of these is usable even
+#: when `Route.key()` is empty. Keyed providers are NOT in this set.
+KEYLESS_PROVIDERS = frozenset({"pollinations", "ollama"})
 
 
 @dataclass
@@ -85,6 +96,11 @@ class Route:
 
     def key(self) -> str:
         return env(self.key_env) if self.key_env else self.inline_key
+
+    def available(self) -> bool:
+        """Usable right now: a real key OR a keyless provider (pollinations/
+        ollama answer with no credential)."""
+        return bool(self.key()) or self.provider in KEYLESS_PROVIDERS
 
 
 @dataclass
@@ -119,16 +135,17 @@ class ModelConfig:
         return self.router_fallbacks.get(name, [])
 
     def keyed(self) -> list[Route]:
-        """Routes whose upstream key is actually set (honest 'available' list)."""
+        """Routes usable now (keyed with a real key, or keyless providers) —
+        the honest 'available' list."""
         out = []
         for name in self.aliases():
             group = self.group(name)
             if not group:
                 r = self.route(name)
-                if r and r.key():
+                if r and r.available():
                     out.append(r)
                 continue
-            if any(r.key() for r in group):
+            if any(r.available() for r in group):
                 out.append(group[0])
         return out
 

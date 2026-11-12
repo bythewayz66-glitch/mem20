@@ -1304,7 +1304,7 @@ def _cmd_llms(b, args) -> int:
                          if not any(p.name == n for p in selected)]
             providers = selected
         if not providers:
-            providers = [_named_provider("nvidia", cfg)]
+            providers = [_named_provider("pollinations", cfg)]
         router = Router(providers, keyring=keyring, substrate=b)
         try:
             result = moa(args.prompt, router,

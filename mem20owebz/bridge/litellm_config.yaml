@@ -1,13 +1,30 @@
 # Jayson Model Bridge — Expanded free providers
 # Based on https://github.com/12britz/awesome-free-models
+#
+# Keyless reality (2026-11-11): the estate secrets home is empty, so every
+# route below needs a key nobody has. The KEYLESS entries at the top need NO
+# credential (pollinations verified by real unauthenticated completions on
+# this host, ~5s, free-tier ~1 reply/45s/IP; local ollama gemma3:1b +
+# qwen2.5-coder:0.5b, context 32768) and keep fast/balanced/strong usable
+# with zero keys. Keyed routes stay as the catalog for deployments that
+# obtain real keys.
 
 model_list:
   # ========== ROUTER GROUPS ==========
   - model_name: fast
     litellm_params:
+      model: ollama/gemma3:1b
+  - model_name: fast
+    litellm_params:
+      model: pollinations/gpt-oss-20b
+  - model_name: fast
+    litellm_params:
       model: google/gemini-3.6-flash
       api_key: "os.environ/GEMINI_API_KEY"
 
+  - model_name: balanced
+    litellm_params:
+      model: pollinations/gpt-oss-20b
   - model_name: balanced
     litellm_params:
       model: groq/llama-3.3-70b-versatile
@@ -19,12 +36,29 @@ model_list:
 
   - model_name: strong
     litellm_params:
+      model: pollinations/gpt-oss-20b
+  - model_name: strong
+    litellm_params:
+      model: ollama/qwen2.5-coder:0.5b
+  - model_name: strong
+    litellm_params:
       model: google/gemini-3.1-pro-preview
       api_key: "os.environ/GEMINI_API_KEY"
   - model_name: strong
     litellm_params:
       model: deepseek/deepseek-reasoner
       api_key: "os.environ/DEEPSEEK_API_KEY"
+
+  # ========== KEYLESS (no credential, usable with an empty secrets home) ==========
+  - model_name: pollinations/gpt-oss-20b
+    litellm_params:
+      model: pollinations/gpt-oss-20b
+  - model_name: ollama/gemma3:1b
+    litellm_params:
+      model: ollama/gemma3:1b
+  - model_name: ollama/qwen2.5-coder:0.5b
+    litellm_params:
+      model: ollama/qwen2.5-coder:0.5b
 
   # ========== ANYAPI ==========
   - model_name: anyapi/gpt-4o
@@ -214,7 +248,8 @@ model_list:
       api_base: "os.environ/AZURE_API_BASE"
       api_version: "2024-08-01-preview"
 
-  # ========== LOCAL OLLAMA (DISABLED) ==========
+  # ========== LOCAL OLLAMA (old docker-internal draft — superseded by the
+  # keyless ollama routes above, which use this host's 127.0.0.1:11434) ==========
   # - model_name: ollama/llama3.2
   #   litellm_params:
   #     model: ollama/llama3.2

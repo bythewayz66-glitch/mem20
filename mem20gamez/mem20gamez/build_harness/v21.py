@@ -1,10 +1,12 @@
 """Harness Upgrades v2.1 - operational framework for the autonomous game studio.
 
 Brings the package rules into the runtime:
-  * provider key inventory (Groq primary, NVIDIA free fallback + vision)
-  * 10-supervisor / 2-orchestrator model assignments (xAI replaced:
-    Main Orchestrator is the human/agent-in-the-loop; heavy roles go to
-    Groq paid, NVIDIA free as verified fallback and vision deck)
+  * provider key inventory (KEYLESS FIRST, 2026-11-11: pollinations remote +
+    local ollama answer with no credential; the Groq/NVIDIA keyed deck remains
+    as the catalog for deployments that obtain real keys)
+  * 10-supervisor / 2-orchestrator model assignments (xAI removed: Main
+    Orchestrator is the human/agent-in-the-loop; keyless providers primary,
+    keyed Groq/NVIDIA entries retained for keyed deployments)
   * multi-model + multi-key worker parallelism (round-robin buckets)
   * naming convention law, mandatory folder hierarchy, batch manifests,
     handoff report template verification, primitive ban, description
@@ -27,8 +29,25 @@ from typing import Any, Iterator, Optional
 
 GROQ_BASE = "https://api.groq.com/openai/v1"
 NVIDIA_BASE = "https://integrate.api.nvidia.com/v1"
+POLLINATIONS_BASE = "https://text.pollinations.ai/openai"
+OLLAMA_BASE = "http://localhost:11434/v1"
 
-PROVIDER_BASE = {"groq": GROQ_BASE, "nvidia": NVIDIA_BASE}
+PROVIDER_BASE = {
+    "groq": GROQ_BASE,
+    "nvidia": NVIDIA_BASE,
+    "pollinations": POLLINATIONS_BASE,
+    "ollama": OLLAMA_BASE,
+}
+
+#: Providers that answer with NO credential (verified by real completions on
+#: this host 2026-11-11: pollinations gpt-oss-20b ~5s remote, free-tier
+#: ~1 reply/45s/IP; local ollama gemma3:1b + qwen2.5-coder:0.5b, ctx 32768).
+KEYLESS_PROVIDERS = frozenset({"pollinations", "ollama"})
+
+
+def _is_keyless(provider: str) -> bool:
+    return provider in KEYLESS_PROVIDERS
+
 
 GROQ_MODEL_36 = "qwen/qwen3.6-27b"
 GROQ_MODEL_38 = "qwen/qwen3.8-27b"
@@ -42,6 +61,15 @@ NIM_TEXT_FALLBACKS = [
     "mistralai/mixtral-8x22b-v0.1",
     "nvidia/llama-3.1-nemotron-51b-instruct",
 ]
+
+# Keyless models. gpt-oss-20b on pollinations returned clean plain text in
+# live smoke (unlike Groq's serving of it, see WORKER_POOL note); the local
+# coder model is the estate's product panelist and honors the text-JSON
+# contract; gemma3:1b is the light local fallback (keep temperature <= 0.6:
+# at 0.9 it drifts into Chinese on this host, verified 2026-11-11).
+POLLINATIONS_MODEL = "gpt-oss-20b"
+OLLAMA_CODER = "qwen2.5-coder:0.5b"
+OLLAMA_LIGHT = "gemma3:1b"
 
 # ── key inventory ─────────────────────────────────────────────────────────────
 
@@ -62,19 +90,26 @@ def provider_keys(provider: str) -> list[str]:
         return _env_keys("NVIDIA_API_KEY", "NGC_API_KEY", "NVIDIA_API_KEYS", "NVAPI_KEY")
     if provider == "xai":
         return _env_keys("XAI_API_KEY")
+    if _is_keyless(provider):
+        # one bucket, legitimately empty: no credential to send
+        return [""]
     return []
 
 
 def collect_keys() -> dict:
-    """Inventory provider keys. Missing = surfaced for operator action."""
+    """Inventory provider keys. Missing keyed credentials are surfaced for
+    operator action; keyless providers make the harness ready regardless."""
     inv = {}
-    for prov in ("groq", "nvidia", "xai"):
+    for prov in ("pollinations", "ollama", "groq", "nvidia", "xai"):
         keys = provider_keys(prov)
-        inv[prov] = {"present": len(keys) > 0, "keys": len(keys)}
+        inv[prov] = {"present": len(keys) > 0, "keys": len(keys),
+                     "keyless": _is_keyless(prov)}
     required = ["GROQ_API_KEY", "NVIDIA_API_KEY"]
     missing = [k for k in required if not os.environ.get(k, "").strip()]
-    return {"providers": inv, "missing": missing,
-            "ready": not missing, "ts": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime())}
+    keyless = {p: True for p in sorted(KEYLESS_PROVIDERS)}
+    return {"providers": inv, "missing": missing, "keyless": keyless,
+            "ready": bool(keyless) or not missing,
+            "ts": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime())}
 
 
 def _pick_key(provider: str, idx: int = 0) -> str:
@@ -87,58 +122,69 @@ def _pick_key(provider: str, idx: int = 0) -> str:
 # ── model assignments (upgrade MODEL_ASSIGNMENTS.md, xAI removed) ─────────────
 
 # (role, match keywords, primary (provider, model), fallback (provider, model))
-# Groq paid = primary per operator. NVIDIA free = fallback text + vision deck.
+# KEYLESS FIRST (2026-11-11): pollinations gpt-oss-20b remote primary; local
+# ollama fallback per role flavour (coder model for code-bearing roles, light
+# gemma for prose/critique). The keyed Groq/NVIDIA deck below the tables is
+# retained as the catalog for deployments that obtain real keys.
 ROLE_ASSIGNMENTS = [
     ("assembly_work",  ["assembly", "assemble", "build out", "compile", "work"],
-     ("groq", GROQ_MODEL_38), ("nvidia", NIM_STRONG)),
+     ("pollinations", POLLINATIONS_MODEL), ("ollama", OLLAMA_CODER)),
     ("assembly_critic", ["critic", "critique", "reviewer"],
-     ("groq", GROQ_MODEL_38), ("nvidia", NIM_STRONG)),
+     ("pollinations", POLLINATIONS_MODEL), ("ollama", OLLAMA_LIGHT)),
     ("unity_engine",   ["unity"],
-     ("groq", GROQ_MODEL_38), ("nvidia", NIM_STRONG)),
+     ("pollinations", POLLINATIONS_MODEL), ("ollama", OLLAMA_CODER)),
     ("godot_engine",   ["godot"],
-     ("groq", GROQ_MODEL_36), ("nvidia", NIM_STRONG)),
+     ("pollinations", POLLINATIONS_MODEL), ("ollama", OLLAMA_CODER)),
     ("asset_lead",     ["3d", "asset", "model", "mesh", "prop"],
-     ("groq", GROQ_MODEL_38), ("nvidia", NIM_STRONG)),
+     ("pollinations", POLLINATIONS_MODEL), ("ollama", OLLAMA_CODER)),
     ("asset_critic",   ["critic", "review", "inspect"],
-     ("groq", GROQ_MODEL_38), ("nvidia", NIM_VISION)),
+     ("pollinations", POLLINATIONS_MODEL), ("ollama", OLLAMA_LIGHT)),
     ("visual_qa_beta", ["visual", "beta", "qa", "test", "quality"],
-     ("groq", GROQ_MODEL_38), ("nvidia", NIM_STRONG)),
+     ("pollinations", POLLINATIONS_MODEL), ("ollama", OLLAMA_LIGHT)),
     ("marketing",      ["marketing", "business", "publish", "store", "launch"],
-     ("groq", GROQ_MODEL_36), ("nvidia", NIM_STRONG)),
+     ("pollinations", POLLINATIONS_MODEL), ("ollama", OLLAMA_LIGHT)),
     ("audio_vfx",      ["audio", "vfx", "sound", "music", "polish"],
-     ("groq", GROQ_MODEL_36), ("nvidia", NIM_STRONG)),
+     ("pollinations", POLLINATIONS_MODEL), ("ollama", OLLAMA_LIGHT)),
     ("systems",        ["system", "gameplay", "flow", "mechanics", "logic"],
-     ("groq", GROQ_MODEL_38), ("nvidia", NIM_STRONG)),
+     ("pollinations", POLLINATIONS_MODEL), ("ollama", OLLAMA_CODER)),
 ]
 
-ORCHESTRATOR_ASSIGNMENT = ("groq", GROQ_MODEL_38)      # main orchestrator LLM
-SECONDARY_ORCH_ASSIGNMENT = ("groq", GROQ_MODEL_36)    # secondary orchestrator
+ORCHESTRATOR_ASSIGNMENT = ("pollinations", POLLINATIONS_MODEL)   # main orchestrator LLM
+SECONDARY_ORCH_ASSIGNMENT = ("ollama", OLLAMA_CODER)             # secondary orchestrator
 
-# Worker buckets spread load across Groq rate buckets + NVIDIA free overflow.
-# Multi-key support: each (provider, model) x each key is a separate bucket.
+# Worker buckets spread load across the keyless deck (pollinations free tier
+# allows ~1 reply/45s/IP, so local ollama carries most of the loop). Multi-key
+# support: each (provider, model) x each key is a separate bucket; keyless
+# providers contribute exactly one empty-key bucket.
 # NOTE: the worker brain speaks a PLAIN-TEXT JSON protocol (CogBrain.propose).
-# gpt-oss models on Groq emit a function-call shape instead and the request is
+# gpt-oss models on GROQ emit a function-call shape instead and the request is
 # rejected with HTTP 400 tool_use_failed ("Tool choice is none, but model
-# called a tool"), which killed whole worker loops. Only models that honor the
-# text-JSON contract belong in this pool (pack: prefer qwen3.6/3.8).
+# called a tool"), which killed whole worker loops. Pollinations' serving of
+# gpt-oss-20b returned clean plain text in live smoke, and the local coder
+# model honors the text-JSON contract (it is the estate's product panelist).
 WORKER_POOL = [
-    ("groq", GROQ_MODEL_38),
-    ("groq", GROQ_MODEL_36),
-    ("nvidia", NIM_STRONG),
+    ("ollama", OLLAMA_CODER),
+    ("ollama", OLLAMA_LIGHT),
+    ("pollinations", POLLINATIONS_MODEL),
 ]
 
 
 def text_candidates(*preferred: Optional[tuple[str, str]]) -> list[tuple[str, str]]:
     """Ordered (provider, model) fallbacks for the text-JSON protocol.
 
-    Dedupes, then appends the NVIDIA text-fallback chain so a 503 from one NIM
-    model does not end the call. Used by both single-shot role calls and the
-    per-worker routed seam.
+    Dedupes, appends the other keyless deck members, then the keyed NVIDIA
+    text-fallback chain (inert without keys) so one provider's 402/503 does
+    not end the call. Used by both single-shot role calls and the per-worker
+    routed seam.
     """
     seen: set[tuple[str, str]] = set()
     out: list[tuple[str, str]] = []
     for pair in preferred:
         if pair and pair not in seen:
+            out.append(pair)
+            seen.add(pair)
+    for pair in WORKER_POOL:
+        if pair not in seen:
             out.append(pair)
             seen.add(pair)
     for m in NIM_TEXT_FALLBACKS:
@@ -150,7 +196,10 @@ def text_candidates(*preferred: Optional[tuple[str, str]]) -> list[tuple[str, st
 
 SUPERVISOR_NAMES = [r[0] for r in ROLE_ASSIGNMENTS]
 
+#: Keyed NVIDIA vision deck (catalog; needs a key). The default vision path is
+#: now LOCAL moondream2 via the estate root llm.py - offline, no credential.
 VISION_MODELS = [NIM_VISION, NIM_VISION_HQ]
+LOCAL_VISION_MODEL = "moondream2"
 BETA_TESTER_COUNT = 5
 
 # Naming convention (NAMING_AND_MANIFEST_GUIDE.md)
@@ -225,7 +274,7 @@ def chat_role(name: str, prompt: str, max_tokens: int = 900,
     errors: list[str] = []
     for prov, model in text_candidates(primary, fallback):
         key = _pick_key(prov)
-        if not key:
+        if not key and not _is_keyless(prov):
             errors.append(f"{prov}:no-key")
             continue
         try:
@@ -244,9 +293,13 @@ def orchestrator_chat(prompt: str, max_tokens: int = 900,
     prov, model = SECONDARY_ORCH_ASSIGNMENT if secondary else ORCHESTRATOR_ASSIGNMENT
     from llm import chat, LLMError
     key = _pick_key(prov)
-    if not key:
-        # fallback to primary groq key if secondary unset
-        key = _pick_key("groq")
+    if not key and not _is_keyless(prov):
+        # keyed provider with no credential: try any keyed provider we do have
+        for alt in ("groq", "nvidia"):
+            key = _pick_key(alt)
+            if key:
+                prov, model = alt, (GROQ_MODEL_38 if alt == "groq" else NIM_STRONG)
+                break
     return chat(
         [{"role": "system", "content": "You are a harness Orchestrator."},
          {"role": "user", "content": prompt}],
@@ -270,7 +323,7 @@ def worker_buckets() -> list[tuple[str, str, int]]:
         for ki in range(n):
             combos.append((prov, model, ki))
     if not combos:
-        combos = [("groq", GROQ_MODEL_38, 0)]
+        combos = [("ollama", OLLAMA_CODER, 0)]
     return combos
 
 
@@ -304,7 +357,7 @@ def install_seam() -> None:
         from llm import LLMError
         for cprov, cmodel in candidates:
             key = _pick_key(cprov)
-            if not key:
+            if not key and not _is_keyless(cprov):
                 continue
             try:
                 return _orig(messages, model=cmodel, temperature=temperature,
@@ -342,7 +395,7 @@ def install_seam() -> None:
             errors: list[str] = []
             for cprov, cmodel in candidates:
                 key = _pick_key(cprov)
-                if not key:
+                if not key and not _is_keyless(cprov):
                     continue
                 try:
                     return _orig_a(messages, model=cmodel, temperature=temperature,
@@ -531,15 +584,28 @@ def _run_blender_stats(path: Path) -> list[dict]:
         return []
 
 
-# ── vision verification (NVIDIA free vision deck) ────────────────────────────
+# ── vision verification (local moondream2; keyed NVIDIA deck as catalog) ─────
 
-def vision_chat(image: Path | str, prompt: str, model: str = NIM_VISION,
+def vision_chat(image: Path | str, prompt: str, model: str = "",
                 max_tokens: int = 500) -> str:
-    """Pass a screenshot/image to a vision model. Returns model verdict text."""
+    """Pass a screenshot/image to a vision model. Returns model verdict text.
+
+    Default (model=""): LOCAL moondream2 via the estate root llm.py - offline,
+    cached weights, no credential (live-verified 2026-11-11). An explicit
+    NVIDIA model name keeps the old keyed NIM vision deck for keyed
+    deployments; with no NVIDIA key that path raises instead of silently
+    switching models.
+    """
+    if not model:
+        import llm
+        return llm.chat([{"role": "user", "content": prompt}],
+                        images=[str(image)], max_tokens=max_tokens)
     import httpx
     key = _pick_key("nvidia")
     if not key:
-        raise RuntimeError("no NVIDIA API key for vision check")
+        raise RuntimeError(
+            f"vision model {model!r} belongs to the keyed NVIDIA deck and no "
+            "NVIDIA API key is present; omit `model` to use local moondream2")
     data = base64.b64encode(Path(image).read_bytes()).decode()
     payload = {
         "model": model,

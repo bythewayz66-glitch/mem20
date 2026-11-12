@@ -4,20 +4,36 @@
   "submaps": [
     {
       "name": "vrtestproject",
-      "description": "VR experimentation project — first Unity VR project for testing VR mechanics and interactions.",
+      "description": "VR experimentation project \u2014 first Unity VR project for testing VR mechanics and interactions.",
       "location": "/opt/mem20/VRTestProject",
       "phases": [
-        {"name": "Phase 1: VR setup and basic mechanics", "status": "completed", "notes": "Initial VR project setup completed."},
-        {"name": "Phase 2: Interaction testing and iteration", "status": "in_progress", "notes": "Testing VR interactions and mechanics."}
+        {
+          "name": "Phase 1: VR setup and basic mechanics",
+          "status": "completed",
+          "notes": "Initial VR project setup completed."
+        },
+        {
+          "name": "Phase 2: Interaction testing and iteration",
+          "status": "in_progress",
+          "notes": "Testing VR interactions and mechanics."
+        }
       ]
     },
     {
       "name": "vrtestproject2",
-      "description": "Second VR test project — expanded VR experimentation with refined mechanics.",
+      "description": "Second VR test project \u2014 expanded VR experimentation with refined mechanics.",
       "location": "/opt/mem20/VRTestProject2",
       "phases": [
-        {"name": "Phase 1: Project setup and VR configuration", "status": "completed", "notes": "Project initialized with VR settings."},
-        {"name": "Phase 2: Advanced VR interactions", "status": "in_progress", "notes": "Building on VRTestProject learnings."}
+        {
+          "name": "Phase 1: Project setup and VR configuration",
+          "status": "completed",
+          "notes": "Project initialized with VR settings."
+        },
+        {
+          "name": "Phase 2: Advanced VR interactions",
+          "status": "in_progress",
+          "notes": "Building on VRTestProject learnings."
+        }
       ]
     },
     {
@@ -29,12 +45,36 @@
         "linux": "/opt/mem20/Desktop/jayson-openwebui/projects/unreliable_prophecy/engine_project/Builds/Linux/v0.5.0_VerticalSlice/TheUnreliableProphecy"
       },
       "phases": [
-        {"name": "Phase 1: Concept and narrative design", "status": "completed", "notes": "Story and narrative structure designed."},
-        {"name": "Phase 2: Core game mechanics", "status": "completed", "notes": "Basic gameplay implemented."},
-        {"name": "Phase 3: Vertical slice (v0.5.0)", "status": "completed", "notes": "v0.5.0 vertical slice built for Windows and Linux."},
-        {"name": "Phase 4: Full game development", "status": "in_progress", "notes": "Expanding vertical slice to full game."},
-        {"name": "Phase 5: Polish and optimization", "status": "planned", "notes": "Performance optimization and polish pass."},
-        {"name": "Phase 6: DLC and expansions", "status": "planned", "notes": "Post-launch content and new chapters."}
+        {
+          "name": "Phase 1: Concept and narrative design",
+          "status": "completed",
+          "notes": "Story and narrative structure designed."
+        },
+        {
+          "name": "Phase 2: Core game mechanics",
+          "status": "completed",
+          "notes": "Basic gameplay implemented."
+        },
+        {
+          "name": "Phase 3: Vertical slice (v0.5.0)",
+          "status": "completed",
+          "notes": "v0.5.0 vertical slice built for Windows and Linux."
+        },
+        {
+          "name": "Phase 4: Full game development",
+          "status": "in_progress",
+          "notes": "Expanding vertical slice to full game."
+        },
+        {
+          "name": "Phase 5: Polish and optimization",
+          "status": "planned",
+          "notes": "Performance optimization and polish pass."
+        },
+        {
+          "name": "Phase 6: DLC and expansions",
+          "status": "planned",
+          "notes": "Post-launch content and new chapters."
+        }
       ]
     },
     {
@@ -42,23 +82,82 @@
       "description": "Blender 3D asset pipeline for Unity game development. Model creation, texturing, export workflow.",
       "location": "/opt/mem20/glb/",
       "phases": [
-        {"name": "Phase 1: Blender model creation", "status": "completed", "notes": "GLB models created (altima-2000 and others)."},
-        {"name": "Phase 2: Export workflow (Blender→GLB→Unity)", "status": "completed", "notes": "GLB export pipeline established."},
-        {"name": "Phase 3: Unity import and material setup", "status": "in_progress", "notes": "GLB importing into Unity with proper materials."},
-        {"name": "Phase 4: Pipeline automation", "status": "planned", "notes": "Automated export/import workflow."}
+        {
+          "name": "Phase 1: Blender model creation",
+          "status": "completed",
+          "notes": "GLB models created (altima-2000 and others)."
+        },
+        {
+          "name": "Phase 2: Export workflow (Blender\u2192GLB\u2192Unity)",
+          "status": "completed",
+          "notes": "GLB export pipeline established."
+        },
+        {
+          "name": "Phase 3: Unity import and material setup",
+          "status": "in_progress",
+          "notes": "GLB importing into Unity with proper materials."
+        },
+        {
+          "name": "Phase 4: Pipeline automation",
+          "status": "planned",
+          "notes": "Automated export/import workflow."
+        }
       ]
     }
   ],
   "phases": [
-    {"name": "Phase 1: Unity MCP tools integration", "status": "completed", "notes": "Unity MCP tools (create_script, build, test, validate) integrated into mem20."},
-    {"name": "Phase 2: VRTestProject — VR experimentation", "status": "completed", "notes": "First VR project completed at /opt/mem20/VRTestProject."},
-    {"name": "Phase 3: VRTestProject2 — expanded VR", "status": "in_progress", "notes": "Second VR project at /opt/mem20/VRTestProject2."},
-    {"name": "Phase 4: TheUnreliableProphecy — narrative game", "status": "in_progress", "notes": "v0.5.0 vertical slice built. Full game in development."},
-    {"name": "Phase 5: Blender pipeline for game assets", "status": "in_progress", "notes": "GLB models and export workflow established."},
-    {"name": "Phase 6: TheUnreliableProphecy expansion", "status": "planned", "notes": "DLC and new chapters post-launch."},
-    {"name": "Phase 7: Mobile game project", "status": "planned", "notes": "Future mobile game concept TBD."},
-    {"name": "Phase 8: Multiplayer/networked game", "status": "planned", "notes": "Future networked game concept TBD."},
-    {"name": "Phase 9: Blender-to-Unity pipeline automation", "status": "planned", "notes": "Full automation of asset pipeline."}
+    {
+      "name": "Phase 1: Unity MCP tools integration",
+      "status": "completed",
+      "notes": "Unity MCP tools (create_script, build, test, validate) integrated into mem20."
+    },
+    {
+      "name": "Phase 2: VRTestProject \u2014 VR experimentation",
+      "status": "completed",
+      "notes": "First VR project completed at /opt/mem20/VRTestProject."
+    },
+    {
+      "name": "Phase 3: VRTestProject2 \u2014 expanded VR",
+      "status": "in_progress",
+      "notes": "Second VR project at /opt/mem20/VRTestProject2.",
+      "jobid": "44efb6fe-55f3-4a41-96f5-002e55a63c01"
+    },
+    {
+      "name": "Phase 4: TheUnreliableProphecy \u2014 narrative game",
+      "status": "in_progress",
+      "notes": "v0.5.0 vertical slice built. Full game in development.",
+      "jobid": "71b05c74-f1b3-4ff8-b28a-112d6c848ded"
+    },
+    {
+      "name": "Phase 5: Blender pipeline for game assets",
+      "status": "in_progress",
+      "notes": "GLB models and export workflow established.",
+      "jobid": "36db2cf7-9a2c-4ede-bd61-ae83c1089a28"
+    },
+    {
+      "name": "Phase 6: TheUnreliableProphecy expansion",
+      "status": "planned",
+      "notes": "DLC and new chapters post-launch.",
+      "jobid": "84ac321b-9fce-454d-941f-798e306a192c"
+    },
+    {
+      "name": "Phase 7: Mobile game project",
+      "status": "planned",
+      "notes": "Future mobile game concept TBD.",
+      "jobid": "61d235a1-2c05-4038-910a-8735791457a2"
+    },
+    {
+      "name": "Phase 8: Multiplayer/networked game",
+      "status": "planned",
+      "notes": "Future networked game concept TBD.",
+      "jobid": "c5d426e0-77b8-43bd-8e02-334dc9ba16bb"
+    },
+    {
+      "name": "Phase 9: Blender-to-Unity pipeline automation",
+      "status": "planned",
+      "notes": "Full automation of asset pipeline.",
+      "jobid": "b77a5a53-26b6-4266-aea6-1c0b79778381"
+    }
   ],
   "retroactive_audit": {
     "completion_date": "2026-09-06",

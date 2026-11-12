@@ -31,12 +31,14 @@
     {
       "name": "6_synthesis_recommendations",
       "status": "planned",
-      "notes": "OPERATIONS MODEL (Jayson, 2026-09-08): production rings are operated by AGS chains \u2014 300 mem20agentz natives supply the labor the ring memberships run on. Phase-5 harness = deterministic proof rig; AGS = production engine. Remaining scope to synthesize: (1) harness\u2192AGS-OS wiring (members m1-m4 \u2192 real mem20agentz workers), (2) fountain ingestion \u2014 00_reference_store pushes/pulls lessons mid-collision, (3) collision protocol promotion from scheduled-rendezvous (deterministic) to live-ring operation, (4) the closed engine end-to-end with proof metrics (failure \u2193, skills \u2191, fountain growth)."
+      "notes": "OPERATIONS MODEL (Jayson, 2026-09-08): production rings are operated by AGS chains \u2014 300 mem20agentz natives supply the labor the ring memberships run on. Phase-5 harness = deterministic proof rig; AGS = production engine. Remaining scope to synthesize: (1) harness\u2192AGS-OS wiring (members m1-m4 \u2192 real mem20agentz workers), (2) fountain ingestion \u2014 00_reference_store pushes/pulls lessons mid-collision, (3) collision protocol promotion from scheduled-rendezvous (deterministic) to live-ring operation, (4) the closed engine end-to-end with proof metrics (failure \u2193, skills \u2191, fountain growth).",
+      "jobid": "4caaa366-9d68-4e81-bf4e-7bf9db545629"
     },
     {
       "name": "7_deliverable_report",
       "status": "planned",
-      "notes": "Report on the closed engine end-to-end: braid (rings) + chains (AGS-OS/mem20agentz) + fountain (00_reference_store) + ledger (mem20) + proof over server life."
+      "notes": "Report on the closed engine end-to-end: braid (rings) + chains (AGS-OS/mem20agentz) + fountain (00_reference_store) + ledger (mem20) + proof over server life.",
+      "jobid": "7671e00c-c157-44f7-974e-aace571da68e"
     }
   ],
   "created": "1788779402.1095536"

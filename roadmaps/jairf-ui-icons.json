@@ -5,37 +5,44 @@
     {
       "name": "1. Core HUD element set",
       "status": "planned",
-      "notes": ""
+      "notes": "",
+      "jobid": "0ef26a14-e99d-4a8a-9f96-028761f4f0fb"
     },
     {
       "name": "2. Inventory & item icons",
       "status": "planned",
-      "notes": ""
+      "notes": "",
+      "jobid": "e448a0d6-9753-4cc8-99ea-db9b15ede98d"
     },
     {
       "name": "3. Skills & class icons",
       "status": "planned",
-      "notes": ""
+      "notes": "",
+      "jobid": "792f14a4-b727-4d8c-a732-44fdb993a290"
     },
     {
       "name": "4. Builder mode UI set",
       "status": "planned",
-      "notes": ""
+      "notes": "",
+      "jobid": "fb550ba9-327a-429c-87cc-1c39b95438d4"
     },
     {
       "name": "5. Social/system/menu icon sets",
       "status": "planned",
-      "notes": ""
+      "notes": "",
+      "jobid": "e6877bae-c9a0-4fec-9a67-fe56d3091178"
     },
     {
       "name": "6. Feedback & status indicators",
       "status": "planned",
-      "notes": ""
+      "notes": "",
+      "jobid": "604bbaf0-5a46-4990-be92-29b586cca852"
     },
     {
       "name": "7. Style pass + export (atlases, contrast, PNG transparency)",
       "status": "planned",
-      "notes": ""
+      "notes": "",
+      "jobid": "e024b8eb-8620-4099-a9d9-34afbcec565d"
     }
   ],
   "created": "1789100773.0305686"

@@ -5,42 +5,50 @@
     {
       "name": "Performance + optimization",
       "status": "planned",
-      "notes": ""
+      "notes": "",
+      "jobid": "16659783-f490-4681-ad7a-a9b6d9799c5c"
     },
     {
       "name": "Anti-cheat foundations",
       "status": "planned",
-      "notes": ""
+      "notes": "",
+      "jobid": "e04d61d7-8c35-45a1-8abf-44965b00d888"
     },
     {
       "name": "Advanced builder features",
       "status": "planned",
-      "notes": ""
+      "notes": "",
+      "jobid": "15b68449-cfae-4521-bbb2-7702da5b4bd4"
     },
     {
       "name": "Simulation-driven balancing",
       "status": "planned",
-      "notes": ""
+      "notes": "",
+      "jobid": "581ae88e-753f-4e9d-86a0-384572140e4f"
     },
     {
       "name": "Content volume pass",
       "status": "planned",
-      "notes": ""
+      "notes": "",
+      "jobid": "639303f3-7d88-4b23-bce3-d53a07f0edb9"
     },
     {
       "name": "Packaging + soft-launch readiness",
       "status": "planned",
-      "notes": ""
+      "notes": "",
+      "jobid": "c56f5631-8729-46f5-b78a-5ca69f395559"
     },
     {
       "name": "QA by beta-testing swarm",
       "status": "planned",
-      "notes": ""
+      "notes": "",
+      "jobid": "b0085764-1389-4da7-b17a-7c03f63b4445"
     },
     {
       "name": "Human sign-off on Q4",
       "status": "planned",
-      "notes": ""
+      "notes": "",
+      "jobid": "bd3bb2d4-860f-4d9d-8998-b55185650790"
     }
   ],
   "created": "1789100773.0305686"

@@ -35,82 +35,98 @@
     {
       "name": "moon-meta-orchestrator",
       "status": "planned",
-      "notes": "Meta-Orchestrator: watch the capability graph for gaps, replan phases, and dispatch. NOT ABSORBED, verified by code 2026-09-25. mem20orcaz has no replan/gap-map/meta-orch symbols at all. The nearest code is mem20sENSEZ: RM-200 GapMapper is real and answers against the live UCG (26 active capabilities; 'quantum teleportation sensor platform' scored coverage_ratio 0.25 with missing_tokens [quantum, teleportation, sensor]), and RM-199 PhaseReplanner is real but its reordering is a no-op because every phase is assigned the same gaps, so the stable sort preserves input order (measured: all phases same gaps True, order changed vs input False). No reactive event-to-replan-to-dispatch loop exists. Gap reporting and a deterministic sha256 plan_id exist; a meta-orchestrator does not."
+      "notes": "Meta-Orchestrator: watch the capability graph for gaps, replan phases, and dispatch. NOT ABSORBED, verified by code 2026-09-25. mem20orcaz has no replan/gap-map/meta-orch symbols at all. The nearest code is mem20sENSEZ: RM-200 GapMapper is real and answers against the live UCG (26 active capabilities; 'quantum teleportation sensor platform' scored coverage_ratio 0.25 with missing_tokens [quantum, teleportation, sensor]), and RM-199 PhaseReplanner is real but its reordering is a no-op because every phase is assigned the same gaps, so the stable sort preserves input order (measured: all phases same gaps True, order changed vs input False). No reactive event-to-replan-to-dispatch loop exists. Gap reporting and a deterministic sha256 plan_id exist; a meta-orchestrator does not.",
+      "jobid": "accae985-63b5-4037-a290-1871f1d4db0d"
     },
     {
       "name": "moon-foundry",
       "status": "planned",
-      "notes": "Autonomous Software Foundry: agents that take a spec and ship verified code end-to-end. First genuine MOON in the union."
+      "notes": "Autonomous Software Foundry: agents that take a spec and ship verified code end-to-end. First genuine MOON in the union.",
+      "jobid": "f6a418dd-2241-4ee5-ba22-44be1b91a42a"
     },
     {
       "name": "moon-self-healing",
       "status": "planned",
-      "notes": "Self-Healing Runtime Civilization: supervised fleets that detect their own faults and repair without human dispatch. Depends on moon-foundry."
+      "notes": "Self-Healing Runtime Civilization: supervised fleets that detect their own faults and repair without human dispatch. Depends on moon-foundry.",
+      "jobid": "fc5e02f9-33d3-4a9b-afd2-65eadfc6027c"
     },
     {
       "name": "moon-agent-economy",
       "status": "planned",
-      "notes": "Living Agent Economy: agents holding and trading real value. The trade ledger already exists (mem20mktz reports braid_ok); the economic layer does not."
+      "notes": "Living Agent Economy: agents holding and trading real value. The trade ledger already exists (mem20mktz reports braid_ok); the economic layer does not.",
+      "jobid": "bc5007f1-8833-4182-90fe-23d447d04ee7"
     },
     {
       "name": "moon-global-market",
       "status": "planned",
-      "notes": "Global Capability Marketplace: capability offers traded across the A2A bus. Local marketplace organs exist in mem20mktz; the federation does not."
+      "notes": "Global Capability Marketplace: capability offers traded across the A2A bus. Local marketplace organs exist in mem20mktz; the federation does not.",
+      "jobid": "32d75073-8d71-44a3-b833-3714f8b67da0"
     },
     {
       "name": "moon-collective-intelligence",
       "status": "planned",
-      "notes": "Collective Model Intelligence: several local models ensembled into one capability that outperforms any member. mem20corez serves models but does not ensemble them."
+      "notes": "Collective Model Intelligence: several local models ensembled into one capability that outperforms any member. mem20corez serves models but does not ensemble them.",
+      "jobid": "c2fa7076-6f64-4f68-8968-180b45cc4c12"
     },
     {
       "name": "moon-reality-compiler",
       "status": "planned",
-      "notes": "Reality-to-Software Compiler: turn an observed physical procedure into executable code. Depends on multimodal capture, not yet present."
+      "notes": "Reality-to-Software Compiler: turn an observed physical procedure into executable code. Depends on multimodal capture, not yet present.",
+      "jobid": "38dab402-0657-4309-8955-2fa0cbfeccd3"
     },
     {
       "name": "moon-quantum-inspired",
       "status": "planned",
-      "notes": "Quantum-Inspired Optimizer: annealing-flavoured search over capability plans. The master report classes this as genuinely beyond today's box; sandbox only."
+      "notes": "Quantum-Inspired Optimizer: annealing-flavoured search over capability plans. The master report classes this as genuinely beyond today's box; sandbox only.",
+      "jobid": "a5c6db9a-3b01-415f-8f2d-4a308899d773"
     },
     {
       "name": "moon-neuromorphic",
       "status": "planned",
-      "notes": "Neuromorphic Event Lab: spiking-event substrate over the existing event bus. Master report classes this as beyond today's box; sandbox only."
+      "notes": "Neuromorphic Event Lab: spiking-event substrate over the existing event bus. Master report classes this as beyond today's box; sandbox only.",
+      "jobid": "4876c63f-d296-4a9f-81e3-17ef9b30e7a0"
     },
     {
       "name": "moon-planetary-batch",
       "status": "planned",
-      "notes": "Planetary Batch Fabric: distributed batch execution across many nodes. Master report classes this as beyond today's box; sandbox only."
+      "notes": "Planetary Batch Fabric: distributed batch execution across many nodes. Master report classes this as beyond today's box; sandbox only.",
+      "jobid": "136ed30e-8a92-460c-b132-9a157a670f0e"
     },
     {
       "name": "moon-spatial-command",
       "status": "planned",
-      "notes": "Spatial Command Universe: a 3D command surface, natural home mem20officez. Speculative."
+      "notes": "Spatial Command Universe: a 3D command surface, natural home mem20officez. Speculative.",
+      "jobid": "e143495a-baf8-4e2d-ad6f-0b0c7e9d7b7e"
     },
     {
       "name": "moon-capability-fusion",
       "status": "planned",
-      "notes": "Dynamic Capability Fusion Engine: compose capabilities at runtime rather than statically. Closest existing relative is mem20langz state graphs."
+      "notes": "Dynamic Capability Fusion Engine: compose capabilities at runtime rather than statically. Closest existing relative is mem20langz state graphs.",
+      "jobid": "fa5eafdf-2c50-4208-80b1-e780bd9c7487"
     },
     {
       "name": "moon-device-enrollment",
       "status": "planned",
-      "notes": "Device-Pull Enrollment Protocol: a device pulls its own credentials on join. The master report marks zero-trust attestation as [SPEC], not built."
+      "notes": "Device-Pull Enrollment Protocol: a device pulls its own credentials on join. The master report marks zero-trust attestation as [SPEC], not built.",
+      "jobid": "08d01dcf-53db-4693-a12a-ced7ad0454c6"
     },
     {
       "name": "moon-coaching",
       "status": "planned",
-      "notes": "Human-Machine Coaching Loop: the agent teaches the human a capability and is corrected in return. Related to PickleInitiative's self-model work but distinct."
+      "notes": "Human-Machine Coaching Loop: the agent teaches the human a capability and is corrected in return. Related to PickleInitiative's self-model work but distinct.",
+      "jobid": "018ebdd6-77e1-4904-95d0-3ff3e8c72ea3"
     },
     {
       "name": "moon-speculative-sandbox",
       "status": "planned",
-      "notes": "Universal Speculative Sandbox: run what--if branches of a workflow safely. Partially folded into mem20orcaz per the roadmap's [DUP] decision; the universal layer is not built."
+      "notes": "Universal Speculative Sandbox: run what--if branches of a workflow safely. Partially folded into mem20orcaz per the roadmap's [DUP] decision; the universal layer is not built.",
+      "jobid": "2c8bf573-f535-4b14-ac5b-60a1b3cfbfb9"
     },
     {
       "name": "moon-narrative-engine",
       "status": "planned",
-      "notes": "Speculative Workflow Narrative Engine: explain a workflow branch as narrative. mem20rpgz already does story-to-play with a real gateway LLM; the speculative planning layer is not built."
+      "notes": "Speculative Workflow Narrative Engine: explain a workflow branch as narrative. mem20rpgz already does story-to-play with a real gateway LLM; the speculative planning layer is not built.",
+      "jobid": "a5b77249-6513-483a-9e3c-94a506458da9"
     }
   ],
   "counts": {

@@ -5,42 +5,50 @@
     {
       "name": "Full classes + progression depth",
       "status": "planned",
-      "notes": ""
+      "notes": "",
+      "jobid": "e0ffbfa5-1209-4958-8b94-61475b272c5f"
     },
     {
       "name": "Quest system",
       "status": "planned",
-      "notes": ""
+      "notes": "",
+      "jobid": "1e2d0f88-9a15-409d-b55a-0b11898751d0"
     },
     {
       "name": "Deeper economy + crafting",
       "status": "planned",
-      "notes": ""
+      "notes": "",
+      "jobid": "26db93ec-c6a8-4139-be5c-04389770a409"
     },
     {
       "name": "Guilds + housing basics",
       "status": "planned",
-      "notes": ""
+      "notes": "",
+      "jobid": "2ed888ce-720d-46d7-be41-0f50448cef3b"
     },
     {
       "name": "Internal builder core (create/persist)",
       "status": "planned",
-      "notes": ""
+      "notes": "",
+      "jobid": "eba7768d-4251-4644-94f1-3b91d1def3b2"
     },
     {
       "name": "Builder sharing + moderation hooks",
       "status": "planned",
-      "notes": ""
+      "notes": "",
+      "jobid": "32f45243-6d3a-48c0-92f1-4b68f079955a"
     },
     {
       "name": "QA by beta-testing swarm",
       "status": "planned",
-      "notes": ""
+      "notes": "",
+      "jobid": "773d0254-6af0-4e5f-a2ed-0c29116915c8"
     },
     {
       "name": "Human sign-off on Q3",
       "status": "planned",
-      "notes": ""
+      "notes": "",
+      "jobid": "1ab1b121-ec91-4062-b5ef-eda95f12ef0e"
     }
   ],
   "created": "1789100773.0305686"

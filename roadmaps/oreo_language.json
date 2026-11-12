@@ -20,27 +20,32 @@
     {
       "name": "runtime",
       "status": "in_progress",
-      "notes": "Runtime at /opt/mem20/OREO/IDE/runtime/ with compiler, interpreter, memory subsystems. Architecture RelationshipEngine implements handshake protocol (pages refuse until CONNECTS_TO line). FunctionRuntime and app emission operational. Full graph interpreter still pending."
+      "notes": "Runtime at /opt/mem20/OREO/IDE/runtime/ with compiler, interpreter, memory subsystems. Architecture RelationshipEngine implements handshake protocol (pages refuse until CONNECTS_TO line). FunctionRuntime and app emission operational. Full graph interpreter still pending.",
+      "jobid": "17baf44e-63f3-46a2-9d1c-9488cf2c9be3"
     },
     {
       "name": "visual_editor",
       "status": "in_progress",
-      "notes": "Visual editor at /opt/mem20/OREO/IDE/visual_editor/ with architecture.py, canvas, interaction, nodes. Talk+draw web editor with ears+voice. GraphLang editor HTML at parser/architecture/graphlang_editor.html. Computational GIR editor blocked by GIR import bug."
+      "notes": "Visual editor at /opt/mem20/OREO/IDE/visual_editor/ with architecture.py, canvas, interaction, nodes. Talk+draw web editor with ears+voice. GraphLang editor HTML at parser/architecture/graphlang_editor.html. Computational GIR editor blocked by GIR import bug.",
+      "jobid": "a8844380-d556-4d46-8699-7e1eb55ecfbc"
     },
     {
       "name": "ai_integration",
       "status": "in_progress",
-      "notes": "AI integration at /opt/mem20/OREO/IDE/ai_integration/ with codegen, explanation, verification. HybridParser uses rules-first with LLM fallback via OpenAICompat/xAI. CypherOptimizer, advise/scene packs merged. Computational AI codegen pending."
+      "notes": "AI integration at /opt/mem20/OREO/IDE/ai_integration/ with codegen, explanation, verification. HybridParser uses rules-first with LLM fallback via OpenAICompat/xAI. CypherOptimizer, advise/scene packs merged. Computational AI codegen pending.",
+      "jobid": "c31ee2cb-ec63-4b3e-82e0-63caaac458c8"
     },
     {
       "name": "test_harness",
       "status": "in_progress",
-      "notes": "Test harness at /opt/mem20/OREO/IDE/test_harness/ with property_tests, fuzzing, integration, model_checking directories. Framework in place, tests need expansion."
+      "notes": "Test harness at /opt/mem20/OREO/IDE/test_harness/ with property_tests, fuzzing, integration, model_checking directories. Framework in place, tests need expansion.",
+      "jobid": "6f2a8e89-fb1c-4fe7-ab87-878853ddd7e4"
     },
     {
       "name": "docs",
       "status": "in_progress",
-      "notes": "Documentation at /opt/mem20/OREO/IDE/docs/ (architecture subdirectory), spec/OREO_LANGUAGE_SPEC.md, spec/NL_CYPHER_SPEC.md, README.md, PROJECT_STRUCTURE.md. Full language guides still pending \u2014 need comprehensive user-facing docs."
+      "notes": "Documentation at /opt/mem20/OREO/IDE/docs/ (architecture subdirectory), spec/OREO_LANGUAGE_SPEC.md, spec/NL_CYPHER_SPEC.md, README.md, PROJECT_STRUCTURE.md. Full language guides still pending \u2014 need comprehensive user-facing docs.",
+      "jobid": "7dc37181-c4b0-4d1a-b47d-daa2c498f8e6"
     }
   ],
   "created": "1787804714.2874022",

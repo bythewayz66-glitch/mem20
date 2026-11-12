@@ -5,37 +5,44 @@
     {
       "name": "1. Beta Testing Supervisor + archetype pool setup",
       "status": "planned",
-      "notes": ""
+      "notes": "",
+      "jobid": "64b4ce8f-d691-4265-abb4-2ad9bca60f57"
     },
     {
       "name": "2. Controlled access tooling (client/headless, logs, screenshots, shared memory)",
       "status": "planned",
-      "notes": ""
+      "notes": "",
+      "jobid": "9796886c-9d97-4ce8-847a-421706ce2e43"
     },
     {
       "name": "3. Deploy in parallel (single-player + multiplayer)",
       "status": "planned",
-      "notes": ""
+      "notes": "",
+      "jobid": "096acebc-54b0-418a-8bdd-5c45fd285ac1"
     },
     {
       "name": "4. Scheduling (post-integration, overnight, stress before human QA)",
       "status": "planned",
-      "notes": ""
+      "notes": "",
+      "jobid": "139497e9-3db6-430b-a18f-b5547e3f2a8a"
     },
     {
       "name": "5. Structured reporting + severity triage",
       "status": "planned",
-      "notes": ""
+      "notes": "",
+      "jobid": "fae06983-7a25-4e9f-be8f-0d7785b99c04"
     },
     {
       "name": "6. Human review loop + ticket auto-generation",
       "status": "planned",
-      "notes": ""
+      "notes": "",
+      "jobid": "8166367b-ad9e-4808-a60f-3de427ab000c"
     },
     {
       "name": "7. Evolution (prompt/memory refinement from successful reports)",
       "status": "planned",
-      "notes": ""
+      "notes": "",
+      "jobid": "2bcb468f-dd1f-47b1-ba1e-5cb5f492b654"
     }
   ],
   "created": "1789100773.0305686"

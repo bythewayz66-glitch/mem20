@@ -5,42 +5,50 @@
     {
       "name": "1. Vision anchored: name + spine",
       "status": "planned",
-      "notes": ""
+      "notes": "",
+      "jobid": "a12de64b-e8a5-4ef3-9fa1-7479f5422a06"
     },
     {
       "name": "2. The Forge: laptop sculpting surface",
       "status": "planned",
-      "notes": ""
+      "notes": "",
+      "jobid": "37c112b9-cba3-40f7-a418-5115e9bdad68"
     },
     {
       "name": "3. World substrate: mem20 as universe ledger",
       "status": "planned",
-      "notes": ""
+      "notes": "",
+      "jobid": "d54c385f-b333-436d-95f2-7024ca675415"
     },
     {
       "name": "4. Agent-native space: MALIC braid rendered visible",
       "status": "planned",
-      "notes": ""
+      "notes": "",
+      "jobid": "336ca89b-f910-41d2-bacd-72c974d5bead"
     },
     {
       "name": "5. The Door: Quest 3 entry (Unity)",
       "status": "planned",
-      "notes": ""
+      "notes": "",
+      "jobid": "17835590-3981-419e-a907-d0ba15a5c4ed"
     },
     {
       "name": "6. Living world: office, car, personal spaces",
       "status": "planned",
-      "notes": ""
+      "notes": "",
+      "jobid": "10e09bd2-dc21-452e-a87d-b8c8acf9ee85"
     },
     {
       "name": "7. Human presence: walk, talk, interact",
       "status": "planned",
-      "notes": ""
+      "notes": "",
+      "jobid": "9edc3445-712f-4c92-999b-d32c72ca7d4e"
     },
     {
       "name": "8. Proof: visible improvement over server life",
       "status": "planned",
-      "notes": ""
+      "notes": "",
+      "jobid": "1eb19aca-54f2-4775-8bfe-e92afa1f9fb3"
     }
   ],
   "created": "1788779402.1095536"

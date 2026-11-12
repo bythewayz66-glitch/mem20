@@ -5,92 +5,110 @@
     {
       "name": "P0 Verify: build engine clean, prove 79 ops, prove RPC, validate GLB/PNG, record md5, git baseline",
       "status": "planned",
-      "notes": ""
+      "notes": "",
+      "jobid": "1be026ad-ac42-4539-b149-4f33dc942130"
     },
     {
       "name": "P1 Close dead declarations: glTF/GLB importer, OBJ read/write, quadric decimator, normal recompute, loose-part separation, all bound as ops",
       "status": "planned",
-      "notes": ""
+      "notes": "",
+      "jobid": "fb09257f-ea04-42c3-8106-7377bf4d33e4"
     },
     {
       "name": "P2 mem20kilnz package: pyproject, console script, hardened RPC client, engine build harness, keys from /opt/mem20/secrets/.env only",
       "status": "planned",
-      "notes": ""
+      "notes": "",
+      "jobid": "2e57c2f7-a4cf-4137-b2bb-05042317ae74"
     },
     {
       "name": "P3 Interop: FBX read/write (cleanroom, ASCII+binary), STL, PLY, USD, Alembic, round-trip gate, loss prediction",
       "status": "planned",
-      "notes": ""
+      "notes": "",
+      "jobid": "3c034f03-fd4a-418e-a0fc-6f0c661030bf"
     },
     {
       "name": "P4 Rigging: rig families (biped/quad/avian/insect/serpent), control rigs, constraints, retargeting, foot planting, weight cleanup, mocap",
       "status": "planned",
-      "notes": ""
+      "notes": "",
+      "jobid": "659017f4-a5de-492c-ae73-6fcaf3e8d0d7"
     },
     {
       "name": "P5 Materials/PBR: node-graph shading, image textures, procedural textures, baking, IBL, glTF PBR compliance",
       "status": "planned",
-      "notes": ""
+      "notes": "",
+      "jobid": "50da4357-07d1-4430-8415-f1e8d166dd35"
     },
     {
       "name": "P6 Animation (all of it): curves, interpolation, easing, drivers, NLA, procedural gaits, motion planning",
       "status": "planned",
-      "notes": ""
+      "notes": "",
+      "jobid": "e8249bcf-a453-499b-9cf0-2a82ecf43398"
     },
     {
       "name": "P7 Solid/CAD: B-Rep kernel, booleans, fillets, NURBS, loft/sweep/revolve, sketch constraint solver, tessellation bridge",
       "status": "planned",
-      "notes": ""
+      "notes": "",
+      "jobid": "2f2754dc-4245-4c8f-a9d2-b03290c74d10"
     },
     {
       "name": "P8 Curves, text, metaballs, volumes, clouds representations",
       "status": "planned",
-      "notes": ""
+      "notes": "",
+      "jobid": "f827f1c3-0bb3-46da-a413-3f507e9774d7"
     },
     {
       "name": "P9 Modifiers + node system: modifier stack, geometry-node-equivalent op algebra, evaluated-outcome inspection",
       "status": "planned",
-      "notes": ""
+      "notes": "",
+      "jobid": "7b44c764-d0d0-40d2-8f4c-55194ac9bf36"
     },
     {
       "name": "P10 Retopology, UV unwrap, sculpt, texturing",
       "status": "planned",
-      "notes": ""
+      "notes": "",
+      "jobid": "3b7d01d1-0ae8-4f06-b57b-9c0194a99415"
     },
     {
       "name": "P11 Render: path tracer, EEVEE-class features, volumes, SSS, compositing, denoise",
       "status": "planned",
-      "notes": ""
+      "notes": "",
+      "jobid": "82f64b19-0055-4100-aae4-3644de687e32"
     },
     {
       "name": "P12 Physics: cloth, soft body, particles, rigid body, collision, force fields",
       "status": "planned",
-      "notes": ""
+      "notes": "",
+      "jobid": "9053fb7b-fdda-41ee-868d-e9ac51e3202b"
     },
     {
       "name": "P13 The 255 AI-native features (families A-L), on a stable kernel",
       "status": "planned",
-      "notes": ""
+      "notes": "",
+      "jobid": "a7860260-ba44-4c5a-b41e-583a91c9c8aa"
     },
     {
       "name": "P14 Sequencer + motion tracking",
       "status": "planned",
-      "notes": ""
+      "notes": "",
+      "jobid": "a9c28a22-0f65-4125-97ba-343d5e58e8b7"
     },
     {
       "name": "P15 FreeCAD tail: Draft, Path/CAM, Robot, BIM, Inspection, Measure, STEP/IGES",
       "status": "planned",
-      "notes": ""
+      "notes": "",
+      "jobid": "ad84c451-2a16-4ab8-b5ee-3b639f84f44f"
     },
     {
       "name": "P16 MSPaint floor: the 8 measured acceptance criteria",
       "status": "planned",
-      "notes": ""
+      "notes": "",
+      "jobid": "3b2e639b-4d21-4530-abb1-8fd7b23058d1"
     },
     {
       "name": "P17 Generative pipeline layer: provider registry, hardware preflight, licence gate, lineage, artifact store, 3D->video GP-Buffer path",
       "status": "planned",
-      "notes": ""
+      "notes": "",
+      "jobid": "1fc8c47b-dc12-4f09-bc78-4d97625c808f"
     }
   ],
   "created": "1789604765.3759632"

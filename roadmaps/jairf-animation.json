@@ -5,37 +5,44 @@
     {
       "name": "1. Standard humanoid rig + locomotion set",
       "status": "planned",
-      "notes": ""
+      "notes": "",
+      "jobid": "e8de460d-363c-4961-be29-dcf898ee7ef2"
     },
     {
       "name": "2. Generic combat animation set",
       "status": "planned",
-      "notes": ""
+      "notes": "",
+      "jobid": "5ebe98b6-68de-402b-aa61-e16736e89f0a"
     },
     {
       "name": "3. Class-specific sets (warrior/mage/archer)",
       "status": "planned",
-      "notes": ""
+      "notes": "",
+      "jobid": "a5b12e11-019d-4685-aaff-eb4d9dac1055"
     },
     {
       "name": "4. Social, emotes + builder mode gestures",
       "status": "planned",
-      "notes": ""
+      "notes": "",
+      "jobid": "b3c9f3ce-b03f-4c75-8e22-18b4f15d99c4"
     },
     {
       "name": "5. Interaction animations (loot/door/NPC/craft)",
       "status": "planned",
-      "notes": ""
+      "notes": "",
+      "jobid": "8c7e17df-5407-403e-8587-751e68fa4c8c"
     },
     {
       "name": "6. Enemy + NPC base sets",
       "status": "planned",
-      "notes": ""
+      "notes": "",
+      "jobid": "eca2b897-bf46-4531-9d84-2252419b0015"
     },
     {
       "name": "7. Tech validation: upper-body layers, root motion, avatar skeleton",
       "status": "planned",
-      "notes": ""
+      "notes": "",
+      "jobid": "63b6481e-2db8-4f07-83d8-55f8f9a5aa00"
     }
   ],
   "created": "1789100773.0305686"

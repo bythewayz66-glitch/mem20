@@ -8,7 +8,8 @@
         "status": "completed"
       },
       "status": "planned",
-      "notes": ""
+      "notes": "",
+      "jobid": "72e93d5d-86dd-46e9-9b4e-efe137a803b6"
     },
     {
       "name": {
@@ -16,7 +17,8 @@
         "status": "in_progress"
       },
       "status": "planned",
-      "notes": ""
+      "notes": "",
+      "jobid": "d88d6e72-a0bf-414e-aedd-e16fb1bdcb52"
     },
     {
       "name": {
@@ -24,7 +26,8 @@
         "status": "planned"
       },
       "status": "planned",
-      "notes": ""
+      "notes": "",
+      "jobid": "41c75db8-b81d-4bc5-b0e2-b5d80249c496"
     },
     {
       "name": {
@@ -32,7 +35,8 @@
         "status": "planned"
       },
       "status": "planned",
-      "notes": ""
+      "notes": "",
+      "jobid": "7cc90b12-b6b3-455b-a75a-f910846c025b"
     },
     {
       "name": {
@@ -40,7 +44,8 @@
         "status": "planned"
       },
       "status": "planned",
-      "notes": ""
+      "notes": "",
+      "jobid": "3a27d9da-92a0-49e6-9439-fad99a82a5a0"
     }
   ],
   "created": "1788371144.7886407",

@@ -5,27 +5,32 @@
     {
       "name": "1. Quest type taxonomy + data schema (SO_Quest)",
       "status": "planned",
-      "notes": ""
+      "notes": "",
+      "jobid": "2382484b-c262-43af-b4fe-cc9750a1b24f"
     },
     {
       "name": "2. Dialogue system core (nodes, conditions, voice/emote hooks)",
       "status": "planned",
-      "notes": ""
+      "notes": "",
+      "jobid": "5388dec4-e7bc-45dd-bcbe-d89ab505ff09"
     },
     {
       "name": "3. World content pillars (story, side, exploration, guild, builder, seasonal)",
       "status": "planned",
-      "notes": ""
+      "notes": "",
+      "jobid": "60e6f93f-93b3-488a-8af3-55417657cdcb"
     },
     {
       "name": "4. Authoring guidelines + agent rules (data-driven, messaging, pacing)",
       "status": "planned",
-      "notes": ""
+      "notes": "",
+      "jobid": "fdf8f8f6-e096-4806-bda7-706c281998b1"
     },
     {
       "name": "5. Player-created quest hooks + validation",
       "status": "planned",
-      "notes": ""
+      "notes": "",
+      "jobid": "9dc29023-a7f4-4959-b717-3b96e6191070"
     }
   ],
   "created": "1789100773.0305686"

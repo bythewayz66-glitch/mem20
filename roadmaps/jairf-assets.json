@@ -5,37 +5,44 @@
     {
       "name": "1. Art direction lock (style keyword + prompt formula)",
       "status": "planned",
-      "notes": ""
+      "notes": "",
+      "jobid": "ba4093ad-d92c-4526-9958-3f06d437cf2a"
     },
     {
       "name": "2. Q1 asset set: characters, weapons, starter zone, inventory",
       "status": "planned",
-      "notes": ""
+      "notes": "",
+      "jobid": "49aa2a23-658c-4b41-9219-ed3e8fb4075b"
     },
     {
       "name": "3. Q2 asset set: zones, non-player chars, social props",
       "status": "planned",
-      "notes": ""
+      "notes": "",
+      "jobid": "60da82a3-df8a-40e0-b79e-2eda46f1b07e"
     },
     {
       "name": "4. Q3 asset set: classes, modular builder pieces, furnishing",
       "status": "planned",
-      "notes": ""
+      "notes": "",
+      "jobid": "8d334e90-bd8d-4d4d-930c-da991860f2b6"
     },
     {
       "name": "5. Q4 asset set: hero assets, biome expansion, advanced builder",
       "status": "planned",
-      "notes": ""
+      "notes": "",
+      "jobid": "385f9002-3fee-4174-9604-16a1a6eb5611"
     },
     {
       "name": "6. Meshy texture/rig pipeline (remesh, PBR, auto-rig, FBX/GLB)",
       "status": "planned",
-      "notes": ""
+      "notes": "",
+      "jobid": "8dc733cc-7a21-46f5-a47d-2b995ca1b9b0"
     },
     {
       "name": "7. Unity import + consistency/performance validation",
       "status": "planned",
-      "notes": ""
+      "notes": "",
+      "jobid": "2c08707a-59b8-4388-b4e4-455828f9669d"
     }
   ],
   "created": "1789100773.0305686"

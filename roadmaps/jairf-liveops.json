@@ -5,32 +5,38 @@
     {
       "name": "1. Localization foundation (string keys, tables, fonts)",
       "status": "planned",
-      "notes": ""
+      "notes": "",
+      "jobid": "a24021be-fa22-498b-976c-917638ddb9ca"
     },
     {
       "name": "2. Accessibility suite (palette, scaling, remap, captions, motion options)",
       "status": "planned",
-      "notes": ""
+      "notes": "",
+      "jobid": "21707b2f-8520-4a25-92f5-c2a0a512aa32"
     },
     {
       "name": "3. Live-ops & events (features flags, calendar, announcements, analytics)",
       "status": "planned",
-      "notes": ""
+      "notes": "",
+      "jobid": "5d7611bd-cf4d-4002-b1ce-8d0ed5318b9e"
     },
     {
       "name": "4. Ethical monetization framework",
       "status": "planned",
-      "notes": ""
+      "notes": "",
+      "jobid": "21c8f5b0-bbfc-4c87-b7e3-82fa167ad43b"
     },
     {
       "name": "5. UGC moderation & safety (filters, review queue, GM tools)",
       "status": "planned",
-      "notes": ""
+      "notes": "",
+      "jobid": "8662e803-df9b-4d1e-8674-b64bff0cf186"
     },
     {
       "name": "6. CI/CD + version control for the agent swarm",
       "status": "planned",
-      "notes": ""
+      "notes": "",
+      "jobid": "97c2d7dc-9126-478b-b46e-a830aaa0d538"
     }
   ],
   "created": "1789100773.0305686"

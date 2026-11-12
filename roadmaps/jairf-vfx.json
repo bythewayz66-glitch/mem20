@@ -5,37 +5,44 @@
     {
       "name": "1. Combat VFX set",
       "status": "planned",
-      "notes": ""
+      "notes": "",
+      "jobid": "33c0527b-0f7b-4923-9446-bb46ea139c38"
     },
     {
       "name": "2. Class/ability VFX (mage/archer/warrior)",
       "status": "planned",
-      "notes": ""
+      "notes": "",
+      "jobid": "11a0e1e9-4e44-42b2-a909-74c141331d7a"
     },
     {
       "name": "3. Player feedback VFX",
       "status": "planned",
-      "notes": ""
+      "notes": "",
+      "jobid": "e2a1ee3a-ed08-4b14-8cce-79d0d90988cf"
     },
     {
       "name": "4. Environment VFX",
       "status": "planned",
-      "notes": ""
+      "notes": "",
+      "jobid": "a4c73802-4d0e-44ff-b5cf-c896eceace81"
     },
     {
       "name": "5. Builder/UGC placement VFX",
       "status": "planned",
-      "notes": ""
+      "notes": "",
+      "jobid": "c18035b6-e8b2-48eb-800f-e36ba0153ee5"
     },
     {
       "name": "6. UI + multiplayer/social VFX",
       "status": "planned",
-      "notes": ""
+      "notes": "",
+      "jobid": "6c65c491-478d-4983-95f9-af512fd81105"
     },
     {
       "name": "7. Optimization: VFX Graph, overdraw, LODs/quality settings",
       "status": "planned",
-      "notes": ""
+      "notes": "",
+      "jobid": "5d5d7097-9734-4e9b-baf0-ff2a81e3d242"
     }
   ],
   "created": "1789100773.0305686"

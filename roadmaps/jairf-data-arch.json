@@ -5,32 +5,38 @@
     {
       "name": "1. ScriptableObject-first foundation (no magic numbers)",
       "status": "planned",
-      "notes": ""
+      "notes": "",
+      "jobid": "42260cd1-4686-4ffd-87d2-f1011889cda9"
     },
     {
       "name": "2. Core data types: items/equipment/skills/recipes",
       "status": "planned",
-      "notes": ""
+      "notes": "",
+      "jobid": "3981f337-2e9f-4f97-aee0-c6c7179d2940"
     },
     {
       "name": "3. Content data types: quests/NPC/enemy/loot/status/class",
       "status": "planned",
-      "notes": ""
+      "notes": "",
+      "jobid": "75c8c7c1-f801-439c-a640-852b18a7d43a"
     },
     {
       "name": "4. Organization, Addressables groups, runtime-mutable separation",
       "status": "planned",
-      "notes": ""
+      "notes": "",
+      "jobid": "003ffd1f-ddf4-47a8-8bee-4463e42d9fb4"
     },
     {
       "name": "5. Save/network data schemas (player, creations, world state)",
       "status": "planned",
-      "notes": ""
+      "notes": "",
+      "jobid": "924665ec-7347-4766-8c69-7375fd72dc76"
     },
     {
       "name": "6. Agent authoring rules + enforcement",
       "status": "planned",
-      "notes": ""
+      "notes": "",
+      "jobid": "29e5f847-d37b-4544-bd0b-950e4b804685"
     }
   ],
   "created": "1789100773.0305686"

@@ -5,37 +5,44 @@
     {
       "name": "Account system + auth",
       "status": "planned",
-      "notes": ""
+      "notes": "",
+      "jobid": "4f0d1b7c-9f95-4238-9553-eca6112e693c"
     },
     {
       "name": "Networking architecture + dedicated server",
       "status": "planned",
-      "notes": ""
+      "notes": "",
+      "jobid": "b3781f02-d97d-44bb-8436-19e63787caae"
     },
     {
       "name": "Multiple zones + shared world state",
       "status": "planned",
-      "notes": ""
+      "notes": "",
+      "jobid": "5766a4dc-9e3c-4415-9004-f1805fa6f61d"
     },
     {
       "name": "Parties + chat",
       "status": "planned",
-      "notes": ""
+      "notes": "",
+      "jobid": "abebbfc1-d081-4a33-81a3-e31b87ccc5a5"
     },
     {
       "name": "Early economy",
       "status": "planned",
-      "notes": ""
+      "notes": "",
+      "jobid": "3ce110ed-b91f-4813-9ecf-00b08b38a142"
     },
     {
       "name": "QA by beta-testing swarm",
       "status": "planned",
-      "notes": ""
+      "notes": "",
+      "jobid": "440b47bf-7cb0-47f4-b13e-dde7394a84ad"
     },
     {
       "name": "Human sign-off on Q2",
       "status": "planned",
-      "notes": ""
+      "notes": "",
+      "jobid": "f3cd7a33-f792-423e-a08d-408b3a5d2557"
     }
   ],
   "created": "1789100773.0305686"

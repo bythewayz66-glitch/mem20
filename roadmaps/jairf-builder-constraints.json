@@ -5,42 +5,50 @@
     {
       "name": "1. Budget limits (pieces, polys/draw calls, texture memory)",
       "status": "planned",
-      "notes": ""
+      "notes": "",
+      "jobid": "bde668a9-b10f-44f7-9cf3-da6fd0fd2b42"
     },
     {
       "name": "2. Placement rules (snap grid, rotation, height, overlap/collision)",
       "status": "planned",
-      "notes": ""
+      "notes": "",
+      "jobid": "3801f3e4-0176-42c0-affe-539946ae7ea7"
     },
     {
       "name": "3. Gameplay & safety rules (path/quest protection, arena flags)",
       "status": "planned",
-      "notes": ""
+      "notes": "",
+      "jobid": "532db2ff-6220-46fa-bf12-d75d5346581a"
     },
     {
       "name": "4. Ownership, permissions + versioning/rollback",
       "status": "planned",
-      "notes": ""
+      "notes": "",
+      "jobid": "a94ba4fd-6439-497b-ad8d-caed8457aded"
     },
     {
       "name": "5. Moderation hooks + auto-validation before publish",
       "status": "planned",
-      "notes": ""
+      "notes": "",
+      "jobid": "22f065eb-1384-4ed4-a9b6-21761080cae2"
     },
     {
       "name": "6. Persistence: server save, draft/published, version history",
       "status": "planned",
-      "notes": ""
+      "notes": "",
+      "jobid": "6bd7897d-8a02-4aa8-a1a3-83109f4eadcd"
     },
     {
       "name": "7. Performance safeguards (culling, LOD, in-UI warnings, server rejection)",
       "status": "planned",
-      "notes": ""
+      "notes": "",
+      "jobid": "25ee0b21-e7e2-4ca7-b8cb-ae08e90e27e7"
     },
     {
       "name": "8. Future hooks: scripted interactions, galleries, contests",
       "status": "planned",
-      "notes": ""
+      "notes": "",
+      "jobid": "8fa4332c-8810-48f5-b6d4-bb7671af35eb"
     }
   ],
   "created": "1789100773.0305686"

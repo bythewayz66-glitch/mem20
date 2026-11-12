@@ -3,89 +3,106 @@
   "description": "JAIRF MMORPG master roadmap. Four vertical quarters (jairf-1..4), cross-quarter production tracks (assets, audio, art style, animation, VFX, UI, budgets, builder constraints, quests, data arch, live-ops), beta testing swarm (jairf-beta), and the executable execution spine (jairf-exec). Parent map; each phase links to a child roadmap. Hybrid human + 300-agent swarm development in Unity 6.",
   "phases": [
     {
-      "name": "AI/HUM ROADMAP EXECUTION (jairf-exec) — EXECUTION SPINE",
+      "name": "AI/HUM ROADMAP EXECUTION (jairf-exec) \u2014 EXECUTION SPINE",
       "status": "planned",
-      "notes": "THE OPERATIONAL SEQUENCE. Follow this phase order for all work; supersedes the parallel parent listing. Every child roadmap feeds into it at its ordered step."
+      "notes": "THE OPERATIONAL SEQUENCE. Follow this phase order for all work; supersedes the parallel parent listing. Every child roadmap feeds into it at its ordered step.",
+      "jobid": "4633d520-88e0-4989-a751-2167d8571449"
     },
     {
       "name": "Q1 Core Playable Foundation (jairf-1)",
       "status": "planned",
-      "notes": "Character creation, movement, combat, inventory, progression, starter zone, UI, local co-op"
+      "notes": "Character creation, movement, combat, inventory, progression, starter zone, UI, local co-op",
+      "jobid": "d1d87dd3-bc59-4497-b9c6-7363d41705de"
     },
     {
       "name": "Digital Assets - 3D (jairf-assets)",
       "status": "planned",
-      "notes": "Runs before/parallel to each quarter; Meshy text-to-3D pipeline"
+      "notes": "Runs before/parallel to each quarter; Meshy text-to-3D pipeline",
+      "jobid": "32303797-1fb7-45f3-a7ca-de3c8f5c93b8"
     },
     {
       "name": "Audio (jairf-audio)",
       "status": "planned",
-      "notes": "Per-quarter SFX + music; SFX_/MUS_/AMB_ naming"
+      "notes": "Per-quarter SFX + music; SFX_/MUS_/AMB_ naming",
+      "jobid": "d6c620af-220f-4a8d-9424-232e6c237c2b"
     },
     {
       "name": "Art Style (jairf-art-style)",
       "status": "planned",
-      "notes": "Stylized fantasy lock; generator keyword consistency"
+      "notes": "Stylized fantasy lock; generator keyword consistency",
+      "jobid": "527fab6e-d72f-4448-86bb-6845d035f5b1"
     },
     {
       "name": "Animation (jairf-animation)",
       "status": "planned",
-      "notes": "Humanoid rig, locomotion, combat, class, emotes, builder gestures, enemy/NPC"
+      "notes": "Humanoid rig, locomotion, combat, class, emotes, builder gestures, enemy/NPC",
+      "jobid": "9bab6c5b-4100-4597-8928-f97150a943aa"
     },
     {
       "name": "VFX (jairf-vfx)",
       "status": "planned",
-      "notes": "Combat, class abilities, feedback, environment, builder, UI, multiplayer"
+      "notes": "Combat, class abilities, feedback, environment, builder, UI, multiplayer",
+      "jobid": "aa0a5528-9134-449c-9560-6dc379598e2f"
     },
     {
       "name": "UI / Icons / HUD (jairf-ui-icons)",
       "status": "planned",
-      "notes": "Core HUD, inventory, skills, builder mode, social, system, status icons"
+      "notes": "Core HUD, inventory, skills, builder mode, social, system, status icons",
+      "jobid": "2bb40165-1766-4a5b-841b-eba3b2553763"
     },
     {
       "name": "Tech Budgets & Naming (jairf-tech-budgets)",
       "status": "planned",
-      "notes": "Poly/LOD, textures, performance targets, naming conventions, enforcement"
+      "notes": "Poly/LOD, textures, performance targets, naming conventions, enforcement",
+      "jobid": "d07c6159-db84-4595-a590-aea380c513b1"
     },
     {
       "name": "Q2 Persistent Multiplayer World (jairf-2)",
       "status": "planned",
-      "notes": "Accounts, networking, dedicated server, zones, shared world, parties, chat, early economy"
+      "notes": "Accounts, networking, dedicated server, zones, shared world, parties, chat, early economy",
+      "jobid": "0c609616-37f0-47ff-887d-13802931eb21"
     },
     {
       "name": "Builder Constraints (jairf-builder-constraints)",
       "status": "planned",
-      "notes": "Safety, budgets, permissions, persistence, moderation, safeguards"
+      "notes": "Safety, budgets, permissions, persistence, moderation, safeguards",
+      "jobid": "29cec627-3841-4e57-ac67-301a9f90424d"
     },
     {
       "name": "Q3 Depth + Internal Builder (jairf-3)",
       "status": "planned",
-      "notes": "Classes, quests, economy, guilds/housing, internal builder core + sharing"
+      "notes": "Classes, quests, economy, guilds/housing, internal builder core + sharing",
+      "jobid": "f8c66e3c-24aa-473b-b43b-3dab831ef317"
     },
     {
       "name": "Quest & Content Framework (jairf-quests)",
       "status": "planned",
-      "notes": "Quest types, data schema, dialogue, content pillars, authoring rules"
+      "notes": "Quest types, data schema, dialogue, content pillars, authoring rules",
+      "jobid": "f6b39d2d-f5a2-4176-9f2e-3c115b416d82"
     },
     {
       "name": "Data Architecture (jairf-data-arch)",
       "status": "planned",
-      "notes": "ScriptableObject-first, content data types, save/network schemas"
+      "notes": "ScriptableObject-first, content data types, save/network schemas",
+      "jobid": "ae16fc49-30a5-4694-a121-2e27e908d9c7"
     },
     {
       "name": "Q4 Polish, Scale & Live-Service (jairf-4)",
       "status": "planned",
-      "notes": "Optimization, anti-cheat, advanced builder, balancing, packaging, soft-launch"
+      "notes": "Optimization, anti-cheat, advanced builder, balancing, packaging, soft-launch",
+      "jobid": "055ee0f9-0e14-4f89-829f-1bf852bfffa8"
     },
     {
       "name": "Localization / Accessibility / Live-Ops (jairf-liveops)",
       "status": "planned",
-      "notes": "L10n, a11y, events, monetization, UGC moderation, CI/CD"
+      "notes": "L10n, a11y, events, monetization, UGC moderation, CI/CD",
+      "jobid": "73eb59ed-c866-4b80-bc90-c2d959b507e8"
     },
     {
       "name": "Beta Testing Swarm (jairf-beta)",
       "status": "planned",
-      "notes": "Continuous across all quarters per Autonomous_Beta_Testing_Agents.md"
+      "notes": "Continuous across all quarters per Autonomous_Beta_Testing_Agents.md",
+      "jobid": "0a4b7191-a019-4544-9735-9c8f8230bc6c"
     }
   ],
   "created": "1789100773.0305686"

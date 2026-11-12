@@ -5,37 +5,44 @@
     {
       "name": "1. Audio toolchain + folder structure + naming conventions",
       "status": "planned",
-      "notes": ""
+      "notes": "",
+      "jobid": "f66d2a9c-20a7-47e8-a038-aa5697da4bce"
     },
     {
       "name": "2. Q1 audio set: UI, movement, basic combat, starter zone, music",
       "status": "planned",
-      "notes": ""
+      "notes": "",
+      "jobid": "98e293c0-ff59-4a64-84c8-33dd08f70033"
     },
     {
       "name": "3. Q2 audio set: multiplayer, enemies, new zones, economy, music",
       "status": "planned",
-      "notes": ""
+      "notes": "",
+      "jobid": "97df6e6c-d059-4c99-ba8a-17dd9d2216c3"
     },
     {
       "name": "4. Q3 audio set: class combat, builder/UGC, crafting, immersion, music",
       "status": "planned",
-      "notes": ""
+      "notes": "",
+      "jobid": "cc601c7d-9aa1-4973-9d7b-993656b5eca9"
     },
     {
       "name": "5. Q4 audio set: hero sounds, biomes, advanced UI, music",
       "status": "planned",
-      "notes": ""
+      "notes": "",
+      "jobid": "b629bca4-81d8-417e-ad13-46e12e6b25db"
     },
     {
       "name": "6. Unity integration: Audio Mixer buses, ducking, spatial audio, settings",
       "status": "planned",
-      "notes": ""
+      "notes": "",
+      "jobid": "46defc20-315d-4950-a299-288e7e997a87"
     },
     {
       "name": "7. QA + polish across quarters",
       "status": "planned",
-      "notes": ""
+      "notes": "",
+      "jobid": "a2274657-1045-47ae-a750-816391e99039"
     }
   ],
   "created": "1789100773.0305686"

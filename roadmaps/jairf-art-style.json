@@ -5,27 +5,32 @@
     {
       "name": "1. Style lock: visual direction, palette, lighting rules",
       "status": "planned",
-      "notes": ""
+      "notes": "",
+      "jobid": "fe485c75-9b7a-4d92-957e-48b761f84630"
     },
     {
       "name": "2. Character guidelines (silhouette, materials, T/A-pose)",
       "status": "planned",
-      "notes": ""
+      "notes": "",
+      "jobid": "db20d90a-e989-42b3-99fc-fa46429c11bc"
     },
     {
       "name": "3. Environment guidelines (modular, landmarks, walkable contrast)",
       "status": "planned",
-      "notes": ""
+      "notes": "",
+      "jobid": "3c6b66a8-e242-40ca-a7ad-cecfe3b2b59a"
     },
     {
       "name": "4. Builder asset visual rules (topology, pivots, selection feedback)",
       "status": "planned",
-      "notes": ""
+      "notes": "",
+      "jobid": "2eeff289-81d4-4e39-9fa2-cfcc3324b68a"
     },
     {
       "name": "5. Generator keyword consistency + cross-pipeline audits",
       "status": "planned",
-      "notes": ""
+      "notes": "",
+      "jobid": "bbd43577-163e-473a-8fdf-a5d707e16016"
     }
   ],
   "created": "1789100773.0305686"

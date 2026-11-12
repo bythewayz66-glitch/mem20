@@ -5,27 +5,32 @@
     {
       "name": "A Intercept",
       "status": "in_progress",
-      "notes": "DoD wedge SHIPPED 2026-09-19: intercept + identity + tool gate + budget + memory hashes + two outcome adapters (Zendesk/Stripe) + signed receipt. Built: registry, MissionService (fail-closed start), Intercept gate (schema+semantic+budget+idempotency+kill), MemoryPartition (hashed/chained/TTL/trust tiers), HTTP gateway (agents/policies/tools/missions/execute/memory/receipt/receipt.sig/complete/outcome-verify), completions passthrough proxy (openai+anthropic), SDK client (MissionControl ctx mgr + Mission handle), adapters.py. 75 tests passing. Commit trail 7ee33a3..46db547. Remaining Phase A: pass^k CI, receipt JSON export bundle + webhooks, internal mission viewer, stored-arg redaction, persistence backend."
+      "notes": "DoD wedge SHIPPED 2026-09-19: intercept + identity + tool gate + budget + memory hashes + two outcome adapters (Zendesk/Stripe) + signed receipt. Built: registry, MissionService (fail-closed start), Intercept gate (schema+semantic+budget+idempotency+kill), MemoryPartition (hashed/chained/TTL/trust tiers), HTTP gateway (agents/policies/tools/missions/execute/memory/receipt/receipt.sig/complete/outcome-verify), completions passthrough proxy (openai+anthropic), SDK client (MissionControl ctx mgr + Mission handle), adapters.py. 75 tests passing. Commit trail 7ee33a3..46db547. Remaining Phase A: pass^k CI, receipt JSON export bundle + webhooks, internal mission viewer, stored-arg redaction, persistence backend.",
+      "jobid": "5db6782a-166d-4bd4-b429-322ba527d0ca"
     },
     {
       "name": "B Ship",
       "status": "planned",
-      "notes": ""
+      "notes": "",
+      "jobid": "0ae5a8c1-33c4-468a-945d-d65a864096a0"
     },
     {
       "name": "C Sell",
       "status": "planned",
-      "notes": ""
+      "notes": "",
+      "jobid": "f28e733b-ed3c-435f-a061-4418a596fb4d"
     },
     {
       "name": "D Standard",
       "status": "planned",
-      "notes": ""
+      "notes": "",
+      "jobid": "c5c464e6-0789-4fe2-a0f1-bea4c492adf6"
     },
     {
       "name": "Beyond 42 (Default/Fabric contingent)",
       "status": "planned",
-      "notes": ""
+      "notes": "",
+      "jobid": "e5510946-094f-4360-920d-fd13a9d97b66"
     }
   ],
   "created": "1789604765.3759632"

@@ -5,27 +5,32 @@
     {
       "name": "1. Poly budget table adoption (LOD0-3 per asset type)",
       "status": "planned",
-      "notes": ""
+      "notes": "",
+      "jobid": "4fe9b8e0-cbfc-48ac-992c-de973e90db9e"
     },
     {
       "name": "2. Texture budgets + compression strategy",
       "status": "planned",
-      "notes": ""
+      "notes": "",
+      "jobid": "4d135c93-ebf4-499b-996f-77d53a7b8e05"
     },
     {
       "name": "3. Performance targets (FPS, draw calls, lights, particles, network)",
       "status": "planned",
-      "notes": ""
+      "notes": "",
+      "jobid": "4fae07bd-f866-4318-8077-2d1c7bf5e9be"
     },
     {
       "name": "4. Naming conventions for all asset families",
       "status": "planned",
-      "notes": ""
+      "notes": "",
+      "jobid": "37ae0a22-4be1-4bec-b235-b4e716790160"
     },
     {
       "name": "5. Enforcement tooling: CI validation + agent build rules",
       "status": "planned",
-      "notes": ""
+      "notes": "",
+      "jobid": "cb6d1012-e75b-41ee-92ab-74cede4728a9"
     }
   ],
   "created": "1789100773.0305686"

@@ -22,13 +22,3 @@ class TwinzToolsMixin:
     async def _twinz_doctor(self,args:Dict[str,Any])->str:
         try: return _d(_load().probe())
         except Exception as e: return _d({"ok":False,"error":str(e)})
-
-# --- compatibility re-exports ---
-# The 2026-11-09 consolidation wave moved these classes into their own
-# per-subsystem modules. mcp/server.py still imports them from here, so
-# they are re-exported at module level to keep the server importable
-# without dropping any mixin from Mem20MCPServer's bases.
-from tools.mem20personalworkflowtwinz_tools import PersonalWorkflowTwinToolsMixin
-from tools.mem20realtimebusinesstwinz_tools import RealTimeBusinessTwinToolsMixin
-from tools.mem20playermotivationtwinz_tools import PlayerMotivationTwinToolsMixin
-from tools.mem20customerdigitaltwinlabz_tools import CustomerDigitalTwinLabToolsMixin

@@ -1,0 +1,7 @@
+"""Compatibility module: re-exports mixins whose real homes are elsewhere."""
+# --- compatibility re-exports ---
+# The 2026-11-09 consolidation wave moved these classes into their own
+# per-subsystem modules. mcp/server.py still imports them from here, so
+# they are re-exported at module level to keep the server importable
+# without dropping any mixin from Mem20MCPServer's bases.
+from tools.mem20remoteexperimentlabz_tools import RemoteExperimentLabToolsMixin

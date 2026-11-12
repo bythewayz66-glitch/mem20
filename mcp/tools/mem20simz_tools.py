@@ -22,3 +22,14 @@ class SimzToolsMixin:
     async def _simz_doctor(self,args:Dict[str,Any])->str:
         try: return _d(_load().probe())
         except Exception as e: return _d({"ok":False,"error":str(e)})
+
+# --- compatibility re-exports ---
+# The 2026-11-09 consolidation wave moved these classes into their own
+# per-subsystem modules. mcp/server.py still imports them from here, so
+# they are re-exported at module level to keep the server importable
+# without dropping any mixin from Mem20MCPServer's bases.
+from tools.mem20architecturesimulationsandboxz_tools import ArchitectureSimulationSandboxzToolsMixin
+from tools.mem20outcomesimulationlabz_tools import OutcomeSimulationLabToolsMixin
+from tools.mem20productledgrowthsimulatorz_tools import ProductLedGrowthSimulatorToolsMixin
+from tools.mem20businessmodelsimulatorz_tools import BusinessModelSimulatorToolsMixin
+from tools.mem20counterfactualmemorysimulatorz_tools import CounterfactualMemorySimulatorToolsMixin

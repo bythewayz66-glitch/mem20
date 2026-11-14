@@ -14375,44 +14375,6 @@
       "version": "0.1.0"
     },
     {
-      "bytes": 40706,
-      "category": "service",
-      "code_lines": 752,
-      "dependencies": [],
-      "description": "",
-      "dir": "tools",
-      "docs": [
-        "tools/README.md"
-      ],
-      "entry_points": {},
-      "file_count": 4,
-      "keywords": [],
-      "languages": {
-        "markdown": 1,
-        "python": 2,
-        "shell": 1
-      },
-      "license": null,
-      "line_count": 765,
-      "lines_by_language": {
-        "markdown": 13,
-        "python": 706,
-        "shell": 46
-      },
-      "modules": [
-        "gen_completion_audit",
-        "gen_systems_value"
-      ],
-      "name": "tools",
-      "packaged": false,
-      "readme_summary": "Standalone maintenance tools \u2014 `tools/`",
-      "readme_text": "# standalone maintenance tools \u2014 `tools/`\n\none-off and periodic maintenance utilities that are not part of the server or the\n`scripts/` operational set.\n\n**3 tracked file(s).**\n\n## contents\n\n- `gen_completion_audit.py` \u2014 generate the completion audit\n- `gen_systems_value.py` \u2014 generate the systems-value report\n- `blue-hydra-ruby-fix.sh` \u2014 ruby-side fix script\n\n## notes\n\nthese are run by hand. if a tool becomes part of a routine, move it to `scripts/`\nand document it there.\n\n---\n\npart of the [mem20 monorepo](../readme.md). see [`docs/index.md`](../docs/index.md) for the full documentation map.\n",
-      "requires_python": null,
-      "subdirs": [],
-      "test_files": 0,
-      "version": null
-    },
-    {
       "bytes": 5201,
       "category": "service",
       "code_lines": 104,

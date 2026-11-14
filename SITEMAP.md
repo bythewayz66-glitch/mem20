@@ -275,7 +275,6 @@ A machine-readable map of this monorepo so an agent can find the right subsystem
 | `mem20-mcp` | 1719 | 3 | - | Thin real loader for the canonical mem20 MCP server. Every module forwards to /opt/mem20/mcp so the shim cannot drift from the running implementation. |
 | `cog` | 1399 | 0 | - | cog |
 | `reference_store` | 861 | 1 | - | 00_reference_store — BUILD MANIFEST (first build of hypo-map-1) |
-| `tools` | 752 | 0 | - | Standalone maintenance tools — `tools/` |
 | `mem20-orchestration` | 499 | 1 | `mem20-orchestration` | Blender operator orchestration: query the real bpy.ops catalog and validate op sequences before they reach a live Blender session. |
 | `dashboard` | 217 | 0 | - | mem20 dashboard |
 | `packaging` | 166 | 0 | - | mem20 packaging |

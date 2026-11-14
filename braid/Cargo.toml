@@ -37,7 +37,7 @@ serde = { version = "1", features = ["derive"] }
 # with its content and signature intact. Correctly-rounded parsing makes the
 # canonical form stable and recovers those records.
 serde_json = { version = "1", features = ["float_roundtrip"] }
-toml = "0.8"
+toml = "1.2"
 sha2 = "0.11"
 # hmac MUST track sha2's digest major. sha2 0.11 builds on digest 0.11 (it is
 # also the version ed25519-dalek v3 pulls in, so cargo unifies the whole

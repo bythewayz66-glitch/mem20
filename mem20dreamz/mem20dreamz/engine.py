@@ -14,6 +14,7 @@ from __future__ import annotations
 
 import os
 import sys
+import threading
 import time
 import uuid
 from concurrent.futures import ThreadPoolExecutor
@@ -32,6 +33,50 @@ _load_dotenv()
 
 RETRY_ATTEMPTS = 3
 RETRY_BACKOFF_S = (2, 8, 30)
+
+#: Per-provider minimum interval (seconds) for keyless LLM providers.
+KEYLESS_RATE_LIMIT_SECONDS = float(
+    getattr(panel_mod, "KEYLESS_RATE_LIMIT_SECONDS", 30.0)
+)
+_KEYLESS_LAST_REQUEST: dict[str, float] = {}
+_KEYLESS_RATE_LOCK = threading.Lock()
+
+
+def _is_keyless_provider(provider: str) -> bool:
+    """True when the named provider is configured as keyless (no API key)."""
+    spec = panel_mod.PROVIDERS.get(provider) or {}
+    return not spec.get("key_env")
+
+
+def _enforce_keyless_rate_limit(provider: str) -> float:
+    """Enforce a minimum interval between requests for the same keyless provider.
+
+    Returns seconds waited (0.0 if none). Applied per provider name so different
+    keyless providers are not artificially serialized.
+    """
+    if not _is_keyless_provider(provider):
+        return 0.0
+    limit = max(0.0, float(KEYLESS_RATE_LIMIT_SECONDS))
+    if limit <= 0.0:
+        return 0.0
+    waited = 0.0
+    with _KEYLESS_RATE_LOCK:
+        now = time.monotonic()
+        last = _KEYLESS_LAST_REQUEST.get(provider)
+        if last is not None:
+            elapsed = now - last
+            if elapsed < limit:
+                waited = limit - elapsed
+        if waited > 0.0:
+            # Reserve the slot now to prevent thundering-herd bursts.
+            _KEYLESS_LAST_REQUEST[provider] = now + waited
+        else:
+            _KEYLESS_LAST_REQUEST[provider] = now
+    if waited > 0.0:
+        time.sleep(waited)
+        with _KEYLESS_RATE_LOCK:
+            _KEYLESS_LAST_REQUEST[provider] = time.monotonic()
+    return waited
 #: Rough share of a panelist's context for the lineage digest. The artifact
 #: itself is passed separately and in full, so this governs history only.
 DIGEST_SHARE = 0.5

@@ -1049,9 +1049,18 @@ def _cmd_parity(b, args) -> int:
             break
     if not names:
         return _out({"checked": 0, "error": "no subcommands found"}) or 1
+
+    # Ensure the mem20agentz package is importable for subprocess help checks
+    # regardless of how PYTHONPATH was set by the caller/test harness.
+    pkg_root = str(pathlib.Path(__file__).resolve().parents[1])
     env = dict(os.environ)
-    env.setdefault("PYTHONPATH", "/opt/mem20/mem20agentz")
+    existing_pp = env.get("PYTHONPATH", "")
+    pp_parts = [pkg_root]
+    if existing_pp:
+        pp_parts.append(existing_pp)
+    env["PYTHONPATH"] = os.pathsep.join(pp_parts)
     env.setdefault("MEM20AGENTZ_BACKEND", "fake")
+
     base = [sys.executable, "-m", "mem20agentz.cli"]
     rows = []
     failed = []

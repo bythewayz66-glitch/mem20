@@ -38,6 +38,8 @@ mem20-metrics = "metrics_collector:main"
 # from systemd units, cron jobs and `sh -c` — not just an interactive shell.
 # Excluded on purpose: mem20-metrics, which is a blocking server, not a command.
 mem20-path = "mem20path:main"
+# Boot, port-deconflict, and health-test the full mem20 web stack.
+mem20-thestack = "mem20thestack:main"
 
 [tool.setuptools]
 packages = ["memory_engine"]
@@ -47,7 +49,8 @@ packages = ["memory_engine"]
 # `mem20-mcp` console script. `metrics_collector.py` is the standalone
 # install-metrics collector server. `mem20path.py` backs `mem20-path`, which
 # keeps every mem20 CLI resolvable from a non-interactive context.
-py-modules = ["memory", "metrics_collector", "procedural", "launcher", "mem20path"]
+# `mem20thestack.py` boots, port-deconflicts, and tests the full web stack.
+py-modules = ["memory", "metrics_collector", "procedural", "launcher", "mem20path", "mem20thestack"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]

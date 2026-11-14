@@ -14,6 +14,8 @@ from __future__ import annotations
 
 import dataclasses
 import os
+import threading
+import time
 from typing import Any, Optional
 
 import httpx
@@ -42,6 +44,26 @@ KNOWN_PROVIDERS: dict[str, dict[str, Optional[str]]] = {
     "ollama-gemma": {
         "base_url": "http://localhost:11434/v1",
         "model": "gemma3:1b",
+        "key_env": None,
+    },
+    "kilo": {
+        "base_url": "https://api.kilo.ai/api/openrouter",
+        "model": "kilo-auto/free",
+        "key_env": None,
+    },
+    "llm7": {
+        "base_url": "https://api.llm7.io/v1",
+        "model": "default",
+        "key_env": None,
+    },
+    "freeaikeyapi": {
+        "base_url": "https://api.freeaikeyapi.com/v1",
+        "model": "free-ai",
+        "key_env": None,
+    },
+    "apillmfree": {
+        "base_url": "https://api.apillmfree.com/v1",
+        "model": "free-ai",
         "key_env": None,
     },
     "nvidia": {
@@ -208,6 +230,11 @@ class AllProvidersFailed(Exception):
         self.errors = errors
 
 
+KEYLESS_RATE_LIMIT_SECONDS = 30.0
+_KEYLESS_LAST_REQUEST: dict[str, float] = {}
+_KEYLESS_RATE_LOCK = threading.Lock()
+
+
 def _is_keyless(provider: "Provider") -> bool:
     """True when KNOWN_PROVIDERS declares this provider needs no key at all.
 
@@ -218,6 +245,36 @@ def _is_keyless(provider: "Provider") -> bool:
     """
     known = KNOWN_PROVIDERS.get(provider.name)
     return bool(known) and not known.get("key_env")
+
+
+def _enforce_keyless_rate_limit(provider: "Provider") -> float:
+    """Enforce a minimum interval between requests for keyless providers.
+
+    Returns the number of seconds waited (0.0 if none). Applied per provider
+    name so fallback across different keyless providers is not artificially
+    serialized, while repeated calls to the same keyless provider are spaced.
+    """
+    if not _is_keyless(provider):
+        return 0.0
+    waited = 0.0
+    with _KEYLESS_RATE_LOCK:
+        now = time.monotonic()
+        last = _KEYLESS_LAST_REQUEST.get(provider.name)
+        if last is not None:
+            elapsed = now - last
+            if elapsed < KEYLESS_RATE_LIMIT_SECONDS:
+                waited = KEYLESS_RATE_LIMIT_SECONDS - elapsed
+        if waited > 0.0:
+            # Sleep while holding the provider slot reservation by updating
+            # the scheduled time now, preventing thundering-herd bursts.
+            _KEYLESS_LAST_REQUEST[provider.name] = now + waited
+        else:
+            _KEYLESS_LAST_REQUEST[provider.name] = now
+    if waited > 0.0:
+        time.sleep(waited)
+        with _KEYLESS_RATE_LOCK:
+            _KEYLESS_LAST_REQUEST[provider.name] = time.monotonic()
+    return waited
 
 
 class Router:
@@ -257,6 +314,7 @@ class Router:
                                               "error": "no api key"})
                         break
                 try:
+                    _enforce_keyless_rate_limit(provider)
                     text = request_chat(
                         messages, provider, api_key, model=model,
                         temperature=temperature, max_tokens=max_tokens,

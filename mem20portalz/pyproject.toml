@@ -1,0 +1,26 @@
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "mem20portalz"
+version = "0.1.0"
+description = "Customer-facing web portal for authenticated access to a customer's saved mem20 memories."
+readme = "README.md"
+requires-python = ">=3.10"
+license = { text = "Apache-2.0" }
+dependencies = [
+  "aiohttp>=3.9",
+]
+
+[project.scripts]
+mem20portalz = "mem20portalz.cli:main"
+
+[tool.setuptools]
+packages = ["mem20portalz"]
+
+[tool.setuptools.package-data]
+mem20portalz = ["web_static/*"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

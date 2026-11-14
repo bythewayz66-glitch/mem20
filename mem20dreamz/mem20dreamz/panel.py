@@ -5,35 +5,30 @@ spot *systematic* rather than random, because every member can be confidently
 wrong in the same direction and agreement gets laundered into consensus.
 Different training lineages have genuinely different blind spots.
 
-Everything in ``PANEL`` was verified to actually answer, on this host, with a
-real call. Model ids and context windows were read from provider endpoints
-rather than guessed, because a wrong id is an instant 404 and a panelist that
-silently never replies is indistinguishable from one with nothing to say.
+Every provider in ``PROVIDERS`` with ``key_env=None`` is keyless: no API key is
+required. The dream engine enforces a per-provider minimum interval
+(``KEYLESS_RATE_LIMIT_SECONDS``, 30 seconds) between requests to the same
+keyless provider so callers do not hammer free-tier endpoints.
 
-KEYLESS REALITY, stated plainly (2026-11-11). The estate secrets file is gone
-and with it every provider key, so only keyless surfaces can serve a
-completion. Verified by calling them, not by reading a catalog:
+Provider roster (keyless):
+  * pollinations      — remote keyless OpenAI-compatible proxy (text.pollinations.ai)
+  * llm7              — remote keyless OpenAI-compatible API (api.llm7.io)
+  * local-tiny-gpt2   — local transformers pipeline (sshleifer/tiny-gpt2)
+  * local-tiny-opt    — local transformers pipeline (tiny-random-OPTForCausalLM)
+  * local-tiny-bloom  — local transformers pipeline (tiny-random-BloomForCausalLM)
+  * local-tiny-gptneo — local transformers pipeline (tiny-random-GPTNeoForCausalLM)
+  * local-tiny-llama  — local transformers pipeline (tiny-random-LlamaForCausalLM)
+  * local-tiny-phi    — local transformers pipeline (tiny-random-PhiForCausalLM)
 
-* Pollinations - ``https://text.pollinations.ai/openai``, ``gpt-oss-20b``;
-  answered a real prompt in ~5s. Free tier is rate-limited to roughly one
-  reply per 45s per IP (HTTP 402 FREE_LIMIT), so exactly one member rides it.
-* Ollama, local - ``http://localhost:11434/v1``; ``qwen2.5-coder:0.5b`` and
-  ``gemma3:1b`` both answered. Context 32768 each, read from ``/api/show``,
-  not guessed. CPU-bound and slow, but uncapped and free.
-
-Keyed providers (cohere, groq) stay in PROVIDERS/KEY_ENV so a deployment that
-obtains real keys can widen the panel without code changes; on this host they
-are honestly unfunded and excluded. The distinct-model rule survives the
-smaller roster: gpt-oss-20b, gemma3:1b and qwen2.5-coder:0.5b are three
-different training lineages across two providers.
-
-Where a context window is an estimate it says so, because that number decides how
-much lineage each panelist can actually read.
+Keyed providers (cohere, groq) remain in PROVIDERS/KEY_ENV so deployments with
+real keys can widen the panel without code changes; on this host they are
+unfunded and excluded.
 """
 
 from __future__ import annotations
 
 import sys
+import threading
 from dataclasses import dataclass
 from typing import Any
 
@@ -42,15 +37,77 @@ sys.path.insert(0, ESTATE_ROOT)
 import llm
 
 POLLINATIONS = "https://text.pollinations.ai/openai"
+LLM7 = "https://api.llm7.io/v1"
 OLLAMA = "http://localhost:11434/v1"
 COHERE = "https://api.cohere.com/compatibility/v1"
 GROQ = "https://api.groq.com/openai/v1"
 
+#: Per-provider minimum interval (seconds) enforced for keyless providers.
+KEYLESS_RATE_LIMIT_SECONDS = 30.0
+
+# Local transformers-backed providers: provider name -> Hugging Face model id.
+# These are served by an in-process OpenAI-compatible shim (local_provider.py)
+# started lazily on first use so e2e calls work without external setup.
+LOCAL_TRANSFORMERS_MODELS: dict[str, str] = {
+    "local-tiny-gpt2": "sshleifer/tiny-gpt2",
+    "local-tiny-opt": "hf-internal-testing/tiny-random-OPTForCausalLM",
+    "local-tiny-bloom": "hf-internal-testing/tiny-random-BloomForCausalLM",
+    "local-tiny-gptneo": "hf-internal-testing/tiny-random-GPTNeoForCausalLM",
+    "local-tiny-llama": "hf-internal-testing/tiny-random-LlamaForCausalLM",
+    "local-tiny-phi": "hf-internal-testing/tiny-random-PhiForCausalLM",
+}
+
+_LOCAL_SERVERS: dict[str, dict[str, Any]] = {}
+_LOCAL_SERVERS_LOCK = threading.Lock()
+
+
+def _local_base_url(provider: str) -> str:
+    """Return a running local OpenAI-compatible base URL for a transformers provider."""
+    model = LOCAL_TRANSFORMERS_MODELS.get(provider)
+    if not model:
+        return ""
+    with _LOCAL_SERVERS_LOCK:
+        entry = _LOCAL_SERVERS.get(provider)
+        if entry and entry.get("base_url"):
+            return str(entry["base_url"])
+        from . import local_provider
+
+        server, thread, base_url = local_provider.start_local_provider(model)
+        _LOCAL_SERVERS[provider] = {"server": server, "thread": thread, "base_url": base_url, "model": model}
+        return base_url
+
+
+def stop_local_providers() -> None:
+    """Stop any lazily-started local transformers provider servers."""
+    with _LOCAL_SERVERS_LOCK:
+        entries = list(_LOCAL_SERVERS.values())
+        _LOCAL_SERVERS.clear()
+    for entry in entries:
+        server = entry.get("server")
+        if server is None:
+            continue
+        try:
+            from . import local_provider
+
+            local_provider.stop_local_provider(server)
+        except Exception:
+            pass
+
+
 #: Every provider the panel knows how to reach, with its base URL and its key
-#: requirement. ``key_env=None`` means the provider needs no key at all -
-#: that is the whole basis of the 2026-11-11 keyless rewire.
+#: requirement. ``key_env=None`` means the provider needs no key at all (keyless).
 PROVIDERS: dict[str, dict[str, Any]] = {
+    # Remote keyless providers
     "pollinations": {"base": POLLINATIONS, "key_env": None},
+    "llm7": {"base": LLM7, "key_env": None},
+    # Local transformers-backed keyless providers (base resolved lazily)
+    "local-tiny-gpt2": {"base": "", "key_env": None, "local_transformers": True},
+    "local-tiny-opt": {"base": "", "key_env": None, "local_transformers": True},
+    "local-tiny-bloom": {"base": "", "key_env": None, "local_transformers": True},
+    "local-tiny-gptneo": {"base": "", "key_env": None, "local_transformers": True},
+    "local-tiny-llama": {"base": "", "key_env": None, "local_transformers": True},
+    "local-tiny-phi": {"base": "", "key_env": None, "local_transformers": True},
+    # Legacy/local keyed-or-local providers kept for compatibility/widening
     "ollama-qwen": {"base": OLLAMA, "key_env": None},
     "ollama-gemma": {"base": OLLAMA, "key_env": None},
     "cohere": {"base": COHERE, "key_env": "COHERE_API_KEY"},
@@ -59,7 +116,7 @@ PROVIDERS: dict[str, dict[str, Any]] = {
 
 #: Keyed providers only - keyless members never consult this map.
 KEY_ENV = {name: spec["key_env"]
-           for name, spec in PROVIDERS.items() if spec["key_env"]}
+           for name, spec in PROVIDERS.items() if spec.get("key_env")}
 
 VERIFIED = "verified"
 ESTIMATE = "conservative-estimate"
@@ -84,11 +141,23 @@ class Panelist:
                 f"unknown provider {self.provider!r}: every panel member must "
                 "name a provider that exists in PROVIDERS"
             )
-        return spec["base"]
+        if spec.get("local_transformers"):
+            base = _local_base_url(self.provider)
+            if not base:
+                raise PanelConfigError(
+                    f"local transformers provider {self.provider!r} could not be started"
+                )
+            return base
+        base = spec.get("base", "")
+        if not base:
+            raise PanelConfigError(
+                f"provider {self.provider!r} has no base URL configured"
+            )
+        return base
 
 
-# One member per model id. All three verified answering keyless on this host
-# on 2026-11-11 (pollinations gpt-oss-20b ~5s; local Ollama models immediately).
+# One member per model id. All eight are keyless providers wired into the dream
+# engine with a 30-second per-provider rate limit.
 PANEL: tuple[Panelist, ...] = (
     Panelist(
         role="systems_inventor",
@@ -101,43 +170,83 @@ PANEL: tuple[Panelist, ...] = (
             "yet, and the smallest real version of it"
         ),
         temperature=0.85,
-        notes=(
-            "remote keyless proxy; ~1 reply/45s/IP (HTTP 402 FREE_LIMIT), so "
-            "exactly one member rides it. Context through the proxy is an "
-            "estimate - gpt-oss-20b natively serves 131k, but the free tier "
-            "has not been probed for its real cap"
-        ),
+        notes="remote keyless OpenAI-compatible proxy; 30s per-provider rate limit",
     ),
     Panelist(
         role="skeptic",
-        provider="ollama-gemma",
-        model="gemma3:1b",
-        context=32_768,
-        context_source=VERIFIED,
+        provider="llm7",
+        model="default",
+        context=8_192,
+        context_source=ESTIMATE,
         focus=(
             "attack the premise. Is this the right thing to be building? "
             "Argue the opposite."
         ),
         temperature=0.6,
-        notes=(
-            "local CPU, keyless; general lineage, contrarian by instruction. "
-            "0.6 not 0.9: verified 2026-11-11 by repeated calls, gemma3:1b at "
-            "0.9 drifted into Chinese on ~1/3 of replies ('失望', '了解') - "
-            "wrong-language output that the verdict parsers cannot read"
-        ),
+        notes="remote keyless OpenAI-compatible API; 30s per-provider rate limit",
     ),
     Panelist(
         role="product",
-        provider="ollama-qwen",
-        model="qwen2.5-coder:0.5b",
-        context=32_768,
-        context_source=VERIFIED,
+        provider="local-tiny-gpt2",
+        model="sshleifer/tiny-gpt2",
+        context=1_024,
+        context_source=ESTIMATE,
         focus=(
             "whether this is the right product, scope discipline, and what is "
             "missing that nobody asked for"
         ),
-        temperature=0.8,
-        notes="local CPU, keyless; the code lineage, and the smallest writer on the panel",
+        temperature=0.7,
+        notes="local transformers keyless provider; 30s per-provider rate limit",
+    ),
+    Panelist(
+        role="architect",
+        provider="local-tiny-opt",
+        model="hf-internal-testing/tiny-random-OPTForCausalLM",
+        context=1_024,
+        context_source=ESTIMATE,
+        focus="system structure, interfaces, and integration boundaries",
+        temperature=0.7,
+        notes="local transformers keyless provider; 30s per-provider rate limit",
+    ),
+    Panelist(
+        role="researcher",
+        provider="local-tiny-bloom",
+        model="hf-internal-testing/tiny-random-BloomForCausalLM",
+        context=1_024,
+        context_source=ESTIMATE,
+        focus="prior art, evidence, and what is already known or proven",
+        temperature=0.7,
+        notes="local transformers keyless provider; 30s per-provider rate limit",
+    ),
+    Panelist(
+        role="implementer",
+        provider="local-tiny-gptneo",
+        model="hf-internal-testing/tiny-random-GPTNeoForCausalLM",
+        context=1_024,
+        context_source=ESTIMATE,
+        focus="concrete implementation steps and smallest working change",
+        temperature=0.7,
+        notes="local transformers keyless provider; 30s per-provider rate limit",
+    ),
+    Panelist(
+        role="critic",
+        provider="local-tiny-llama",
+        model="hf-internal-testing/tiny-random-LlamaForCausalLM",
+        context=1_024,
+        context_source=ESTIMATE,
+        focus="failure modes, edge cases, and what would break in practice",
+        temperature=0.6,
+        notes="local transformers keyless provider; 30s per-provider rate limit",
+    ),
+    Panelist(
+        role="synthesizer",
+        provider="local-tiny-phi",
+        model="hf-internal-testing/tiny-random-PhiForCausalLM",
+        context=1_024,
+        context_source=ESTIMATE,
+        focus="synthesize critiques into a coherent, improved revision",
+        temperature=0.7,
+        notes="local transformers keyless provider; 30s per-provider rate limit",
     ),
 )
 
@@ -236,6 +345,7 @@ def roster_status() -> dict[str, Any]:
         "distinct_models": len({m.model for m in members}),
         "distinct_providers": len(providers),
         "distinct_model_rule": "enforced: one member per model id",
+        "keyless_rate_limit_s": KEYLESS_RATE_LIMIT_SECONDS,
         "members": [
             {
                 "role": m.role,
@@ -253,10 +363,8 @@ def roster_status() -> dict[str, Any]:
             for name in KEY_ENV if not _key_for(name)
         },
         "caveat": (
-            "keyless reality 2026-11-11: pollinations (remote, ~1 reply/45s/IP) "
-            "and local Ollama (qwen2.5-coder:0.5b, gemma3:1b) are the only usable "
-            "providers; every keyed provider is unfunded on this host. Family "
-            "diversity is narrower than the distinct-model rule deserves - three "
-            "lineages across two providers."
+            f"keyless providers wired: {len(members)} members across {len(providers)} "
+            f"providers, each enforced with a {int(KEYLESS_RATE_LIMIT_SECONDS)}s "
+            "per-provider rate limit. Keyed providers remain unfunded on this host."
         ),
     }

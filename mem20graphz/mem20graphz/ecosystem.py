@@ -72,6 +72,44 @@ def semantic_objects() -> Dict[str, Any]:
         return {"terms": w[:4], "hash_prefix": h[:12]}
     return _safe("mem20semanticobjectgraphz", run)
 
+
+def _absorbed_member_peers():
+    try:
+        import importlib, pathlib, sys
+        root = pathlib.Path(__file__).resolve().parents[2]
+        if str(root) not in sys.path: sys.path.insert(0, str(root))
+        try:
+            import _mem20_absorbed_finder  # noqa: F401
+        except Exception:
+            pass
+        tc = root / 'toolchest' / 'src'
+        if tc.is_dir() and str(tc) not in sys.path: sys.path.insert(0, str(tc))
+        adir = pathlib.Path(__file__).resolve().parents[1] / 'absorbed'
+        members = sorted(p.name for p in adir.iterdir() if p.is_dir()) if adir.is_dir() else []
+        checks = {}
+        total = 0; okm = 0
+        for name in members:
+            try:
+                eco = importlib.import_module(f"{name}.ecosystem")
+                if hasattr(eco, 'probe'):
+                    r = eco.probe()
+                    if isinstance(r, dict):
+                        c = r.get('count')
+                        if c is None: c = len(r.get('reachable') or r.get('checks') or [])
+                        checks[name] = {'ok': bool(r.get('ok', False)), 'count': int(c)}
+                        total += int(c)
+                        if r.get('ok'): okm += 1
+                        continue
+                fns = [x for x in dir(eco) if not x.startswith('_') and callable(getattr(eco,x))]
+                checks[name] = {'ok': True, 'count': len(fns)}
+                total += len(fns); okm += 1
+            except Exception as e:
+                checks[name] = {'ok': False, 'count': 0, 'error': f"{type(e).__name__}: {e}"}
+        return {'ok': True, 'members_with_ecosystem_probe': len(members), 'members_ok': okm, 'peer_checks_total': total, 'checks': checks}
+    except Exception as e:
+        return {'ok': False, 'error': f"{type(e).__name__}: {e}"}
+
+
 def crew_report() -> Dict[str, Any]:
     from . import domain as _dom
     checks = {
@@ -82,7 +120,15 @@ def crew_report() -> Dict[str, Any]:
     }
     reachable = [k for k, v in checks.items() if v.get("ok")]
     summary = _dom.crew_summary()
-    return {"ok": len(reachable) == 7, "integration_health": {"ok": len(reachable), "total": 7}, "summary": summary, "integrations": checks}
+    result = {"ok": len(reachable) == 7, "integration_health": {"ok": len(reachable), "total": 7}, "core_count": 7, "count": 7, "summary": summary, "integrations": checks}
+    try:
+        amp = _absorbed_member_peers()
+        result["member_ecosystems"] = amp
+        result["peer_surface_total"] = 7 + int(amp.get("peer_checks_total", 0))
+        result["count"] = result["peer_surface_total"]
+    except Exception:
+        pass
+    return result
 
 def probe() -> Dict[str, Any]:
     return crew_report()

@@ -1,0 +1,413 @@
+{
+  "explicit_count": 87,
+  "targets": {
+    "mem20assistz": [
+      "mem20ambientdevicecompanionz",
+      "mem20conflictdeescalationassistantz",
+      "mem20contextawarelearningcoachz",
+      "mem20conversationalactiondesktopz",
+      "mem20humancapabilityacceleratorz",
+      "mem20humancapabilitysuperplatformz",
+      "mem20personalautomationcanvasz",
+      "mem20personalintelligencecompanionz",
+      "mem20universalcompaniondevicesdkz"
+    ],
+    "mem20biz": [
+      "mem20acquisitionandpartnershipscoutz",
+      "mem20livingagenteconomyz",
+      "mem20revenueleakhunterz"
+    ],
+    "mem20boxz": [
+      "mem20multiworldsandboxz",
+      "mem20scopemutationsandboxz",
+      "mem20spatialcomputingsandboxz"
+    ],
+    "mem20enginez": [
+      "mem20chaosnativeapplicationruntimez",
+      "mem20communitychallengeenginez",
+      "mem20communitypulseenginez",
+      "mem20completionconfidenceenginez",
+      "mem20crdtcollaborationenginez",
+      "mem20crosslanguagerefactorenginez",
+      "mem20customerlifecycleenginez",
+      "mem20dynamicnarrativeenginez",
+      "mem20featuredependencygraphenginez",
+      "mem20generativebrandworldenginez",
+      "mem20liveprojectdemonstrationenginez",
+      "mem20liveschemamorphingenginez",
+      "mem20mixedinitiativefocusenginez",
+      "mem20mobileedgeagentruntimez",
+      "mem20multilingualliveconversationenginez",
+      "mem20offergenomeenginez",
+      "mem20outcomeverificationruntimez",
+      "mem20peertopeerappruntimez",
+      "mem20predictiverecallenginez",
+      "mem20privatelocalreasoningenginez",
+      "mem20protocolautodiscoveryenginez",
+      "mem20runtimebugpredictionenginez",
+      "mem20runtimecompatibilityenginez",
+      "mem20servicebundlingenginez",
+      "mem20speculativeworkflowenginez"
+    ],
+    "mem20fabricz": [
+      "mem20apishapeshiftinggatewayz",
+      "mem20collectivemodelintelligencez",
+      "mem20crossruntimeeventlatticez",
+      "mem20edgetransportfabricz",
+      "mem20eventstreamsuperhighwayz",
+      "mem20freestackambientcomputingfabricz",
+      "mem20livemodelfusionz",
+      "mem20modalitybridgez",
+      "mem20modelsleepandwakesystemz",
+      "mem20personalmodelevolutionz",
+      "mem20planetarybatchfabricz",
+      "mem20rewardforgez",
+      "mem20sensorfusiongatewayz",
+      "mem20temporaldatabasefabricz",
+      "mem20universalintegrationcompilerz"
+    ],
+    "mem20facez": [
+      "mem20intenttomissioncompilerz",
+      "mem20multimodaltaskcapturez",
+      "mem20multiworldsandboxz",
+      "mem20musicvisualsynchronizerz",
+      "mem20parallelworkstreamcomposerz",
+      "mem20personalautomationcanvasz",
+      "mem20spatialcommanduniversez",
+      "mem20spatialexperiencedesignerz",
+      "mem20visualagentblackboardz",
+      "mem20visualdataflowcomposerz",
+      "mem20voicetoactionswitchboardz"
+    ],
+    "mem20gamez": [
+      "mem20ailevelarchitectz",
+      "mem20alternativedatabaseplaygroundz",
+      "mem20dynamicquestrewardcomposerz",
+      "mem20gameproductioncontrolcenterz"
+    ],
+    "mem20graphz": [
+      "mem20capabilitygapmapperz",
+      "mem20crossproductloyaltygraphz",
+      "mem20deterministicconfigurationgraphz",
+      "mem20dynamicskillgraphz",
+      "mem20relationshipcontextgraphz",
+      "mem20reversibleexecutiongraphz",
+      "mem20semanticobjectgraphz"
+    ],
+    "mem20labz": [
+      "mem20autonomoussaleslaboratoryz"
+    ],
+    "mem20mktz": [
+      "mem20capabilitymarketplacez",
+      "mem20connectormarketplacez",
+      "mem20globalcapabilitymarketplacez",
+      "mem20hardwaremarketplacez",
+      "mem20offerassemblyfabricz",
+      "mem20resourceexchangemarketz"
+    ],
+    "mem20secretz": [
+      "mem20temporaldatabasefabricz"
+    ],
+    "mem20selfz": [
+      "mem20capabilitymarketplacez",
+      "mem20causalroutingbrainz",
+      "mem20episodicmemorygraphz",
+      "mem20eventstreamsuperhighwayz",
+      "mem20rewardforgez",
+      "mem20universalhealthnervoussystemz"
+    ],
+    "mem20simz": [
+      "mem20capabilitymarketplacez",
+      "mem20causalroutingbrainz",
+      "mem20eventstreamsuperhighwayz",
+      "mem20faultcontainmentcellsz"
+    ],
+    "mem20studioz": [
+      "mem20autonomousworkcellsz",
+      "mem20capabilitymarketplacez",
+      "mem20eventstreamsuperhighwayz"
+    ],
+    "mem20twinz": [
+      "mem20capabilitymarketplacez",
+      "mem20causalroutingbrainz",
+      "mem20eventstreamsuperhighwayz"
+    ]
+  },
+  "mapping": {
+    "mem20acquisitionandpartnershipscoutz": [
+      "mem20biz"
+    ],
+    "mem20ailevelarchitectz": [
+      "mem20gamez"
+    ],
+    "mem20alternativedatabaseplaygroundz": [
+      "mem20gamez"
+    ],
+    "mem20ambientdevicecompanionz": [
+      "mem20assistz"
+    ],
+    "mem20apishapeshiftinggatewayz": [
+      "mem20fabricz"
+    ],
+    "mem20autonomoussaleslaboratoryz": [
+      "mem20labz"
+    ],
+    "mem20autonomousworkcellsz": [
+      "mem20studioz"
+    ],
+    "mem20capabilitygapmapperz": [
+      "mem20graphz"
+    ],
+    "mem20capabilitymarketplacez": [
+      "mem20mktz",
+      "mem20selfz",
+      "mem20simz",
+      "mem20studioz",
+      "mem20twinz"
+    ],
+    "mem20causalroutingbrainz": [
+      "mem20selfz",
+      "mem20simz",
+      "mem20twinz"
+    ],
+    "mem20chaosnativeapplicationruntimez": [
+      "mem20enginez"
+    ],
+    "mem20collectivemodelintelligencez": [
+      "mem20fabricz"
+    ],
+    "mem20communitychallengeenginez": [
+      "mem20enginez"
+    ],
+    "mem20communitypulseenginez": [
+      "mem20enginez"
+    ],
+    "mem20completionconfidenceenginez": [
+      "mem20enginez"
+    ],
+    "mem20conflictdeescalationassistantz": [
+      "mem20assistz"
+    ],
+    "mem20connectormarketplacez": [
+      "mem20mktz"
+    ],
+    "mem20contextawarelearningcoachz": [
+      "mem20assistz"
+    ],
+    "mem20conversationalactiondesktopz": [
+      "mem20assistz"
+    ],
+    "mem20crdtcollaborationenginez": [
+      "mem20enginez"
+    ],
+    "mem20crosslanguagerefactorenginez": [
+      "mem20enginez"
+    ],
+    "mem20crossproductloyaltygraphz": [
+      "mem20graphz"
+    ],
+    "mem20crossruntimeeventlatticez": [
+      "mem20fabricz"
+    ],
+    "mem20customerlifecycleenginez": [
+      "mem20enginez"
+    ],
+    "mem20deterministicconfigurationgraphz": [
+      "mem20graphz"
+    ],
+    "mem20dynamicnarrativeenginez": [
+      "mem20enginez"
+    ],
+    "mem20dynamicquestrewardcomposerz": [
+      "mem20gamez"
+    ],
+    "mem20dynamicskillgraphz": [
+      "mem20graphz"
+    ],
+    "mem20edgetransportfabricz": [
+      "mem20fabricz"
+    ],
+    "mem20episodicmemorygraphz": [
+      "mem20selfz"
+    ],
+    "mem20eventstreamsuperhighwayz": [
+      "mem20fabricz",
+      "mem20selfz",
+      "mem20simz",
+      "mem20studioz",
+      "mem20twinz"
+    ],
+    "mem20faultcontainmentcellsz": [
+      "mem20simz"
+    ],
+    "mem20featuredependencygraphenginez": [
+      "mem20enginez"
+    ],
+    "mem20freestackambientcomputingfabricz": [
+      "mem20fabricz"
+    ],
+    "mem20gameproductioncontrolcenterz": [
+      "mem20gamez"
+    ],
+    "mem20generativebrandworldenginez": [
+      "mem20enginez"
+    ],
+    "mem20globalcapabilitymarketplacez": [
+      "mem20mktz"
+    ],
+    "mem20hardwaremarketplacez": [
+      "mem20mktz"
+    ],
+    "mem20humancapabilityacceleratorz": [
+      "mem20assistz"
+    ],
+    "mem20humancapabilitysuperplatformz": [
+      "mem20assistz"
+    ],
+    "mem20intenttomissioncompilerz": [
+      "mem20facez"
+    ],
+    "mem20livemodelfusionz": [
+      "mem20fabricz"
+    ],
+    "mem20liveprojectdemonstrationenginez": [
+      "mem20enginez"
+    ],
+    "mem20liveschemamorphingenginez": [
+      "mem20enginez"
+    ],
+    "mem20livingagenteconomyz": [
+      "mem20biz"
+    ],
+    "mem20mixedinitiativefocusenginez": [
+      "mem20enginez"
+    ],
+    "mem20mobileedgeagentruntimez": [
+      "mem20enginez"
+    ],
+    "mem20modalitybridgez": [
+      "mem20fabricz"
+    ],
+    "mem20modelsleepandwakesystemz": [
+      "mem20fabricz"
+    ],
+    "mem20multilingualliveconversationenginez": [
+      "mem20enginez"
+    ],
+    "mem20multimodaltaskcapturez": [
+      "mem20facez"
+    ],
+    "mem20multiworldsandboxz": [
+      "mem20boxz",
+      "mem20facez"
+    ],
+    "mem20musicvisualsynchronizerz": [
+      "mem20facez"
+    ],
+    "mem20offerassemblyfabricz": [
+      "mem20mktz"
+    ],
+    "mem20offergenomeenginez": [
+      "mem20enginez"
+    ],
+    "mem20outcomeverificationruntimez": [
+      "mem20enginez"
+    ],
+    "mem20parallelworkstreamcomposerz": [
+      "mem20facez"
+    ],
+    "mem20peertopeerappruntimez": [
+      "mem20enginez"
+    ],
+    "mem20personalautomationcanvasz": [
+      "mem20assistz",
+      "mem20facez"
+    ],
+    "mem20personalintelligencecompanionz": [
+      "mem20assistz"
+    ],
+    "mem20personalmodelevolutionz": [
+      "mem20fabricz"
+    ],
+    "mem20planetarybatchfabricz": [
+      "mem20fabricz"
+    ],
+    "mem20predictiverecallenginez": [
+      "mem20enginez"
+    ],
+    "mem20privatelocalreasoningenginez": [
+      "mem20enginez"
+    ],
+    "mem20protocolautodiscoveryenginez": [
+      "mem20enginez"
+    ],
+    "mem20relationshipcontextgraphz": [
+      "mem20graphz"
+    ],
+    "mem20resourceexchangemarketz": [
+      "mem20mktz"
+    ],
+    "mem20revenueleakhunterz": [
+      "mem20biz"
+    ],
+    "mem20reversibleexecutiongraphz": [
+      "mem20graphz"
+    ],
+    "mem20rewardforgez": [
+      "mem20fabricz",
+      "mem20selfz"
+    ],
+    "mem20runtimebugpredictionenginez": [
+      "mem20enginez"
+    ],
+    "mem20runtimecompatibilityenginez": [
+      "mem20enginez"
+    ],
+    "mem20scopemutationsandboxz": [
+      "mem20boxz"
+    ],
+    "mem20semanticobjectgraphz": [
+      "mem20graphz"
+    ],
+    "mem20sensorfusiongatewayz": [
+      "mem20fabricz"
+    ],
+    "mem20servicebundlingenginez": [
+      "mem20enginez"
+    ],
+    "mem20spatialcommanduniversez": [
+      "mem20facez"
+    ],
+    "mem20spatialcomputingsandboxz": [
+      "mem20boxz"
+    ],
+    "mem20spatialexperiencedesignerz": [
+      "mem20facez"
+    ],
+    "mem20speculativeworkflowenginez": [
+      "mem20enginez"
+    ],
+    "mem20temporaldatabasefabricz": [
+      "mem20fabricz",
+      "mem20secretz"
+    ],
+    "mem20universalcompaniondevicesdkz": [
+      "mem20assistz"
+    ],
+    "mem20universalhealthnervoussystemz": [
+      "mem20selfz"
+    ],
+    "mem20universalintegrationcompilerz": [
+      "mem20fabricz"
+    ],
+    "mem20visualagentblackboardz": [
+      "mem20facez"
+    ],
+    "mem20visualdataflowcomposerz": [
+      "mem20facez"
+    ],
+    "mem20voicetoactionswitchboardz": [
+      "mem20facez"
+    ]
+  }
+}

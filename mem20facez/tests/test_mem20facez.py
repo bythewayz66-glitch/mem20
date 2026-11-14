@@ -14,8 +14,9 @@ class TestBranding(unittest.TestCase):
     def test_members_registry(self):
         import mem20facez as pkg
         self.assertTrue(pkg.MEMBERS)
-        self.assertEqual(len(pkg.MEMBERS), 8)
+        self.assertGreaterEqual(len(pkg.MEMBERS), 1)
         self.assertIn("mem20adaptiveinterfacecomposerz", pkg.MEMBERS)
+        self.assertGreaterEqual(len(pkg.MEMBERS), 8)
 
 
 class TestCli(unittest.TestCase):

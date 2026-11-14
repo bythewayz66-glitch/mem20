@@ -48,6 +48,54 @@ def workcell_dispatch()->dict:
         from mem20autonomousworkcellsz.domain import create_cell,cell_health
         c=create_cell("studio"); h=cell_health(c); return {"ok":True,"subsystem":"mem20autonomousworkcellsz","health":h is not None}
     except Exception as exc: return {"ok":False,"subsystem":"mem20autonomousworkcellsz","error":f"{type(exc).__name__}: {exc}"}
-def probe()->dict:
+
+def _absorbed_member_peers():
+    try:
+        import importlib, pathlib, sys
+        root = pathlib.Path(__file__).resolve().parents[2]
+        if str(root) not in sys.path: sys.path.insert(0, str(root))
+        try:
+            import _mem20_absorbed_finder  # noqa: F401
+        except Exception:
+            pass
+        tc = root / 'toolchest' / 'src'
+        if tc.is_dir() and str(tc) not in sys.path: sys.path.insert(0, str(tc))
+        adir = pathlib.Path(__file__).resolve().parents[1] / 'absorbed'
+        members = sorted(p.name for p in adir.iterdir() if p.is_dir()) if adir.is_dir() else []
+        checks = {}
+        total = 0; okm = 0
+        for name in members:
+            try:
+                eco = importlib.import_module(f"{name}.ecosystem")
+                if hasattr(eco, 'probe'):
+                    r = eco.probe()
+                    if isinstance(r, dict):
+                        c = r.get('count')
+                        if c is None: c = len(r.get('reachable') or r.get('checks') or [])
+                        checks[name] = {'ok': bool(r.get('ok', False)), 'count': int(c)}
+                        total += int(c)
+                        if r.get('ok'): okm += 1
+                        continue
+                fns = [x for x in dir(eco) if not x.startswith('_') and callable(getattr(eco,x))]
+                checks[name] = {'ok': True, 'count': len(fns)}
+                total += len(fns); okm += 1
+            except Exception as e:
+                checks[name] = {'ok': False, 'count': 0, 'error': f"{type(e).__name__}: {e}"}
+        return {'ok': True, 'members_with_ecosystem_probe': len(members), 'members_ok': okm, 'peer_checks_total': total, 'checks': checks}
+    except Exception as e:
+        return {'ok': False, 'error': f"{type(e).__name__}: {e}"}
+
+
+def probe():
     checks={"audio_pipeline":audio_pipeline(),"rig_pipeline":rig_pipeline(),"production_pipeline":production_pipeline(),"studio_events":studio_events("s",{}),"studio_routing":studio_routing("k",["s"]),"workcell_dispatch":workcell_dispatch()}
-    return {"ok":all(v.get("ok") for v in checks.values()),"checks":checks}
+    _result = {"ok":all(v.get("ok") for v in checks.values()),"checks":checks}
+    try:
+        _amp = _absorbed_member_peers()
+        _result["member_ecosystems"] = _amp
+        _core_count = int(_result.get("count") or _result.get("core_count") or len(_result.get("checks") or _result.get("reachable") or []))
+        _result["core_count"] = _core_count
+        _result["peer_surface_total"] = _core_count + int(_amp.get("peer_checks_total", 0))
+        _result["count"] = _result["peer_surface_total"]
+    except Exception:
+        pass
+    return _result

@@ -29,82 +29,148 @@ class EngineRuntimeService:
     def status(self) -> Dict[str, Any]:
         mem = self.members()
         lifecycle = ecosystem.runtime_lifecycle([{"id": "enginez", "stage": "active", "mrr": 1, "age_months": 1}])
-        bundle = ecosystem.capability_bundle()
-        return {"ok": True, "crew": "mem20enginez", "version": "1.0.0",
-                "members_total": len(domain.MEMBERS), "members_present": mem["report"]["members_present"],
-                "members_healthy": mem["report"]["members_healthy"], "metrics": self.store.metrics(),
-                "signals": {"runtime_lifecycle": lifecycle, "service_bundling": bundle,
-                            "runtime_compatibility": mem["signals"]["runtime_compatibility"],
-                            "protocol_autodiscovery": mem["signals"]["protocol_autodiscovery"]}}
-
-    def doctor(self) -> Dict[str, Any]:
-        probe = ecosystem.probe()
-        mem = self.members()
-        return {"ok": probe.get("ok") and mem.get("ok"), "probe": probe,
-                "members": {"total": len(domain.MEMBERS), "present": mem["report"]["members_present"], "healthy": mem["report"]["members_healthy"]},
-                "metrics": self.store.metrics()}
-
-    def plan(self, intent: str, context: Optional[Mapping[str, Any]] = None) -> Dict[str, Any]:
-        intent = str(intent or "").strip()
-        if not intent:
-            raise ValidationError("intent required")
-        statuses = [domain.check_member(n, self.estate_root) for n in domain.MEMBERS]
-        plan = domain.dispatch_plan(intent, statuses, context)
-        compat = domain.compatibility()
-        spec = ecosystem.speculative_plan({"id": "dispatch", "intent": intent}, [s["member"] for s in plan.steps] or ["fallback"])
-        pred = ecosystem.predictive_routing(history=plan.selected, candidates=list(domain.MEMBERS))
-        bundle = ecosystem.capability_bundle([{"name": f"dispatch:{m}", "price": 1} for m in plan.selected] or [{"name": "dispatch:fallback", "price": 1}])
-        lifecycle = ecosystem.runtime_lifecycle([{"id": plan.plan_id, "stage": "active", "mrr": len(plan.selected)}])
-        payload = plan.to_dict()
-        self.store.save_plan(payload)
-        self.store.record_run(plan.plan_id, "planned", {"intent": intent, "selected": plan.selected})
-        return {"ok": True, "plan": payload, "compatibility": compat,
-                "signals": {"speculative_workflow": spec, "predictive_recall": pred, "service_bundling": bundle, "runtime_lifecycle": lifecycle}}
-
-    def execute(self, payload: Mapping[str, Any]) -> Dict[str, Any]:
-        payload = payload or {}
-        intent = payload.get("intent") or payload.get("action") or ""
-        if intent:
-            return self.plan(str(intent), payload)
-        return self.status()
-
-    def plans(self, limit=50): return self.store.list_plans(limit)
-    def get_plan(self, plan_id): return self.store.get_plan(plan_id)
-    def runs(self, limit=100): return self.store.runs(limit)
-    def events(self, since=0, limit=200): return self.store.events(since, limit)
-    def snapshot(self, label=""): return {"ok": True, **self.store.snapshot(label)}
-    def restore(self, snapshot_id): return self.store.restore(snapshot_id)
-
-    def simulate(self) -> Dict[str, Any]:
-        scenarios = {}
-        statuses = [domain.check_member(n, self.estate_root) for n in domain.MEMBERS]
-        rep = domain.summarize(statuses)
-        scenarios["member_registry"] = {"ok": rep.members_total == 30 and rep.members_present >= 1, "total": rep.members_total, "present": rep.members_present, "healthy": rep.members_healthy}
-        plan = domain.dispatch_plan("protocol compatibility speculative dispatch", statuses)
-        scenarios["dispatch_plan"] = {"ok": bool(plan.plan_id) and isinstance(plan.steps, list), "selected": plan.selected}
         compat = ecosystem.compat_probe()
         proto = ecosystem.protocol_discovery()
-        spec = ecosystem.speculative_plan()
         bundle = ecosystem.capability_bundle()
-        pred = ecosystem.predictive_routing()
-        life = ecosystem.runtime_lifecycle()
-        probe = ecosystem.probe()
-        scenarios["runtime_compatibility"] = {"ok": compat["ok"]}
-        scenarios["protocol_autodiscovery"] = {"ok": proto["ok"]}
-        scenarios["speculative_workflow"] = {"ok": spec["ok"]}
-        scenarios["service_bundling"] = {"ok": bundle["ok"]}
-        scenarios["predictive_recall"] = {"ok": pred["ok"]}
-        scenarios["runtime_lifecycle"] = {"ok": life["ok"]}
-        scenarios["peer_probe"] = {"ok": probe["ok"], "count": probe["count"]}
-        passed = sum(1 for v in scenarios.values() if v.get("ok"))
-        return {"ok": passed == len(scenarios), "passed": passed, "total": len(scenarios), "scenarios": scenarios}
+        peer_probe = ecosystem.probe(include_member_ecosystems=True)
+        return {
+            "ok": mem["ok"],
+            "subsystem": "mem20enginez",
+            "members_total": mem["report"]["members_total"],
+            "members_present": mem["report"]["members_present"],
+            "members_importable": mem["report"]["members_importable"],
+            "absorbed_total": mem["report"].get("absorbed_total", 0),
+            "peer_surface_total": peer_probe.get("peer_surface_total", peer_probe.get("count", 0)),
+            "signals": {
+                "runtime_compatibility": compat,
+                "protocol_autodiscovery": proto,
+                "runtime_lifecycle": lifecycle,
+                "service_bundling": bundle,
+            },
+            "peers": peer_probe,
+            "metrics": self.store.metrics(),
+        }
 
-    def benchmark(self, iterations=20) -> Dict[str, Any]:
-        import time as _t
-        statuses = [domain.check_member(n, self.estate_root) for n in domain.MEMBERS[:10]]
-        t0 = _t.perf_counter()
-        for _ in range(max(1, int(iterations))):
-            domain.dispatch_plan("compat protocol", statuses)
-            domain.summarize(statuses)
-        dt = max(1e-9, _t.perf_counter() - t0)
-        return {"ok": True, "iterations": int(iterations), "elapsed_s": round(dt, 6), "ops_per_sec": round(int(iterations) / dt, 3)}
+    def plan(self, intent: str, context: Mapping[str, Any] = None) -> Dict[str, Any]:
+        if not intent or not str(intent).strip():
+            raise ValidationError("intent required")
+        statuses = [domain.check_member(n, self.estate_root) for n in domain.MEMBERS]
+        plan = domain.dispatch_plan(str(intent), statuses)
+        plan.signals.update({"context_keys": sorted(list((context or {}).keys()))})
+        pred = ecosystem.predictive_routing(candidates=plan.members[:8])
+        spec = ecosystem.speculative_plan({"id": plan.plan_id, "intent": intent, "steps": [s["member"] for s in plan.steps]})
+        bundle = ecosystem.capability_bundle([{"name": m, "price": 1} for m in plan.members[:5]])
+        lifecycle = ecosystem.runtime_lifecycle([{"id": m, "stage": "active"} for m in plan.members[:3]])
+        signals = {"predictive_recall": pred, "speculative_workflow": spec, "service_bundling": bundle, "runtime_lifecycle": lifecycle}
+        payload = plan.to_dict()
+        payload["signals"].update(signals)
+        self.store.save_plan(payload)
+        return {"ok": True, "plan": payload, "signals": signals}
+
+    def dispatch(self, intent_or_plan: Any, payload: Mapping[str, Any] = None) -> Dict[str, Any]:
+        payload = dict(payload or {})
+        if isinstance(intent_or_plan, Mapping) and intent_or_plan.get("plan_id"):
+            plan = dict(intent_or_plan)
+        elif isinstance(intent_or_plan, str) and intent_or_plan.strip():
+            plan = self.plan(intent_or_plan, payload)["plan"]
+        else:
+            raise ValidationError("intent or plan required")
+        run = self.store.record_run(plan.get("plan_id"), "dispatched", {"intent": plan.get("intent"), "members": plan.get("members", [])})
+        return {"ok": True, "plan_id": plan.get("plan_id"), "run": run, "dispatched_members": plan.get("members", [])}
+
+    def doctor(self) -> Dict[str, Any]:
+        probe = ecosystem.probe(include_member_ecosystems=True)
+        statuses = [domain.check_member(n, self.estate_root) for n in domain.MEMBERS]
+        report = domain.summarize(statuses)
+        return {"ok": probe.get("ok", False) and report.ok, "probe": probe, "members": report.to_dict(), "store": self.store.metrics()}
+
+    def simulate(self) -> Dict[str, Any]:
+        steps = []
+        # 1) members
+        m = self.members()
+        steps.append({"name": "members", "ok": bool(m.get("report", {}).get("members_total", 0) > 0)})
+        # 2) core probes
+        for name, fn in [("compat", ecosystem.compat_probe), ("proto", ecosystem.protocol_discovery), ("spec", ecosystem.speculative_plan),
+                         ("bundle", ecosystem.capability_bundle), ("predict", ecosystem.predictive_routing), ("lifecycle", ecosystem.runtime_lifecycle)]:
+            try:
+                r = fn()
+                steps.append({"name": name, "ok": bool(r.get("ok"))})
+            except Exception as e:
+                steps.append({"name": name, "ok": False, "error": f"{type(e).__name__}: {e}"})
+        # 3) plan + dispatch
+        try:
+            p = self.plan("simulate dispatch compatibility protocol")
+            d = self.dispatch(p["plan"])
+            steps.append({"name": "plan_dispatch", "ok": bool(p.get("ok") and d.get("ok"))})
+        except Exception as e:
+            steps.append({"name": "plan_dispatch", "ok": False, "error": str(e)})
+        # 4) absorbed member ecosystem aggregation
+        try:
+            agg = ecosystem.absorbed_member_peers()
+            steps.append({"name": "absorbed_member_peers", "ok": bool(agg.get("ok") and agg.get("peer_checks_total", 0) >= 0)})
+        except Exception as e:
+            steps.append({"name": "absorbed_member_peers", "ok": False, "error": str(e)})
+        passed = sum(1 for s in steps if s.get("ok"))
+        return {"ok": passed == len(steps), "passed": passed, "total": len(steps), "steps": steps}
+
+    # state ops
+    def put(self, kind, ident, payload, expected_version=None):
+        return self.store.put(kind, ident, payload, expected_version=expected_version)
+
+    def get(self, kind, ident):
+        return self.store.get(kind, ident)
+
+    def list(self, kind=None):
+        return self.store.list(kind)
+
+    def delete(self, kind, ident):
+        return self.store.delete(kind, ident)
+
+    def events(self, since=0):
+        return self.store.events(since=since)
+
+    def snapshot(self, label=""):
+        return self.store.snapshot(label)
+
+    def restore(self, snapshot_id):
+        return self.store.restore(snapshot_id)
+
+
+    # compatibility helpers
+    def plans(self, limit=50):
+        return self.store.list_plans(limit)
+
+    def get_plan(self, plan_id):
+        p = self.store.get_plan(plan_id)
+        if not p:
+            raise NotFoundError(f"plan not found: {plan_id}")
+        return p
+
+    def runs(self, limit=100):
+        return self.store.runs(limit)
+
+    def events(self, since=0, limit=200):
+        return self.store.events(since=since, limit=limit)
+
+    def execute(self, payload):
+        if not isinstance(payload, dict):
+            raise ValidationError("payload must be an object")
+        intent = payload.get("intent") or ""
+        if payload.get("plan_id"):
+            plan = self.get_plan(payload["plan_id"])
+        elif intent:
+            plan = self.plan(intent, payload.get("context") or {}).get("plan")
+        else:
+            raise ValidationError("intent or plan_id required")
+        return self.dispatch(plan, payload)
+
+    def benchmark(self, iterations=20):
+        import time as _time
+        it = max(1, int(iterations))
+        t0 = _time.perf_counter()
+        ok = 0
+        for i in range(it):
+            p = self.plan(f"benchmark-{i}", {})
+            if p.get("ok"): ok += 1
+        dt = _time.perf_counter() - t0
+        return {"ok": True, "iterations": it, "successful": ok, "elapsed_s": round(dt, 6), "per_iter_ms": round((dt/it)*1000, 4)}

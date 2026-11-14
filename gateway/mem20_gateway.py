@@ -7,6 +7,19 @@ Stage 1: CLI procede. No fake code. Real tools only.
 
 import argparse
 import json
+
+# Assimilation: resolve absorbed mem20*z packages rehomed under short runtimes
+try:
+    import sys as _sys, pathlib as _pl
+    _repo = _pl.Path(__file__).resolve().parents[1]
+    if str(_repo) not in _sys.path:
+        _sys.path.insert(0, str(_repo))
+    _tc = _repo / "toolchest" / "src"
+    if _tc.is_dir() and str(_tc) not in _sys.path:
+        _sys.path.insert(0, str(_tc))
+    import _mem20_absorbed_finder  # noqa: F401
+except Exception:
+    pass
 import os
 import sys
 import uuid

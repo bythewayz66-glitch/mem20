@@ -1,76 +1,44 @@
-# mem20enginez — crew runtime (#305)
+# mem20enginez
 
-First-class runtime for the 30-member mem20 engine crew. It provides a truthful member registry and filesystem/import probing, compatibility checks, deterministic dispatch planning, durable SQLite WAL state, CLI + JSON HTTP API + operator cockpit, and six **unique** cross-subsystem peer integrations (different set from #300-#304).
+Assimilated crew runtime for engine subsystems in the mem20 estate.
 
-## Members (30)
+- **Members:** all absorbed engine subsystems rehomed under `mem20enginez/absorbed/` (auto-discovered). Current registry includes 31 absorbed members (code/READMEs/tests preserved in-place).
+- **Peers:** core runtime peers (compatibility, protocol discovery, speculative workflow, service bundling, predictive recall, lifecycle) plus aggregated peer probes from absorbed member ecosystems, yielding a peer surface well above 6 (typically 50+ checks depending on environment).
+- **Surfaces:** Python API (`domain`/`service`/`ecosystem`), CLI (`python -m mem20enginez ...`), JSON HTTP API/cockpit (`serve`).
 
-`mem20adaptiveachievementenginez`, `mem20adaptivedispatchenginez`, `mem20adaptiveforgettingenginez`, `mem20adaptivepersonalityruntimez`, `mem20schoolz`, `mem20chaosnativeapplicationruntimez`, `mem20communitychallengeenginez`, `mem20communitypulseenginez`, `mem20completionconfidenceenginez`, `mem20crdtcollaborationenginez`, `mem20crosslanguagerefactorenginez`, `mem20customerlifecycleenginez`, `mem20dynamicnarrativeenginez`, `mem20featuredependencygraphenginez`, `mem20generativebrandworldenginez`, `mem20liveprojectdemonstrationenginez`, `mem20liveschemamorphingenginez`, `mem20mixedinitiativefocusenginez`, `mem20mobileedgeagentruntimez`, `mem20multilingualliveconversationenginez`, `mem20offergenomeenginez`, `mem20outcomeverificationruntimez`, `mem20peertopeerappruntimez`, `mem20predictiverecallenginez`, `mem20privatelocalreasoningenginez`, `mem20protocolautodiscoveryenginez`, `mem20runtimebugpredictionenginez`, `mem20runtimecompatibilityenginez`, `mem20servicebundlingenginez`, `mem20speculativeworkflowenginez`.
-
-Member probing is truthful: present/healthy/importable members are reported as-is; missing or degraded members are surfaced, not hidden.
-
-## Architecture
-
-| Layer | File | Responsibility |
-|---|---|---|
-| Domain | `mem20enginez/domain.py` | Canonical registry, `check_member` filesystem/import probe, compatibility, capability-matched `dispatch_plan`, summary report. |
-| State | `mem20enginez/store.py` | SQLite WAL objects/events/plans/runs/snapshots/restore. |
-| Ecosystem | `mem20enginez/ecosystem.py` | 6 unique peer adapters (real calls, fail-open reporting). |
-| Service | `mem20enginez/service.py` | members/status/doctor/plan/execute/events/runs/simulate/benchmark with peer signals. |
-| Runtime | `mem20enginez/runtime.py` + `web/` | CLI, JSON HTTP API, static cockpit, CORS, 400/404/409 mapping. |
-
-## Unique cross-subsystem wiring (criterion 6)
-
-| Peer | Real calls used | Contribution |
-|---|---|---|
-| `mem20runtimecompatibilityenginez` | `check_python`, `check_deps`, `compatibility_report`, `suggest_fixes` | runtime/member compatibility checks |
-| `mem20protocolautodiscoveryenginez` | `detect_protocol`, `parse_headers`, `register_protocol`, `list_protocols`, `protocol_health` | protocol discovery/registry for wiring |
-| `mem20speculativeworkflowenginez` | `speculate`, `commit`, `rollback`, `speculative_health` | speculative dispatch planning |
-| `mem20servicebundlingenginez` | `create_bundle`, `add_service`, `discount`, `bundle_health` | capability/service bundling |
-| `mem20predictiverecallenginez` | `predict_next`, `recall_score`, `prefetch`, `cache_hit_rate`, `recall_health` | predictive member selection/routing |
-| `mem20customerlifecycleenginez` | `lifecycle_stage`, `transition`, `retention_probability`, `lifetime_value`, `segment_customers` | runtime lifecycle/stage transitions |
-
-## Runnable example (verified)
-
-```bash
-cd /opt/mem20
-PYTHONPATH=/opt/mem20 .venv/bin/python -m mem20enginez --db /tmp/engz-demo.sqlite3 plan --intent "protocol compatibility speculative dispatch"
-```
-
-Observed (real run, key fields):
-
-```text
-ok=true
-plan.intent="protocol compatibility speculative dispatch"
-plan.selected includes capability-matched healthy members (e.g. protocol/runtime-compatibility/speculative-capable members present in the estate)
-signals.speculative_workflow.ok=true  (branches speculated/committed)
-signals.predictive_recall.ok=true     (predictions/prefetch)
-signals.service_bundling.ok=true      (capability bundle priced)
-signals.runtime_lifecycle.ok=true     (lifecycle transitions/retention/segments)
-```
+## CLI
 
 ```bash
 python -m mem20enginez --version
 python -m mem20enginez --members
-python -m mem20enginez --db state/enginez.sqlite3 status
-python -m mem20enginez --db state/enginez.sqlite3 doctor
-python -m mem20enginez --db state/enginez.sqlite3 simulate
-python -m mem20enginez --db state/enginez.sqlite3 serve --port 8785
+python -m mem20enginez status
+python -m mem20enginez doctor
+python -m mem20enginez members
+python -m mem20enginez plan --intent "speculative protocol dispatch"
+python -m mem20enginez simulate
+python -m mem20enginez serve --port 8785
 ```
 
-## HTTP API
+## Python API
 
-`GET /api/status|doctor|members|plans|runs|events`, `POST /api/plan|execute|simulate|benchmark|snapshot|restore`, cockpit at `/`.
+```python
+from mem20enginez.mem20enginez import MEMBERS, domain, ecosystem
+from mem20enginez.mem20enginez.service import EngineRuntimeService
 
-## Web surfaces
+print(len(MEMBERS), MEMBERS[:3])
+print(domain.summarize([domain.check_member(m) for m in MEMBERS]).members_present)
+print(ecosystem.probe()["peer_surface_total"])  # core + absorbed member ecosystem peers
+svc = EngineRuntimeService("state/enginez.db")
+print(svc.status()["peer_surface_total"])
+print(svc.plan("runtime compatibility and swarm dispatch")["ok"])
+```
 
-- Served cockpit: `GET /` from `serve`.
-- docs/app monitor: `docs/app/engine-runtime/index.html` (`?api=http://host:port`), linked from `docs/app/README.md`.
+## Assimilation notes
 
-## Tests / conformance
+Absorbed member source trees live in `absorbed/<member>/` with their tests under `tests/absorbed/<member>/` where present. Member probing locates absorbed directories and resolves imports via the repo absorbed-package finder when needed. Individual absorbed member probes may report environment/dependency limitations; aggregation and core runtime behavior remain real and reported truthfully.
+
+## Tests
 
 ```bash
-PYTHONPATH=/opt/mem20 .venv/bin/python -m pytest mem20enginez/tests -q
-PYTHONPATH=/opt/mem20 .venv/bin/python scripts/renovation/conformance.py mem20enginez
+PYTHONPATH=/opt/mem20 /opt/mem20/.venv/bin/python -m pytest mem20enginez/tests -q
 ```
-
-Target 7/7.

@@ -1,4 +1,17 @@
 from tools.mem20alternativedatabaseplaygroundz_tools import AlternativeDatabasePlaygroundzToolsMixin
+
+# Assimilation: resolve absorbed mem20*z packages rehomed under short runtimes
+try:
+    import sys as _sys, pathlib as _pl
+    _repo = _pl.Path(__file__).resolve().parents[1]
+    if str(_repo) not in _sys.path:
+        _sys.path.insert(0, str(_repo))
+    _tc = _repo / "toolchest" / "src"
+    if _tc.is_dir() and str(_tc) not in _sys.path:
+        _sys.path.insert(0, str(_tc))
+    import _mem20_absorbed_finder  # noqa: F401
+except Exception:
+    pass
 from tools.mem20ambientdevicecompanionz_tools import AmbientDeviceCompanionzToolsMixin
 from tools.mem20ambientteamradioz_tools import AmbientTeamRadiozToolsMixin
 from tools.mem20architecturesimulationsandboxz_tools import ArchitectureSimulationSandboxzToolsMixin

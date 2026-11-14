@@ -9,6 +9,6 @@ def test_eco_events(): r=_eco().twin_events("t",{}); assert r["ok"] and r["subsy
 def test_eco_route(): r=_eco().twin_routing("k",["t"]); assert r["ok"] and r["subsystem"]=="mem20capabilitymarketplacez"
 def test_eco_causal(): r=_eco().causal_routing({"x":1},{"x":1}); assert r["ok"] and r["subsystem"]=="mem20causalroutingbrainz"
 def test_report_and_probe():
-    m=_m(); rep=m.twin_report(); assert len(rep["peers"])==6
+    m=_m(); rep=m.twin_report(); assert len(rep["peers"]) >= 6
     for k,v in rep["peers"].items(): assert v["ok"] is True,(k,v.get("error"))
     assert m.probe()["ok"]

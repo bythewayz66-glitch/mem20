@@ -4,12 +4,21 @@ from dataclasses import dataclass, field
 from typing import Any, Dict, List, Optional
 import importlib, time
 
-MEMBERS = (
+
+from pathlib import Path as _AbsPath
+_ABSORBED_ROOT = _AbsPath(__file__).resolve().parents[1] / "absorbed"
+def _discover_absorbed():
+    if not _ABSORBED_ROOT.is_dir(): return ()
+    return tuple(sorted(p.name for p in _ABSORBED_ROOT.iterdir() if p.is_dir() and p.name.startswith("mem20") and p.name.endswith("z")))
+
+_ORIGINAL_MEMBERS = (
     "mem20adaptiveinterfacecomposerz","mem20musicvisualsynchronizerz","mem20parallelworkstreamcomposerz",
     "mem20spatialcommanduniversez","mem20spatialexperiencedesignerz","mem20visualagentblackboardz",
     "mem20visualdataflowcomposerz","mem20voicetoactionswitchboardz",
 )
-
+_ABSORBED = _discover_absorbed()
+_seen = set()
+MEMBERS = tuple(m for m in list(_ORIGINAL_MEMBERS) + list(_ABSORBED) if not (m in _seen or _seen.add(m)))
 @dataclass
 class MemberStatus:
     name: str; importable: bool; version: Optional[str] = None; error: Optional[str] = None; checked_at: float = field(default_factory=time.time)

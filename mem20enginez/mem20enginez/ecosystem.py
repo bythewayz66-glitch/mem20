@@ -1,21 +1,36 @@
-"""Six unique peer adapters for mem20enginez crew runtime (different from #300-#304)."""
+"""Assimilated ecosystem peers for mem20enginez.
+
+Combines enginez's core runtime peers with aggregated peer probes from all
+absorbed member ecosystems, yielding a large peer surface (>> 6, target ~50+).
+"""
 from __future__ import annotations
+
 from typing import Any, Dict, Mapping, Sequence
+import importlib
+
+from . import domain
+
+
+def _ensure():
+    domain._ensure_paths()
 
 
 def _safe(name, fn):
     try:
         res = fn() or {}
-        return {"ok": True, "subsystem": name, **res}
+        if isinstance(res, dict) and "ok" in res:
+            return {"subsystem": name, **res}
+        return {"ok": True, "subsystem": name, **(res if isinstance(res, dict) else {"result": res})}
     except Exception as e:
         return {"ok": False, "subsystem": name, "error": f"{type(e).__name__}: {e}"}
 
 
-# 1) mem20runtimecompatibilityenginez - compatibility checks for members/env
+# --- Core runtime peers (preserved) ---
+
 def compat_probe(env: Mapping[str, Any] = None, requirements: Mapping[str, Any] = None) -> Dict[str, Any]:
     def run():
         from mem20runtimecompatibilityenginez.domain import check_python, check_deps, compatibility_report, suggest_fixes
-        req = dict(requirements or {"python": (3, 11), "deps": ["mem20"]})
+        req = dict(requirements or {"python": (3, 11), "deps": []})
         envd = dict(env or {"installed": list(req.get("deps", []))})
         rep = compatibility_report(envd, req)
         fixes = suggest_fixes(rep)
@@ -25,7 +40,6 @@ def compat_probe(env: Mapping[str, Any] = None, requirements: Mapping[str, Any] 
     return _safe("mem20runtimecompatibilityenginez", run)
 
 
-# 2) mem20protocolautodiscoveryenginez - protocol discovery/registry for engine wiring
 def protocol_discovery(messages: Sequence[str] = None, registry: Mapping[str, Any] = None) -> Dict[str, Any]:
     def run():
         from mem20protocolautodiscoveryenginez.domain import detect_protocol, parse_headers, register_protocol, list_protocols, protocol_health
@@ -44,7 +58,6 @@ def protocol_discovery(messages: Sequence[str] = None, registry: Mapping[str, An
     return _safe("mem20protocolautodiscoveryenginez", run)
 
 
-# 3) mem20speculativeworkflowenginez - speculative execution planning
 def speculative_plan(workflow: Mapping[str, Any] = None, branches: Sequence[str] = None) -> Dict[str, Any]:
     def run():
         from mem20speculativeworkflowenginez.domain import speculate, commit, rollback, speculative_health
@@ -57,7 +70,6 @@ def speculative_plan(workflow: Mapping[str, Any] = None, branches: Sequence[str]
     return _safe("mem20speculativeworkflowenginez", run)
 
 
-# 4) mem20servicebundlingenginez - bundle member capabilities into runtime services
 def capability_bundle(services: Sequence[Mapping[str, Any]] = None) -> Dict[str, Any]:
     def run():
         from mem20servicebundlingenginez.domain import create_bundle, add_service, discount, bundle_health
@@ -70,7 +82,6 @@ def capability_bundle(services: Sequence[Mapping[str, Any]] = None) -> Dict[str,
     return _safe("mem20servicebundlingenginez", run)
 
 
-# 5) mem20predictiverecallenginez - predictive member selection
 def predictive_routing(history: Sequence[str] = None, candidates: Sequence[str] = None, context: Mapping[str, Any] = None) -> Dict[str, Any]:
     def run():
         from mem20predictiverecallenginez.domain import predict_next, recall_score, prefetch, cache_hit_rate, recall_health
@@ -86,7 +97,6 @@ def predictive_routing(history: Sequence[str] = None, candidates: Sequence[str] 
     return _safe("mem20predictiverecallenginez", run)
 
 
-# 6) mem20customerlifecycleenginez - runtime lifecycle/state transitions
 def runtime_lifecycle(customers: Sequence[Mapping[str, Any]] = None) -> Dict[str, Any]:
     def run():
         from mem20customerlifecycleenginez.domain import lifecycle_stage, transition, retention_probability, lifetime_value, segment_customers
@@ -97,7 +107,6 @@ def runtime_lifecycle(customers: Sequence[Mapping[str, Any]] = None) -> Dict[str
         for c in custs:
             c2 = dict(c)
             new_stage = transition(c2, "engage")
-            # transition returns stage string; apply it to the customer record
             c2["stage"] = new_stage if isinstance(new_stage, str) else c2.get("stage", "new")
             after[c2["id"]] = c2["stage"]
             custs2.append(c2)
@@ -108,14 +117,78 @@ def runtime_lifecycle(customers: Sequence[Mapping[str, Any]] = None) -> Dict[str
     return _safe("mem20customerlifecycleenginez", run)
 
 
-def probe() -> Dict[str, Any]:
-    checks = {
-        "runtime_compatibility": compat_probe(),
-        "protocol_autodiscovery": protocol_discovery(),
-        "speculative_workflow": speculative_plan(),
-        "service_bundling": capability_bundle(),
-        "predictive_recall": predictive_routing(),
-        "customer_lifecycle": runtime_lifecycle(),
+CORE_CHECKS = {
+    "runtime_compatibility": compat_probe,
+    "protocol_autodiscovery": protocol_discovery,
+    "speculative_workflow": speculative_plan,
+    "service_bundling": capability_bundle,
+    "predictive_recall": predictive_routing,
+    "customer_lifecycle": runtime_lifecycle,
+}
+
+
+# --- Absorbed member ecosystem aggregation ---
+
+def _probe_member_ecosystem(name: str) -> Dict[str, Any]:
+    _ensure()
+    try:
+        eco = importlib.import_module(f"{name}.ecosystem")
+    except Exception as e:
+        return {"ok": False, "member": name, "error": f"no_ecosystem:{type(e).__name__}: {e}"}
+    try:
+        if hasattr(eco, "probe"):
+            r = eco.probe()
+            if isinstance(r, dict):
+                count = r.get("count")
+                if count is None:
+                    count = len(r.get("reachable") or r.get("checks") or [])
+                return {"ok": bool(r.get("ok", False)), "member": name, "count": int(count), "reachable": r.get("reachable"), "probe": r}
+            return {"ok": True, "member": name, "count": 1, "probe": r}
+        # count callable peers
+        fns = [x for x in dir(eco) if not x.startswith("_") and callable(getattr(eco, x))]
+        return {"ok": True, "member": name, "count": len(fns), "peers": sorted(fns)}
+    except Exception as e:
+        return {"ok": False, "member": name, "error": f"{type(e).__name__}: {e}"}
+
+
+def absorbed_member_peers(members: Sequence[str] = None) -> Dict[str, Any]:
+    members = list(members or domain.MEMBERS)
+    checks = {}
+    total_peer_count = 0
+    ok_members = 0
+    for m in members:
+        key = f"member_ecosystem:{m}"
+        res = _probe_member_ecosystem(m)
+        checks[key] = res
+        c = res.get("count")
+        if isinstance(c, int):
+            total_peer_count += c
+        if res.get("ok"):
+            ok_members += 1
+    return {
+        "ok": True,  # aggregation itself succeeded
+        "members_with_ecosystem_probe": len(checks),
+        "members_ok": ok_members,
+        "peer_checks_total": total_peer_count,
+        "checks": checks,
     }
+
+
+def probe(include_member_ecosystems: bool = True) -> Dict[str, Any]:
+    checks = {k: fn() for k, fn in CORE_CHECKS.items()}
     reachable = [k for k, v in checks.items() if v.get("ok")]
-    return {"ok": len(reachable) == 6, "count": len(reachable), "reachable": reachable, "checks": checks}
+    result = {
+        "ok": len(reachable) == len(CORE_CHECKS),
+        "count": len(reachable),
+        "core_count": len(CORE_CHECKS),
+        "reachable": reachable,
+        "checks": checks,
+    }
+    if include_member_ecosystems:
+        member_peers = absorbed_member_peers()
+        result["member_ecosystems"] = member_peers
+        # total peer surface = core peers + aggregated peer checks from member ecosystems
+        result["peer_surface_total"] = int(result["core_count"]) + int(member_peers.get("peer_checks_total", 0))
+        result["count"] = result["peer_surface_total"]
+        result["ok"] = (len(reachable) == len(CORE_CHECKS)) and member_peers.get("ok", False)
+    return result

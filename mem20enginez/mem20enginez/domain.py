@@ -1,105 +1,114 @@
 """Engine runtime domain: real member registry, probing, compatibility, dispatch.
 
-MEMBERS is the canonical 30-member crew. Domain logic verifies members against
-the live filesystem/package surface, computes compatibility/health, and builds
-deterministic dispatch plans. Pure where possible (filesystem checks are reads).
+Assimilated runtime: members include all absorbed subsystems rehomed under
+mem20enginez/absorbed/ (canonical + locally held copies). Probing locates
+absorbed members on disk and via import, and ecosystem peer aggregation
+surfaces peers from absorbed member ecosystems (>> 6).
 """
 from __future__ import annotations
 
-import importlib
-import os
-import sys
-import time
-from dataclasses import dataclass, field
+from dataclasses import asdict, dataclass, field
 from pathlib import Path
 from typing import Any, Dict, List, Mapping, Optional, Sequence
+import importlib
+import json
+import sys
+import time
+import uuid
 
-MEMBERS: tuple[str, ...] = (
-    "mem20adaptiveachievementenginez",
-    "mem20adaptivedispatchenginez",
-    "mem20adaptiveforgettingenginez",
-    "mem20adaptivepersonalityruntimez",
-    "mem20schoolz",
-    "mem20chaosnativeapplicationruntimez",
-    "mem20communitychallengeenginez",
-    "mem20communitypulseenginez",
-    "mem20completionconfidenceenginez",
-    "mem20crdtcollaborationenginez",
-    "mem20crosslanguagerefactorenginez",
-    "mem20customerlifecycleenginez",
-    "mem20dynamicnarrativeenginez",
-    "mem20featuredependencygraphenginez",
-    "mem20generativebrandworldenginez",
-    "mem20liveprojectdemonstrationenginez",
-    "mem20liveschemamorphingenginez",
-    "mem20mixedinitiativefocusenginez",
-    "mem20mobileedgeagentruntimez",
-    "mem20multilingualliveconversationenginez",
-    "mem20offergenomeenginez",
-    "mem20outcomeverificationruntimez",
-    "mem20peertopeerappruntimez",
-    "mem20predictiverecallenginez",
-    "mem20privatelocalreasoningenginez",
-    "mem20protocolautodiscoveryenginez",
-    "mem20runtimebugpredictionenginez",
-    "mem20runtimecompatibilityenginez",
-    "mem20servicebundlingenginez",
-    "mem20speculativeworkflowenginez",
+
+ESTATE_ROOT = Path(__file__).resolve().parents[2]
+ABSORBED_ROOT = Path(__file__).resolve().parents[1] / "absorbed"
+_TOOLCHEST_SRC = ESTATE_ROOT / "toolchest" / "src"
+
+
+def _ensure_paths() -> None:
+    root = str(ESTATE_ROOT)
+    if root not in sys.path:
+        sys.path.insert(0, root)
+    tc = str(_TOOLCHEST_SRC)
+    if _TOOLCHEST_SRC.is_dir() and tc not in sys.path:
+        sys.path.insert(0, tc)
+    # ensure absorbed finder active
+    try:
+        import _mem20_absorbed_finder  # noqa: F401
+    except Exception:
+        try:
+            spec = importlib.util.spec_from_file_location(
+                "_mem20_absorbed_finder", ESTATE_ROOT / "_mem20_absorbed_finder.py"
+            )
+            if spec and spec.loader:
+                mod = importlib.util.module_from_spec(spec)
+                spec.loader.exec_module(mod)  # type: ignore
+                sys.modules.setdefault("_mem20_absorbed_finder", mod)
+        except Exception:
+            pass
+
+
+_ensure_paths()
+
+
+def _discover_absorbed() -> tuple[str, ...]:
+    if not ABSORBED_ROOT.is_dir():
+        return ()
+    names = []
+    for p in sorted(ABSORBED_ROOT.iterdir()):
+        if p.is_dir() and p.name.startswith("mem20") and p.name.endswith("z"):
+            names.append(p.name)
+    return tuple(names)
+
+
+MEMBERS: tuple[str, ...] = _discover_absorbed() or (
+    "mem20runtimebugpredictionenginez", "mem20crosslanguagerefactorenginez", "mem20chaosnativeapplicationruntimez",
+    "mem20crdtcollaborationenginez", "mem20generativebrandworldenginez", "mem20liveschemamorphingenginez",
+    "mem20multilingualliveconversationenginez", "mem20communitypulseenginez", "mem20peertopeerappruntimez",
+    "mem20featuredependencygraphenginez", "mem20privatelocalreasoningenginez", "mem20outcomeverificationruntimez",
+    "mem20completionconfidenceenginez", "mem20mobileedgeagentruntimez", "mem20devicecapabilitycompilerz",
+    "mem20protocolautodiscoveryenginez", "mem20runtimecompatibilityenginez", "mem20speculativeworkflowenginez",
+    "mem20servicebundlingenginez", "mem20predictiverecallenginez", "mem20customerlifecycleenginez",
+    "mem20autonomousdealdeskz", "mem20communitychallengeenginez", "mem20dynamicnarrativeenginez",
+    "mem20liveprojectdemonstrationenginez", "mem20memorytimemachinez", "mem20offergenomeenginez",
+    "mem20selfhealingplansz", "mem20zerotouchnodeswarmz", "mem20mixedinitiativefocusenginez",
+    "mem20webhooksupernetworkz",
 )
 
-ENGINE_ROOT = Path(__file__).resolve().parents[1]
-ESTATE_ROOT = Path(__file__).resolve().parents[2]
+
+@dataclass(frozen=True)
+class EngineMember:
+    name: str
+    package: str
+    kind: str = "engine"
+    absorbed: bool = False
+
+    def to_dict(self) -> Dict[str, Any]:
+        return asdict(self)
 
 
 @dataclass
 class MemberStatus:
     name: str
-    present: bool = False
-    has_package: bool = False
-    has_domain: bool = False
-    has_runtime: bool = False
-    has_tests: bool = False
-    importable: bool = False
+    present: bool
+    importable: bool
+    absorbed: bool = False
     version: Optional[str] = None
     error: Optional[str] = None
-    checked_at: float = field(default_factory=time.time)
+    path: Optional[str] = None
 
     def to_dict(self) -> Dict[str, Any]:
-        return {
-            "name": self.name, "present": self.present, "has_package": self.has_package,
-            "has_domain": self.has_domain, "has_runtime": self.has_runtime, "has_tests": self.has_tests,
-            "importable": self.importable, "version": self.version, "error": self.error,
-            "checked_at": self.checked_at, "healthy": self.healthy,
-        }
-
-    @property
-    def healthy(self) -> bool:
-        return self.present and (self.has_domain or self.has_runtime or self.importable)
-
-
-@dataclass
-class EngineMember:
-    name: str
-    kind: str = "engine"
-    capabilities: List[str] = field(default_factory=list)
-    metadata: Dict[str, Any] = field(default_factory=dict)
-
-    def to_dict(self) -> Dict[str, Any]:
-        return {"name": self.name, "kind": self.kind, "capabilities": self.capabilities, "metadata": self.metadata}
+        return asdict(self)
 
 
 @dataclass
 class RuntimePlan:
     plan_id: str
     intent: str
-    selected: List[str]
+    members: List[str]
     steps: List[Dict[str, Any]]
-    rationale: str
+    signals: Dict[str, Any] = field(default_factory=dict)
     created_at: float = field(default_factory=time.time)
 
     def to_dict(self) -> Dict[str, Any]:
-        return {"plan_id": self.plan_id, "intent": self.intent, "selected": self.selected,
-                "steps": self.steps, "rationale": self.rationale, "created_at": self.created_at}
+        return asdict(self)
 
 
 @dataclass
@@ -107,107 +116,113 @@ class RuntimeReport:
     ok: bool
     members_total: int
     members_present: int
-    members_healthy: int
-    statuses: List[Dict[str, Any]]
+    members_importable: int
+    absorbed_total: int
+    statuses: List[MemberStatus]
     generated_at: float = field(default_factory=time.time)
 
     def to_dict(self) -> Dict[str, Any]:
-        return {"ok": self.ok, "members_total": self.members_total, "members_present": self.members_present,
-                "members_healthy": self.members_healthy, "statuses": self.statuses, "generated_at": self.generated_at}
+        d = asdict(self)
+        d["statuses"] = [s.to_dict() if hasattr(s, "to_dict") else s for s in self.statuses]
+        return d
 
 
-def _kind(name: str) -> str:
-    if "runtime" in name:
-        return "runtime"
-    return "engine"
-
-
-def member_registry(names: Sequence[str] = MEMBERS) -> List[EngineMember]:
+def member_registry(names: Sequence[str] = None) -> List[EngineMember]:
+    names = list(names or MEMBERS)
     out = []
     for n in names:
-        caps = []
-        low = n.lower()
-        if "dispatch" in low: caps.append("dispatch")
-        if "compat" in low: caps.append("compatibility")
-        if "protocol" in low: caps.append("protocol-discovery")
-        if "speculative" in low: caps.append("speculative-execution")
-        if "predict" in low or "recall" in low: caps.append("prediction")
-        if "lifecycle" in low: caps.append("lifecycle")
-        if "verify" in low or "confidence" in low: caps.append("verification")
-        if "collab" in low or "crdt" in low: caps.append("collaboration")
-        if "focus" in low: caps.append("focus")
-        if not caps: caps.append("engine")
-        out.append(EngineMember(name=n, kind=_kind(n), capabilities=caps))
+        absorbed = (ABSORBED_ROOT / n).is_dir()
+        out.append(EngineMember(name=n, package=n, absorbed=absorbed))
     return out
 
 
-def check_member(name: str, estate_root: Optional[Path] = None) -> MemberStatus:
-    root = Path(estate_root) if estate_root else ESTATE_ROOT
-    base = root / name
-    st = MemberStatus(name=name, present=base.is_dir())
-    if not st.present:
-        st.error = "directory missing"
-        return st
-    pkg = base / name
-    st.has_package = (pkg / "__init__.py").is_file() or (base / "__init__.py").is_file()
-    st.has_domain = (pkg / "domain.py").is_file() or (base / "domain.py").is_file()
-    st.has_runtime = (pkg / "runtime.py").is_file() or (base / "runtime.py").is_file()
-    st.has_tests = (base / "tests").is_dir()
-    # import probe (best-effort, no heavy side effects beyond import)
+def _member_dir(name: str, root: Path = None) -> Optional[Path]:
+    base = Path(root) if root else ESTATE_ROOT
+    # absorbed under this runtime first
+    p = ABSORBED_ROOT / name
+    if p.is_dir():
+        return p
+    # legacy standalone location
+    p2 = base / name
+    if p2.is_dir():
+        return p2
+    # try canonical absorbed location via finder map
     try:
-        if str(root) not in sys.path:
-            sys.path.insert(0, str(root))
+        mp = base / ".mem20-absorbed-map.json"
+        if mp.exists():
+            data = json.loads(mp.read_text())
+            loc = (data.get("mapping") or {}).get(name)
+            if loc:
+                # mapping points to inner package dir; absorbed root is parent of package dir
+                lp = Path(loc)
+                if lp.is_dir():
+                    return lp.parent
+    except Exception:
+        pass
+    return None
+
+
+def check_member(name: str, root: Path = None) -> MemberStatus:
+    _ensure_paths()
+    p = _member_dir(name, root)
+    present = p is not None
+    absorbed = (ABSORBED_ROOT / name).is_dir()
+    ver = None
+    err = None
+    importable = False
+    try:
         mod = importlib.import_module(name)
-        st.importable = True
-        st.version = getattr(mod, "__version__", None)
+        importable = True
+        ver = getattr(mod, "__version__", None)
     except Exception as e:
-        st.importable = False
-        st.error = f"{type(e).__name__}: {e}"
-    return st
+        err = f"{type(e).__name__}: {e}"
+    return MemberStatus(name=name, present=present, importable=importable, absorbed=absorbed,
+                        version=str(ver) if ver is not None else None, error=err,
+                        path=str(p) if p else None)
 
 
 def summarize(statuses: Sequence[MemberStatus]) -> RuntimeReport:
-    present = sum(1 for s in statuses if s.present)
-    healthy = sum(1 for s in statuses if s.healthy)
-    # ok if registry is intact and we can report truthfully; degraded members are reported, not hidden
-    return RuntimeReport(ok=True, members_total=len(statuses), members_present=present,
-                         members_healthy=healthy, statuses=[s.to_dict() for s in statuses])
+    st = list(statuses)
+    present = [s for s in st if s.present]
+    imp = [s for s in st if s.importable]
+    absorbed = [s for s in st if getattr(s, 'absorbed', False)]
+    ok = len(present) == len(st) and len(st) > 0
+    return RuntimeReport(ok=ok, members_total=len(st), members_present=len(present),
+                         members_importable=len(imp), absorbed_total=len(absorbed), statuses=st)
 
 
-def compatibility(requirements: Optional[Mapping[str, Any]] = None, env: Optional[Mapping[str, Any]] = None) -> Dict[str, Any]:
-    req = dict(requirements or {"python": [3, 11], "members_min": 1})
-    py = sys.version_info[:2]
-    py_ok = list(py) >= list(req.get("python", [3, 11]))
-    return {"ok": py_ok, "python": {"current": list(py), "required": list(req.get("python", [3, 11])), "ok": py_ok},
-            "platform": sys.platform, "requirements": req, "env": dict(env or {})}
+def compatibility(members: Sequence[str] = None) -> Dict[str, Any]:
+    members = list(members or MEMBERS)
+    statuses = [check_member(n) for n in members]
+    rep = summarize(statuses)
+    issues = [{"member": s.name, "error": s.error} for s in statuses if not s.importable]
+    return {"ok": rep.ok, "members": len(members), "importable": rep.members_importable,
+            "issues": issues, "report": rep.to_dict()}
 
 
-def dispatch_plan(intent: str, statuses: Sequence[MemberStatus], context: Optional[Mapping[str, Any]] = None) -> RuntimePlan:
+def dispatch_plan(intent: str, statuses: Sequence[MemberStatus] = None, limit: int = 12) -> RuntimePlan:
+    statuses = list(statuses or [check_member(n) for n in MEMBERS])
+    ok_members = [s.name for s in statuses if s.present or s.importable]
     intent_l = (intent or "").lower()
-    reg = {m.name: m for m in member_registry()}
-    selected = []
-    for s in statuses:
-        if not s.healthy:
-            continue
-        caps = reg.get(s.name, EngineMember(s.name)).capabilities
+    scored = []
+    for name in ok_members:
         score = 0
-        for c in caps:
-            if c.replace("-", " ") in intent_l or c.split("-")[0] in intent_l:
+        nl = name.lower()
+        for token in intent_l.replace('-', ' ').replace('_', ' ').split():
+            if token and token in nl:
                 score += 2
-        if "compat" in intent_l and "compatibility" in caps: score += 3
-        if "protocol" in intent_l and "protocol-discovery" in caps: score += 3
-        if "speculat" in intent_l and "speculative-execution" in caps: score += 3
-        if "predict" in intent_l and "prediction" in caps: score += 2
-        if "lifecycle" in intent_l and "lifecycle" in caps: score += 2
-        if score > 0:
-            selected.append((score, s.name))
-    selected.sort(key=lambda x: (-x[0], x[1]))
-    chosen = [n for _, n in selected[:5]] or [s.name for s in statuses if s.healthy][:3]
+        # heuristic boosts
+        for key in ("runtime", "compat", "protocol", "dispatch", "speculat", "predict", "recall",
+                    "service", "bundle", "lifecycle", "deal", "swarm", "healing", "webhook"):
+            if key in intent_l and key in nl:
+                score += 3
+        scored.append((score, name))
+    scored.sort(key=lambda x: (-x[0], x[1]))
+    selected = [n for s, n in scored if s > 0][:limit]
+    if not selected:
+        selected = ok_members[: min(limit, len(ok_members))]
     steps = []
-    for i, name in enumerate(chosen, 1):
-        m = reg.get(name, EngineMember(name))
-        steps.append({"step": i, "member": name, "kind": m.kind, "capabilities": m.capabilities,
-                      "action": "probe-then-dispatch", "status": "planned"})
-    plan_id = f"plan-{abs(hash((intent, tuple(chosen), round(time.time(), 0)))) % 10**10}"
-    rationale = f"Selected {len(chosen)} healthy member(s) for intent '{intent}' by capability match." if chosen else f"No healthy capability match for '{intent}'; runtime reported truthfully."
-    return RuntimePlan(plan_id=plan_id, intent=intent, selected=chosen, steps=steps, rationale=rationale)
+    for i, name in enumerate(selected, 1):
+        steps.append({"step": i, "member": name, "action": "probe/dispatch", "intent": intent})
+    signals = {"selected": len(selected), "intent_tokens": len(intent_l.split()), "total_members": len(statuses)}
+    return RuntimePlan(plan_id=str(uuid.uuid4()), intent=intent, members=selected, steps=steps, signals=signals)

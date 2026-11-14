@@ -133,3 +133,16 @@ __all__ = [
     "normalize_grid_size",
     "stack_batch",
 ]
+
+def _discover_absorbed_members():
+    try:
+        from pathlib import Path as _P
+        _adir = _P(__file__).resolve().parents[1] / 'absorbed'
+        if _adir.is_dir():
+            return tuple(sorted(p.name for p in _adir.iterdir() if p.is_dir() and p.name.startswith('mem20') and p.name.endswith('z')))
+    except Exception:
+        pass
+    return ()
+
+ABSORBED_MEMBERS = _discover_absorbed_members()
+__all__ = list(dict.fromkeys(list(__all__) + ["ABSORBED_MEMBERS"]))

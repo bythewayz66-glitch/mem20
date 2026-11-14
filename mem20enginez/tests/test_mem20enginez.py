@@ -1,4 +1,4 @@
-"""Compatibility tests for mem20enginez (legacy expectations preserved)."""
+"""Compatibility tests for mem20enginez (assimilated)."""
 from __future__ import annotations
 
 import unittest
@@ -10,12 +10,14 @@ class TestBranding(unittest.TestCase):
         self.assertTrue(__version__)
         self.assertIsInstance(__version__, str)
         self.assertTrue(MEMBERS)
-        self.assertEqual(len(MEMBERS), 30)
-        self.assertIn("mem20adaptiveachievementenginez", MEMBERS)
+        # assimilated absorbed members
+        self.assertGreaterEqual(len(MEMBERS), 30)
+        self.assertIn("mem20mixedinitiativefocusenginez", MEMBERS)
 
     def test_members_registry(self):
         from mem20enginez.mem20enginez import MEMBERS
-        self.assertEqual(len(MEMBERS), 30)
+        self.assertGreaterEqual(len(MEMBERS), 30)
+        self.assertEqual(len(MEMBERS), len(set(MEMBERS)))
 
 
 class TestCli(unittest.TestCase):

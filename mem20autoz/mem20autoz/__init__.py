@@ -13,7 +13,18 @@ from pathlib import Path
 
 __version__ = "0.2.0"
 
-MEMBERS = (
+
+def _discover_absorbed_members():
+    try:
+        from pathlib import Path as _P
+        _adir = _P(__file__).resolve().parents[1] / 'absorbed'
+        if _adir.is_dir():
+            return tuple(sorted(p.name for p in _adir.iterdir() if p.is_dir() and p.name.startswith('mem20') and p.name.endswith('z')))
+    except Exception:
+        pass
+    return ()
+
+_ORIGINAL_MEMBERS = (
     "mem20autonomouscodesurgeonz",
     "mem20autonomousdealdeskz",
     "mem20autonomousmicrosaasfoundryz",
@@ -34,7 +45,10 @@ MEMBERS = (
     "mem20dailydecisioncopilotz",
     "mem20smartmeetingcopilotz",
 )
-
+_ABSORBED_MEMBERS = _discover_absorbed_members()
+# merge: originals (vendored under members/) plus absorbed, preserving order and uniqueness
+_seen = set()
+MEMBERS = tuple(x for x in list(_ORIGINAL_MEMBERS) + list(_ABSORBED_MEMBERS) if not (x in _seen or _seen.add(x)))
 _MEMBERS_ROOT = Path(__file__).resolve().parent.parent / "members"
 
 

@@ -1,12 +1,22 @@
-"""Six unique peers for mem20fabricz Integration Fabric (#311), different from #300-#310."""
+"""Assimilated peers for mem20fabricz: core peers + absorbed member ecosystem aggregation."""
 from __future__ import annotations
 from typing import Any, Dict, Mapping
+import importlib
+from . import domain
+
+def _ensure():
+    domain._ensure_paths()
 
 def _safe(name, fn):
-    try: return {"ok": True, "subsystem": name, **(fn() or {})}
-    except Exception as e: return {"ok": False, "subsystem": name, "error": f"{type(e).__name__}: {e}"}
+    try:
+        res = fn() or {}
+        if isinstance(res, dict) and 'ok' in res:
+            return {"subsystem": name, **res}
+        return {"ok": True, "subsystem": name, **(res if isinstance(res, dict) else {"result": res})}
+    except Exception as e:
+        return {"ok": False, "subsystem": name, "error": f"{type(e).__name__}: {e}"}
 
-# 1) mem20apishapeshiftinggatewayz - payload transform/version routing/schema adaptation
+# --- Core peers (preserved API) ---
 def api_gateway(payload: Mapping[str, Any] = None) -> Dict[str, Any]:
     def run():
         from mem20apishapeshiftinggatewayz.domain import transform_payload, version_route, schema_diff, adapt_response
@@ -19,7 +29,6 @@ def api_gateway(payload: Mapping[str, Any] = None) -> Dict[str, Any]:
         return {"transformed": transformed, "route": route, "schema_diff": diff, "adapted": adapted}
     return _safe("mem20apishapeshiftinggatewayz", run)
 
-# 2) mem20universalintegrationcompilerz - compile/validate/transform integration mappings
 def integration_compiler(mapping: Mapping[str, Any] = None) -> Dict[str, Any]:
     def run():
         from mem20universalintegrationcompilerz.domain import compile_integration, validate_mapping, transform
@@ -30,7 +39,6 @@ def integration_compiler(mapping: Mapping[str, Any] = None) -> Dict[str, Any]:
         return {"compiled": compiled, "valid": valid, "transform": out}
     return _safe("mem20universalintegrationcompilerz", run)
 
-# 3) mem20episodicmemorygraphz - episode/recall graph for integration traces
 def episodic_traces(title: str = "fabric-run") -> Dict[str, Any]:
     def run():
         from mem20episodicmemorygraphz.domain import create_episode, add_event, link_episodes, recall
@@ -42,7 +50,6 @@ def episodic_traces(title: str = "fabric-run") -> Dict[str, Any]:
         return {"episode": ep, "linked": linked, "recall": rec}
     return _safe("mem20episodicmemorygraphz", run)
 
-# 4) mem20realtimeeventautopilotz - event ingestion/rules/autopilot
 def event_autopilot(event: Mapping[str, Any] = None) -> Dict[str, Any]:
     def run():
         from mem20realtimeeventautopilotz.domain import ingest_event, evaluate_rules, autopilot
@@ -55,7 +62,6 @@ def event_autopilot(event: Mapping[str, Any] = None) -> Dict[str, Any]:
         return {"ingested": len(stream.get("events", [])), "rules": evald, "autopilot": auto}
     return _safe("mem20realtimeeventautopilotz", run)
 
-# 5) mem20ambientteamradioz - coordination channel messaging
 def team_radio(message: str = "fabric status") -> Dict[str, Any]:
     def run():
         from mem20ambientteamradioz.domain import create_channel, join_channel, send_message, channel_activity
@@ -70,7 +76,6 @@ def team_radio(message: str = "fabric status") -> Dict[str, Any]:
         return {"channel": ch.get("name") if isinstance(ch, dict) else "fabric-ops", "activity": act}
     return _safe("mem20ambientteamradioz", run)
 
-# 6) mem20autonomousdealdeskz - priority/value negotiation heuristic for dispatch
 def dispatch_value(payload: Mapping[str, Any] = None) -> Dict[str, Any]:
     def run():
         from mem20autonomousdealdeskz.domain import price_deal, terms_score, approval_required, deal_health
@@ -82,11 +87,55 @@ def dispatch_value(payload: Mapping[str, Any] = None) -> Dict[str, Any]:
         return {"price": price, "terms_score": terms, "approval_required": approval, "health": health}
     return _safe("mem20autonomousdealdeskz", run)
 
-def probe() -> Dict[str, Any]:
-    checks = {
-        "api_gateway": api_gateway(), "integration_compiler": integration_compiler(),
-        "episodic_traces": episodic_traces(), "event_autopilot": event_autopilot(),
-        "team_radio": team_radio(), "dispatch_value": dispatch_value(),
-    }
+CORE_CHECKS = {
+    "api_gateway": api_gateway,
+    "integration_compiler": integration_compiler,
+    "episodic_traces": episodic_traces,
+    "event_autopilot": event_autopilot,
+    "team_radio": team_radio,
+    "dispatch_value": dispatch_value,
+}
+
+def _probe_member_ecosystem(name: str) -> Dict[str, Any]:
+    _ensure()
+    try:
+        eco = importlib.import_module(f"{name}.ecosystem")
+    except Exception as e:
+        return {"ok": False, "member": name, "error": f"no_ecosystem:{type(e).__name__}: {e}"}
+    try:
+        if hasattr(eco, 'probe'):
+            r = eco.probe()
+            if isinstance(r, dict):
+                count = r.get('count')
+                if count is None:
+                    count = len(r.get('reachable') or r.get('checks') or [])
+                return {"ok": bool(r.get('ok', False)), "member": name, "count": int(count)}
+            return {"ok": True, "member": name, "count": 1}
+        fns = [x for x in dir(eco) if not x.startswith('_') and callable(getattr(eco, x))]
+        return {"ok": True, "member": name, "count": len(fns)}
+    except Exception as e:
+        return {"ok": False, "member": name, "error": f"{type(e).__name__}: {e}"}
+
+def absorbed_member_peers(members=None) -> Dict[str, Any]:
+    members = list(members or domain.MEMBERS)
+    checks = {}
+    total = 0
+    ok_members = 0
+    for m in members:
+        r = _probe_member_ecosystem(m)
+        checks[m] = r
+        c = r.get('count')
+        if isinstance(c, int): total += c
+        if r.get('ok'): ok_members += 1
+    return {"ok": True, "members_with_ecosystem_probe": len(checks), "members_ok": ok_members, "peer_checks_total": total, "checks": checks}
+
+def probe(include_member_ecosystems: bool = True) -> Dict[str, Any]:
+    checks = {k: fn() for k, fn in CORE_CHECKS.items()}
     reachable = [k for k, v in checks.items() if v.get("ok")]
-    return {"ok": len(reachable) == 6, "count": len(reachable), "reachable": reachable, "checks": checks}
+    result = {"ok": len(reachable) == len(CORE_CHECKS), "count": len(reachable), "core_count": len(CORE_CHECKS), "reachable": reachable, "checks": checks}
+    if include_member_ecosystems:
+        mp = absorbed_member_peers()
+        result["member_ecosystems"] = mp
+        result["peer_surface_total"] = int(result["core_count"]) + int(mp.get("peer_checks_total", 0))
+        result["count"] = result["peer_surface_total"]
+    return result

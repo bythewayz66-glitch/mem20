@@ -1,0 +1,13 @@
+<!doctype html><html><head><meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/><title>Energy-Aware Compute Migration (RM-047)</title>
+<link rel="stylesheet" href="/style.css"/></head><body>
+<header><h1>Energy-Aware Compute Migration <small>RM-047</small></h1>
+<div><button id="refresh">Refresh</button> <button id="doctor">Doctor</button> <button id="simulate">Simulate</button></div></header>
+<main>
+<section class="panel"><h2>Status</h2><pre id="status">loading…</pre></section>
+<div class="grid">
+<div class="panel"><h2>Add node</h2><label>ID <input id="nid" value="green-a"/></label><label>Power W <input id="np" type="number" value="60"/></label><label>Speed <input id="ns" type="number" value="2" step="0.1"/></label><label>Rate <input id="nr" type="number" value="0.10" step="0.01"/></label><label>Carbon g/kWh <input id="nc" type="number" value="120"/></label><label>Renewable % <input id="nre" type="number" value="70"/></label><button id="addNode">Add</button></div>
+<div class="panel"><h2>Add workload / migrate</h2><label>Workload <input id="wid" value="job-1"/></label><label>Size <input id="ws" type="number" value="10"/></label><label>Current node <input id="wcn" value=""/></label><button id="addWl">Add workload</button><label>Target <input id="wto" value=""/></label><button id="mig">Migrate</button><button id="plan">Plan</button></div>
+</div>
+<div class="grid"><div class="panel"><h2>Nodes</h2><pre id="nodes"></pre></div><div class="panel"><h2>Workloads</h2><pre id="wls"></pre></div></div>
+<section class="panel"><h2>Result</h2><pre id="out">ready</pre></section>
+</main><script src="/app.js"></script></body></html>

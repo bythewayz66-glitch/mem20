@@ -1,4 +1,4 @@
-"""mem20fabricz runtime: CLI + JSON/HTTP API + static cockpit. Preserves legacy --version/--members."""
+"""mem20fabricz runtime: CLI + JSON/HTTP API + static cockpit (assimilated)."""
 from __future__ import annotations
 import argparse, json, mimetypes, sys
 from http.server import BaseHTTPRequestHandler, HTTPServer
@@ -11,13 +11,12 @@ WEB = Path(__file__).resolve().parent / "web"
 SVC = FabricService()
 
 def build_parser() -> argparse.ArgumentParser:
-    p = argparse.ArgumentParser(prog="mem20fabricz", description="mem20 integration fabric runtime.")
-    # legacy flags (compat)
+    p = argparse.ArgumentParser(prog="mem20fabricz", description="mem20 integration fabric runtime (assimilated).")
     p.add_argument("--version", action="store_true", help="Print the version and exit.")
     p.add_argument("--members", action="store_true", help="List member systems and exit.")
     sub = p.add_subparsers(dest="cmd")
     sub.add_parser("status", help="Member registry/import status")
-    sub.add_parser("doctor", help="Member + 6-peer health probe")
+    sub.add_parser("doctor", help="Member + peer health probe")
     d = sub.add_parser("dispatch", help="Plan/dispatch an integration intent")
     d.add_argument("--intent", default="integrate")
     d.add_argument("--payload", default="{}")
@@ -32,7 +31,6 @@ def _out(obj):
 
 def main(argv=None) -> int:
     args = build_parser().parse_args(argv)
-    # legacy compat behavior
     if args.version:
         print(f"mem20fabricz {__version__}")
         if not args.cmd and not args.members: return 0

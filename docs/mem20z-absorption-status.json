@@ -1,0 +1,12 @@
+{
+  "updated": "2026-11-14",
+  "summary": "Assimilation pass: all long mem20*z subsystems (len>15) rehomed into short runtimes (len<15) with extended absorption (full code/README/tests/CLI/docs copied into absorbed/, READMEs appended, originals deleted, no symlinks). 177 members absorbed + 1 stale remnant removed; 0 long standalone dirs remain. Canonical import resolution added via _mem20_absorbed_finder.py and .mem20-absorbed-map.json. Major runtimes assimilated (members/probing from absorbed/, ecosystem peer aggregation, CLI/service wiring): mem20enginez, mem20fabricz, mem20facez, mem20graphz, mem20meshz, mem20selfz, mem20simz, mem20studioz, mem20twinz, mem20labz and others. MCP/gateway bootstrapped for absorbed imports; sitemap/SITEMAP regenerated.",
+  "remaining_long_dirs": 0,
+  "absorbed_members_total": 177,
+  "notes": [
+    "Absorbed copies live under <target>/absorbed/<member>/ and tests under <target>/tests/absorbed/<member>/ where present.",
+    "Canonical mapping: .mem20-absorbed-map.json and /tmp/absorbed_canonical.json.",
+    "Some absorbed/member ecosystem probes may report environment-specific dependency issues; aggregation is real and reported truthfully.",
+    "MCP tool modules for absorbed standalone subsystems remain registered; imports resolve via absorbed finder. Gateway/SITEMAP reflect current estate layout after regeneration."
+  ]
+}

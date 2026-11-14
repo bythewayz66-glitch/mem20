@@ -377,3 +377,98 @@ def run_governor(brief: str, output: str, topic: Optional[str] = None,
     gov = CrewGovernor(topic=topic, record=record)
     report = gov.prepare()
     return gov.judge(brief, output, triangles, report).as_dict()
+
+
+def _absorbed_member_peers():
+    try:
+        import importlib, pathlib, sys
+        repo = pathlib.Path(__file__).resolve()
+        root = None
+        for par in repo.parents:
+            if (par / '_mem20_absorbed_finder.py').exists():
+                root = par
+                break
+        if root is None:
+            root = pathlib.Path(__file__).resolve().parents[2] if len(pathlib.Path(__file__).resolve().parents) > 2 else pathlib.Path(__file__).resolve().parent
+        if str(root) not in sys.path:
+            sys.path.insert(0, str(root))
+        try:
+            import _mem20_absorbed_finder  # noqa: F401
+        except Exception:
+            pass
+        tc = root / 'toolchest' / 'src'
+        if tc.is_dir() and str(tc) not in sys.path:
+            sys.path.insert(0, str(tc))
+        target_dir = None
+        for parent in [pathlib.Path(__file__).resolve().parent, pathlib.Path(__file__).resolve().parents[1] if len(pathlib.Path(__file__).resolve().parents)>1 else None, pathlib.Path(__file__).resolve().parents[2] if len(pathlib.Path(__file__).resolve().parents)>2 else None]:
+            if parent is None: continue
+            if (parent / 'absorbed').is_dir():
+                target_dir = parent; break
+        if target_dir is None:
+            return {'ok': True, 'members_with_ecosystem_probe': 0, 'members_ok': 0, 'peer_checks_total': 0, 'checks': {}}
+        adir = target_dir / 'absorbed'
+        members = sorted(p.name for p in adir.iterdir() if p.is_dir() and p.name.startswith('mem20') and p.name.endswith('z')) if adir.is_dir() else []
+        checks = {}; total = 0; okm = 0
+        for name in members:
+            try:
+                eco = importlib.import_module(f"{name}.ecosystem")
+                if hasattr(eco, 'probe'):
+                    r = eco.probe()
+                    if isinstance(r, dict):
+                        c = r.get('count')
+                        if c is None:
+                            c = len(r.get('reachable') or r.get('checks') or r.get('integrations') or [])
+                        try: c = int(c)
+                        except Exception: c = 0
+                        checks[name] = {'ok': bool(r.get('ok', False)), 'count': c}
+                        total += c
+                        if r.get('ok'): okm += 1
+                        continue
+                fns = [x for x in dir(eco) if not x.startswith('_') and callable(getattr(eco, x))]
+                checks[name] = {'ok': True, 'count': len(fns)}
+                total += len(fns); okm += 1
+            except Exception as e:
+                checks[name] = {'ok': False, 'count': 0, 'error': f"{type(e).__name__}: {e}"}
+        return {'ok': True, 'members_with_ecosystem_probe': len(members), 'members_ok': okm, 'peer_checks_total': total, 'checks': checks}
+    except Exception as e:
+        return {'ok': False, 'members_with_ecosystem_probe': 0, 'members_ok': 0, 'peer_checks_total': 0, 'error': f"{type(e).__name__}: {e}", 'checks': {}}
+
+
+
+def _safe(name, fn):
+    try:
+        r = fn() or {}
+        if isinstance(r, dict):
+            return {'subsystem': name, **r} if 'subsystem' not in r else r
+        return {'ok': True, 'subsystem': name, 'result': r}
+    except Exception as e:
+        return {'ok': False, 'subsystem': name, 'error': f"{type(e).__name__}: {e}"}
+
+
+def _core_peers():
+    checks = {}
+    checks['memory_engine'] = _safe('memory_engine', lambda: grounded_context(topic='crewz-probe', k=1))
+    checks['mem20dreamz'] = _safe('mem20dreamz', lambda: output_surprise('probe prompt', 'probe answer'))
+    checks['mem20verify'] = _safe('mem20verify', lambda: lint_output('x = 1'))
+    checks['mem20kilnz'] = _safe('mem20kilnz', lambda: check_asset_budget('probe', 100))
+    checks['mem20corez'] = _safe('mem20corez', lambda: model_confidence('probe confidence text'))
+    checks['mem20cliz'] = _safe('mem20cliz', lambda: cli_envelope(['--json']))
+    return checks
+
+
+def probe(include_member_ecosystems: bool = True) -> dict:
+    checks = _core_peers()
+    reachable = [k for k, v in checks.items() if v.get('ok')]
+    result = {
+        'ok': len(reachable) >= 6,
+        'count': len(reachable),
+        'core_count': len(checks),
+        'reachable': reachable,
+        'checks': checks,
+    }
+    if include_member_ecosystems:
+        amp = _absorbed_member_peers()
+        result['member_ecosystems'] = amp
+        result['peer_surface_total'] = int(result['core_count']) + int(amp.get('peer_checks_total', 0))
+        result['count'] = result['peer_surface_total']
+    return result

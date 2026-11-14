@@ -369,12 +369,7 @@ def main():
     idx_path = OUT_DIR / "skills.index.agent.json"
     with open(idx_path, 'w') as f:
         json.dump(idx, f)
-    # also write to other locations
-    for extra in [Path('/opt/mem20/agent_skills_catalog'), Path('/opt/mem20/skills_catalog_agent')]:
-        extra.mkdir(parents=True, exist_ok=True)
-        (extra / 'skills.catalog.agent.jsonl').write_text(jsonl_path.read_text())
-        (extra / 'skills.index.agent.json').write_text(idx_path.read_text())
-        (extra / 'skills.catalog.agent.json').write_text(cat_path.read_text())
+    # canonical output lives in toolchest/skills (OUT_DIR)
     print(f"wrote {len(skills)} skills")
     print(jsonl_path)
     print(idx_path)

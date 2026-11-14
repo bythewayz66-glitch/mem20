@@ -304,11 +304,9 @@ A machine-readable map of this monorepo so an agent can find the right subsystem
 | `.github` | 0 | 0 | - | Summary |
 | `.opencode` | 0 | 0 | - |  |
 | `2.0_roadmap` | 0 | 0 | - | mem20 2.0 Roadmap — Deliverables |
-| `agent_skills_catalog` | 0 | 0 | - |  |
 | `corez` | 0 | 0 | - | Core model artifacts — `corez/` |
 | `ops` | 0 | 0 | - | Launch page corrections — 2026-11-01 (owner directive, wave 2) |
 | `reference` | 0 | 0 | - | Cached reference data — `reference/` |
-| `skills_catalog_agent` | 0 | 0 | - |  |
 | `specs` | 0 | 0 | - | Specification Authority |
 | `systemd` | 0 | 0 | - | systemd unit template — `systemd/` |
 

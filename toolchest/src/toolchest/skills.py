@@ -10,9 +10,7 @@ SKILLS_DIR = Path(__file__).resolve().parent.parent / "skills"
 
 def _locate_skills_catalog() -> Path:
     for p in [SKILLS_DIR / "skills.catalog.agent.jsonl",
-              Path("/opt/mem20/toolchest/skills/skills.catalog.agent.jsonl"),
-              Path("/opt/mem20/agent_skills_catalog/skills.catalog.agent.jsonl"),
-              Path("/opt/mem20/skills_catalog_agent/skills.catalog.agent.jsonl")]:
+              Path("/opt/mem20/toolchest/skills/skills.catalog.agent.jsonl")]:
         if p.exists():
             return p
     return SKILLS_DIR / "skills.catalog.agent.jsonl"

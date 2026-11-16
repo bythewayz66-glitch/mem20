@@ -75,6 +75,11 @@ class Query:
     The previous corpus made every `adversarial` query answer-free ("is Zephyra
     a real city"), and the scorer hardcoded its verdict to False, so the 0.000
     it published measured the harness, not retrieval. See `docs/benchmarks/`.
+
+    The non-text modes (`recall`, `recall_at`, `entities`, `ledger`) are not
+    rankers, so their probe carries the thing it is actually asking for rather
+    than a sentence: a metadata filter, an as-of instant, or an enumeration
+    window. Scoring a text ranker on one of those would measure nothing.
     """
 
     qid: str
@@ -86,6 +91,18 @@ class Query:
     entity: str | None = None
     difficulty: str = "medium"
     gold_key: str | None = None
+    # -- non-text modes ---------------------------------------------------
+    # `recall` is a metadata filter, so its "query" is the filter itself.
+    topic_filter: str | None = None
+    tags_filter: tuple[str, ...] = ()
+    # `recall_at` is bi-temporal, so its "query" is the as-of instant.
+    as_of: str | None = None
+    # A negative temporal assertion: at this instant the record did not exist
+    # yet, so a correct point-in-time read returns nothing.
+    expect_empty: bool = False
+    # `entities` is an ordered top-N over nodes, not a top-k retriever, so its
+    # window is set on the probe rather than borrowed from the retrieval `k`.
+    enumeration_limit: int = 0
 
 
 @dataclass

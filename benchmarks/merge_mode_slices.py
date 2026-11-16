@@ -11,7 +11,7 @@ import sys
 from pathlib import Path
 
 MODES = ["bm25", "vector", "hybrid", "hybrid-rerank-off", "graph", "keyword",
-         "constant"]
+         "constant", "recall", "recall_at", "entities", "ledger"]
 SLICES = Path(sys.argv[1] if len(sys.argv) > 1 else "/tmp/slices")
 CORPUS = Path(sys.argv[2] if len(sys.argv) > 2 else "/tmp/mem20-scale-corpus-v2")
 OUT = Path(__file__).resolve().parent / "results"
@@ -74,16 +74,22 @@ report = {
                       "records.jsonl")
         },
         "store": base["environment"]["store"],
+        # Derived from the slices, not hardcoded: a literal 700/654/3601 here
+        # silently misreports the store the moment the corpus size changes.
         "store_health": {
-            "vector_indexed": 700, "bm25_indexed": 700, "graph_entities": 654,
-            "graph_edges": 3601, "ledger_records": 700, "healthy": True},
+            "vector_indexed": base["trust"]["indexed_entries"],
+            "bm25_indexed": base["trust"]["indexed_entries"],
+            "graph_entities": base["trust"]["graph_entities"],
+            "graph_edges": base["trust"]["graph_edges"],
+            "ledger_records": base["trust"]["indexed_entries"],
+            "healthy": base["trust"]["index_healthy"]},
         "k": 5,
         "modes": MODES,
         "scored_in_separate_processes": True,
         "why_split": (
             "the harness host caps at 2 GB; one process that ingests and scores "
-            "all seven modes is OOM-killed (exit 137). Each mode was scored "
-            "against the SAME already-built store, so the numbers are "
+            f"all {len(MODES)} modes is OOM-killed (exit 137). Each mode was "
+            "scored against the SAME already-built store, so the numbers are "
             "comparable; only the process boundary differs."),
         "elapsed_s_per_mode": {m: slices[m]["_elapsed_s"] for m in MODES},
     },

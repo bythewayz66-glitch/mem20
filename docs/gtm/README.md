@@ -16,6 +16,7 @@ This directory is the **git-side source of truth** for mem20 go-to-market collat
 | [`mem20-launch-copy.md`](./mem20-launch-copy.md) | Brand & Positioning Strategist | One-liner, Show HN post, H1/subhead, value props, HN / Product Hunt / LinkedIn / X variants. |
 | [`mem20-campaign-plan.md`](./mem20-campaign-plan.md) | Marketing & Demand Gen / Revenue Analytics | Channel tiers, 12 tracked links, measurement plan, launch sequencing. |
 | [`mem20-sales-one-pager.md`](./mem20-sales-one-pager.md) | VP of Sales | Pitch, ICP, objection handling, commercial model, 6-week pilot-to-paid motion. |
+| [`experiment-gh-exp-001-prove-it-hero.md`](./experiment-gh-exp-001-prove-it-hero.md) | Growth Hacker | **Pre-registered growth experiment** for the 4.0.0 release: hypothesis, primary metric, exact-Poisson sample size, day-level switchback design, guardrails, analysis plan. Arithmetic in `scripts/gtm/experiment_power.py`. |
 
 ---
 

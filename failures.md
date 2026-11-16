@@ -212,3 +212,11 @@
   - Gateway tests: 33 passed
   - Conformance: 7/7 PASS
 - **Retroactive audit updated** in roadmaps/fleetwide_mem20.json with completion_date 2026-11-16
+
+## 2026-11-16 — Integrate fleet features into teamz (Steps 6-9)
+- **Step 6 (Isolated Namespaces):** Added `fleet.py` with `FleetClient` for gateway namespace management. Config: `TEAMZ_FLEET_ENABLED`, `TEAMZ_FLEET_GATEWAY_URL`, `TEAMZ_FLEET_AGENT_NAME`, `TEAMZ_FLEET_NS_AUTO_CREATE`. Auto-creates namespace for orchestrator on startup.
+- **Step 7 (Kanban Integration):** Config: `TEAMZ_KANBAN_ENABLED`, `TEAMZ_KANBAN_MCP_URL`. Sync teamz goals → kanban cards.
+- **Step 8 (A2A Setup):** Config: `TEAMZ_A2A_ENABLED`, `TEAMZ_A2A_PORT`, `TEAMZ_A2A_PEER_CONFIG`. Register peer agents, health checks.
+- **Step 9 (Fleetwide Rules):** Config: `TEAMZ_FLEET_RULES_ENABLED`, `TEAMZ_FLEET_DECISION_PERSISTENCE`, `TEAMZ_FLEET_FAIL_LOG_REVIEW`. Decision persistence, fail log review.
+- **API Endpoints:** 13 new `/v1/fleet/*` endpoints for all integrations
+- **Verification:** All tests pass (47), imports OK, endpoints registered

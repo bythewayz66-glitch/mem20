@@ -114,6 +114,26 @@ class Settings:
     )
     mem20_timeout_s: float = field(default_factory=lambda: _env_float("MEM20_TIMEOUT_S", 30.0))
 
+    # Fleetwide Mem20 integration (Step 6: isolated namespaces)
+    fleet_enabled: bool = field(default_factory=lambda: _env_bool("TEAMZ_FLEET_ENABLED", True))
+    fleet_gateway_url: str = field(default_factory=lambda: os.getenv("TEAMZ_FLEET_GATEWAY_URL", "http://localhost:8788"))
+    fleet_agent_name: str = field(default_factory=lambda: os.getenv("TEAMZ_FLEET_AGENT_NAME", "teamz-orchestrator"))
+    fleet_namespace_auto_create: bool = field(default_factory=lambda: _env_bool("TEAMZ_FLEET_NS_AUTO_CREATE", True))
+
+    # Kanban integration (Step 7)
+    kanban_enabled: bool = field(default_factory=lambda: _env_bool("TEAMZ_KANBAN_ENABLED", False))
+    kanban_mcp_url: str = field(default_factory=lambda: os.getenv("TEAMZ_KANBAN_MCP_URL", "http://localhost:8789"))
+
+    # A2A setup (Step 8)
+    a2a_enabled: bool = field(default_factory=lambda: _env_bool("TEAMZ_A2A_ENABLED", True))
+    a2a_port: int = field(default_factory=lambda: _env_int("TEAMZ_A2A_PORT", 8790))
+    a2a_peer_config: str = field(default_factory=lambda: os.getenv("TEAMZ_A2A_PEER_CONFIG", ""))
+
+    # Fleetwide rules enforcement (Step 9)
+    fleet_rules_enabled: bool = field(default_factory=lambda: _env_bool("TEAMZ_FLEET_RULES_ENABLED", True))
+    fleet_decision_persistence: bool = field(default_factory=lambda: _env_bool("TEAMZ_FLEET_DECISION_PERSISTENCE", True))
+    fleet_fail_log_review: bool = field(default_factory=lambda: _env_bool("TEAMZ_FLEET_FAIL_LOG_REVIEW", True))
+
     # Persistent workspace/session storage (survives browser restarts + server restarts)
     persist_enabled: bool = field(default_factory=lambda: _env_bool("TEAMZ_PERSIST_ENABLED", True))
     state_file: str = field(

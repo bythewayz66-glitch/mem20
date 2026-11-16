@@ -26,6 +26,7 @@ from .execution import (
     tools_manifest,
 )
 from .mem20 import Mem20Error, get_mem20_client
+from .fleet import FleetClient, get_fleet_client, init_fleet_integration, shutdown_fleet_integration
 from .models import (
     ChatRequest,
     ChatResponse,
@@ -74,6 +75,9 @@ worker = GoalWorker(state_store, router, load_skill_catalogue())
 async def _startup() -> None:
     if settings.goal_enabled and settings.goal_worker_enabled:
         await worker.start()
+    # Initialize fleet integration (Steps 6-9)
+    if settings.fleet_enabled:
+        await init_fleet_integration()
 
 
 @app.on_event("shutdown")
@@ -86,6 +90,8 @@ async def _shutdown() -> None:
         await get_mem20_client().close()
     except Exception:
         pass
+    # Shutdown fleet integration
+    await shutdown_fleet_integration()
 
 
 @app.get("/health")
@@ -1009,3 +1015,242 @@ async def worker_control(req: WorkerControlRequest) -> Dict[str, Any]:
     if action == "self-improve":
         return await worker.self_improve(req.agentId)
     raise HTTPException(status_code=400, detail="action must be start|stop|tick|self-improve")
+
+
+# --- Fleet Integration (Steps 6-9) ------------------------------------------
+
+from pydantic import BaseModel
+
+
+class NamespaceCreateRequest(BaseModel):
+    agent_name: str
+
+
+class KanbanSyncRequest(BaseModel):
+    conversation_id: str
+    goal_text: str
+    agent_id: Optional[str] = None
+
+
+class KanbanUpdateRequest(BaseModel):
+    card_id: str
+    column: Optional[str] = None
+    title: Optional[str] = None
+    priority: Optional[int] = None
+    tags: Optional[List[str]] = None
+
+
+class A2APeerRequest(BaseModel):
+    name: str
+    url: str
+    capabilities: List[str] = []
+    health_check_url: Optional[str] = None
+
+
+class DecisionRecordRequest(BaseModel):
+    agent_name: str
+    decision: str
+    rationale: str
+    conversation_id: Optional[str] = None
+    tags: Optional[List[str]] = None
+
+
+@app.get("/v1/fleet/status")
+async def fleet_status() -> Dict[str, Any]:
+    """Get fleet integration status."""
+    if not settings.fleet_enabled:
+        return {"enabled": False}
+    client = get_fleet_client()
+    namespaces = await client.list_namespaces()
+    a2a_peers = client.get_a2a_peers()
+    health = await client.health_check_a2a_peers() if settings.a2a_enabled else {}
+    return {
+        "enabled": True,
+        "gateway_url": settings.fleet_gateway_url,
+        "agent_name": settings.fleet_agent_name,
+        "namespaces": [
+            {
+                "agent_name": ns.agent_name,
+                "store_path": ns.store_path,
+                "created_at": ns.created_at,
+                "status": ns.status,
+            }
+            for ns in namespaces
+        ],
+        "a2a_peers": [
+            {
+                "name": p.name,
+                "url": p.url,
+                "capabilities": p.capabilities,
+                "status": p.status,
+                "last_seen": p.last_seen,
+            }
+            for p in a2a_peers
+        ],
+        "a2a_health": health,
+        "kanban_cards": len(client._kanban_cache),
+        "decisions_recorded": len(client._decisions),
+        "fleet_rules": {
+            "decision_persistence": settings.fleet_decision_persistence,
+            "fail_log_review": settings.fleet_fail_log_review,
+        },
+    }
+
+
+@app.post("/v1/fleet/namespace/create")
+async def fleet_namespace_create(req: NamespaceCreateRequest) -> Dict[str, Any]:
+    """Create isolated mem20 namespace for an agent (Step 6)."""
+    if not settings.fleet_enabled:
+        raise HTTPException(status_code=503, detail="fleet integration disabled")
+    client = get_fleet_client()
+    namespace = await client.create_namespace(req.agent_name)
+    return {
+        "ok": True,
+        "agent_name": namespace.agent_name,
+        "store_path": namespace.store_path,
+        "created_at": namespace.created_at,
+        "status": namespace.status,
+    }
+
+
+@app.get("/v1/fleet/namespace/{agent_name}")
+async def fleet_namespace_get(agent_name: str) -> Dict[str, Any]:
+    """Get namespace for an agent."""
+    if not settings.fleet_enabled:
+        raise HTTPException(status_code=503, detail="fleet integration disabled")
+    client = get_fleet_client()
+    namespace = await client.get_namespace(agent_name)
+    return {
+        "ok": True,
+        "agent_name": namespace.agent_name,
+        "store_path": namespace.store_path,
+        "created_at": namespace.created_at,
+        "status": namespace.status,
+    }
+
+
+@app.get("/v1/fleet/namespaces")
+async def fleet_namespaces_list() -> Dict[str, Any]:
+    """List all agent namespaces."""
+    if not settings.fleet_enabled:
+        raise HTTPException(status_code=503, detail="fleet integration disabled")
+    client = get_fleet_client()
+    namespaces = await client.list_namespaces()
+    return {
+        "ok": True,
+        "namespaces": [
+            {
+                "agent_name": ns.agent_name,
+                "store_path": ns.store_path,
+                "created_at": ns.created_at,
+                "status": ns.status,
+            }
+            for ns in namespaces
+        ],
+    }
+
+
+# --- Kanban Integration (Step 7) ---
+
+@app.post("/v1/fleet/kanban/sync-goal")
+async def fleet_kanban_sync_goal(req: KanbanSyncRequest) -> Dict[str, Any]:
+    """Sync a teamz goal to kanban as a card (Step 7)."""
+    if not settings.kanban_enabled:
+        raise HTTPException(status_code=503, detail="kanban integration disabled")
+    client = get_fleet_client()
+    card = await client.sync_goal_to_kanban(req.conversation_id, req.goal_text, req.agent_id)
+    return {"ok": True, "card": card.__dict__}
+
+
+@app.post("/v1/fleet/kanban/update")
+async def fleet_kanban_update(req: KanbanUpdateRequest) -> Dict[str, Any]:
+    """Update kanban card (move column, etc.)."""
+    if not settings.kanban_enabled:
+        raise HTTPException(status_code=503, detail="kanban integration disabled")
+    client = get_fleet_client()
+    card = await client.update_kanban_card(req.card_id, req.column, title=req.title, priority=req.priority, tags=req.tags)
+    if not card:
+        raise HTTPException(status_code=404, detail="card not found")
+    return {"ok": True, "card": card.__dict__}
+
+
+@app.get("/v1/fleet/kanban/cards")
+async def fleet_kanban_list(conversation_id: Optional[str] = None) -> Dict[str, Any]:
+    """List kanban cards, optionally filtered by conversation."""
+    if not settings.kanban_enabled:
+        raise HTTPException(status_code=503, detail="kanban integration disabled")
+    client = get_fleet_client()
+    cards = await client.get_kanban_cards(conversation_id)
+    return {"ok": True, "cards": [c.__dict__ for c in cards]}
+
+
+# --- A2A Setup (Step 8) ---
+
+@app.post("/v1/fleet/a2a/peer/register")
+async def fleet_a2a_register_peer(req: A2APeerRequest) -> Dict[str, Any]:
+    """Register an A2A peer agent (Step 8)."""
+    if not settings.a2a_enabled:
+        raise HTTPException(status_code=503, detail="A2A integration disabled")
+    client = get_fleet_client()
+    from .fleet import A2APeer
+    peer = A2APeer(name=req.name, url=req.url, capabilities=req.capabilities, health_check_url=req.health_check_url)
+    client.register_a2a_peer(peer)
+    return {"ok": True, "peer": peer.__dict__}
+
+
+@app.get("/v1/fleet/a2a/peers")
+async def fleet_a2a_list_peers() -> Dict[str, Any]:
+    """List all registered A2A peers."""
+    if not settings.a2a_enabled:
+        raise HTTPException(status_code=503, detail="A2A integration disabled")
+    client = get_fleet_client()
+    peers = client.get_a2a_peers()
+    return {"ok": True, "peers": [p.__dict__ for p in peers]}
+
+
+@app.post("/v1/fleet/a2a/health-check")
+async def fleet_a2a_health_check() -> Dict[str, Any]:
+    """Health check all A2A peers."""
+    if not settings.a2a_enabled:
+        raise HTTPException(status_code=503, detail="A2A integration disabled")
+    client = get_fleet_client()
+    health = await client.health_check_a2a_peers()
+    return {"ok": True, "health": health}
+
+
+# --- Fleetwide Rules Enforcement (Step 9) ---
+
+@app.post("/v1/fleet/rules/decision/record")
+async def fleet_rules_record_decision(req: DecisionRecordRequest) -> Dict[str, Any]:
+    """Record a decision per fleetwide decision persistence rule (Step 9)."""
+    if not settings.fleet_rules_enabled:
+        raise HTTPException(status_code=503, detail="fleet rules enforcement disabled")
+    client = get_fleet_client()
+    decision = await client.record_decision(
+        req.agent_name,
+        req.decision,
+        req.rationale,
+        req.conversation_id,
+        req.tags,
+    )
+    return {"ok": True, "decision": decision.__dict__}
+
+
+@app.get("/v1/fleet/rules/decisions")
+async def fleet_rules_list_decisions(agent_name: Optional[str] = None) -> Dict[str, Any]:
+    """List recorded decisions."""
+    if not settings.fleet_rules_enabled:
+        raise HTTPException(status_code=503, detail="fleet rules enforcement disabled")
+    client = get_fleet_client()
+    decisions = client.get_decisions(agent_name)
+    return {"ok": True, "decisions": [d.__dict__ for d in decisions]}
+
+
+@app.get("/v1/fleet/rules/fail-logs")
+async def fleet_rules_review_fail_logs(agent_name: Optional[str] = None, limit: int = 50) -> Dict[str, Any]:
+    """Review failure logs per fleetwide fail log review rule (Step 9)."""
+    if not settings.fleet_rules_enabled:
+        raise HTTPException(status_code=503, detail="fleet rules enforcement disabled")
+    client = get_fleet_client()
+    logs = await client.review_fail_logs(agent_name, limit)
+    return {"ok": True, "logs": logs, "count": len(logs)}

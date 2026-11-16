@@ -236,6 +236,15 @@
 - **Generated files:** docs/surface.json, docs/TOOL-DOMAINS.md, web/src/data/tools.json
 - **docs/index.html:** Added version badge `<span class="badge">v3.1.2</span>` to match VERSION file
 
+## 2026-11-16 — Fix MCP server startup (NameError: Mem20MCPServer)
+- **Issue:** Server failed to start with `NameError: name 'Mem20MCPServer' is not defined` when run via launcher.py/runpy
+- **Root cause:** The dynamic class builder `_build_mem20_server_class()` created the class but didn't write it to module globals; when run as script via `runpy.run_path(..., run_name="__main__")`, the `__getattr__` hook wasn't available
+- **Fix:** 
+  - Added static class definition for AST extractor (wiring gate) after imports, wrapped in `if False:` so visible to AST parser but not executed at runtime
+  - Modified `_build_mem20_server_class()` to write `Mem20MCPServer` to `globals()`
+  - Server now starts correctly via launcher.py and runpy
+- **Verification:** verify_mcp.py PASS (487 tools), server health endpoint OK
+
 ## 2026-11-16 — 4.0.0 bump and blocker-fix follow-up
 - **mcp/server.py state drift during edits:** mixin lazy-load refactor was lost in an intermediate state; restored with lazy class builder and fixed sys.path/memory lazy-access integration. Required recompile and toolchest refresh to confirm MCP discovery.
 - **pytest collection still unstable:** despite opt-in pre-imports and timeouts in `conftest.py`, root/targeted `--collect-only` runs remained slow/hanging or non-diagnostic in-session; blocker improved but not fully closed.

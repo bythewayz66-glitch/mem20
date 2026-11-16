@@ -1,7 +1,7 @@
 """Deterministic scale corpus v2 for mem20benchmarkz.
 
 `mem20-scale-corpus-v2` — 2,000 records across three labelled categories, plus
-250 probes. Same seed always yields the same bytes, so the corpus is
+410 probes. Same seed always yields the same bytes, so the corpus is
 reproducible and the JSONL is a build artifact, not a checked-in blob.
 
     mem20benchmarkz generate-scale --out /tmp/mem20-scale-corpus-v2
@@ -50,6 +50,13 @@ verbatim `evidence` string the fact was transcribed from. False facts are
 demonstrably wrong against that same evidence. The categories are not blurred:
 a record is in exactly one of them, and the validator refuses a `grounded`
 record without a source or a `false` record without a `contradicts` target.
+
+## Probes for the non-text modes
+
+`recall`, `recall_at`, `entities` and `ledger` are not rankers, so a text probe
+cannot score them. Each gets a probe class that carries the thing it is
+actually asking for — a metadata filter, an as-of instant, an enumeration
+window — and `bench._mode_answers_kind()` refuses every other pairing.
 """
 from __future__ import annotations
 
@@ -76,6 +83,14 @@ SCALE_ADVERSARIAL = 60
 SCALE_ADVERSARIAL_HARD = 40
 SCALE_CONTRADICTION = 40
 SCALE_UNANSWERABLE = 20
+
+# Probes for the modes that were previously declared but never scored, plus the
+# graph-hop class that takes graph mode past its 30 multi_hop probes.
+SCALE_RECALL = 30          # metadata filter (topic / tags)
+SCALE_RECALL_AT = 30       # bi-temporal: 15 positive, 15 negative
+SCALE_ENTITIES = 20        # query-free enumeration
+SCALE_LEDGER = 20          # append-only tail
+SCALE_GRAPH_HOP = 60       # entity -> attribute node, graph mode
 
 REFERENCE_DIR = Path(__file__).resolve().parent.parent.parent / "reference" / "v2"
 
@@ -389,6 +404,21 @@ def _hard_relation(predicate: str) -> str:
     return _SYNONYM.get(predicate, "is documented as which value")
 
 
+def _region_of(seed: Seed) -> str | None:
+    """The region a country seed belongs to, read back from its evidence.
+
+    The evidence string is `"<name> alpha-2=<a2> region=<region> sub-region=<sub>"`,
+    so the region is recoverable without re-reading the reference file. This is
+    the attribute node one hop from the country in the graph index.
+    """
+    for part in (seed.evidence or "").split():
+        if part.startswith("region="):
+            value = part.split("=", 1)[1]
+            if value and value != "None":
+                return value
+    return None
+
+
 def build_queries(grounded: list[Seed], false: list[Seed]) -> list[Query]:
     """Probes whose answers all exist in the corpus, plus a 0.000 control."""
     queries: list[Query] = []
@@ -471,6 +501,129 @@ def build_queries(grounded: list[Seed], false: list[Seed]) -> list[Query]:
             kind="unanswerable", supports=(), expect=(),
             difficulty="control"))
 
+    # -- graph_hop: entity -> attribute node, answered by graph traversal -----
+    # `graph()` returns the facts of the entities it reaches, not the start
+    # entity's own fact. A country's region is a separate node one hop away, so
+    # the region name is genuinely reachable by traversal and is absent from the
+    # probe text. This is what takes graph mode past its 30 multi_hop probes.
+    #
+    # The pool excludes any country whose NAME contains its own region name
+    # ("South Africa" -> "Africa"). The probe text names the country, so those
+    # would leak their own answer and the validator rejects them — correctly.
+    country_pool = []
+    for g in grounded:
+        if g.family != "country":
+            continue
+        region = _region_of(g)
+        if not region:
+            continue
+        if region.lower() in g.subject.lower():
+            continue
+        country_pool.append(g)
+    for i in range(SCALE_GRAPH_HOP):
+        g = country_pool[(i * 13 + 2) % len(country_pool)]
+        region = _region_of(g)
+        queries.append(Query(
+            qid=f"g{i:03d}",
+            text=f"which region is {g.subject} connected to",
+            kind="graph_hop", supports=(g.key,), expect=(region,),
+            hops=2, entity=g.subject, gold_key=g.key, difficulty="medium"))
+
+    # -- recall: metadata filter, no text ranking ----------------------------
+    # The "query" is the filter. `recall` returns the most recent k records of a
+    # topic, so asserting "the gold record is in the top k" would measure
+    # recency, not filtering. The property a filter actually owes is
+    # *precision*: every row it returns must belong to the topic asked for.
+    # The expected evidence is therefore the family marker that EVERY record of
+    # that topic contains — a filter that ignores the topic returns rows from
+    # other families and misses it.
+    families = (("element", "chemical element"),
+                ("country", "the country"),
+                ("mime", "the media type"))
+    for i in range(SCALE_RECALL):
+        fam, marker = families[i % len(families)]
+        pool = [g for g in grounded if g.family == fam]
+        g = pool[(i * 7 + 1) % len(pool)]
+        # The probe text names the topic as `bench.<family>` and deliberately
+        # avoids the prose marker, so it cannot leak the evidence it is scored
+        # on. The validator enforces that.
+        queries.append(Query(
+            qid=f"r{i:03d}",
+            text=f"list records filed under topic bench.{fam}",
+            kind="recall", supports=(g.key,), expect=(marker,),
+            topic_filter=f"bench.{fam}", gold_key=g.key, difficulty="easy"))
+
+    # -- recall_at: bi-temporal read ----------------------------------------
+    # Positive: an instant after ingestion must return the record. Negative: an
+    # instant before ingestion must return nothing. The negative half is the
+    # only probe that can catch a point-in-time read that ignores `as_of`.
+    #
+    # `recall_at` returns the most recent k records *of a topic*, so the probe
+    # carries the family topic. Without it the read would return the newest
+    # writes globally and the verdict would measure recency, not the temporal
+    # axis. The expected evidence is the family marker every record of that
+    # topic carries, so a read that returns another family's rows fails.
+    family_marker = {"element": "chemical element", "country": "the country",
+                     "mime": "the media type"}
+    for i in range(SCALE_RECALL_AT):
+        g = grounded[(i * 19 + 4) % len(grounded)]
+        topic = f"bench.{g.family}"
+        marker = family_marker[g.family]
+        if i % 2 == 0:
+            queries.append(Query(
+                qid=f"t{i:03d}",
+                text=f"what was on record as of 2030 for topic {topic}",
+                kind="recall_at", supports=(g.key,), expect=(marker,),
+                as_of="2030-01-01T00:00:00+00:00", topic_filter=topic,
+                gold_key=g.key, difficulty="medium"))
+        else:
+            queries.append(Query(
+                qid=f"t{i:03d}",
+                text=f"what was on record as of 2000 for topic {topic}",
+                kind="recall_at", supports=(), expect=(),
+                as_of="2000-01-01T00:00:00+00:00", topic_filter=topic,
+                expect_empty=True, gold_key=g.key, difficulty="hard"))
+
+    # -- entities: query-free enumeration -----------------------------------
+    # `entities(limit=k)` returns the k highest-degree nodes, ordered. The
+    # expectation must therefore be a node that is genuinely in that top set —
+    # asserting a name that ranks 600th would be a corpus error, not a retrieval
+    # defect. Measured on this corpus the degree ranking starts
+    # `grounded`(653), `bench.country`(524), `country`(524), then the region
+    # nodes, then `bench.element`(125). `bench.mime` is NOT among them (degree 4,
+    # rank 651) so it is deliberately not used as a target; the enumeration is
+    # an ordered top-N over *degree*, and only high-degree nodes belong in it.
+    entity_targets = ("bench.element", "bench.country", "country", "grounded")
+    for i in range(SCALE_ENTITIES):
+        name = entity_targets[i % len(entity_targets)]
+        queries.append(Query(
+            qid=f"e{i:03d}",
+            text="enumerate the most connected entities in the graph",
+            kind="entities", supports=(), expect=(name,),
+            enumeration_limit=10, difficulty="easy"))
+
+    # -- ledger: append-only tail -------------------------------------------
+    # The tail is ordered, not ranked: it returns the LAST k writes. The probe
+    # therefore targets only records that really are the newest writes — using
+    # an arbitrary gold record would fail for anything ingested early, which is
+    # recency, not a ledger defect.
+    #
+    # The expectation is the record's FULL content, not its `gold_phrase`. A
+    # phrase like "marked compressible" repeats across hundreds of mime records,
+    # so a tail that returned the wrong row would still satisfy it; the whole
+    # sentence is unique per record, so the check is actually specific.
+    #
+    # `bulk_ingest` appends grounded.jsonl in order, so the last rows of the
+    # generated list are the tail the store will show.
+    tail_window = min(len(grounded), max(k_tail := SCALE_LEDGER // 4, 1))
+    for i in range(SCALE_LEDGER):
+        g = grounded[len(grounded) - 1 - (i % tail_window)]
+        queries.append(Query(
+            qid=f"l{i:03d}",
+            text=f"show the most recent writes (expect {g.subject})",
+            kind="ledger", supports=(g.key,), expect=(g.content,),
+            gold_key=g.key, difficulty="medium"))
+
     return queries
 
 
@@ -551,6 +704,25 @@ def validate(corpus: Corpus) -> dict:
         if q.kind == "unanswerable":
             if q.expect or q.supports:
                 errors.append(f"{q.qid}: control probe must not expect evidence")
+            continue
+        if q.kind == "recall_at" and q.expect_empty:
+            # A negative temporal probe asserts absence at an instant before
+            # ingestion. It must carry no expected evidence, and its as-of
+            # instant must precede the corpus's own timestamps.
+            if q.expect or q.supports:
+                errors.append(f"{q.qid}: negative temporal probe must not "
+                              f"expect evidence")
+            if not q.as_of:
+                errors.append(f"{q.qid}: temporal probe has no as_of instant")
+            checked += 1
+            continue
+        if q.kind == "entities":
+            # Enumeration has no gold record; the expectation is an entity name
+            # that the graph index must surface. Check it is a real node.
+            if not q.expect:
+                errors.append(f"{q.qid}: entities probe has no expected name")
+                continue
+            checked += 1
             continue
         if not q.expect:
             errors.append(f"{q.qid}: answerable probe has no expected evidence")
@@ -637,6 +809,9 @@ def write_scale_corpus(out_dir: str | Path, n_facts: int | None = None) -> Path:
         "expect": list(q.expect), "supports": list(q.supports),
         "hops": q.hops, "entity": q.entity,
         "difficulty": q.difficulty, "gold_key": q.gold_key,
+        "topic_filter": q.topic_filter, "tags_filter": list(q.tags_filter),
+        "as_of": q.as_of, "expect_empty": q.expect_empty,
+        "enumeration_limit": q.enumeration_limit,
     } for q in corpus.queries]
 
     dump("grounded.jsonl", g_rows)
@@ -666,8 +841,7 @@ def write_scale_corpus(out_dir: str | Path, n_facts: int | None = None) -> Path:
         "description": (
             "Scale corpus v2. Every non-control probe has its gold record in the "
             "corpus and does not leak its own answer; the `unanswerable` kind is "
-            "a control that must score 0.000. Contamination must stay 0.0."
-        ),
+            "a control that must score 0.000. Contamination must stay 0.0."),
     }
     (out / "manifest.json").write_text(json.dumps(manifest, indent=2) + "\n",
                                        encoding="utf-8")
@@ -723,6 +897,11 @@ def load_jsonl_corpus(corpus_dir: str | Path) -> Corpus:
                 entity=row.get("entity"),
                 difficulty=row.get("difficulty") or "medium",
                 gold_key=row.get("gold_key"),
+                topic_filter=row.get("topic_filter"),
+                tags_filter=tuple(row.get("tags_filter") or ()),
+                as_of=row.get("as_of"),
+                expect_empty=bool(row.get("expect_empty")),
+                enumeration_limit=int(row.get("enumeration_limit") or 0),
             ))
 
     name = SCALE_NAME

@@ -1,0 +1,17 @@
+group,player,access,self_host,architecture_bet,temporal,grounded_simulated,provenance_in_store,entry_price,price_status,sources
+A,Mem0,Apache-2.0 core + proprietary cloud,yes (core),Passive LLM fact extraction into vector store; graph gated to top tier,timestamps + per-record event history; no bi-temporal,no,no - event history is per-memory,$0 Free -> Custom (quote-only),MOVED,S1;S2;S3;S4
+A,Zep / Graphiti,Graphiti Apache-2.0; hosted core closed,Graphiti only - CE discontinued,Bi-temporal knowledge graph; invalidate rather than delete,strongest in category,no,graph-level fact invalidation,$0 (10000 credits/mo) -> $125/mo Flex,CONFIRMED,S5;S6;S7
+A,Letta (MemGPT),Apache-2.0,yes (framework + server),LLM edits its own memory via tool calls; MemFS git-backed,no,no,no,$0 Free (3 agents) -> $20/mo Pro,CONFIRMED,S8;S9;S10
+A,LangMem,MIT,yes,Framework-bound memory for LangGraph agents,no,no,no,$0 (library),UNVERIFIED,S11
+A,Cognee,Apache-2.0 + cloud,yes (engine free forever),Knowledge graph + vector index over docs code conversations,Enterprise feature,Enterprise / manual primitives in OSS,no,$0 Free (1M tokens) -> $1.00/1M tokens,CONFIRMED,S12;S13;S14
+A,Supermemory,proprietary + OSS core,partial,Credit-metered personalization + institutional memory,no,no,Enterprise only,$0 + $5 credits/mo,NEW,S31
+B,AWS AgentCore Memory,managed only,no,Platform-native short + long-term memory consumption-priced,no,no,CloudWatch adjacent,$1.00/GB ingested,CONFIRMED,S15;S16
+B,Vertex AI Agent Engine,managed only,no,Platform-native sessions + Memory Bank,no,no,Cloud Logging adjacent,$0.25/1000 events,CONFIRMED,S17;S18
+C,Pinecone,proprietary managed,no,Serverless managed vector database,no,no,no,$0 Starter (2 GB) -> $50/mo min,CONFIRMED,S19;S20
+C,Redis,AGPLv3 / RSALv2 / SSPLv1 (Redis 8),yes,Vector + session + operational state in one store,no,no,no,$0 (self-host),CONFIRMED,S21;S22
+C,Weaviate,BSD-3 + cloud,yes,Open-source hybrid vector search (BM25F + vector),no,no,no,$0 licence -> $45/mo Flex min,CONFIRMED,S23;S24
+D,IBM watsonx.governance,commercial,no,Enterprise AI risk + audit trail to EU AI Act / NIST AI RMF / ISO 42001; Gartner MQ Leader (Jun 2026),no,no,orchestration layer,free trial; $0.60/resource unit Essentials,CONFIRMED,S25;S26
+D,ServiceNow AI Control Tower,commercial,no,Discover/Observe/Govern/Secure/Measure across any AI system,no,no,workflow layer,quote-only,UNVERIFIED,S27;S28
+D,Lyzr OpenController,commercial,yes - customer's own cloud account,Signed record from the control that allowed or refused each call; per-call authorization budgets quarantine,no,no,yes at orchestration layer (signed),platform Free tier; OpenController quote-only,SHARPENED,S29;S30
+D,Sentra,commercial,yes (VPC / air-gapped),Governed organization memory: permission-aware context named approver record of what is true now,partial (what is true now),no,yes at the memory layer,quote-only,NEW,S32
+REF,mem20,MIT,yes (source),Memory + cognition substrate over MCP JSON-RPC 2.0; 487 tools / 129 domains / v4.0.0; 133-tool memory stack,append-only ledger + timeline + decay + contradiction detection,enforced at the storage layer,yes - the store is the ledger,$14000 blended ACV,REFRESHED,R1;R2;R3;R4;R5;R6;R7;R8;R9

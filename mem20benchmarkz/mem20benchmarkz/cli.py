@@ -4,13 +4,13 @@
     mem20benchmarkz drift --out benchmarks/results
     mem20benchmarkz render benchmarks/results
 
-    # Scale corpus (mem20-scale-corpus-v2: 2000 records, 250 probes)
+    # Scale corpus (mem20-scale-corpus-v2: 2000 records, 410 probes)
     mem20benchmarkz generate-scale --out /tmp/mem20-scale-corpus-v2
     mem20benchmarkz validate-scale /tmp/mem20-scale-corpus-v2
     mem20benchmarkz ingest-scale --corpus /tmp/mem20-scale-corpus-v2 \\
         --store /tmp/mem20-scale-store --bulk
     mem20benchmarkz run-scale --corpus /tmp/mem20-scale-corpus-v2 --bulk \\
-        --modes bm25,vector,hybrid,hybrid-rerank-off,graph,keyword,constant \\
+        --modes bm25,vector,hybrid,hybrid-rerank-off,graph,keyword,constant,recall,recall_at,entities,ledger \\
         --out benchmarks/results
 """
 from __future__ import annotations
@@ -360,7 +360,9 @@ def main(argv=None) -> int:
     rs.add_argument(
         "--modes",
         default="keyword,semantic,hybrid",
-        help="comma list; default skips graph for speed at scale",
+        help=("comma list; the full surface is bm25,vector,hybrid,"
+              "hybrid-rerank-off,graph,keyword,constant,recall,recall_at,"
+              "entities,ledger"),
     )
 
     args = p.parse_args(argv)

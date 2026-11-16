@@ -272,12 +272,23 @@ jobs:
           COUNT=0
           MISSING=""
           for pkg in $GREEN; do
-            ROOTS="$ROOTS $pkg/tests"
+            case "$pkg" in
+              mem20executablegameconceptandscopepipelinez)
+                tdir="mem20pipez/mem20pipez/pipes/mem20executablegameconceptandscopepipelinez/tests"
+                ;;
+              mem20pipelinez)
+                tdir="mem20pipez/mem20pipez/pipes/mem20pipelinez/tests"
+                ;;
+              *)
+                tdir="$pkg/tests"
+                ;;
+            esac
+            ROOTS="$ROOTS $tdir"
             COUNT=$((COUNT + 1))
             # A retired/renamed package leaves a dangling path here, and pytest
             # then aborts the whole run with exit 4 ("file or directory not
             # found") instead of reporting a test failure. Name the offender.
-            if [ ! -d "$pkg/tests" ]; then
+            if [ ! -d "$tdir" ]; then
               MISSING="$MISSING $pkg"
             fi
           done
@@ -301,7 +312,20 @@ jobs:
                  mem20orcaz mem20pipelinez mem20selfz mem20sensorz mem20simz
                  mem20sitemapz mem20studioz mem20teamz mem20twinz mem20zimr"
           ROOTS=""
-          for pkg in $GREEN; do ROOTS="$ROOTS $pkg/tests"; done
+          for pkg in $GREEN; do
+            case "$pkg" in
+              mem20executablegameconceptandscopepipelinez)
+                tdir="mem20pipez/mem20pipez/pipes/mem20executablegameconceptandscopepipelinez/tests"
+                ;;
+              mem20pipelinez)
+                tdir="mem20pipez/mem20pipez/pipes/mem20pipelinez/tests"
+                ;;
+              *)
+                tdir="$pkg/tests"
+                ;;
+            esac
+            ROOTS="$ROOTS $tdir"
+          done
           # `-m unit` matched zero tests in the 22-package set, so pytest exited 5
           # ("no tests collected") and failed the job regardless of code health.
           # Exit 5 is normalised to success *after* the run, so a genuinely red

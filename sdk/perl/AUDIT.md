@@ -1,4 +1,4 @@
-# Perl SDK surface audit — mem20 3.1.2 @ main (2026-11-07)
+# Perl SDK surface audit — mem20 4.0.0 @ main (2026-11-07)
 
 Scope: `sdk/perl/` only. Target surface **487 tools across 129 domains**.
 
@@ -15,12 +15,12 @@ collections must be identical or the generator refuses to emit. Both land on
 
 ```
 initialize -> {"protocolVersion":"2025-06-18","serverInfo":{"name":"mem20-mcp","version":""}}
-tools/list -> TOOL_COUNT: 311   UNIQUE: 311
+tools/list -> TOOL_COUNT: 487   UNIQUE: 487
 ```
 
 `serverInfo.version` is the empty string, so the SDK does not assert on it.
 
-**Why the domain count is not a prefix count.** Bucketing the 311 tool *names*
+**Why the domain count is not a prefix count.** Bucketing the 487 tool *names*
 by their first `_` component yields more buckets than there are domains, because
 `memory_*` and `vault_*` are separate prefixes inside one domain,
 `cloud_*`/`cloudstorage_*` likewise, and the bare `reflexion` has no underscore.
@@ -147,10 +147,10 @@ stored one fact
 recall returned:
 [2026-10-27T02:02:51] project (pri=normal) [observed]
    prod runs build 4127
-surface: 487 tools (SDK compiled for 311), 129 domains, ok=1
+surface: 487 tools (SDK compiled for 487), 129 domains, ok=1
 ```
 
-The live suite asserts the 311 count, a `memory_store`->`memory_recall` round
+The live suite asserts the 487 count, a `memory_store`->`memory_recall` round
 trip through the grounded partition, local refusal of a missing
 `epistemic_status`, `ToolError` for an unknown tool, `soft_error` for a rejected
 status, and a `cog_plan` job polled to a terminal state.

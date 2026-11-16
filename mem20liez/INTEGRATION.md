@@ -29,7 +29,7 @@ All three are equivalent and resolve to the same implementation:
 ### Verifying a checkout
 
 ```bash
-python3 ./verify_mcp.py     # initialize + tools/list; exits non-zero unless 270 tools
+python3 ./verify_mcp.py     # initialize + tools/list; exits non-zero unless 487 tools
 ```
 
 CI runs the same script from a deliberately shallow checkout
@@ -60,7 +60,7 @@ failing test file instead of a dead test run.
 ## Tools
 
 `mcp/tools/lie_tools.py` — `LieToolsMixin`, registered by `Mem20MCPServer.__init__` via
-`self.register_lie_tools()`. It contributes the 10 `lie_*` tools to the 270-tool surface.
+`self.register_lie_tools()`. It contributes the 10 `lie_*` tools to the 487-tool surface.
 
 ## Grounded + braid on seal
 

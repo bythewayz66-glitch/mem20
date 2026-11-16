@@ -1,6 +1,6 @@
 # docs/gtm — GTM collateral (v3, current)
 
-**Owner:** mem20 GTM Team Lead · **Captured:** 2026-10-26 · **Repo HEAD:** `7c0b3e8` · **Version at capture:** 3.0.0 (**current `VERSION` = 3.1.0** at `27c1e5fb`; this directory is dated to `7c0b3e8` and its 3.0.0 readings are not restated as current)
+**Owner:** mem20 GTM Team Lead · **Captured:** 2026-10-26 · **Repo HEAD:** `7c0b3e8` · **Version at capture:** 3.0.0 (**current `VERSION` = 4.0.0** at `3d8d9d45`; this directory is dated to `7c0b3e8` and its 3.0.0 readings are not restated as current)
 **Canonical repo:** https://github.com/bythewayz66-glitch/mem20
 **Canonical public URL:** https://bythewayz66-glitch.github.io/mem20/
 
@@ -21,7 +21,7 @@ This directory is the **git-side source of truth** for mem20 go-to-market collat
 
 ## The five numbers and states that are current
 
-1. **270 tools across 27 domains.** Live handshake: `python3 verify_mcp.py` → `TOOL_COUNT: 270`. Retired: 257, 258, 268.
+1. **487 tools across 129 domains.** Live handshake: `python3 verify_mcp.py` → `TOOL_COUNT: 487`. Retired: 257, 258, 268, 270, 272, 306, 311.
 2. **Install is source-only.** `git clone` → `pip install -r requirements.txt`. `mem20`, `mem20-ai` and `mem20oreo` all **404** on PyPI. Never imply otherwise.
 3. **The only public web URL is `https://bythewayz66-glitch.github.io/mem20/`** (HTTP 200, byte-identical to `docs/index.html`). Every `/sites/` URL returns **403** anonymously — never publish or link one.
 4. **House numbers, restated not re-measured:** TAM **$1.28B** / SAM **$282M** / SOM **$1.68M** / blended ACV **$14,000**.
@@ -35,8 +35,8 @@ This directory is the **git-side source of truth** for mem20 go-to-market collat
 |---|---|---|
 | GitHub repo `homepage` field | Points at a `/sites/` URL that returns **403**. Most-clicked link on the repo is a dead end. | Repo admin (one field) |
 | `docs/index.html` (the live public page) | **Resolved.** Re-measured at `27c1e5fb`: **0** occurrences of `268`, **10** of `270`. The public page now agrees with the live server. | Closed |
-| `docs/02-tools-reference.md` | Says **268 / 26**. | Webpage Developer (P1) |
+| `docs/02-tools-reference.md` | Re-measured 2026-11-16: states the live **487 / 129**. | Closed |
 | `toolchest/inventory.json` | Regenerated `2026-10-29`; `counts.mcp` now reads `0`, so it no longer contradicts the surface — it simply no longer counts it. | Webpage Developer (P1) |
 | `docs/CNAME` | **Resolved.** Names `mem20.com`, which resolves and returns 200. The old legacy-zone hostname is retired — do not cite it. | Closed (2026-10-31) |
 
-The `docs/index.html` contradiction is closed as of this sweep: the public page and the campaign copy both say 270/27. The row is recorded rather than deleted, because this table is the reason the number stopped drifting. The one live P1 that remains is `docs/02-tools-reference.md`, which still prints 268/26 in its header.
+The `docs/index.html` contradiction is closed: the public page and the campaign copy both carry the live pin. The row is recorded rather than deleted, because this table is the reason the number stopped drifting. No live P1 remains in this table — `docs/02-tools-reference.md` was re-measured on 2026-11-16 and now prints 487 / 129.

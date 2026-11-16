@@ -7,8 +7,8 @@ live pin in ``docs/surface.json``.
 Why this exists
 ---------------
 The tool surface has moved several times (257 -> 258-260 -> 265 -> 268 -> 270 ->
-306 -> 311 tools; 26 -> 27 -> 38 -> 39 domains). Every move left prose behind
-that still presents the old number as *current*. ``scripts/surface_manifest.py``
+272 -> 306 -> 311 -> 487 tools; 26 -> 27 -> 28 -> 38 -> 39 -> 129 domains). Every move left prose
+along that still presents the old number as *current*. ``scripts/surface_manifest.py``
 already checks a hand-listed set of current-facing docs, but that list is short
 and the retired bands keep reappearing in subsystem READMEs, SDK docs and the
 docs/ tree. This gate is the mechanical backstop: it scans the whole live-doc
@@ -70,8 +70,8 @@ from pathlib import Path
 # The retired bands. These are the numbers that have been the live surface at
 # some earlier HEAD and must never be presented as current again.
 # --------------------------------------------------------------------------
-RETIRED_TOOLS = ("257", "258", "259", "260", "265", "268", "270", "306")
-RETIRED_DOMAINS = ("26", "27", "38")
+RETIRED_TOOLS = ("257", "258", "259", "260", "265", "268", "270", "272", "306", "311")
+RETIRED_DOMAINS = ("26", "27", "38", "39")
 
 # A retired band is legal on a line that names it as history. Line-local, so
 # every exemption is auditable by eye.
@@ -233,8 +233,13 @@ def scan(root: Path) -> tuple[list[str], list[str]]:
 
 
 def self_test() -> int:
-    """Prove the patterns fire on a seeded 270/27 doc and pass on the live pin."""
-    tools, domains = 311, 39
+    """Prove the patterns fire on seeded retired bands and pass on the live pin.
+
+    The expected pin is read from ``docs/surface.json`` (never hardcoded) so the
+    self-test follows the surface when it moves instead of pinning a second copy
+    that drifts -- exactly the failure this gate exists to catch.
+    """
+    tools, domains = live_pin(repo_root(None))
     seeded = [
         "The server exposes 270 tools across 27 domains.",
         "| Tool surface | **270 tools / 27 domains** |",
@@ -242,6 +247,11 @@ def self_test() -> int:
         "It registers 257 tools.",
         "The surface is 306 tools across 38 domains.",
     ]
+    # Every retired band must be caught when presented as current.
+    for band in RETIRED_TOOLS:
+        seeded.append("The server exposes %s tools." % band)
+    for band in RETIRED_DOMAINS:
+        seeded.append("The server exposes %s domains." % band)
     clean = [
         "The server exposes %d tools across %d domains." % (tools, domains),
         "The retired 270 / 27 pair is history.",

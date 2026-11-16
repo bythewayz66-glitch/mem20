@@ -31,13 +31,16 @@ RESULTS = REPO_ROOT / "benchmarks" / "results"
 JSON_PATH = RESULTS / "latest.json"
 MD_PATH = RESULTS / "latest.md"
 
-# The commit that introduced benchmarks/results/latest.json. Verified stable:
-# sha256 of the blob is identical at a9860b95, fb3ae9cf, 35500f4c and HEAD.
-DATA_COMMIT = "a9860b955fb8c8b2cadab7adbda4295693a281c9"
+# The commit the numbers were produced ON TOP OF — the main HEAD this branch
+# was cut from. It is deliberately not this branch's own SHA: a commit cannot
+# cite itself, and a hardcoded self-SHA goes stale the moment the commit is
+# amended. The branch that carries the artifact is named in the PR.
+DATA_COMMIT = "0224a64946a2c00313a9872515893157adcbc47e"
 
 # Order the per-kind table the way the artifact lists its modes, then by kind.
 KIND_ORDER = ["direct", "adversarial", "adversarial_hard", "contradiction",
-              "multi_hop", "unanswerable"]
+              "multi_hop", "unanswerable", "graph_hop", "recall", "recall_at",
+              "entities", "ledger"]
 
 
 def _f(value: float, places: int = 3) -> str:
@@ -83,10 +86,12 @@ def render(report: dict) -> str:
     a("")
     a("> [!IMPORTANT]")
     a("> **These numbers are not comparable to competitor benchmarks.** Mem0's "
-      "LoCoMo (92.5) and LongMemEval (94.4) figures and Zep's DMR (94.8%) come "
-      "from different corpora \u2014 two of the three are private or "
-      "vendor-defined \u2014 and different metrics. Nothing here refutes or "
-      "reproduces them. These results describe this corpus only.")
+      "LoCoMo and LongMemEval figures and Zep's DMR come from different "
+      "corpora \u2014 two of the three are private or vendor-defined \u2014 and "
+      "different metrics. Nothing here refutes or reproduces them. These "
+      "results describe this corpus only. No competitor figure is quoted in "
+      "this report, by design: a number lifted out of context is exactly how "
+      "an incomparable result gets mistaken for a comparable one.")
     a("")
     a("> [!WARNING]")
     a("> **No LoCoMo result is claimed.** This harness has not been run against "
@@ -104,7 +109,7 @@ def render(report: dict) -> str:
     a(f"- Dataset: `{corpus}` (`{digest_name}` sha256 `{short}\u2026`, "
       f"{facts + simulated} records, {queries} probes)")
     a(f"- Run command: `mem20benchmarkz run-scale --corpus /tmp/{corpus} "
-      f"--bulk --k {manifest['k']} --modes {','.join(modes)} "
+      f"--bulk -k {manifest['k']} --modes {','.join(modes)} "
       f"--out benchmarks/results`")
     a("- Canonical script: `benchmarks/run-7modes.sh` (the command above, "
       "parameterised; every row below names it)")
@@ -191,6 +196,12 @@ def render(report: dict) -> str:
     a(f"- Python {env['python']} on {env['platform']} ({env['machine']})")
     a(f"- Embedding model: `{env['embedding_model']}` "
       f"({env['embedding_dim']}-dim)")
+    backend = env.get("embedder_backend")
+    if backend:
+        a(f"- Embedder backend actually used: `{backend}`"
+          + ("" if backend == "sentence-transformers" else
+             " \u2014 NOT a neural encoder. The vector and hybrid rows above "
+             "measure this backend, not all-MiniLM-L6-v2."))
     a(f"- Vector deps available: {env['vector_available']}; "
       f"BM25: {env['bm25_available']}; cross-encoder: {env['cross_encoder']}")
     a("")
@@ -204,7 +215,7 @@ def render(report: dict) -> str:
     a("```bash")
     a(f"mem20benchmarkz generate-scale --out /tmp/{corpus}")
     a(f"mem20benchmarkz run-scale --corpus /tmp/{corpus} --bulk \\")
-    a(f"    --modes {','.join(modes)} \\")
+    a(f"    -k {manifest['k']} --modes {','.join(modes)} \\")
     a("    --out benchmarks/results")
     a("```")
     a("")

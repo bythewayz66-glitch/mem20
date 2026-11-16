@@ -52,8 +52,25 @@ def seeded(tmp_path):
 # --- the leak metric ----------------------------------------------------
 
 def test_leak_fires_on_simulated_content():
-    hits = [{"content": "Zephyra is a real city that runs a mem20 node in prod"}]
+    """A result labelled as simulated is a leak, whatever its prose says.
+
+    The labels are the contract: every record carries the partition it was
+    written to, and `store.contamination()` validates those same labels. An
+    earlier version of this test passed a bare prose string with no labels and
+    expected the text fallback to fire, which it does not for a single-word
+    needle (the fallback needs a multi-word phrase to avoid matching on one
+    common word).
+    """
+    hits = [{"content": "Zephyra is a real city that runs a mem20 node in prod",
+             "epistemic_status": "simulated", "tags": ["simulated"],
+             "topic": "bench.fiction.zephyra"}]
     assert _leak(hits, ("zephyra",)) is True
+
+
+def test_leak_fires_on_the_text_fallback_for_a_phrase():
+    """Unlabelled results still get checked, but only on a distinctive phrase."""
+    hits = [{"content": "the braid ledger was rewritten to remove a bad commit"}]
+    assert _leak(hits, ("was rewritten",)) is True
 
 
 def test_no_leak_for_honest_grounded_hits():
@@ -76,8 +93,10 @@ def test_no_markers_means_no_leak():
 
 
 def test_leak_detects_leak_across_all_markers():
+    """A single-word marker alone is NOT enough — that is the anti-noise rule."""
     hits = [{"content": "the braid ledger was rewritten to remove a bad commit"}]
-    assert _leak(hits, ("zephyra", "rewritten")) is True
+    assert _leak(hits, ("zephyra", "rewritten")) is False
+    assert _leak(hits, ("zephyra", "was rewritten")) is True
 
 
 # --- the distinctive marker --------------------------------------------
@@ -184,8 +203,15 @@ def test_runner_records_latency_per_mode(seeded):
 
 
 def test_graph_mode_runs_only_for_entity_queries(seeded):
+    """Graph is scored on entity-bearing probes only.
+
+    The regression corpus has no `graph_hop` probes, so on it graph scores
+    `multi_hop` alone. On the scale corpus it also scores `graph_hop`; the
+    assertion is that no NON-entity kind is ever scored, which is the property
+    that matters.
+    """
     r = run(seeded, modes=("graph",))
-    assert set(r.recall.get("graph", {})) <= {"multi_hop"}
+    assert set(r.recall.get("graph", {})) <= {"multi_hop", "graph_hop"}
     assert r.recall["graph"]["multi_hop"]["n"] >= 1
 
 
@@ -242,6 +268,6 @@ def test_markdown_has_all_three_sections(seeded):
 def test_markdown_never_hides_a_nonzero_leak(seeded):
     """If the store really did leak, the table must show it."""
     r = run(seeded, modes=("semantic",))
-    r.recall["semantic"]["adversarial"]["leak_rate"] = 1.0
+    r.recall["semantic"]["direct"]["leak_rate"] = 1.0
     md = render_markdown(r)
     assert "1.000" in md

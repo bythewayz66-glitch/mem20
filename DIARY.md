@@ -932,3 +932,18 @@ Reworked/verified subsystems #340–#350 (oldest→newest, 1 at a time) to full 
   - `mem20twinz.probe()` → `ok: True`, 34 peer checks (6 core + 28 absorbed)
   - `mem20selfz.probe()` → `ok: True`, 76 peer checks (6 core + 70 absorbed)
 - **Also fixed:** `mem20simz.ecosystem.sim_containment` `CircuitOpen` unbound exception by catching by class name instead of direct import.
+
+## 2026-11-16 — Complete fleetwide_mem20 Phase 3: Isolated namespaces per bot
+- **Roadmap:** fleetwide_mem20 Phase 3 "Create isolated mem20 namespace for each bot" (in_progress → completed)
+- **Implementation:** Extended gateway/mem20_gateway.py with namespace management:
+  - New CLI commands: `namespace-create`, `namespace-get`, `namespace-list`, `namespace-delete`
+  - Auto-creates isolated namespace on agent registration via `register_agent()`
+  - Each bot gets its own `MEM20_STORE_PATH` at `~/.mem20/fleet/<agent_name>/`
+  - Namespace tracking in `gateway/agent_namespaces.json`
+- **Verification:** 
+  - `python gateway/mem20_gateway.py namespace-create test-bot-1` → creates `/root/.mem20/fleet/test-bot-1`
+  - `python gateway/mem20_gateway.py register --name test-auto-bot` → auto-creates namespace
+  - `python gateway/mem20_gateway.py namespace-list` → shows all namespaces
+  - Gateway tests: 33 passed
+  - Conformance: 7/7 PASS
+- **Retroactive audit updated** in roadmaps/fleetwide_mem20.json with completion_date 2026-11-16

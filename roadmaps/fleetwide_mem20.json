@@ -23,10 +23,10 @@
     {
       "name": {
         "name": "Phase 3: Create isolated mem20 namespace for each bot",
-        "status": "in_progress"
+        "status": "completed"
       },
-      "status": "planned",
-      "notes": "",
+      "status": "completed",
+      "notes": "Implemented in gateway/mem20_gateway.py: namespace-create, namespace-get, namespace-list, namespace-delete CLI commands. Auto-creates namespace on agent registration. Each bot gets isolated MEM20_STORE_PATH at ~/.mem20/fleet/<agent_name>/",
       "jobid": "a924b868-719c-43f4-a759-6cca7e5897d3"
     },
     {
@@ -50,8 +50,8 @@
   ],
   "created": "1788371144.7886407",
   "retroactive_audit": {
-    "completion_date": "2026-09-06",
-    "completion_status": "phase_1_2_completed",
-    "notes": "Phase 1 (rename releasecoach\u2192coach) completed. Phase 2 (add mem20 MCP to all profiles) completed. Phase 3 (isolated namespaces) in progress."
+    "completion_date": "2026-11-16",
+    "completion_status": "phase_1_2_3_completed",
+    "notes": "Phase 1 (rename releasecoach→coach) completed. Phase 2 (add mem20 MCP to all profiles) completed. Phase 3 (isolated namespaces) completed: gateway/mem20_gateway.py now provides namespace-create, namespace-get, namespace-list, namespace-delete CLI commands. Auto-creates isolated MEM20_STORE_PATH at ~/.mem20/fleet/<agent_name>/ on agent registration. Each bot gets its own mem20 store directory."
   }
 }

@@ -30,6 +30,8 @@ MEM20_DIR = Path("/opt/mem20")
 GATEWAY_DIR = MEM20_DIR / "gateway"
 NAMES_FILE = GATEWAY_DIR / "agent_names.json"
 MESSAGES_FILE = GATEWAY_DIR / "messages.jsonl"
+NAMESPACES_FILE = GATEWAY_DIR / "agent_namespaces.json"
+DEFAULT_STORE_ROOT = Path.home() / ".mem20" / "fleet"
 
 # ---------------------------------------------------------------------------
 # Subsystem registry
@@ -481,7 +483,7 @@ def ensure_dirs():
 def register_agent(name: str = None, location: str = None) -> dict:
     """
     Each mem20 agent picks a name on startup. If no name given, generate one.
-    Returns agent record.
+    Returns agent record with isolated namespace.
     """
     ensure_dirs()
     
@@ -517,10 +519,16 @@ def register_agent(name: str = None, location: str = None) -> dict:
     with open(NAMES_FILE, "w") as f:
         json.dump(names, f, indent=2)
     
+    # Auto-create isolated mem20 namespace for this agent (Phase 3)
+    namespace = create_namespace(name)
+    record["store_path"] = namespace["store_path"]
+    record["namespace_created"] = True
+    
     print(f"Agent registered: {name}")
     print(f"  Location: {record['location']}")
     print(f"  Agent ID: {record['agent_id']}")
     print(f"  Registered: {record['registered_at']}")
+    print(f"  Store Path: {record['store_path']}")
     
     return record
 
@@ -629,6 +637,113 @@ def read_messages(since: str = None, agent: str = None, limit: int = 50):
     
     return messages
 
+
+# ---------------------------------------------------------------------------
+# Namespace management (Phase 3: isolated mem20 namespace per bot)
+# ---------------------------------------------------------------------------
+def ensure_namespaces_file():
+    """Ensure the namespaces file exists."""
+    ensure_dirs()
+    if not NAMESPACES_FILE.exists():
+        with open(NAMESPACES_FILE, "w") as f:
+            json.dump({}, f)
+
+
+def load_namespaces() -> dict:
+    """Load agent namespace mappings."""
+    ensure_namespaces_file()
+    with open(NAMESPACES_FILE) as f:
+        return json.load(f)
+
+
+def save_namespaces(namespaces: dict):
+    """Save agent namespace mappings."""
+    ensure_dirs()
+    with open(NAMESPACES_FILE, "w") as f:
+        json.dump(namespaces, f, indent=2)
+
+
+def create_namespace(agent_name: str, store_root: Path = None) -> dict:
+    """
+    Create an isolated mem20 namespace (store path) for an agent.
+    
+    Each agent gets its own directory under the fleet store root.
+    """
+    if store_root is None:
+        store_root = DEFAULT_STORE_ROOT
+    
+    store_root.mkdir(parents=True, exist_ok=True)
+    agent_store = store_root / agent_name
+    agent_store.mkdir(parents=True, exist_ok=True)
+    
+    namespace = {
+        "agent_name": agent_name,
+        "store_path": str(agent_store),
+        "created_at": datetime.now(timezone.utc).isoformat(),
+        "status": "active"
+    }
+    
+    namespaces = load_namespaces()
+    namespaces[agent_name] = namespace
+    save_namespaces(namespaces)
+    
+    print(f"Created namespace for {agent_name}: {agent_store}")
+    return namespace
+
+
+def get_namespace(agent_name: str) -> dict:
+    """Get the namespace (store path) for an agent."""
+    namespaces = load_namespaces()
+    namespace = namespaces.get(agent_name)
+    if namespace is None:
+        # Auto-create if not exists
+        return create_namespace(agent_name)
+    return namespace
+
+
+def get_store_path(agent_name: str) -> str:
+    """Get the MEM20_STORE_PATH for an agent."""
+    namespace = get_namespace(agent_name)
+    return namespace["store_path"]
+
+
+def list_namespaces() -> dict:
+    """List all agent namespaces."""
+    namespaces = load_namespaces()
+    if not namespaces:
+        print("No namespaces created.")
+        return namespaces
+    
+    print(f"Agent namespaces ({len(namespaces)}):")
+    for agent_name, info in sorted(namespaces.items()):
+        store_path = info.get("store_path", "unknown")
+        created = info.get("created_at", "unknown")
+        status = info.get("status", "unknown")
+        print(f"  {agent_name}")
+        print(f"    Store: {store_path}")
+        print(f"    Created: {created}")
+        print(f"    Status: {status}")
+        print()
+    
+    return namespaces
+
+
+def delete_namespace(agent_name: str) -> bool:
+    """Delete an agent's namespace."""
+    namespaces = load_namespaces()
+    if agent_name not in namespaces:
+        print(f"Namespace for {agent_name} not found.")
+        return False
+    
+    # Don't delete the actual store directory - just mark as deleted
+    namespaces[agent_name]["status"] = "deleted"
+    namespaces[agent_name]["deleted_at"] = datetime.now(timezone.utc).isoformat()
+    save_namespaces(namespaces)
+    
+    print(f"Marked namespace for {agent_name} as deleted.")
+    return True
+
+
 def parse_args():
     parser = argparse.ArgumentParser(description="mem20 Gateway — multi-mem20 relay")
     subparsers = parser.add_subparsers(dest="command", required=True)
@@ -653,6 +768,22 @@ def parse_args():
     p_read.add_argument("--agent", "-a", help="Filter by agent name")
     p_read.add_argument("--limit", "-l", type=int, default=50, help="Max messages to return")
     
+    # namespace create
+    p_ns_create = subparsers.add_parser("namespace-create", help="Create isolated mem20 namespace for an agent")
+    p_ns_create.add_argument("agent_name", help="Agent name")
+    p_ns_create.add_argument("--store-root", help="Root directory for stores (default: ~/.mem20/fleet)")
+    
+    # namespace get
+    p_ns_get = subparsers.add_parser("namespace-get", help="Get store path for an agent")
+    p_ns_get.add_argument("agent_name", help="Agent name")
+    
+    # namespace list
+    subparsers.add_parser("namespace-list", help="List all agent namespaces")
+    
+    # namespace delete
+    p_ns_delete = subparsers.add_parser("namespace-delete", help="Mark namespace as deleted")
+    p_ns_delete.add_argument("agent_name", help="Agent name")
+    
     return parser.parse_args()
 
 def main():
@@ -670,6 +801,21 @@ def main():
     
     elif args.command == "read":
         read_messages(since=args.since, agent=args.agent, limit=args.limit)
+    
+    elif args.command == "namespace-create":
+        store_root = Path(args.store_root).expanduser() if args.store_root else DEFAULT_STORE_ROOT
+        namespace = create_namespace(args.agent_name, store_root)
+        print(json.dumps(namespace, indent=2))
+    
+    elif args.command == "namespace-get":
+        namespace = get_namespace(args.agent_name)
+        print(json.dumps(namespace, indent=2))
+    
+    elif args.command == "namespace-list":
+        list_namespaces()
+    
+    elif args.command == "namespace-delete":
+        delete_namespace(args.agent_name)
 
 if __name__ == "__main__":
     main()

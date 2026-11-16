@@ -197,3 +197,18 @@
 - **Verification:** Full test suite passes: `python -m pytest mem20kilnz/tests -q` → **279 passed, 7 skipped in 35.93s**. The 7 skipped are expected (require GUI/Vulkan or specific fixtures).
 - **Status:** Issue #229 resolved. mem20kilnz is now fully functional with its C++ engine.
 - **Push:** Committed and pushed to origin/main (commit 7196a10b). Also added teamz project. DIARY/failures updated in-repo.
+
+## 2026-11-16 — Complete fleetwide_mem20 Phase 3: Isolated namespaces per bot
+- **Roadmap:** fleetwide_mem20 Phase 3 "Create isolated mem20 namespace for each bot" (in_progress → completed)
+- **Implementation:** Extended gateway/mem20_gateway.py with namespace management:
+  - New CLI commands: `namespace-create`, `namespace-get`, `namespace-list`, `namespace-delete`
+  - Auto-creates isolated namespace on agent registration via `register_agent()`
+  - Each bot gets its own `MEM20_STORE_PATH` at `~/.mem20/fleet/<agent_name>/`
+  - Namespace tracking in `gateway/agent_namespaces.json`
+- **Verification:** 
+  - `python gateway/mem20_gateway.py namespace-create test-bot-1` → creates `/root/.mem20/fleet/test-bot-1`
+  - `python gateway/mem20_gateway.py register --name test-auto-bot` → auto-creates namespace
+  - `python gateway/mem20_gateway.py namespace-list` → shows all namespaces
+  - Gateway tests: 33 passed
+  - Conformance: 7/7 PASS
+- **Retroactive audit updated** in roadmaps/fleetwide_mem20.json with completion_date 2026-11-16

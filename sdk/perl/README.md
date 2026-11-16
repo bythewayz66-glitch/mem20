@@ -119,7 +119,7 @@ fails immediately and leaves the previous good value in place.
 ## Calling tools
 
 Three routes to the same **487-tool surface across 129 domains** (verified live
-against mem20 3.1.2 — see `AUDIT.md`):
+against mem20 4.0.0 — see `AUDIT.md`):
 
 ```perl
 # 1. the named memory primitives
@@ -135,12 +135,13 @@ $client->memory_status;
 $client->cog_plan(goal => 'ship the 3.0 baseline');
 ```
 
-`verify_surface` compares the live `tools/list` count with the 487/129 this
-release was built and tested against:
+`verify_surface` compares the live `tools/list` surface with the 487/129
+manifest this release was generated against, and names any tool that moved:
 
 ```perl
 my $s = $client->verify_surface;
-# { ok => 1, tools => 311, expected_tools => 311, domains => 39, server_version => '3.1.2' }
+# { ok => 1, tools => 487, expected_tools => 487, domains => 129,
+#   missing => [], extra => [], server_version => '4.0.0' }
 ```
 
 Note that tool *names* bucket into more prefixes than there are domains:
@@ -254,15 +255,15 @@ MEM20_MCP_DIR=/opt/mem20/mcp MEM20_PYTHON=/opt/mem20/.venv/bin/python \
   prove -Ilib t/90-live-server.t
 ```
 
-That suite asserts the 311-tool surface, a `memory_store` → `memory_recall`
+That suite asserts the 487-tool surface, a `memory_store` → `memory_recall`
 round trip through the grounded partition, local refusal of a missing
 `epistemic_status`, `ToolError` for an unknown tool, `soft_error` for a rejected
 status, and a `cog_plan` job polled to a terminal state.
 
 ## Status
 
-Version 0.2.0, validated against mem20 server **3.1.2** on the **311-tool /
-39-domain** surface. The SDK versions independently of the server
+Version 0.3.0, validated against mem20 server **4.0.0** on the **487-tool /
+129-domain** surface. The SDK versions independently of the server
 (`$Mem20::Version::VERSION` vs `$Mem20::Version::SERVER_VERSION`).
 
 `AUDIT.md` records how the surface figure was established (registration count
@@ -275,3 +276,5 @@ the job-envelope tools, and the `aiohttp` gap in `requirements.txt`.
 - `mem20-sdk-ruby/` — the Ruby gem, same surface
 - `mem20api/` — the Python API
 - `../docs/API.md` — the tool surface both SDKs expose
+- `lib/Mem20/Surface.pm` — the generated tool/domain manifest; regenerate with
+  `perl xt/gen-surface.pl`

@@ -6,6 +6,7 @@ lib/Mem20.pm
 lib/Mem20/Client.pm
 lib/Mem20/Config.pm
 lib/Mem20/Errors.pm
+lib/Mem20/Surface.pm
 lib/Mem20/Transport/Stdio.pm
 lib/Mem20/Version.pm
 LICENSE
@@ -20,3 +21,4 @@ t/20-client.t
 t/90-live-server.t
 t/95-jobs.t
 t/support/fake_mcp_server.pl
+xt/gen-surface.pl

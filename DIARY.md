@@ -977,3 +977,11 @@ Reworked/verified subsystems #340–#350 (oldest→newest, 1 at a time) to full 
   - `POST /v1/skills/agent-catalog/refresh` — regenerate from toolchest
 - **Catalog contents:** 233 skills including 13 teamz-specific skills (fleet namespace, kanban, a2a, rules, operate/inspect/test)
 - **Verification:** All 47 tests pass, search works (q='teamz' → 13 results, ns='mem20.teamz' → 10, cat='fleet' → 4)
+
+## 2026-11-16 — Verify MCP tool surface (Step 18)
+- **Surface:** 487 tools / 129 domains confirmed live
+- **verify_mcp.py:** RESULT: PASS (487 tools)
+- **surface_manifest.py --check-docs:** OK (all docs match)
+- **surface_manifest.py --write:** OK (surface is 487 tools / 129 domains)
+- **Generated files:** docs/surface.json, docs/TOOL-DOMAINS.md, web/src/data/tools.json
+- **docs/index.html:** Added version badge `<span class="badge">v3.1.2</span>` to match VERSION file

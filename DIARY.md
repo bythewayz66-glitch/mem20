@@ -919,3 +919,4 @@ Reworked/verified subsystems #340–#350 (oldest→newest, 1 at a time) to full 
 - **Build:** `cd mem20kilnz/engine && make -j$(nproc)` — clean build, 0 warnings, 0 errors. Binary `kiln` produced at `mem20kilnz/engine/kiln`.
 - **Verification:** Full test suite passes: `python -m pytest mem20kilnz/tests -q` → **279 passed, 7 skipped in 35.93s**. The 7 skipped are expected (require GUI/Vulkan or specific fixtures).
 - **Status:** Issue #229 resolved. mem20kilnz is now fully functional with its C++ engine.
+- **Push:** Committed and pushed to origin/main (commit 7196a10b). DIARY/failures updated in-repo.

@@ -72,6 +72,7 @@ RETIREMENT_MARKERS = (
     # Lines that name the license defect rather than assert the old label.
     "not mit", "correction", "occurrences of", "wedge", "does not claim",
     "repo is", "say **mit**", "says **mit**", "mit \u2192", "never",
+    "relicensed", "relicense",
 )
 
 # A line naming a vendored component license is not a root-license claim.
@@ -127,7 +128,6 @@ def main() -> int:
     tools = int(surface["tools"])
     domains = int(surface["domains"])
     unwired = len(surface["unwired_tools"])
-    domain_counts = surface["domain_counts"]
 
     license_text = read("LICENSE")
     pyproject = read("pyproject.toml")

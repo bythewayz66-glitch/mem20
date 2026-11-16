@@ -1,5 +1,11 @@
 # mem20controlz — UX acceptance specs
 
+> **Live-surface research, current release:**
+> [`mem20-ux-research-4.0-2026-11-16.md`](./mem20-ux-research-4.0-2026-11-16.md) — an
+> instrumented audit of the **public web surface** (`mem20.com/` + `docs/app/`) at 4.0.0:
+> 13 findings (2 critical), 8 recommendations in 4 waves, every number measured against the
+> live deployment. The documents below cover the **desktop shell**, a disjoint surface.
+
 **Written:** 2026-10-26 · **Surface:** `mem20controlz/` @ `main` · **Owner:** UX research
 **All paths below are repository-root-relative** (this file lives at `docs/ux/`).
 **Scope:** the four UX-shaped issues in the 8-issue backlog — #37, #38, #39, #40.

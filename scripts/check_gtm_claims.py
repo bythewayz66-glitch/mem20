@@ -55,6 +55,7 @@ OWNED_FILES = frozenset(
     {
         "docs/gtm/utm-registry.csv",
         "docs/gtm/launch-instrumentation.md",
+        "docs/gtm/experiment-gh-exp-001-prove-it-hero.md",
         "scripts/check_gtm_claims.py",
     }
 )

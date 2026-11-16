@@ -1,0 +1,947 @@
+[
+  {
+    "id": "creative.art-direction",
+    "key": "art-direction",
+    "label": "Art direction",
+    "description": "Sets one visual reference and enforces it across the set.",
+    "category": "creative"
+  },
+  {
+    "id": "creative.audio",
+    "key": "audio",
+    "label": "Audio production",
+    "description": "Mixes for speech intelligibility first and music second.",
+    "category": "creative"
+  },
+  {
+    "id": "creative.comedy",
+    "key": "comedy",
+    "label": "Comedy writing",
+    "description": "Writes the setup plainly and puts the turn last.",
+    "category": "creative"
+  },
+  {
+    "id": "creative.editing",
+    "key": "editing",
+    "label": "Editing",
+    "description": "Cuts filler, prefers concrete verbs, and keeps one idea per paragraph.",
+    "category": "creative"
+  },
+  {
+    "id": "creative.game-design",
+    "key": "game-design",
+    "label": "Game design",
+    "description": "Tunes a core loop and its feedback before adding content.",
+    "category": "creative"
+  },
+  {
+    "id": "creative.naming",
+    "key": "naming",
+    "label": "Naming",
+    "description": "Generates names that are short, sayable, and clear of collisions.",
+    "category": "creative"
+  },
+  {
+    "id": "creative.poetry",
+    "key": "poetry",
+    "label": "Poetry",
+    "description": "Works in image and rhythm, and removes any line that only explains.",
+    "category": "creative"
+  },
+  {
+    "id": "creative.scripting",
+    "key": "scripting",
+    "label": "Scripting",
+    "description": "Writes scenes that carry information through action and subtext.",
+    "category": "creative"
+  },
+  {
+    "id": "creative.storytelling",
+    "key": "storytelling",
+    "label": "Storytelling",
+    "description": "Builds tension from a want and an obstacle, not from adjectives.",
+    "category": "creative"
+  },
+  {
+    "id": "creative.worldbuilding",
+    "key": "worldbuilding",
+    "label": "Worldbuilding",
+    "description": "Keeps internal rules consistent and states them before bending them.",
+    "category": "creative"
+  },
+  {
+    "id": "data.sql-analytics",
+    "key": "sql-analytics",
+    "label": "Analytical SQL",
+    "description": "Writes window-function SQL and is explicit about grain and fan-out.",
+    "category": "data"
+  },
+  {
+    "id": "data.ml-basics",
+    "key": "ml-basics",
+    "label": "Applied ML",
+    "description": "Starts from a baseline and refuses to add complexity without a measured gain.",
+    "category": "data"
+  },
+  {
+    "id": "data.visualisation",
+    "key": "visualisation",
+    "label": "Data visualisation",
+    "description": "Picks the chart the question needs and labels axes so it reads without a caption.",
+    "category": "data"
+  },
+  {
+    "id": "data.dbt",
+    "key": "dbt",
+    "label": "dbt modelling",
+    "description": "Builds staged, tested models with documented joins and freshness expectations.",
+    "category": "data"
+  },
+  {
+    "id": "data.etl",
+    "key": "etl",
+    "label": "ETL/ELT",
+    "description": "Designs idempotent pipelines that can be re-run without duplicating rows.",
+    "category": "data"
+  },
+  {
+    "id": "data.experiment-analysis",
+    "key": "experiment-analysis",
+    "label": "Experiment analysis",
+    "description": "Checks assignment balance, power and multiple comparisons before calling a winner.",
+    "category": "data"
+  },
+  {
+    "id": "data.pandas",
+    "key": "pandas",
+    "label": "Pandas",
+    "description": "Reshapes data with vectorised operations and checks dtype assumptions first.",
+    "category": "data"
+  },
+  {
+    "id": "data.statistics",
+    "key": "statistics",
+    "label": "Statistics",
+    "description": "Chooses tests from the data shape, reports effect sizes and uncertainty.",
+    "category": "data"
+  },
+  {
+    "id": "data.warehouse",
+    "key": "warehouse",
+    "label": "Warehouse modelling",
+    "description": "Separates raw, staging and mart layers with clear ownership.",
+    "category": "data"
+  },
+  {
+    "id": "design.accessibility",
+    "key": "accessibility",
+    "label": "Accessibility",
+    "description": "Covers focus order, labels, reduced motion and keyboard-only paths.",
+    "category": "design"
+  },
+  {
+    "id": "design.color",
+    "key": "color",
+    "label": "Colour & contrast",
+    "description": "Builds accessible palettes and checks contrast against real surface colours.",
+    "category": "design"
+  },
+  {
+    "id": "design.design-systems",
+    "key": "design-systems",
+    "label": "Design systems",
+    "description": "Extends an existing token and component system rather than inventing a parallel one.",
+    "category": "design"
+  },
+  {
+    "id": "design.figma",
+    "key": "figma",
+    "label": "Figma",
+    "description": "Works in components, variants and auto-layout instead of ad-hoc frames.",
+    "category": "design"
+  },
+  {
+    "id": "design.iconography",
+    "key": "iconography",
+    "label": "Iconography",
+    "description": "Keeps an icon set optically consistent at the sizes it ships at.",
+    "category": "design"
+  },
+  {
+    "id": "design.motion",
+    "key": "motion",
+    "label": "Motion",
+    "description": "Uses motion for state change, with durations short enough to feel immediate.",
+    "category": "design"
+  },
+  {
+    "id": "design.prototyping",
+    "key": "prototyping",
+    "label": "Prototyping",
+    "description": "Prototypes the smallest artefact that can be put in front of a user.",
+    "category": "design"
+  },
+  {
+    "id": "design.responsive",
+    "key": "responsive",
+    "label": "Responsive layout",
+    "description": "Designs the narrow case first and names what collapses at each breakpoint.",
+    "category": "design"
+  },
+  {
+    "id": "design.typography",
+    "key": "typography",
+    "label": "Typography",
+    "description": "Pairs type, sets a scale, and fixes measure and line-height before colour.",
+    "category": "design"
+  },
+  {
+    "id": "design.ux-research",
+    "key": "ux-research",
+    "label": "UX research",
+    "description": "Plans interviews and usability tests that answer a decision, not a curiosity.",
+    "category": "design"
+  },
+  {
+    "id": "education.assessment",
+    "key": "assessment",
+    "label": "Assessment",
+    "description": "Writes items that test understanding, not recall of phrasing.",
+    "category": "education"
+  },
+  {
+    "id": "education.curriculum",
+    "key": "curriculum",
+    "label": "Curriculum design",
+    "description": "Sequences outcomes so each unit depends on the last one.",
+    "category": "education"
+  },
+  {
+    "id": "education.feedback",
+    "key": "feedback",
+    "label": "Feedback",
+    "description": "Gives feedback on the work against the goal, with one next step.",
+    "category": "education"
+  },
+  {
+    "id": "education.learning-accessibility",
+    "key": "learning-accessibility",
+    "label": "Learning accessibility",
+    "description": "Provides multiple representations and removes time pressure where it adds nothing.",
+    "category": "education"
+  },
+  {
+    "id": "education.learning-science",
+    "key": "learning-science",
+    "label": "Learning science",
+    "description": "Applies retrieval practice and spacing instead of re-reading.",
+    "category": "education"
+  },
+  {
+    "id": "education.lesson-planning",
+    "key": "lesson-planning",
+    "label": "Lesson planning",
+    "description": "Plans around one learning objective and its misconception.",
+    "category": "education"
+  },
+  {
+    "id": "education.scaffolding",
+    "key": "scaffolding",
+    "label": "Scaffolding",
+    "description": "Adds support that is withdrawn as competence grows.",
+    "category": "education"
+  },
+  {
+    "id": "education.tutoring",
+    "key": "tutoring",
+    "label": "Tutoring",
+    "description": "Diagnoses the gap before explaining, and checks understanding after.",
+    "category": "education"
+  },
+  {
+    "id": "engineering.api-design",
+    "key": "api-design",
+    "label": "API design",
+    "description": "Shapes request/response contracts, versioning and error envelopes that stay stable.",
+    "category": "engineering"
+  },
+  {
+    "id": "engineering.security",
+    "key": "security",
+    "label": "App security",
+    "description": "Threat-models input, auth and secrets handling; flags injection and privilege paths.",
+    "category": "engineering"
+  },
+  {
+    "id": "engineering.ci-cd",
+    "key": "ci-cd",
+    "label": "CI/CD",
+    "description": "Builds pipelines that fail fast, cache well and never leak credentials into logs.",
+    "category": "engineering"
+  },
+  {
+    "id": "engineering.code-review",
+    "key": "code-review",
+    "label": "Code review",
+    "description": "Reviews for correctness, naming and blast radius — and says which comments block.",
+    "category": "engineering"
+  },
+  {
+    "id": "engineering.docker",
+    "key": "docker",
+    "label": "Containers",
+    "description": "Writes reproducible Dockerfiles and keeps images small and cache-friendly.",
+    "category": "engineering"
+  },
+  {
+    "id": "engineering.css",
+    "key": "css",
+    "label": "CSS & layout",
+    "description": "Handles layout with flexbox and grid, tokenised spacing, and responsive breakpoints.",
+    "category": "engineering"
+  },
+  {
+    "id": "engineering.go",
+    "key": "go",
+    "label": "Go",
+    "description": "Idiomatic Go: explicit errors, context propagation, and goroutines with bounded lifetimes.",
+    "category": "engineering"
+  },
+  {
+    "id": "engineering.k8s",
+    "key": "k8s",
+    "label": "Kubernetes",
+    "description": "Reasons about probes, resources, rollout strategy and failure domains.",
+    "category": "engineering"
+  },
+  {
+    "id": "engineering.node",
+    "key": "node",
+    "label": "Node.js services",
+    "description": "Writes small HTTP services, middleware chains and graceful shutdown handling.",
+    "category": "engineering"
+  },
+  {
+    "id": "engineering.observability",
+    "key": "observability",
+    "label": "Observability",
+    "description": "Adds structured logs, metrics and traces that answer a specific operational question.",
+    "category": "engineering"
+  },
+  {
+    "id": "engineering.perf",
+    "key": "perf",
+    "label": "Performance",
+    "description": "Profiles before optimising, then measures the delta in numbers.",
+    "category": "engineering"
+  },
+  {
+    "id": "engineering.python",
+    "key": "python",
+    "label": "Python",
+    "description": "Writes typed, tested Python with clear module seams and no hidden global state.",
+    "category": "engineering"
+  },
+  {
+    "id": "engineering.react",
+    "key": "react",
+    "label": "React",
+    "description": "Builds composable components with correct hook dependencies and explicit loading/empty/error states.",
+    "category": "engineering"
+  },
+  {
+    "id": "engineering.refactoring",
+    "key": "refactoring",
+    "label": "Refactoring",
+    "description": "Splits seams and shrinks diffs without changing observable behaviour.",
+    "category": "engineering"
+  },
+  {
+    "id": "engineering.rust",
+    "key": "rust",
+    "label": "Rust",
+    "description": "Ownership-aware Rust, preferring clear lifetimes over clones.",
+    "category": "engineering"
+  },
+  {
+    "id": "engineering.sql",
+    "key": "sql",
+    "label": "SQL",
+    "description": "Writes readable queries and understands indexes, joins and query plans.",
+    "category": "engineering"
+  },
+  {
+    "id": "engineering.testing",
+    "key": "testing",
+    "label": "Testing",
+    "description": "Writes tests that fail for the right reason, at the cheapest layer that can catch the bug.",
+    "category": "engineering"
+  },
+  {
+    "id": "engineering.ts",
+    "key": "ts",
+    "label": "TypeScript",
+    "description": "Reads and writes strict TypeScript, including generics, narrowing and module boundaries.",
+    "category": "engineering"
+  },
+  {
+    "id": "finance.ap-ar",
+    "key": "ap-ar",
+    "label": "AP/AR operations",
+    "description": "Keeps cash timing visible and flags anything aging past terms.",
+    "category": "finance"
+  },
+  {
+    "id": "finance.budgeting",
+    "key": "budgeting",
+    "label": "Budgeting",
+    "description": "Builds a budget from drivers and shows what happens when they move.",
+    "category": "finance"
+  },
+  {
+    "id": "finance.modeling",
+    "key": "modeling",
+    "label": "Financial modelling",
+    "description": "Builds models where every assumption is a labelled input, never a hard-coded cell.",
+    "category": "finance"
+  },
+  {
+    "id": "finance.reporting",
+    "key": "reporting",
+    "label": "Financial reporting",
+    "description": "Produces statements that tie out, with the reconciliation shown.",
+    "category": "finance"
+  },
+  {
+    "id": "finance.forecasting",
+    "key": "forecasting",
+    "label": "Forecasting",
+    "description": "Present three scenarios with the assumption that separates them.",
+    "category": "finance"
+  },
+  {
+    "id": "finance.unit-economics",
+    "key": "unit-economics",
+    "label": "Unit economics",
+    "description": "Computes contribution margin per unit and states which costs are excluded.",
+    "category": "finance"
+  },
+  {
+    "id": "finance.valuation",
+    "key": "valuation",
+    "label": "Valuation",
+    "description": "Shows the comparable set and the sensitivity around the chosen multiple.",
+    "category": "finance"
+  },
+  {
+    "id": "finance.variance",
+    "key": "variance",
+    "label": "Variance analysis",
+    "description": "Explains the gap by driver, and distinguishes timing from permanent delta.",
+    "category": "finance"
+  },
+  {
+    "id": "health.care-coordination",
+    "key": "care-coordination",
+    "label": "Care coordination",
+    "description": "Keeps handovers and follow-ups from falling between providers.",
+    "category": "health"
+  },
+  {
+    "id": "health.clinical-documentation",
+    "key": "clinical-documentation",
+    "label": "Clinical documentation",
+    "description": "Documents facts, timestamps and decisions without editorialising.",
+    "category": "health"
+  },
+  {
+    "id": "health.health-compliance",
+    "key": "health-compliance",
+    "label": "Health compliance",
+    "description": "Handles sensitive data under the minimum-necessary principle.",
+    "category": "health"
+  },
+  {
+    "id": "health.intake",
+    "key": "intake",
+    "label": "Intake",
+    "description": "Collects a structured history and flags anything needing escalation.",
+    "category": "health"
+  },
+  {
+    "id": "health.patient-education",
+    "key": "patient-education",
+    "label": "Patient education",
+    "description": "Explains in plain language and checks understanding back.",
+    "category": "health"
+  },
+  {
+    "id": "health.safety",
+    "key": "safety",
+    "label": "Safety boundaries",
+    "description": "Recognises when to stop advising and route to a clinician.",
+    "category": "health"
+  },
+  {
+    "id": "health.triage-support",
+    "key": "triage-support",
+    "label": "Triage support",
+    "description": "Routes by red-flag symptoms and declines to guess at a diagnosis.",
+    "category": "health"
+  },
+  {
+    "id": "health.wellness-coaching",
+    "key": "wellness-coaching",
+    "label": "Wellness coaching",
+    "description": "Sets habits small enough to survive a bad week.",
+    "category": "health"
+  },
+  {
+    "id": "legal.compliance",
+    "key": "compliance",
+    "label": "Compliance",
+    "description": "Turns an obligation into an owner, a control and a review cadence.",
+    "category": "legal"
+  },
+  {
+    "id": "legal.contract-review",
+    "key": "contract-review",
+    "label": "Contract review",
+    "description": "Summarises obligations, term and termination before line-level comments.",
+    "category": "legal"
+  },
+  {
+    "id": "legal.ip",
+    "key": "ip",
+    "label": "IP & licensing",
+    "description": "Checks licence compatibility and ownership before reuse.",
+    "category": "legal"
+  },
+  {
+    "id": "legal.policy",
+    "key": "policy",
+    "label": "Policy drafting",
+    "description": "Writes policy with an explicit scope and a named exception path.",
+    "category": "legal"
+  },
+  {
+    "id": "legal.privacy",
+    "key": "privacy",
+    "label": "Privacy",
+    "description": "Maps data flows to a lawful basis and flags anything retained without one.",
+    "category": "legal"
+  },
+  {
+    "id": "legal.redlining",
+    "key": "redlining",
+    "label": "Redlining",
+    "description": "Proposes minimal alternative language with the risk explained.",
+    "category": "legal"
+  },
+  {
+    "id": "legal.risk",
+    "key": "risk",
+    "label": "Risk assessment",
+    "description": "Rates likelihood against impact and names the mitigation and residual risk.",
+    "category": "legal"
+  },
+  {
+    "id": "legal.terms",
+    "key": "terms",
+    "label": "Terms & policies",
+    "description": "Writes terms a normal user could read, without hiding the material limits.",
+    "category": "legal"
+  },
+  {
+    "id": "marketing.brand",
+    "key": "brand",
+    "label": "Brand voice",
+    "description": "Keeps a consistent register across surfaces and names what the brand will not say.",
+    "category": "marketing"
+  },
+  {
+    "id": "marketing.content-strategy",
+    "key": "content-strategy",
+    "label": "Content strategy",
+    "description": "Plans a content set that answers a journey rather than a keyword list.",
+    "category": "marketing"
+  },
+  {
+    "id": "marketing.copywriting",
+    "key": "copywriting",
+    "label": "Copywriting",
+    "description": "Leads with the concrete benefit and cuts every hedge word.",
+    "category": "marketing"
+  },
+  {
+    "id": "marketing.email",
+    "key": "email",
+    "label": "Email marketing",
+    "description": "Writes subject lines that survive a crowded inbox and one clear CTA.",
+    "category": "marketing"
+  },
+  {
+    "id": "marketing.analytics",
+    "key": "analytics",
+    "label": "Marketing analytics",
+    "description": "Attributes conversions honestly and separates correlation from incrementality.",
+    "category": "marketing"
+  },
+  {
+    "id": "marketing.paid-ads",
+    "key": "paid-ads",
+    "label": "Paid acquisition",
+    "description": "Structures campaigns around one testable variable at a time.",
+    "category": "marketing"
+  },
+  {
+    "id": "marketing.seo",
+    "key": "seo",
+    "label": "SEO",
+    "description": "Maps intent to pages, fixes structure before copy, and avoids keyword stuffing.",
+    "category": "marketing"
+  },
+  {
+    "id": "marketing.social",
+    "key": "social",
+    "label": "Social media",
+    "description": "Adapts one idea per platform instead of cross-posting the same text.",
+    "category": "marketing"
+  },
+  {
+    "id": "operations.incident-response",
+    "key": "incident-response",
+    "label": "Incident response",
+    "description": "Runs the response, keeps a timeline, and writes the blameless follow-up.",
+    "category": "operations"
+  },
+  {
+    "id": "operations.inventory",
+    "key": "inventory",
+    "label": "Inventory",
+    "description": "Sets reorder points from lead time and demand spread.",
+    "category": "operations"
+  },
+  {
+    "id": "operations.logistics",
+    "key": "logistics",
+    "label": "Logistics",
+    "description": "Plans capacity against demand variability, not the average.",
+    "category": "operations"
+  },
+  {
+    "id": "operations.okrs",
+    "key": "okrs",
+    "label": "OKRs",
+    "description": "Writes key results as measurable outcomes rather than activity lists.",
+    "category": "operations"
+  },
+  {
+    "id": "operations.process-mapping",
+    "key": "process-mapping",
+    "label": "Process mapping",
+    "description": "Draws the current state honestly, including the workarounds.",
+    "category": "operations"
+  },
+  {
+    "id": "operations.project-mgmt",
+    "key": "project-mgmt",
+    "label": "Project management",
+    "description": "Keeps dependencies and the critical path explicit and current.",
+    "category": "operations"
+  },
+  {
+    "id": "operations.vendor-management",
+    "key": "vendor-management",
+    "label": "Vendor management",
+    "description": "Reviews vendors on reliability and exit cost, not only price.",
+    "category": "operations"
+  },
+  {
+    "id": "operations.automation",
+    "key": "automation",
+    "label": "Workflow automation",
+    "description": "Automates the stable, high-frequency step and leaves the judgement call manual.",
+    "category": "operations"
+  },
+  {
+    "id": "people.compensation",
+    "key": "compensation",
+    "label": "Compensation",
+    "description": "Benchmarks against a stated market and explains the band.",
+    "category": "people"
+  },
+  {
+    "id": "people.engagement",
+    "key": "engagement",
+    "label": "Engagement",
+    "description": "Reads survey results by team and separates signal from sample noise.",
+    "category": "people"
+  },
+  {
+    "id": "people.hr-policy",
+    "key": "hr-policy",
+    "label": "HR policy",
+    "description": "Writes policy that is consistent across regions and actually enforceable.",
+    "category": "people"
+  },
+  {
+    "id": "people.interviewing",
+    "key": "interviewing",
+    "label": "Interviewing",
+    "description": "Asks questions with a scoring rubric agreed before the call.",
+    "category": "people"
+  },
+  {
+    "id": "people.onboarding-hr",
+    "key": "onboarding-hr",
+    "label": "Onboarding",
+    "description": "Sequences the first two weeks so a new hire can ship something small.",
+    "category": "people"
+  },
+  {
+    "id": "people.org-design",
+    "key": "org-design",
+    "label": "Org design",
+    "description": "Designs reporting lines around decisions, not around people.",
+    "category": "people"
+  },
+  {
+    "id": "people.performance",
+    "key": "performance",
+    "label": "Performance management",
+    "description": "Gives feedback tied to observed behaviour and a specific next action.",
+    "category": "people"
+  },
+  {
+    "id": "people.sourcing",
+    "key": "sourcing",
+    "label": "Sourcing",
+    "description": "Writes outreach that names the specific work, not the company perks.",
+    "category": "people"
+  },
+  {
+    "id": "product.competitive-analysis",
+    "key": "competitive-analysis",
+    "label": "Competitive analysis",
+    "description": "Compares on the axis users switch on, not on feature checklists.",
+    "category": "product"
+  },
+  {
+    "id": "product.discovery",
+    "key": "discovery",
+    "label": "Discovery",
+    "description": "Separates the problem being solved from the feature being requested.",
+    "category": "product"
+  },
+  {
+    "id": "product.experiments",
+    "key": "experiments",
+    "label": "Experimentation",
+    "description": "Sizes the effect an experiment must detect before it is worth running.",
+    "category": "product"
+  },
+  {
+    "id": "product.prioritisation",
+    "key": "prioritisation",
+    "label": "Prioritisation",
+    "description": "Applies a stated scoring rule and shows the trade-off it forces.",
+    "category": "product"
+  },
+  {
+    "id": "product.metrics",
+    "key": "metrics",
+    "label": "Product metrics",
+    "description": "Defines one primary metric, its guardrails, and how it could be gamed.",
+    "category": "product"
+  },
+  {
+    "id": "product.roadmapping",
+    "key": "roadmapping",
+    "label": "Roadmapping",
+    "description": "Sequences work by risk and learning value, not by who shouted loudest.",
+    "category": "product"
+  },
+  {
+    "id": "product.spec-writing",
+    "key": "spec-writing",
+    "label": "Spec writing",
+    "description": "Writes specs short enough to be read, with the open questions still visible.",
+    "category": "product"
+  },
+  {
+    "id": "product.user-stories",
+    "key": "user-stories",
+    "label": "User stories",
+    "description": "Writes stories with testable acceptance criteria and an explicit non-goal.",
+    "category": "product"
+  },
+  {
+    "id": "research.citation",
+    "key": "citation",
+    "label": "Citation",
+    "description": "Cites to the specific page or dataset, never to \"a study\".",
+    "category": "research"
+  },
+  {
+    "id": "research.competitive-intel",
+    "key": "competitive-intel",
+    "label": "Competitive intelligence",
+    "description": "Tracks competitor changes from public signals and timestamps each finding.",
+    "category": "research"
+  },
+  {
+    "id": "research.fact-checking",
+    "key": "fact-checking",
+    "label": "Fact-checking",
+    "description": "Traces a claim to its origin and flags where a summary drifted from the source.",
+    "category": "research"
+  },
+  {
+    "id": "research.literature-search",
+    "key": "literature-search",
+    "label": "Literature search",
+    "description": "Builds a search strategy and records what was excluded, not just what was found.",
+    "category": "research"
+  },
+  {
+    "id": "research.interviews",
+    "key": "interviews",
+    "label": "Research interviews",
+    "description": "Asks about past behaviour instead of hypothetical future intent.",
+    "category": "research"
+  },
+  {
+    "id": "research.source-evaluation",
+    "key": "source-evaluation",
+    "label": "Source evaluation",
+    "description": "Weighs primary over secondary sources and states the confidence level.",
+    "category": "research"
+  },
+  {
+    "id": "research.survey-design",
+    "key": "survey-design",
+    "label": "Survey design",
+    "description": "Writes neutral, single-barrelled questions and pilots before fielding.",
+    "category": "research"
+  },
+  {
+    "id": "research.synthesis",
+    "key": "synthesis",
+    "label": "Synthesis",
+    "description": "Collapses many sources into claims, with the disagreement left visible.",
+    "category": "research"
+  },
+  {
+    "id": "sales.crm-hygiene",
+    "key": "crm-hygiene",
+    "label": "CRM hygiene",
+    "description": "Keeps stages and next-action dates accurate enough to forecast from.",
+    "category": "sales"
+  },
+  {
+    "id": "sales.onboarding-sales",
+    "key": "onboarding-sales",
+    "label": "Customer onboarding",
+    "description": "Hands off with context so the customer never repeats themselves.",
+    "category": "sales"
+  },
+  {
+    "id": "sales.discovery-calls",
+    "key": "discovery-calls",
+    "label": "Discovery calls",
+    "description": "Runs a call that ends with a next step agreed by both sides.",
+    "category": "sales"
+  },
+  {
+    "id": "sales.forecasting",
+    "key": "forecasting",
+    "label": "Forecasting",
+    "description": "Separates committed, best-case and pipeline with stated assumptions.",
+    "category": "sales"
+  },
+  {
+    "id": "sales.negotiation",
+    "key": "negotiation",
+    "label": "Negotiation",
+    "description": "Trades on value and terms rather than discounting price by reflex.",
+    "category": "sales"
+  },
+  {
+    "id": "sales.objection-handling",
+    "key": "objection-handling",
+    "label": "Objection handling",
+    "description": "Treats an objection as missing information and answers it without pressure.",
+    "category": "sales"
+  },
+  {
+    "id": "sales.proposals",
+    "key": "proposals",
+    "label": "Proposals",
+    "description": "Writes proposals where scope, price and exclusions are unambiguous.",
+    "category": "sales"
+  },
+  {
+    "id": "sales.prospecting",
+    "key": "prospecting",
+    "label": "Prospecting",
+    "description": "Qualifies against a written ideal-customer profile before reaching out.",
+    "category": "sales"
+  },
+  {
+    "id": "support.escalation",
+    "key": "escalation",
+    "label": "Escalation",
+    "description": "Escalates with reproduction steps and a clear ask, not a forwarded thread.",
+    "category": "support"
+  },
+  {
+    "id": "support.help-docs",
+    "key": "help-docs",
+    "label": "Help documentation",
+    "description": "Writes steps a first-time user can follow without prior context.",
+    "category": "support"
+  },
+  {
+    "id": "support.macros",
+    "key": "macros",
+    "label": "Response macros",
+    "description": "Keeps canned replies specific enough to feel written for one person.",
+    "category": "support"
+  },
+  {
+    "id": "support.root-cause",
+    "key": "root-cause",
+    "label": "Root-cause analysis",
+    "description": "Separates the trigger from the underlying condition before proposing a fix.",
+    "category": "support"
+  },
+  {
+    "id": "support.sla",
+    "key": "sla",
+    "label": "SLA management",
+    "description": "Tracks first-response and resolution clocks and flags the ones about to breach.",
+    "category": "support"
+  },
+  {
+    "id": "support.tone",
+    "key": "tone",
+    "label": "Support tone",
+    "description": "Stays plain and accountable, and never blames the user or the tool.",
+    "category": "support"
+  },
+  {
+    "id": "support.triage",
+    "key": "triage",
+    "label": "Ticket triage",
+    "description": "Classifies by impact and urgency, and routes before replying.",
+    "category": "support"
+  },
+  {
+    "id": "support.troubleshooting",
+    "key": "troubleshooting",
+    "label": "Troubleshooting",
+    "description": "Asks for the one datum that splits the hypothesis space, not a screenshot dump.",
+    "category": "support"
+  }
+]

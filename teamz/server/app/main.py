@@ -1,0 +1,1011 @@
+from __future__ import annotations
+
+import json
+import time
+import uuid
+from typing import Any, AsyncIterator, Dict, List, Optional
+
+import httpx
+from fastapi import FastAPI, HTTPException, Request
+from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import JSONResponse, StreamingResponse
+
+from .config import settings
+from .connectors import connectors_status, gh_exec, gh_status, github_request, github_status, google_api_request, google_status
+from .execution import (
+    execute_actions,
+    files_status,
+    file_edit,
+    file_list,
+    file_read,
+    file_write,
+    gh_status as gh_tool_status,
+    github_status as github_tool_status,
+    terminal_exec,
+    terminal_status,
+    tools_manifest,
+)
+from .mem20 import Mem20Error, get_mem20_client
+from .models import (
+    ChatRequest,
+    ChatResponse,
+    ChatChoice,
+    FileEditRequest,
+    FileListRequest,
+    FileReadRequest,
+    FileWriteRequest,
+    MemoryRecallRequest,
+    MemoryStoreRequest,
+    OptimizePromptRequest,
+    OptimizePromptResponse,
+    RoutingMeta,
+    AttemptInfo,
+    RuntimeExecRequest,
+    SetGoalRequest,
+    TerminalExecRequest,
+    ToolCallRequest,
+    Usage,
+    WorkerControlRequest,
+    WorkspaceSnapshot,
+)
+from .providers.base import RouteContext, StreamEvent
+from .router import Router
+from .skills import load_skill_catalogue, skill_status
+from .state import StateStore
+from .worker import GoalWorker
+
+
+app = FastAPI(title="teamz orchestrator", version="0.3.0")
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=settings.cors_origins or ["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+router = Router(cfg=settings)
+state_store = StateStore(settings.state_file)
+worker = GoalWorker(state_store, router, load_skill_catalogue())
+
+
+@app.on_event("startup")
+async def _startup() -> None:
+    if settings.goal_enabled and settings.goal_worker_enabled:
+        await worker.start()
+
+
+@app.on_event("shutdown")
+async def _shutdown() -> None:
+    try:
+        await worker.stop()
+    except Exception:
+        pass
+    try:
+        await get_mem20_client().close()
+    except Exception:
+        pass
+
+
+@app.get("/health")
+async def health() -> Dict[str, Any]:
+    mem20_ok = False
+    if settings.mem20_enabled:
+        try:
+            await get_mem20_client().ensure()
+            mem20_ok = True
+        except Exception:
+            mem20_ok = False
+    return {
+        "ok": True,
+        "service": "teamz-orchestrator",
+        "mem20": {"enabled": settings.mem20_enabled, "connected": mem20_ok},
+        "providers": [getattr(p, "name", "unknown") for p in router.providers],
+        "keyless_first": settings.keyless_first,
+        "ts": int(time.time()),
+    }
+
+
+@app.get("/v1/status")
+async def status() -> Dict[str, Any]:
+    mem20 = {"enabled": settings.mem20_enabled, "connected": False, "tools": 0}
+    if settings.mem20_enabled:
+        try:
+            client = get_mem20_client()
+            await client.ensure()
+            tools = await client.tools()
+            mem20.update({"connected": True, "tools": len(tools)})
+        except Exception as e:
+            mem20.update({"error": str(e)})
+    providers = []
+    for p in router.providers:
+        providers.append(
+            {
+                "name": getattr(p, "name", "unknown"),
+                "keyless": bool(getattr(p, "keyless", False) and not getattr(p, "api_key", "")),
+                "has_api_key": bool(getattr(p, "api_key", "")),
+                "base_url": getattr(p, "base_url", None),
+                "default_model": getattr(p, "default_model", None),
+                "local_runtime": bool(getattr(p, "local_runtime", False)),
+            }
+        )
+    return {
+        "ok": True,
+        "providers": providers,
+        "mem20": mem20,
+        "persistence": state_store.summary(),
+        "worker": worker.status(),
+        "skills": skill_status(),
+        "tools": {
+            "terminal": terminal_status(),
+            "files": files_status(),
+            "gh": gh_tool_status(),
+            "github": github_tool_status(),
+            "manifest": tools_manifest(),
+        },
+        "config": {
+            "max_attempts": settings.max_attempts,
+            "keyless_first": settings.keyless_first,
+            "request_timeout_s": settings.request_timeout_s,
+        },
+    }
+
+
+def _routing_meta(attempts: List[Dict[str, Any]], requested_model: Optional[str]) -> RoutingMeta:
+    success = next((a for a in attempts if a.get("status") == "success"), None)
+    failed = [a for a in attempts if a.get("status") == "failed"]
+    return RoutingMeta(
+        selected_provider=success.get("provider") if success else None,
+        selected_model=success.get("model") if success else None,
+        attempts=[AttemptInfo(**a) for a in attempts],
+        fallback_used=bool(failed and success),
+        requested_model=requested_model,
+    )
+
+
+def _usage_obj(u: Optional[Dict[str, Any]]) -> Optional[Usage]:
+    if not u:
+        return None
+    try:
+        return Usage(**{k: v for k, v in u.items() if k in {"prompt_tokens", "completion_tokens", "total_tokens"}})
+    except Exception:
+        return None
+
+
+def _messages_to_dicts(messages: Any) -> List[Dict[str, Any]]:
+    out: List[Dict[str, Any]] = []
+    for m in messages or []:
+        if hasattr(m, "model_dump"):
+            out.append(m.model_dump())
+        elif isinstance(m, dict):
+            out.append(m)
+        else:
+            out.append({"role": "user", "content": str(m)})
+    return out
+
+
+async def _maybe_store_memory(kind: str, conversation: Optional[Dict[str, Any]], text: str) -> None:
+    if not settings.mem20_enabled or not text.strip():
+        return
+    conv = conversation or {}
+    conv_id = conv.get("id") or conv.get("conversationId") or "unknown"
+    tags = ["teamz", f"conversation:{conv_id}", kind]
+    name = conv.get("name")
+    if name:
+        tags.append(f"channel:{str(name)[:64]}")
+    if conv.get("kind"):
+        tags.append(f"kind:{conv.get('kind')}")
+    try:
+        client = get_mem20_client()
+        await client.memory_store(text[:4000], category="teamz", tags=tags)
+    except Exception:
+        return
+
+
+async def _recall_memories_for_context(query: str, conversation: Optional[Dict[str, Any]], limit: int = 5) -> List[Dict[str, Any]]:
+    if not settings.mem20_enabled:
+        return []
+    client = get_mem20_client()
+    queries = []
+    conv = conversation or {}
+    conv_id = conv.get("id") or conv.get("conversationId")
+    name = conv.get("name")
+    if conv_id:
+        queries.append(f"conversation:{conv_id} {query}")
+    if name:
+        queries.append(f"{name} {query}")
+    queries.append(query)
+    seen = set()
+    out: List[Dict[str, Any]] = []
+    for q in queries:
+        try:
+            items = await client.recall_texts(q, limit=limit)
+        except Exception:
+            items = []
+        for it in items:
+            key = str(it.get("id") or it.get("text", ""))[:200]
+            if key in seen:
+                continue
+            seen.add(key)
+            out.append(it)
+        if len(out) >= limit:
+            break
+    return out[:limit]
+
+
+async def _augment_messages_with_channel_memory(messages: List[Dict[str, Any]], conversation: Optional[Dict[str, Any]]) -> List[Dict[str, Any]]:
+    if not settings.mem20_enabled or not conversation:
+        return messages
+    # Derive query from latest user message
+    query = ""
+    for m in reversed(messages):
+        if m.get("role") == "user":
+            c = m.get("content")
+            query = c if isinstance(c, str) else json.dumps(c, ensure_ascii=False)
+            break
+    if not query:
+        query = str(conversation.get("name") or conversation.get("topic") or "conversation context")
+    memories = await _recall_memories_for_context(query[:500], conversation, limit=6)
+    if not memories:
+        return messages
+    lines = []
+    for mem in memories:
+        txt = str(mem.get("text") or "").strip()
+        if txt:
+            lines.append(f"- {txt[:400]}")
+    if not lines:
+        return messages
+    memory_block = (
+        "Persistent channel memory/context (mem20, relevant recalled items):\n" + "\n".join(lines)
+    )
+    # Inject as a system message after the first system message if present, else prepend.
+    out = list(messages)
+    insert_at = 0
+    if out and out[0].get("role") == "system":
+        insert_at = 1
+    out.insert(insert_at, {"role": "system", "content": memory_block})
+    return out
+
+
+def _lead_runtime_instruction(agent: Optional[Dict[str, Any]], conversation: Optional[Dict[str, Any]]) -> Optional[str]:
+    if not agent or not (agent.get("isLead") or agent.get("lead")):
+        return None
+    return (
+        "You are the LEAD AGENT for this workspace. You can add, remove, and program agents and the runtime itself. "
+        "When asked, you can make new channels, make agents, and program/configure current ones. "
+        "You must orchestrate and delegate work to groups of agents that match the task.\n\n"
+        "When you decide to perform runtime changes, include a fenced code block with language `teamz-actions` containing STRICT JSON: "
+        "{\"actions\":[ ... ]}.\n"
+        "Supported actions: "
+        "create_channel {name, agentIds?:[], agentNames?:[], topic?}; "
+        "rename_channel {conversationId|channelId|nameMatch, name}; "
+        "update_channel_members {conversationId|channelId|nameMatch, agentIds?:[], agentNames?:[], addAgentIds?:[], addAgentNames?:[], removeAgentIds?:[], removeAgentNames?:[]}; "
+        "delete_channel {conversationId|channelId|nameMatch}; "
+        "create_agent {name, role?, systemPrompt?, model?, skills?:[{key,label,level}], isLead?:bool, emoji?, accent?}; "
+        "update_agent {agentId|agentName, name?, systemPrompt?, model?, skills?:[], addSkills?:[], isLead?:bool, role?, status?}; "
+        "delete_agent {agentId|agentName}; "
+        "invite_agent_to_channel {conversationId|channelId|nameMatch, agentId|agentName}; "
+        "send_message {conversationId|channelId|nameMatch|agentName, text, directedAgentNames?:[]}; "
+        "open_direct_chat {agentId|agentName}.\n"
+        "Use names/ids that exist in context when possible. Explain what you did. "
+        "For HTML presentation deliverables when a job is completed, include a fenced block with language `presentation` containing complete HTML."
+    )
+
+
+async def _augment_messages_for_agent_runtime(messages: List[Dict[str, Any]], req: ChatRequest) -> List[Dict[str, Any]]:
+    out = await _augment_messages_with_channel_memory(messages, req.conversation)
+    lead_instr = _lead_runtime_instruction(req.agent, req.conversation)
+    if lead_instr:
+        # Insert after any existing system messages block start to keep strong instruction
+        insert_at = 0
+        if out and out[0].get("role") == "system":
+            insert_at = 1
+        out.insert(insert_at, {"role": "system", "content": lead_instr})
+    # Provide compact roster/channel context if available in metadata for orchestration/delegation
+    meta = req.metadata or {}
+    workspace = meta.get("workspace") if isinstance(meta.get("workspace"), dict) else None
+    if workspace:
+        try:
+            agents = workspace.get("agents") or []
+            convs = workspace.get("conversations") or []
+            roster = []
+            for a in agents[:40]:
+                if not isinstance(a, dict):
+                    continue
+                skills = a.get("skills") or []
+                sk = ", ".join([f"{(s.get('label') or s.get('key'))}(L{s.get('level',1)})" for s in skills if isinstance(s, dict)][:6])
+                roster.append(f"- {a.get('name')} (id:{a.get('id')}, lead:{bool(a.get('isLead'))}, role:{(a.get('origin') or {}).get('role') if isinstance(a.get('origin'), dict) else a.get('role','')}) skills:{sk}")
+            chans = []
+            for c in convs[:30]:
+                if not isinstance(c, dict):
+                    continue
+                chans.append(f"- {c.get('name')} (id:{c.get('id')}, kind:{c.get('kind')}, members:{len(c.get('agentIds') or [])}, topic:{c.get('topic','')})")
+            if roster or chans:
+                ctx = "Workspace runtime context (for orchestration/delegation):\nAgents:\n" + ("\n".join(roster) if roster else "- none") + "\nConversations:\n" + ("\n".join(chans) if chans else "- none")
+                insert_at = 1 if out and out[0].get("role") == "system" else 0
+                out.insert(insert_at, {"role": "system", "content": ctx})
+        except Exception:
+            pass
+    return out
+
+
+@app.post("/v1/chat/completions")
+async def chat_completions(req: ChatRequest):
+    base_messages = _messages_to_dicts(req.messages)
+    ctx_messages = await _augment_messages_for_agent_runtime(base_messages, req)
+    ctx = RouteContext(
+        messages=ctx_messages,
+        requested_model=req.model or (req.agent or {}).get("model"),
+        strict_model=bool(req.strict_model),
+        stream=bool(req.stream),
+        temperature=req.temperature,
+        max_tokens=req.max_tokens,
+        metadata=req.metadata or {},
+    )
+
+    # Persist latest user message context to channel memory (best-effort)
+    if settings.mem20_enabled:
+        last_user = None
+        for m in reversed(base_messages):
+            if m.get("role") == "user":
+                c = m.get("content")
+                last_user = c if isinstance(c, str) else json.dumps(c, ensure_ascii=False)
+                break
+        if last_user:
+            await _maybe_store_memory("user", req.conversation, f"User: {last_user}")
+
+    if not req.stream:
+        result = await router.complete(ctx)
+        await _maybe_store_memory("assistant", req.conversation, f"Assistant: {result.text}")
+        attempts = [a.to_dict() if hasattr(a, "to_dict") else a for a in result.attempts]
+        meta = _routing_meta(attempts, ctx.requested_model)
+        resp = ChatResponse(
+            id=f"chatcmpl-{uuid.uuid4().hex[:24]}",
+            created=int(time.time()),
+            model=result.model,
+            choices=[ChatChoice(index=0, message={"role": "assistant", "content": result.text}, finish_reason="stop")],
+            usage=_usage_obj(result.usage),
+            routing=meta,
+        )
+        return JSONResponse(resp.model_dump())
+
+    async def event_stream() -> AsyncIterator[str]:
+        final_text = ""
+        final_usage = None
+        final_model = None
+        attempts: List[Dict[str, Any]] = []
+        async for ev in router.stream(ctx):
+            if ev.type == "meta":
+                attempts = ev.data.get("attempts") or attempts
+                yield f"event: meta\ndata: {json.dumps({'type':'meta','attempts':attempts}, ensure_ascii=False)}\n\n"
+            elif ev.type == "delta":
+                delta = ev.data.get("delta") or ""
+                final_text += delta
+                payload = {
+                    "id": "chatcmpl-stream",
+                    "object": "chat.completion.chunk",
+                    "choices": [{"index": 0, "delta": {"content": delta}, "finish_reason": None}],
+                    "provider": ev.data.get("provider"),
+                    "model": ev.data.get("model"),
+                }
+                yield f"data: {json.dumps(payload, ensure_ascii=False)}\n\n"
+            elif ev.type == "done":
+                final_text = ev.data.get("text") or final_text
+                final_usage = ev.data.get("usage") or final_usage
+                final_model = ev.data.get("model") or final_model
+                attempts = ev.data.get("attempts") or attempts
+                meta = _routing_meta(attempts, ctx.requested_model).model_dump() if attempts else None
+                done_payload = {
+                    "type": "done",
+                    "text": final_text,
+                    "provider": ev.data.get("provider"),
+                    "model": final_model,
+                    "usage": final_usage,
+                    "routing": meta,
+                    "fallback_used": ev.data.get("fallback_used", False),
+                }
+                yield f"event: done\ndata: {json.dumps(done_payload, ensure_ascii=False)}\n\n"
+                yield "data: [DONE]\n\n"
+                if final_text:
+                    await _maybe_store_memory("assistant", req.conversation, f"Assistant: {final_text}")
+                return
+            elif ev.type == "error":
+                attempts = ev.data.get("attempts") or attempts
+                err_payload = {"type": "error", "error": ev.data.get("error"), "attempts": attempts}
+                yield f"event: error\ndata: {json.dumps(err_payload, ensure_ascii=False)}\n\n"
+                return
+        yield "data: [DONE]\n\n"
+
+    return StreamingResponse(event_stream(), media_type="text/event-stream")
+
+
+@app.post("/v1/optimize-prompt", response_model=OptimizePromptResponse)
+async def optimize_prompt(req: OptimizePromptRequest):
+    draft = (req.draft or "").strip()
+    if not draft:
+        raise HTTPException(status_code=400, detail="draft is required")
+
+    memories: List[Dict[str, Any]] = []
+    conv = req.conversation or req.channel or {}
+    if req.use_memory and settings.mem20_enabled:
+        q = req.memory_query or draft
+        memories = await _recall_memories_for_context(q, conv, limit=6)
+
+    history_lines = []
+    for h in (req.history or [])[-20:]:
+        role = h.get("role") or h.get("authorType") or "user"
+        name = h.get("authorName") or h.get("name") or role
+        text = h.get("text") or h.get("content") or ""
+        if isinstance(text, list):
+            text = json.dumps(text, ensure_ascii=False)
+        text = str(text).strip()
+        if text:
+            history_lines.append(f"- {name}: {text[:500]}")
+
+    agent_lines = []
+    for a in (req.agents or [])[:30]:
+        nm = a.get("name") or a.get("id") or "agent"
+        role = a.get("origin", {}).get("role") if isinstance(a.get("origin"), dict) else a.get("role")
+        lead = a.get("isLead") or a.get("lead")
+        skills = a.get("skills") or []
+        skill_names = []
+        for s in skills[:8]:
+            if isinstance(s, dict):
+                lvl = s.get("level")
+                label = str(s.get("label") or s.get("name") or s.get("key") or "")
+                if label:
+                    skill_names.append(f"{label}" + (f"(L{lvl})" if lvl else ""))
+            else:
+                skill_names.append(str(s))
+        desc = f"{nm}" + (" [lead]" if lead else "") + (f" ({role})" if role else "")
+        if skill_names:
+            desc += ": " + ", ".join([s for s in skill_names if s])
+        agent_lines.append(f"- {desc}")
+
+    memory_lines = [f"- {m.get('text','')[:400]}" for m in memories if m.get("text")]
+
+    system = (
+        "You improve user prompts for an AI team workspace. "
+        "Rewrite the draft into a clearer, more specific, context-aware prompt while preserving intent. "
+        "Use the provided conversation history, channel context, agent roster (roles/skills/lead), and recalled persistent memories when relevant. "
+        "Do not invent facts. Keep it concise and actionable. Return ONLY the improved prompt text."
+    )
+    user_parts = [
+        f"Channel/Conversation: {json.dumps({k: conv.get(k) for k in ('id','name','kind','topic') if conv.get(k) is not None}, ensure_ascii=False)}",
+        "Agents/participants:\n" + ("\n".join(agent_lines) if agent_lines else "- (none provided)"),
+        "Recent conversation:\n" + ("\n".join(history_lines) if history_lines else "- (none provided)"),
+        "Relevant persistent memories:\n" + ("\n".join(memory_lines) if memory_lines else "- (none recalled)"),
+        f"Goal/context hint: {req.goal or '(none)'}",
+        "Draft prompt to improve:\n" + draft,
+    ]
+    ctx = RouteContext(
+        messages=[{"role": "system", "content": system}, {"role": "user", "content": "\n\n".join(user_parts)}],
+        requested_model=None,
+        strict_model=False,
+        stream=False,
+        temperature=0.3,
+    )
+    result = await router.complete(ctx)
+    improved = (result.text or draft).strip()
+    attempts = [a.to_dict() if hasattr(a, "to_dict") else a for a in result.attempts]
+    meta = _routing_meta(attempts, None)
+
+    if settings.mem20_enabled:
+        try:
+            cid = (conv.get("id") or conv.get("conversationId") or "unknown")
+            await get_mem20_client().memory_store(
+                f"Prompt optimized in conversation {cid}. Draft: {draft[:500]} | Improved: {improved[:800]}",
+                category="teamz",
+                tags=["teamz", f"conversation:{cid}", "prompt_optimization"],
+            )
+        except Exception:
+            pass
+
+    return OptimizePromptResponse(prompt=improved, original=draft, memories_used=memories, routing=meta)
+
+
+@app.post("/v1/memory/recall")
+async def memory_recall(req: MemoryRecallRequest):
+    if not settings.mem20_enabled:
+        return {"items": [], "enabled": False}
+    try:
+        client = get_mem20_client()
+        items = await client.recall_texts(req.query, limit=req.limit)
+        return {"items": items, "enabled": True}
+    except Exception as e:
+        raise HTTPException(status_code=502, detail=f"mem20 recall failed: {e}")
+
+
+@app.post("/v1/memory/store")
+async def memory_store(req: MemoryStoreRequest):
+    if not settings.mem20_enabled:
+        raise HTTPException(status_code=503, detail="mem20 is disabled")
+    try:
+        client = get_mem20_client()
+        res = await client.memory_store(req.content, category=req.category, tags=req.tags)
+        return {"ok": True, "result": res}
+    except Exception as e:
+        raise HTTPException(status_code=502, detail=f"mem20 store failed: {e}")
+
+
+@app.get("/v1/tools")
+async def list_tools():
+    if not settings.mem20_enabled:
+        return {"tools": [], "enabled": False}
+    try:
+        client = get_mem20_client()
+        tools = await client.tools()
+        return {"tools": tools, "enabled": True}
+    except Exception as e:
+        raise HTTPException(status_code=502, detail=f"mem20 tools/list failed: {e}")
+
+
+@app.post("/v1/tools/call")
+async def call_tool(req: ToolCallRequest):
+    if not settings.mem20_enabled:
+        raise HTTPException(status_code=503, detail="mem20 is disabled")
+    try:
+        client = get_mem20_client()
+        result = await client.call_tool(req.name, req.arguments)
+        return {"ok": True, "result": result}
+    except Mem20Error as e:
+        raise HTTPException(status_code=502, detail=str(e))
+    except Exception as e:
+        raise HTTPException(status_code=502, detail=f"mem20 tool call failed: {e}")
+
+
+# --- Connectors ---
+
+@app.get("/v1/connectors/status")
+async def connectors_status_endpoint():
+    return connectors_status()
+
+
+@app.get("/v1/connectors/github/status")
+async def connectors_github_status():
+    return github_status().to_dict()
+
+
+@app.post("/v1/connectors/github/request")
+async def connectors_github_request(payload: Dict[str, Any]):
+    method = str(payload.get("method") or "GET").upper()
+    path = str(payload.get("path") or "").strip()
+    if not path:
+        raise HTTPException(status_code=400, detail="path is required")
+    params = payload.get("params") if isinstance(payload.get("params"), dict) else None
+    body = payload.get("body") if ("body" in payload) else payload.get("json")
+    return github_request(method, path, params=params, json_body=body)
+
+
+@app.get("/v1/connectors/gh/status")
+async def connectors_gh_status():
+    return gh_status().to_dict()
+
+
+@app.post("/v1/connectors/gh/exec")
+async def connectors_gh_exec(payload: Dict[str, Any]):
+    args = payload.get("args")
+    if not isinstance(args, list):
+        raise HTTPException(status_code=400, detail="args (list) is required")
+    cwd = payload.get("cwd") if isinstance(payload.get("cwd"), str) else None
+    timeout = payload.get("timeout")
+    try:
+        timeout_f = float(timeout) if timeout is not None else 60.0
+    except Exception:
+        timeout_f = 60.0
+    timeout_f = max(1.0, min(timeout_f, 300.0))
+    return gh_exec([str(a) for a in args], cwd=cwd, timeout=timeout_f)
+
+
+@app.get("/v1/connectors/google/status")
+async def connectors_google_status():
+    return google_status().to_dict()
+
+
+@app.post("/v1/connectors/google/request")
+async def connectors_google_request(payload: Dict[str, Any]):
+    method = str(payload.get("method") or "GET").upper()
+    url = str(payload.get("url") or payload.get("path") or "").strip()
+    if not url:
+        raise HTTPException(status_code=400, detail="url or path is required")
+    scopes = payload.get("scopes") if isinstance(payload.get("scopes"), list) else None
+    params = payload.get("params") if isinstance(payload.get("params"), dict) else None
+    body = payload.get("body") if ("body" in payload) else payload.get("json")
+    headers = payload.get("headers") if isinstance(payload.get("headers"), dict) else None
+    return google_api_request(method, url, scopes=[str(s) for s in scopes] if scopes else None, params=params, json_body=body, headers=headers)
+
+
+# --- Runtime planning for lead agent / orchestration ---
+
+def _extract_json_object(text: str) -> Optional[Dict[str, Any]]:
+    text = (text or "").strip()
+    if not text:
+        return None
+    try:
+        obj = json.loads(text)
+        return obj if isinstance(obj, dict) else None
+    except Exception:
+        pass
+    start = text.find("{")
+    end = text.rfind("}")
+    if start != -1 and end != -1 and end > start:
+        try:
+            obj = json.loads(text[start : end + 1])
+            return obj if isinstance(obj, dict) else None
+        except Exception:
+            return None
+    return None
+
+
+@app.post("/v1/runtime/plan")
+async def runtime_plan(payload: Dict[str, Any]):
+    """Plan runtime/workspace actions for a lead agent request.
+    Returns structured actions the frontend can apply (create/remove/program agents/channels, delegate).
+    """
+    request_text = str(payload.get("request") or payload.get("prompt") or payload.get("message") or "").strip()
+    if not request_text:
+        raise HTTPException(status_code=400, detail="request is required")
+    workspace = payload.get("workspace") or {}
+    agents = workspace.get("agents") or payload.get("agents") or []
+    conversations = workspace.get("conversations") or payload.get("conversations") or []
+    active_conversation = workspace.get("activeConversation") or payload.get("activeConversation") or payload.get("conversation")
+    history = payload.get("history") or []
+
+    # Recall relevant persistent memories
+    memories: List[Dict[str, Any]] = []
+    if settings.mem20_enabled:
+        q = request_text
+        if active_conversation and isinstance(active_conversation, dict):
+            q = f"{active_conversation.get('name','')} {request_text}"
+        memories = await _recall_memories_for_context(q, active_conversation if isinstance(active_conversation, dict) else None, limit=8)
+
+    system = (
+        "You are the runtime planner for a lead AI agent in the teamz workspace. "
+        "Given the user's request and current workspace state, produce a concrete plan and structured actions. "
+        "The lead agent can add, remove, and program agents and the runtime itself; make new channels; make agents; "
+        "program/configure current ones; and orchestrate/delegate work to groups of agents that match the task. "
+        "Return STRICT JSON only with this shape: {\n"
+        "  \"summary\": string,\n"
+        "  \"actions\": [ {\"type\": string, ...params} ],\n"
+        "  \"delegations\": [ {\"agent_id\": string|null, \"agent_name\": string|null, \"task\": string, \"reason\": string} ],\n"
+        "  \"response\": string\n"
+        "}\n"
+        "Supported action types and params: "
+        "create_channel {name, agentIds?:[], agentNames?:[], topic?}; "
+        "rename_channel {conversationId|channelId|nameMatch, name}; "
+        "update_channel_members {conversationId|channelId|nameMatch, agentIds?:[], agentNames?:[], addAgentIds?:[], addAgentNames?:[], removeAgentIds?:[], removeAgentNames?:[]}; "
+        "delete_channel {conversationId|channelId|nameMatch}; "
+        "create_agent {name, role?, systemPrompt?, model?, skills?:[{key,label,level}], isLead?:bool, emoji?, accent?, templateId?, seniority?}; "
+        "update_agent {agentId|agentName, name?, systemPrompt?, model?, skills?:[{key,label,level}], addSkills?:[{key,label,level}], isLead?:bool, emoji?, accent?, status?, endpointUrl?}; "
+        "delete_agent {agentId|agentName}; "
+        "invite_agent_to_channel {conversationId|channelId|nameMatch, agentId|agentName}; "
+        "send_message {conversationId|channelId|nameMatch|agentName(for direct), text, directedAgentNames?:[], directedAgentIds?:[]}. "
+        "Use existing ids/names from workspace when possible. Prefer agentNames/nameMatch when ids unknown. "
+        "Keep actions minimal, valid, and executable. Do not invent non-existent agents in delegations unless also creating them."
+    )
+    # Compact context
+    agent_ctx = []
+    for a in agents[:60]:
+        if not isinstance(a, dict):
+            continue
+        skills = a.get("skills") or []
+        sk = ", ".join([f"{(s.get('label') or s.get('key'))}(L{s.get('level',1)})" for s in skills if isinstance(s, dict)][:8])
+        agent_ctx.append({
+            "id": a.get("id"), "name": a.get("name"), "isLead": bool(a.get("isLead")),
+            "role": (a.get("origin") or {}).get("role") if isinstance(a.get("origin"), dict) else a.get("role"),
+            "model": a.get("model"), "skills": sk,
+        })
+    conv_ctx = []
+    for c in conversations[:60]:
+        if not isinstance(c, dict):
+            continue
+        conv_ctx.append({"id": c.get("id"), "kind": c.get("kind"), "name": c.get("name"), "agentIds": c.get("agentIds"), "topic": c.get("topic")})
+    hist_ctx = []
+    for h in history[-20:]:
+        if not isinstance(h, dict):
+            continue
+        hist_ctx.append({"authorType": h.get("authorType"), "authorName": h.get("authorName"), "text": str(h.get("text") or "")[:400]})
+
+    user = (
+        f"User request: {request_text}\n\n"
+        f"Active conversation: {json.dumps(active_conversation, ensure_ascii=False)[:2000] if active_conversation else 'null'}\n\n"
+        f"Agents: {json.dumps(agent_ctx, ensure_ascii=False)[:6000]}\n\n"
+        f"Conversations/channels: {json.dumps(conv_ctx, ensure_ascii=False)[:6000]}\n\n"
+        f"Recent history: {json.dumps(hist_ctx, ensure_ascii=False)[:4000]}\n\n"
+        f"Relevant memories: {json.dumps([m.get('text') for m in memories[:6]], ensure_ascii=False)[:3000]}"
+    )
+    ctx = RouteContext(messages=[{"role": "system", "content": system}, {"role": "user", "content": user}], stream=False, temperature=0.2)
+    result = await router.complete(ctx)
+    parsed = _extract_json_object(result.text) or {}
+    actions = parsed.get("actions") if isinstance(parsed.get("actions"), list) else []
+    delegations = parsed.get("delegations") if isinstance(parsed.get("delegations"), list) else []
+    out = {
+        "ok": True,
+        "summary": parsed.get("summary") or "",
+        "actions": actions,
+        "delegations": delegations,
+        "response": parsed.get("response") or parsed.get("summary") or "",
+        "memories_used": memories,
+        "routing": _routing_meta([a.to_dict() if hasattr(a, "to_dict") else a for a in result.attempts], None).model_dump(),
+        "raw": None if parsed else result.text,
+    }
+    if settings.mem20_enabled:
+        try:
+            await get_mem20_client().memory_store(
+                f"Runtime plan for request: {request_text[:300]} => actions={len(actions)} delegations={len(delegations)} summary={str(out.get('summary',''))[:300]}",
+                category="teamz",
+                tags=["teamz", "runtime", "lead_agent", "plan"],
+            )
+        except Exception:
+            pass
+    return out
+
+
+# --- Opportunity / portfolio scanning ---
+
+@app.post("/v1/opportunities/scan")
+async def scan_opportunities(payload: Dict[str, Any]):
+    """Scan chats/messages for opportunities to create tools, skills, capabilities, and reusable assets."""
+    conversations = payload.get("conversations") or payload.get("chats") or []
+    messages = payload.get("messages") or []
+    agents = payload.get("agents") or []
+    if messages and not conversations:
+        conversations = [{"id": payload.get("conversationId", "unknown"), "messages": messages}]
+
+    corpus_parts = []
+    for conv in conversations[:10]:
+        cid = conv.get("id") or conv.get("conversationId") or "conversation"
+        cname = conv.get("name") or cid
+        corpus_parts.append(f"## Conversation: {cname} ({cid})")
+        for m in (conv.get("messages") or [])[-60:]:
+            who = m.get("authorName") or m.get("role") or m.get("authorType") or "unknown"
+            txt = m.get("text") or m.get("content") or ""
+            if isinstance(txt, list):
+                txt = json.dumps(txt, ensure_ascii=False)
+            txt = str(txt).strip()
+            if txt:
+                corpus_parts.append(f"- {who}: {txt[:600]}")
+        corpus_parts.append("")
+    corpus = "\n".join(corpus_parts)[:12000]
+    if not corpus.strip():
+        if settings.mem20_enabled:
+            mem_items = await _recall_memories_for_context("opportunities tools skills capabilities reusable assets", None, limit=12)
+            corpus = "\n".join(f"- {i.get('text','')}" for i in mem_items)
+
+    agent_summary = []
+    for a in agents[:40]:
+        skills = a.get("skills") or []
+        sk = ", ".join((f"{s.get('label') or s.get('key')}(L{s.get('level',1)})") for s in skills if isinstance(s, dict)) if skills else ""
+        agent_summary.append(f"- {a.get('id','')} {a.get('name','agent')} lead={bool(a.get('isLead'))}: {sk}")
+
+    system = (
+        "You analyze team chat transcripts to find opportunities to create reusable assets. "
+        "Identify: (1) skills/capabilities agents demonstrated or should learn, (2) tools/automations worth building, "
+        "(3) reusable prompts/workflows/templates. Return STRICT JSON only with keys: "
+        "{\"opportunities\":[{\"type\":\"skill|tool|capability|asset\",\"title\":str,\"description\":str,\"evidence\":str,\"suggested_agent\":str|null,\"suggested_agent_id\":str|null,\"suggested_skill_level\":1-5|null,\"reusable\":true}],"
+        "\"portfolio_updates\":[{\"agent_name\":str,\"agent_id\":str|null,\"skill\":str,\"skill_key\":str,\"level\":1-5,\"evidence\":str}]}"
+    )
+    user = (
+        "Known agents/skills:\n" + ("\n".join(agent_summary) if agent_summary else "- none") +
+        "\n\nChat corpus:\n" + (corpus or "- empty")
+    )
+    ctx = RouteContext(messages=[{"role": "system", "content": system}, {"role": "user", "content": user}], stream=False, temperature=0.2)
+    result = await router.complete(ctx)
+    parsed = _extract_json_object(result.text) or {"opportunities": [], "portfolio_updates": [], "raw": result.text}
+    if not isinstance(parsed.get("opportunities"), list):
+        parsed["opportunities"] = []
+    if not isinstance(parsed.get("portfolio_updates"), list):
+        parsed["portfolio_updates"] = []
+    attempts = [a.to_dict() if hasattr(a, "to_dict") else a for a in result.attempts]
+    parsed["routing"] = _routing_meta(attempts, None).model_dump()
+
+    if settings.mem20_enabled:
+        try:
+            await get_mem20_client().memory_store(
+                "Opportunity scan results: " + json.dumps(parsed, ensure_ascii=False)[:3500],
+                category="teamz",
+                tags=["teamz", "opportunities", "scan"],
+            )
+        except Exception:
+            pass
+    return parsed
+
+
+# --- Persistent workspace / session state ---------------------------------
+
+@app.get("/v1/state")
+async def get_state() -> Dict[str, Any]:
+    return state_store.load()
+
+
+@app.get("/v1/state/status")
+async def get_state_status() -> Dict[str, Any]:
+    return state_store.summary()
+
+
+@app.put("/v1/state")
+async def put_state(snapshot: WorkspaceSnapshot) -> Dict[str, Any]:
+    state_store.save(snapshot.model_dump())
+    return {"ok": True, "state": state_store.summary()}
+
+
+@app.post("/v1/state/reset")
+async def reset_state() -> Dict[str, Any]:
+    from .state import empty_state
+
+    state_store.save(empty_state())
+    return {"ok": True, "state": state_store.summary()}
+
+
+# --- Skill catalogue ------------------------------------------------------
+
+@app.get("/v1/skills")
+async def get_skills() -> Dict[str, Any]:
+    skills = load_skill_catalogue()
+    return {"skills": skills, "count": len(skills), "status": skill_status()}
+
+
+# --- Goals (room objectives) ----------------------------------------------
+
+@app.get("/v1/goals")
+async def get_goals() -> Dict[str, Any]:
+    state = state_store.load()
+    return {"goals": state.get("goals") or {}, "worker": worker.status()}
+
+
+@app.post("/v1/goals")
+async def set_goal(req: SetGoalRequest) -> Dict[str, Any]:
+    text = (req.text or "").strip()
+    state = state_store.load()
+    goals = dict(state.get("goals") or {})
+    if not text:
+        goals.pop(req.conversationId, None)
+        state["goals"] = goals
+        state_store.save(state)
+        return {"ok": True, "cleared": True, "conversationId": req.conversationId}
+    existing = goals.get(req.conversationId) or {}
+    goals[req.conversationId] = {
+        "text": text,
+        "active": bool(req.active) if not existing.get("done") else False,
+        "done": bool(existing.get("done")),
+        "status": existing.get("status", "active"),
+        "progress": int(existing.get("progress", 0) or 0),
+        "steps": int(existing.get("steps", 0) or 0),
+        "lastStep": existing.get("lastStep"),
+        "nextStep": existing.get("nextStep"),
+        "lastError": None,
+        "lastAgentId": existing.get("lastAgentId"),
+        "createdAt": int(existing.get("createdAt") or time.time() * 1000),
+        "updatedAt": int(time.time() * 1000),
+        "cooldownUntil": None,
+    }
+    state["goals"] = goals
+    state_store.save(state)
+    if settings.goal_worker_enabled and goals[req.conversationId]["active"]:
+        await worker.start()
+    return {"ok": True, "goal": goals[req.conversationId]}
+
+
+@app.get("/v1/goals/{conversation_id}")
+async def get_goal(conversation_id: str) -> Dict[str, Any]:
+    goals = state_store.load().get("goals") or {}
+    goal = goals.get(conversation_id)
+    if not goal:
+        raise HTTPException(status_code=404, detail="no goal for this room")
+    return {"ok": True, "conversationId": conversation_id, "goal": goal}
+
+
+@app.delete("/v1/goals/{conversation_id}")
+async def delete_goal(conversation_id: str) -> Dict[str, Any]:
+    state = state_store.load()
+    goals = dict(state.get("goals") or {})
+    existed = goals.pop(conversation_id, None) is not None
+    state["goals"] = goals
+    state_store.save(state)
+    return {"ok": True, "cleared": existed}
+
+
+@app.post("/v1/goals/{conversation_id}/tick")
+async def tick_goal(conversation_id: str) -> Dict[str, Any]:
+    result = await worker.tick_conversation(conversation_id)
+    return result
+
+
+# --- Tasks / activity -----------------------------------------------------
+
+@app.get("/v1/tasks")
+async def get_tasks() -> Dict[str, Any]:
+    state = state_store.load()
+    return {"tasks": state.get("tasks") or [], "activity": (state.get("activity") or [])[-100:]}
+
+
+@app.get("/v1/activity")
+async def get_activity(limit: int = 100) -> Dict[str, Any]:
+    state = state_store.load()
+    items = state.get("activity") or []
+    return {"activity": items[-max(1, min(limit, 500)):]}
+
+
+# --- Terminal -------------------------------------------------------------
+
+@app.get("/v1/terminal/status")
+async def terminal_status_endpoint() -> Dict[str, Any]:
+    return terminal_status()
+
+
+@app.post("/v1/terminal/exec")
+async def terminal_exec_endpoint(req: TerminalExecRequest) -> Dict[str, Any]:
+    timeout = req.timeout
+    if timeout is not None:
+        timeout = max(1.0, min(float(timeout), 600.0))
+    return terminal_exec(
+        req.command,
+        cwd=req.cwd,
+        timeout=timeout,
+        agent_id=req.agentId,
+    ).to_dict()
+
+
+# --- File tools -----------------------------------------------------------
+
+@app.get("/v1/files/status")
+async def files_status_endpoint() -> Dict[str, Any]:
+    return files_status()
+
+
+@app.post("/v1/files/read")
+async def files_read(req: FileReadRequest) -> Dict[str, Any]:
+    return file_read(req.path, offset=req.offset or 0, limit=req.limit or 2000).to_dict()
+
+
+@app.post("/v1/files/write")
+async def files_write(req: FileWriteRequest) -> Dict[str, Any]:
+    return file_write(req.path, req.content, append=req.append).to_dict()
+
+
+@app.post("/v1/files/edit")
+async def files_edit(req: FileEditRequest) -> Dict[str, Any]:
+    return file_edit(req.path, req.old_string, req.new_string, replace_all=req.replace_all).to_dict()
+
+
+@app.post("/v1/files/list")
+async def files_list(req: FileListRequest) -> Dict[str, Any]:
+    return file_list(req.path or ".").to_dict()
+
+
+# --- Agent runtime tool actions (terminal/files/gh/github) ----------------
+
+@app.post("/v1/runtime/exec")
+async def runtime_exec(req: RuntimeExecRequest) -> Dict[str, Any]:
+    results = execute_actions([a.model_dump() for a in req.actions], agent_id=req.agentId)
+    return {"ok": True, "results": results}
+
+
+# --- Autonomous worker control -------------------------------------------
+
+@app.get("/v1/worker/status")
+async def worker_status() -> Dict[str, Any]:
+    return worker.status()
+
+
+@app.get("/v1/worker/log")
+async def worker_log(limit: int = 50) -> Dict[str, Any]:
+    return {"log": worker.log[-max(1, min(limit, 200)):]}
+
+
+@app.post("/v1/worker/control")
+async def worker_control(req: WorkerControlRequest) -> Dict[str, Any]:
+    action = (req.action or "").strip().lower()
+    if action == "start":
+        return await worker.start()
+    if action == "stop":
+        return await worker.stop()
+    if action == "tick":
+        if req.conversationId:
+            return await worker.tick_conversation(req.conversationId)
+        results = await worker.tick_all()
+        return {"ok": True, "results": results}
+    if action == "self-improve":
+        return await worker.self_improve(req.agentId)
+    raise HTTPException(status_code=400, detail="action must be start|stop|tick|self-improve")

@@ -44,6 +44,11 @@ The same principle applies to a query class whose verdict is decided by the
 scorer rather than by retrieval. An adversarial probe whose answer is not in the
 corpus, scored by a branch that returns False unconditionally, produces 0.000
 that looks like a retrieval finding and is not one. See ADVERSARIAL_KINDS.
+
+It applies equally to a mode scored on a probe it cannot answer. A text ranker
+run against a metadata filter or a bi-temporal read produces a number that
+measures nothing, so `_mode_answers_kind()` refuses the pairing instead of
+reporting it.
 """
 from __future__ import annotations
 
@@ -62,6 +67,92 @@ from .corpus import Corpus, load
 # about corpus coverage and it has to be explainable — not the guaranteed
 # consequence of a constant in the scorer.
 ADVERSARIAL_KINDS = ("adversarial", "adversarial_hard", "contradiction")
+
+# Probe kinds a text ranker can legitimately be scored on. The non-text kinds
+# (recall, recall_at, entities, ledger) are answered by a different store
+# surface and are excluded from every text mode — see `_mode_answers_kind`.
+TEXT_KINDS = ("direct", "multi_hop", "graph_hop", "adversarial",
+              "adversarial_hard", "contradiction", "unanswerable")
+
+# Every retrieval mode present in the tree, whether this harness can score it,
+# and — where it cannot — the reason. A mode is never dropped from this list:
+# an absent row reads as "not run", which is a weaker statement than "blocked
+# and documented". `scored` is a property of the harness; `scored_in_this_run`
+# is set per invocation by `run()`.
+MODE_SURFACE: tuple[dict, ...] = (
+    {"id": "bm25",
+     "surface": "engine BM25 index (rank_bm25), vector half never called",
+     "scored": True,
+     "note": ("Pure sparse retrieval. Reads the engine's own bm25_index.pkl / "
+              "bm25_corpus.jsonl, so it measures the index the store built. NOT "
+              "the same as `keyword`: hybrid(alpha=0.0) still executes the "
+              "vector half and fuses it, so calling that BM25 overstates what "
+              "was isolated.")},
+    {"id": "vector",
+     "surface": "MemoryStore.semantic -> recall_semantic (FAISS)",
+     "scored": True,
+     "note": ("Dense retrieval. ALIAS of `semantic`, not a second system: same "
+              "code path, scored under the name the surface list uses. The "
+              "embedder backend is reported in `environment.embedder_backend`; "
+              "on a checkout without sentence-transformers it is the engine's "
+              "deterministic hashing fallback, not a neural encoder.")},
+    {"id": "hybrid",
+     "surface": "MemoryStore.hybrid -> recall_hybrid (alpha=0.5)",
+     "scored": True,
+     "note": "RRF fusion of vector + BM25 with cross-encoder reranking ON (default)."},
+    {"id": "hybrid-rerank-off",
+     "surface": "MemoryStore.hybrid, USE_CROSS_ENCODER=False",
+     "scored": True,
+     "note": ("Same fusion with reranking disabled (MEM20_RERANK=0). A real "
+              "operational configuration, not a synthetic variant.")},
+    {"id": "graph",
+     "surface": "MemoryStore.graph -> recall_graph",
+     "scored": True,
+     "note": ("Entity/edge traversal. Scored on `multi_hop` (the start entity's "
+              "own fact) and `graph_hop` (an attribute node one hop away, e.g. "
+              "a country's region), so n is larger than the multi_hop count "
+              "alone. Only entity-bearing probes are scored; that is a corpus "
+              "property, not a skip.")},
+    {"id": "keyword",
+     "surface": "MemoryStore.hybrid(alpha=0.0) -> BM25 half",
+     "scored": True,
+     "note": ("Retained for continuity with the previously published table. It "
+              "is the shipped path for the sparse half but still pays the "
+              "fusion wrapper, which is why `bm25` is reported separately.")},
+    {"id": "constant",
+     "surface": "control retriever (ignores the query)",
+     "scored": True,
+     "note": ("ADVERSARIAL CONTROL. Returns one fixed document that matches no "
+              "corpus record. Every metric must read exactly 0.000; any "
+              "non-zero value means the metric is handing out free hits.")},
+    {"id": "recall",
+     "surface": "MemoryStore.recall (topic/tags filter)",
+     "scored": True,
+     "note": ("Metadata filter, not a ranker. Scored on `recall` probes whose "
+              "query IS the filter (topic family), so a filter that ignores the "
+              "topic fails. Previously unscored for want of a probe class; that "
+              "class now exists.")},
+    {"id": "recall_at",
+     "surface": "MemoryStore.recall_at (bi-temporal)",
+     "scored": True,
+     "note": ("Point-in-time read. Scored on `recall_at` probes: a positive "
+              "instant after ingestion must return the record, and a negative "
+              "instant before ingestion must return nothing. The negative half "
+              "is what catches a read that ignores `as_of`.")},
+    {"id": "entities",
+     "surface": "MemoryStore.entities (enumeration)",
+     "scored": True,
+     "note": ("Query-free enumeration, ordered by degree. Scored on `entities` "
+              "probes that name a high-degree node the top-k must surface. "
+              "Hit rate is defined here as 'the named node is in the "
+              "enumeration', not as a ranked retrieval metric.")},
+    {"id": "ledger",
+     "surface": "MemoryStore.ledger (append-only tail)",
+     "scored": True,
+     "note": ("Append-only tail, ordered not ranked. Scored on `ledger` probes "
+              "that assert a known recent write is present in the tail. This "
+              "measures tail ordering and completeness, not retrieval quality.")},
+)
 
 
 @dataclass
@@ -97,6 +188,7 @@ class Report:
     trust: dict = field(default_factory=dict)
     per_query: list[dict] = field(default_factory=list)
     notes: list[str] = field(default_factory=list)
+    mode_surface: list[dict] = field(default_factory=list)
 
     def to_dict(self) -> dict:
         return asdict(self)
@@ -129,6 +221,35 @@ def _hit(r_hits: list[dict], expect: tuple[str, ...],
     return False, None
 
 
+def _mode_answers_kind(mode: str, kind: str) -> bool:
+    """Can `mode` legitimately be scored on a probe of `kind`?
+
+    This is the dispatch table, and it is deliberately narrow. A text ranker
+    cannot answer a metadata filter, a bi-temporal read, an enumeration or a
+    ledger tail — running it on those probes would produce a number that
+    measures nothing. The reverse is also true: the non-text modes have exactly
+    one probe class each.
+
+    The `constant` control is the exception that proves the rule: it is scored
+    on every TEXT kind so its 0.000 is a real check that the metric hands out no
+    free hits. It is deliberately NOT scored on `recall_at`, because a negative
+    temporal probe's correct answer is "nothing came back" and a control that
+    always returns one document would score 0.000 there for the wrong reason.
+    """
+    if mode == "graph":
+        return kind in ("multi_hop", "graph_hop")
+    if mode == "recall":
+        return kind == "recall"
+    if mode == "recall_at":
+        return kind == "recall_at"
+    if mode == "entities":
+        return kind == "entities"
+    if mode == "ledger":
+        return kind == "ledger"
+    # Text rankers: bm25, vector, hybrid, hybrid-rerank-off, keyword, constant.
+    return kind in TEXT_KINDS
+
+
 def _run_mode(store, q, mode: str, k: int) -> tuple[list[dict], str | None,
                                                     bool | None, float]:
     t0 = time.perf_counter()
@@ -146,12 +267,107 @@ def _run_mode(store, q, mode: str, k: int) -> tuple[list[dict], str | None,
         facts = [{"id": f.get("id"), "content": f.get("content", "")}
                  for f in r.get("facts", [])]
         return facts, ("found" if r.get("found") else "miss"), True, ms
+    if mode == "bm25":
+        # The engine's OWN sparse index, with the vector half never called.
+        # `keyword` below goes through hybrid(alpha=0.0), which still executes
+        # and fuses the vector half; that is a different measurement, which is
+        # why both exist. Imported lazily so the harness runs on a checkout
+        # where rank_bm25 is absent and only the BM25 half is skipped.
+        from memory_engine import memory as _eng
+        if not getattr(_eng, "BM25_AVAILABLE", False):
+            raise RuntimeError("rank_bm25 not installed; bm25 mode unavailable")
+        bm25 = _eng._get_bm25_index()
+        corpus = _eng._load_bm25_corpus()
+        scores = bm25.get_scores(_eng._bm25_tokens(q.text))
+        order = sorted(range(len(corpus)), key=lambda i: -float(scores[i]))
+        by_id = _eng._ledger_remember_by_id()
+        hits = []
+        for idx in order:
+            if len(hits) >= k:
+                break
+            rec = by_id.get(corpus[idx]["id"])
+            if rec is None:
+                continue
+            hits.append({"id": rec.get("id"), "content": rec.get("content", ""),
+                         "topic": rec.get("topic"), "tags": rec.get("tags"),
+                         "epistemic_status": rec.get("epistemic_status"),
+                         "_bm25_score": float(scores[idx])})
+        ms = (time.perf_counter() - t0) * 1000
+        return hits, None, True, ms
+    if mode == "vector":
+        # Alias of `semantic`, scored under the name the surface list uses.
+        r = store.semantic(q.text, k=k)
+        ms = (time.perf_counter() - t0) * 1000
+        return r["hits"], None, r["healthy"], ms
+    if mode == "hybrid-rerank-off":
+        # The shipped fusion with the cross-encoder disabled. Toggled on the
+        # engine and restored in `finally`, so a raised query cannot leave the
+        # store in the wrong configuration for the next mode.
+        eng = store._engine
+        original = getattr(eng, "USE_CROSS_ENCODER", False)
+        try:
+            eng.USE_CROSS_ENCODER = False
+            r = store.hybrid(q.text, k=k)
+        finally:
+            eng.USE_CROSS_ENCODER = original
+        ms = (time.perf_counter() - t0) * 1000
+        return r["hits"], r["degraded_to"], True, ms
+    if mode == "constant":
+        # The control: a fixed document that matches no corpus record, returned
+        # for every query regardless of what was asked. Every metric must read
+        # 0.000; a non-zero value means the metric is handing out free hits.
+        ms = (time.perf_counter() - t0) * 1000
+        return [{"id": "constant-control",
+                 "content": "mem20 benchmark constant control document",
+                 "topic": "bench.control",
+                 "tags": ["control"],
+                 "epistemic_status": "observed"}], None, True, ms
     if mode == "keyword":
         # Engine-level BM25 via hybrid with alpha=0, which is the honest way to
         # isolate the keyword half using the shipped code path.
         r = store.hybrid(q.text, k=k, alpha=0.0)
         ms = (time.perf_counter() - t0) * 1000
         return r["hits"], r["degraded_to"], True, ms
+    if mode == "recall":
+        # Metadata filter, not a ranker. The "query" is the filter itself, so
+        # the probe carries topic_filter / tags_filter instead of text. The
+        # returned rows are ledger records, so the same evidence check applies.
+        rows = store.recall(topic=q.topic_filter,
+                            tags=list(q.tags_filter) or None, k=k)
+        ms = (time.perf_counter() - t0) * 1000
+        return rows, None, True, ms
+    if mode == "recall_at":
+        # Bi-temporal read. The "query" is the as-of instant; a probe may also
+        # assert that nothing existed yet (expect_empty), which is the only way
+        # to test the temporal axis rather than the current view.
+        rows = store.recall_at(q.as_of or "1970-01-01T00:00:00+00:00",
+                               topic=q.topic_filter,
+                               tags=list(q.tags_filter) or None, k=k)
+        ms = (time.perf_counter() - t0) * 1000
+        return rows, None, True, ms
+    if mode == "entities":
+        # Query-free enumeration. There is no text to match, so the probe asks
+        # whether a known high-degree entity is present in the enumeration. The
+        # row shape is {entity, degree, facts, topics}; map `entity` onto
+        # `content` so the shared evidence check can read it.
+        #
+        # The enumeration limit is not the retrieval `k`: `entities()` is an
+        # ordered top-N over nodes, and the store holds 600+ of them, so asking
+        # for only k=5 would score the node ranking rather than the mode. The
+        # probe is "is this high-degree node enumerable", which needs a window
+        # wider than the arbitrary top-5.
+        limit = max(k, q.enumeration_limit or k)
+        rows = [{"id": None, "content": e.get("entity", ""),
+                 "entity": e.get("entity"), "degree": e.get("degree")}
+                for e in store.entities(limit=limit)]
+        ms = (time.perf_counter() - t0) * 1000
+        return rows, None, True, ms
+    if mode == "ledger":
+        # Append-only tail. Ordered, not ranked: the probe asserts that the
+        # most recent writes are the ones the tail returns.
+        rows = store.ledger(k=k)
+        ms = (time.perf_counter() - t0) * 1000
+        return rows, None, True, ms
     raise ValueError(mode)
 
 
@@ -216,6 +432,10 @@ def _leak(hits: list[dict], forbidden: tuple[str, ...]) -> bool:
     the union of their words covered most of the vocabulary and it reported a
     0.87 leak against a CLEAN store. `forbidden` is now only a fallback for
     result shapes that carry no labels at all.
+
+    The fallback requires a MULTI-WORD phrase on purpose. A single word is not
+    distinctive enough to convict a result: "rewritten" appears in ordinary
+    prose, and matching on it would flag honest grounded content.
     """
     for h in hits:
         status = str(h.get("epistemic_status") or "").lower()
@@ -306,6 +526,14 @@ def run(store, modes=("keyword", "semantic", "hybrid", "graph"),
         "Scores are NOT comparable to Mem0's LoCoMo/LongMemEval or Zep's DMR. "
         "Those run on different corpora (two of them private or vendor-defined) "
         "with different metrics. These numbers describe this corpus only.")
+    # The caveat is emitted by the harness, not patched into the artifact, so a
+    # merge or a re-render cannot drop it. It is a hard restriction on how these
+    # numbers may be quoted, and it stays until a run on the originals lands.
+    notes.append(
+        "NO LoCoMo RESULT IS CLAIMED. This harness has not been run against the "
+        "LoCoMo originals (10 conversations, 1,986 QA), so no LoCoMo figure "
+        "appears in this report and none may be quoted from it. The caveat "
+        "stays until a run on the originals lands.")
 
     supports_all = _answerable_ids(corpus)
 
@@ -328,9 +556,7 @@ def run(store, modes=("keyword", "semantic", "hybrid", "graph"),
     results: list[QueryResult] = []
     for mode in modes:
         for q in corpus.queries:
-            if mode == "graph" and q.kind != "multi_hop":
-                continue  # graph traversal is only meaningful for entity queries
-            if mode == "graph" and q.entity is None:
+            if not _mode_answers_kind(mode, q.kind):
                 continue
             try:
                 hits, degraded, healthy, ms = _run_mode(store, q, mode, k)
@@ -353,13 +579,21 @@ def run(store, modes=("keyword", "semantic", "hybrid", "graph"),
                 # Leak is a property of what came back, independent of whether
                 # the query was answerable, so the control is still checked.
                 leaked = _leak(hits, sim_markers)
+            elif q.kind == "recall_at" and q.expect_empty:
+                # Negative temporal probe: the correct answer is "nothing
+                # existed yet". A hit means the read returned a record it
+                # should not have, so the verdict is inverted on purpose and
+                # labelled by the probe, not by a constant in the scorer.
+                hit, rank = (len(hits) == 0), (1 if not hits else None)
+                leaked = _leak(hits, sim_markers)
             else:
-                # Every answerable kind — direct, multi_hop, adversarial,
-                # adversarial_hard, contradiction — is scored by the same
-                # evidence check. Adversarial used to be excluded here and had
-                # its verdict hardcoded to False, which is why every
-                # adversarial row in every published run read exactly 0.000
-                # regardless of what retrieval returned.
+                # Every answerable kind — direct, multi_hop, graph_hop,
+                # adversarial, adversarial_hard, contradiction, recall,
+                # recall_at, entities, ledger — is scored by the same evidence
+                # check. Adversarial used to be excluded here and had its
+                # verdict hardcoded to False, which is why every adversarial
+                # row in every published run read exactly 0.000 regardless of
+                # what retrieval returned.
                 hit, rank = _hit(hits, q.expect, sup)
                 leaked = (_leak(hits, sim_markers)
                           if q.kind in ADVERSARIAL_KINDS else False)
@@ -385,6 +619,8 @@ def run(store, modes=("keyword", "semantic", "hybrid", "graph"),
         trust=trust,
         per_query=[asdict(r) for r in results],
         notes=notes,
+        mode_surface=[{**m, "scored_in_this_run": m["id"] in modes}
+                      for m in MODE_SURFACE],
     )
 
 
@@ -468,6 +704,12 @@ def _environment(store) -> dict:
         "bm25_available": eng.BM25_AVAILABLE,
         "embedding_model": getattr(eng, "EMBEDDING_MODEL", None),
         "embedding_dim": getattr(eng, "EMBEDDING_DIM", None),
+        # The model NAME is a constant; it does not say which encoder actually
+        # ran. Without sentence-transformers the engine silently falls back to
+        # a deterministic hashing embedder, and a report that printed only the
+        # constant would imply a neural encoder was used when it was not.
+        "embedder_backend": (eng.embedder_backend()
+                             if hasattr(eng, "embedder_backend") else None),
         "cross_encoder": bool(getattr(eng, "USE_CROSS_ENCODER", False)),
     }
 
@@ -484,10 +726,18 @@ def render_markdown(report: Report) -> str:
 
     a("> [!IMPORTANT]")
     a("> **These numbers are not comparable to competitor benchmarks.** "
-      "Mem0's LoCoMo (92.5) and LongMemEval (94.4) figures and Zep's DMR "
-      "(94.8%) come from different corpora — two of the three are private or "
-      "vendor-defined — and different metrics. Nothing here refutes or "
-      "reproduces them. These results describe this corpus only.")
+      "Mem0's LoCoMo and LongMemEval figures and Zep's DMR come from different "
+      "corpora — two of the three are private or vendor-defined — and "
+      "different metrics. Nothing here refutes or reproduces them. These "
+      "results describe this corpus only. No competitor figure is quoted in "
+      "this report, by design: a number lifted out of context is exactly how "
+      "an incomparable result gets mistaken for a comparable one.")
+    a("")
+    a("> [!WARNING]")
+    a("> **No LoCoMo result is claimed.** This harness has not been run against "
+      "the LoCoMo originals (10 conversations, 1,986 QA). No LoCoMo figure "
+      "appears in this report and none may be quoted from it. The caveat stays "
+      "until a run on the originals lands.")
     a("")
 
     a("## Retrieval quality")
@@ -557,6 +807,12 @@ def render_markdown(report: Report) -> str:
     a(f"- Python {env['python']} on {env['platform']} ({env['machine']})")
     a(f"- Embedding model: `{env['embedding_model']}` "
       f"({env['embedding_dim']}-dim)")
+    backend = env.get("embedder_backend")
+    if backend:
+        a(f"- Embedder backend actually used: `{backend}`"
+          + ("" if backend == "sentence-transformers" else
+             " — NOT a neural encoder. The vector and hybrid rows above "
+             "measure this backend, not all-MiniLM-L6-v2."))
     a(f"- Vector deps available: {env['vector_available']}; "
       f"BM25: {env['bm25_available']}; cross-encoder: {env['cross_encoder']}")
     a("")
@@ -573,7 +829,8 @@ def render_markdown(report: Report) -> str:
     a("```bash")
     a("mem20benchmarkz generate-scale --out /tmp/mem20-scale-corpus-v2")
     a("mem20benchmarkz run-scale --corpus /tmp/mem20-scale-corpus-v2 --bulk \\")
-    a("    --modes keyword,semantic --out benchmarks/results")
+    a("    -k 5 --modes bm25,vector,hybrid,hybrid-rerank-off,graph,keyword,\\")
+    a("    constant,recall,recall_at,entities,ledger --out benchmarks/results")
     a("```")
     a("")
     a("The run uses an isolated store, ingests the corpus through the engine's "
@@ -588,3 +845,7 @@ def save(report: Report, out_dir: str | Path) -> dict[str, str]:
     j.write_text(json.dumps(report.to_dict(), indent=2, default=str))
     md = out / "latest.md"
     md.write_text(render_markdown(report))
+    # The caller prints these paths; returning None made `run-scale` raise
+    # TypeError after it had already written both files, so a successful run
+    # exited non-zero and looked like a failure.
+    return {"json": str(j), "markdown": str(md)}

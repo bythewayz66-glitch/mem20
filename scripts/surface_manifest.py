@@ -139,7 +139,7 @@ def live_tool_names() -> list[str]:
         capture_output=True,
         text=True,
         timeout=240,
-        env={**os.environ, "PYTHONUNBUFFERED": "1"},
+        env={**os.environ, "PYTHONUNBUFFERED": "1", "MEM20_HEALTH_DISABLE": "1"},
     )
     response = None
     for line in completed.stdout.splitlines():

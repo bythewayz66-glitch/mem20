@@ -9,7 +9,7 @@ p = subprocess.Popen(
     [sys.executable, os.path.join(ROOT, "launcher.py")],
     stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE,
     cwd=ROOT, text=True, bufsize=1,
-    env={**os.environ, "PYTHONUNBUFFERED": "1"},
+    env={**os.environ, "PYTHONUNBUFFERED": "1", "MEM20_HEALTH_DISABLE": "1"},
 )
 
 def send(obj):

@@ -14,18 +14,13 @@ ENV/
 build/
 dist/
 *.egg-info/
-.mem20-skill-uploads/
+.mem20/
 
-# Test
-.pytest_cache/
-.coverage
-htmlcov/
-.tox/
-
-# Node
-node_modules/
-npm-debug.log*
-yarn-error.log*
+# Memory store
+store/
+*.faiss
+*.jsonl
+*.pkl
 
 # Logs
 *.log
@@ -65,3 +60,65 @@ entries/*.md
 # Secrets
 secrets/
 .env
+*.key
+*.pem
+
+# Docker
+.docker/
+
+# Node
+node_modules/
+npm-debug.log*
+
+# Test
+.coverage
+.pytest_cache/
+htmlcov/
+# Ad-hoc root scratch (real suites live under each package's tests/)
+/test/
+
+# Model / embedding caches
+**/data/cache/
+**/huggingface/
+**/.cache/huggingface/
+**/models--*/
+**/snapshots/
+**/.no_exist/
+CACHEDIR.TAG
+*.tensorflow.cache/
+
+# Blender/Unity cache
+*.blend*
+
+# Rust build artifacts — keep Cargo.lock tracked for braid workspaces (issue #20)
+**/target/
+# Do NOT ignore braid**/Cargo.lock — reproducible builds require it.
+# Ignore other accidental lockfiles outside braid if any:
+# (none)
+
+# Runtime data
+entries/*.json
+
+mem20agentz/built/
+mem20messenger/.test-home/
+mem20owebz/data/cache/
+mem20owebz/data/vector_db/
+mem20owebz/data/uploads/
+backups/kanban-merge-*/
+.mypy_cache/
+
+# Generated SQLite state (issue #83)
+*.db
+*.db-wal
+*.db-shm
+*.sqlite3-wal
+*.sqlite3-shm
+
+# Perl SDK build artifacts
+sdk/perl/blib/
+sdk/perl/pm_to_blib
+sdk/perl/Makefile
+sdk/perl/MYMETA.*
+sdk/perl/*.tar.gz
+sdk/perl/Mem20-*/
+sdk/perl/MANIFEST.bak

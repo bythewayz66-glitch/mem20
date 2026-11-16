@@ -1,0 +1,1 @@
+{"version": 2, "width": 80, "height": 24, "timestamp": 1794807696.2526784, "command": "echo hello from phase 2", "env": {"TERM": "xterm-256color", "COLUMNS": "80", "LINES": "24"}}

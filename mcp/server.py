@@ -148,6 +148,9 @@ def __getattr__(name):
         return engine_audit()
     raise AttributeError(name)
 
+# Build the server class eagerly so it's available when run as a script
+_build_mem20_server_class()
+
 def main():
     server = Mem20MCPServer()
     server.run()

@@ -1,0 +1,28 @@
+{
+  "version": 1,
+  "updatedAt": 1794803377811,
+  "agents": [],
+  "conversations": [],
+  "messages": {},
+  "filters": {},
+  "activeConversationId": null,
+  "goals": {
+    "test-room": {
+      "text": "Build a React todo app with TypeScript, Vite, and tests",
+      "active": true,
+      "done": false,
+      "status": "active",
+      "progress": 0,
+      "steps": 0,
+      "lastStep": null,
+      "nextStep": null,
+      "lastError": null,
+      "lastAgentId": null,
+      "createdAt": 1794803377811,
+      "updatedAt": 1794803377811,
+      "cooldownUntil": null
+    }
+  },
+  "tasks": [],
+  "activity": []
+}

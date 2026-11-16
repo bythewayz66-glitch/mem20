@@ -52,6 +52,8 @@ from .models import (
 from .providers.base import RouteContext, StreamEvent
 from .router import Router
 from .skills import load_skill_catalogue, skill_status
+import json
+from pathlib import Path
 from .state import StateStore
 from .worker import GoalWorker
 
@@ -850,6 +852,126 @@ async def reset_state() -> Dict[str, Any]:
 async def get_skills() -> Dict[str, Any]:
     skills = load_skill_catalogue()
     return {"skills": skills, "count": len(skills), "status": skill_status()}
+
+
+# --- Agent Skill Catalog (Step 16) ------------------------------------------
+
+TEAMZ_SKILL_CATALOG_PATH = Path(__file__).resolve().parent / "skills_catalog_agent.json"
+TEAMZ_SKILL_INDEX_PATH = Path(__file__).resolve().parent / "skills_index_agent.json"
+TEAMZ_SKILL_CATALOG_JSONL_PATH = Path(__file__).resolve().parent / "skills_catalog_agent.jsonl"
+
+
+def _load_agent_skill_catalog() -> Dict[str, Any]:
+    """Load the full agent skill catalog."""
+    if TEAMZ_SKILL_CATALOG_PATH.exists():
+        with open(TEAMZ_SKILL_CATALOG_PATH) as f:
+            return json.load(f)
+    return {"meta": {}, "skills": [], "index": {}}
+
+
+def _load_agent_skill_index() -> Dict[str, Any]:
+    """Load the agent skill index."""
+    if TEAMZ_SKILL_INDEX_PATH.exists():
+        with open(TEAMZ_SKILL_INDEX_PATH) as f:
+            return json.load(f)
+    return {}
+
+
+def _load_agent_skill_catalog_jsonl() -> List[Dict[str, Any]]:
+    """Load the agent skill catalog as JSONL lines."""
+    skills = []
+    if TEAMZ_SKILL_CATALOG_JSONL_PATH.exists():
+        with open(TEAMZ_SKILL_CATALOG_JSONL_PATH) as f:
+            for line in f:
+                line = line.strip()
+                if line:
+                    try:
+                        skills.append(json.loads(line))
+                    except json.JSONDecodeError:
+                        pass
+    return skills
+
+
+@app.get("/v1/skills/agent-catalog")
+async def get_agent_skill_catalog() -> Dict[str, Any]:
+    """Get the full agent-only skill catalog (Step 16)."""
+    catalog = _load_agent_skill_catalog()
+    return {
+        "ok": True,
+        "meta": catalog.get("meta", {}),
+        "count": len(catalog.get("skills", [])),
+        "skills": catalog.get("skills", []),
+    }
+
+
+@app.get("/v1/skills/agent-catalog/index")
+async def get_agent_skill_index() -> Dict[str, Any]:
+    """Get the inverted index for the agent skill catalog."""
+    index = _load_agent_skill_index()
+    return {"ok": True, "index": index}
+
+
+@app.get("/v1/skills/agent-catalog/jsonl")
+async def get_agent_skill_catalog_jsonl() -> Dict[str, Any]:
+    """Get the agent skill catalog as JSONL lines (streaming-friendly)."""
+    skills = _load_agent_skill_catalog_jsonl()
+    return {"ok": True, "count": len(skills), "skills": skills}
+
+
+@app.get("/v1/skills/agent-catalog/search")
+async def search_agent_skills(q: str = "", ns: str = "", cat: str = "", cap: str = "", tag: str = "", limit: int = 50) -> Dict[str, Any]:
+    """Search the agent skill catalog by query, namespace, category, capability, or tag."""
+    catalog = _load_agent_skill_catalog()
+    skills = catalog.get("skills", [])
+    
+    results = []
+    q_lower = q.lower()
+    
+    for skill in skills:
+        match = True
+        
+        if q and q_lower not in skill.get("desc", "").lower() and q_lower not in skill.get("intent", "").lower() and q_lower not in skill.get("id", "").lower():
+            match = False
+        if ns and ns not in skill.get("ns", ""):
+            match = False
+        if cat and cat not in skill.get("cat", ""):
+            match = False
+        if cap and cap not in skill.get("caps", []):
+            match = False
+        if tag and tag not in skill.get("tags", []):
+            match = False
+        
+        if match:
+            results.append(skill)
+            if len(results) >= limit:
+                break
+    
+    return {"ok": True, "query": q, "filters": {"ns": ns, "cat": cat, "cap": cap, "tag": tag}, "count": len(results), "skills": results}
+
+
+@app.post("/v1/skills/agent-catalog/refresh")
+async def refresh_agent_skill_catalog() -> Dict[str, Any]:
+    """Regenerate the agent skill catalog from toolchest."""
+    import subprocess
+    try:
+        result = subprocess.run(
+            ["python", "toolchest/generate_skills_catalog.py"],
+            cwd="/opt/mem20",
+            capture_output=True,
+            text=True,
+            timeout=120
+        )
+        if result.returncode == 0:
+            # Copy generated files to teamz
+            import shutil
+            shutil.copy2("/opt/mem20/toolchest/skills/skills.catalog.agent.json", TEAMZ_SKILL_CATALOG_PATH)
+            shutil.copy2("/opt/mem20/toolchest/skills/skills.index.agent.json", TEAMZ_SKILL_INDEX_PATH)
+            shutil.copy2("/opt/mem20/toolchest/skills/skills.catalog.agent.jsonl", TEAMZ_SKILL_CATALOG_JSONL_PATH)
+            return {"ok": True, "refreshed": True, "output": result.stdout}
+        else:
+            return {"ok": False, "error": result.stderr}
+    except Exception as e:
+        return {"ok": False, "error": str(e)}
 
 
 # --- Goals (room objectives) ----------------------------------------------

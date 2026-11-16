@@ -220,3 +220,10 @@
 - **Step 9 (Fleetwide Rules):** Config: `TEAMZ_FLEET_RULES_ENABLED`, `TEAMZ_FLEET_DECISION_PERSISTENCE`, `TEAMZ_FLEET_FAIL_LOG_REVIEW`. Decision persistence, fail log review.
 - **API Endpoints:** 13 new `/v1/fleet/*` endpoints for all integrations
 - **Verification:** All tests pass (47), imports OK, endpoints registered
+
+## 2026-11-16 — Attach agent skill catalog to teamz (Step 16)
+- **Action:** Copied generated agent skill catalog (233 skills) from toolchest/skills/ to teamz/server/app/
+- **Files added:** `skills_catalog_agent.json`, `skills_index_agent.json`, `skills_catalog_agent.jsonl`
+- **New API endpoints (5):** `/v1/skills/agent-catalog`, `/index`, `/jsonl`, `/search`, `/refresh`
+- **Catalog contents:** 233 skills including 13 teamz-specific skills (fleet namespace, kanban, a2a, rules, operate/inspect/test)
+- **Verification:** All 47 tests pass, search works (q='teamz' → 13 results, ns='mem20.teamz' → 10, cat='fleet' → 4)

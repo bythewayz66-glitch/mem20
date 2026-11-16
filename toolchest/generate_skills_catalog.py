@@ -313,6 +313,270 @@ for wid, wns, wint, wdesc, wcaps in [(w[0],w[1],w[2],w[3],w[4]) for w in workflo
             "deps": [], "comp": [], "tags": wcaps + ["workflow"], "cx": 0.5, "eff": 0.95, "side": [], "inv": []
         })
 
+# teamz-specific skills
+add_skill({
+    "id": "mem20.teamz.fleet.namespace.create.v1",
+    "ns": "mem20.teamz.fleet",
+    "cat": "fleet",
+    "intent": "create_isolated_namespace",
+    "desc": "create isolated mem20 namespace for teamz agent via fleet gateway",
+    "caps": ["fleet", "namespace", "create"],
+    "req_tools": ["POST /v1/fleet/namespace/create"],
+    "req_subsys": ["teamz", "gateway"],
+    "pre": ["fleet_enabled"],
+    "proc": [
+        {"op": "call", "tool": "POST /v1/fleet/namespace/create", "args": {"agent_name": "$agent_name"}, "ret": "ns"}
+    ],
+    "in": {"schema": {"agent_name": {"t": "str", "req": True}}, "req": ["agent_name"]},
+    "out": {"schema": {"store_path": {"t": "str"}, "ok": {"t": "bool"}}},
+    "ver": [{"chk": "namespace_created"}],
+    "fail": [{"e": "gateway_unreachable", "rec": "check_fleet_gateway"}],
+    "deps": [],
+    "comp": ["mem20.teamz.fleet.namespace.get.v1"],
+    "tags": ["teamz", "fleet", "namespace", "create"],
+    "cx": 0.2,
+    "eff": 0.95,
+    "side": ["gateway_write"],
+    "inv": []
+})
+
+add_skill({
+    "id": "mem20.teamz.fleet.namespace.get.v1",
+    "ns": "mem20.teamz.fleet",
+    "cat": "fleet",
+    "intent": "get_namespace",
+    "desc": "get isolated mem20 namespace store path for teamz agent",
+    "caps": ["fleet", "namespace", "get"],
+    "req_tools": ["GET /v1/fleet/namespace/{agent_name}"],
+    "req_subsys": ["teamz", "gateway"],
+    "pre": ["fleet_enabled"],
+    "proc": [
+        {"op": "call", "tool": "GET /v1/fleet/namespace/{agent_name}", "ret": "ns"}
+    ],
+    "in": {"schema": {"agent_name": {"t": "str", "req": True}}, "req": ["agent_name"]},
+    "out": {"schema": {"store_path": {"t": "str"}, "ok": {"t": "bool"}}},
+    "ver": [{"chk": "store_path_exists"}],
+    "fail": [{"e": "not_found", "rec": "create_namespace"}],
+    "deps": [],
+    "comp": ["mem20.teamz.fleet.namespace.create.v1"],
+    "tags": ["teamz", "fleet", "namespace", "get"],
+    "cx": 0.15,
+    "eff": 0.98,
+    "side": [],
+    "inv": []
+})
+
+add_skill({
+    "id": "mem20.teamz.kanban.sync_goal.v1",
+    "ns": "mem20.teamz.kanban",
+    "cat": "kanban",
+    "intent": "sync_goal_to_kanban",
+    "desc": "sync teamz goal to kanban board as a card",
+    "caps": ["kanban", "sync", "goal"],
+    "req_tools": ["POST /v1/fleet/kanban/sync-goal"],
+    "req_subsys": ["teamz"],
+    "pre": ["kanban_enabled"],
+    "proc": [
+        {"op": "call", "tool": "POST /v1/fleet/kanban/sync-goal", "args": {"conversation_id": "$cid", "goal_text": "$goal", "agent_id": "$aid"}, "ret": "card"}
+    ],
+    "in": {"schema": {"conversation_id": {"t": "str", "req": True}, "goal_text": {"t": "str", "req": True}, "agent_id": {"t": "str", "req": False}}, "req": ["conversation_id", "goal_text"]},
+    "out": {"schema": {"card_id": {"t": "str"}, "column": {"t": "str"}}},
+    "ver": [{"chk": "card_created"}],
+    "fail": [{"e": "kanban_disabled", "rec": "enable_kanban"}],
+    "deps": [],
+    "comp": ["mem20.teamz.kanban.update.v1"],
+    "tags": ["teamz", "kanban", "sync", "goal"],
+    "cx": 0.2,
+    "eff": 0.95,
+    "side": ["kanban_write"],
+    "inv": []
+})
+
+add_skill({
+    "id": "mem20.teamz.a2a.register_peer.v1",
+    "ns": "mem20.teamz.a2a",
+    "cat": "a2a",
+    "intent": "register_a2a_peer",
+    "desc": "register A2A peer agent for teamz inter-agent communication",
+    "caps": ["a2a", "peer", "register"],
+    "req_tools": ["POST /v1/fleet/a2a/peer/register"],
+    "req_subsys": ["teamz"],
+    "pre": ["a2a_enabled"],
+    "proc": [
+        {"op": "call", "tool": "POST /v1/fleet/a2a/peer/register", "args": {"name": "$name", "url": "$url", "capabilities": "$caps"}, "ret": "peer"}
+    ],
+    "in": {"schema": {"name": {"t": "str", "req": True}, "url": {"t": "str", "req": True}, "capabilities": {"t": "list", "req": False}}, "req": ["name", "url"]},
+    "out": {"schema": {"peer_id": {"t": "str"}, "ok": {"t": "bool"}}},
+    "ver": [{"chk": "peer_registered"}],
+    "fail": [{"e": "a2a_disabled", "rec": "enable_a2a"}],
+    "deps": [],
+    "comp": ["mem20.teamz.a2a.health_check.v1"],
+    "tags": ["teamz", "a2a", "peer", "register"],
+    "cx": 0.2,
+    "eff": 0.95,
+    "side": ["a2a_write"],
+    "inv": []
+})
+
+add_skill({
+    "id": "mem20.teamz.a2a.health_check.v1",
+    "ns": "mem20.teamz.a2a",
+    "cat": "a2a",
+    "intent": "health_check_a2a_peers",
+    "desc": "health check all registered A2A peers",
+    "caps": ["a2a", "health", "check"],
+    "req_tools": ["POST /v1/fleet/a2a/health-check"],
+    "req_subsys": ["teamz"],
+    "pre": ["a2a_enabled"],
+    "proc": [
+        {"op": "call", "tool": "POST /v1/fleet/a2a/health-check", "ret": "health"}
+    ],
+    "in": {"schema": {}, "req": []},
+    "out": {"schema": {"health": {"t": "obj"}}},
+    "ver": [{"chk": "all_healthy_or_reported"}],
+    "fail": [{"e": "peer_unreachable", "rec": "debug_peer"}],
+    "deps": [],
+    "comp": ["mem20.teamz.a2a.register_peer.v1"],
+    "tags": ["teamz", "a2a", "health", "check"],
+    "cx": 0.15,
+    "eff": 0.98,
+    "side": [],
+    "inv": []
+})
+
+add_skill({
+    "id": "mem20.teamz.rules.record_decision.v1",
+    "ns": "mem20.teamz.rules",
+    "cat": "fleet_rules",
+    "intent": "record_fleet_decision",
+    "desc": "record decision per fleetwide decision persistence rule",
+    "caps": ["fleet", "decision", "persist"],
+    "req_tools": ["POST /v1/fleet/rules/decision/record"],
+    "req_subsys": ["teamz"],
+    "pre": ["fleet_rules_enabled"],
+    "proc": [
+        {"op": "call", "tool": "POST /v1/fleet/rules/decision/record", "args": {"agent_name": "$agent", "decision": "$decision", "rationale": "$rationale", "conversation_id": "$cid", "tags": "$tags"}, "ret": "dec"}
+    ],
+    "in": {"schema": {"agent_name": {"t": "str", "req": True}, "decision": {"t": "str", "req": True}, "rationale": {"t": "str", "req": True}, "conversation_id": {"t": "str", "req": False}, "tags": {"t": "list", "req": False}}, "req": ["agent_name", "decision", "rationale"]},
+    "out": {"schema": {"decision_id": {"t": "str"}, "ok": {"t": "bool"}}},
+    "ver": [{"chk": "decision_recorded"}],
+    "fail": [{"e": "rules_disabled", "rec": "enable_fleet_rules"}],
+    "deps": [],
+    "comp": ["mem20.teamz.rules.list_decisions.v1"],
+    "tags": ["teamz", "fleet", "decision", "persist"],
+    "cx": 0.2,
+    "eff": 0.95,
+    "side": ["mem20_write"],
+    "inv": []
+})
+
+add_skill({
+    "id": "mem20.teamz.rules.review_fail_logs.v1",
+    "ns": "mem20.teamz.rules",
+    "cat": "fleet_rules",
+    "intent": "review_fleet_fail_logs",
+    "desc": "review failure logs per fleetwide fail log review rule",
+    "caps": ["fleet", "fail", "review"],
+    "req_tools": ["GET /v1/fleet/rules/fail-logs"],
+    "req_subsys": ["teamz"],
+    "pre": ["fleet_rules_enabled"],
+    "proc": [
+        {"op": "call", "tool": "GET /v1/fleet/rules/fail-logs", "args": {"agent_name": "$agent", "limit": "$limit"}, "ret": "logs"}
+    ],
+    "in": {"schema": {"agent_name": {"t": "str", "req": False}, "limit": {"t": "int", "req": False, "d": 50}}, "req": []},
+    "out": {"schema": {"logs": {"t": "list"}, "count": {"t": "int"}}},
+    "ver": [{"chk": "logs_retrieved"}],
+    "fail": [{"e": "rules_disabled", "rec": "enable_fleet_rules"}],
+    "deps": [],
+    "comp": ["mem20.teamz.rules.record_decision.v1"],
+    "tags": ["teamz", "fleet", "fail", "review"],
+    "cx": 0.15,
+    "eff": 0.98,
+    "side": [],
+    "inv": []
+})
+
+add_skill({
+    "id": "mem20.teamz.operate.v1",
+    "ns": "mem20.teamz",
+    "cat": "subsystem",
+    "intent": "operate_teamz",
+    "desc": "operate teamz orchestrator subsystem via its API",
+    "caps": ["operate", "orchestrate", "memory", "tools"],
+    "req_tools": [],
+    "req_subsys": ["teamz"],
+    "pre": [],
+    "proc": [
+        {"op": "discover", "tgt": "api"},
+        {"op": "invoke", "tgt": "interface"},
+        {"op": "verify", "tgt": "result"}
+    ],
+    "in": {"schema": {"op": {"t": "str", "req": True}}, "req": ["op"]},
+    "out": {"schema": {"ok": {"t": "bool"}}},
+    "ver": [{"chk": "interface_ok"}],
+    "fail": [{"e": "not_importable", "rec": "check_install"}],
+    "deps": [],
+    "comp": [],
+    "tags": ["teamz", "subsystem", "operate", "orchestrator"],
+    "cx": 0.4,
+    "eff": 0.9,
+    "side": [],
+    "inv": []
+})
+
+add_skill({
+    "id": "mem20.teamz.inspect.v1",
+    "ns": "mem20.teamz",
+    "cat": "inspect",
+    "intent": "inspect_teamz",
+    "desc": "inspect teamz structure/api/tests",
+    "caps": ["inspect", "discover"],
+    "req_tools": [],
+    "req_subsys": ["teamz"],
+    "pre": [],
+    "proc": [
+        {"op": "read", "path": "teamz/server/app/main.py"},
+        {"op": "glob", "pat": "teamz/**/*.py"}
+    ],
+    "in": {"schema": {}, "req": []},
+    "out": {"schema": {"api": {"t": "obj"}}},
+    "ver": [{"chk": "structure_mapped"}],
+    "fail": [],
+    "deps": [],
+    "comp": ["mem20.teamz.operate.v1"],
+    "tags": ["teamz", "subsystem", "inspect"],
+    "cx": 0.25,
+    "eff": 0.95,
+    "side": [],
+    "inv": []
+})
+
+add_skill({
+    "id": "mem20.teamz.test.v1",
+    "ns": "mem20.teamz",
+    "cat": "test",
+    "intent": "test_teamz",
+    "desc": "run tests for teamz",
+    "caps": ["test", "verify"],
+    "req_tools": [],
+    "req_subsys": ["teamz"],
+    "pre": [],
+    "proc": [
+        {"op": "exec", "cmd": "cd /opt/mem20/teamz && PYTHONPATH=/opt/mem20/teamz server/.venv/bin/python -m pytest server/tests -q"}
+    ],
+    "in": {"schema": {}, "req": []},
+    "out": {"schema": {"passed": {"t": "int"}, "failed": {"t": "int"}}},
+    "ver": [{"chk": "tests_green_or_reported"}],
+    "fail": [{"e": "failures", "rec": "debug"}],
+    "deps": [],
+    "comp": [],
+    "tags": ["teamz", "subsystem", "test"],
+    "cx": 0.3,
+    "eff": 0.95,
+    "side": [],
+    "inv": []
+})
+
 # Add procedural skills
 for name in ["mem20.procedural.list.v1", "mem20.procedural.execute.v1", "mem20.procedural.learn.v1"]:
     intent = name.split('.')[2]

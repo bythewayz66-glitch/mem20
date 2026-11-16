@@ -965,3 +965,15 @@ Reworked/verified subsystems #340–#350 (oldest→newest, 1 at a time) to full 
   - Decision persistence, fail log review; API: `/v1/fleet/rules/decision/record|decisions|fail-logs`
 - **Fleet Status API:** `/v1/fleet/status` shows all integrations
 - **Verification:** All tests pass (47), imports OK, endpoints registered
+
+## 2026-11-16 — Attach agent skill catalog to teamz (Step 16)
+- **Action:** Copied generated agent skill catalog (233 skills) from toolchest/skills/ to teamz/server/app/
+- **Files added:** `skills_catalog_agent.json`, `skills_index_agent.json`, `skills_catalog_agent.jsonl`
+- **New API endpoints (5):**
+  - `GET /v1/skills/agent-catalog` — full catalog with meta
+  - `GET /v1/skills/agent-catalog/index` — inverted index for AI search
+  - `GET /v1/skills/agent-catalog/jsonl` — streaming-friendly JSONL
+  - `GET /v1/skills/agent-catalog/search` — query by q/ns/cat/cap/tag
+  - `POST /v1/skills/agent-catalog/refresh` — regenerate from toolchest
+- **Catalog contents:** 233 skills including 13 teamz-specific skills (fleet namespace, kanban, a2a, rules, operate/inspect/test)
+- **Verification:** All 47 tests pass, search works (q='teamz' → 13 results, ns='mem20.teamz' → 10, cat='fleet' → 4)

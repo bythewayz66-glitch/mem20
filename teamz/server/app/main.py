@@ -1106,7 +1106,7 @@ async def files_list(req: FileListRequest) -> Dict[str, Any]:
 
 @app.post("/v1/runtime/exec")
 async def runtime_exec(req: RuntimeExecRequest) -> Dict[str, Any]:
-    results = execute_actions([a.model_dump() for a in req.actions], agent_id=req.agentId)
+    results = await execute_actions([a.model_dump() for a in req.actions], agent_id=req.agentId)
     return {"ok": True, "results": results}
 
 

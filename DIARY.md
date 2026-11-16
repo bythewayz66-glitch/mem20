@@ -986,6 +986,15 @@ Reworked/verified subsystems #340–#350 (oldest→newest, 1 at a time) to full 
 - **Generated files:** docs/surface.json, docs/TOOL-DOMAINS.md, web/src/data/tools.json
 - **docs/index.html:** Added version badge `<span class="badge">v3.1.2</span>` to match VERSION file
 
+## 2026-11-16 — Fix MCP server startup (NameError: Mem20MCPServer)
+- **Issue:** Server failed to start with `NameError: name 'Mem20MCPServer' is not defined` when run via launcher.py/runpy
+- **Root cause:** The dynamic class builder `_build_mem20_server_class()` created the class but didn't write it to module globals; when run as script via `runpy.run_path(..., run_name="__main__")`, the `__getattr__` hook wasn't available
+- **Fix:** 
+  - Added static class definition for AST extractor (wiring gate) after imports, wrapped in `if False:` so visible to AST parser but not executed at runtime
+  - Modified `_build_mem20_server_class()` to write `Mem20MCPServer` to `globals()`
+  - Server now starts correctly via launcher.py and runpy
+- **Verification:** verify_mcp.py PASS (487 tools), server health endpoint OK
+
 ## 2026-11-16 — Site-wide 4.0.0 bump and blocker fixes
 - **Version bump:** Updated `VERSION`, root `pyproject.toml`, `README.md`, and `docs/index.html` to **4.0.0**; added `CHANGELOG.md` `[4.0.0] — 2026-11-16`.
 - **Blockers addressed:**

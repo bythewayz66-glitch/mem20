@@ -386,3 +386,170 @@ class CrossRoomEvent(BaseModel):
     data: Dict[str, Any]
     timestamp: int
     propagated: bool = False
+
+
+# --- Phase 7: Testing & Quality Gates ----------------------------------------
+
+class TestFile(BaseModel):
+    """A test file in the workspace."""
+    id: str
+    path: str
+    language: str  # e.g., "python", "typescript", "javascript"
+    test_framework: str  # e.g., "pytest", "vitest", "jest", "go test"
+    created_at: int
+    updated_at: int
+    coverage_pct: float = 0.0
+
+
+class TestRun(BaseModel):
+    """A single test run result."""
+    id: str
+    test_file_id: str
+    room_id: Optional[str] = None
+    agent_id: Optional[str] = None
+    status: Literal["passed", "failed", "skipped", "flaky"] = "skipped"
+    duration_ms: int = 0
+    coverage_pct: float = 0.0
+    output: str = ""
+    error: Optional[str] = None
+    started_at: int
+    completed_at: Optional[int] = None
+
+
+class CoverageReport(BaseModel):
+    """Coverage report for a room or project."""
+    id: str
+    room_id: Optional[str] = None
+    project_id: Optional[str] = None
+    total_lines: int = 0
+    covered_lines: int = 0
+    coverage_pct: float = 0.0
+    threshold_pct: float = 80.0
+    gate_passed: bool = False
+    generated_at: int
+
+
+class MutationTestResult(BaseModel):
+    """Result of a mutation test run."""
+    id: str
+    test_file_id: str
+    room_id: Optional[str] = None
+    total_mutants: int = 0
+    killed_mutants: int = 0
+    survived_mutants: int = 0
+    timeout_mutants: int = 0
+    error_mutants: int = 0
+    mutation_score: float = 0.0  # killed / total
+    threshold_pct: float = 80.0
+    gate_passed: bool = False
+    started_at: int
+    completed_at: Optional[int] = None
+
+
+class ContractTestResult(BaseModel):
+    """Result of contract testing against OpenAPI schema."""
+    id: str
+    endpoint: str
+    method: str
+    schema_valid: bool = False
+    request_valid: bool = False
+    response_valid: bool = False
+    errors: List[str] = Field(default_factory=list)
+    tested_at: int
+
+
+class VisualRegressionResult(BaseModel):
+    """Result of visual regression testing."""
+    id: str
+    test_name: str
+    room_id: Optional[str] = None
+    baseline_screenshot: str  # base64
+    current_screenshot: str  # base64
+    diff_screenshot: Optional[str] = None
+    diff_pixels: int = 0
+    diff_pct: float = 0.0
+    threshold_pct: float = 0.1
+    passed: bool = True
+    tested_at: int
+
+
+class PerformanceBenchmark(BaseModel):
+    """Performance benchmark result."""
+    id: str
+    name: str
+    room_id: Optional[str] = None
+    metric: str  # "latency_p50", "latency_p95", "latency_p99", "throughput", "memory_mb", "cpu_pct"
+    value: float
+    unit: str
+    baseline_value: Optional[float] = None
+    regression_pct: Optional[float] = None
+    threshold_pct: float = 10.0
+    regression_detected: bool = False
+    measured_at: int
+
+
+class SecurityScanResult(BaseModel):
+    """Result of a security scan."""
+    id: str
+    tool: str  # "semgrep", "trivy", "zap", "bandit"
+    room_id: Optional[str] = None
+    project_id: Optional[str] = None
+    severity: Literal["critical", "high", "medium", "low", "info"]
+    finding: str
+    file_path: Optional[str] = None
+    line_number: Optional[int] = None
+    description: str
+    remediation: Optional[str] = None
+    scanned_at: int
+
+
+class DependencyAuditResult(BaseModel):
+    """Result of a dependency audit."""
+    id: str
+    room_id: Optional[str] = None
+    project_id: Optional[str] = None
+    package_manager: str  # "npm", "pip", "cargo", "go", "maven"
+    package_name: str
+    current_version: str
+    latest_version: str
+    update_type: Literal["patch", "minor", "major", "security"]
+    cve_ids: List[str] = Field(default_factory=list)
+    auto_pr_created: bool = False
+    pr_url: Optional[str] = None
+    audited_at: int
+
+
+class FlakyTestDetection(BaseModel):
+    """Flaky test detection result."""
+    id: str
+    test_file_id: str
+    room_id: Optional[str] = None
+    test_name: str
+    flaky_score: float  # 0-1, higher = more flaky
+    runs_analyzed: int
+    pass_rate: float
+    detection_method: str  # "repeated_runs", "historical_analysis"
+    detected_at: int
+
+
+class QualityDashboardEntry(BaseModel):
+    """An entry in the quality dashboard."""
+    id: str
+    room_id: str
+    metric_type: str  # "test_health", "coverage", "mutation_score", "flaky_tests", "security", "performance"
+    value: float
+    threshold: float
+    status: Literal["healthy", "warning", "critical", "unknown"] = "unknown"
+    trend: Literal["improving", "stable", "degrading", "unknown"] = "unknown"
+    measured_at: int
+
+
+class QualityGateConfig(BaseModel):
+    """Configuration for quality gates."""
+    coverage_threshold: float = 80.0
+    mutation_threshold: float = 80.0
+    performance_regression_threshold: float = 10.0
+    visual_regression_threshold: float = 0.1
+    mutation_timeout_seconds: int = 30
+    flaky_test_runs: int = 5
+    coverage_required_for_done: bool = True

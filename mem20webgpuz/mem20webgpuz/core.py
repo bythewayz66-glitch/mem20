@@ -1,6 +1,5 @@
-import os, sys
-_root = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".."))
-if _root not in sys.path:
-    sys.path.insert(0, _root)
-from mem20core.fixes import *  # noqa: F401,F403
-from mem20core.fixes import patch as _patch; _patch()
+"""Back-compat shim: the implementation moved to the package modules."""
+from . import *  # noqa: F401,F403
+from . import __all__ as _all
+from .cli import main as cli
+__all__ = list(_all) + ["cli"]

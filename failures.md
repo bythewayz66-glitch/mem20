@@ -177,3 +177,22 @@
 - **Runtime API mismatches in absorbed/self integrations (partially resolved):** `mem20simz`/`mem20selfz`/`mem20twinz` ecosystems referenced APIs not present on top-level runtime domains (`counterfactual`/`compare` in simz domain, `create_twin`/`twin_health`/`drift` in twinz domain, `compress` in rewardforgez domain). Updated adapters to use real submodule APIs (`mem20simz.sims.mem20counterfactualmemorysimulatorz.domain`, `mem20twinz.twins.*.domain`, `mem20rewardforgez.forges.mem20contextcompressionforgez.domain`) where available.
 - **Test count/name drift (resolved for key runtimes):** Assimilation changed discovered MEMBERS counts and ecosystem probe shapes (expanded peer surfaces). Updated affected runtime tests (enginez/fabricz/facez/simz/selfz/studioz/twinz/assistz/biz/boxz/autoz/labz/graphz etc.) to assert assimilated invariants (absorbed discovery, >= counts, core+aggregated peers) while preserving real behavior checks.
 - **Known residuals:** Some absorbed member/internal tests and probes may still depend on environment-specific deps or pre-existing API mismatches not addressed in this pass; generated inventories/bench docs beyond sitemap and absorption docs may retain historical references. Gateway `SUBSYSTEMS` registry still contains entries for absorbed standalone subsystems (names preserved; implementations resolved via absorbed packages where applicable).
+
+## 2026-11-14 — glyph-cluster: userland↔phone file transfer (Tailscale) verification
+- **No new technical failures in this session.** `/opt/ftp/` created successfully on first attempt. Existing `/opt/fyp` Tailscale upload frontend was already running and verified healthy (HTTP 200, tailnet serve configured); user reported it works as requested. Noted accurately: the working `/opt/fyp` frontend was pre-existing (not created/modified this session) to avoid misattribution. mem20 Code Mode memory/context/self-model save-back beyond file updates was limited by available tool surface in-session; diary/failures updated in-repo.
+
+## 2026-11-16 — Fix mem20kilnz engine build (Issue #229)
+- **Issue:** #229 "mem20kilnz: 200 test failures because the C++ engine source was deleted with the gitlink" — the engine source was tracked as a gitlink (submodule pointer) to `JaysonAIOnline/mem20kilnz-engine` but the submodule was never initialized, leaving `mem20kilnz/engine/` empty. The gitlink was removed in commit 71939ee0 to unblock Pages builds.
+- **Root cause:** The C++ engine source exists as a separate repository at `https://github.com/JaysonAIOnline/mem20kilnz-engine`. The mem20kilnz Python package's `engine.py` expects the engine source at `mem20kilnz/engine/` (beside the package) and builds it via `make`. Without the source, `binary_path()` raises `EngineMissing`, causing all tests to fail at fixture setup.
+- **Fix:** Cloned the engine repository into `/opt/mem20/mem20kilnz/engine/`:
+  ```bash
+  git clone https://github.com/JaysonAIOnline/mem20kilnz-engine.git mem20kilnz/engine
+  ```
+- **Build dependency:** The engine requires `libassimp-dev` for FBX import (`assimp/Importer.hpp`). Installed via:
+  ```bash
+  apt-get update && apt-get install -y libassimp-dev
+  ```
+  (Note: dpkg reported a non-fatal error on `dbus` post-install script due to container permissions; `libassimp-dev` installed successfully.)
+- **Build:** `cd mem20kilnz/engine && make -j$(nproc)` — clean build, 0 warnings, 0 errors. Binary `kiln` produced at `mem20kilnz/engine/kiln`.
+- **Verification:** Full test suite passes: `python -m pytest mem20kilnz/tests -q` → **279 passed, 7 skipped in 35.93s**. The 7 skipped are expected (require GUI/Vulkan or specific fixtures).
+- **Status:** Issue #229 resolved. mem20kilnz is now fully functional with its C++ engine.

@@ -895,3 +895,27 @@ Reworked/verified subsystems #340–#350 (oldest→newest, 1 at a time) to full 
 - **Repo-wide wiring:** Bootstrapped absorbed-finder/toolchest paths in `mcp/server.py` and `gateway/mem20_gateway.py`; regenerated `.sitemap/sitemap.json` and `SITEMAP.md` via `mem20sitemapz build` (absorbed standalone entries removed; subsystems 103). Fixed absorbed ecosystem exception-handling bug (`except CircuitOpen` unbound when dependency import fails) in 57 absorbed ecosystem files to make probes robust.
 - **Verification (targeted):** `mem20enginez/tests` (8 passed), `mem20fabricz` runtime tests (7 passed), `mem20selfz`/`mem20simz`/`mem20twinz` domain tests (21 passed), `mem20facez` runtime tests, `mem20studioz`/`mem20twinz`/`mem20graphz` branding/runtime tests, and assorted runtime tests for assistz/biz/boxz/autoz/labz/selfz/simz updated/passing in this pass (absorbed-member tests retained under `tests/absorbed/`).
 - **Artifacts:** `docs/mem20z-absorption-87-map.json`, `docs/mem20z-absorption-status.json`, `docs/mem20z-short-list-inventory.md`, `docs/mem20z-working-list-inventory.md`, `.mem20-absorbed-map.json`, `_mem20_absorbed_finder.py`, `mem20_absorbed.py`.
+
+## 2026-11-14 — glyph-cluster: userland↔phone file transfer (Tailscale) verification
+- **Request:** Create `/opt/ftp/` and a no-premium way to transfer files between userland (this host) and phone.
+- **Action (this session):** Created `/opt/ftp/` successfully on the first attempt (`mkdir -p /opt/ftp`; verified `drwx------ root root /opt/ftp`). `/opt/ftp` remains an empty, unused directory (no service configured for it in this session).
+- **Verified existing working frontend:** Confirmed the pre-existing `/opt/fyp` upload/download service is running and healthy: `upload_server.py` (`/opt/fyp/.venv/bin/python /opt/fyp/upload_server.py`) listening on port 15377, `tailscale serve` proxying `https://localhost-0.taild3422c.ts.net/` → `http://127.0.0.1:15377`, local check `curl -I http://127.0.0.1:15377/` returned `200`. Tailnet nodes observed: `localhost-0` (`100.95.230.79`, this host), `jesses-s24-ultra` (`100.106.1.62`, phone), `jnet1` (`100.87.46.34`). User clarified transfer target is userland↔phone (not `jnet1`/amd).
+- **User feedback:** User reported the upload frontend works exactly as requested with no issues (accessed via the existing `/opt/fyp` tailnet-served UI for phone↔userland transfers).
+- **Future wishes (noted):** Folder management and project spaces in future versions.
+- **Accuracy note:** The working `/opt/fyp` upload frontend/bring-up setup pre-existed this session and was not authored or modified here; this session created `/opt/ftp` and verified/documented the existing solution.
+
+## 2026-11-16 — Fix mem20kilnz engine build (Issue #229)
+- **Issue:** #229 "mem20kilnz: 200 test failures because the C++ engine source was deleted with the gitlink" — the engine source was tracked as a gitlink (submodule pointer) to `JaysonAIOnline/mem20kilnz-engine` but the submodule was never initialized, leaving `mem20kilnz/engine/` empty. The gitlink was removed in commit 71939ee0 to unblock Pages builds.
+- **Root cause:** The C++ engine source exists as a separate repository at `https://github.com/JaysonAIOnline/mem20kilnz-engine`. The mem20kilnz Python package's `engine.py` expects the engine source at `mem20kilnz/engine/` (beside the package) and builds it via `make`. Without the source, `binary_path()` raises `EngineMissing`, causing all 279 tests to fail at fixture setup.
+- **Fix:** Cloned the engine repository into `/opt/mem20/mem20kilnz/engine/`:
+  ```bash
+  git clone https://github.com/JaysonAIOnline/mem20kilnz-engine.git mem20kilnz/engine
+  ```
+- **Build dependency:** The engine requires `libassimp-dev` for FBX import (`assimp/Importer.hpp`). Installed via:
+  ```bash
+  apt-get update && apt-get install -y libassimp-dev
+  ```
+  (Note: dpkg reported a non-fatal error on `dbus` post-install script due to container permissions; `libassimp-dev` installed successfully.)
+- **Build:** `cd mem20kilnz/engine && make -j$(nproc)` — clean build, 0 warnings, 0 errors. Binary `kiln` produced at `mem20kilnz/engine/kiln`.
+- **Verification:** Full test suite passes: `python -m pytest mem20kilnz/tests -q` → **279 passed, 7 skipped in 35.93s**. The 7 skipped are expected (require GUI/Vulkan or specific fixtures).
+- **Status:** Issue #229 resolved. mem20kilnz is now fully functional with its C++ engine.

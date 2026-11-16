@@ -1,0 +1,11 @@
+scenario,tier,acv_usd,cogs_usd,gross_profit_per_account_usd,gross_margin_pct,revenue_usd,gross_profit_usd,gp_share_pct,gp_leverage_x
+A-committed,Team,6000,4280,1720,28.67,516000,147920,12.57,0.18
+A-committed,Business,18000,4280,13720,76.22,270000,205800,17.49,1.4
+A-committed,Scale,36000,4280,31720,88.11,504000,444080,37.75,3.23
+A-committed,Enterprise,80000,4280,75720,94.65,400000,378600,32.18,7.72
+A-committed,TOTAL,14083.33,,,69.61,1690000,1176400,100.0,
+B-proposed,Team,6000,4280,1720,28.67,414000,118680,8.27,0.14
+B-proposed,Business,18000,4280,13720,76.22,522000,397880,27.74,1.15
+B-proposed,Scale,36000,4280,31720,88.11,612000,539240,37.59,2.65
+B-proposed,Enterprise,80000,4280,75720,94.65,400000,378600,26.39,6.33
+B-proposed,TOTAL,16233.33,,,73.63,1948000,1434400,100.0,

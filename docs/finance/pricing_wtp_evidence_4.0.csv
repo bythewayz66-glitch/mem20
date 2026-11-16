@@ -1,0 +1,9 @@
+player,plan,usd_per_year,source_id,segment,note
+Mem0,Hobby,0,S1,memory_api,"free tier, 10k add / 1k retrieval per month"
+Letta,Pro (personal),240,S2,memory_api,$20/seat/mo annualised
+Zep,Flex,1500,S5,memory_api,$125/mo annualised
+Mem0,Pro,2988,S2,memory_api,$249/mo annualised
+Zep,Flex Plus,4500,S5,memory_api,$375/mo annualised
+Pinecone,Standard (min),600,S19,substrate,$50/mo minimum
+Weaviate,Plus,3360,S23,substrate,$280/mo annualised
+Lyzr,platform top tier,11988,S29,governance,$999/mo annualised

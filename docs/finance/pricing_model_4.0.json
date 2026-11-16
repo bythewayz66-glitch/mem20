@@ -1,0 +1,451 @@
+{
+  "schema": "mem20.pricing.model/4.0",
+  "as_of": "2026-11-16",
+  "release": "4.0.0",
+  "surface": {
+    "tools": 487,
+    "domains": 129,
+    "source": "docs/surface.json (live pin)"
+  },
+  "invariants": {
+    "blended_acv_usd": 14000,
+    "som_arr_usd": 1680000,
+    "som_accounts": 120,
+    "tam_usd": 1280000000,
+    "sam_usd": 282000000,
+    "status": "PASS",
+    "problems": []
+  },
+  "cost_structure": {
+    "hosting_per_account_usd": 1880,
+    "support_per_account_usd": 2400,
+    "cogs_per_account_usd": 4280,
+    "cogs_basis": "hosting + 24 tickets x $100 x (1 - 0 deflection)",
+    "blended_cac_usd": 16800,
+    "cac_basis": "32 touches x $210 / 0.40 close, 0 inbound signals"
+  },
+  "assumptions": {
+    "price_elasticity": {
+      "value": -0.8,
+      "basis": "analyst assumption for B2B developer infrastructure; not measured on mem20. Stress-tested from -0.2 to -2.0."
+    },
+    "cogs_flat_by_tier": {
+      "value": true,
+      "basis": "carried from compute_model.py: hosting $1,880 + support $2,400 per account, not varied by tier. A tier-varying COGS would raise Team margin and lower Enterprise margin."
+    },
+    "support_tickets_per_account": {
+      "value": 24,
+      "basis": "declared in inputs.json acquisition_inputs.tickets_per_account"
+    },
+    "governance_attach_rate_baseline": {
+      "value": 0.28,
+      "basis": "analyst assumption: share of Team buyers who would pay for the governance bundle if it were sold separately rather than bundled. Stress-tested 0.15-0.45."
+    },
+    "win_rate_at_list": {
+      "value": 0.34,
+      "basis": "analyst assumption for a category with no published mem20 win data. Used only to shape the sensitivity curve, never to state an actual win rate."
+    }
+  },
+  "scenario_a_committed": {
+    "label": "committed ladder - 72/12/12/4, blend $14,000, zero drift",
+    "gates": {
+      "Team": "core memory, full 129-domain read surface, no epistemic partition",
+      "Business": "+ epistemic partition (grounded/simulated), provenance ledger, contamination audit",
+      "Scale": "+ A2A transport, multi-region, SSO/SCIM",
+      "Enterprise": "+ BYOC, custom domains, contractual SLA"
+    },
+    "tiers": [
+      {
+        "tier": "Team",
+        "acv_usd": 6000,
+        "share": 0.72,
+        "accounts": 86,
+        "fractional_accounts": 86.4,
+        "cogs_usd": 4280,
+        "gross_profit_per_account_usd": 1720,
+        "gross_margin_pct": 28.67,
+        "max_discount_before_zero_contribution_pct": 28.67,
+        "revenue_usd": 516000,
+        "gross_profit_usd": 147920,
+        "logo_share_pct": 71.67,
+        "gp_share_pct": 12.57,
+        "gp_leverage_x": 0.18
+      },
+      {
+        "tier": "Business",
+        "acv_usd": 18000,
+        "share": 0.12,
+        "accounts": 15,
+        "fractional_accounts": 14.4,
+        "cogs_usd": 4280,
+        "gross_profit_per_account_usd": 13720,
+        "gross_margin_pct": 76.22,
+        "max_discount_before_zero_contribution_pct": 76.22,
+        "revenue_usd": 270000,
+        "gross_profit_usd": 205800,
+        "logo_share_pct": 12.5,
+        "gp_share_pct": 17.49,
+        "gp_leverage_x": 1.4
+      },
+      {
+        "tier": "Scale",
+        "acv_usd": 36000,
+        "share": 0.12,
+        "accounts": 14,
+        "fractional_accounts": 14.4,
+        "cogs_usd": 4280,
+        "gross_profit_per_account_usd": 31720,
+        "gross_margin_pct": 88.11,
+        "max_discount_before_zero_contribution_pct": 88.11,
+        "revenue_usd": 504000,
+        "gross_profit_usd": 444080,
+        "logo_share_pct": 11.67,
+        "gp_share_pct": 37.75,
+        "gp_leverage_x": 3.23
+      },
+      {
+        "tier": "Enterprise",
+        "acv_usd": 80000,
+        "share": 0.04,
+        "accounts": 5,
+        "fractional_accounts": 4.8,
+        "cogs_usd": 4280,
+        "gross_profit_per_account_usd": 75720,
+        "gross_margin_pct": 94.65,
+        "max_discount_before_zero_contribution_pct": 94.65,
+        "revenue_usd": 400000,
+        "gross_profit_usd": 378600,
+        "logo_share_pct": 4.17,
+        "gp_share_pct": 32.18,
+        "gp_leverage_x": 7.72
+      }
+    ],
+    "accounts": 120,
+    "revenue_usd": 1690000,
+    "gross_profit_usd": 1176400,
+    "gross_margin_pct": 69.61,
+    "blended_acv_fractional_usd": 14000.0,
+    "blended_acv_usd": 14083.33,
+    "rounding_residual_usd": 83.33,
+    "rounding_note": "integer account book vs fractional share blend; the residual is a rounding artefact, not a price change"
+  },
+  "scenario_b_proposed": {
+    "label": "proposed 4.0 repackaging - 58/24/14/4, blend $16,040",
+    "gates": {
+      "Team": "core memory, full 129-domain read surface, 90-day ledger retention, no epistemic partition",
+      "Business": "+ epistemic partition, unlimited ledger retention, contamination audit, evidence-based promotion",
+      "Scale": "+ A2A transport, multi-region, SSO/SCIM, 99.9% SLA",
+      "Enterprise": "+ BYOC, custom domains, 99.95% SLA, named TAM"
+    },
+    "blend_delta_usd": 2040.0,
+    "blend_delta_pct": 14.57,
+    "som_arr_usd": 1924800.0,
+    "som_delta_usd": 244800.0,
+    "gp_delta_vs_a_usd": 258000,
+    "gp_delta_vs_a_pct": 21.93,
+    "requires_owner_signoff": true,
+    "why_it_moves_a_house_number": "the mix shift from gating governance out of Team raises the blend above $14,000, which restates SOM. That is an owner decision; the model reports the delta and does not write it into inputs.json.",
+    "tiers": [
+      {
+        "tier": "Team",
+        "acv_usd": 6000,
+        "share": 0.58,
+        "accounts": 69,
+        "fractional_accounts": 69.6,
+        "cogs_usd": 4280,
+        "gross_profit_per_account_usd": 1720,
+        "gross_margin_pct": 28.67,
+        "max_discount_before_zero_contribution_pct": 28.67,
+        "revenue_usd": 414000,
+        "gross_profit_usd": 118680,
+        "logo_share_pct": 57.5,
+        "gp_share_pct": 8.27,
+        "gp_leverage_x": 0.14
+      },
+      {
+        "tier": "Business",
+        "acv_usd": 18000,
+        "share": 0.24,
+        "accounts": 29,
+        "fractional_accounts": 28.8,
+        "cogs_usd": 4280,
+        "gross_profit_per_account_usd": 13720,
+        "gross_margin_pct": 76.22,
+        "max_discount_before_zero_contribution_pct": 76.22,
+        "revenue_usd": 522000,
+        "gross_profit_usd": 397880,
+        "logo_share_pct": 24.17,
+        "gp_share_pct": 27.74,
+        "gp_leverage_x": 1.15
+      },
+      {
+        "tier": "Scale",
+        "acv_usd": 36000,
+        "share": 0.14,
+        "accounts": 17,
+        "fractional_accounts": 16.8,
+        "cogs_usd": 4280,
+        "gross_profit_per_account_usd": 31720,
+        "gross_margin_pct": 88.11,
+        "max_discount_before_zero_contribution_pct": 88.11,
+        "revenue_usd": 612000,
+        "gross_profit_usd": 539240,
+        "logo_share_pct": 14.17,
+        "gp_share_pct": 37.59,
+        "gp_leverage_x": 2.65
+      },
+      {
+        "tier": "Enterprise",
+        "acv_usd": 80000,
+        "share": 0.04,
+        "accounts": 5,
+        "fractional_accounts": 4.8,
+        "cogs_usd": 4280,
+        "gross_profit_per_account_usd": 75720,
+        "gross_margin_pct": 94.65,
+        "max_discount_before_zero_contribution_pct": 94.65,
+        "revenue_usd": 400000,
+        "gross_profit_usd": 378600,
+        "logo_share_pct": 4.17,
+        "gp_share_pct": 26.39,
+        "gp_leverage_x": 6.33
+      }
+    ],
+    "accounts": 120,
+    "revenue_usd": 1948000,
+    "gross_profit_usd": 1434400,
+    "gross_margin_pct": 73.63,
+    "blended_acv_fractional_usd": 16040.0,
+    "blended_acv_usd": 16233.33,
+    "rounding_residual_usd": 193.33,
+    "rounding_note": "integer account book vs fractional share blend; the residual is a rounding artefact, not a price change"
+  },
+  "wtp": {
+    "method": "Van Westendorp proxy over published competitor price points, computed per segment",
+    "caveat": "PROXY, not primary research. Published points only; vendors that publish no price (Mem0 Custom, Zep Enterprise, Cognee Enterprise, ServiceNow) are excluded rather than estimated.",
+    "points_used": [
+      {
+        "player": "Mem0",
+        "plan": "Hobby",
+        "usd_per_year": 0,
+        "source_id": "S1",
+        "segment": "memory_api",
+        "note": "free tier, 10k add / 1k retrieval per month"
+      },
+      {
+        "player": "Letta",
+        "plan": "Pro (personal)",
+        "usd_per_year": 240,
+        "source_id": "S2",
+        "segment": "memory_api",
+        "note": "$20/seat/mo annualised"
+      },
+      {
+        "player": "Zep",
+        "plan": "Flex",
+        "usd_per_year": 1500,
+        "source_id": "S5",
+        "segment": "memory_api",
+        "note": "$125/mo annualised"
+      },
+      {
+        "player": "Mem0",
+        "plan": "Pro",
+        "usd_per_year": 2988,
+        "source_id": "S2",
+        "segment": "memory_api",
+        "note": "$249/mo annualised"
+      },
+      {
+        "player": "Zep",
+        "plan": "Flex Plus",
+        "usd_per_year": 4500,
+        "source_id": "S5",
+        "segment": "memory_api",
+        "note": "$375/mo annualised"
+      },
+      {
+        "player": "Pinecone",
+        "plan": "Standard (min)",
+        "usd_per_year": 600,
+        "source_id": "S19",
+        "segment": "substrate",
+        "note": "$50/mo minimum"
+      },
+      {
+        "player": "Weaviate",
+        "plan": "Plus",
+        "usd_per_year": 3360,
+        "source_id": "S23",
+        "segment": "substrate",
+        "note": "$280/mo annualised"
+      },
+      {
+        "player": "Lyzr",
+        "plan": "platform top tier",
+        "usd_per_year": 11988,
+        "source_id": "S29",
+        "segment": "governance",
+        "note": "$999/mo annualised"
+      }
+    ],
+    "memory_api_meter": {
+      "n_points": 5,
+      "min_usd": 0,
+      "point_of_marginal_cheapness_usd": 1500,
+      "indifference_price_usd": 1500,
+      "optimal_price_point_usd": 2988,
+      "point_of_marginal_expensiveness_usd": 4500,
+      "ceiling_usd": 4500,
+      "median_usd": 1500
+    },
+    "substrate_meter": {
+      "n_points": 2,
+      "min_usd": 600,
+      "point_of_marginal_cheapness_usd": 1980.0,
+      "indifference_price_usd": 1980.0,
+      "optimal_price_point_usd": 3360,
+      "point_of_marginal_expensiveness_usd": 3360,
+      "ceiling_usd": 3360,
+      "median_usd": 1980.0
+    },
+    "governance_meter": {
+      "n_points": 1,
+      "min_usd": 11988,
+      "point_of_marginal_cheapness_usd": 11988,
+      "indifference_price_usd": 11988,
+      "optimal_price_point_usd": 11988,
+      "point_of_marginal_expensiveness_usd": 11988,
+      "ceiling_usd": 11988,
+      "median_usd": 11988
+    },
+    "category_ceiling_usd": 4500,
+    "category_ceiling_source": "Zep Flex Plus, $375/mo annualised (S5)",
+    "mem20_team_usd": 6000,
+    "team_premium_vs_ceiling_pct": 33.33,
+    "team_multiple_of_ceiling_x": 1.33,
+    "pct_of_memory_points_below_team": 100.0,
+    "governance_anchor_low_usd": 11988,
+    "governance_anchor_high_usd": 12000,
+    "business_tier_vs_governance_anchor_pct": 50.0,
+    "finding": "Two separate budget lines, and mem20 is mispriced against both. (1) MEMORY API: the highest published price point is $4,500 (Zep Flex Plus); mem20's entry tier is $6,000, i.e. +33% versus that ceiling, and 100% of published memory-API points sit at or below it. mem20 has no land tier - every buyer enters at 1.3x the category's top published price. (2) GOVERNANCE: the audit/control budget line transacts at $11,988-$12,000 (Lyzr platform top tier, S29). mem20's Business tier at $18,000 is +50% versus that anchor, so the governance capability is priced correctly at Business - and is given away inside Team, which is the leak quantified in margin_leak."
+  },
+  "margin_leak": {
+    "mechanism": "governance capability (epistemic partition + provenance ledger + contamination audit) is included in Team at $6,000 instead of sold at Business at $18,000",
+    "team_accounts": 86,
+    "attach_rate_assumed": 0.28,
+    "eligible_accounts": 24.08,
+    "uplift_per_account_usd": 12000,
+    "forgone_revenue_usd": 288960.0,
+    "forgone_gross_profit_usd": 288960.0,
+    "forgone_as_pct_of_scenario_a_gp": 24.56,
+    "note": "COGS is flat per account in this model, so forgone revenue and forgone gross profit are the same number. If COGS varied by tier the gross-profit figure would be the smaller of the two."
+  },
+  "sensitivity": {
+    "base_acv_usd": 14000,
+    "cogs_usd": 4280,
+    "elasticity_assumed": -0.8,
+    "grid": [
+      {
+        "price_usd": 11200.0,
+        "delta_pct": -20.0,
+        "volume_multiple": 1.16,
+        "accounts": 139.2,
+        "revenue_usd": 1559040.0,
+        "gross_profit_usd": 963264.0,
+        "gross_margin_pct": 61.79,
+        "win_rate_pct": 39.44,
+        "revenue_vs_base_pct": -7.2,
+        "gp_vs_base_pct": -17.42
+      },
+      {
+        "price_usd": 12600.0,
+        "delta_pct": -10.0,
+        "volume_multiple": 1.08,
+        "accounts": 129.6,
+        "revenue_usd": 1632960.0,
+        "gross_profit_usd": 1078272.0,
+        "gross_margin_pct": 66.03,
+        "win_rate_pct": 36.72,
+        "revenue_vs_base_pct": -2.8,
+        "gp_vs_base_pct": -7.56
+      },
+      {
+        "price_usd": 14000.0,
+        "delta_pct": 0.0,
+        "volume_multiple": 1.0,
+        "accounts": 120.0,
+        "revenue_usd": 1680000.0,
+        "gross_profit_usd": 1166400.0,
+        "gross_margin_pct": 69.43,
+        "win_rate_pct": 34.0,
+        "revenue_vs_base_pct": 0.0,
+        "gp_vs_base_pct": 0.0
+      },
+      {
+        "price_usd": 15400.0,
+        "delta_pct": 10.0,
+        "volume_multiple": 0.92,
+        "accounts": 110.4,
+        "revenue_usd": 1700160.0,
+        "gross_profit_usd": 1227648.0,
+        "gross_margin_pct": 72.21,
+        "win_rate_pct": 31.28,
+        "revenue_vs_base_pct": 1.2,
+        "gp_vs_base_pct": 5.25
+      },
+      {
+        "price_usd": 16800.0,
+        "delta_pct": 20.0,
+        "volume_multiple": 0.84,
+        "accounts": 100.8,
+        "revenue_usd": 1693440.0,
+        "gross_profit_usd": 1262016.0,
+        "gross_margin_pct": 74.52,
+        "win_rate_pct": 28.56,
+        "revenue_vs_base_pct": 0.8,
+        "gp_vs_base_pct": 8.2
+      }
+    ],
+    "break_even_elasticity_10pct_cut": -1.683,
+    "break_even_note": "A 10% list cut holds gross profit only while elasticity is shallower than -1.68. At the assumed -0.8 the cut is gross-profit-negative, which is why discount depth - not list price - is the lever to control."
+  },
+  "discount_governance": {
+    "policy": "cap = gross margin - 20pp; never discount a tier below 20% of its list gross profit",
+    "tiers": [
+      {
+        "tier": "Team",
+        "gross_margin_pct": 28.67,
+        "absolute_cap_pct": 28.67,
+        "policy_cap_pct": 8.67,
+        "approval": "Sales rep",
+        "note": "binding constraint: any discount above 28.67% makes this tier contribution-negative"
+      },
+      {
+        "tier": "Business",
+        "gross_margin_pct": 76.22,
+        "absolute_cap_pct": 76.22,
+        "policy_cap_pct": 56.22,
+        "approval": "CEO/CFO",
+        "note": "binding constraint: any discount above 76.22% makes this tier contribution-negative"
+      },
+      {
+        "tier": "Scale",
+        "gross_margin_pct": 88.11,
+        "absolute_cap_pct": 88.11,
+        "policy_cap_pct": 68.11,
+        "approval": "CEO/CFO",
+        "note": "binding constraint: any discount above 88.11% makes this tier contribution-negative"
+      },
+      {
+        "tier": "Enterprise",
+        "gross_margin_pct": 94.65,
+        "absolute_cap_pct": 94.65,
+        "policy_cap_pct": 74.65,
+        "approval": "CEO/CFO",
+        "note": "binding constraint: any discount above 94.65% makes this tier contribution-negative"
+      }
+    ],
+    "binding_tier": "Team"
+  }
+}

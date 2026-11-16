@@ -1,0 +1,9 @@
+scenario,tier,acv_usd,share,accounts,cogs_usd,gross_profit_per_account_usd,gross_margin_pct,logo_share_pct,gp_share_pct,gp_leverage_x,capability_gate
+A-committed,Team,6000,0.72,86,4280,1720,28.67,71.67,12.57,0.18,"core memory, full 129-domain read surface, no epistemic partition"
+A-committed,Business,18000,0.12,15,4280,13720,76.22,12.5,17.49,1.4,"+ epistemic partition (grounded/simulated), provenance ledger, contamination audit"
+A-committed,Scale,36000,0.12,14,4280,31720,88.11,11.67,37.75,3.23,"+ A2A transport, multi-region, SSO/SCIM"
+A-committed,Enterprise,80000,0.04,5,4280,75720,94.65,4.17,32.18,7.72,"+ BYOC, custom domains, contractual SLA"
+B-proposed,Team,6000,0.58,69,4280,1720,28.67,57.5,8.27,0.14,"core memory, full 129-domain read surface, 90-day ledger retention, no epistemic partition"
+B-proposed,Business,18000,0.24,29,4280,13720,76.22,24.17,27.74,1.15,"+ epistemic partition, unlimited ledger retention, contamination audit, evidence-based promotion"
+B-proposed,Scale,36000,0.14,17,4280,31720,88.11,14.17,37.59,2.65,"+ A2A transport, multi-region, SSO/SCIM, 99.9% SLA"
+B-proposed,Enterprise,80000,0.04,5,4280,75720,94.65,4.17,26.39,6.33,"+ BYOC, custom domains, 99.95% SLA, named TAM"

@@ -43,8 +43,8 @@ Drop the memoised config / client. `reset_client!` closes the underlying process
 
 | Constant | Value | Meaning |
 |---|---|---|
-| `Mem20::VERSION` | `"0.2.0"` | SDK version, tracked independently of the server |
-| `Mem20::SERVER_VERSION` | `"2.1.0rc2"` | the mem20 release this SDK was validated against |
+| `Mem20::VERSION` | `"0.3.0"` | SDK version, tracked independently of the server |
+| `Mem20::SERVER_VERSION` | `"4.0.0"` | the mem20 release this SDK was validated against |
 | `Mem20::PROTOCOL_VERSION` | `"2025-06-18"` | the MCP revision sent in the handshake |
 
 ---
@@ -58,7 +58,7 @@ client = Mem20::Client.new(cwd: "/opt/mem20/mem20")  # config built from ENV + o
 
 | Method | Signature | Returns |
 |---|---|---|
-| `#tool` | `tool(name, **params)` | the tool's JSON-RPC `result` |
+| `#tool` | `tool(name, arguments = nil, **params)` | the tool's JSON-RPC `result` |
 | `#tools` | `tools` | the `tools/list` result (name, description, `inputSchema`) |
 | `#tool_names` | `tool_names` | cached `Array<String>` of registered tool names |
 | `#memory_store` | `memory_store(content:, category: "general", tags: nil)` | the store result |

@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="https://img.shields.io/badge/mem20--sdk--ruby-v0.2.0-cc342d?style=for-the-badge&logo=ruby" alt="mem20-sdk-ruby v0.2.0">
+  <img src="https://img.shields.io/badge/mem20--sdk--ruby-v0.3.0-cc342d?style=for-the-badge&logo=ruby" alt="mem20-sdk-ruby v0.3.0">
 </p>
 <p align="center">
   <strong>Ruby SDK for mem20 — a persistent memory + cognition substrate for AI agents.</strong>
@@ -29,7 +29,7 @@ a Sidekiq worker, or a plain script.
 | Requirement | Version |
 |---|---|
 | Ruby | >= 3.1 |
-| mem20 server | v3.1.2 (Python 3.11+) |
+| mem20 server | v4.0.0 (Python 3.11+) |
 | Runtime deps | none (stdlib only: `json`, `open3`, `net/http`, `timeout`) |
 
 ## Install
@@ -60,7 +60,7 @@ bundle install
 
 ```bash
 gem build mem20-sdk.gemspec
-gem install ./mem20-sdk-0.2.0.gem
+gem install ./mem20-sdk-0.3.0.gem
 ```
 
 Full instructions, including building the mem20 server itself, are in
@@ -87,7 +87,7 @@ client.memory_store(content: "The release sign-off lives in the repo.",
 result = client.memory_recall(query: "where does the release sign-off live", limit: 5)
 puts Mem20::Client.text(result)
 
-# Any one of the 311 registered tools, by name…
+# Any one of the 487 registered tools, by name…
 client.tool("memory_status", {})
 # …or as a dynamic binding.
 client.memory_status
@@ -108,7 +108,7 @@ ruby -Ilib examples/quickstart.rb
 | `Mem20.configure` / `Mem20.client` | module-level entry points |
 | `Mem20::Config` | frozen, validated configuration mapped to the documented `MEM20_*` variables |
 | `Mem20::Client` | thread-safe facade: `#tool`, `#tools`, `#memory_store`, `#memory_recall`, `#health`, `#metrics` |
-| `Mem20::Surface` | the verified surface: `TOOL_COUNT` (311), `DOMAIN_COUNT` (39), `DOMAIN_TOOLS` (311), `INFRA_TOOLS` |
+| `Mem20::Surface` | the verified surface: `TOOL_COUNT` (487), `DOMAIN_COUNT` (129), `DOMAIN_TOOLS` (487), `DOMAIN_TOOL_COUNTS`, `INFRA_TOOLS` |
 | `Mem20::Transport::Stdio` | JSON-RPC 2.0 over stdio with the MCP handshake, timeouts and mutex-serialised access |
 | typed errors | `ConfigurationError`, `ToolError` (`#code`, `#data`), `TransportError` |
 
@@ -121,7 +121,7 @@ ruby -Ilib examples/quickstart.rb
   authoritative manifest: `scripts/surface_manifest.py` generates it from a live
   `tools/list` response and cross-checks it against the AST catalog in
   `web/src/data/tools.json`, refusing to emit unless the two are identical sets.
-  `tools/list` returns all 311, so `tool_names.size` is 311 — the SDK reaches every
+  `tools/list` returns all 487, so `tool_names.size` is 487 — the SDK reaches every
   one through `#tool` or a dynamic binding. `Mem20::Surface` is the single source of
   truth for those numbers, `spec/mem20/surface_spec.rb` pins them, and
   `rake surface:check` compares them with `docs/surface.json`.
@@ -150,8 +150,8 @@ GitHub Actions — only the root `.github/workflows/` directory is read):
 
 ```bash
 # 1. bump lib/mem20/version.rb + CHANGELOG.md, merge to main
-git tag -a mem20-sdk-ruby-v0.2.0 -m "mem20-sdk 0.2.0"
-git push origin mem20-sdk-ruby-v0.2.0
+git tag -a mem20-sdk-ruby-v0.3.0 -m "mem20-sdk 0.3.0"
+git push origin mem20-sdk-ruby-v0.3.0
 ```
 
 The publish job needs a repository secret **`RUBYGEMS_API_KEY`** holding a RubyGems
@@ -161,25 +161,28 @@ Run workflow* with `dry_run` left on (the default).
 
 ## Verification — reproduced results
 
-The results below were produced by running the suite and a live round-trip against
-the mem20 server on a Kali Linux host with Ruby 3.3.8. That host has since been
-retired and no longer exists; the measurements stand as recorded. The surface has
-since been re-verified to **487 tools across 129 domains** (see
-[`docs/EVIDENCE.md`](docs/EVIDENCE.md) § 0). The raw command output is reproduced
-in [`docs/EVIDENCE.md`](docs/EVIDENCE.md).
+The build, test and packaging rows below were produced on this checkout
+(2026-11-16, Ruby 3.1.2, Debian 12) and are reproduced verbatim in
+[`docs/EVIDENCE.md`](docs/EVIDENCE.md). The live stdio round-trip row is the
+earlier capture from a Kali Linux host with Ruby 3.3.8; that host has since been
+retired and no longer exists, so the measurement stands as recorded. The surface
+has been re-verified to **487 tools across 129 domains** against
+`docs/surface.json` (see [`docs/EVIDENCE.md`](docs/EVIDENCE.md) § 0).
 
 | Check | Result |
 |---|---|
 | `ruby -c` on every `lib/**/*.rb` | Syntax OK |
-| `rspec` | **33 examples, 0 failures** |
-| `rubocop` | 19 files inspected, **no offenses detected** |
-| `gem build mem20-sdk.gemspec` | mem20-sdk **0.2.0** built |
-| `require "mem20"` (installed gem) | loads mem20-sdk 0.2.0 |
-| live stdio round-trip | protocol **2025-06-18**, stored token recalled (surface re-verified: **487 tools**) |
+| `rspec` | **82 examples, 0 failures** |
+| `rubocop` | 24 files inspected, **no offenses detected** |
+| `gem build mem20-sdk.gemspec` | mem20-sdk **0.3.0** built |
+| `require "mem20"` (installed gem) | loads mem20-sdk 0.3.0, surface 487 / 129 |
+| `rake surface:check` | `Mem20::Surface` matches `docs/surface.json` |
+| live stdio round-trip (earlier capture) | protocol **2025-06-18**, stored token recalled |
 
 The round-trip stores a distinctive token with `memory_store` and reads it back with
 `memory_recall` against the real server; the recorded run recovered the token in
-**5.805 ms**.
+**5.805 ms**. It is not re-run here: this checkout has no mem20 server or LLM
+endpoint, so the row is the dated capture, not a fresh measurement.
 
 ## Scope and honest limits
 

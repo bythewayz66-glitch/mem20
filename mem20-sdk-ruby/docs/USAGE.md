@@ -52,7 +52,7 @@ client.memory_probe
 `client.tool_names` returns the cached list:
 
 ```ruby
-puts client.tool_names.size   # 311
+puts client.tool_names.size   # 487
 ```
 
 ## Inspect the schemas

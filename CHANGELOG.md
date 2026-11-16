@@ -3,6 +3,19 @@
 All notable changes to mem20 are documented here. The format is based on
 [Keep a Changelog](https://keepachangelog.com/).
 
+## [4.0.0] — 2026-11-16
+
+### Changed
+- **Site-wide version bump:** `VERSION`, root `pyproject.toml`, and primary docs (`README.md`, `docs/index.html`) updated to **4.0.0**.
+- **MCP server startup:** tool mixin imports in `mcp/server.py` are lazy-loaded on first server construction; core memory engine access is deferred via lazy loaders to reduce import-time coupling.
+- **Test collection resilience:** `conftest.py` package pre-imports are opt-in by default (`MEM20_PYTEST_PREIMPORT=1` to enable) with bounded timeout (`MEM20_PYTEST_PREIMPORT_TIMEOUT`, default 1s) to mitigate collection hangs while preserving path reassert hooks.
+- **Benchmarks:** v3 corpus shard generation triggered from `reference/v3` cache per manifest reproduce command when missing (generation status recorded in logs/artifacts).
+
+### Fixed
+- **MCP health endpoint:** honors `MEM20_HEALTH_PORT=0` / disable flags without blocking stdio transport; bind failures remain non-fatal.
+- **MCP wiring/import hygiene:** removed redundant ops mixin re-export coupling and fixed lazy server-class build namespace injection for toolchest/MCP discovery.
+- **Packaging/entrypoints/docs:** added `mem20pipez`/`mem20kilnz` root `__main__` shims, documented `mem20kilnz` engine build, refreshed specs, added `rank-bm25`/`cryptography` deps and root `cv` extra.
+
 ## [3.1.0] — 2026-10-31
 
 First release cut since `v3.0.0`, which pointed at `a366ff74` and had drifted 93

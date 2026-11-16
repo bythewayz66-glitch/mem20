@@ -235,3 +235,8 @@
 - **surface_manifest.py --write:** OK (surface is 487 tools / 129 domains)
 - **Generated files:** docs/surface.json, docs/TOOL-DOMAINS.md, web/src/data/tools.json
 - **docs/index.html:** Added version badge `<span class="badge">v3.1.2</span>` to match VERSION file
+
+## 2026-11-16 — 4.0.0 bump and blocker-fix follow-up
+- **mcp/server.py state drift during edits:** mixin lazy-load refactor was lost in an intermediate state; restored with lazy class builder and fixed sys.path/memory lazy-access integration. Required recompile and toolchest refresh to confirm MCP discovery.
+- **pytest collection still unstable:** despite opt-in pre-imports and timeouts in `conftest.py`, root/targeted `--collect-only` runs remained slow/hanging or non-diagnostic in-session; blocker improved but not fully closed.
+- **v3 corpus build/validate:** initial blocker (missing `records.part-*.jsonl`) resolved by generating shards; build completed and validation passed. Large generated artifacts increased sitemap totals.

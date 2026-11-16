@@ -106,6 +106,39 @@ def _importable(project):
     return None
 
 
+def _preimport_with_timeout(mod, timeout_s=None):
+    # Pre-importing every package can hang or be very slow in large estates.
+    # Default to off for collectability; enable explicitly when needed.
+    if os.environ.get("MEM20_PYTEST_PREIMPORT", "0").strip().lower() not in ("1", "true", "yes"):
+        return
+    if os.environ.get("MEM20_PYTEST_NO_PREIMPORT"):
+        return
+    if timeout_s is None:
+        try:
+            timeout_s = float(os.environ.get("MEM20_PYTEST_PREIMPORT_TIMEOUT", "1"))
+        except Exception:
+            timeout_s = 1.0
+    try:
+        import signal
+
+        def _handler(signum, frame):
+            raise TimeoutError(f"preimport timeout: {mod}")
+
+        old = signal.getsignal(signal.SIGALRM)
+        signal.signal(signal.SIGALRM, _handler)
+        signal.setitimer(signal.ITIMER_REAL, timeout_s)
+        try:
+            importlib.import_module(mod)
+        finally:
+            signal.setitimer(signal.ITIMER_REAL, 0)
+            signal.signal(signal.SIGALRM, old)
+    except Exception:
+        # A package whose import needs optional native deps may not load here;
+        # that is fine. We only need the ones pytest will import in this session
+        # to be pre-bound, and any that fail still import normally on demand.
+        pass
+
+
 for _project in _project_roots():
     _found = _importable(_project)
     if not _found:
@@ -113,13 +146,7 @@ for _project in _project_roots():
     _mod, _parent = _found
     if _parent not in sys.path:
         sys.path.insert(0, _parent)
-    try:
-        importlib.import_module(_mod)
-    except Exception:
-        # A package whose import needs optional native deps may not load here;
-        # that is fine. We only need the ones pytest will import in this session
-        # to be pre-bound, and any that fail still import normally on demand.
-        pass
+    _preimport_with_timeout(_mod)
 
 # 4b. Re-assert the path invariant at COLLECTION time (issue #224).
 #

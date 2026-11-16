@@ -1,8 +1,7 @@
 {
-  "generated_at": "2026-11-14T06:27:18+0000",
+  "generated_at": "2026-11-16T06:31:17+0000",
   "root": "/opt/mem20",
   "root_files": [
-    ".coverage",
     ".gitignore",
     ".mcp.json",
     ".mem20-absorbed-map.json",
@@ -74,7 +73,7 @@
   "roots": [
     "/opt/mem20"
   ],
-  "scan_seconds": 18.52,
+  "scan_seconds": 14.42,
   "schema": "mem20-sitemap-v1",
   "subsystems": [
     {
@@ -228,7 +227,7 @@
       "version": null
     },
     {
-      "bytes": 276573,
+      "bytes": 101362901,
       "category": "other",
       "code_lines": 2257,
       "dependencies": [],
@@ -239,19 +238,19 @@
         "benchmarks/v3/README.md"
       ],
       "entry_points": {},
-      "file_count": 19,
+      "file_count": 22,
       "keywords": [],
       "languages": {
         "json": 6,
-        "jsonl": 1,
+        "jsonl": 4,
         "markdown": 3,
         "python": 8,
         "shell": 1
       },
       "license": null,
-      "line_count": 3424,
+      "line_count": 3318,
       "lines_by_language": {
-        "json": 271,
+        "json": 165,
         "jsonl": 600,
         "markdown": 296,
         "python": 2221,
@@ -520,7 +519,7 @@
       "version": null
     },
     {
-      "bytes": 37840,
+      "bytes": 41297,
       "category": "service",
       "code_lines": 217,
       "dependencies": [],
@@ -540,12 +539,12 @@
         "markdown": 1
       },
       "license": null,
-      "line_count": 1184,
+      "line_count": 1279,
       "lines_by_language": {
         "css": 36,
         "html": 12,
         "javascript": 169,
-        "json": 932,
+        "json": 1027,
         "markdown": 35
       },
       "modules": [],
@@ -561,7 +560,7 @@
       "version": null
     },
     {
-      "bytes": 2768479,
+      "bytes": 2764255,
       "category": "other",
       "code_lines": 8122,
       "dependencies": [],
@@ -606,13 +605,13 @@
         "xml": 1
       },
       "license": null,
-      "line_count": 39252,
+      "line_count": 39063,
       "lines_by_language": {
         "cpp": 149,
         "css": 164,
         "html": 4598,
         "javascript": 197,
-        "json": 4346,
+        "json": 4157,
         "markdown": 26519,
         "other": 246,
         "python": 3014,
@@ -689,9 +688,9 @@
       "version": null
     },
     {
-      "bytes": 108300,
+      "bytes": 90056,
       "category": "service",
-      "code_lines": 2152,
+      "code_lines": 2034,
       "dependencies": [],
       "description": "",
       "dir": "gateway",
@@ -699,21 +698,21 @@
         "gateway/README.md"
       ],
       "entry_points": {},
-      "file_count": 13,
+      "file_count": 14,
       "keywords": [],
       "languages": {
-        "json": 1,
+        "json": 2,
         "jsonl": 1,
         "markdown": 1,
         "python": 10
       },
       "license": null,
-      "line_count": 2197,
+      "line_count": 2099,
       "lines_by_language": {
-        "json": 25,
+        "json": 45,
         "jsonl": 2,
         "markdown": 18,
-        "python": 2152
+        "python": 2034
       },
       "modules": [
         "__init__",
@@ -739,9 +738,9 @@
       "version": null
     },
     {
-      "bytes": 1027530,
+      "bytes": 1031016,
       "category": "service",
-      "code_lines": 20344,
+      "code_lines": 19141,
       "dependencies": [],
       "description": "",
       "dir": "mcp",
@@ -757,11 +756,11 @@
         "python": 177
       },
       "license": null,
-      "line_count": 20557,
+      "line_count": 19354,
       "lines_by_language": {
         "json": 128,
         "markdown": 85,
-        "python": 20344
+        "python": 19141
       },
       "modules": [
         "__init__",
@@ -1207,9 +1206,9 @@
       "version": "1.0.0"
     },
     {
-      "bytes": 1015022,
+      "bytes": 1023115,
       "category": "organ",
-      "code_lines": 15451,
+      "code_lines": 15603,
       "dependencies": [
         "PyYAML>=6.0",
         "aiohttp>=3.9",
@@ -1238,14 +1237,14 @@
         "toml": 2
       },
       "license": null,
-      "line_count": 18775,
+      "line_count": 18927,
       "lines_by_language": {
         "css": 728,
         "html": 1207,
         "javascript": 1548,
         "json": 2290,
         "markdown": 988,
-        "python": 11968,
+        "python": 12120,
         "toml": 46
       },
       "modules": [
@@ -1417,9 +1416,9 @@
       "version": "0.1.0"
     },
     {
-      "bytes": 418165,
+      "bytes": 427493,
       "category": "organ",
-      "code_lines": 3744,
+      "code_lines": 3936,
       "dependencies": [],
       "description": "mem20 companion, coach and assistant runtime \u2014 crew runtime grouping reviewed packages for joint integration.",
       "dir": "mem20assistz",
@@ -1441,7 +1440,7 @@
       "entry_points": {
         "mem20assistz": "mem20assistz.cli:main"
       },
-      "file_count": 174,
+      "file_count": 175,
       "keywords": [
         "mem20",
         "crew",
@@ -1454,18 +1453,18 @@
         "javascript": 3,
         "json": 45,
         "markdown": 21,
-        "python": 86,
+        "python": 87,
         "toml": 13
       },
       "license": "MIT",
-      "line_count": 6877,
+      "line_count": 7069,
       "lines_by_language": {
         "css": 13,
         "html": 13,
         "javascript": 25,
         "json": 2230,
         "markdown": 715,
-        "python": 3693,
+        "python": 3885,
         "toml": 188
       },
       "modules": [
@@ -1474,6 +1473,7 @@
         "cli",
         "conftest",
         "domain",
+        "ecosystem",
         "test_mem20assistz"
       ],
       "name": "mem20assistz",
@@ -1547,9 +1547,9 @@
       "version": "0.1.0"
     },
     {
-      "bytes": 105074,
+      "bytes": 114400,
       "category": "organ",
-      "code_lines": 277,
+      "code_lines": 469,
       "dependencies": [],
       "description": "mem20 autonomous systems runtime \u2014 crew runtime grouping reviewed packages for joint integration.",
       "dir": "mem20autoz",
@@ -1567,7 +1567,7 @@
       "entry_points": {
         "mem20autoz": "mem20autoz.cli:main"
       },
-      "file_count": 74,
+      "file_count": 75,
       "keywords": [
         "mem20",
         "crew",
@@ -1577,16 +1577,16 @@
       "languages": {
         "json": 28,
         "markdown": 10,
-        "python": 27,
+        "python": 28,
         "shell": 1,
         "toml": 8
       },
       "license": "MIT",
-      "line_count": 1841,
+      "line_count": 2033,
       "lines_by_language": {
         "json": 1141,
         "markdown": 307,
-        "python": 247,
+        "python": 439,
         "shell": 30,
         "toml": 116
       },
@@ -1595,6 +1595,7 @@
         "__main__",
         "cli",
         "conftest",
+        "ecosystem",
         "test_mem20autoz"
       ],
       "name": "mem20autoz",
@@ -1671,9 +1672,9 @@
       "version": "0.1.0"
     },
     {
-      "bytes": 302354,
+      "bytes": 311678,
       "category": "organ",
-      "code_lines": 3626,
+      "code_lines": 3818,
       "dependencies": [],
       "description": "mem20 autonomous company and revenue runtime \u2014 crew runtime grouping reviewed packages for joint integration.",
       "dir": "mem20biz",
@@ -1688,7 +1689,7 @@
       "entry_points": {
         "mem20biz": "mem20biz.cli:main"
       },
-      "file_count": 90,
+      "file_count": 91,
       "keywords": [
         "mem20",
         "crew",
@@ -1701,18 +1702,18 @@
         "javascript": 2,
         "json": 16,
         "markdown": 13,
-        "python": 49,
+        "python": 50,
         "toml": 6
       },
       "license": "MIT",
-      "line_count": 5164,
+      "line_count": 5356,
       "lines_by_language": {
         "css": 25,
         "html": 24,
         "javascript": 27,
         "json": 896,
         "markdown": 550,
-        "python": 3550,
+        "python": 3742,
         "toml": 92
       },
       "modules": [
@@ -1720,6 +1721,7 @@
         "__main__",
         "cli",
         "conftest",
+        "ecosystem",
         "test_mem20biz"
       ],
       "name": "mem20biz",
@@ -1807,9 +1809,9 @@
       "version": "0.2.0"
     },
     {
-      "bytes": 66236,
+      "bytes": 75561,
       "category": "organ",
-      "code_lines": 447,
+      "code_lines": 639,
       "dependencies": [],
       "description": "mem20 sandbox runtime \u2014 crew runtime grouping reviewed packages for joint integration.",
       "dir": "mem20boxz",
@@ -1822,7 +1824,7 @@
       "entry_points": {
         "mem20boxz": "mem20boxz.cli:main"
       },
-      "file_count": 39,
+      "file_count": 40,
       "keywords": [
         "mem20",
         "crew",
@@ -1832,15 +1834,15 @@
       "languages": {
         "json": 11,
         "markdown": 5,
-        "python": 19,
+        "python": 20,
         "toml": 4
       },
       "license": "MIT",
-      "line_count": 1100,
+      "line_count": 1292,
       "lines_by_language": {
         "json": 466,
         "markdown": 127,
-        "python": 447,
+        "python": 639,
         "toml": 60
       },
       "modules": [
@@ -1848,6 +1850,7 @@
         "__main__",
         "cli",
         "conftest",
+        "ecosystem",
         "test_mem20boxz"
       ],
       "name": "mem20boxz",
@@ -2036,9 +2039,9 @@
       "version": "0.1.0"
     },
     {
-      "bytes": 113643,
+      "bytes": 118659,
       "category": "organ",
-      "code_lines": 2433,
+      "code_lines": 2535,
       "dependencies": [
         "numpy>=1.26",
         "httpx>=0.27",
@@ -2063,10 +2066,10 @@
         "toml": 1
       },
       "license": null,
-      "line_count": 2515,
+      "line_count": 2617,
       "lines_by_language": {
         "markdown": 48,
-        "python": 2433,
+        "python": 2535,
         "toml": 34
       },
       "modules": [
@@ -2097,9 +2100,9 @@
       "version": "0.2.0"
     },
     {
-      "bytes": 208750,
+      "bytes": 213306,
       "category": "organ",
-      "code_lines": 4087,
+      "code_lines": 4173,
       "dependencies": [
         "pyyaml>=6.0",
         "aiohttp>=3.9",
@@ -2123,11 +2126,11 @@
         "yaml": 1
       },
       "license": null,
-      "line_count": 4422,
+      "line_count": 4508,
       "lines_by_language": {
         "jsonl": 84,
         "markdown": 132,
-        "python": 4087,
+        "python": 4173,
         "toml": 24,
         "yaml": 95
       },
@@ -2221,9 +2224,9 @@
       "version": "0.1.0"
     },
     {
-      "bytes": 295568,
+      "bytes": 300090,
       "category": "organ",
-      "code_lines": 6097,
+      "code_lines": 6183,
       "dependencies": [
         "httpx"
       ],
@@ -2250,10 +2253,10 @@
         "toml": 1
       },
       "license": "MIT",
-      "line_count": 6198,
+      "line_count": 6284,
       "lines_by_language": {
         "markdown": 81,
-        "python": 6097,
+        "python": 6183,
         "toml": 20
       },
       "modules": [
@@ -2498,9 +2501,9 @@
       "version": "0.1.0"
     },
     {
-      "bytes": 754233,
+      "bytes": 754560,
       "category": "organ",
-      "code_lines": 7214,
+      "code_lines": 7219,
       "dependencies": [],
       "description": "mem20 interface/workspace crew runtime: 8-member registry/composition with 6-peer capture, dataflow, mission, canvas, sandbox, and blackboard signals.",
       "dir": "mem20facez",
@@ -2547,7 +2550,7 @@
         "toml": 20
       },
       "license": "MIT",
-      "line_count": 11983,
+      "line_count": 11988,
       "lines_by_language": {
         "css": 65,
         "html": 52,
@@ -2555,7 +2558,7 @@
         "json": 3357,
         "markdown": 1118,
         "other": 4,
-        "python": 7002,
+        "python": 7007,
         "toml": 290
       },
       "modules": [
@@ -2638,9 +2641,9 @@
       "version": "0.1.0"
     },
     {
-      "bytes": 1005298,
+      "bytes": 1014623,
       "category": "organ",
-      "code_lines": 6735,
+      "code_lines": 6927,
       "dependencies": [],
       "description": "Family registry for the mem20*z packages: which family each package belongs to, what that family is for, and what would prove it.",
       "dir": "mem20famz",
@@ -2694,7 +2697,7 @@
       "entry_points": {
         "mem20famz": "mem20famz.__main__:main"
       },
-      "file_count": 511,
+      "file_count": 512,
       "keywords": [],
       "languages": {
         "css": 6,
@@ -2703,11 +2706,11 @@
         "json": 170,
         "markdown": 59,
         "other": 1,
-        "python": 218,
+        "python": 219,
         "toml": 45
       },
       "license": null,
-      "line_count": 16817,
+      "line_count": 17009,
       "lines_by_language": {
         "css": 30,
         "html": 28,
@@ -2715,12 +2718,13 @@
         "json": 7379,
         "markdown": 2057,
         "other": 2,
-        "python": 6620,
+        "python": 6812,
         "toml": 644
       },
       "modules": [
         "__init__",
         "__main__",
+        "ecosystem",
         "families"
       ],
       "name": "mem20famz",
@@ -2737,9 +2741,9 @@
       "version": "0.1.0"
     },
     {
-      "bytes": 848751,
+      "bytes": 858077,
       "category": "organ",
-      "code_lines": 13148,
+      "code_lines": 13340,
       "dependencies": [
         "PyYAML>=6.0",
         "numpy>=1.26",
@@ -2763,7 +2767,7 @@
       "entry_points": {
         "mem20gamez": "mem20gamez.cli:main"
       },
-      "file_count": 184,
+      "file_count": 185,
       "keywords": [],
       "languages": {
         "css": 5,
@@ -2771,18 +2775,18 @@
         "javascript": 5,
         "json": 28,
         "markdown": 22,
-        "python": 110,
+        "python": 111,
         "toml": 9
       },
       "license": null,
-      "line_count": 15845,
+      "line_count": 16037,
       "lines_by_language": {
         "css": 32,
         "html": 26,
         "javascript": 46,
         "json": 1733,
         "markdown": 817,
-        "python": 13044,
+        "python": 13236,
         "toml": 147
       },
       "modules": [
@@ -2794,6 +2798,7 @@
         "config",
         "conftest",
         "curriculum",
+        "ecosystem",
         "environment",
         "networks",
         "replay_buffer",
@@ -3130,9 +3135,9 @@
       "version": "0.1.0"
     },
     {
-      "bytes": 508004,
+      "bytes": 2247577,
       "category": "organ",
-      "code_lines": 7432,
+      "code_lines": 46986,
       "dependencies": [],
       "description": "Native mem20 3D subsystem (KilNZ): AI-first cleanroom mesh and geometry modeler with a 103-op agent surface, procedural generation, glTF/OBJ import-export, rigging, text-to-3D asset pipeline, and a budget/naming validation gate",
       "dir": "mem20kilnz",
@@ -3140,24 +3145,35 @@
         "mem20kilnz/CONFWORK.md",
         "mem20kilnz/PROPOSAL.md",
         "mem20kilnz/README.md",
-        "mem20kilnz/TODO.md"
+        "mem20kilnz/TODO.md",
+        "mem20kilnz/engine/README.md"
       ],
       "entry_points": {
         "kiln": "mem20kilnz.cli:main",
         "mem20kilnz": "mem20kilnz.cli:main"
       },
-      "file_count": 46,
+      "file_count": 97,
       "keywords": [],
       "languages": {
-        "markdown": 5,
-        "python": 40,
+        "c": 1,
+        "cpp": 38,
+        "make": 1,
+        "markdown": 7,
+        "other": 4,
+        "python": 43,
+        "shell": 2,
         "toml": 1
       },
       "license": "MIT",
-      "line_count": 10033,
+      "line_count": 50251,
       "lines_by_language": {
-        "markdown": 2568,
-        "python": 7432,
+        "c": 1520,
+        "cpp": 37437,
+        "make": 57,
+        "markdown": 3092,
+        "other": 140,
+        "python": 7945,
+        "shell": 27,
         "toml": 33
       },
       "modules": [
@@ -3207,6 +3223,7 @@
       "readme_text": "# mem20kilnz\n\na cleanroom, agent-first 3d subsystem for mem20: a c++ geometry kernel driven\nover json-rpc, wrapped in a python package with budgets, a read-only gltf\nvalidator, and a cli that turns a written brief into a real asset.\n\nthe human surface is deliberately secondary. the primary caller is an agent.\n\n## what is actually implemented\n\neverything below is exercised by the test suite or the cli in this repo. it is\nnot a roadmap.\n\n- **103 ops** on the c++ kernel, with an automated drift guard\n  (`tests/check_op_sync.py`) that fails if the advertised list and the\n  dispatcher ever disagree.\n- **gltf 2.0 / glb import and export.** geometry (positions, indices) round-trips\n  without loss. 17 fixtures are covered; malformed files are rejected with a\n  reason rather than crashing.\n- **obj import and export.**\n- **mesh operations** including decimation, normals, booleans, remesh, smoothing,\n  subdivision (loop, catmull-clark), wireframe, shrinkwrap, symmetrize, extrude,\n  bevel, and per-vertex transform ops.\n- **rig operations** including two-bone inverse kinematics, parenting, skinning,\n  and pose application.\n- **a natural-language and json-rpc agent surface.** the engine prefers, in\n  order: literal json, the kiln dsl, a built-in english intent handler, then an\n  llm.\n- **a provenance journal.** every applied op is recorded with its verdict,\n  including the ones a language model invents internally and which never arrive\n  at the kernel.\n- **authored triangle budgets** per asset family, with detail tiers and lod\n  ceilings (`mem20kilnz/budgets.py`).\n\n## 4.0 \u2014 the build gate (`mem20kilnz/ecosystem.py`)\n\nan asset is only shippable if it is *within budget*, *structurally sound*,\n*faithful to its brief* and *grounded in what the estate already knows*. the\nbuild gate is that seam, and it is wired into six other mem20 subsystems.\n\n| subsystem | function actually called | what it decides |\n|---|---|---|\n| `memory_engine` | `memory.recall`, `memory.remember` | what the estate knows about this asset family; the build outcome is written back as `agent_generated` |\n| `mem20crewz` | `guardrails.guards.check_clearance` | may this build rest on these facts, or is it a guess with a manifest |\n| `mem20verify` | `linters.all_checks` (every check invoked) | is the emitted code structurally sound |\n| `mem20dreamz` | `verdicts.fidelity_verdict`, `verdicts.divergence` | does the result still serve the brief, and how far did it move |\n| `mem20corez` | `mlp.charmlp.perplexity` | how far the result sits from the model's corpus |\n| `mem20cliz` | `build_envelope`, `split_json_flag` | the fleet's shared `--json` envelope |\n\n`buildgate.prepare()` runs before a build; `buildgate.judge()` runs after it.\n`report.shippable` is `true` only when every subsystem that was asked actually\nanswered \u2014 a part that ran and returned `ok: false` makes the report\nunshippable, and a part that was never run (a text-only build has no code to\nlint) is marked `skipped` rather than counted as a pass.\n\n### runnable example\n\n```python\nimport sys\nsys.path.insert(0, \"mem20kilnz\")\nsys.path.insert(0, \".\")\nfrom mem20kilnz import ecosystem\n\nout = ecosystem.run_gate(\n    \"build the prop family mesh at the standard budget\",\n    \"built the prop family mesh at 4000 triangles.\\n\"\n    \"```python\\ndef within(n):\\n    return n <= 6000\\n```\\n\",\n    topic=\"kiln.readme\",\n)\nprint(out[\"shippable\"], out[\"subsystems\"])\n```\n\nreal output from that call:\n\n```json\n{\n  \"shippable\": true,\n  \"subsystems\": [\n    \"memory_engine\",\n    \"mem20crewz\",\n    \"mem20verify\",\n    \"mem20dreamz\",\n    \"mem20corez\"\n  ],\n  \"context\": {\n    \"ok\": true,\n    \"subsystem\": \"memory_engine\",\n    \"count\": 0,\n    \"rows\": []\n  },\n  \"veto\": {\n    \"ok\": true,\n    \"subsystem\": \"mem20crewz\",\n    \"vetoed\": false,\n    \"reason\": \"no fact_ids to veto-check\",\n    \"offenders\": [],\n    \"verdict\": {\n      \"vetoed\": false,\n      \"reason\": \"no fact_ids to veto-check\"\n    }\n  },\n  \"lint\": {\n    \"ok\": true,\n    \"subsystem\": \"mem20verify\",\n    \"checks\": 4,\n    \"issues\": [],\n    \"clean\": true\n  },\n  \"fidelity\": {\n    \"ok\": true,\n    \"subsystem\": \"mem20dreamz\",\n    \"fidelity\": 50,\n    \"summary\": \"lexical overlap with the brief\",\n    \"divergence\": 54.0,\n    \"novelty\": 62.5\n  },\n  \"surprise\": {\n    \"ok\": true,\n    \"subsystem\": \"mem20corez\",\n    \"perplexity\": 57.13324529408706,\n    \"params\": 28337\n  },\n  \"recorded\": {}\n}\n```\n\n### mcp surface\n\n`mcp/tools/kilnz_tools.py` registers four tools on the mem20 mcp server:\n\n- `kilnz_status` \u2014 is the kiln importable, and what does it wire to\n- `kilnz_ground` \u2014 grounded context about an asset family before a build\n- `kilnz_gate` \u2014 judge a build result before the asset ships\n- `kilnz_budget` \u2014 check a triangle count against the authored budget table\n\n### tests\n\n```bash\npython3 -m pytest mem20kilnz/tests/test_ecosystem.py -q\n# 13 passed\n```\n\nthe tests assert on the value the *other* subsystem computed \u2014 a build recorded\nthrough the gate is read back by the engine's own `recall` and labelled\n`agent_generated`; the veto refuses a build on agent output and passes one on\nuser-stated facts; a known-bad snippet is caught by `identical-branches`; the\nperplexity is a finite number from real matrix multiplication.\n\n### conformance\n\n```bash\npython3 scripts/renovation/conformance.py mem20kilnz\n```\n # confwork \u2014 verified facts only\n\nrule: nothing enters this file unless it was executed and observed in this\nsession. doubt means it does not go in. failed attempts go in `failures.md`.\n\nenvironment (probed 2026-09-25/26):\n- host: linux, 4 cpu cores, 15 gb ram\n- **gpu: none.** intel skylake-u hd graphics 520, no cuda, no `/dev/nvidia*`,\n  nvidia kernel module not loaded. torch 2.14.0+**cpu**. (worked)\n- blender 5.2.0 lts at `/usr/local/bin/blender`; freecad 1.1.3 at\n  `/usr/local/bin/freecad` and `/usr/local/bin/freecadcmd`. (worked)\n- venv `.venv`; has trimesh 5.1.0, numpy-stl 4.0.0, numpy 2.5.3,\n  transformers 5.15.1, torch 2.14.0+cpu. (worked)\n- estate convention for a subsystem: `/opt/mem20/mem20<name>z/` with\n  `pyproject.toml`, package dir, `python -m <pkg>`, console script, readme,\n  tests, registered via `python -m toolchest refresh`. (worked)\n\nblender 5.2.0 census, via `blender --background --python probe.py` (worked):\n- `bpy.ops` operators: **2010**, across **77** categories\n- `bpy.types.shadernode*`: **102**\n- `bpy.types.geometrynode*`: **274**\n- `bpy.types.object*`: 9\n\nfreecad 1.1.3 census, via `freecadcmd probe.py` (worked):\n- 15 modules load headless: part, sketcher, partdesign, draft, boptools, import,\n  meshpart, mesh, points, robot, bim, path, inspection, measure\n- `part` exposes 103 names, 46 substantive cad ops\n- occt b-rep present: solid, compsolid, shell, face, wire, edge, vertex,\n  bsplinesurface, beziersurface, surfaceofrevolution, surfaceofextrusion,\n  offsetsurface, brepoffsetapi, hlrbrep\n\nkiln engine (relocated to `/opt/mem20/mem20kilnz/engine`) (worked):\n- 9,766 loc c++17 across 10 translation units; 68 tracked files\n- builds clean with `g++ 15.3.0 -std=c++17 -o2 -wall -wextra`:\n  **0 warnings, 0 errors**; `make` exit 0. (worked)\n- binary `kiln`, 1,096,440 bytes\n- **79 live ops**, confirmed by extracting `kind == \"...\"` from `apply_op` in\n  `src/ops/ops.cpp` and cross-checked against the runtime `ping` response\n  (`ops=79`) and `docs/rpc.md`. (worked)\n- four entry points: `--repl`, `--headless`, `--rpc`, `--gui` (cmake/vulkan)\n- `make rpc` returns valid json-rpc 2.0 on stdout, exit 0. (worked)\n- `make demo` runs the english path: \"add a red cube\" \u2192 `created cube`;\n  named colours work (`gray`, `gold`); writes png + glb, exit 0. (worked)\n- `examples/rpc_session.py` full client session: 14 ops applied, batch of 2,\n  box 6\u219218 faces, render at 4x samples, export 5 nodes / 3 meshes, a deliberate\n  failure returned structured `[-32000] frame: no node 'nosuchnode'`, the\n  session survived it, clean close, exit 0. (worked)\n- `file(1)` independently confirms `png image data, 960 x 540, 8-bit/color\n  rgba` and `gltf binary model, version",
       "requires_python": ">=3.11",
       "subdirs": [
+        "engine",
         "mem20kilnz",
         "tests"
       ],
@@ -3259,9 +3276,9 @@
       "version": "0.1.0"
     },
     {
-      "bytes": 572027,
+      "bytes": 578192,
       "category": "organ",
-      "code_lines": 5941,
+      "code_lines": 6061,
       "dependencies": [],
       "description": "mem20 laboratory runtime \u2014 crew runtime grouping reviewed packages for joint integration.",
       "dir": "mem20labz",
@@ -3297,14 +3314,14 @@
         "toml": 10
       },
       "license": "MIT",
-      "line_count": 8920,
+      "line_count": 9040,
       "lines_by_language": {
         "css": 72,
         "html": 56,
         "javascript": 82,
         "json": 2150,
         "markdown": 681,
-        "python": 5731,
+        "python": 5851,
         "toml": 148
       },
       "modules": [
@@ -3550,9 +3567,9 @@
       "version": "1.0.0"
     },
     {
-      "bytes": 930552,
+      "bytes": 939877,
       "category": "organ",
-      "code_lines": 10941,
+      "code_lines": 11133,
       "dependencies": [
         "PyYAML>=6.0",
         "cryptography>=42.0"
@@ -3581,7 +3598,7 @@
       "entry_points": {
         "fs-mkt": "mem20mktz.cli:main"
       },
-      "file_count": 342,
+      "file_count": 343,
       "keywords": [],
       "languages": {
         "css": 13,
@@ -3589,18 +3606,18 @@
         "javascript": 13,
         "json": 50,
         "markdown": 46,
-        "python": 190,
+        "python": 191,
         "toml": 17
       },
       "license": null,
-      "line_count": 15314,
+      "line_count": 15506,
       "lines_by_language": {
         "css": 102,
         "html": 88,
         "javascript": 133,
         "json": 2621,
         "markdown": 1489,
-        "python": 10618,
+        "python": 10810,
         "toml": 263
       },
       "modules": [
@@ -3981,9 +3998,9 @@
       "version": "0.1.0"
     },
     {
-      "bytes": 1067072,
+      "bytes": 1076492,
       "category": "organ",
-      "code_lines": 11843,
+      "code_lines": 12038,
       "dependencies": [],
       "description": "mem20pipez \u2014 unified pipeline system aggregating all pipe runtimes",
       "dir": "mem20pipez",
@@ -4006,7 +4023,7 @@
       "entry_points": {
         "mem20pipez": "mem20pipez.runtime:main"
       },
-      "file_count": 339,
+      "file_count": 341,
       "keywords": [],
       "languages": {
         "css": 15,
@@ -4014,23 +4031,24 @@
         "javascript": 15,
         "json": 47,
         "markdown": 35,
-        "python": 198,
+        "python": 200,
         "toml": 14
       },
       "license": null,
-      "line_count": 16214,
+      "line_count": 16409,
       "lines_by_language": {
         "css": 137,
         "html": 149,
         "javascript": 217,
         "json": 2971,
         "markdown": 1200,
-        "python": 11340,
+        "python": 11535,
         "toml": 200
       },
       "modules": [
         "__init__",
         "__main__",
+        "ecosystem",
         "runtime"
       ],
       "name": "mem20pipez",
@@ -4200,9 +4218,9 @@
       "version": "1.0.0"
     },
     {
-      "bytes": 227251,
+      "bytes": 236579,
       "category": "organ",
-      "code_lines": 3853,
+      "code_lines": 4045,
       "dependencies": [],
       "description": "mem20 secrets governance \u2014 detect floating credentials that have escaped the central store, classify leak vs config duplication, and report git-exposure risk. Read-only: never mutates stored data.",
       "dir": "mem20secretz",
@@ -4214,7 +4232,7 @@
       "entry_points": {
         "mem20secretz": "mem20secretz.cli:main"
       },
-      "file_count": 37,
+      "file_count": 38,
       "keywords": [
         "mem20",
         "secrets",
@@ -4225,15 +4243,15 @@
       "languages": {
         "json": 6,
         "markdown": 4,
-        "python": 24,
+        "python": 25,
         "toml": 3
       },
       "license": "MIT",
-      "line_count": 4437,
+      "line_count": 4629,
       "lines_by_language": {
         "json": 246,
         "markdown": 278,
-        "python": 3853,
+        "python": 4045,
         "toml": 60
       },
       "modules": [
@@ -4253,9 +4271,9 @@
       "version": "0.1.0"
     },
     {
-      "bytes": 1396193,
+      "bytes": 1396816,
       "category": "organ",
-      "code_lines": 16364,
+      "code_lines": 16375,
       "dependencies": [],
       "description": "mem20 self-healing, self-tuning, forecasting and optimization runtime \u2014 crew runtime grouping reviewed packages for joint integration.",
       "dir": "mem20selfz",
@@ -4305,14 +4323,14 @@
         "toml": 24
       },
       "license": "MIT",
-      "line_count": 23580,
+      "line_count": 23591,
       "lines_by_language": {
         "css": 356,
         "html": 225,
         "javascript": 551,
         "json": 4558,
         "markdown": 2292,
-        "python": 15232,
+        "python": 15243,
         "toml": 366
       },
       "modules": [
@@ -4457,9 +4475,9 @@
       "version": "0.1.0"
     },
     {
-      "bytes": 1088731,
+      "bytes": 1089402,
       "category": "organ",
-      "code_lines": 13425,
+      "code_lines": 13438,
       "dependencies": [],
       "description": "mem20 simulator runtime with 6 peers, HTTP cockpit, MCP",
       "dir": "mem20simz",
@@ -4494,14 +4512,14 @@
         "toml": 14
       },
       "license": null,
-      "line_count": 17604,
+      "line_count": 17617,
       "lines_by_language": {
         "css": 349,
         "html": 223,
         "javascript": 553,
         "json": 2543,
         "markdown": 1424,
-        "python": 12300,
+        "python": 12313,
         "toml": 212
       },
       "modules": [
@@ -4582,9 +4600,9 @@
       "version": "0.1.0"
     },
     {
-      "bytes": 447602,
+      "bytes": 447723,
       "category": "organ",
-      "code_lines": 5642,
+      "code_lines": 5639,
       "dependencies": [],
       "description": "mem20 studio runtime with 6 peers, HTTP cockpit, MCP",
       "dir": "mem20studioz",
@@ -4611,14 +4629,14 @@
         "toml": 6
       },
       "license": null,
-      "line_count": 7481,
+      "line_count": 7478,
       "lines_by_language": {
         "css": 35,
         "html": 19,
         "javascript": 36,
         "json": 926,
         "markdown": 819,
-        "python": 5552,
+        "python": 5549,
         "toml": 94
       },
       "modules": [
@@ -4702,9 +4720,9 @@
       "version": "0.1.0"
     },
     {
-      "bytes": 953300,
+      "bytes": 954131,
       "category": "organ",
-      "code_lines": 12578,
+      "code_lines": 12587,
       "dependencies": [],
       "description": "mem20 twin runtime with 6 peers, HTTP cockpit, MCP",
       "dir": "mem20twinz",
@@ -4736,14 +4754,14 @@
         "toml": 11
       },
       "license": null,
-      "line_count": 15641,
+      "line_count": 15650,
       "lines_by_language": {
         "css": 295,
         "html": 191,
         "javascript": 498,
         "json": 1742,
         "markdown": 1157,
-        "python": 11594,
+        "python": 11603,
         "toml": 164
       },
       "modules": [
@@ -5396,7 +5414,7 @@
       "version": null
     },
     {
-      "bytes": 1977659,
+      "bytes": 1994697,
       "category": "other",
       "code_lines": 25492,
       "dependencies": [],
@@ -5416,24 +5434,24 @@
         "published/sites/fb74dacb-26d1-429a-98ff-2765e0e7b61a/documents/mem20-launch-deploy/README.md"
       ],
       "entry_points": {},
-      "file_count": 145,
+      "file_count": 146,
       "keywords": [],
       "languages": {
         "css": 1,
         "html": 51,
         "json": 3,
-        "markdown": 64,
+        "markdown": 65,
         "other": 7,
         "python": 11,
         "shell": 8
       },
       "license": null,
-      "line_count": 32399,
+      "line_count": 32629,
       "lines_by_language": {
         "css": 1,
         "html": 21445,
         "json": 504,
-        "markdown": 6197,
+        "markdown": 6427,
         "other": 206,
         "python": 3451,
         "shell": 595
@@ -5540,7 +5558,7 @@
       "version": null
     },
     {
-      "bytes": 488878,
+      "bytes": 489370,
       "category": "service",
       "code_lines": 0,
       "dependencies": [],
@@ -5713,7 +5731,7 @@
       "version": null
     },
     {
-      "bytes": 384255,
+      "bytes": 437409,
       "category": "service",
       "code_lines": 0,
       "dependencies": [],
@@ -5721,25 +5739,25 @@
       "dir": "store",
       "docs": [],
       "entry_points": {},
-      "file_count": 15,
+      "file_count": 16,
       "keywords": [],
       "languages": {
         "json": 3,
         "jsonl": 3,
-        "markdown": 9
+        "markdown": 10
       },
       "license": null,
-      "line_count": 296,
+      "line_count": 312,
       "lines_by_language": {
         "json": 215,
-        "jsonl": 39,
-        "markdown": 42
+        "jsonl": 49,
+        "markdown": 48
       },
       "modules": [],
       "name": "store",
       "packaged": false,
       "readme_summary": "Memory Store Index",
-      "readme_text": "# memory store index\n\n_auto-generated 2026-11-14t05:56:38.867164+00:00 \u2014 8 topics, 19 events_\n\n## topics\n\n- **project** \u2014 7 entries, last 2026-11-09, pri=normal, tags=['agents', 'commit', 'cueliez', 'end', 'es', 'fixes', 'glyph-cluster', 'grok', 'install', 'issues', 'kilo', 'mem20', 'opencode', 'phase9', 'pollinations', 'pytest', 'rules', 'session', 'setup', 'summary', 'training-gui']\n- **self_model__agent-glyph-cluster** \u2014 1 entries, last 2026-11-04, pri=high, tags=['agent-glyph-cluster', 'core', 'identity', 'self_model']\n- **self_model__glyph-cluster** \u2014 6 entries, last 2026-11-14, pri=high, tags=['core', 'glyph-cluster', 'identity', 'self_model']\n- **self_model__iceman-free** \u2014 1 entries, last 2026-11-13, pri=high, tags=['core', 'iceman-free', 'identity', 'self_model']\n- **self_model_identity__agent-glyph-cluster** \u2014 1 entries, last 2026-11-04, pri=high, tags=['agent-glyph-cluster', 'self_model_identity']\n- **self_model_identity__glyph-cluster** \u2014 1 entries, last 2026-11-07, pri=high, tags=['glyph-cluster', 'self_model_identity']\n- **self_model_identity__iceman-free** \u2014 1 entries, last 2026-11-13, pri=high, tags=['iceman-free', 'self_model_identity']\n- **user_pref** \u2014 1 entries, last 2026-11-04, pri=normal, tags=['affective', 'capabilities', 'experiences', 'glyph', 'self_model']\n\n## how to use\n- `python3 memory.py recall --topic <name>` to read full detail\n- `python3 memory.py remember --topic <name> --content \"...\"` to add\n- deep detail per topic lives in `entries/<topic>.md`\n",
+      "readme_text": "# memory store index\n\n_auto-generated 2026-11-15t07:31:35.272817+00:00 \u2014 9 topics, 25 events_\n\n## topics\n\n- **general** \u2014 3 entries, last 2026-11-14, pri=normal, tags=['absorbed', 'aggregation', 'assimilation', 'es', 'glyph-cluster', 'mem20z', 'peers', 'probe', 'pushed', 'tls', 'verification']\n- **project** \u2014 7 entries, last 2026-11-09, pri=normal, tags=['agents', 'commit', 'cueliez', 'end', 'es', 'fixes', 'glyph-cluster', 'grok', 'install', 'issues', 'kilo', 'mem20', 'opencode', 'phase9', 'pollinations', 'pytest', 'rules', 'session', 'setup', 'summary', 'training-gui']\n- **self_model__agent-glyph-cluster** \u2014 1 entries, last 2026-11-04, pri=high, tags=['agent-glyph-cluster', 'core', 'identity', 'self_model']\n- **self_model__glyph-cluster** \u2014 7 entries, last 2026-11-15, pri=high, tags=['core', 'glyph-cluster', 'identity', 'self_model']\n- **self_model__iceman-free** \u2014 1 entries, last 2026-11-13, pri=high, tags=['core', 'iceman-free', 'identity', 'self_model']\n- **self_model_identity__agent-glyph-cluster** \u2014 1 entries, last 2026-11-04, pri=high, tags=['agent-glyph-cluster', 'self_model_identity']\n- **self_model_identity__glyph-cluster** \u2014 1 entries, last 2026-11-07, pri=high, tags=['glyph-cluster', 'self_model_identity']\n- **self_model_identity__iceman-free** \u2014 1 entries, last 2026-11-13, pri=high, tags=['iceman-free', 'self_model_identity']\n- **user_pref** \u2014 1 entries, last 2026-11-04, pri=normal, tags=['affective', 'capabilities', 'experiences', 'glyph', 'self_model']\n\n## how to use\n- `python3 memory.py recall --topic <name>` to read full detail\n- `python3 memory.py remember --topic <name> --content \"...\"` to add\n- deep detail per topic lives in `entries/<topic>.md`\n",
       "requires_python": null,
       "subdirs": [
         "braid",
@@ -5778,6 +5796,69 @@
       "requires_python": null,
       "subdirs": [],
       "test_files": 0,
+      "version": null
+    },
+    {
+      "bytes": 1442132,
+      "category": "other",
+      "code_lines": 18707,
+      "dependencies": [],
+      "description": "",
+      "dir": "teamz",
+      "docs": [
+        "teamz/README.md",
+        "teamz/server/README.md"
+      ],
+      "entry_points": {},
+      "file_count": 106,
+      "keywords": [],
+      "languages": {
+        "css": 1,
+        "html": 1,
+        "javascript": 3,
+        "json": 8,
+        "jsonl": 1,
+        "markdown": 4,
+        "other": 2,
+        "python": 30,
+        "shell": 1,
+        "toml": 1,
+        "typescript": 52,
+        "yaml": 2
+      },
+      "license": null,
+      "line_count": 21053,
+      "lines_by_language": {
+        "css": 1806,
+        "html": 17,
+        "javascript": 191,
+        "json": 1453,
+        "jsonl": 233,
+        "markdown": 541,
+        "other": 23,
+        "python": 5383,
+        "shell": 4,
+        "toml": 9,
+        "typescript": 11306,
+        "yaml": 87
+      },
+      "modules": [
+        "test_git"
+      ],
+      "name": "teamz",
+      "packaged": false,
+      "readme_summary": "teamz",
+      "readme_text": "# teamz\n\na teamily-style workspace for managing and collaborating with **your own** ai agents: channels, 1:1 chats, a lead/orchestrator agent, persistent memory, and a fastapi orchestrator with keyless-first llm routing.\n\n- **channels + dms:** multi-agent channels with relevance-based responses (not blind fan-out) and explicit `@mentions`; 1:1 chats with each agent.\n- **lead agent / runtime control:** a lead agent can be asked to add/remove/program agents and the runtime itself, create/manage channels, configure agents, and orchestrate/delegate work to groups matching the task (via runtime actions/planning).\n- **prompt improve:** improve a draft prompt using conversation, channel, agent, and mem20 memory context.\n- **message actions:** long-press/right-click to reply/bring attention, unsend (your sent message), or delete locally.\n- **html presentation replies:** agents can deliver completed work as sandboxed html presentations (` ```presentation ` / `:::presentation` blocks).\n- **persistent channel memory:** mem20-backed memory per conversation/channel used for context and prompt optimization.\n- **agent portfolio & skill learning:** skills/capabilities tracked with levels; portfolio updates can be applied (including from opportunity scans).\n- **connectors:** github (rest), `gh` (github cli), and google via the orchestrator.\n- **chat opportunity scanner (backend):** scans chats for tools/skills/capabilities/reusable assets and portfolio updates.\n\n## quick start (frontend)\n\n```bash\ncorepack enable\nyarn install --frozen-lockfile --ignore-scripts\nyarn dev        # http://localhost:5173\n```\n\n```bash\nyarn run typecheck\nyarn run test\nyarn run build  # typecheck + production bundle into dist/\nyarn preview    # serve dist/\n```\n\nrequires node 18+ (developed/tested on node 20). package manager: **yarn 1** (`yarn.lock`).\n\n## quick start (orchestrator / server)\n\n```bash\ncd server\npython3 -m venv .venv\n. .venv/bin/activate\npip install -r requirements.txt\ncd ..\npythonpath=$pwd server/.venv/bin/python -m uvicorn server.app.main:app --host 0.0.0.0 --port 8787\n# or: server/run.sh\n```\n\nin the app, open **workspace & api** and select **teamz orchestrator** (default `http://localhost:8787`).\n\nsee [`server/readme.md`](server/readme.md) for full run/config docs, env vars, provider targets (pollinations/llm7/ovhcloud + optional local runtimes), mem20 integration, connectors, and api details.\n\n## ai providers\n\nconfigured in **workspace & api** (stored in browser `localstorage`, never in the build/repo):\n\n| provider | what it does |\n| --- | --- |\n| **teamz orchestrator** (recommended) | fastapi server with keyless-first routing + observable fallback chain, mem20 persistent memory/tools, prompt optimization, connectors, runtime planning, opportunity scanning |\n| **pollinations** | direct browser \u2192 pollinations openai-compatible chat (streaming) |\n| **own endpoints** | post to each agent\u2019s `endpointurl` (custom contract) |\n| **mock** | offline canned replies (labelled) |\n\nthe composer/provider pill and the live provider/usage panel show last selected provider/model, usage, and fallback attempts when using the orchestrator.\n\n## key behavior\n\n### channel routing (relevance, not blind fan-out)\n- in channels, messages **without** `@mentions` are routed to **relevant** agents (not every member in sequence).\n- `@mentions` explicitly direct a message to specific agents.\n- the composer shows likely responders for unmentioned channel messages (use `@` to direct explicitly).\n\n### lead agent & runtime orchestration\n- agents can be marked **lead** (see agent settings). seed workspace includes a lead agent (atlas).\n- talk to the lead agent to add/remove/program agents and the runtime, create channels, configure agents, and orchestrate/delegate work to groups matching the task.\n- lead-agent replies can include runtime actions (parsed/applied by the frontend) and the orchestrator provides `/v1/runtime/plan` plus lead-aware context/memory.\n\n### prompt improve\n- use the \u2728 **improve prompt** button in the composer to rewrite your draft using conversation/channel history, agent roster/skills/roles, and mem20-recalled persistent memory (via orchestrator).\n\n### message actions\n- long-press (touch) or right-click a message: **reply/bring attention**, **bring/remove attention**, **unsend** (your sent message), **delete** (local).\n- attention and reply context are reflected in the thread and composer.\n\n### html presentation replies\n- agents can return completed deliverables as sandboxed html presentations using a fenced block:\n  - ` ```presentation ... ``` ` (or `html:presentation` / `slides`), or\n  - `:::presentation` ... `:::` markers.\n\n### persistent channel memory (mem20)\n- the orchestrator stores and recalls conversation-tagged memories in mem20 and augments chat/prompt optimization with relevant persistent context. each channel/conversation has persistent memory for context when mem20 is enabled/configured.\n\n### agent portfolio & skill learning\n- each agent has a portfolio of skills/capabilities with levels (1\u20135). skills can be added/updated in agent settings.\n- opportunity scans can produce portfolio updates; runtime/lead workflows can add skills as agents learn capabilities.\n\n### connectors (orchestrator)\n- **github** (rest, token-configured), **`gh`** (cli exec/status), **google** (access token or service-account based) exposed via `/v1/connectors/*` with real, configurable integrations.\n\n### opportunity scanner (backend)\n- `post /v1/opportunities/scan` analyzes chats for opportunities to create tools/skills/capabilities/reusable assets and suggests portfolio updates.\n\n## own endpoints contract (custom provider)\n\n`src/api/agents.ts` posts to `agent.endpointurl`:\n\n```jsonc\n{\n  \"agent\":    { \"id\", \"name\", \"model\", \"systemprompt\" },\n  \"messages\": [ { \"role\": \"user\" | \"assistant\", \"content\": \"...\", \"authorname\": \"...\" } ],\n  \"channel\":  { \"id\", \"name\", \"members\": [ { \"id\", \"name\" } ] },\n  \"directed\": true // optional, when explicitly @mentioned\n}\n```\n\naccepted reply shapes include `{ \"reply\": \"...\" }`, `{ \"text\": \"...\" }`, openai-style `choices[0].message.content`, and anthropic-style content blocks.\n\n## visual/e2e scripts (playwright)\n\ninstall browsers once:\n\n```bash\nyarn playwright install chromium\n```\n\nrun the app (preview or dev), then run scripts (default `base_url=http://localhost:4173/teamz/`):\n\n```bash\nyarn build && yarn preview --host 0.0.0.0 --port 4173 &\nnode scripts/shot-picker.mjs\nnode scripts/shot-channel.mjs\n```\n\nscripts capture screenshots to `screenshots/` and print json diagnostics (filter/invite/picker measurements).\n\n## project layout\n\n```\nsrc/\n  api/                 agents, orchestrator, pollinations, settings\n  components/          sidebar, chatpane, agentsettings, dialogs, richtext (presentations), etc.\n  data/                mock seed data + template catalogue\n  lib/                 mentions, relevance routing, formatting\n  store/               workspace state (persistence, relevance routing, message/runtime actions)\n  styles.css\nserver/\n  app/                 fastapi orchestrator (routing, providers, mem20, connectors, runtime/scan apis)\n  tests/               server tests\nscripts/               playwright visual-flow scripts (shot-picker, shot-channel)\n```\n\n## tests & verification\n\n```bash\n# frontend\nyarn run typecheck\nyarn run test\nyarn run build\n\n# server\npythonpath=$pwd server/.venv/bin/python -m pytest server/tests -q\n```\n\nci/deploy workflows are aligned to yarn (`yarn.lock`, `corepack enable`, `yarn install --frozen-lockfile`).\n\n## license\n\nmit\n",
+      "requires_python": null,
+      "subdirs": [
+        ".github",
+        ".teamz",
+        "screenshots",
+        "scripts",
+        "server",
+        "src"
+      ],
+      "test_files": 7,
       "version": null
     },
     {
@@ -5831,9 +5912,9 @@
       "version": null
     },
     {
-      "bytes": 3784877,
+      "bytes": 2415018,
       "category": "service",
-      "code_lines": 2143,
+      "code_lines": 2397,
       "dependencies": [],
       "description": "mem20 tool inventory registry \u2014 real discovery over the mem20 MCP server tools, on-box CLI binaries, and native mem20*z subsystems, with a query CLI (refresh/list/search/show).",
       "dir": "toolchest",
@@ -5859,12 +5940,12 @@
         "toml": 1
       },
       "license": "MIT",
-      "line_count": 46303,
+      "line_count": 67857,
       "lines_by_language": {
-        "json": 43130,
-        "jsonl": 907,
+        "json": 65104,
+        "jsonl": 233,
         "markdown": 104,
-        "python": 2143,
+        "python": 2397,
         "toml": 19
       },
       "modules": [
@@ -5973,35 +6054,36 @@
   "totals": {
     "categories": {
       "organ": 67,
-      "other": 20,
+      "other": 21,
       "service": 16
     },
-    "code_lines": 514137,
-    "files": 11041,
+    "code_lines": 573643,
+    "files": 11214,
     "languages": {
-      "cpp": 16,
+      "c": 1,
+      "cpp": 54,
       "csharp": 50,
-      "css": 174,
+      "css": 175,
       "gdscript": 5,
-      "html": 366,
-      "javascript": 238,
-      "json": 4025,
-      "jsonl": 15,
-      "make": 2,
-      "markdown": 1253,
-      "other": 36,
+      "html": 367,
+      "javascript": 241,
+      "json": 4034,
+      "jsonl": 19,
+      "make": 3,
+      "markdown": 1261,
+      "other": 42,
       "perl": 3,
-      "python": 3688,
+      "python": 3731,
       "ruby": 22,
       "rust": 76,
-      "shell": 27,
+      "shell": 30,
       "svg": 3,
-      "toml": 348,
-      "typescript": 534,
+      "toml": 349,
+      "typescript": 586,
       "xml": 1,
-      "yaml": 109
+      "yaml": 111
     },
-    "lines": 1211883,
-    "subsystems": 103
+    "lines": 1295554,
+    "subsystems": 104
   }
 }

@@ -985,3 +985,12 @@ Reworked/verified subsystems #340–#350 (oldest→newest, 1 at a time) to full 
 - **surface_manifest.py --write:** OK (surface is 487 tools / 129 domains)
 - **Generated files:** docs/surface.json, docs/TOOL-DOMAINS.md, web/src/data/tools.json
 - **docs/index.html:** Added version badge `<span class="badge">v3.1.2</span>` to match VERSION file
+
+## 2026-11-16 — Site-wide 4.0.0 bump and blocker fixes
+- **Version bump:** Updated `VERSION`, root `pyproject.toml`, `README.md`, and `docs/index.html` to **4.0.0**; added `CHANGELOG.md` `[4.0.0] — 2026-11-16`.
+- **Blockers addressed:**
+  - **MCP core import deferral:** `mcp/server.py` now lazy-loads memory API/audit access and lazy-builds `Mem20MCPServer` with deferred tool-mixin imports (restored/fixed lazy class builder + `__getattr__` compatibility).
+  - **Collection resilience:** `conftest.py` package pre-imports made opt-in by default (`MEM20_PYTEST_PREIMPORT=1`) with bounded timeout to reduce collection hangs (path reassert hooks retained).
+  - **Benchmark v3 data:** generated missing v3 corpus shards from `reference/v3` per manifest reproduce command; `validate_corpus_v3.py` passes (122,178 records, 500 probes checked, 0 dups).
+- **Artifacts refreshed:** rebuilt sitemap (`.sitemap/sitemap.json`, `SITEMAP.md`) and refreshed `toolchest/inventory.json` (MCP discovery 487 tools). Rust remains tracked in sitemap totals.
+- **Verification:** `py_compile` (`mcp/server.py`, `conftest.py`) OK; `pytest mem20kilnz/tests -q` 279 passed, 7 skipped; v3 validation OK; toolchest refresh OK. Full/root pytest collection still not conclusively triaged in this environment.

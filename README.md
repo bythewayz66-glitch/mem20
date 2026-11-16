@@ -9,7 +9,7 @@ session, records *why* it believes what it believes, and can be audited after th
 It ships as an MCP server (JSON-RPC 2.0 over stdio) plus a large estate of independently
 packaged subsystems.
 
-- **Version:** 3.1.2 (`VERSION`)
+- **Version:** 4.0.0 (`VERSION`)
 - **License:** Apache-2.0
 - **Python:** >= 3.10
 - **Transport:** MCP over stdio, with an HTTP health/metrics endpoint on `:8080`
@@ -47,9 +47,9 @@ documentation. Where an older number was wrong, the correction is noted.
 | MCP tool modules | **44** | `ls mcp/tools/*.py \| wc -l` |
 | Subsystems (sitemap) | **340** | `.sitemap/sitemap.json` → `totals.subsystems` |
 | Subsystem directories | **297** | `ls -d mem20*/` |
-| Source files | **8,497** | `.sitemap/sitemap.json` → `totals.files` |
-| Code lines | **384,249** | `.sitemap/sitemap.json` → `totals.code_lines` |
-| Total lines | **964,795** | `.sitemap/sitemap.json` → `totals.lines` |
+| Source files | **11,214** | `.sitemap/sitemap.json` → `totals.files` |
+| Code lines | **573,643** | `.sitemap/sitemap.json` → `totals.code_lines` |
+| Total lines | **1,295,554** | `.sitemap/sitemap.json` → `totals.lines` |
 | Packaged subsystems | **288 of 297** | dirs with a `pyproject.toml` at depth 1 or 2 |
 | `pyproject.toml` files | **290** | `find . -name pyproject.toml` |
 | Test files | **322** | `find . -name "test_*.py" -o -name "*_test.py"` |
@@ -65,8 +65,8 @@ These were wrong in the old README and are corrected here:
 | Degraded tools | 101 | **169** |
 | Unpackaged tools | 142 | **141 in inventory, but only 9 directories actually lack a `pyproject.toml`** |
 | Subsystems | 327 | **340** (sitemap) / **297** directories |
-| Source files | 8,969 | **8,497** |
-| Code lines | 468k | **384,249** |
+| Source files | 8,497 | **11,214** |
+| Code lines | 384,249 | **573,643** |
 
 The corpus is the biggest correction. `benchmarks/corpora/mem20-scale-corpus-v2.manifest.json`
 declares `records: 2000` (700 grounded, 1,300 simulated, 250 queries). A newer

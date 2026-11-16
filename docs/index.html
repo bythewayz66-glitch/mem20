@@ -4,9 +4,9 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>mem20 — auditable agent memory</title>
-<meta name="description" content="mem20 is a trusted, auditable memory and world-model layer for agents. Grounded facts and simulated hypotheses never mix, and every retrieval reports its own drift.">
+<meta name="description" content="mem20 is a trusted, auditable memory and world-model layer for agents. 487 MCP tools across 129 domains. Grounded facts and simulated hypotheses never mix, and every retrieval reports its own drift.">
 <meta property="og:title" content="mem20 — auditable agent memory">
-<meta property="og:description" content="A memory that survives the session, records why it believes what it believes, and can be audited after the fact.">
+<meta property="og:description" content="A memory that survives the session, records why it believes what it believes, and can be audited after the fact. 487 MCP tools across 129 domains.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://mem20.com/">
 <link rel="canonical" href="https://mem20.com/">
@@ -51,9 +51,24 @@
   pre.code .a{color:var(--accent)}
   .note{background:var(--surface);border:1px solid var(--line);border-left:3px solid var(--accent);border-radius:var(--radius-sm);padding:18px 22px;color:var(--text-2);font-size:14.5px}
   .note strong{color:var(--text)}
+  /* live surface block */
+  .surface{display:grid;grid-template-columns:1.15fr 1fr;gap:18px;align-items:start}
+  .surface .big{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:26px}
+  .surface .big .row{display:flex;align-items:baseline;gap:14px;padding:14px 0;border-bottom:1px solid var(--line)}
+  .surface .big .row:last-child{border-bottom:0;padding-bottom:0}
+  .surface .big .row:first-child{padding-top:0}
+  .surface .n{font-family:'Space Grotesk',sans-serif;font-size:clamp(30px,4vw,42px);font-weight:600;letter-spacing:-.03em;line-height:1;color:var(--accent)}
+  .surface .n.alt{color:var(--accent-2)}
+  .surface .cap{font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+  .surface .sub{font-size:13.5px;color:var(--text-2);margin-top:6px}
+  .surface table.spec td:last-child{text-align:right;font-family:'IBM Plex Mono',monospace;color:var(--text)}
+  .surface .tbl-wrap{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:8px 20px 14px}
+  .surface .tbl-wrap .hd{font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);padding:14px 0 6px}
+  .src{font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--muted);margin-top:16px}
+  .src a{color:var(--accent)}
   @media(max-width:900px){
     .facts{grid-template-columns:repeat(2,1fr)}
-    .split,.series-strip{grid-template-columns:1fr}
+    .split,.series-strip,.surface{grid-template-columns:1fr}
     .g3{grid-template-columns:1fr}
   }
 </style>
@@ -89,9 +104,9 @@
     </div>
     <div class="facts">
       <div class="fact"><div class="v"><span class="badge">v4.0.0</span></div><div class="l">Version</div></div>
+      <div class="fact"><div class="v">487</div><div class="l">MCP tools</div></div>
+      <div class="fact"><div class="v">129</div><div class="l">Domains</div></div>
       <div class="fact"><div class="v">Apache-2.0</div><div class="l">License</div></div>
-      <div class="fact"><div class="v">MCP / stdio</div><div class="l">Transport</div></div>
-      <div class="fact"><div class="v">Python 3.10+</div><div class="l">Runtime</div></div>
     </div>
   </div>
 </header>
@@ -122,6 +137,71 @@
 
 <section>
   <div class="wrap">
+    <h2 class="sec">The surface, measured</h2>
+    <p class="sec-lede">
+      The MCP server registers <strong>487 tools across 129 domains</strong>. That is not a marketing
+      figure: it is the count returned by the live JSON-RPC <span class="mono">tools/list</span> call,
+      cross-checked against the AST catalog of the tool modules, and pinned in
+      <span class="mono">docs/surface.json</span> so the number on this page and the number the server
+      reports cannot drift apart.
+    </p>
+    <div class="surface">
+      <div class="big">
+        <div class="row">
+          <div class="n">487</div>
+          <div>
+            <div class="cap">MCP tools</div>
+            <div class="sub">Registered on the server and reachable over stdio JSON-RPC 2.0.</div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="n alt">129</div>
+          <div>
+            <div class="cap">Domains</div>
+            <div class="sub">Independently packaged capability modules, each with its own tests.</div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="n" style="color:var(--amber)">19</div>
+          <div>
+            <div class="cap">Unwired tools</div>
+            <div class="sub">Registered but not yet bound to a domain surface — published, not hidden.</div>
+          </div>
+        </div>
+      </div>
+      <div class="tbl-wrap">
+        <div class="hd">Largest domains</div>
+        <table class="spec">
+          <thead>
+            <tr><th>Domain</th><th>Tools</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>memory</td><td>55</td></tr>
+            <tr><td>cognitive</td><td>19</td></tr>
+            <tr><td>world</td><td>14</td></tr>
+            <tr><td>versioncontrol</td><td>11</td></tr>
+            <tr><td>cloudservice</td><td>10</td></tr>
+            <tr><td>database</td><td>10</td></tr>
+            <tr><td>filesystem</td><td>10</td></tr>
+            <tr><td>lie</td><td>10</td></tr>
+            <tr><td>productivity</td><td>10</td></tr>
+            <tr><td>braid</td><td>9</td></tr>
+            <tr><td>communication</td><td>9</td></tr>
+            <tr><td>dev</td><td>9</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <p class="src">
+      Source of truth: <a href="https://github.com/bythewayz66-glitch/mem20/blob/main/docs/surface.json">docs/surface.json</a>
+      — generated from <span class="mono">tools/list</span>; cross-check <span class="mono">ast_tools 487 / ast_domains 129</span>,
+      with no tool present in one catalog and missing from the other.
+    </p>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
     <h2 class="sec">Three layers, in dependency order</h2>
     <p class="sec-lede">A durable substrate, a protocol surface, and a large estate of independently packaged capability modules.</p>
     <div class="grid g3">
@@ -134,13 +214,13 @@
       <div class="card">
         <span class="k">Layer 02</span>
         <h3>MCP server</h3>
-        <p>Exposes the engine and the wider estate as MCP tools over stdio, with an HTTP
+        <p>Exposes the engine and the wider estate as 487 MCP tools over stdio, with an HTTP
            health/metrics endpoint.</p>
       </div>
       <div class="card">
         <span class="k">Layer 03</span>
         <h3>Subsystems</h3>
-        <p>Independently packaged capability modules, each with its own <span class="mono">pyproject.toml</span>
+        <p>129 independently packaged capability modules, each with its own <span class="mono">pyproject.toml</span>
            and its own tests.</p>
       </div>
     </div>
@@ -160,10 +240,12 @@ python3 -m venv .venv
 <span class="c"># start the MCP server</span>
 MEM20_STORE_PATH="$HOME/.mem20/store" .venv/bin/python mcp/mcp_server.py</pre>
     <p class="note" style="margin-top:22px">
-      <strong>On the numbers.</strong> The repository publishes its own measured figures — tool count,
-      subsystem count, corpus size, code lines — in <span class="mono">README.md</span>, together with a
-      table of corrections to numbers that were previously published and wrong. We would rather point
-      you at the measurement than restate a claim here that we cannot re-derive.
+      <strong>On the numbers.</strong> Every figure on this page is re-derivable. The tool and domain
+      counts come from <span class="mono">docs/surface.json</span>, which is generated from the live
+      <span class="mono">tools/list</span> response and checked in CI by the doc-count drift gate — a
+      retired count in a live doc fails the build. <span class="mono">README.md</span> carries the same
+      measurement alongside a table of corrections to numbers that were previously published and wrong.
+      We would rather point you at the measurement than restate a claim here that we cannot re-derive.
     </p>
   </div>
 </section>

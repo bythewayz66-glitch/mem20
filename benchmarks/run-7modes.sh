@@ -19,21 +19,22 @@ OUT="${OUT:-benchmarks/results}"
 # comparable.
 mem20benchmarkz generate-scale --out "$CORPUS"
 
-# Score all seven modes. --bulk writes the ledger envelopes directly and
-# rebuilds the vector/BM25/graph indexes once, instead of paying ~0.5 s per
-# record through remember().
+# Score every mode the store exposes. --bulk writes the ledger envelopes
+# directly and rebuilds the vector/BM25/graph indexes once, instead of paying
+# ~0.5 s per record through remember().
 #
-# KNOWN GAP (see docs/benchmarks/retrieval-gap-analysis-2026-11-01.md §5):
-# the `_run_mode()` dispatch committed on main accepts only four of these seven
-# ids -- semantic, hybrid, graph, keyword. It has no branch for `bm25`,
-# `vector`, `hybrid-rerank-off` or `constant`, so re-running this script against
-# main raises `ValueError: unsupported mode`. The seven-mode rows in
-# latest.json are therefore not yet reproducible from main as committed; the
-# corpus half is (all four sha256 match). Closing this needs the four missing
-# branches, which is a harness change, not a reporting one.
+# The mode list is the full surface, not a subset. `_run_mode()` now has a
+# branch for all eleven ids, so this script is reproducible from the branch it
+# ships on. The four modes that were previously declared but unscored
+# (`recall`, `recall_at`, `entities`, `ledger`) are answered by a different
+# store surface than a text ranker, so each is scored only on the probe class
+# it can legitimately answer — see `_mode_answers_kind()` in bench.py.
+#
+# `graph` is scored on `multi_hop` AND `graph_hop`, so its n is 90 rather than
+# the 30 multi_hop probes alone.
 mem20benchmarkz run-scale \
     --corpus "$CORPUS" \
     --bulk \
-    --k 5 \
-    --modes bm25,vector,hybrid,hybrid-rerank-off,graph,keyword,constant \
+    -k 5 \
+    --modes bm25,vector,hybrid,hybrid-rerank-off,graph,keyword,constant,recall,recall_at,entities,ledger \
     --out "$OUT"

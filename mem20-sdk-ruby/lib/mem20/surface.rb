@@ -14,18 +14,19 @@ module Mem20
   # the two collections must be identical or the generator refuses to emit.
   # Both land on 487 tools across 129 domains.
   #
-  # Earlier revisions published three different values (257 / 268 / 270) for
-  # the same surface because the domain half and the total were conflated.
+  # Earlier revisions published several different values (257 / 268 / 270 / 272
+  # / 311) for the same surface because the domain half and the total were
+  # conflated.
   # `job_status` / `job_wait` used to be counted as transport "infra" outside
   # any domain; in the current taxonomy `job` is a domain of its own, so every
   # tool belongs to exactly one of the 129 domains and there is no separate
   # infra layer.
   module Surface
     # Number of domain mixin modules that register at least one tool.
-    DOMAIN_COUNT = 39
+    DOMAIN_COUNT = 129
 
     # Tools contributed by those domain modules.
-    DOMAIN_TOOLS = 311
+    DOMAIN_TOOLS = 487
 
     # Tools registered by the server itself, outside any domain module.
     INFRA_TOOLS = [].freeze
@@ -36,7 +37,7 @@ module Mem20
     # The infra tools are excluded from {DOMAIN_COUNT} on purpose, so this
     # identity is the invariant the specs pin.
     def self.consistent?
-      TOOL_COUNT == 311 && DOMAIN_TOOLS == 311 && DOMAIN_COUNT == 39
+      TOOL_COUNT == 487 && DOMAIN_TOOLS == 487 && DOMAIN_COUNT == 129
     end
 
     # Human-readable summary used by `rake surface:check` and the README.

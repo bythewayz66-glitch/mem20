@@ -920,3 +920,15 @@ Reworked/verified subsystems #340–#350 (oldest→newest, 1 at a time) to full 
 - **Verification:** Full test suite passes: `python -m pytest mem20kilnz/tests -q` → **279 passed, 7 skipped in 35.93s**. The 7 skipped are expected (require GUI/Vulkan or specific fixtures).
 - **Status:** Issue #229 resolved. mem20kilnz is now fully functional with its C++ engine.
 - **Push:** Committed and pushed to origin/main (commit 7196a10b). DIARY/failures updated in-repo.
+
+## 2026-11-16 — Fix absorbed runtime API mismatches (mem20simz, mem20twinz, mem20selfz)
+- **Issue:** `mem20simz`/`mem20selfz`/`mem20twinz` ecosystems could not import peer subsystems because absorbed member packages were not on sys.path. Probes failed with `ModuleNotFoundError` for `mem20causalroutingbrainz`, `mem20eventstreamsuperhighwayz`, `mem20capabilitymarketplacez`, `mem20faultcontainmentcellsz`, etc.
+- **Root cause:** The `_bootstrap()` function in each ecosystem.py only added the top-level subsystem directories to sys.path, but peer subsystems live in absorbed directories (e.g., `mem20twinz/absorbed/mem20causalroutingbrainz/mem20causalroutingbrainz/`). Also missing toolchest/src for `toolchest.catalog`.
+- **Fix:** Updated `_bootstrap()` in `mem20simz/mem20simz/ecosystem.py`, `mem20twinz/mem20twinz/ecosystem.py`, `mem20selfz/mem20selfz/ecosystem.py` to:
+  1. Iterate absorbed directories and add each member's package directory to sys.path
+  2. Add `toolchest/src` to sys.path for `toolchest.catalog` imports
+- **Verification:** All three probes now pass:
+  - `mem20simz.probe()` → `ok: True`, 58 peer checks (6 core + 52 absorbed)
+  - `mem20twinz.probe()` → `ok: True`, 34 peer checks (6 core + 28 absorbed)
+  - `mem20selfz.probe()` → `ok: True`, 76 peer checks (6 core + 70 absorbed)
+- **Also fixed:** `mem20simz.ecosystem.sim_containment` `CircuitOpen` unbound exception by catching by class name instead of direct import.

@@ -9,6 +9,17 @@ def _bootstrap():
     for name in reversed(_PROJECTS):
         p=str(_REPO_ROOT/name)
         if p in sys.path: sys.path.remove(p); sys.path.insert(0,p)
+    # Add absorbed directories for peer subsystems (parent dirs so packages are importable)
+    for parent in (_REPO_ROOT / "mem20simz", _REPO_ROOT / "mem20twinz", _REPO_ROOT / "mem20selfz", _REPO_ROOT / "mem20fabricz", _REPO_ROOT / "mem20enginez"):
+        adir = parent / "absorbed"
+        if adir.is_dir():
+            for sub in adir.iterdir():
+                if sub.is_dir() and str(sub) not in sys.path:
+                    sys.path.insert(0, str(sub))
+    # Add toolchest src for catalog
+    tc = _REPO_ROOT / "toolchest" / "src"
+    if tc.is_dir() and str(tc) not in sys.path:
+        sys.path.insert(0, str(tc))
     r=str(_REPO_ROOT)
     if r not in sys.path: sys.path.append(r)
 _bootstrap()
@@ -54,8 +65,10 @@ def sim_containment(op:str)->dict:
         from mem20faultcontainmentcellsz.domain import CircuitOpen,FaultContainmentCells
         cell=FaultContainmentCells(); res=cell.call(lambda: {"op":op,"ok":True})
         return {"ok":True,"subsystem":"mem20faultcontainmentcellsz","op":op,"has_result":res is not None}
-    except CircuitOpen: return {"ok":True,"subsystem":"mem20faultcontainmentcellsz","op":op,"open":True}
-    except Exception as exc: return {"ok":False,"subsystem":"mem20faultcontainmentcellsz","error":f"{type(exc).__name__}: {exc}"}
+    except Exception as exc:
+        if exc.__class__.__name__ == "CircuitOpen":
+            return {"ok":True,"subsystem":"mem20faultcontainmentcellsz","op":op,"open":True}
+        return {"ok":False,"subsystem":"mem20faultcontainmentcellsz","error":f"{type(exc).__name__}: {exc}"}
 
 def _absorbed_member_peers():
     try:

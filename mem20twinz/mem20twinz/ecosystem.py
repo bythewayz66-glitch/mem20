@@ -9,6 +9,17 @@ def _bootstrap():
     for name in reversed(_PROJECTS):
         p=str(_REPO_ROOT/name)
         if p in sys.path: sys.path.remove(p); sys.path.insert(0,p)
+    # Add absorbed directories for peer subsystems (parent dirs so packages are importable)
+    for parent in (_REPO_ROOT / "mem20simz", _REPO_ROOT / "mem20twinz", _REPO_ROOT / "mem20selfz", _REPO_ROOT / "mem20fabricz", _REPO_ROOT / "mem20enginez"):
+        adir = parent / "absorbed"
+        if adir.is_dir():
+            for sub in adir.iterdir():
+                if sub.is_dir() and str(sub) not in sys.path:
+                    sys.path.insert(0, str(sub))
+    # Add toolchest src for catalog
+    tc = _REPO_ROOT / "toolchest" / "src"
+    if tc.is_dir() and str(tc) not in sys.path:
+        sys.path.insert(0, str(tc))
     r=str(_REPO_ROOT)
     if r not in sys.path: sys.path.append(r)
 _bootstrap()

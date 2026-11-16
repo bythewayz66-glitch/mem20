@@ -92,3 +92,16 @@
 
 - **toolchest**: Runtime-checked inventory/registry for the mem20 agent fleet. Tracks MCP tools, CLI binaries, and native subsystems with real verification. Use `toolchest` CLI or MCP tools (`toolchest_inventory`, `toolchest_wiring`). Located at `toolchest/`.
 - **sitemapz**: Estate-wide sitemap/indexing and discovery. Provides structured views of subsystems, files, and relationships across the mem20 ecosystem. Located at `mem20sitemapz/`.
+
+## Agent skills
+
+Skills live in `.opencode/skills/<name>/SKILL.md` and are committed with the
+code, so a skill ships with the checkout that needs it. `mem20agentz`'s skill
+catalog reads that tree first (`mem20agentz/skill_index.py`), then the host
+trees; `MEM20_SKILL_ROOTS` overrides the list entirely.
+
+- **register-subsystem** — make a `mem20*` subsystem first-class across gateway,
+  toolchest, MCP and sitemapz in one pass.
+- **gate-triage** — diagnose a red CI check and decide whether it is a real
+  regression or pre-existing debt, using the repo's own gate scripts as the
+  source of truth. Start here before "fixing" a red check.

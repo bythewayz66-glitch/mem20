@@ -32,13 +32,57 @@ import re
 from pathlib import Path
 from typing import Iterable, Optional
 
-#: Where agent skills live. Both are searched; a name in both is reported once.
-DEFAULT_ROOTS = tuple(
-    Path(p) for p in os.environ.get(
-        "MEM20_SKILL_ROOTS",
-        "/root/.config/opencode/skills:/opt/mem20-skills/skills",
-    ).split(":") if p
-)
+#: Where agent skills live, in priority order. A name found under more than one
+#: root is reported once, from the first root that has it.
+#:
+#: ``MEM20_SKILL_ROOTS`` overrides this list entirely (colon-separated), which is
+#: what an operator with an unusual layout wants. When it is unset the list is the
+#: **committed** skill tree of this checkout followed by the two host trees: a
+#: skill that ships with the repo has to be discoverable on any machine, not only
+#: on the one where the host trees happen to exist.
+HOST_ROOTS = ("/root/.config/opencode/skills", "/opt/mem20-skills/skills")
+
+#: The committed skill tree, relative to the repository root.
+REPO_SKILLS_SUBDIR = (".opencode", "skills")
+
+
+def repo_root() -> Path:
+    """The checkout this module is running from.
+
+    ``skill_index.py`` sits at ``<root>/mem20agentz/mem20agentz/skill_index.py``,
+    so the repository root is the parent that holds both the ``mem20agentz``
+    package and ``.opencode``. Walking the ancestors rather than counting them
+    keeps discovery working when a consumer vendors the package one level deeper.
+
+    The documented layout is the fallback, so an unusual checkout still resolves
+    to a real path instead of a guess.
+    """
+    here = Path(__file__).resolve()
+    for parent in here.parents:
+        if (parent / "mem20agentz").is_dir() and (parent / ".opencode").is_dir():
+            return parent
+    return here.parents[2] if len(here.parents) > 2 else here.parent
+
+
+def repo_skill_root() -> Path:
+    """``<root>/.opencode/skills`` -- the skill tree committed to this repo."""
+    return repo_root().joinpath(*REPO_SKILLS_SUBDIR)
+
+
+def default_roots() -> tuple[Path, ...]:
+    """Roots to scan, honouring ``MEM20_SKILL_ROOTS`` when it is set.
+
+    With no override the repo's own skills come first: they are the ones under
+    version control and review, so they must win a name collision against a
+    machine-local copy of the same skill.
+    """
+    override = os.environ.get("MEM20_SKILL_ROOTS")
+    if override is not None:
+        return tuple(Path(p) for p in override.split(":") if p)
+    return (repo_skill_root(),) + tuple(Path(p) for p in HOST_ROOTS)
+
+
+DEFAULT_ROOTS = default_roots()
 
 #: A skill is a directory containing this file.
 MARKER = "SKILL.md"

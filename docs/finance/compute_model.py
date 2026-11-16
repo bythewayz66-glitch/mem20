@@ -20,11 +20,17 @@ Run:  python3 compute_model.py            (verifies, writes artefacts)
       python3 compute_model.py --check    (verifies only, writes nothing)
 """
 import csv
+import hashlib
 import json
 import os
 import sys
 
 HERE = os.path.dirname(os.path.abspath(__file__))
+REPO_ROOT = os.path.dirname(os.path.dirname(HERE))
+# docs/surface.json is the one authoritative surface manifest, generated from the
+# live JSON-RPC tools/list by scripts/surface_manifest.py. The finance model reads
+# it rather than carrying its own copy of the count.
+SURFACE_JSON = os.path.join(os.path.dirname(HERE), "surface.json")
 TOL = 1e-9
 CHECK_ONLY = "--check" in sys.argv
 
@@ -46,6 +52,53 @@ def fail(msg):
 def load():
     with open(os.path.join(HERE, "inputs.json")) as fh:
         return json.load(fh)
+
+
+def load_surface(path=None):
+    """Read the authoritative surface manifest and prove it is self-consistent.
+
+    The tool count is DERIVED from docs/surface.json, never hardcoded here. A
+    literal pair in this file would keep passing forever while the server moved
+    underneath it, which is exactly the drift this model exists to catch. The
+    manifest's own cross-check (live tools/list vs the AST catalog) is verified
+    first, so a manifest that disagrees with itself fails before it can be
+    compared to anything.
+    """
+    p = path or SURFACE_JSON
+    if not os.path.exists(p):
+        fail("surface manifest missing: %s (run scripts/surface_manifest.py --write)" % p)
+    with open(p, "rb") as fh:
+        raw = fh.read()
+    s = json.loads(raw.decode("utf-8"))
+
+    tools, domains = s.get("tools"), s.get("domains")
+    if not isinstance(tools, int) or not isinstance(domains, int):
+        fail("surface manifest tools/domains must be integers, got %r/%r" % (tools, domains))
+
+    cc = s.get("cross_check") or {}
+    if cc.get("ast_tools") != tools or cc.get("ast_domains") != domains:
+        fail("surface manifest cross-check disagrees with its own counts: %r vs %r/%r"
+             % (cc, tools, domains))
+    if cc.get("only_ast") or cc.get("only_live"):
+        fail("surface manifest has unmatched tools: only_ast=%r only_live=%r"
+             % (cc.get("only_ast"), cc.get("only_live")))
+
+    names = s.get("domain_names") or []
+    if len(names) != domains:
+        fail("surface manifest lists %d domain names for %d domains" % (len(names), domains))
+    counts = s.get("domain_counts") or {}
+    if sum(counts.values()) != tools:
+        fail("surface manifest domain_counts sum to %d, tools is %d"
+             % (sum(counts.values()), tools))
+
+    return {
+        "tools": tools,
+        "domains": domains,
+        "unwired_tools": len(s.get("unwired_tools") or []),
+        "sha256": hashlib.sha256(raw).hexdigest(),
+        "path": os.path.relpath(p, REPO_ROOT).replace(os.sep, "/"),
+        "cross_check": cc,
+    }
 
 
 # ---------------------------------------------------------------------------
@@ -103,7 +156,7 @@ def pct(part, whole):
 # ---------------------------------------------------------------------------
 # Model
 # ---------------------------------------------------------------------------
-def build(d):
+def build(d, surface_path=None):
     house, surf = d["house_numbers"], d["tool_surface"]
     acq, repo = d["acquisition_inputs"], d["repo_state"]
     tiers, costs = d["tier_ladder"], d["unit_cost_and_funnel"]
@@ -132,15 +185,45 @@ def build(d):
         "on 6K/18K/36K/80K reconciles to 14,000 exactly")
 
     # --- Tool surface ----------------------------------------------------
-    if surf["tools"] != 487 or surf["domains"] != 129:
-        fail("tool surface must be the live 487/129, got %r/%r"
-             % (surf["tools"], surf["domains"]))
+    # Derived, not hardcoded. The live manifest is read and its internal
+    # cross-check verified, then compared to the declared inputs. If the server
+    # gains or loses a tool, this fails on the next run instead of silently
+    # re-asserting a stale literal.
+    live = load_surface(surface_path)
+    if (live["tools"], live["domains"]) != (surf["tools"], surf["domains"]):
+        fail("declared tool surface %r/%r does not match the live manifest %r/%r "
+             "(%s); update docs/finance/inputs.json tool_surface"
+             % (surf["tools"], surf["domains"], live["tools"], live["domains"],
+                live["path"]))
     log.append({
-        "item": "Tool surface (tools/domains)", "implied_by_model": "487 / 129",
-        "house_value": "487 / 129", "delta": 0, "delta_pct": 0.0, "unit": "count",
+        "item": "Tool surface (tools/domains)",
+        "implied_by_model": "%d / %d" % (live["tools"], live["domains"]),
+        "house_value": "%d / %d" % (surf["tools"], surf["domains"]),
+        "delta": 0, "delta_pct": 0.0, "unit": "count",
         "status": "RECONCILED",
-        "note": "487/129 and 257/26 are retired; the finance model no longer depends on the "
-                "tool count for any revenue figure - it is carried as context only",
+        "note": "derived from %s (sha256 %s), not from a literal in this file; the "
+                "manifest's own live-vs-AST cross-check is clean (%d tools / %d domains, "
+                "%d unwired). 311/39 and 257/26 are retired; the finance model does not "
+                "read the tool count for any revenue figure - it is carried as context "
+                "only, and re-derived on every run so a migration cannot pass unnoticed"
+                % (live["path"], live["sha256"][:16], live["tools"], live["domains"],
+                   live["unwired_tools"]),
+    })
+    log.append({
+        "item": "Surface manifest provenance (sha256)",
+        "implied_by_model": live["sha256"][:16],
+        "house_value": live["sha256"][:16],
+        "delta": 0, "delta_pct": 0.0, "unit": "sha256",
+        "status": "RECONFIRMED",
+        "note": "%s read at build time: %d tools / %d domains, %d unwired, cross-check "
+                "ast_tools=%r ast_domains=%r only_ast=%r only_live=%r. A new row lands "
+                "only when the manifest itself changes, so the ledger records every "
+                "surface the model was ever reconciled against"
+                % (live["path"], live["tools"], live["domains"], live["unwired_tools"],
+                   live["cross_check"].get("ast_tools"),
+                   live["cross_check"].get("ast_domains"),
+                   live["cross_check"].get("only_ast"),
+                   live["cross_check"].get("only_live")),
     })
 
     # --- Acquisition / support (repo-dependent) --------------------------
@@ -274,7 +357,10 @@ def build(d):
         "ledger_run": {"run_seq": run["run_seq"], "run_utc": run["run_utc"]},
         "canonical_repo": repo["url"],
         "house_numbers_verbatim": house,
-        "tool_surface": surf,
+        "tool_surface": dict(surf, manifest=live["path"],
+                             manifest_sha256=live["sha256"],
+                             unwired_tools=live["unwired_tools"],
+                             derived_from_manifest=True),
         "market": {
             "tam_usd": TAM, "tam_accounts_floor": TAM_ACCTS,
             "sam_usd": SAM, "sam_accounts_floor": SAM_ACCTS,
@@ -523,8 +609,9 @@ def main():
     print("  gross margin       %.2f%%   CAC %s   payback %s yr   3-yr LTV:CAC %sx"
           % (ue["gross_margin_pct"], ue["blended_cac_usd"],
              ue["cac_payback_years"], ue["ltv_cac_3y"]))
-    print("  tool surface       %d tools / %d domains"
-          % (m["tool_surface"]["tools"], m["tool_surface"]["domains"]))
+    print("  tool surface       %d tools / %d domains  (derived from %s)"
+          % (m["tool_surface"]["tools"], m["tool_surface"]["domains"],
+             m["tool_surface"]["manifest"]))
     print("  SOM arithmetic     %d accounts x %s ACV = %s  (house 1,680,000: EXACT)"
           % (mk["som_accounts"], format(int(m["acv"]["blended_usd"]), ",d"),
              format(int(mk["som_arr_usd"]), ",d")))

@@ -31,6 +31,8 @@
     "previous_tools": 311,
     "previous_domains": 39,
     "authority": "live JSON-RPC tools/list, generated into docs/surface.json by scripts/surface_manifest.py; CI .github/workflows/mcp-verify.yml pins 487; docs/TOOL-DOMAINS.md carries 487/129",
+    "derived_from": "docs/surface.json",
+    "derivation": "compute_model.py reads docs/surface.json at build time and asserts its live-vs-AST cross-check is clean before comparing it to the values declared here. The count is never hardcoded in the model, so a surface migration fails the drift check instead of passing silently.",
     "asserted_on_every_run": true,
     "owner_of_migration": "Webpage Developer (P1)",
     "note": "311/39 and 257/26 are retired for the finance model. They survive only as stated prior values in the corrections register."

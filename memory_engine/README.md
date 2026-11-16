@@ -142,6 +142,37 @@ The substrate is registered with the mem20 MCP server as six tools
 `memory_engine_health`, `memory_engine_recall`, `memory_engine_veto`,
 `memory_engine_guard`, `memory_engine_namespace`, `memory_engine_subsystem`.
 
+## Cross-subsystem wiring
+
+`memory_engine/integrations.py` is the one place where the store reaches into
+other mem20 subsystems. Every function calls a real public API on a real path —
+nothing is stubbed, and nothing is imported only to satisfy a checker.
+
+| edge | what it proves |
+|---|---|
+| `mem20kanbanz.ledger_digest` | SHA-256 of the grounded ledger, via the estate's single file-hasher |
+| `mem20ops.classify_topic_key` | a topic key is a filename, so ops' naming rules decide its verdict |
+| `mem20corez.model_parameter_count` | the parameter count mem20corez actually allocates |
+| `mem20cliz.cli_envelope` | the `mem20.cli/1` envelope is built by its owner, not reimplemented |
+| `mem20verify.test_bearing_packages` | which packages the estate's own runner discovers |
+| `toolchest.tool_inventory_counts` | the real on-box tool inventory |
+
+```bash
+# Prove every edge. Exits non-zero if any is dead, so CI can gate on it.
+python3 -m memory_engine wiring
+
+# Also write the estate snapshot into the grounded ledger as an observed fact.
+python3 -m memory_engine wiring --record
+```
+
+A subsystem that is genuinely absent is reported as unavailable with the real
+import error — never a fabricated value. A store that has never been written to
+has no ledger to hash, so that edge reports `skipped` (distinct from a pass).
+
+`record_estate_snapshot()` writes through the sanctioned grounded path with
+`epistemic_status="observed"`, because those numbers were measured by calling
+the subsystems, not inferred.
+
 ## Tests
 
 ```bash

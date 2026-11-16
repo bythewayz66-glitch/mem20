@@ -10,6 +10,7 @@ cannot and why. Nothing here is simulated.
     python -m memory_engine guard --id <fact-id>
     python -m memory_engine namespace --agent "my agent"
     python -m memory_engine subsystem --name mem20kilnz
+    python -m memory_engine wiring
     python -m memory_engine health
 
 Add ``--json`` to any subcommand for the fleet envelope (mem20cliz schema).
@@ -94,6 +95,15 @@ def build_parser() -> argparse.ArgumentParser:
     pa = sub.add_parser("validate", help="validate a glTF/GLB artifact")
     pa.add_argument("--path", required=True)
 
+    pw = sub.add_parser(
+        "wiring",
+        help="prove the cross-subsystem edges are live (exit non-zero if any is dead)",
+    )
+    pw.add_argument(
+        "--record", action="store_true",
+        help="also write the estate snapshot into the grounded ledger",
+    )
+
     return p
 
 
@@ -157,6 +167,18 @@ def main(argv: Optional[list[str]] = None) -> int:
             # A failed validation is a real failure: exit non-zero so a script
             # cannot mistake "invalid artifact" for success.
             return code if result["ok"] else 1
+
+        if command == "wiring":
+            # Imported here, not at module scope: the wiring module puts every
+            # sibling project root on sys.path, which is real work a caller who
+            # only wants ``status`` should not pay for.
+            from . import integrations
+
+            report = integrations.wiring_report(record=args.record)
+            code = _emit(report, as_json=as_json, command=command, argv=argv)
+            # A dead edge is a real failure: exit non-zero so a fleet script
+            # cannot read a broken integration as a healthy one.
+            return code if report["ok"] else 1
 
     except S.SubstrateError as exc:
         return _fail(str(exc), as_json=as_json, command=command, argv=argv)

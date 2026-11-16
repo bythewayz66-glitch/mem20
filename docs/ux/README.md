@@ -213,6 +213,6 @@ Two things the register settles that this section previously left implicit:
   `Dreams.tsx:140-142` blames the control plane, but no chain request is ever made — `sel` is
   declared at `:22` and never used to fetch. A reviewer with a healthy backend would debug the
   wrong system.
-- **G-06 is latent, not live.** The catalog is 270 tools across 27 domains
+- **G-06 is latent, not live.** The catalog is 487 tools across 129 domains
   (`web/src/data/tools.json`), below the 400 slice, so the count mismatch cannot be reached
   today. It is recorded as latent rather than as a defect.

@@ -240,3 +240,24 @@
 - **mcp/server.py state drift during edits:** mixin lazy-load refactor was lost in an intermediate state; restored with lazy class builder and fixed sys.path/memory lazy-access integration. Required recompile and toolchest refresh to confirm MCP discovery.
 - **pytest collection still unstable:** despite opt-in pre-imports and timeouts in `conftest.py`, root/targeted `--collect-only` runs remained slow/hanging or non-diagnostic in-session; blocker improved but not fully closed.
 - **v3 corpus build/validate:** initial blocker (missing `records.part-*.jsonl`) resolved by generating shards; build completed and validation passed. Large generated artifacts increased sitemap totals.
+
+## 2026-11-16 — Phase 6: Multi-Room Orchestration complete (teamz)
+- **Phase 6 completed:** Multi-Room Orchestration with 10/10 subphases implemented
+- **Cross-room message bus:** `RoomMessageBusMessage`, `send_cross_room_message`, `get_room_messages` — bidirectional messaging between rooms
+- **Project rooms with child rooms:** `ProjectRoom`, `create_project_room`, `add_room_to_project` — hierarchical room organization
+- **Dependency graph for rooms:** `RoomDependency`, `set_room_dependencies`, `check_room_dependencies` with circular dependency detection
+- **Shared artifact store:** `ArtifactStoreEntry`, `store_artifact`, `get_artifact`, `list_artifacts` — shared artifacts across rooms
+- **Global worker pool:** `WorkerPoolEntry`, `register_worker`, `assign_worker_to_room`, `release_worker_from_room`, `get_worker_pool_status` — shared agent pool
+- **Room templates:** `RoomTemplate`, `get_room_templates`, `create_room_from_template` — templated room creation
+- **Cross-room events:** `CrossRoomEvent`, `propagate_cross_room_event` — event propagation across rooms
+- **Cross-room messaging:** `RoomMessageBusMessage`, `send_cross_room_message`, `get_room_messages` — room-to-room messaging
+- **Shared artifact store:** `ArtifactStoreEntry`, `store_artifact`, `list_artifacts` — shared artifacts across rooms
+- **Worker pool management:** `register_worker`, `assign_worker_to_room`, `release_worker_from_room`, `get_worker_pool_status`
+
+**New models added:** `RoomDependency`, `RoomTemplate`, `ProjectRoom`, `ArtifactStoreEntry`, `WorkerPoolEntry`, `RoomMessageBusMessage`, `CrossRoomEvent`
+
+**New worker methods:** `create_project_room`, `add_room_to_project`, `set_room_dependencies`, `check_room_dependencies`, `propagate_cross_room_event`, `send_cross_room_message`, `get_room_messages`, `store_artifact`, `get_artifact`, `list_artifacts`, `register_worker`, `assign_worker_to_room`, `release_worker_from_room`, `get_worker_pool_status`, `get_room_templates`, `create_room_from_template`
+
+**Verification:** All tests pass (107 frontend, 70 server), builds pass, typecheck passes.
+
+**No failures encountered in this phase.** All tests pass (107 frontend, 70 server), builds pass, typecheck passes.

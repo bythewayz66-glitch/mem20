@@ -79,18 +79,26 @@ module SurfaceCheck
     cc = actual[:cross_check]
     return [] if cc.empty?
 
-    problems = []
-    if cc["ast_tools"] != actual[:tools]
-      problems << "manifest cross_check.ast_tools #{cc['ast_tools']} != tools #{actual[:tools]}"
-    end
-    if cc["ast_domains"] != actual[:domains]
-      problems << "manifest cross_check.ast_domains #{cc['ast_domains']} != domains #{actual[:domains]}"
-    end
-    unless Array(cc["only_ast"]).empty? && Array(cc["only_live"]).empty?
-      problems << "manifest cross_check is not clean: only_ast=#{cc['only_ast'].inspect} " \
-                  "only_live=#{cc['only_live'].inspect}"
-    end
-    problems
+    tool_problems(cc) + domain_problems(cc) + difference_problems(cc)
+  end
+
+  def tool_problems(cc)
+    return [] if cc["ast_tools"] == actual[:tools]
+
+    ["manifest cross_check.ast_tools #{cc["ast_tools"]} != tools #{actual[:tools]}"]
+  end
+
+  def domain_problems(cc)
+    return [] if cc["ast_domains"] == actual[:domains]
+
+    ["manifest cross_check.ast_domains #{cc["ast_domains"]} != domains #{actual[:domains]}"]
+  end
+
+  def difference_problems(cc)
+    return [] if Array(cc["only_ast"]).empty? && Array(cc["only_live"]).empty?
+
+    ["manifest cross_check is not clean: only_ast=#{cc["only_ast"].inspect} " \
+     "only_live=#{cc["only_live"].inspect}"]
   end
 
   def problems

@@ -11,7 +11,7 @@ Gem::Specification.new do |spec|
   spec.summary       = "Ruby client for the mem20 MCP server"
   spec.description   = "Native Ruby client for mem20: JSON-RPC 2.0 over stdio, " \
                        "MCP handshake, tool discovery and invocation over the " \
-                       "311-tool mem20 surface (39 domains)."
+                       "487-tool mem20 surface (129 domains)."
   spec.homepage      = "https://github.com/bythewayz66-glitch/mem20"
   spec.license       = "MIT"
   spec.required_ruby_version = ">= 3.0"

@@ -75,6 +75,13 @@ Metrics/BlockLength:
 Metrics/ClassLength:
   Max: 130
 
+# Surface is a data table: one line per domain, 129 of them, plus the derived
+# constants and the measurement helpers. The length is the data, not branching
+# logic, so the module budget is raised rather than the table being split into
+# a second file that would only obscure where the numbers live.
+Metrics/ModuleLength:
+  Max: 200
+
 # examples/ and the stdio test stub are invoked as `ruby path/to/file`, never
 # executed directly, so they carry a shebang without the execute bit. The cop
 # flags that combination; it is intentional here, not a packaging mistake.

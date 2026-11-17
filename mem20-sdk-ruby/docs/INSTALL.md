@@ -70,7 +70,7 @@ bundle install
 
 ```bash
 gem build mem20-sdk.gemspec
-gem install ./mem20-sdk-0.2.0.gem
+gem install ./mem20-sdk-0.3.0.gem
 ```
 
 ## 4. Configure
@@ -126,8 +126,8 @@ Mem20.configure { |c| c.cwd = "/opt/mem20/mem20" }
 client = Mem20.client
 
 puts client.transport.initialize_session.protocol_version  # "2025-06-18"
-puts client.tool_names.size                                 # 311
-puts client.tools.dig("tools").size                        # 311
+puts client.tool_names.size                                 # 487
+puts client.tools.dig("tools").size                        # 487
 puts Mem20::Surface.summary                                 # 487 tools across 129 domains
 puts client.healthy?                                       # true when :8080/health answers 200
 

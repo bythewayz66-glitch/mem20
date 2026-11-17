@@ -27,6 +27,7 @@
 #include <stdlib.h>  // mkdtemp, std::system
 
 #include <cstdlib>
+#include <fstream>
 #include <iostream>
 #include <set>
 #include <string>
@@ -118,3 +119,64 @@ std::string reply_text(const std::string& reply) {
 }  // namespace
 
 int main() {
+  if (!has_python3()) {
+    skip("python3 is not on PATH");
+  }
+  if (!python3_has_mcp()) {
+    skip("python3 cannot import the mcp package");
+  }
+
+  const std::string server_script = MEM20_TEST_SERVER_SCRIPT;
+  std::ifstream script(server_script);
+  if (!script.good()) {
+    skip("server script not found: " + server_script);
+  }
+  script.close();
+
+  mem20::ServerConfig cfg;
+  cfg.command = {"python3", server_script};
+  cfg.cwd = MEM20_TEST_REPO_ROOT;
+  cfg.timeout_ms = 60000;
+
+  auto session = mem20::Session::spawn(cfg);
+  if (!session) {
+    fail("Session::spawn failed: " + session.message());
+  }
+
+  auto tools = (*session).list_tools();
+  if (!tools) {
+    fail("tools/list failed: " + tools.message());
+  }
+  if (tools->size() != kExpectedToolCount) {
+    fail("tools/list returned " + std::to_string(tools->size()) +
+         " tools, expected " + std::to_string(kExpectedToolCount));
+  }
+
+  mem20::GroundedMemory fact;
+  fact.content = kFactText;
+  fact.category = mem20::MemoryCategory::General;
+  fact.tags = {"live-surface", "cpp-sdk"};
+  auto stored = (*session).store(fact);
+  if (!stored) {
+    fail("memory_store failed: " + stored.message());
+  }
+
+  auto hits = (*session).recall(kFactMarker, mem20::RecallOptions{});
+  if (!hits) {
+    fail("memory_recall failed: " + hits.message());
+  }
+  bool found = false;
+  for (const auto& hit : *hits) {
+    if ( hit.content.find(kFactMarker) != std::string::npos) {
+      found = true;
+      break;
+    }
+  }
+  if (!found) {
+    fail("stored fact was not found by recall");
+  }
+
+  std::cout << "ok: live surface matched " << tools->size()
+            << " tools; store/recall round trip passed\n";
+  return kExitOk;
+}

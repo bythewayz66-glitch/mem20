@@ -34,17 +34,12 @@ coverage>=7
 
 # FastAPI/Starlette compatibility pin (issue #179/#180).
 #
-# fastapi 0.115.12 calls `routing.APIRouter(on_startup=..., on_shutdown=...)`,
-# which Starlette removed in 1.0. An unpinned install resolves starlette 1.7.0
-# and every FastAPI app in the estate fails at import with
-#
-#     TypeError: Router.__init__() got an unexpected keyword argument 'on_startup'
-#
-# which aborted collection for mem20messenger and mem20mktz. Pinned below the
-# release that removed the argument; raise this only together with a fastapi
-# upgrade that stops passing it.
+# fastapi 0.162.x requires starlette>=0.46; the older <0.42 pin made a clean
+# `pip install -r requirements.txt` resolve to an impossible pair (pip exited
+# with ResolutionImpossible). Keep the fastapi range and move starlette to the
+# line its own metadata requires.
 fastapi>=0.162.2,<0.163
-starlette>=0.40,<0.42
+starlette>=0.46,<0.47
 
 # mem20autouez imports websockets at module scope (connection.py:12).
 websockets>=16.1.1

@@ -52,7 +52,17 @@ for _project in (
     "mem20ops", "mem20verify", "mem20liez", "mem20ircz",
     "mem20temporaldatabasefabricz",
 ):
-    for _candidate in (_REPO_ROOT / _project / "src", _REPO_ROOT / _project):
+    # Some estates keep their packages nested under <parent>/absorbed/<name>.
+    # Check those layouts too, otherwise a clean CI checkout cannot import the
+    # temporal package and every mcp/tests collection dies before it runs.
+    for _candidate in (
+        _REPO_ROOT / _project / "src",
+        _REPO_ROOT / _project,
+        _REPO_ROOT / "mem20fabricz" / "absorbed" / _project / "src",
+        _REPO_ROOT / "mem20fabricz" / "absorbed" / _project,
+        _REPO_ROOT / "mem20secretz" / "absorbed" / _project / "src",
+        _REPO_ROOT / "mem20secretz" / "absorbed" / _project,
+    ):
         if _candidate.is_dir() and str(_candidate) not in _sys.path:
             _sys.path.insert(0, str(_candidate))
 

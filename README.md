@@ -44,15 +44,15 @@ documentation. Where an older number was wrong, the correction is noted.
 | Metric | Verified value | How measured |
 |---|---|---|
 | MCP tools | **487** | live JSON-RPC `tools/list` (generated in `docs/surface.json`) |
-| MCP tool modules | **44** | `ls mcp/tools/*.py \| wc -l` |
-| Subsystems (sitemap) | **340** | `.sitemap/sitemap.json` → `totals.subsystems` |
-| Subsystem directories | **297** | `ls -d mem20*/` |
-| Source files | **8,497** | `.sitemap/sitemap.json` → `totals.files` |
-| Code lines | **384,249** | `.sitemap/sitemap.json` → `totals.code_lines` |
-| Total lines | **964,795** | `.sitemap/sitemap.json` → `totals.lines` |
+| MCP tool modules | **157** | `ls mcp/tools/*.py \| wc -l` |
+| Subsystems (sitemap) | **104** | `.sitemap/sitemap.json` → `totals.subsystems` |
+| Subsystem directories | **300** | `ls -d mem20*/` |
+| Source files | **11,214** | `.sitemap/sitemap.json` → `totals.files` |
+| Code lines | **573,643** | `.sitemap/sitemap.json` → `totals.code_lines` |
+| Total lines | **1,295,554** | `.sitemap/sitemap.json` → `totals.lines` |
 | Packaged subsystems | **294 of 297** | dirs with a `pyproject.toml` at depth 1 |
-| `pyproject.toml` files | **296** | `find . -name pyproject.toml` |
-| Test files | **322** | `find . -name "test_*.py" -o -name "*_test.py"` |
+| `pyproject.toml` files | **336** | `find . -name pyproject.toml` |
+| Test files | **732** | `find . -name "test_*.py" -o -name "*_test.py"` |
 
 ### Corrections to previously published numbers
 

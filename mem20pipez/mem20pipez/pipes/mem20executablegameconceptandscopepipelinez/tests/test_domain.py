@@ -1,5 +1,5 @@
 import importlib
-MOD="mem20pipez"
+MOD="mem20pipez.mem20pipez.pipes.mem20executablegameconceptandscopepipelinez"
 def _m(): return importlib.import_module(MOD+".domain")
 def test_score(): m=_m(); assert 0<=m.concept_score({"innovation":8,"market_fit":7,"feasibility":6})<=1
 def test_scope(): m=_m(); r=m.scope_estimate({"features":["a","b"],"complexity":"high"}); assert r["weeks"]>0

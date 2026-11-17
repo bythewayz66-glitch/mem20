@@ -32,7 +32,14 @@ import re
 from pathlib import Path
 from typing import Iterable, Optional
 
-#: Host paths where agent skills may live. Kept for operator setups.
+#: Where agent skills live, in priority order. A name found under more than one
+#: root is reported once, from the first root that has it.
+#:
+#: ``MEM20_SKILL_ROOTS`` overrides this list entirely (colon-separated), which is
+#: what an operator with an unusual layout wants. When it is unset the list is the
+#: **committed** skill tree of this checkout followed by the two host trees: a
+#: skill that ships with the repo has to be discoverable on any machine, not only
+#: on the one where the host trees happen to exist.
 HOST_ROOTS = ("/root/.config/opencode/skills", "/opt/mem20-skills/skills")
 
 #: The committed skill tree, relative to the repository root.
@@ -40,7 +47,16 @@ REPO_SKILLS_SUBDIR = (".opencode", "skills")
 
 
 def repo_root() -> Path:
-    """The checkout this module is running from."""
+    """The checkout this module is running from.
+
+    ``skill_index.py`` sits at ``<root>/mem20agentz/mem20agentz/skill_index.py``,
+    so the repository root is the parent that holds both the ``mem20agentz``
+    package and ``.opencode``. Walking the ancestors rather than counting them
+    keeps discovery working when a consumer vendors the package one level deeper.
+
+    The documented layout is the fallback, so an unusual checkout still resolves
+    to a real path instead of a guess.
+    """
     here = Path(__file__).resolve()
     for parent in here.parents:
         if (parent / "mem20agentz").is_dir() and (parent / ".opencode").is_dir():

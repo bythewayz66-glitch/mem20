@@ -18,6 +18,7 @@ running-gags sheet.
 | [#4](issue-04/) | Twenty-Two of Twenty-Three | 19 – 26 Oct 2026 | 66 |
 | [#5](issue-05/) | The Rule and the Hole | 7 Nov 2026, 18:15–23:52 UTC | 66 |
 | [#6](issue-06/) | The Report Says Nothing | 14 – 18 Oct 2026 | 38 |
+| [#7](issue-07/) | The Organ and the Oscillation | 19 Oct 2026, 09:13–10:00 | 35 |
 
 ## Reference
 

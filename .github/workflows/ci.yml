@@ -234,6 +234,28 @@ jobs:
             cargo test --manifest-path braid/Cargo.toml
           fi
 
+  cpp-surface:
+    name: C++ surface guard
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Configure
+        run: cmake -S sdk/cpp -B build/cpp -DCMAKE_BUILD_TYPE=Release
+      - name: Build
+        run: cmake --build build/cpp -j4
+      # The static_asserts in include/mem20/surface.hpp are the only place the
+      # published tool/domain count is derived rather than restated. Until this
+      # job existed, nothing compiled them: the guard could have been wrong for
+      # any length of time and no run would have said so. It was wrong -- it
+      # asserted 270 while the server advertised 272.
+      - name: Run the surface guards
+        working-directory: build/cpp
+        run: ctest --output-on-failure
+      # VERSION, pyproject.toml and version.hpp each state the version and
+      # nothing compared them: on 2026-11-01 they read 3.1.2, 3.0.0 and 3.1.0.
+      - name: Version consistency
+        run: python3 scripts/check_version_consistency.py
+
   tests:
     name: Tests
     runs-on: ubuntu-latest
@@ -258,7 +280,17 @@ jobs:
 
       - name: Unit-marked MCP tests (issue #5)
         run: |
-          python3 -m pytest -q -m unit mcp/tests || true
+          set -euo pipefail
+          # `|| true` used to swallow every outcome here, including a collection
+          # error. Exit 5 (nothing selected) is the one outcome that is not a
+          # failure; everything else must fail the job.
+          rc=0
+          python3 -m pytest -q -m unit mcp/tests || rc=$?
+          if [ "$rc" -eq 5 ]; then
+            echo "::warning::No 'unit'-marked tests in mcp/tests; nothing to run."
+            exit 0
+          fi
+          exit "$rc"
 
       - name: Run the green package set
         run: |
@@ -347,8 +379,8 @@ jobs:
           rc=0
           python3 -m pytest -m unit -q -o addopts='' --import-mode=prepend --ignore-glob='*/tests/absorbed/*' $ROOTS || rc=$?
           if [ "$rc" -eq 5 ]; then
-            echo "::warning::No tests carry the 'unit' marker in the green set; nothing to run."
-            exit 0
+            echo "::error::The green set collected no tests; the selector is wrong."
+            exit 1
           fi
           exit "$rc"
 

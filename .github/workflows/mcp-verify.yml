@@ -37,7 +37,14 @@ jobs:
       - name: Install core dependencies
         run: |
           python -m pip install --upgrade pip
-          python -m pip install "mcp>=2.1.1" "pydantic>=2.13.4" "anyio>=4.14.2" "aiohttp>=3.9"
+          # Install from requirements.txt, not a hand-written list. The hand
+          # list drifted: it named four packages while requirements.txt
+          # declared eight, and the two it omitted (mcp-types, and aiohttp at
+          # the pinned floor) are imported at module scope by modules the
+          # server loads before it can answer a single request. Sixteen runs
+          # failed on that gap. The file is the source of truth; this step
+          # reads it.
+          python -m pip install -r requirements.txt
 
       - name: Verify the MCP handshake and tool count
         env:

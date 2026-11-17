@@ -90,7 +90,7 @@ is honoured, so one `.env` configures both halves:
 | Option | Environment | Default |
 |---|---|---|
 | `server_command` | — | `['python3', 'mcp/mcp_server.py']` |
-| `cwd` | — | *unset* |
+| `cwd` | — | `None` |
 | `store_path` | `MEM20_STORE_PATH` | *server default* |
 | `cog_path` | `MEM20_COG_PATH` | *server default* |
 | `llm_base_url` | `MEM20_LLM_BASE_URL` | `https://integrate.api.nvidia.com/v1` |

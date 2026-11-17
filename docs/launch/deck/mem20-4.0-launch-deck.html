@@ -1,0 +1,474 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>mem20 4.0 — Auditable Agent Memory (launch deck source)</title>
+<meta name="description" content="Launch deck for mem20 4.0.0 — 487 tools across 129 domains, the auditable memory story, and the 4.0 roadmap. Every figure traceable to a file in this repo.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+/* mem20 launch deck — palette and type taken from docs/series/series.css */
+:root{
+  --bg:#070A0F; --bg-2:#0B1017; --surface:#101724;
+  --line:#1E2A3C; --line-2:#293850;
+  --text:#E8EFF7; --text-2:#B8C6D8; --muted:#8296AC;
+  --accent:#2FD4C4; --accent-2:#46B8F5; --amber:#F5B841;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0;background:var(--bg)}
+.deck{display:flex;flex-direction:column;align-items:center;gap:24px;padding:24px 0}
+.slide{width:1920px;height:1080px;flex:0 0 auto;position:relative;overflow:hidden}
+.s{width:1920px;height:1080px;padding:64px 80px;position:relative;overflow:hidden;
+   background:var(--bg);color:var(--text);font-family:'Space Grotesk',sans-serif}
+.mono{font-family:'IBM Plex Mono',monospace}
+.kicker{font-family:'IBM Plex Mono',monospace;font-size:24px;letter-spacing:.18em;color:var(--accent)}
+.kicker.warn{color:var(--amber)}
+h1{font-size:96px;line-height:1.04;font-weight:700;letter-spacing:-.035em;margin:30px 0 0}
+h2{font-size:64px;line-height:1.12;font-weight:700;letter-spacing:-.02em;margin:22px 0 0}
+.lede{font-size:32px;line-height:1.55;color:var(--text-2);margin-top:20px;max-width:1440px}
+.rule{height:1px;background:var(--line);margin-top:26px}
+.foot{position:absolute;left:80px;right:80px;bottom:48px;font-family:'IBM Plex Mono',monospace;
+      font-size:24px;color:var(--muted)}
+.accent{color:var(--accent)}
+.amber{color:var(--amber)}
+.dim{color:var(--muted)}
+.strong{color:var(--text);font-weight:600}
+/* cover */
+.cover-bar{position:absolute;top:0;left:0;width:6px;height:1080px;
+  background:linear-gradient(180deg,var(--accent) 0%,var(--accent-2) 100%)}
+.cover-top{display:flex;justify-content:space-between;align-items:center;
+  font-family:'IBM Plex Mono',monospace;font-size:24px}
+.cover-facts{position:absolute;left:80px;right:80px;bottom:64px;border-top:1px solid var(--line);
+  padding-top:30px;display:flex}
+.cover-facts>div{width:25%}
+.cover-facts .l{font-family:'IBM Plex Mono',monospace;font-size:24px;color:var(--muted);letter-spacing:.12em}
+.cover-facts .v{font-size:64px;font-weight:700;line-height:1.1;margin-top:6px}
+.cover-facts .v.sm{font-size:32px;font-weight:600;line-height:1.4;margin-top:14px;color:var(--text-2)}
+/* generic blocks */
+.cols{display:flex;gap:56px;margin-top:56px}
+.cols>div{flex:1 1 0}
+.card{background:var(--surface);border:1px solid var(--line);padding:30px 34px}
+.card.g{border-left:3px solid var(--accent)}
+.card.a{border-left:3px solid var(--amber)}
+.card.b{border-top:3px solid var(--accent-2)}
+.card h3{font-size:40px;font-weight:600;line-height:1.25;margin:14px 0 0}
+.card p{font-size:32px;line-height:1.5;color:var(--text-2);margin:16px 0 0}
+.card .lbl{font-family:'IBM Plex Mono',monospace;font-size:24px;letter-spacing:.12em;color:var(--accent)}
+.card .lbl.a{color:var(--amber)}
+.big{font-size:72px;font-weight:700;line-height:1.1;margin-top:14px}
+.big.sm{font-size:64px}
+.note{background:var(--surface);border-left:3px solid var(--accent);padding:26px 32px;
+  font-size:32px;line-height:1.5;color:var(--text)}
+.note.amber{border-left-color:var(--amber)}
+/* tables */
+.tbl{margin-top:40px;border-top:1px solid var(--line)}
+.tr{display:flex;align-items:center;padding:16px 0;border-bottom:1px solid var(--line)}
+.tr.hd{padding:18px 0}
+.tr.hd>div{font-family:'IBM Plex Mono',monospace;font-size:24px;color:var(--muted);letter-spacing:.1em}
+.tr>div{font-size:32px;color:var(--text)}
+.tr .m{font-family:'IBM Plex Mono',monospace;color:var(--accent)}
+.tr .n{font-family:'IBM Plex Mono',monospace;text-align:right;color:var(--text-2)}
+.tr .n.hi{color:var(--accent);font-weight:600}
+.tr .n.warn{color:var(--amber)}
+.tr.alt{background:var(--surface)}
+/* bars */
+.bars{margin-top:44px}
+.bar-row{display:flex;align-items:center;margin-bottom:16px}
+.bar-row .nm{width:300px;font-family:'IBM Plex Mono',monospace;font-size:28px}
+.bar{height:22px;background:linear-gradient(90deg,var(--accent),var(--accent-2));border-radius:2px}
+.bar-row .ct{font-family:'IBM Plex Mono',monospace;font-size:28px;color:var(--text-2);margin-left:20px}
+/* steps */
+.steps{display:flex;align-items:stretch;margin-top:52px}
+.steps>div{width:400px;padding:0 32px;border-left:1px solid var(--line)}
+.steps>div:first-child{padding-left:0;border-left:0}
+.steps .arrow{width:40px;padding:0;border:0;display:flex;align-items:center;justify-content:center;
+  font-size:40px;color:var(--line-2)}
+.steps h3{font-size:40px;font-weight:600;margin:12px 0 0;line-height:1.25}
+.steps p{font-size:32px;line-height:1.5;color:var(--text-2);margin:14px 0 0}
+/* code */
+pre{background:var(--bg-2);border:1px solid var(--line);padding:34px 40px;margin:44px 0 0;
+  font-family:'IBM Plex Mono',monospace;font-size:28px;line-height:1.9;color:var(--text-2);overflow:hidden}
+pre .p{color:var(--muted)}
+pre .c{color:var(--muted)}
+/* numbered gate list */
+.gate{margin-top:40px;border-top:1px solid var(--line)}
+.gate .r{display:flex;align-items:center;padding:22px 0;border-bottom:1px solid var(--line)}
+.gate .num{width:80px;flex:0 0 80px;font-family:'IBM Plex Mono',monospace;font-size:40px;
+  font-weight:600;color:var(--accent)}
+.gate .txt{flex:1 1 auto;font-size:32px;line-height:1.45}
+/* limits */
+.limits{margin-top:44px}
+.limits .r{display:flex;padding:24px 0;border-bottom:1px solid var(--line)}
+.limits .h{width:520px;font-size:40px;font-weight:600;line-height:1.25}
+.limits .b{width:1240px;font-size:32px;line-height:1.5;color:var(--text-2)}
+@media print{@page{size:1920px 1080px;margin:0}.deck{gap:0;padding:0}.slide{page-break-after:always}}
+</style>
+</head>
+<body>
+<div class="deck">
+
+<!-- 01 · Cover -->
+<div class="slide" id="slide-01"><div class="s">
+  <div class="cover-bar"></div>
+  <div class="cover-top">
+    <span class="accent">MEM20 &middot; RELEASE 4.0.0</span>
+    <span class="dim">2026-11-16 &middot; MIT</span>
+  </div>
+  <div class="rule"></div>
+  <div style="margin-top:132px">
+    <div class="mono dim" style="font-size:24px;letter-spacing:.16em">THE MEMORY SUBSTRATE FOR AGENTS THAT MUST NOT CONFABULATE</div>
+    <h1>Auditable<br><span class="accent">agent memory.</span></h1>
+    <p class="lede" style="max-width:1240px;margin-top:38px">Grounded facts and simulated hypotheses are separated at the storage layer &mdash; not asked for in a prompt. Every write carries provenance. Every read reports its own drift.</p>
+  </div>
+  <div class="cover-facts">
+    <div><div class="l">TOOLS</div><div class="v">487</div></div>
+    <div><div class="l">DOMAINS</div><div class="v">129</div></div>
+    <div><div class="l">SUBSYSTEMS</div><div class="v">211</div></div>
+    <div><div class="l">TRANSPORT</div><div class="v sm">JSON-RPC 2.0<br>over stdio</div></div>
+  </div>
+</div></div>
+
+<!-- 02 · The problem -->
+<div class="slide" id="slide-02"><div class="s">
+  <div class="kicker">01 &middot; THE PROBLEM</div>
+  <h2 style="max-width:1400px">An agent that remembers everything<br>it invents.</h2>
+  <div class="rule" style="margin-top:40px"></div>
+  <div class="cols">
+    <div>
+      <div class="mono amber" style="font-size:24px;letter-spacing:.14em">01 &middot; COMPOUNDING</div>
+      <h3 style="font-size:40px;font-weight:600;line-height:1.25;margin:16px 0 0">A guess becomes a fact</h3>
+      <p style="font-size:32px;line-height:1.55;color:var(--text-2);margin-top:18px">One hallucinated detail written to memory is retrieved as evidence on the next turn. By the tenth turn it is load-bearing.</p>
+    </div>
+    <div>
+      <div class="mono amber" style="font-size:24px;letter-spacing:.14em">02 &middot; NO PROVENANCE</div>
+      <h3 style="font-size:40px;font-weight:600;line-height:1.25;margin:16px 0 0">Nothing to audit</h3>
+      <p style="font-size:32px;line-height:1.55;color:var(--text-2);margin-top:18px">If a store cannot say where a fact came from or how confident it was, no post-hoc review can separate recall from invention.</p>
+    </div>
+    <div>
+      <div class="mono amber" style="font-size:24px;letter-spacing:.14em">03 &middot; PROMPT RULES</div>
+      <h3 style="font-size:40px;font-weight:600;line-height:1.25;margin:16px 0 0">A request, not a boundary</h3>
+      <p style="font-size:32px;line-height:1.55;color:var(--text-2);margin-top:18px">&ldquo;Don&rsquo;t make things up&rdquo; in a system prompt is a convention. It is not enforced, not recorded, and not checkable after the fact.</p>
+    </div>
+  </div>
+  <div class="note" style="position:absolute;left:80px;right:80px;bottom:64px">The failure is not that the model is wrong. It is that the store <span class="accent strong">cannot tell you it was wrong</span>.</div>
+</div></div>
+
+<!-- 03 · The wedge -->
+<div class="slide" id="slide-03"><div class="s">
+  <div class="kicker">02 &middot; THE WEDGE</div>
+  <h2>Grounded and simulated never mix.</h2>
+  <p class="lede" style="max-width:1300px">Two partitions in one store, with a hard boundary between them. Promotion is an explicit, recorded event &mdash; never a side effect of retrieval.</p>
+  <div style="display:flex;align-items:stretch;margin-top:52px">
+    <div class="card g" style="width:820px">
+      <div class="lbl">GROUNDED</div>
+      <h3>What the agent knows</h3>
+      <p>Observed, inferred, user-stated or agent-generated &mdash; each write declares its epistemic status. An unlabeled write is refused.</p>
+    </div>
+    <div style="width:120px;display:flex;flex-direction:column;align-items:center;justify-content:center">
+      <div class="mono dim" style="font-size:24px;letter-spacing:.1em">VETO</div>
+      <div style="width:1px;height:150px;margin-top:12px;background:repeating-linear-gradient(180deg,var(--line-2) 0 8px,transparent 8px 16px)"></div>
+    </div>
+    <div class="card a" style="width:820px">
+      <div class="lbl a">SIMULATED</div>
+      <h3>What the agent imagined</h3>
+      <p>Counterfactuals, hypotheses and plans live here. They cannot be promoted to grounded without explicit confirmation or real-world prediction-error resolution.</p>
+    </div>
+  </div>
+  <div style="position:absolute;left:80px;right:80px;bottom:64px;display:flex;gap:56px;border-top:1px solid var(--line);padding-top:26px">
+    <div style="width:600px;font-size:32px;line-height:1.5;color:var(--text-2)"><span class="accent strong">Enforced in code.</span> The partition is a storage invariant, not a prompt convention.</div>
+    <div style="width:600px;font-size:32px;line-height:1.5;color:var(--text-2)"><span class="accent strong">Auditable after the fact.</span> Every operation lands in an append-only ledger.</div>
+  </div>
+</div></div>
+
+<!-- 04 · The surface -->
+<div class="slide" id="slide-04"><div class="s">
+  <div class="kicker">03 &middot; THE SURFACE</div>
+  <h2>487 tools across 129 domains.</h2>
+  <div style="margin-top:44px;display:flex;align-items:flex-end;gap:80px">
+    <div>
+      <div class="accent" style="font-size:96px;font-weight:700;line-height:1;letter-spacing:-.04em">487</div>
+      <div class="mono dim" style="font-size:24px;letter-spacing:.14em;margin-top:10px">TOOLS ON THE WIRE</div>
+    </div>
+    <div>
+      <div style="font-size:96px;font-weight:700;line-height:1;letter-spacing:-.04em">129</div>
+      <div class="mono dim" style="font-size:24px;letter-spacing:.14em;margin-top:10px">DOMAINS</div>
+    </div>
+    <div style="padding-bottom:14px;max-width:760px;font-size:32px;line-height:1.5;color:var(--text-2)">
+      Counted from the server&rsquo;s live <span class="mono strong">tools/list</span> response, then cross-checked against the AST catalog. The two sets must agree exactly.
+    </div>
+  </div>
+  <div class="tbl">
+    <div class="tr hd"><div style="width:760px">DERIVATION STEP</div><div style="width:200px;text-align:right">VALUE</div></div>
+    <div class="tr"><div style="width:760px">Live <span class="mono accent">tools/list</span> &mdash; what a client actually receives</div><div class="n hi" style="width:200px">487</div></div>
+    <div class="tr"><div style="width:760px">AST catalog, wired declarations</div><div class="n hi" style="width:200px">487</div></div>
+    <div class="tr"><div style="width:760px">Declared in source but not registered by any mixin</div><div class="n" style="width:200px">19</div></div>
+    <div class="tr"><div style="width:760px">Names only in <span class="mono">tools/list</span> &middot; names only in AST</div><div class="n hi" style="width:200px">0 &middot; 0</div></div>
+  </div>
+  <div class="foot">Source: docs/surface.json &middot; docs/TOOL-DOMAINS.md &middot; regenerate with scripts/surface_manifest.py --check</div>
+</div></div>
+
+<!-- 05 · The epistemic label -->
+<div class="slide" id="slide-05"><div class="s">
+  <div class="kicker">04 &middot; THE EPISTEMIC LABEL</div>
+  <h2>Every fact says how it knows.</h2>
+  <p class="lede" style="max-width:1400px">Six labels, declared at write time. <span class="strong">An unlabeled write is refused</span> &mdash; because a defaulted label is indistinguishable from an asserted one at every later read.</p>
+  <div style="margin-top:48px;display:flex;flex-wrap:wrap;gap:24px">
+    <div class="card g" style="width:560px;padding:24px 28px"><div class="lbl">OBSERVED</div><p style="margin-top:10px">Read directly from a tool result or a source.</p></div>
+    <div class="card g" style="width:560px;padding:24px 28px"><div class="lbl">INFERRED</div><p style="margin-top:10px">Derived by reasoning over observed facts.</p></div>
+    <div class="card g" style="width:560px;padding:24px 28px"><div class="lbl">USER_STATED</div><p style="margin-top:10px">Asserted by the person, not verified by the system.</p></div>
+    <div class="card g" style="width:560px;padding:24px 28px"><div class="lbl">AGENT_GENERATED</div><p style="margin-top:10px">Produced by the agent itself &mdash; labeled, never laundered.</p></div>
+    <div class="card a" style="width:560px;padding:24px 28px"><div class="lbl a">HYPOTHESIS</div><p style="margin-top:10px">A candidate belief awaiting evidence.</p></div>
+    <div class="card a" style="width:560px;padding:24px 28px"><div class="lbl a">UNLABELED</div><p style="margin-top:10px">Rejected at the door by the epistemic veto.</p></div>
+  </div>
+  <div class="foot">Source: docs/01-architecture.md &middot; docs/renovation/4.0/SUBSTRATE.md (memory_engine.remember contract)</div>
+</div></div>
+
+<!-- 06 · The audit trail -->
+<div class="slide" id="slide-06"><div class="s">
+  <div class="kicker">05 &middot; THE AUDIT TRAIL</div>
+  <h2>The ledger is append-only.</h2>
+  <p class="lede" style="max-width:1400px">Every memory operation is recorded. Nothing is rewritten in place, so a review can reconstruct what the agent believed at any point &mdash; and why.</p>
+  <div class="steps">
+    <div><div class="mono accent" style="font-size:24px;letter-spacing:.12em">STEP 1</div><h3>Write</h3><p>Fact plus required epistemic status plus provenance.</p></div>
+    <div class="arrow">&rarr;</div>
+    <div><div class="mono accent" style="font-size:24px;letter-spacing:.12em">STEP 2</div><h3>Ledger</h3><p>Append-only record of the operation, its label and its origin.</p></div>
+    <div class="arrow">&rarr;</div>
+    <div><div class="mono accent" style="font-size:24px;letter-spacing:.12em">STEP 3</div><h3>Retrieve</h3><p>Results carry their epistemic label back to the caller.</p></div>
+    <div class="arrow">&rarr;</div>
+    <div><div class="mono accent" style="font-size:24px;letter-spacing:.12em">STEP 4</div><h3>Audit</h3><p>Contamination check between the simulated and grounded partitions.</p></div>
+  </div>
+  <div class="card" style="margin-top:56px;display:flex;gap:56px">
+    <div style="width:820px">
+      <div class="mono dim" style="font-size:24px;letter-spacing:.12em">MEASURED ON THE SCALE CORPUS</div>
+      <div style="display:flex;gap:64px;margin-top:18px">
+        <div><div class="accent" style="font-size:64px;font-weight:700;line-height:1">0.0</div><div class="mono dim" style="font-size:24px;margin-top:8px">CONTAMINATION RATE</div></div>
+        <div><div class="accent" style="font-size:64px;font-weight:700;line-height:1">0.0</div><div class="mono dim" style="font-size:24px;margin-top:8px">STALE POINTER RATE</div></div>
+      </div>
+    </div>
+    <div style="width:820px;font-size:32px;line-height:1.5;color:var(--text-2);padding-top:6px">A contamination rate of zero means no simulated content was found in the grounded partition. It is a check that can fail &mdash; which is what makes it worth reporting.</div>
+  </div>
+  <div class="foot">Source: docs/benchmarks/README.md &sect;3 &middot; benchmarks/results/latest.json</div>
+</div></div>
+
+<!-- 07 · The benchmark -->
+<div class="slide" id="slide-07"><div class="s">
+  <div class="kicker">06 &middot; THE BENCHMARK, HONESTLY</div>
+  <h2>We publish the rows that hurt.</h2>
+  <p class="lede">The benchmark is a reporting layer. Every figure is rendered from a committed artifact by <span class="mono strong">render.py</span> &mdash; nothing typed by hand, nothing estimated.</p>
+  <div style="margin-top:44px;display:flex;gap:32px">
+    <div class="card g" style="width:600px;padding:28px 32px">
+      <div class="accent" style="font-size:64px;font-weight:700;line-height:1">7 / 11</div>
+      <div style="font-size:32px;line-height:1.45;margin-top:14px;font-weight:600">declared modes scored</div>
+      <p style="margin-top:10px">The other four are named with their blocker, not filled with estimates.</p>
+    </div>
+    <div class="card g" style="width:600px;padding:28px 32px">
+      <div class="accent" style="font-size:64px;font-weight:700;line-height:1">250</div>
+      <div style="font-size:32px;line-height:1.45;margin-top:14px;font-weight:600">probes per mode</div>
+      <p style="margin-top:10px">Over a 2,000-record corpus, across six query kinds including adversarial.</p>
+    </div>
+    <div class="card a" style="width:600px;padding:28px 32px">
+      <div class="amber" style="font-size:64px;font-weight:700;line-height:1">0.000</div>
+      <div style="font-size:32px;line-height:1.45;margin-top:14px;font-weight:600">leak rate, every mode</div>
+      <p style="margin-top:10px">No fabricated answer was retrieved in any scored mode.</p>
+    </div>
+  </div>
+  <div class="note amber" style="margin-top:44px;background:var(--bg-2);border:1px solid var(--line);border-left:3px solid var(--amber)">
+    <div class="mono amber" style="font-size:24px;letter-spacing:.12em">READ THE ADVERSARIAL ROWS CORRECTLY</div>
+    <p style="margin:14px 0 0;max-width:1600px">Adversarial queries are negative controls. A hit rate of <span class="mono strong">0.000</span> there is the <span class="accent strong">desired</span> result &mdash; it means the system correctly refused to answer. It is not a failure, and we do not hide it.</p>
+  </div>
+  <div class="foot">Source: docs/benchmarks/README.md &middot; corpus mem20-scale-corpus-v2 &middot; regenerate: python docs/benchmarks/render.py</div>
+</div></div>
+
+<!-- 08 · Measured results -->
+<div class="slide" id="slide-08"><div class="s">
+  <div class="kicker">07 &middot; MEASURED RESULTS</div>
+  <h2>Seven modes, one table.</h2>
+  <div class="tbl" style="margin-top:40px">
+    <div class="tr hd">
+      <div style="width:420px">MODE</div><div style="width:180px;text-align:right">n</div>
+      <div style="width:240px;text-align:right">HIT RATE</div><div style="width:240px;text-align:right">MRR</div>
+      <div style="width:240px;text-align:right">LEAK</div><div style="width:240px;text-align:right">p50 ms</div>
+    </div>
+    <div class="tr"><div class="m" style="width:420px">hybrid-rerank-off</div><div class="n" style="width:180px">250</div><div class="n hi" style="width:240px">0.776</div><div class="n" style="width:240px">0.668</div><div class="n hi" style="width:240px">0.000</div><div class="n" style="width:240px">27.3</div></div>
+    <div class="tr"><div class="m" style="width:420px">vector</div><div class="n" style="width:180px">250</div><div class="n hi" style="width:240px">0.776</div><div class="n" style="width:240px">0.721</div><div class="n hi" style="width:240px">0.000</div><div class="n" style="width:240px">204.9</div></div>
+    <div class="tr"><div class="m" style="width:420px">bm25</div><div class="n" style="width:180px">250</div><div class="n hi" style="width:240px">0.532</div><div class="n" style="width:240px">0.484</div><div class="n hi" style="width:240px">0.000</div><div class="n" style="width:240px">102.2</div></div>
+    <div class="tr"><div class="m" style="width:420px">hybrid</div><div class="n" style="width:180px">250</div><div class="n hi" style="width:240px">0.512</div><div class="n" style="width:240px">0.505</div><div class="n hi" style="width:240px">0.000</div><div class="n" style="width:240px">1797.1</div></div>
+    <div class="tr"><div class="m" style="width:420px">keyword</div><div class="n" style="width:180px">250</div><div class="n hi" style="width:240px">0.360</div><div class="n" style="width:240px">0.350</div><div class="n hi" style="width:240px">0.000</div><div class="n" style="width:240px">1692.2</div></div>
+    <div class="tr"><div class="m" style="width:420px">graph</div><div class="n" style="width:180px">30</div><div class="n hi" style="width:240px">0.033</div><div class="n" style="width:240px">0.033</div><div class="n hi" style="width:240px">0.000</div><div class="n" style="width:240px">208.4</div></div>
+    <div class="tr"><div class="m dim" style="width:420px">constant <span style="font-size:24px">(control)</span></div><div class="n" style="width:180px">250</div><div class="n dim" style="width:240px">0.000</div><div class="n dim" style="width:240px">0.000</div><div class="n hi" style="width:240px">0.000</div><div class="n dim" style="width:240px">0.0</div></div>
+  </div>
+  <div class="foot">n-weighted means across query kinds &middot; graph covers multi-hop only, hence n=30 &middot; constant is the null control</div>
+</div></div>
+
+<!-- 09 · Domain distribution -->
+<div class="slide" id="slide-09"><div class="s">
+  <div class="kicker">08 &middot; WHERE THE TOOLS LIVE</div>
+  <h2>Memory is the largest domain &mdash; by design.</h2>
+  <div style="margin-top:44px;display:flex;gap:80px">
+    <div class="bars" style="width:1000px;margin-top:0">
+      <div class="bar-row"><div class="nm">memory</div><div class="bar" style="width:640px"></div><div class="ct accent">55</div></div>
+      <div class="bar-row"><div class="nm">cognitive</div><div class="bar" style="width:221px"></div><div class="ct">19</div></div>
+      <div class="bar-row"><div class="nm">world</div><div class="bar" style="width:163px"></div><div class="ct">14</div></div>
+      <div class="bar-row"><div class="nm">versioncontrol</div><div class="bar" style="width:128px"></div><div class="ct">11</div></div>
+      <div class="bar-row"><div class="nm">database</div><div class="bar" style="width:116px"></div><div class="ct">10</div></div>
+      <div class="bar-row"><div class="nm">filesystem</div><div class="bar" style="width:116px"></div><div class="ct">10</div></div>
+      <div class="bar-row"><div class="nm">lie</div><div class="bar" style="width:116px"></div><div class="ct">10</div></div>
+      <div class="bar-row"><div class="nm">productivity</div><div class="bar" style="width:116px"></div><div class="ct">10</div></div>
+      <div class="bar-row"><div class="nm">braid</div><div class="bar" style="width:105px"></div><div class="ct">9</div></div>
+      <div class="bar-row"><div class="nm">communication</div><div class="bar" style="width:105px"></div><div class="ct">9</div></div>
+    </div>
+    <div style="width:680px;border-left:1px solid var(--line);padding-left:56px">
+      <div style="font-size:32px;line-height:1.55;color:var(--text-2)">The remaining <span class="strong">119 domains</span> cover the long tail: cloud, design, finance, marketing, edge fleet, and a large estate of independently packaged capability modules.</div>
+      <div class="card g" style="margin-top:36px;padding:24px 28px">
+        <div class="lbl">19 UNWIRED</div>
+        <p style="margin-top:10px">Declared in source but not registered by any inherited mixin. Counted, published, and excluded from the 487.</p>
+      </div>
+    </div>
+  </div>
+  <div class="foot">Source: docs/surface.json &middot; domain_counts &middot; 129 domains, 487 tools</div>
+</div></div>
+
+<!-- 10 · Architecture -->
+<div class="slide" id="slide-10"><div class="s">
+  <div class="kicker">09 &middot; ARCHITECTURE</div>
+  <h2>Three dependency layers.</h2>
+  <div style="margin-top:52px">
+    <div class="card g" style="display:flex;align-items:center">
+      <div class="mono accent" style="width:220px;font-size:24px;letter-spacing:.12em">LAYER 1</div>
+      <div style="width:420px;font-size:40px;font-weight:600">Memory Engine</div>
+      <div class="mono dim" style="width:340px;font-size:24px">memory_engine/ &middot; memory.py</div>
+      <div style="width:700px;font-size:32px;line-height:1.45;color:var(--text-2)">Global memory, ledger, vector store and epistemic tracking. The durable substrate.</div>
+    </div>
+    <div style="text-align:center;padding:10px 0;font-size:32px;color:var(--line-2)">&darr;</div>
+    <div class="card" style="display:flex;align-items:center;border-left:3px solid var(--accent-2)">
+      <div class="mono" style="width:220px;font-size:24px;letter-spacing:.12em;color:var(--accent-2)">LAYER 2</div>
+      <div style="width:420px;font-size:40px;font-weight:600">MCP Server</div>
+      <div class="mono dim" style="width:340px;font-size:24px">mcp/</div>
+      <div style="width:700px;font-size:32px;line-height:1.45;color:var(--text-2)">Exposes the engine and the wider estate as MCP tools over stdio, JSON-RPC 2.0.</div>
+    </div>
+    <div style="text-align:center;padding:10px 0;font-size:32px;color:var(--line-2)">&darr;</div>
+    <div class="card a" style="display:flex;align-items:center">
+      <div class="mono amber" style="width:220px;font-size:24px;letter-spacing:.12em">LAYER 3</div>
+      <div style="width:420px;font-size:40px;font-weight:600">Subsystems</div>
+      <div class="mono dim" style="width:340px;font-size:24px">mem20*/</div>
+      <div style="width:700px;font-size:32px;line-height:1.45;color:var(--text-2)">Independently packaged capability modules, each with its own pyproject.toml.</div>
+    </div>
+  </div>
+  <div style="position:absolute;left:80px;right:80px;bottom:56px;display:flex;gap:56px;border-top:1px solid var(--line);padding-top:26px">
+    <div style="width:820px;font-size:32px;line-height:1.5;color:var(--text-2)"><span class="accent strong">211 subsystems</span> discovered by the conformance gate, across 217,172 lines of source.</div>
+    <div style="width:820px;font-size:32px;line-height:1.5;color:var(--text-2)"><span class="accent strong">12,621 lines of Rust</span> in braid/ &mdash; the execution braid, not a Python bridge.</div>
+  </div>
+</div></div>
+
+<!-- 11 · Getting started -->
+<div class="slide" id="slide-11"><div class="s">
+  <div class="kicker">10 &middot; GETTING STARTED</div>
+  <h2>Source-only install. No surprises.</h2>
+  <p class="lede" style="max-width:1400px">mem20 is not on PyPI. Install is a clone and a requirements file &mdash; and we say so, because a copy-paste install that raises on import is worse than none.</p>
+  <pre><span class="p">$</span> git clone https://github.com/bythewayz66-glitch/mem20.git
+<span class="p">$</span> cd mem20
+<span class="p">$</span> pip install -r requirements.txt
+<span class="p">$</span> python mcp/mcp_server.py  <span class="c"># JSON-RPC 2.0 over stdio</span></pre>
+  <div style="margin-top:44px;display:flex;gap:32px">
+    <div class="card g" style="width:600px;padding:26px 30px"><div class="lbl">RUNTIME</div><p style="margin-top:12px">Python 3.10+ &middot; MIT licensed &middot; self-hosted</p></div>
+    <div class="card g" style="width:600px;padding:26px 30px"><div class="lbl">TRANSPORT</div><p style="margin-top:12px">stdio primary &middot; HTTP health and metrics on 8080</p></div>
+    <div class="card g" style="width:600px;padding:26px 30px"><div class="lbl">VERIFY</div><p style="margin-top:12px">python3 scripts/surface_manifest.py --check</p></div>
+  </div>
+  <div class="foot">Source: docs/03-installation.md &middot; docs/01-architecture.md &middot; mem20, mem20-ai and mem20oreo all return 404 on PyPI</div>
+</div></div>
+
+<!-- 12 · Roadmap -->
+<div class="slide" id="slide-12"><div class="s">
+  <div class="kicker">11 &middot; ROADMAP</div>
+  <h2>211 subsystems. Three waves.</h2>
+  <p class="lede">The 4.0 renovation is a wiring and hardening job, not a rewrite. 182k lines of non-test source already exist and domain logic is universally present.</p>
+  <div style="margin-top:48px;display:flex;gap:32px">
+    <div class="card g" style="width:600px;padding:30px 32px">
+      <div class="lbl">WAVE 1 &middot; SUBSTRATE</div>
+      <div class="big">23</div>
+      <div class="mono dim" style="font-size:24px;margin-top:6px">86,929 LOC &middot; 12 agents</div>
+      <p style="margin-top:18px">The modules every other subsystem imports. Landing them first makes criterion 7 a one-line change downstream.</p>
+    </div>
+    <div class="card b" style="width:600px;padding:30px 32px">
+      <div class="mono" style="font-size:24px;letter-spacing:.12em;color:var(--accent-2)">WAVE 2 &middot; PRODUCT</div>
+      <div class="big">129</div>
+      <div class="mono dim" style="font-size:24px;margin-top:6px">82,670 LOC &middot; 16 agents</div>
+      <p style="margin-top:18px">The core product surface: studio, office, kanban, control, benchmark and evaluation modules.</p>
+    </div>
+    <div class="card a" style="width:600px;padding:30px 32px">
+      <div class="lbl a">WAVE 3 &middot; LONG TAIL</div>
+      <div class="big">59</div>
+      <div class="mono dim" style="font-size:24px;margin-top:6px">47,573 LOC &middot; 8 agents</div>
+      <p style="margin-top:18px">Research, pricing, finance, growth and narrative modules &mdash; the last band to be wired.</p>
+    </div>
+  </div>
+  <div class="foot">Source: docs/renovation/4.0/RENOVATION_PLAN.md &sect;4 &middot; docs/renovation/4.0/subsystem-assignments.csv (211 rows)</div>
+</div></div>
+
+<!-- 13 · The honest gap -->
+<div class="slide" id="slide-13"><div class="s">
+  <div class="kicker">12 &middot; THE HONEST GAP</div>
+  <h2>Seven criteria. Two are near zero.</h2>
+  <p class="lede">A subsystem is done only when the conformance gate exits 0. Here is the measured pass rate per criterion &mdash; published because the gap is the roadmap.</p>
+  <div class="tbl" style="margin-top:40px">
+    <div class="tr"><div class="mono dim" style="width:120px;font-size:24px">#1</div><div style="width:900px">Domain logic present</div><div class="n hi" style="width:260px">211 / 211</div><div class="n hi" style="width:200px">100%</div></div>
+    <div class="tr"><div class="mono dim" style="width:120px;font-size:24px">#2</div><div style="width:900px">No stubs</div><div class="n" style="width:260px">202 / 211</div><div class="n" style="width:200px">95.7%</div></div>
+    <div class="tr"><div class="mono dim" style="width:120px;font-size:24px">#3</div><div style="width:900px">Tests present</div><div class="n" style="width:260px">201 / 211</div><div class="n" style="width:200px">95.3%</div></div>
+    <div class="tr"><div class="mono dim" style="width:120px;font-size:24px">#4</div><div style="width:900px">CLI surface</div><div class="n" style="width:260px">194 / 211</div><div class="n" style="width:200px">91.9%</div></div>
+    <div class="tr"><div class="mono dim" style="width:120px;font-size:24px">#5</div><div style="width:900px">README with a runnable example</div><div class="n warn" style="width:260px">65 / 211</div><div class="n warn" style="width:200px">30.8%</div></div>
+    <div class="tr alt"><div class="mono amber" style="width:120px;font-size:24px">#6</div><div style="width:900px">&ge;5 other mem20 modules imported <span class="dim">and used</span></div><div class="n warn" style="width:260px">7 / 211</div><div class="n warn" style="width:200px">3.3%</div></div>
+    <div class="tr alt"><div class="mono amber" style="width:120px;font-size:24px">#7</div><div style="width:900px">Registered with MCP server / gateway</div><div class="n warn" style="width:260px">12 / 211</div><div class="n warn" style="width:200px">5.7%</div></div>
+  </div>
+  <div class="foot">Measured at baseline d99ab5d8 &middot; python3 scripts/renovation/conformance.py --all --json /tmp/conf.json</div>
+</div></div>
+
+<!-- 14 · The release gate -->
+<div class="slide" id="slide-14"><div class="s">
+  <div class="kicker">13 &middot; THE RELEASE GATE</div>
+  <h2>4.0 ships when six checks pass.</h2>
+  <p class="lede">Not a date. A gate. Each item is backed by a check run at release time, and the gate exits non-zero when it fails.</p>
+  <div class="gate">
+    <div class="r"><div class="num">1</div><div class="txt">conformance.py --all --fail-under 1.0 exits 0 &mdash; all 211 subsystems at 7/7</div></div>
+    <div class="r"><div class="num">2</div><div class="txt">pytest green across the repo, with the test count recorded</div></div>
+    <div class="r"><div class="num">3</div><div class="txt">Every subsystem branch merged via PR &mdash; zero unmerged 4.0 branches</div></div>
+    <div class="r"><div class="num">4</div><div class="txt">VERSION = 4.0.0, CHANGELOG has a 4.0.0 section, tag v4.0.0 cut</div></div>
+    <div class="r"><div class="num">5</div><div class="txt">SUBSTRATE.md public APIs still match what subsystems import</div></div>
+    <div class="r"><div class="num">6</div><div class="txt">README tool count reconciled to 487 / 129 &mdash; retired bands must not reappear</div></div>
+  </div>
+  <div class="foot">Source: docs/renovation/4.0/RENOVATION_PLAN.md &sect;8 &middot; VERSION on main is 4.0.0; tag v4.0.0 not yet cut</div>
+</div></div>
+
+<!-- 15 · What we do not claim -->
+<div class="slide" id="slide-15"><div class="s">
+  <div class="kicker warn">14 &middot; WHAT WE DO NOT CLAIM</div>
+  <h2>The limits, stated plainly.</h2>
+  <p class="lede">A launch that hides its gaps gets pulled. These are the four things mem20 does not do today, each with the reason.</p>
+  <div class="limits">
+    <div class="r"><div class="h">Not on PyPI</div><div class="b">mem20, mem20-ai and mem20oreo all return 404. Install is source-only, and no doc may claim <span class="mono strong">pip install mem20</span>.</div></div>
+    <div class="r"><div class="h">4 of 11 modes unscored</div><div class="b">recall, recall_at, entities and ledger have no harness branch. They are named with their blocker rather than filled with estimates.</div></div>
+    <div class="r"><div class="h">Not a retrieval leader</div><div class="b">The pitch is provenance and auditability, which the repo demonstrates in code. It is not retrieval superiority, which the benchmark does not demonstrate.</div></div>
+    <div class="r"><div class="h">Wiring is incomplete</div><div class="b">199 of 211 subsystems are not yet reachable by any MCP client. That is criterion 7, and it is the work 4.0 exists to finish.</div></div>
+  </div>
+  <div class="note" style="position:absolute;left:80px;right:80px;bottom:44px">Every number in this deck is pointable in the repo. <span class="accent strong">A figure that cannot be cited does not ship.</span></div>
+</div></div>
+
+<!-- 16 · Closing -->
+<div class="slide" id="slide-16"><div class="s">
+  <div class="cover-bar"></div>
+  <div class="kicker">15 &middot; CLOSING</div>
+  <div style="margin-top:120px">
+    <h2 style="font-size:88px;line-height:1.08;margin:0;letter-spacing:-.035em;max-width:1500px">A memory that can<br><span class="accent">show its work.</span></h2>
+    <p class="lede" style="max-width:1300px;margin-top:36px">487 tools across 129 domains. Grounded and simulated separated at the storage layer. An append-only ledger behind every read. And a benchmark that publishes the rows that hurt.</p>
+  </div>
+  <div style="margin-top:64px;display:flex;gap:32px">
+    <div class="card g" style="width:560px;padding:26px 30px"><div class="lbl">REPO</div><div class="mono accent" style="font-size:28px;margin-top:12px;line-height:1.4">github.com/<br>bythewayz66-glitch/mem20</div></div>
+    <div class="card g" style="width:560px;padding:26px 30px"><div class="lbl">LIVE</div><div class="mono accent" style="font-size:28px;margin-top:12px;line-height:1.4">mem20.com</div></div>
+    <div class="card g" style="width:560px;padding:26px 30px"><div class="lbl">LICENSE</div><div class="mono accent" style="font-size:28px;margin-top:12px;line-height:1.4">MIT &middot; Python 3.10+</div></div>
+  </div>
+  <div class="foot" style="border-top:1px solid var(--line);padding-top:24px;bottom:56px">mem20 4.0.0 &middot; deck source committed under docs/launch/deck/ &middot; every figure traceable to a file in the repo</div>
+</div></div>
+
+</div>
+</body>
+</html>

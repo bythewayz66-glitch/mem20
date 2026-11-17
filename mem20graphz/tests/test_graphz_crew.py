@@ -3,13 +3,13 @@ from mem20graphz import domain, ecosystem, MEMBERS, __version__
 
 class TestCrew(unittest.TestCase):
     def test_members_preserved(self):
-        self.assertEqual(len(MEMBERS), 7)
+        self.assertEqual(len(MEMBERS), 9)
         self.assertIn("mem20capabilitygapmapperz", MEMBERS)
         self.assertTrue(__version__)
 
     def test_domain_summary(self):
         s = domain.crew_summary()
-        self.assertEqual(s["members"], 7)
+        self.assertEqual(s["members"], 9)
         self.assertEqual(s["crew"], "mem20graphz")
 
     def test_ecosystem_probe_real_integrations(self):

@@ -1,0 +1,117 @@
+# Evidence: memory engine transcript
+# captured: 2026-11-16T13:02:22Z
+# checkout: 0224a64946a2c00313a9872515893157adcbc47e
+# python: Python 3.11.15
+# store: $MEM20_STORE_PATH (fresh mktemp -d, throwaway)
+
+## 1. remember a grounded fact
+$ python3 -m memory_engine.cli remember --topic launch --content "mem20 4.0.0 exposes 487 tools across 129 domains" --epistemic-status observed
+{
+  "epistemic_status": "observed",
+  "id": "1a1e47394ed2f0c",
+  "topic": "launch"
+}
+
+## 2. an undeclared basis is refused (no --epistemic-status)
+$ python3 -m memory_engine.cli remember --topic launch --content "unlabeled claim"
+usage: memory_engine remember [-h] --topic TOPIC --content CONTENT
+                              --epistemic-status EPISTEMIC_STATUS
+                              [--tags TAGS] [--actor ACTOR]
+                              [--confidence CONFIDENCE]
+memory_engine remember: error: the following arguments are required: --epistemic-status
+exit=2
+
+## 3. an invented basis is refused
+$ python3 -m memory_engine.cli remember --topic launch --content "x" --epistemic-status guessed
+error: Invalid epistemic_status 'guessed'. Must be one of: ['observed', 'inferred', 'imagined', 'user_stated', 'hypothesis', 'agent_generated', 'unlabeled']
+exit=1
+
+## 4. recall keeps the label
+$ python3 -m memory_engine.cli recall --topic launch
+[
+  {
+    "action": "remember",
+    "actor": "agent",
+    "confidence": null,
+    "content": "mem20 4.0.0 exposes 487 tools across 129 domains",
+    "epistemic_status": "observed",
+    "event_time_basis": "assumed_ingestion",
+    "id": "1a1e47394ed2f0c",
+    "origin": "grounded",
+    "priority": "normal",
+    "secrets_detected": null,
+    "source": "memory_engine.substrate",
+    "store": "grounded",
+    "tags": [],
+    "topic": "launch",
+    "ts": "2026-11-16T13:02:22.444507+00:00",
+    "valid_from": "2026-11-16T13:02:22.444507+00:00",
+    "valid_to": null
+  }
+]
+
+## 5. health
+$ python3 -m memory_engine.cli health
+{
+  "bm25_available": false,
+  "grounded_facts": 1,
+  "label_coverage": 1.0,
+  "labeled_facts": 1,
+  "ledger_events": 1,
+  "public_api": [
+    "remember_fact",
+    "recall_facts",
+    "veto_plan",
+    "guard_plan",
+    "namespace_for_agent",
+    "subsystem_status",
+    "envelope",
+    "health",
+    "dream_lineage",
+    "validate_artifact"
+  ],
+  "store": "/tmp/tmp.EIfJjfCQKr",
+  "vector_available": false
+}
+
+## 6. two partitions, two ledgers (Python API)
+from memory_engine.api import MemoryEngine
+e = MemoryEngine()
+g = e.remember("launch", "487 tools across 129 domains", epistemic_status="observed")
+s = e.remember_simulated("launch", "10,000 users by Friday", scenario="optimistic")
+
+grounded:  observed  store=grounded   origin=grounded
+simulated: imagined  store=simulated  origin=simulated   valid_to=2026-12-16T13:01:33Z
+ledger lines: 1
+simulated ledger exists: true
+simulated ledger lines: 1
+
+## 7. the veto refuses simulated ground and unknown ids
+$ veto_plan([grounded_id])
+{"veto": false, "offenders": [], "unresolved": [], "message": "OK: plan rests on validated grounded memory."}
+
+$ veto_plan([simulated_id])
+{"veto": true, "offenders": [{"fact_id": "1a1e472f03080cd", "kind": "simulated", "reason": "relies on unvalidated simulated content"}], "unresolved": [], "message": "VETO: plan relies on unvalidated simulated/imagined beliefs."}
+
+$ veto_plan(["deadbeef"])
+{"veto": true, "offenders": [{"fact_id": "deadbeef", "kind": "unverifiable", "reason": "fact id not found in grounded or simulated store"}], "unresolved": [{"fact_id": "deadbeef", "kind": "unverifiable"}], "message": "VETO: plan relies on unvalidated simulated/imagined beliefs, and 1 cited fact id(s) could not be verified."}
+
+$ veto_plan([grounded_id, simulated_id])
+{"veto": true, ...}   # one imagined input vetoes the whole plan
+
+## 8. --json fleet envelope
+$ python3 -m memory_engine.cli --json health
+{"schema": "mem20.cli/1", "ok": true, "exit_code": 0, "stdout": ..., "stderr": ""}
+
+## 9. per-agent namespace
+$ python3 -m memory_engine.cli namespace --agent atlas
+mem20agentz:atlas
+
+## Notes
+# - Ids, timestamps and ledger line counts are from the throwaway store above and are
+#   not reproducible byte for byte; the behaviour is.
+# - `python3 -m memory_engine` is NOT the CLI entry point (no memory_engine/__main__.py);
+#   `python3 -m memory_engine.cli` is, which is what every command here uses.
+# - vector_available and bm25_available are both false because the optional `vector`
+#   extra was not installed in this environment. The engine reports that rather than
+#   silently substituting a lexical search.

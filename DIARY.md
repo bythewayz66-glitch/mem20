@@ -1002,4 +1002,10 @@ Reworked/verified subsystems #340–#350 (oldest→newest, 1 at a time) to full 
   - **Collection resilience:** `conftest.py` package pre-imports made opt-in by default (`MEM20_PYTEST_PREIMPORT=1`) with bounded timeout to reduce collection hangs (path reassert hooks retained).
   - **Benchmark v3 data:** generated missing v3 corpus shards from `reference/v3` per manifest reproduce command; `validate_corpus_v3.py` passes (122,178 records, 500 probes checked, 0 dups).
 - **Artifacts refreshed:** rebuilt sitemap (`.sitemap/sitemap.json`, `SITEMAP.md`) and refreshed `toolchest/inventory.json` (MCP discovery 487 tools). Rust remains tracked in sitemap totals.
+
+## 2026-11-16 — Phase 9: LLM Provider Ecosystem + Phase 10: Memory & Knowledge (teamz)
+- **Phase 9 — Provider Ecosystem:** 4 local runners (Ollama, llama.cpp, vLLM, TGI) + health scoring + cost-aware failover + prompt caching + structured output (JSON Schema→Pydantic) + function calling shim + model templates + BYOK + cost budgets + marketplace. 13 runtime tools.
+- **Phase 10 — Memory & Knowledge:** Vector memory (pgvector/Qdrant/Weaviate/in-memory) + Episodic memory (agent recalls 'how I solved X') + Semantic memory (glossary/ADRs/concepts) + Consolidation (nightly summarization+embedding) + Knowledge graph (code entities/relations) + Git history RAG ('why was this function added?') + Unified MemoryManager with 'Remember this' pins + Memory pack export/import. 19 runtime tools.
+- **All quality gates pass:** 70 server tests + 107 frontend tests + TypeScript typecheck + build succeed.
+- **Persisted to:** teamz/server/app/providers/ (9 files), teamz/server/app/memory/ (7 files), teamz/server/app/models.py (Phase 9/10 models), teamz/server/app/execution.py (32 runtime tools), teamz/server/app/router.py (enhanced with health/cache/structured/functions/templates).
 - **Verification:** `py_compile` (`mcp/server.py`, `conftest.py`) OK; `pytest mem20kilnz/tests -q` 279 passed, 7 skipped; v3 validation OK; toolchest refresh OK. Full/root pytest collection still not conclusively triaged in this environment.

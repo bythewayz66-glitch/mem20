@@ -11,14 +11,13 @@ from .prng import DeterministicPRNG, ValueNoise, grid, in_bounds
 
 @dataclass(eq=False)
 class Generator(ABC):
-    """Base generator."""
+    """Base generator; subclasses implement ``generate``."""
 
     name: str = "generator"
 
     @abstractmethod
     def generate(self, config) -> object:
-        """Generate content from a config object."""
-        ...
+        """Return the artifact produced for ``config``."""
 
 
 @dataclass(eq=False)

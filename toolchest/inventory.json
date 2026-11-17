@@ -25,12 +25,10 @@
     "cli": {
       "count": 1356,
       "subcategories": [
-        "data-db",
         "generic",
         "graphics-3d",
         "mem20",
         "ml-ai",
-        "node-js",
         "python-tooling",
         "web-net"
       ]
@@ -25658,9 +25656,9 @@
       }
     },
     {
-      "id": "cli:f2py",
+      "id": "cli:coverage",
       "kind": "cli",
-      "name": "f2py",
+      "name": "coverage",
       "category": "cli",
       "subcategory": "python-tooling",
       "description": "f2py \u00b7 runs with /usr/bin/python3",
@@ -50481,7 +50479,7 @@
       "description": "fs: Fleet-wide CLI dispatcher for the mem20 subsystems.  One command reaches every subsystem CLI:      fs                     list every subsystem and its binary     fs list --json         machine-readable inventory     fs c",
       "source": "/usr/local/bin/fs",
       "runtime_status": "ok",
-      "runtime_detail": "symlink in /usr/local/bin",
+      "runtime_detail": "script in /opt/mem20/.venv/bin",
       "checks": [
         {
           "check": "path exists",
@@ -50495,9 +50493,9 @@
         }
       ],
       "meta": {
-        "bin_dir": "/usr/local/bin",
-        "type": "symlink",
-        "shebang": "",
+        "bin_dir": "/opt/mem20/.venv/bin",
+        "type": "script",
+        "shebang": "/opt/mem20/.venv/bin/python",
         "executable": true,
         "size": 172,
         "symlink": true,
@@ -50518,7 +50516,7 @@
       "description": "fs-cv \u00b7 -> /opt/mem20/.venv/bin/fs-cv",
       "source": "/usr/local/bin/fs-cv",
       "runtime_status": "ok",
-      "runtime_detail": "symlink in /usr/local/bin",
+      "runtime_detail": "script in /opt/mem20/.venv/bin",
       "checks": [
         {
           "check": "path exists",
@@ -50532,9 +50530,9 @@
         }
       ],
       "meta": {
-        "bin_dir": "/usr/local/bin",
-        "type": "symlink",
-        "shebang": "",
+        "bin_dir": "/opt/mem20/.venv/bin",
+        "type": "script",
+        "shebang": "/opt/mem20/.venv/bin/python",
         "executable": true,
         "size": 171,
         "symlink": true,
@@ -50702,9 +50700,9 @@
         }
       ],
       "meta": {
-        "bin_dir": "/usr/local/bin",
-        "type": "symlink",
-        "shebang": "",
+        "bin_dir": "/opt/mem20/.venv/bin",
+        "type": "script",
+        "shebang": "/opt/mem20/.venv/bin/python",
         "executable": true,
         "size": 173,
         "symlink": true,
@@ -51208,7 +51206,7 @@
       "description": "mem20-dream \u00b7 -> /opt/mem20/.venv/bin/mem20-dream",
       "source": "/usr/local/bin/mem20-dream",
       "runtime_status": "ok",
-      "runtime_detail": "symlink in /usr/local/bin",
+      "runtime_detail": "script in /opt/mem20/.venv/bin",
       "checks": [
         {
           "check": "path exists",
@@ -51319,7 +51317,39 @@
       ],
       "meta": {
         "bin_dir": "/usr/local/bin",
-        "type": "symlink",
+        "type": "script",
+        "shebang": "/usr/bin/python3",
+        "executable": true,
+        "size": 216,
+        "symlink": false,
+        "resolved_target": "/usr/local/bin/f2py"
+      }
+    },
+    {
+      "id": "cli:godot4",
+      "kind": "cli",
+      "name": "godot4",
+      "category": "cli",
+      "subcategory": "graphics-3d",
+      "description": "godot4: \u001b[38;5;39mGodot Engine\u001b[0m v4.7.2.stable.official.ed1daf0bf - \u001b[4mhttps://godotengine.org\u001b[0m \u001b[90mFree and open source software under the terms of the MIT license.\u001b[0m \u001b[90m(c) 2014-present Godot Engine contributors. (c",
+      "source": "/usr/local/bin/godot4",
+      "runtime_status": "ok",
+      "runtime_detail": "elf in /usr/local/bin",
+      "checks": [
+        {
+          "check": "path exists",
+          "ok": true,
+          "detail": "/usr/local/bin/godot4"
+        },
+        {
+          "check": "executable",
+          "ok": true,
+          "detail": ""
+        }
+      ],
+      "meta": {
+        "bin_dir": "/usr/local/bin",
+        "type": "elf",
         "shebang": "",
         "executable": true,
         "size": 181,
@@ -60475,18 +60505,18 @@
         },
         {
           "check": "installed",
-          "ok": false,
-          "detail": "not pip-installed in /usr/local (no matching local .venv dist)"
+          "ok": true,
+          "detail": "installed 0.1.0 via root-venv"
         },
         {
           "check": "distribution",
-          "ok": false,
-          "detail": "not pip-installed in /usr/local (no matching local .venv dist)"
+          "ok": true,
+          "detail": "installed 0.1.0 via root-venv"
         },
         {
           "check": "import",
-          "ok": false,
-          "detail": "mem20_orchestration=n"
+          "ok": true,
+          "detail": "mem20_orchestration=y"
         }
       ],
       "meta": {
@@ -60501,11 +60531,15 @@
           }
         ],
         "dependencies": [],
-        "installed": null,
+        "installed": {
+          "env": "root-venv",
+          "version": "0.1.0",
+          "location": "/opt/mem20/.venv/lib/python3.13/site-packages"
+        },
         "importable": [
           {
             "name": "mem20_orchestration",
-            "importable": false
+            "importable": true
           }
         ],
         "categories_from": "auto-discovered (not in AGENTS.md table)"
@@ -60636,8 +60670,8 @@
         },
         {
           "check": "import",
-          "ok": false,
-          "detail": "mem20AIonbordz=n"
+          "ok": true,
+          "detail": "mem20AIonbordz=y"
         }
       ],
       "meta": {
@@ -60660,7 +60694,7 @@
         "importable": [
           {
             "name": "mem20AIonbordz",
-            "importable": false
+            "importable": true
           }
         ],
         "categories_from": "auto-discovered (not in AGENTS.md table)"
@@ -60694,13 +60728,13 @@
         },
         {
           "check": "installed",
-          "ok": false,
-          "detail": "not pip-installed in /usr/local (no matching local .venv dist)"
+          "ok": true,
+          "detail": "installed 0.2.0 via root-venv"
         },
         {
           "check": "distribution",
-          "ok": false,
-          "detail": "not pip-installed in /usr/local (no matching local .venv dist)"
+          "ok": true,
+          "detail": "installed 0.2.0 via root-venv"
         },
         {
           "check": "import",
@@ -60714,7 +60748,11 @@
         "pyproject": "/opt/mem20/mem20_mcp/pyproject.toml",
         "entry_points": [],
         "dependencies": [],
-        "installed": null,
+        "installed": {
+          "env": "root-venv",
+          "version": "0.2.0",
+          "location": "/opt/mem20/.venv/lib/python3.13/site-packages"
+        },
         "importable": [
           {
             "name": "mem20_mcp",
@@ -60985,8 +61023,8 @@
         },
         {
           "check": "import",
-          "ok": false,
-          "detail": "mem20api=n"
+          "ok": true,
+          "detail": "mem20api=y"
         }
       ],
       "meta": {
@@ -61009,7 +61047,7 @@
         "importable": [
           {
             "name": "mem20api",
-            "importable": false
+            "importable": true
           }
         ],
         "categories_from": "auto-discovered (not in AGENTS.md table)"
@@ -61682,8 +61720,8 @@
         },
         {
           "check": "import",
-          "ok": false,
-          "detail": "mem20core=n"
+          "ok": true,
+          "detail": "mem20core=y"
         }
       ],
       "meta": {
@@ -61700,7 +61738,7 @@
         "importable": [
           {
             "name": "mem20core",
-            "importable": false
+            "importable": true
           }
         ],
         "categories_from": "auto-discovered (not in AGENTS.md table)"
@@ -61809,13 +61847,13 @@
         },
         {
           "check": "installed",
-          "ok": false,
-          "detail": "not pip-installed in /usr/local (no matching local .venv dist)"
+          "ok": true,
+          "detail": "installed 0.1.0 via root-venv"
         },
         {
           "check": "distribution",
-          "ok": false,
-          "detail": "not pip-installed in /usr/local (no matching local .venv dist)"
+          "ok": true,
+          "detail": "installed 0.1.0 via root-venv"
         },
         {
           "check": "import",
@@ -61839,7 +61877,11 @@
           "aiohttp>=3.9",
           "pydantic>=2.0"
         ],
-        "installed": null,
+        "installed": {
+          "env": "root-venv",
+          "version": "0.1.0",
+          "location": "/opt/mem20/.venv/lib/python3.13/site-packages"
+        },
         "importable": [
           {
             "name": "mem20crewz",
@@ -63213,8 +63255,8 @@
         },
         {
           "check": "import",
-          "ok": false,
-          "detail": "mem20messenger=n"
+          "ok": true,
+          "detail": "mem20messenger=y"
         }
       ],
       "meta": {
@@ -63234,7 +63276,7 @@
         "importable": [
           {
             "name": "mem20messenger",
-            "importable": false
+            "importable": true
           }
         ],
         "categories_from": "AGENTS.md crosscheck table"
@@ -63278,8 +63320,8 @@
         },
         {
           "check": "import",
-          "ok": false,
-          "detail": "mem20mktz=n"
+          "ok": true,
+          "detail": "mem20mktz=y"
         }
       ],
       "meta": {
@@ -63305,7 +63347,7 @@
         "importable": [
           {
             "name": "mem20mktz",
-            "importable": false
+            "importable": true
           }
         ],
         "categories_from": "auto-discovered (not in AGENTS.md table)"
@@ -63692,13 +63734,13 @@
         },
         {
           "check": "installed",
-          "ok": false,
-          "detail": "not pip-installed in /usr/local (no matching local .venv dist)"
+          "ok": true,
+          "detail": "installed 1.0.0 via root-venv"
         },
         {
           "check": "distribution",
-          "ok": false,
-          "detail": "not pip-installed in /usr/local (no matching local .venv dist)"
+          "ok": true,
+          "detail": "installed 1.0.0 via root-venv"
         },
         {
           "check": "import",
@@ -63718,7 +63760,11 @@
           }
         ],
         "dependencies": [],
-        "installed": null,
+        "installed": {
+          "env": "root-venv",
+          "version": "1.0.0",
+          "location": "/opt/mem20/.venv/lib/python3.13/site-packages"
+        },
         "importable": [
           {
             "name": "mem20pipez",
@@ -63756,13 +63802,13 @@
         },
         {
           "check": "installed",
-          "ok": false,
-          "detail": "not pip-installed in /usr/local (no matching local .venv dist)"
+          "ok": true,
+          "detail": "installed 1.0.0 via root-venv"
         },
         {
           "check": "distribution",
-          "ok": false,
-          "detail": "not pip-installed in /usr/local (no matching local .venv dist)"
+          "ok": true,
+          "detail": "installed 1.0.0 via root-venv"
         },
         {
           "check": "import",
@@ -63892,13 +63938,13 @@
         },
         {
           "check": "installed",
-          "ok": false,
-          "detail": "not pip-installed in /usr/local (no matching local .venv dist)"
+          "ok": true,
+          "detail": "installed 1.0.0 via root-venv"
         },
         {
           "check": "distribution",
-          "ok": false,
-          "detail": "not pip-installed in /usr/local (no matching local .venv dist)"
+          "ok": true,
+          "detail": "installed 1.0.0 via root-venv"
         },
         {
           "check": "import",
@@ -63918,7 +63964,11 @@
           }
         ],
         "dependencies": [],
-        "installed": null,
+        "installed": {
+          "env": "root-venv",
+          "version": "1.0.0",
+          "location": "/opt/mem20/.venv/lib/python3.13/site-packages"
+        },
         "importable": [
           {
             "name": "mem20schoolz",
@@ -64308,8 +64358,8 @@
         },
         {
           "check": "import",
-          "ok": false,
-          "detail": "mem20sitemapz=n"
+          "ok": true,
+          "detail": "mem20sitemapz=y"
         }
       ],
       "meta": {
@@ -64332,7 +64382,7 @@
         "importable": [
           {
             "name": "mem20sitemapz",
-            "importable": false
+            "importable": true
           }
         ],
         "categories_from": "auto-discovered (not in AGENTS.md table)"
@@ -64580,8 +64630,8 @@
         },
         {
           "check": "import",
-          "ok": false,
-          "detail": "mem20ucgz=n"
+          "ok": true,
+          "detail": "mem20ucgz=y"
         }
       ],
       "meta": {
@@ -64604,7 +64654,7 @@
         "importable": [
           {
             "name": "mem20ucgz",
-            "importable": false
+            "importable": true
           }
         ],
         "categories_from": "auto-discovered (not in AGENTS.md table)"

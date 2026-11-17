@@ -32,7 +32,7 @@ from pathlib import Path
 
 try:
     import tomllib
-except ModuleNotFoundError:  # Python 3.10
+except ModuleNotFoundError:  # Python 3.10: no stdlib TOML parser
     tomllib = None
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
@@ -399,12 +399,16 @@ def python_cross_modules_covered(name: str, path: Path, src: list, root: Path) -
     return real, detail, ""
 
 
-
 def declared_entry_points(path: Path) -> list[str]:
-    """Console-script targets declared in pyproject.toml and present on disk.
+    """Console-script targets declared in ``pyproject.toml`` and present on disk.
 
-    Criterion 4 accepts a declared [project.scripts] target whose module exists,
-    so a working command is not reported as missing (issue #218).
+    Criterion 4 used to be a filename check only (``cli.py`` / ``__main__.py`` /
+    ``main.py``). A subsystem can ship a working command through
+    ``[project.scripts]`` with none of those files, which made the gate report
+    "no CLI surface" for a runtime that starts fine (issue #218). Each declared
+    target is resolved against the tree, so a stale declaration does not count.
+
+    Returns the raw ``module:callable`` strings that resolve to a real module.
     """
     pyproject = path / "pyproject.toml"
     if not pyproject.is_file():
@@ -413,40 +417,45 @@ def declared_entry_points(path: Path) -> list[str]:
         text = pyproject.read_text(encoding="utf-8", errors="ignore")
     except OSError:
         return []
+
     scripts: dict = {}
     if tomllib is not None:
         try:
             project = tomllib.loads(text).get("project") or {}
-        except Exception:
+        except tomllib.TOMLDecodeError:
             project = {}
         scripts.update(project.get("scripts") or {})
         entry_points = project.get("entry-points") or {}
-        if isinstance(entry_points, dict):
-            console = entry_points.get("console_scripts")
-            if isinstance(console, dict):
-                scripts.update(console)
-    else:
+        console = entry_points.get("console_scripts") if isinstance(entry_points, dict) else None
+        if isinstance(console, dict):
+            scripts.update(console)
+    else:  # pragma: no cover - only on Python 3.10
         section = None
         for line in text.splitlines():
-            s = line.strip()
-            if s.startswith("[") and s.endswith("]"):
-                section = s.strip("[]")
+            stripped = line.strip()
+            if stripped.startswith("[") and stripped.endswith("]"):
+                section = stripped.strip("[]")
                 continue
-            m = re.match(r'^([A-Za-z0-9_.-]+)\s*=\s*"([^"]+)"', s)
-            if m and section in ("project.scripts", 'project.entry-points."console_scripts"'):
-                scripts[m.group(1)] = m.group(2)
+            match = re.match(r'^([A-Za-z0-9_.-]+)\s*=\s*"([^"]+)"', stripped)
+            if match and section in ("project.scripts", 'project.entry-points."console_scripts"'):
+                scripts[match.group(1)] = match.group(2)
+
     resolved = []
     for target in scripts.values():
         if not isinstance(target, str) or ":" not in target:
             continue
         module = target.split(":", 1)[0].strip()
-        rel = module.replace(".", "/")
-        for cand in (path / f"{rel}.py", path / "src" / f"{rel}.py",
-                     path / rel / "__init__.py", path / "src" / rel / "__init__.py"):
-            if cand.is_file():
-                resolved.append(target)
-                break
+        relative = module.replace(".", "/")
+        candidates = (
+            path / f"{relative}.py",
+            path / "src" / f"{relative}.py",
+            path / relative / "__init__.py",
+            path / "src" / relative / "__init__.py",
+        )
+        if any(candidate.is_file() for candidate in candidates):
+            resolved.append(target)
     return resolved
+
 
 def check_subsystem(name: str, root: Path = REPO_ROOT) -> Result:
     path = root / name

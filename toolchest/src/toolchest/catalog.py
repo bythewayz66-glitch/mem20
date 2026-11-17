@@ -724,7 +724,10 @@ def discover_subsystems() -> Dict[str, Any]:
             install_detail = f"installed {install_env['version']} via {install_env['env']}"
         else:
             install_status = "missing"
-            install_detail = "not pip-installed in /usr/local (no matching local .venv dist)"
+            install_detail = (
+                f"not pip-installed in {ROOT_VENV} (no matching local .venv dist); "
+                "run scripts/install_estate.py with this interpreter"
+            )
         checks.append({"check": "installed", "ok": install_status == "ok",
                        "detail": install_detail})
 

@@ -1,88 +1,71 @@
 # mem20factoryz
 
-Procedural content generation for the mem20 estate: deterministic terrain, BSP dungeons, loot, assets, levels, narrative beats, and lightweight playtesting.
+Deterministic, hermetic game-factory primitives for the mem20 estate: a seeded
+PRNG and value noise, terrain and BSP-dungeon generators, texture and audio
+synthesis, level assembly, narrative beats, and playtest simulation.
 
-- **Package**: `mem20factoryz`
-- **Python**: >= 3.11 (see `pyproject.toml`)
-- **Core property**: generation is seed-driven and deterministic for a given config
+Everything is reproducible from a seed. No network, no wall clock, and no
+external asset files are involved.
 
 ## Install
 
-From a mem20 checkout:
-
 ```bash
-python3 -m pip install -e mem20factoryz
+cd mem20factoryz
+python3 -m pip install -e .
 ```
 
 ## CLI
 
+The top-level `--seed` must come before the subcommand.
+
 ```bash
-# Generate a level summary
-mem20factoryz generate --seed 7 --width 32 --height 32
+# Build a 32x32 level and print its summary
+python3 -m mem20factoryz --seed 7 generate --width 32 --height 32
 
-# Preview terrain tiles
-mem20factoryz terrain --seed 7 --width 16 --height 12
+# Emit the same level as JSON
+python3 -m mem20factoryz --seed 7 generate --width 32 --height 32 --json
 
-# Write a deterministic texture (PPM) and SFX (WAV)
-mem20factoryz texture --seed 7 --resolution 16 --out /tmp/factoryz_texture.ppm
-mem20factoryz audio --seed 7 --out /tmp/factoryz_sfx.wav
+# Synthesize a texture and an SFX file
+python3 -m mem20factoryz --seed 7 texture --resolution 16 --out /tmp/factoryz.ppm
+python3 -m mem20factoryz --seed 7 audio --out /tmp/factoryz.wav
 
-# Narrative beats
-mem20factoryz story --seed 7 --segments 5
+# Preview terrain tiles and simulate five playthroughs
+python3 -m mem20factoryz --seed 7 terrain --width 16 --height 8
+python3 -m mem20factoryz --seed 7 playtest --runs 5
+```
 
-# Playtest a generated level
-mem20factoryz playtest --seed 7 --runs 2
+The installed console script is equivalent:
 
-# Built-in self-test
-mem20factoryz test --seed 7
+```bash
+mem20factoryz --seed 7 generate --width 32 --height 32
 ```
 
 ## Python API
 
 ```python
 from mem20factoryz.config import FactoryConfig
-from mem20factoryz.generator import TerrainGenerator, BSPDungeonGenerator, LootGenerator
 from mem20factoryz.level import LevelBuilder
-from mem20factoryz.narrative import NarrativeEngine
-from mem20factoryz.assets import AssetSynthesizer, Palette
-from mem20factoryz.playtest import Playtester
 
 cfg = FactoryConfig(seed=7, width=32, height=32)
-
-# Heightmap (list[list[float]]) and tile quantization
-hmap = TerrainGenerator().generate(cfg)
-tiles = TerrainGenerator().to_tiles(hmap, levels=4)
-
-# BSP dungeon: walls/floors, rooms, spawn
-dungeon = BSPDungeonGenerator().generate(cfg)
-print(len(dungeon["rooms"]), dungeon["spawn"])
-
-# Deterministic loot
-loot = LootGenerator().generate(FactoryConfig(items_per_level=5))
-
-# Full level assembly
 level = LevelBuilder(cfg).build()
-print(level.width, level.height, len(level.objectives))
 
-# Narrative and assets
-beats = NarrativeEngine(seed=7).generate(segments=4)
-synth = AssetSynthesizer(FactoryConfig(seed=7, asset_resolution=8))
-pixels = synth.synthesise_texture(palette=Palette.from_seed(7))
-sfx = synth.synthesise_sfx()
-
-# Playtest
-results = Playtester(cfg).run(level, runs=2)
-print(results[0].summary())
+assert (level.width, level.height) == (32, 32)
+print(len(level.entities), len(level.objectives), level.spawn)
 ```
 
-## Development
+`Generator` is an abstract base class: concrete generators implement
+`generate(config)` and return their artifact (a heightmap, a dungeon dict, or a
+loot table).
+
+## Guarantees
+
+- The same seed produces byte-identical output (`DeterministicPRNG`).
+- Level, texture, audio, narrative, and playtest paths are all seeded.
+- Failure is explicit: an incomplete `Generator` subclass cannot be
+  instantiated.
+
+## Test
 
 ```bash
-python3 -m pytest mem20factoryz/mem20factoryz/tests -q
-python3 scripts/renovation/conformance.py mem20factoryz
+python3 -m pytest -q mem20factoryz/mem20factoryz/tests
 ```
-
-## Notes
-
-- Outputs are procedural; keep `seed`/config stable for reproducible results.
-- Use the CLI/API for real generation. Do not treat placeholder values as generated assets.

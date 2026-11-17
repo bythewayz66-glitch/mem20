@@ -4,13 +4,14 @@ VENV ?= .venv
 CXX ?= c++
 CXXFLAGS ?= -std=c++17 -Wall -Wextra
 
-.PHONY: help sync venv install dev docker deb npm dashboard test clean cpp-example
+.PHONY: help sync venv install dev docker deb npm dashboard test clean cpp-example install-estate
 
 help:
 	@echo "mem20 packaging targets:"
 	@echo "  make sync        - copy mcp/ into mem20_runtime/mcp (keep package data in sync)"
 	@echo "  make venv        - create a venv and install requirements"
 	@echo "  make install     - pip install . (builds wheel, installs mem20-mcp)"
+	@echo "  make install-estate - pip install -e every mem20* subsystem (issue #227)"
 	@echo "  make deb         - build the .deb package (packaging/deb/build-deb.sh)"
 	@echo "  make docker      - docker build -t mem20 ."
 	@echo "  make npm         - build the dashboard (npm run build in dashboard/)"
@@ -31,6 +32,11 @@ install: sync
 
 dev: sync
 	$(PYTHON) -m pip install -e .
+
+# Issue #227: install every mem20* subsystem into this interpreter so the
+# toolchest registry no longer reports them as degraded for lack of a dist.
+install-estate: sync
+	$(PYTHON) scripts/install_estate.py --continue-on-error
 
 deb: sync
 	bash packaging/deb/build-deb.sh

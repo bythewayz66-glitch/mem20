@@ -19,6 +19,7 @@ running-gags sheet.
 | [#5](issue-05/) | The Rule and the Hole | 7 Nov 2026, 18:15–23:52 UTC | 66 |
 | [#6](issue-06/) | The Report Says Nothing | 14 – 18 Oct 2026 | 38 |
 | [#7](issue-07/) | The Organ and the Oscillation | 19 Oct 2026, 09:13–10:00 | 35 |
+| [#8](issue-08/) | What the Repository Did With the Organ | 19 – 20 Oct 2026 | 33 |
 
 ## Reference
 

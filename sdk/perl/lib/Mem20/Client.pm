@@ -11,6 +11,7 @@ use Mem20::Config;
 use Mem20::Errors;
 use Mem20::Transport::Stdio;
 use Mem20::Version ();
+use Mem20::Surface ();
 
 # Threadless, but reentrant-safe: one client owns one transport, and the
 # transport serialises calls, so a client can be shared across a whole program
@@ -152,31 +153,63 @@ sub tool_schema {
     return $self->tool_schemas->{$name};
 }
 
-# Compare the live surface against the counts this SDK release was compiled
+# Compare the live surface against the manifest this SDK release was generated
 # against. Returns a hashref:
 #
-#   { ok => 1, tools => 311, expected_tools => 311, domains => 39, ... }
+#   {
+#     ok             => 1,
+#     tools          => 487,
+#     expected_tools => 487,
+#     domains        => 129,
+#     missing        => [],   # expected, not advertised
+#     extra          => [],   # advertised, not expected
+#     server_version => '4.0.0',
+#   }
 #
-# `ok` is false when the live tool count differs, and `missing`/`extra` name the
-# tools that moved. Domains are a registration-time figure and cannot be read
-# off the wire, so `domains` reports the compiled constant.
+# `ok` is false when the live surface differs in EITHER direction, and
+# `missing`/`extra` name the exact tools that moved. That is the whole reason
+# Mem20::Surface exists: a bare count comparison cannot distinguish "one tool
+# was added" from "one tool was renamed", and a rename that keeps the count
+# identical is exactly the drift a client needs to hear about.
+#
+# Domains are a registration-time figure and cannot be read off the wire, so
+# `domains` reports the compiled constant.
 sub verify_surface {
     my ($self) = @_;
 
     my $live = $self->tool_names;
 
+    my $diff = Mem20::Surface->diff($live);
+
     return {
-        ok             => ( @$live == $Mem20::Version::SURFACE_TOOL_COUNT ? 1 : 0 ),
-        tools          => scalar @$live,
-        expected_tools => $Mem20::Version::SURFACE_TOOL_COUNT,
-        domains        => $Mem20::Version::SURFACE_DOMAIN_COUNT,
+        %$diff,
         server_version => $Mem20::Version::SERVER_VERSION,
     };
 }
 
-# The compiled expectation is a count, not a name list: the surface is large and
-# upstream adds tools often, so the SDK asserts the size it was built and tested
-# against and reports the delta rather than hard-failing on a rename.
+# ---------------------------------------------------------- surface metadata
+#
+# The generated manifest (Mem20::Surface) knows which domain owns each tool, so
+# these answer without starting a server. Useful for building a tool picker or
+# for asserting a domain is present before calling into it.
+
+# The domain that owns a tool, or undef when the manifest does not know it.
+sub tool_domain {
+    my ( $self, $name ) = @_;
+    return Mem20::Surface->domain_of($name);
+}
+
+# The tools a domain owns, as a list.
+sub tools_in_domain {
+    my ( $self, $domain ) = @_;
+    return Mem20::Surface->tools_in($domain);
+}
+
+# Every domain name in the manifest, sorted.
+sub domains {
+    my ($self) = @_;
+    return @Mem20::Surface::DOMAIN_NAMES;
+}
 
 # ---------------------------------------------------------- long-running jobs
 #
@@ -729,9 +762,14 @@ list or a single hashref. Alias: C<call_tool>.
 =item C<tool_names>, C<tool_schemas>, C<< tool_schema($name) >> - the server's
 advertisement, cached after the first call.
 
-=item C<verify_surface> - compare the live tool count with the count this SDK
-was built against (487 across 129 domains). Returns C<ok>, C<tools>,
-C<expected_tools>, C<domains>, C<server_version>.
+=item C<verify_surface> - compare the live tool surface with the manifest this
+SDK was generated against (487 tools across 129 domains). Returns C<ok>,
+C<tools>, C<expected_tools>, C<domains>, C<missing>, C<extra> and
+C<server_version>. C<missing> and C<extra> name the exact tools that moved, so
+a rename that keeps the count identical is still reported.
+
+=item C<tool_domain($name)>, C<tools_in_domain($domain)>, C<domains> - the
+generated tool-to-domain map, without a server round trip.
 
 =item C<< memory_store(%args) >> - store a grounded fact. C<content> and
 C<epistemic_status> are required; C<category> is one of C<user_pref>,

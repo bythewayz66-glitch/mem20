@@ -9,6 +9,8 @@ use Time::HiRes ();
 use Mem20::Config;
 use Mem20::Client;
 use Mem20::Errors;
+use Mem20::Version ();
+use Mem20::Surface ();
 
 # Everything here drives a REAL child process over REAL pipes (the script in
 # t/support/), on purpose: a mocked transport passes even when the framing is
@@ -311,14 +313,27 @@ subtest 'close is idempotent and leaves no child running' => sub {
     pass('second close is a no-op');
 };
 
-subtest 'verify_surface reports the compiled expectation and the live count' => sub {
+subtest 'verify_surface reports the manifest expectation and names the drift' => sub {
     my $client = Mem20::Client->new( config => config_for('ok') );
 
     my $surface = $client->verify_surface;
     is( $surface->{tools}, 5, 'counts what the server actually advertises' );
-    is( $surface->{expected_tools}, 487, 'and reports the compiled expectation' );
-    is( $surface->{domains}, 129, 'domains come from the compiled constant' );
-    is( $surface->{ok}, 0, 'a 5-tool server does not satisfy a 487-tool contract' );
+    is( $surface->{expected_tools}, $Mem20::Version::SURFACE_TOOL_COUNT,
+        'and reports the manifest expectation' );
+    is( $surface->{domains}, $Mem20::Version::SURFACE_DOMAIN_COUNT,
+        'domains come from the manifest constant' );
+    is( $surface->{ok}, 0, 'a 5-tool server does not satisfy the full-surface contract' );
+
+    # The fake server advertises 5 of the 487 tools, so the diff must name the
+    # 482 that are absent and report nothing extra. A count-only check could
+    # not tell this apart from a rename.
+    is( scalar @{ $surface->{missing} }, $Mem20::Version::SURFACE_TOOL_COUNT - 5,
+        'missing names every tool the fake server does not advertise' );
+    is_deeply( $surface->{extra}, [], 'nothing the fake server advertises is unknown' );
+    ok( ( grep { $_ eq 'a2a_call' } @{ $surface->{missing} } ),
+        'a known-but-unadvertised tool is named in missing' );
+    ok( !( grep { $_ eq 'memory_store' } @{ $surface->{missing} } ),
+        'an advertised tool is not reported as missing' );
 
     $client->close;
 };

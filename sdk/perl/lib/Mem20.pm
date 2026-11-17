@@ -3,6 +3,7 @@ use strict;
 use warnings;
 
 use Mem20::Version ();
+use Mem20::Surface ();
 use Mem20::Errors;
 use Mem20::Config;
 use Mem20::Transport::Stdio;

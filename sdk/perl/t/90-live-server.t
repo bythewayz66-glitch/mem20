@@ -6,6 +6,7 @@ use Mem20::Config;
 use Mem20::Client;
 use Mem20::Errors;
 use Mem20::Version ();
+use Mem20::Surface ();
 
 # Live verification against a REAL mem20 server.
 #
@@ -56,19 +57,27 @@ subtest 'handshake' => sub {
         'protocol revision matches the SDK constant' );
     is( $session->{server_info}{name}, 'mem20-mcp', 'server identifies as mem20-mcp' );
 
-    # serverInfo.version is an empty string in mem20 3.1.2. Asserting on it
+    # serverInfo.version is an empty string in mem20 4.0.0. Asserting on it
     # would be asserting on a bug, so only the name is checked.
     is( $session->{server_info}{version}, '', 'serverInfo.version is empty (known upstream)' );
 };
 
-subtest 'the live surface matches what this SDK was compiled against' => sub {
+subtest 'the live surface matches the manifest this SDK was generated against' => sub {
     my $surface = $client->verify_surface;
 
     is( $surface->{tools}, $Mem20::Version::SURFACE_TOOL_COUNT,
         "tools/list returns $Mem20::Version::SURFACE_TOOL_COUNT tools" );
-    is( $surface->{expected_tools}, 487, 'SDK constant is 487' );
-    is( $surface->{domains}, 129, 'SDK constant says 129 domain modules' );
+    is( $surface->{expected_tools}, $Mem20::Version::SURFACE_TOOL_COUNT,
+        'expected_tools is the manifest constant' );
+    is( $surface->{domains}, $Mem20::Version::SURFACE_DOMAIN_COUNT,
+        'domains is the manifest constant' );
     is( $surface->{ok}, 1, 'surface check passes' );
+
+    # The manifest names every tool, so a live surface that matched the count
+    # but not the names would still fail here. That is the point of shipping
+    # the name list rather than two integers.
+    is_deeply( $surface->{missing}, [], 'no expected tool is missing from the live surface' );
+    is_deeply( $surface->{extra},   [], 'the live surface advertises no unknown tool' );
 
     my $names = $client->tool_names;
     is( scalar @$names, scalar( keys %{ { map { $_ => 1 } @$names } } ),
@@ -80,6 +89,25 @@ subtest 'the live surface matches what this SDK was compiled against' => sub {
     ok( $client->can('cog_plan'),          'cognitive domain bound' );
     ok( $client->can('job_status'),        'inline job domain bound' );
     ok( $client->can('memory_simulate_store'), 'simulated partition bound' );
+};
+
+subtest 'the generated domain map agrees with the live server' => sub {
+    # The manifest's tool-to-domain map is generated from the AST catalog. If
+    # the live server advertises a tool the map does not know, verify_surface
+    # already reported it as `extra`; here we check the map is usable for the
+    # tools that ARE known.
+    is( $client->tool_domain('memory_store'), 'memory',
+        'memory_store is mapped to the memory domain' );
+    is( $client->tool_domain('no_such_tool_xyz'), undef,
+        'an unknown tool has no domain' );
+
+    my @memory = $client->tools_in_domain('memory');
+    ok( @memory > 0, 'the memory domain owns tools' );
+    ok( ( grep { $_ eq 'memory_store' } @memory ), 'memory_store is in the memory domain' );
+
+    my @domains = $client->domains;
+    is( scalar @domains, $Mem20::Version::SURFACE_DOMAIN_COUNT,
+        'the client exposes every manifest domain' );
 };
 
 subtest 'end-to-end round trip through the grounded partition' => sub {

@@ -269,6 +269,7 @@ jobs:
                  mem20orcaz mem20pipelinez mem20selfz mem20sensorz mem20simz
                  mem20sitemapz mem20studioz mem20teamz mem20twinz mem20zimr"
           ROOTS=""
+          PP=""
           COUNT=0
           MISSING=""
           for pkg in $GREEN; do
@@ -285,6 +286,8 @@ jobs:
             esac
             ROOTS="$ROOTS $tdir"
             COUNT=$((COUNT + 1))
+            if [ -d "$pkg/src" ]; then PP="$PP:$PWD/$pkg/src"; fi
+            PP="$PP:$PWD/$pkg"
             # A retired/renamed package leaves a dangling path here, and pytest
             # then aborts the whole run with exit 4 ("file or directory not
             # found") instead of reporting a test failure. Name the offender.
@@ -301,7 +304,14 @@ jobs:
             echo "Fix: update GREEN in .github/workflows/ci.yml to the current package name."
             exit 1
           fi
-          python3 -m pytest -q -m "not integration" $ROOTS
+          # The nested estate packages keep their real code under src/ or
+          # absorbed/ while the outer project directory has no __init__.py.
+          # pytest's importlib mode lets those outer directories win as
+          # namespace packages, so run this suite in prepend mode with the real
+          # package roots on PYTHONPATH. tests/absorbed holds stale copies of
+          # the real tests that live under pkg/absorbed/<name>/tests.
+          export PYTHONPATH="${PP#:}${PYTHONPATH:+:$PYTHONPATH}"
+          python3 -m pytest -q -m "not integration" -o addopts='' --import-mode=prepend --ignore-glob='*/tests/absorbed/*' $ROOTS
 
       - name: Run unit-marked tests (no optional deps)
         run: |
@@ -312,6 +322,7 @@ jobs:
                  mem20orcaz mem20pipelinez mem20selfz mem20sensorz mem20simz
                  mem20sitemapz mem20studioz mem20teamz mem20twinz mem20zimr"
           ROOTS=""
+          PP=""
           for pkg in $GREEN; do
             case "$pkg" in
               mem20executablegameconceptandscopepipelinez)
@@ -325,13 +336,16 @@ jobs:
                 ;;
             esac
             ROOTS="$ROOTS $tdir"
+            if [ -d "$pkg/src" ]; then PP="$PP:$PWD/$pkg/src"; fi
+            PP="$PP:$PWD/$pkg"
           done
           # `-m unit` matched zero tests in the 22-package set, so pytest exited 5
           # ("no tests collected") and failed the job regardless of code health.
           # Exit 5 is normalised to success *after* the run, so a genuinely red
           # suite still fails while an empty selection no longer does.
+          export PYTHONPATH="${PP#:}${PYTHONPATH:+:$PYTHONPATH}"
           rc=0
-          python3 -m pytest -m unit -q $ROOTS || rc=$?
+          python3 -m pytest -m unit -q -o addopts='' --import-mode=prepend --ignore-glob='*/tests/absorbed/*' $ROOTS || rc=$?
           if [ "$rc" -eq 5 ]; then
             echo "::warning::No tests carry the 'unit' marker in the green set; nothing to run."
             exit 0

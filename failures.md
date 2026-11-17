@@ -269,4 +269,11 @@
 
 **Verification:** All tests pass (107 frontend, 70 server), builds pass, typecheck passes.
 
+## 2026-11-16 — Phase 9/10: Provider Ecosystem + Memory & Knowledge (teamz)
+- **In-memory vector backend fallback needed:** pgvector default requires PostgreSQL + pgvector extension; added `in_memory` backend as dev fallback but kept `pgvector` as production default. Verified: all tests pass with in-memory backend.
+- **Embedding generation edge case:** Fixed hash-to-vector conversion where `hash_obj.hexdigest()[i*2:(i+1)*2]` returned empty string for last iteration; now wraps around using modulo arithmetic across full 1536 dimensions.
+- **State persistence for new memory keys:** `normalize_state()` in `state.py` was stripping unknown keys; fixed to preserve extensibility keys (providers, budgets, routing_config, pins, episodes, concepts, etc.).
+- **Module import order:** Memory modules import `_get_embedding` from multiple files; consolidated to local methods to avoid circular imports.
+- **Verification:** All 70 server tests + 107 frontend tests pass; TypeScript typecheck + build succeed.
+
 **No failures encountered in this phase.** All tests pass (107 frontend, 70 server), builds pass, typecheck passes.

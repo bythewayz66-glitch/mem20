@@ -1,0 +1,25 @@
+{
+  "experiment": "GH-EXP-001",
+  "timezone": "UTC",
+  "description": "Pre-committed day-level switchback schedule (edit before launch). Example 14-day window shown; extend as pre-registered if needed.",
+  "assignments": {
+    "2026-11-17": "A",
+    "2026-11-18": "B",
+    "2026-11-19": "A",
+    "2026-11-20": "B",
+    "2026-11-21": "B",
+    "2026-11-22": "A",
+    "2026-11-23": "B",
+    "2026-11-24": "A",
+    "2026-11-25": "A",
+    "2026-11-26": "B",
+    "2026-11-27": "A",
+    "2026-11-28": "B",
+    "2026-11-29": "B",
+    "2026-11-30": "A"
+  },
+  "arms": {
+    "A": "control",
+    "B": "treatment"
+  }
+}

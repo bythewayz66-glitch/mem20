@@ -48,6 +48,18 @@ from .models import (
     Usage,
     WorkerControlRequest,
     WorkspaceSnapshot,
+    # Phase 7
+    DeadLetterActionRequest,
+    WorkerLogQuery,
+    # Phase 8
+    AlertEvent,
+    AlertRule,
+    CreateAlertRuleRequest,
+    CreateCostBudgetRequest,
+    ExportTracesRequest,
+    ObservabilityConfig,
+    WorkerLogQuery,
+    WorkerControlRequest,
 )
 from .providers.base import RouteContext, StreamEvent
 from .router import Router
@@ -1376,3 +1388,384 @@ async def fleet_rules_review_fail_logs(agent_name: Optional[str] = None, limit: 
     client = get_fleet_client()
     logs = await client.review_fail_logs(agent_name, limit)
     return {"ok": True, "logs": logs, "count": len(logs)}
+
+
+# --- Phase 8: Observability & Debugging ------------------------------------
+
+@app.post("/v1/observability/traces/start")
+async def observability_start_trace(req: dict) -> Dict[str, Any]:
+    """Start a new distributed trace."""
+    trace = await worker.start_trace(
+        operation_name=req.get("operation_name", "operation"),
+        room_id=req.get("room_id"),
+        goal_id=req.get("goal_id"),
+        agent_id=req.get("agent_id"),
+        tags=req.get("tags"),
+        attributes=req.get("attributes"),
+    )
+    return {"ok": True, "trace": trace.model_dump()}
+
+
+@app.post("/v1/observability/traces/end")
+async def observability_end_trace(req: dict) -> Dict[str, Any]:
+    """End a distributed trace."""
+    trace = await worker.end_trace(
+        trace_id=req.get("trace_id"),
+        status=req.get("status", "ok"),
+    )
+    if not trace:
+        raise HTTPException(status_code=404, detail="trace not found")
+    return {"ok": True, "trace": trace.model_dump()}
+
+
+@app.get("/v1/observability/traces/{trace_id}")
+async def observability_get_trace(trace_id: str) -> Dict[str, Any]:
+    """Get a trace by ID."""
+    trace = await worker.get_trace(trace_id)
+    if not trace:
+        raise HTTPException(status_code=404, detail="trace not found")
+    return {"ok": True, "trace": trace.model_dump()}
+
+
+@app.get("/v1/observability/traces")
+async def observability_query_traces(
+    room_id: Optional[str] = None,
+    goal_id: Optional[str] = None,
+    agent_id: Optional[str] = None,
+    start_time: Optional[int] = None,
+    end_time: Optional[int] = None,
+    limit: int = 50,
+    offset: int = 0,
+) -> Dict[str, Any]:
+    """Query traces with filters."""
+    traces = await worker.query_traces(
+        room_id=room_id,
+        goal_id=goal_id,
+        agent_id=agent_id,
+        start_time=start_time,
+        end_time=end_time,
+        limit=limit,
+        offset=offset,
+    )
+    return {"ok": True, "traces": [t.model_dump() for t in traces], "count": len(traces)}
+
+
+@app.get("/v1/observability/token-usage")
+async def observability_get_token_usage(
+    room_id: Optional[str] = None,
+    agent_id: Optional[str] = None,
+    start_time: Optional[int] = None,
+    end_time: Optional[int] = None,
+    limit: int = 100,
+    offset: int = 0,
+) -> Dict[str, Any]:
+    """Get token usage records with filters."""
+    records = await worker.get_token_usage(
+        room_id=room_id,
+        agent_id=agent_id,
+        start_time=start_time,
+        end_time=end_time,
+        limit=limit,
+        offset=offset,
+    )
+    return {"ok": True, "records": [r.model_dump() for r in records], "count": len(records)}
+
+
+@app.get("/v1/observability/cost-budgets")
+async def observability_get_cost_budget(
+    scope: str,
+    scope_id: str,
+) -> Dict[str, Any]:
+    """Get cost budget for a scope."""
+    budget = await worker.get_cost_budget(scope, scope_id)
+    if not budget:
+        raise HTTPException(status_code=404, detail="budget not found")
+    return {"ok": True, "budget": budget.model_dump()}
+
+
+@app.post("/v1/observability/cost-budgets")
+async def observability_create_cost_budget(req: CreateCostBudgetRequest) -> Dict[str, Any]:
+    """Create a cost budget."""
+    budget = await worker.create_cost_budget(
+        scope=req.scope,
+        scope_id=req.scope_id,
+        budget_usd=req.budget_usd,
+        period_start=req.period_start,
+        period_end=req.period_end,
+        alert_threshold_pct=req.alert_threshold_pct,
+        hard_stop=req.hard_stop,
+    )
+    return {"ok": True, "budget": budget.model_dump()}
+
+
+@app.post("/v1/observability/cost-budgets/check")
+async def observability_check_cost_budgets() -> Dict[str, Any]:
+    """Check all cost budgets and trigger alerts if needed."""
+    alerts = await worker.check_cost_budgets()
+    return {"ok": True, "alerts": alerts}
+
+
+@app.post("/v1/observability/alert-rules")
+async def observability_create_alert_rule(req: CreateAlertRuleRequest) -> Dict[str, Any]:
+    """Create an alert rule."""
+    rule = await worker.create_alert_rule(req)
+    return {"ok": True, "rule": rule.model_dump()}
+
+
+@app.get("/v1/observability/alert-rules")
+async def observability_get_alert_rules() -> Dict[str, Any]:
+    """Get all alert rules."""
+    rules = await worker.get_alert_rules()
+    return {"ok": True, "rules": [r.model_dump() for r in rules]}
+
+
+@app.post("/v1/observability/alerts/check")
+async def observability_check_alerts() -> Dict[str, Any]:
+    """Check all alert rules and trigger alerts."""
+    alerts = await worker.check_alerts()
+    return {"ok": True, "alerts": [a.model_dump() for a in alerts]}
+
+
+@app.post("/v1/observability/alerts/{alert_id}/acknowledge")
+async def observability_acknowledge_alert(alert_id: str, acknowledged_by: str) -> Dict[str, Any]:
+    """Acknowledge an alert."""
+    result = await worker.acknowledge_alert(alert_id, acknowledged_by)
+    return result
+
+
+@app.get("/v1/observability/alerts")
+async def observability_get_alerts(
+    room_id: Optional[str] = None,
+    severity: Optional[str] = None,
+    acknowledged: Optional[bool] = None,
+    limit: int = 50,
+) -> Dict[str, Any]:
+    """Get alerts with filters."""
+    alerts = await worker.get_alerts(
+        room_id=room_id,
+        severity=severity,
+        acknowledged=acknowledged,
+        limit=limit,
+    )
+    return {"ok": True, "alerts": [a.model_dump() for a in alerts], "count": len(alerts)}
+
+
+@app.get("/v1/observability/audit-log")
+async def observability_get_audit_log(
+    actor_id: Optional[str] = None,
+    actor_type: Optional[str] = None,
+    action: Optional[str] = None,
+    resource_type: Optional[str] = None,
+    resource_id: Optional[str] = None,
+    start_time: Optional[int] = None,
+    end_time: Optional[int] = None,
+    limit: int = 100,
+    offset: int = 0,
+) -> Dict[str, Any]:
+    """Query audit log with filters."""
+    logs = await worker.get_audit_log(
+        actor_id=actor_id,
+        actor_type=actor_type,
+        action=action,
+        resource_type=resource_type,
+        resource_id=resource_id,
+        start_time=start_time,
+        end_time=end_time,
+        limit=limit,
+        offset=offset,
+    )
+    return {"ok": True, "logs": [l.model_dump() for l in logs], "count": len(logs)}
+
+
+@app.post("/v1/observability/replay/snapshot")
+async def observability_create_replay_snapshot(req: dict) -> Dict[str, Any]:
+    """Create a replay snapshot for deterministic replay."""
+    snapshot = await worker.create_replay_snapshot(
+        trace_id=req.get("trace_id"),
+        seed=req.get("seed", ""),
+        step=req.get("step", 0),
+        state_hash=req.get("state_hash", ""),
+        prompt=req.get("prompt", ""),
+        context=req.get("context", {}),
+    )
+    return {"ok": True, "snapshot": snapshot.model_dump()}
+
+
+@app.get("/v1/observability/replay/snapshots/{trace_id}")
+async def observability_get_replay_snapshots(trace_id: str) -> Dict[str, Any]:
+    """Get all snapshots for a trace."""
+    snapshots = await worker.get_replay_snapshots(trace_id)
+    return {"ok": True, "snapshots": [s.model_dump() for s in snapshots]}
+
+
+@app.get("/v1/observability/timeline/{room_id}")
+async def observability_get_room_timeline(
+    room_id: str,
+    start_time: Optional[int] = None,
+    end_time: Optional[int] = None,
+    agent_id: Optional[str] = None,
+    limit: int = 200,
+) -> Dict[str, Any]:
+    """Get timeline events for Gantt chart view."""
+    events = await worker.get_room_timeline(
+        room_id=room_id,
+        start_time=start_time,
+        end_time=end_time,
+        agent_id=agent_id,
+        limit=limit,
+    )
+    return {"ok": True, "events": [e.model_dump() for e in events], "count": len(events)}
+
+
+@app.get("/v1/observability/config")
+async def observability_get_config() -> Dict[str, Any]:
+    """Get current observability configuration."""
+    config = await worker.get_observability_config()
+    return {"ok": True, "config": config.model_dump()}
+
+
+@app.post("/v1/observability/config")
+async def observability_update_config(config: ObservabilityConfig) -> Dict[str, Any]:
+    """Update observability configuration."""
+    config = await worker.update_observability_config(config)
+    return {"ok": True, "config": config.model_dump()}
+
+
+@app.post("/v1/observability/traces/export")
+async def observability_export_traces(req: ExportTracesRequest) -> Dict[str, Any]:
+    """Export traces in specified format (jaeger, zipkin, tempo, json)."""
+    result = await worker.export_traces(req)
+    return {"ok": True, "result": result}
+
+
+@app.post("/v1/observability/alert-rules")
+async def observability_create_alert_rule(req: CreateAlertRuleRequest) -> Dict[str, Any]:
+    """Create an alert rule."""
+    rule = await worker.create_alert_rule(req)
+    return {"ok": True, "rule": rule.model_dump()}
+
+
+@app.get("/v1/observability/alert-rules")
+async def observability_get_alert_rules() -> Dict[str, Any]:
+    """Get all alert rules."""
+    rules = await worker.get_alert_rules()
+    return {"ok": True, "rules": [r.model_dump() for r in rules]}
+
+
+@app.post("/v1/observability/alerts/check")
+async def observability_check_alerts() -> Dict[str, Any]:
+    """Check all alert rules and trigger alerts."""
+    alerts = await worker.check_alerts()
+    return {"ok": True, "alerts": [a.model_dump() for a in alerts]}
+
+
+@app.post("/v1/observability/alerts/{alert_id}/acknowledge")
+async def observability_acknowledge_alert(alert_id: str, acknowledged_by: str) -> Dict[str, Any]:
+    """Acknowledge an alert."""
+    result = await worker.acknowledge_alert(alert_id, acknowledged_by)
+    return result
+
+
+@app.get("/v1/observability/alerts")
+async def observability_get_alerts(
+    room_id: Optional[str] = None,
+    severity: Optional[str] = None,
+    acknowledged: Optional[bool] = None,
+    limit: int = 50,
+) -> Dict[str, Any]:
+    """Get alerts with filters."""
+    alerts = await worker.get_alerts(
+        room_id=room_id,
+        severity=severity,
+        acknowledged=acknowledged,
+        limit=limit,
+    )
+    return {"ok": True, "alerts": [a.model_dump() for a in alerts], "count": len(alerts)}
+
+
+@app.get("/v1/observability/audit-log")
+async def observability_get_audit_log(
+    actor_id: Optional[str] = None,
+    actor_type: Optional[str] = None,
+    action: Optional[str] = None,
+    resource_type: Optional[str] = None,
+    resource_id: Optional[str] = None,
+    start_time: Optional[int] = None,
+    end_time: Optional[int] = None,
+    limit: int = 100,
+    offset: int = 0,
+) -> Dict[str, Any]:
+    """Query audit log with filters."""
+    logs = await worker.get_audit_log(
+        actor_id=actor_id,
+        actor_type=actor_type,
+        action=action,
+        resource_type=resource_type,
+        resource_id=resource_id,
+        start_time=start_time,
+        end_time=end_time,
+        limit=limit,
+        offset=offset,
+    )
+    return {"ok": True, "logs": [l.model_dump() for l in logs], "count": len(logs)}
+
+
+@app.post("/v1/observability/replay/snapshot")
+async def observability_create_replay_snapshot(req: dict) -> Dict[str, Any]:
+    """Create a replay snapshot for deterministic replay."""
+    snapshot = await worker.create_replay_snapshot(
+        trace_id=req.get("trace_id"),
+        seed=req.get("seed", ""),
+        step=req.get("step", 0),
+        state_hash=req.get("state_hash", ""),
+        prompt=req.get("prompt", ""),
+        context=req.get("context", {}),
+    )
+    return {"ok": True, "snapshot": snapshot.model_dump()}
+
+
+@app.get("/v1/observability/replay/snapshots/{trace_id}")
+async def observability_get_replay_snapshots(trace_id: str) -> Dict[str, Any]:
+    """Get all snapshots for a trace."""
+    snapshots = await worker.get_replay_snapshots(trace_id)
+    return {"ok": True, "snapshots": [s.model_dump() for s in snapshots]}
+
+
+@app.get("/v1/observability/timeline/{room_id}")
+async def observability_get_room_timeline(
+    room_id: str,
+    start_time: Optional[int] = None,
+    end_time: Optional[int] = None,
+    agent_id: Optional[str] = None,
+    limit: int = 200,
+) -> Dict[str, Any]:
+    """Get timeline events for Gantt chart view."""
+    events = await worker.get_room_timeline(
+        room_id=room_id,
+        start_time=start_time,
+        end_time=end_time,
+        agent_id=agent_id,
+        limit=limit,
+    )
+    return {"ok": True, "events": [e.model_dump() for e in events], "count": len(events)}
+
+
+@app.get("/v1/observability/config")
+async def observability_get_config() -> Dict[str, Any]:
+    """Get current observability configuration."""
+    config = await worker.get_observability_config()
+    return {"ok": True, "config": config.model_dump()}
+
+
+@app.post("/v1/observability/config")
+async def observability_update_config(config: ObservabilityConfig) -> Dict[str, Any]:
+    """Update observability configuration."""
+    config = await worker.update_observability_config(config)
+    return {"ok": True, "config": config.model_dump()}
+
+
+@app.post("/v1/observability/traces/export")
+async def observability_export_traces(req: ExportTracesRequest) -> Dict[str, Any]:
+    """Export traces in specified format (jaeger, zipkin, tempo, json)."""
+    result = await worker.export_traces(req)
+    return {"ok": True, "result": result}

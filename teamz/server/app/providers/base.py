@@ -50,6 +50,17 @@ class RouteContext:
     temperature: Optional[float] = None
     max_tokens: Optional[int] = None
     metadata: Optional[Dict[str, Any]] = None
+    # Extended fields for compatibility with models.RouteContext
+    conversationKind: Optional[str] = None
+    conversationName: Optional[str] = None
+    topic: Optional[str] = None
+    otherAgents: Optional[List[Dict[str, str]]] = None
+    directed: Optional[bool] = None
+    conversationId: Optional[str] = None
+    workspace: Optional[Dict[str, Any]] = None
+    model: Optional[str] = None
+    agent: Optional[Dict[str, Any]] = None
+    conversation: Optional[Dict[str, Any]] = None
 
 
 @dataclass
@@ -60,6 +71,8 @@ class ProviderResult:
     attempts: List[Attempt] = field(default_factory=list)
     usage: Optional[Dict[str, Any]] = None
     raw: Optional[Any] = None
+    structured_data: Optional[Dict[str, Any]] = None
+    cached: bool = False
 
     @property
     def fallback_used(self) -> bool:

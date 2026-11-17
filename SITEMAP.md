@@ -9,6 +9,7 @@ A machine-readable map of this monorepo so an agent can find the right subsystem
 ## Totals
 
 - Subsystems indexed: **104**
+- Committed agent skills (repo-local): `.opencode/skills/register-subsystem/SKILL.md`, `.opencode/skills/gate-triage/SKILL.md` (see `docs/agent-skills/README.md` for discovery/index notes)
 - Source files: **11214**
 - Code lines (excludes data/docs): **573,643**
 - All non-blank source lines (incl. json/md): **1,295,554**

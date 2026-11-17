@@ -41,9 +41,7 @@ class BuildResult:
 
 
 def engine_source_dir() -> Path:
-    from . import engine_dir
-
-    return engine_dir()
+    return Path(__file__).resolve().parent.parent / "engine"
 
 
 def binary_path() -> Path:

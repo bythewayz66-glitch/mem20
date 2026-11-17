@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": 1794809249857,
+  "updatedAt": 1794843744409,
   "agents": [],
   "conversations": [],
   "messages": {},
@@ -24,5 +24,28 @@
     }
   },
   "tasks": [],
-  "activity": []
+  "activity": [],
+  "provider_budgets": [
+    {
+      "id": "budget-98b34b71ecd9",
+      "provider_id": "ollama",
+      "budget_usd": 100.0,
+      "spent_usd": 0.0,
+      "period_start": 1794843744331,
+      "period_end": 1797435744331,
+      "alert_threshold_pct": 80.0,
+      "hard_stop": false,
+      "per_model_limits": {}
+    }
+  ],
+  "routing_config": {
+    "strategy": "cost_optimized",
+    "cost_weight": 0.4,
+    "latency_weight": 0.3,
+    "quality_weight": 0.3,
+    "prefer_keyless": true,
+    "prefer_local": true,
+    "max_fallback_attempts": 3,
+    "fallback_timeout_s": 30.0
+  }
 }

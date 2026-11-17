@@ -19,6 +19,7 @@ import hashlib
 import json
 import random
 import time
+import uuid
 from typing import Any, Dict, List, Optional
 
 from .config import settings
@@ -31,6 +32,16 @@ from .models import (
     SkillDecayConfig,
     SkillMarketplaceListing,
     SkillTreeNode,
+    AlertEvent,
+    AlertRule,
+    AuditLogEntry,
+    CostBudget,
+    ObservabilityConfig,
+    ReplaySnapshot,
+    TelemetrySpan,
+    TelemetryTrace,
+    TimelineEvent,
+    TokenUsageRecord,
 )
 from .state import StateStore
 
@@ -1500,3 +1511,699 @@ def _compose_step_message(
     elif next_step:
         lines += ["", f"Next: {next_step}"]
     return "\n".join(lines)
+
+
+# --- Phase 8: Observability & Debugging ------------------------------------
+
+    def _sign_audit_entry(self, entry: AuditLogEntry) -> str:
+        """Sign an audit log entry for immutability."""
+        if not settings.observability.audit_log_signing_key:
+            return "unsigned"
+        import hmac
+        data = f"{entry.id}:{entry.timestamp}:{entry.actor_id}:{entry.action}:{entry.resource_type}:{entry.resource_id}"
+        return hmac.new(
+            settings.observability.audit_log_signing_key.encode(),
+            data.encode(),
+            hashlib.sha256
+        ).hexdigest()
+
+    def _create_audit_log(
+        self,
+        actor_id: str,
+        actor_type: str,
+        action: str,
+        resource_type: str,
+        resource_id: str,
+        before: Optional[Dict[str, Any]] = None,
+        after: Optional[Dict[str, Any]] = None,
+        metadata: Optional[Dict[str, Any]] = None,
+    ) -> AuditLogEntry:
+        """Create and persist an audit log entry."""
+        entry = AuditLogEntry(
+            id=f"audit-{uuid.uuid4().hex[:12]}",
+            timestamp=int(time.time() * 1000),
+            actor_id=actor_id,
+            actor_type=actor_type,
+            action=action,
+            resource_type=resource_type,
+            resource_id=resource_id,
+            before=before,
+            after=after,
+            signature="",
+            metadata=metadata or {},
+        )
+        entry.signature = self._sign_audit_entry(entry)
+        
+        state = self.store.load()
+        state.setdefault("audit_log", []).append(entry.model_dump())
+        self.store.save(state)
+        return entry
+
+    def _start_span(
+        self,
+        trace_id: str,
+        operation_name: str,
+        parent_span_id: Optional[str] = None,
+        room_id: Optional[str] = None,
+        goal_id: Optional[str] = None,
+        agent_id: Optional[str] = None,
+        tags: Optional[Dict[str, str]] = None,
+        attributes: Optional[Dict[str, Any]] = None,
+    ) -> TelemetrySpan:
+        """Start a new telemetry span."""
+        span_id = f"span-{uuid.uuid4().hex[:12]}"
+        span = TelemetrySpan(
+            id=span_id,
+            trace_id=trace_id,
+            parent_span_id=parent_span_id,
+            operation_name=operation_name,
+            start_time=int(time.time() * 1_000_000),
+            tags=tags or {},
+            attributes=attributes or {},
+        )
+        
+        state = self.store.load()
+        state.setdefault("telemetry_spans", []).append(span.model_dump())
+        self.store.save(state)
+        return span
+
+    def _end_span(
+        self,
+        span_id: str,
+        status: Literal["ok", "error", "cancelled"] = "ok",
+        error_message: Optional[str] = None,
+    ) -> Optional[TelemetrySpan]:
+        """End a telemetry span."""
+        state = self.store.load()
+        spans = state.get("telemetry_spans", [])
+        
+        for i, span in enumerate(spans):
+            if span.get("id") == span_id:
+                end_time = int(time.time() * 1_000_000)
+                span["end_time"] = end_time
+                span["duration_ms"] = span["end_time"] - span["start_time"]
+                span["status"] = status
+                if error_message:
+                    span["error_message"] = error_message
+                spans[i] = span
+                self.store.save(state)
+                return TelemetrySpan(**span)
+        return None
+
+    def _record_token_usage(
+        self,
+        room_id: str,
+        agent_id: str,
+        provider: str,
+        model: str,
+        prompt_tokens: int,
+        completion_tokens: int,
+        span_id: Optional[str] = None,
+    ) -> TokenUsageRecord:
+        """Record token usage for cost tracking."""
+        total_tokens = prompt_tokens + completion_tokens
+        cost_usd = (prompt_tokens * 0.000015) + (completion_tokens * 0.00006)  # rough estimate
+        
+        record = TokenUsageRecord(
+            id=f"token-{uuid.uuid4().hex[:12]}",
+            room_id=room_id,
+            agent_id=agent_id,
+            provider=provider,
+            model=model,
+            prompt_tokens=prompt_tokens,
+            completion_tokens=completion_tokens,
+            total_tokens=prompt_tokens + completion_tokens,
+            cost_usd=cost_usd,
+            timestamp=int(time.time() * 1000),
+            span_id=span_id,
+        )
+        
+        state = self.store.load()
+        state.setdefault("token_usage", []).append(record.model_dump())
+        
+        # Update cost budget
+        budgets = state.get("cost_budgets", [])
+        for budget in budgets:
+            if budget.get("scope") == "room" and budget.get("scope_id") == room_id:
+                budget["spent_usd"] = budget.get("spent_usd", 0) + cost_usd
+        
+        self.store.save(state)
+        return TokenUsageRecord(**record.model_dump())
+
+    # --- Public Observability API Methods ---
+
+    async def start_trace(
+        self,
+        operation_name: str,
+        room_id: Optional[str] = None,
+        goal_id: Optional[str] = None,
+        agent_id: Optional[str] = None,
+        tags: Optional[Dict[str, str]] = None,
+        attributes: Optional[Dict[str, Any]] = None,
+    ) -> TelemetryTrace:
+        """Start a new distributed trace."""
+        trace_id = f"trace-{uuid.uuid4().hex[:16]}"
+        root_span = self._start_span(
+            trace_id=trace_id,
+            operation_name=operation_name,
+            room_id=room_id,
+            goal_id=goal_id,
+            agent_id=agent_id,
+            tags={"type": "root"},
+        )
+        
+        trace = TelemetryTrace(
+            trace_id=trace_id,
+            root_span_id=root_span.id,
+            spans=[root_span],
+            start_time=root_span.start_time,
+            room_id=room_id,
+            goal_id=goal_id,
+            agent_id=agent_id,
+        )
+        
+        state = self.store.load()
+        state.setdefault("telemetry_traces", []).append(trace.model_dump())
+        self.store.save(state)
+        
+        return trace
+
+    async def end_trace(
+        self,
+        trace_id: str,
+        status: Literal["ok", "error", "cancelled"] = "ok",
+    ) -> Optional[TelemetryTrace]:
+        """End a distributed trace."""
+        state = self.store.load()
+        traces = state.get("telemetry_traces", [])
+        
+        for i, trace in enumerate(traces):
+            if trace.get("trace_id") == trace_id:
+                end_time = int(time.time() * 1_000_000)
+                trace["end_time"] = end_time
+                trace["status"] = status
+                traces[i] = trace
+                self.store.save(state)
+                return TelemetryTrace(**trace)
+        return None
+
+    async def get_trace(self, trace_id: str) -> Optional[TelemetryTrace]:
+        """Get a trace by ID."""
+        state = self.store.load()
+        traces = state.get("telemetry_traces", [])
+        for trace in traces:
+            if trace.get("trace_id") == trace_id:
+                return TelemetryTrace(**trace)
+        return None
+
+    async def query_traces(
+        self,
+        room_id: Optional[str] = None,
+        goal_id: Optional[str] = None,
+        agent_id: Optional[str] = None,
+        start_time: Optional[int] = None,
+        end_time: Optional[int] = None,
+        limit: int = 50,
+        offset: int = 0,
+    ) -> List[TelemetryTrace]:
+        """Query traces with filters."""
+        state = self.store.load()
+        traces = state.get("telemetry_traces", [])
+        
+        filtered = []
+        for trace in traces:
+            if room_id and trace.get("room_id") != room_id:
+                continue
+            if goal_id and trace.get("goal_id") != goal_id:
+                continue
+            if agent_id and trace.get("agent_id") != agent_id:
+                continue
+            if start_time and trace.get("start_time", 0) < start_time:
+                continue
+            if end_time and trace.get("end_time", 0) > end_time:
+                continue
+            filtered.append(TelemetryTrace(**trace))
+        
+        filtered.sort(key=lambda t: t.start_time, reverse=True)
+        return filtered[offset:offset + limit]
+
+    async def get_token_usage(
+        self,
+        room_id: Optional[str] = None,
+        agent_id: Optional[str] = None,
+        start_time: Optional[int] = None,
+        end_time: Optional[int] = None,
+        limit: int = 100,
+        offset: int = 0,
+    ) -> List[TokenUsageRecord]:
+        """Get token usage records with filters."""
+        state = self.store.load()
+        records = state.get("token_usage", [])
+        
+        filtered = []
+        for record in records:
+            if room_id and record.get("room_id") != room_id:
+                continue
+            if agent_id and record.get("agent_id") != agent_id:
+                continue
+            if start_time and record.get("timestamp", 0) < start_time:
+                continue
+            if end_time and record.get("timestamp", 0) > end_time:
+                continue
+            filtered.append(TokenUsageRecord(**record))
+        
+        filtered.sort(key=lambda r: r.timestamp, reverse=True)
+        return filtered[offset:offset + limit]
+
+    async def get_cost_budget(self, scope: str, scope_id: str) -> Optional[CostBudget]:
+        """Get cost budget for a scope."""
+        state = self.store.load()
+        budgets = state.get("cost_budgets", [])
+        
+        for budget in budgets:
+            if budget.get("scope") == scope and budget.get("scope_id") == scope_id:
+                return CostBudget(**budget)
+        return None
+
+    async def create_cost_budget(
+        self,
+        scope: str,
+        scope_id: str,
+        budget_usd: float,
+        period_start: int,
+        period_end: int,
+        alert_threshold_pct: float = 80.0,
+        hard_stop: bool = False,
+    ) -> CostBudget:
+        """Create a cost budget."""
+        budget = CostBudget(
+            id=f"budget-{uuid.uuid4().hex[:12]}",
+            scope=scope,
+            scope_id=scope_id,
+            budget_usd=budget_usd,
+            period_start=period_start,
+            period_end=period_end,
+            alert_threshold_pct=alert_threshold_pct,
+            hard_stop=hard_stop,
+        )
+        
+        state = self.store.load()
+        state.setdefault("cost_budgets", []).append(budget.model_dump())
+        self.store.save(state)
+        return budget
+
+    async def check_cost_budgets(self) -> List[Dict[str, Any]]:
+        """Check all cost budgets and trigger alerts if needed."""
+        state = self.store.load()
+        budgets = state.get("cost_budgets", [])
+        alerts = []
+        
+        for budget in budgets:
+            pct = (budget.get("spent_usd", 0) / budget["budget_usd"] * 100) if budget["budget_usd"] > 0 else 0
+            if pct >= budget.get("alert_threshold_pct", 80):
+                self._create_audit_log(
+                    actor_id="system",
+                    actor_type="system",
+                    action="cost_budget_alert",
+                    resource_type="cost_budget",
+                    resource_id=budget["id"],
+                    metadata={"budget_id": budget["id"], "spent_pct": pct},
+                )
+                alerts.append({
+                    "budget_id": budget["id"],
+                    "scope": budget["scope"],
+                    "scope_id": budget["scope_id"],
+                    "spent_pct": pct,
+                    "budget_usd": budget["budget_usd"],
+                    "spent_usd": budget.get("spent_usd", 0),
+                })
+        
+        return alerts
+
+    async def create_alert_rule(self, rule: AlertRule) -> AlertRule:
+        """Create an alert rule."""
+        if not rule.id:
+            rule.id = f"alert-{uuid.uuid4().hex[:12]}"
+        
+        state = self.store.load()
+        state.setdefault("alert_rules", []).append(rule.model_dump())
+        self.store.save(state)
+        return rule
+
+    async def get_alert_rules(self) -> List[AlertRule]:
+        """Get all alert rules."""
+        state = self.store.load()
+        return [AlertRule(**r) for r in state.get("alert_rules", [])]
+
+    async def check_alerts(self) -> List[AlertEvent]:
+        """Check all alert rules and trigger alerts."""
+        state = self.store.load()
+        rules = state.get("alert_rules", [])
+        triggered = []
+        
+        for rule in rules:
+            if not rule.get("enabled", True):
+                continue
+            
+            # Check cooldown
+            last_alert = next(
+                (a for a in state.get("alerts", []) if a.get("rule_id") == rule.get("id")),
+                None
+            )
+            if last_alert:
+                cooldown = rule.get("cooldown_seconds", 300)
+                if time.time() * 1000 - last_alert.get("triggered_at", 0) < cooldown * 1000:
+                    continue
+            
+            # Evaluate condition (simplified - in production use a proper expression evaluator)
+            triggered = False
+            message = ""
+            if "goal_stalled" in rule.get("condition", ""):
+                state = self.store.load()
+                goals = state.get("goals", {})
+                for goal in goals.values():
+                    if goal.get("active") and not goal.get("done"):
+                        if goal.get("lastStep") and time.time() * 1000 - goal.get("updatedAt", 0) > 300000:
+                            triggered = True
+                            message = f"Goal {goal.get('id')} stalled for >5 minutes"
+                            break
+            elif "error_rate" in rule.get("condition", ""):
+                # Simplified check
+                pass
+            elif "cost" in rule.get("condition", ""):
+                alerts = await self.check_cost_budgets()
+                if alerts:
+                    triggered = True
+                    message = f"Cost budget exceeded: {len(alerts)} budgets over threshold"
+            
+            if triggered:
+                alert = AlertEvent(
+                    id=f"alert-{uuid.uuid4().hex[:12]}",
+                    rule_id=rule["id"],
+                    message=message,
+                    severity=rule.get("severity", "warning"),
+                    triggered_at=int(time.time() * 1000),
+                )
+                state.setdefault("alerts", []).append(alert.model_dump())
+                self.store.save(state)
+                triggered.append(alert)
+        
+        return triggered
+
+    async def acknowledge_alert(self, alert_id: str, acknowledged_by: str) -> Dict[str, Any]:
+        """Acknowledge an alert."""
+        state = self.store.load()
+        alerts = state.get("alerts", [])
+        
+        for alert in alerts:
+            if alert.get("id") == alert_id:
+                alert["acknowledged"] = True
+                alert["acknowledged_by"] = acknowledged_by
+                alert["acknowledged_at"] = int(time.time() * 1000)
+                self.store.save(state)
+                return {"ok": True, "alert": alert}
+        
+        return {"ok": False, "error": "alert not found"}
+
+    async def get_alerts(
+        self,
+        room_id: Optional[str] = None,
+        severity: Optional[str] = None,
+        acknowledged: Optional[bool] = None,
+        limit: int = 50,
+    ) -> List[AlertEvent]:
+        """Get alerts with filters."""
+        state = self.store.load()
+        alerts = state.get("alerts", [])
+        
+        filtered = []
+        for alert in alerts:
+            if room_id and alert.get("room_id") != room_id:
+                continue
+            if severity and alert.get("severity") != severity:
+                continue
+            if acknowledged is not None and alert.get("acknowledged") != acknowledged:
+                continue
+            filtered.append(AlertEvent(**alert))
+        
+        filtered.sort(key=lambda a: a.triggered_at, reverse=True)
+        return filtered[:limit]
+
+    async def get_audit_log(
+        self,
+        actor_id: Optional[str] = None,
+        actor_type: Optional[str] = None,
+        action: Optional[str] = None,
+        resource_type: Optional[str] = None,
+        resource_id: Optional[str] = None,
+        start_time: Optional[int] = None,
+        end_time: Optional[int] = None,
+        limit: int = 100,
+        offset: int = 0,
+    ) -> List[AuditLogEntry]:
+        """Query audit log with filters."""
+        state = self.store.load()
+        logs = state.get("audit_log", [])
+        
+        filtered = []
+        for log in logs:
+            if actor_id and log.get("actor_id") != actor_id:
+                continue
+            if actor_type and log.get("actor_type") != actor_type:
+                continue
+            if action and log.get("action") != action:
+                continue
+            if resource_type and log.get("resource_type") != resource_type:
+                continue
+            if resource_id and log.get("resource_id") != resource_id:
+                continue
+            if start_time and log.get("timestamp", 0) < start_time:
+                continue
+            if end_time and log.get("timestamp", 0) > end_time:
+                continue
+            filtered.append(AuditLogEntry(**log))
+        
+        filtered.sort(key=lambda l: l.timestamp, reverse=True)
+        return filtered[offset:offset + limit]
+
+    async def create_replay_snapshot(
+        self,
+        trace_id: str,
+        seed: str,
+        step: int,
+        state_hash: str,
+        prompt: str,
+        context: Dict[str, Any],
+    ) -> ReplaySnapshot:
+        """Create a replay snapshot for deterministic replay."""
+        snapshot = ReplaySnapshot(
+            id=f"replay-{uuid.uuid4().hex[:12]}",
+            trace_id=trace_id,
+            seed=seed,
+            step=step,
+            state_hash=state_hash,
+            prompt=prompt,
+            context=context,
+            created_at=int(time.time() * 1000),
+        )
+        
+        state = self.store.load()
+        state.setdefault("replay_snapshots", []).append(snapshot.model_dump())
+        self.store.save(state)
+        
+        return snapshot
+
+    async def get_replay_snapshots(self, trace_id: str) -> List[ReplaySnapshot]:
+        """Get all snapshots for a trace."""
+        state = self.store.load()
+        snapshots = state.get("replay_snapshots", [])
+        
+        return [
+            ReplaySnapshot(**s) for s in snapshots
+            if s.get("trace_id") == trace_id
+        ]
+
+    async def get_room_timeline(
+        self,
+        room_id: str,
+        start_time: Optional[int] = None,
+        end_time: Optional[int] = None,
+        agent_id: Optional[str] = None,
+        limit: int = 200,
+    ) -> List[TimelineEvent]:
+        """Get timeline events for Gantt chart view."""
+        state = self.store.load()
+        messages = state.get("messages", {}).get(room_id, [])
+        
+        events = []
+        for msg in messages:
+            if msg.get("deleted") or msg.get("unsent"):
+                continue
+            if start_time and msg.get("createdAt", 0) < start_time:
+                continue
+            if end_time and msg.get("createdAt", 0) > end_time:
+                continue
+            if agent_id and msg.get("authorId") != agent_id:
+                continue
+            
+            event = TimelineEvent(
+                id=f"evt-{uuid.uuid4().hex[:8]}",
+                room_id=room_id,
+                agent_id=msg.get("authorId", "unknown"),
+                agent_name=msg.get("authorName", "Unknown"),
+                event_type="step_end" if msg.get("authorType") == "agent" else "step_start",
+                start_time=msg.get("createdAt", 0),
+                end_time=None,
+                duration_ms=None,
+                label=msg.get("text", "")[:100],
+                details={"message_id": msg.get("id")},
+                color="#3b82f6" if msg.get("authorType") == "agent" else "#ef4444",
+            )
+            events.append(event)
+        
+        events.sort(key=lambda e: e.start_time)
+        return events[:limit]
+
+    async def get_observability_config(self) -> ObservabilityConfig:
+        """Get current observability configuration."""
+        return settings.observability
+
+    async def update_observability_config(self, config: ObservabilityConfig) -> ObservabilityConfig:
+        """Update observability configuration."""
+        # In a real implementation, this would update settings
+        # For now, return current config
+        return settings.observability
+
+    async def export_traces(self, request: TraceExportRequest) -> Dict[str, Any]:
+        """Export traces in specified format."""
+        state = self.store.load()
+        traces = state.get("telemetry_traces", [])
+        
+        # Filter traces
+        filtered = []
+        for trace in traces:
+            if request.trace_ids and trace.get("trace_id") not in request.trace_ids:
+                continue
+            if request.start_time and trace.get("start_time", 0) < request.start_time:
+                continue
+            if request.end_time and trace.get("end_time", 0) > request.end_time:
+                continue
+            filtered.append(trace)
+        
+        if request.format == "jaeger":
+            # Convert to Jaeger format
+            jaeger_spans = []
+            for trace in filtered:
+                for span_data in trace.get("spans", []):
+                    jaeger_spans.append({
+                        "traceID": trace.get("trace_id"),
+                        "spanID": span_data.get("id"),
+                        "parentSpanID": span_data.get("parent_span_id") or "",
+                        "operationName": span_data.get("operation_name"),
+                        "startTime": span_data.get("start_time"),
+                        "duration": span_data.get("duration_ms") * 1000,
+                        "tags": [{"key": k, "vStr": v, "type": "string"} for k, v in span_data.get("tags", {}).items()],
+                    })
+            return {"format": "jaeger", "data": {"spans": jaeger_spans}}
+        
+        elif request.format == "zipkin":
+            # Convert to Zipkin format
+            zipkin_spans = []
+            for trace in filtered:
+                for span_data in trace.get("spans", []):
+                    zipkin_spans.append({
+                        "traceId": trace.get("trace_id"),
+                        "id": span_data.get("id"),
+                        "parentId": span_data.get("parent_span_id"),
+                        "name": span_data.get("operation_name"),
+                        "timestamp": span_data.get("start_time"),
+                        "duration": span_data.get("duration_ms") * 1000,
+                        "tags": span_data.get("tags", {}),
+                    })
+            return {"format": "zipkin", "data": zipkin_spans}
+        
+        elif request.format == "tempo":
+            # Tempo format (similar to Jaeger)
+            return {"format": "tempo", "data": filtered}
+        
+        return {"format": "json", "data": filtered}
+
+
+# Add method to record tool execution in trace
+    def _record_tool_in_trace(
+        self,
+        trace_id: str,
+        tool_name: str,
+        args: Dict[str, Any],
+        result: ToolResult,
+        agent_id: Optional[str] = None,
+    ) -> None:
+        """Record a tool execution as a span in a trace."""
+        if not settings.observability.tracing_enabled:
+            return
+        
+        state = self.store.load()
+        traces = state.get("telemetry_traces", [])
+        
+        for trace in traces:
+            if trace.get("trace_id") == trace_id:
+                span = self._start_span(
+                    trace_id=trace_id,
+                    operation_name=f"tool.{tool_name}",
+                    parent_span_id=None,  # Would need to track current span
+                    agent_id=agent_id,
+                    tags={"tool": tool_name},
+                    attributes={"args": args, "result_ok": result.ok},
+                )
+                if not result.ok:
+                    span["status"] = "error"
+                    span["error_message"] = result.error
+                trace["spans"].append(span)
+                self.store.save(state)
+                break
+
+    def _record_llm_call_in_trace(
+        self,
+        trace_id: str,
+        model: str,
+        prompt_tokens: int,
+        completion_tokens: int,
+        cost_usd: float,
+    ) -> None:
+        """Record an LLM call in a trace."""
+        if not settings.observability.tracing_enabled:
+            return
+        
+        state = self.store.load()
+        traces = state.get("telemetry_traces", [])
+        
+        for trace in traces:
+            if trace.get("trace_id") == trace_id:
+                span = TelemetrySpan(
+                    id=f"span-{uuid.uuid4().hex[:12]}",
+                    trace_id=trace_id,
+                    operation_name="llm.call",
+                    start_time=int(time.time() * 1_000_000),
+                    end_time=int(time.time() * 1_000_000),
+                    duration_ms=0,  # Would need actual timing
+                    tags={"model": model},
+                    attributes={
+                        "prompt_tokens": prompt_tokens,
+                        "completion_tokens": completion_tokens,
+                        "cost_usd": cost_usd,
+                    },
+                    status="ok",
+                )
+                trace["spans"].append(span.model_dump())
+                
+                # Record token usage
+                self._record_token_usage(
+                    room_id=trace.get("room_id", "unknown"),
+                    agent_id="system",
+                    provider="openai",  # Would need actual provider
+                    model=model,
+                    prompt_tokens=prompt_tokens,
+                    completion_tokens=completion_tokens,
+                )
+                self.store.save(state)
+                break

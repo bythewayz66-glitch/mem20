@@ -41,23 +41,21 @@ def normalize_state(raw: Any) -> Dict[str, Any]:
     if not isinstance(raw, dict):
         return base
     out = dict(base)
-    for key in ("version", "updatedAt", "activeConversationId"):
-        if key in raw:
-            out[key] = raw[key]
-    if isinstance(raw.get("agents"), list):
-        out["agents"] = raw["agents"]
-    if isinstance(raw.get("conversations"), list):
-        out["conversations"] = raw["conversations"]
-    if isinstance(raw.get("messages"), dict):
-        out["messages"] = raw["messages"]
-    if isinstance(raw.get("filters"), dict):
-        out["filters"] = raw["filters"]
-    if isinstance(raw.get("goals"), dict):
-        out["goals"] = raw["goals"]
-    if isinstance(raw.get("tasks"), list):
-        out["tasks"] = raw["tasks"]
-    if isinstance(raw.get("activity"), list):
-        out["activity"] = raw["activity"]
+    # Preserve all keys from raw, only normalize known ones
+    for key, value in raw.items():
+        if key in base:
+            # Known keys: validate type
+            if key in ("agents", "conversations", "tasks", "activity") and isinstance(value, list):
+                out[key] = value
+            elif key in ("messages", "filters", "goals") and isinstance(value, dict):
+                out[key] = value
+            elif key in ("version", "updatedAt", "activeConversationId"):
+                out[key] = value
+            else:
+                out[key] = base[key]
+        else:
+            # Unknown keys: preserve as-is (for extensibility)
+            out[key] = value
     return out
 
 

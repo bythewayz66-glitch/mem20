@@ -176,5 +176,26 @@ class Settings:
     github_enabled: bool = field(default_factory=lambda: _env_bool("TEAMZ_GITHUB_ENABLED", True))
     gh_enabled: bool = field(default_factory=lambda: _env_bool("TEAMZ_GH_ENABLED", True))
 
+    # Phase 9: Local LLM providers
+    ollama_base_url: str = field(
+        default_factory=lambda: os.getenv("OLLAMA_BASE_URL", "http://localhost:11434").rstrip("/")
+    )
+    ollama_default_model: str = field(default_factory=lambda: os.getenv("OLLAMA_DEFAULT_MODEL", "llama3"))
+
+    llamacpp_base_url: str = field(
+        default_factory=lambda: os.getenv("LLAMACPP_BASE_URL", "http://localhost:8080").rstrip("/")
+    )
+    llamacpp_default_model: str = field(default_factory=lambda: os.getenv("LLAMACPP_DEFAULT_MODEL", "llama3"))
+
+    vllm_base_url: str = field(
+        default_factory=lambda: os.getenv("VLLM_BASE_URL", "http://localhost:8000").rstrip("/")
+    )
+    vllm_default_model: str = field(default_factory=lambda: os.getenv("VLLM_DEFAULT_MODEL", "meta-llama/Meta-Llama-3-8B-Instruct"))
+
+    tgi_base_url: str = field(
+        default_factory=lambda: os.getenv("TGI_BASE_URL", "http://localhost:8080").rstrip("/")
+    )
+    tgi_default_model: str = field(default_factory=lambda: os.getenv("TGI_DEFAULT_MODEL", "tgi-model"))
+
 
 settings = Settings()

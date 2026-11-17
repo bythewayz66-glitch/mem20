@@ -27,6 +27,61 @@ by their first `_` component yields more buckets than there are domains, because
 The domain count must come from registration; the prefix count is a different
 measurement. `Mem20::Version` records both meanings explicitly.
 
+## 1a. The two tools added since the previous audit
+
+`d99ab5d` ("ci(mcp): bump expected tool count 270 -> 272 after wave-1 merges")
+documents the delta, and the wire confirms both:
+
+```
+$ grep -n 'vcs_asset_release_audit\|graph_execute_reversible_plan' /tmp/live_tools.txt
+114:graph_execute_reversible_plan
+253:vcs_asset_release_audit
+```
+
+| tool | origin | registered by |
+|---|---|---|
+| `vcs_asset_release_audit` | PR #157 (RM-239) | `mcp/tools/rm239_tools.py` |
+| `graph_execute_reversible_plan` | PR #158 (RM-052) | `mcp/tools/rm052_tools.py` |
+
+Both landed inside the **existing** `register_versioncontrol_tools()` call site,
+so the domain count stayed 27 while the tool count moved to 272. That is the
+ordinary case: the tool count drifts on almost every merge, the domain count
+only moves when a new `register_*_tools()` call site appears. A guard that only
+tracked domains would have missed this entirely — which is why
+`t/90-live-server.t` asserts the exact tool count.
+
+**How they attach matters, and it is not a plain mixin.** Neither file defines a
+new `register_*_tools()` that `_setup_tools()` calls. Each one *wraps* the
+existing method on the class:
+
+```python
+# mcp/tools/rm052_tools.py:104-115
+original = VersionControlToolsMixin.register_versioncontrol_tools
+if getattr(original, "_rm052_installed", False):
+    return True
+
+def register_versioncontrol_tools(self):
+    original(self)
+    self.tools["graph_execute_reversible_plan"] = _tool_spec()
+    self._graph_execute_reversible_plan = _handle
+
+register_versioncontrol_tools._rm052_installed = True
+VersionControlToolsMixin.register_versioncontrol_tools = register_versioncontrol_tools
+```
+
+`rm239_tools.py` does the same with its own `_rm239_installed` sentinel. So
+`grep -rn 'def register_versioncontrol_tools'` returns **three** definitions
+(`versioncontrol_tools.py:36`, `rm052_tools.py:107`, `rm239_tools.py:110`) while
+`_setup_tools()` calls it **once**. Consequences worth knowing:
+
+- The "27 domains" figure counts **call sites**, not modules. The module count
+  behind those call sites is higher (29 here: 27 + the two RM wrappers).
+- The `_rmNNN_installed` sentinels make the patch idempotent, so importing the
+  module twice does not double-register. Verified: `TOOL_COUNT: 272` and
+  `UNIQUE: 272` — no duplicates.
+- A tool count derived by grepping `def register_*_tools` would be wrong in both
+  directions, which is why the count here comes from instantiating the registry.
+
 ## 2. `initialize` will not accept an empty `clientInfo`
 
 ```
@@ -127,8 +182,9 @@ are the poll primitives; `Mem20::Client` adds `job_from`, `wait_for_job` and
 
 ## 8. Verified
 
-All of the following were run against a **clean clone of this branch**, so they
-describe the tree the PR actually ships.
+All of the following were run on **2026-11-01** against main @ `d99ab5d8`
+(`d99ab5d8e9c5c45a1fb3d02d3b65b2f9a96b5110`), with the server booted from that
+same clone. The transcripts are the runner's own summary lines.
 
 ```
 $ perl xt/gen-surface.pl --check

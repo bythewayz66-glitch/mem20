@@ -133,17 +133,34 @@ for my $doc (@DOCS) {
 # neighbours that a hand edit produces. None of them may appear as a tool count.
 my @RETIRED = ( 257, 268, 269, 270, 271, 272, 306, 311 );
 
+# Strip fenced code blocks before looking for stale PROSE claims.
+#
+# A fenced block is evidence: a transcript, a command, a quoted failure line.
+# AUDIT.md legitimately contains `expected: '270'` inside the transcript of the
+# very failure a release fixed, and rewriting that would falsify the evidence.
+# Prose must never claim a retired count; a quoted transcript may.
+#
+# This is deliberately narrow -- only ``` fences are stripped, so a stale claim
+# in a heading, a table or a sentence is still caught.
+sub prose_only {
+    my ($text) = @_;
+    $text =~ s/^```.*?^```//msg;
+    return $text;
+}
+
 for my $doc ( sort keys %body ) {
+    my $prose = prose_only( $body{$doc} );
+
     for my $n (@RETIRED) {
         unlike(
-            $body{$doc},
+            $prose,
             qr/\b$n\b(?=[^\n]{0,40}\b(?:tools?|tool surface)\b)/,
-            "$doc does not quote the retired $n-tool surface"
+            "$doc does not quote the retired $n-tool surface in prose"
         );
     }
 
     # Any "<N> tools across <M> domains" phrase must use both live constants.
-    while ( $body{$doc} =~ /\b(\d+)\s+tools?\s+across\s+(\d+)\s+domains?\b/g ) {
+    while ( $prose =~ /\b(\d+)\s+tools?\s+across\s+(\d+)\s+domains?\b/g ) {
         my ( $t, $d ) = ( $1, $2 );
         is( $t, $TOOLS,   "$doc: '$t tools across $d domains' uses the live tool count" );
         is( $d, $DOMAINS, "$doc: '$t tools across $d domains' uses the live domain count" );
@@ -240,8 +257,21 @@ if ( -f $live_path ) {
     my $live = do { local $/; <$fh> };
     close $fh;
 
-    unlike( $live, qr/expected_tools\s*=>\s*\d+/, 'live test does not hardcode expected_tools' );
-    unlike( $live, qr/domains\s*=>\s*\d+/,        'live test does not hardcode domains' );
+    # Match BOTH spellings a hardcoded expectation takes: the hashref form
+    # (`expected_tools => 270`) and the assertion form
+    # (`is( $surface->{expected_tools}, 270 )`). The original regex only caught
+    # `=>`, so the comma form in t/90-live-server.t slipped past it.
+    unlike( $live, qr/\bexpected_tools\}?\s*(?:=>|,)\s*\d+/,
+        'live test does not hardcode expected_tools' );
+    unlike( $live, qr/\bdomains\}?\s*(?:=>|,)\s*\d+/,
+        'live test does not hardcode domains' );
+
+    # ...and it must actually read the constants, so deleting the assertion is
+    # not a way to make the two checks above pass.
+    like( $live, qr/\$Mem20::Version::SURFACE_TOOL_COUNT/,
+        'live test reads SURFACE_TOOL_COUNT' );
+    like( $live, qr/\$Mem20::Version::SURFACE_DOMAIN_COUNT/,
+        'live test reads SURFACE_DOMAIN_COUNT' );
 }
 
 done_testing();

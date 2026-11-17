@@ -1,6 +1,6 @@
 name: Mem20
 abstract: Perl SDK for the mem20 memory + cognition server
-version: 0.2.0
+version: 0.2.1
 license: MIT
 author: mem20 contributors
 

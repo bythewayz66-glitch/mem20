@@ -1,7 +1,7 @@
 # mem20 4.0 — Subsystem Renovation Plan
 
 **Issued:** 2026-11-01 · **Owner directive:** bythewayz66 · **Prepared by:** Mem20-admin (work-preservation & ops watchdog)
-**Baseline commit:** `d99ab5d8e9c5c45a1fb3d02d3b65b2f9a96b5110` (main, 2026-11-01T20:13:47Z) — re-measured; the original baseline was `48c241a1edff1fdc9f0d0b38f51796c3c8b88b2b` (tag `v3.1.2`)
+**Baseline commit:** `d99ab5d8e9c5c45a1fb3d02d3b65b2f9a96b5110` (main, 2026-11-01T20:13:47Z) — re-measured; the original baseline was `48c241a1edff1fdc9f0d0b38f51796c3c8b88b2b` (tag `v4.0.0`)
 **Repo of record:** `github.com/bythewayz66-glitch/mem20` (public). `JaysonAIOnline/mem20` returns 404 — not the live repo.
 **Target release:** mem20 **4.0**
 
@@ -219,7 +219,7 @@ These are live facts as of the baseline commit and will bite agents who assume o
 | Retired publish host | unreachable: ports 2222/9900 errno 113, 22/80 timeout | the publish gate is gone; all 4.0 evidence must be GitHub SHAs, not host URLs. |
 | Retired `jaysonai.online` zone | NXDOMAIN on Cloudflare + Google DoH | the zone is retired; do not wire it into any subsystem. |
 | `mem20.org` / `.store` / `.info` | 404 (GitHub Pages allows one custom domain; `docs/CNAME` = `mem20.com`) | only `mem20.com` serves. |
-| Tag `v3.0.0` | 93+ commits behind main | superseded by `v3.1.2`; 4.0 will cut its own tag. |
+| Tag `v3.0.0` | 93+ commits behind main | superseded by `v4.0.0`; 4.0 will cut its own tag. |
 | Benchmark coverage | only 2 of 7 retrieval modes scored; adversarial hit-rate 0.000 | Benchmark Builder owns closing this in wave 2. |
 
 ---

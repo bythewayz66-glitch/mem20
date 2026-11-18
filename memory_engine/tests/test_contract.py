@@ -65,7 +65,7 @@ class TestPublicSurface:
             memory_engine.definitely_not_a_real_name
 
     def test_version_is_declared(self):
-        assert memory_engine.__version__ == "3.1.2"
+        assert memory_engine.__version__ == "4.0.0"
 
     def test_epistemic_vocabulary_matches_engine(self):
         """The literal in api.py must equal the engine's list, or the contract lies."""

@@ -283,7 +283,7 @@ cd /opt/mem20 && python3 -m pytest tests/test_mem20path.py -q   # 17
   instead of hardcoding a canonical constant.
 
 ### Launch gate version drift
-- `scripts/check_launch_gate.py` listed the *current* `VERSION` (3.1.2) as
+- `scripts/check_launch_gate.py` listed the *current* `VERSION` (4.0.0) as
   retired, so a correct page failed. Added `retired_versions_for(current)` to
   filter the live version out; `tests/test_launch_gate.py` covers it (5 pass).
 
@@ -300,7 +300,7 @@ cd /opt/mem20 && python3 -m pytest tests/test_mem20path.py -q   # 17
 - Created comprehensive AGENTS.md with all rulesets
 - Filed issue #256, committed/pushed to mem20 repo
 - Saved context and self model to mem20 via tools
-- 2026-11-04: Fixed docs counts (306 tools), version skew (3.1.2), architecture stub, specs placeholders; registered temporal tools
+- 2026-11-04: Fixed docs counts (306 tools), version skew (4.0.0), architecture stub, specs placeholders; registered temporal tools
 - 2026-11-04: Fixed Godot SDK, registered temporal tools, closed issues 244-248, version updates
 
 ### Session es// (full) - 2026-11-04
@@ -819,7 +819,7 @@ Completed depth-first rebuild to **7/7** for #315-#329 (11 subsystems in this se
 ## 2026-11-09 - full install / OpenCode mem20 restore / live 487-129 alignment (glyph-cluster)
 
 - **OpenCode mem20 restored (root cause):** mem20 MCP (stdio `mem20-mcp`) was down due to server wiring crashes, not port 8080 (health bind non-fatal). Fixed `mcp/tools/ops_tools.py` to re-export mixins imported by `mcp/server.py` (restored `DataLocalityOptimizerToolsMixin`) and added `CrossProductLoyaltyGraphToolsMixin` to `Mem20MCPServer` bases in `mcp/server.py`. `mem20-mcp` now passes `initialize`/`tools/list`; OpenCode config set `MEM20_HEALTH_PORT=0`, `MEM20_NO_TELEMETRY=1`.
-- **Full install:** `/opt/mem20` full non-shallow clone. Root deps + `mem20 3.1.2` editable in `.venv`; core imports OK. Editable `pip install -e` completed for 295 subsystem packages: **293 OK / 2 FAIL** (`mem20enginez`, `mem20pipez`) — root cause: `pyproject.toml` declared `mem20X.mem20X` but package path resolved incorrectly for mixed top-level+inner layout; fixed with `package-dir = {"mem20X" = "."}` in `mem20enginez/pyproject.toml`, `mem20pipez/pyproject.toml`; both now install OK. SDKs: C++ built/installed, ctest `live_surface`+`surface_docs` PASS (487/129); Perl build+tests PASS incl. `t/90-live-server.t` 8/8; Ruby gem `mem20-sdk-0.2.0` installed; TS `@mem20/sdk` built (`package-lock.json` added); Godot addon present. `aiohttp` installed to system site-packages.
+- **Full install:** `/opt/mem20` full non-shallow clone. Root deps + `mem20 4.0.0` editable in `.venv`; core imports OK. Editable `pip install -e` completed for 295 subsystem packages: **293 OK / 2 FAIL** (`mem20enginez`, `mem20pipez`) — root cause: `pyproject.toml` declared `mem20X.mem20X` but package path resolved incorrectly for mixed top-level+inner layout; fixed with `package-dir = {"mem20X" = "."}` in `mem20enginez/pyproject.toml`, `mem20pipez/pyproject.toml`; both now install OK. SDKs: C++ built/installed, ctest `live_surface`+`surface_docs` PASS (487/129); Perl build+tests PASS incl. `t/90-live-server.t` 8/8; Ruby gem `mem20-sdk-0.2.0` installed; TS `@mem20/sdk` built (`package-lock.json` added); Godot addon present. `aiohttp` installed to system site-packages.
 - **Live surface & stale counts:** verified **487 tools / 129 domains** (`Mem20MCPServer().tools`, live). Regenerated `docs/surface.json`, `docs/TOOL-DOMAINS.md`, `web/src/data/tools.json`; aligned current-facing docs/SDKs/CI/finance/verify (`verify_mcp.py`, workflows, finance model/inputs regenerated, C++/Perl/Ruby surfaces + live tests). `scripts/surface_manifest.py --check-docs` = **OK**. Historical records (DIARY/changelogs/dated reports) left as history.
 
 ## 2026-11-09 - 100% coverage agent skill catalog (second track) + sitemapz/toolchest docs
@@ -984,7 +984,7 @@ Reworked/verified subsystems #340–#350 (oldest→newest, 1 at a time) to full 
 - **surface_manifest.py --check-docs:** OK (all docs match)
 - **surface_manifest.py --write:** OK (surface is 487 tools / 129 domains)
 - **Generated files:** docs/surface.json, docs/TOOL-DOMAINS.md, web/src/data/tools.json
-- **docs/index.html:** Added version badge `<span class="badge">v3.1.2</span>` to match VERSION file
+- **docs/index.html:** Added version badge `<span class="badge">v4.0.0</span>` to match VERSION file
 
 ## 2026-11-16 — Fix MCP server startup (NameError: Mem20MCPServer)
 - **Issue:** Server failed to start with `NameError: name 'Mem20MCPServer' is not defined` when run via launcher.py/runpy

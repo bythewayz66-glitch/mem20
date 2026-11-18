@@ -37,7 +37,7 @@
   `_server_python()` to prefer `.venv/bin/python` for the server subprocess, so
   both interpreters now verify 311/39.
 - 2026-11-04: launch-gate check flagged the served page because `VERSION`
-  (3.1.2) was itself listed in `RETIRED_VERSIONS`. NEXT ACTION: done —
+  (4.0.0) was itself listed in `RETIRED_VERSIONS`. NEXT ACTION: done —
   `retired_versions_for(current)` filters the live version; regression test
   added.
 - 2026-11-06: Conformance criterion 6 still failed after adding genuine
@@ -234,7 +234,7 @@
 - **surface_manifest.py --check-docs:** OK (all docs match)
 - **surface_manifest.py --write:** OK (surface is 487 tools / 129 domains)
 - **Generated files:** docs/surface.json, docs/TOOL-DOMAINS.md, web/src/data/tools.json
-- **docs/index.html:** Added version badge `<span class="badge">v3.1.2</span>` to match VERSION file
+- **docs/index.html:** Added version badge `<span class="badge">v4.0.0</span>` to match VERSION file
 
 ## 2026-11-16 — Fix MCP server startup (NameError: Mem20MCPServer)
 - **Issue:** Server failed to start with `NameError: name 'Mem20MCPServer' is not defined` when run via launcher.py/runpy

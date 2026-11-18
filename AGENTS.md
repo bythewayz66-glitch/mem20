@@ -10,6 +10,7 @@
 - Do not create mock/fake/dummy functions or classes
 - Do not return hardcoded fake data to pass tests
 - Implement complete functionality or do not add the code
+- No npm - use yarn
 
 ## Session Protocol
 

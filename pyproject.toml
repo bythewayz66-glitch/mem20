@@ -59,5 +59,15 @@ packages = ["memory_engine"]
 # `mem20thestack.py` boots, port-deconflicts, and tests the full web stack.
 py-modules = ["memory", "metrics_collector", "procedural", "launcher", "mem20path", "mem20thestack"]
 
+[project.entry-points."mem20.vector_backends"]
+faiss = "memory_engine.backends.faiss_backend:FaissBackend"
+memory = "memory_engine.backends.memory_backend:MemoryBackend"
+# Future backends (enabled when dependencies available):
+# pgvector = "memory_engine.backends.pgvector_backend:PgVectorBackend"
+# qdrant = "memory_engine.backends.qdrant_backend:QdrantBackend"
+# lancedb = "memory_engine.backends.lancedb_backend:LanceDBBackend"
+# milvus = "memory_engine.backends.milvus_backend:MilvusBackend"
+# weaviate = "memory_engine.backends.weaviate_backend:WeaviateBackend"
+
 [tool.pytest.ini_options]
 testpaths = ["tests"]

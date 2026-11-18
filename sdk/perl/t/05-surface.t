@@ -129,7 +129,7 @@ for my $doc (@DOCS) {
 # Retired counts. 257 was the pre-3.0 surface, 268 was the domain-tools-only
 # figure that the Ruby gem once mistook for the total, 270 was the pre-temporal
 # surface, 272 was the wave-1 surface, 306 was the pre-temporal count, 311 was
-# the 3.1.2 surface this SDK shipped 0.2.0 against, and 269/271 are off-by-one
+# the 4.0.0 surface this SDK shipped 0.2.0 against, and 269/271 are off-by-one
 # neighbours that a hand edit produces. None of them may appear as a tool count.
 my @RETIRED = ( 257, 268, 269, 270, 271, 272, 306, 311 );
 

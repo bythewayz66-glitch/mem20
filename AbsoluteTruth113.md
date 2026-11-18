@@ -2,7 +2,7 @@
 
 **Scope:** a full verification pass over `bythewayz66-glitch/mem20` — repository contents, documentation claims, the live MCP surface, every installable package in the tree, the five first-party SDKs, the published-artifact manifest, and the benchmark artifacts.
 
-**Checkout:** `/opt/mem20`, branch `main`. Scan started at `109d06f6c757131bf2e41847bc352e8ae96b7f2c`; final verification was re-run at `b1b9ede7ccbfa8c2aa6b0470a01cee2239a94ad8`. `VERSION` 3.1.2 throughout.
+**Checkout:** `/opt/mem20`, branch `main`. Scan started at `109d06f6c757131bf2e41847bc352e8ae96b7f2c`; final verification was re-run at `b1b9ede7ccbfa8c2aa6b0470a01cee2239a94ad8`. `VERSION` 4.0.0 throughout.
 **Date of run:** 2026-11-04.
 **Method:** clone the repo, read the code and docs, run the server, run the installers, and compare every claim against a command that can be re-run. Each finding below is backed by a command and its output. Nothing in this file is copied from a prior report.
 
@@ -14,7 +14,7 @@ The owner pushed six commits while this audit was running. This section records 
 
 | Commit | Message | Effect on this report |
 |---|---|---|
-| `ce36fd69` | Fix docs counts, version skew, architecture stub to match reality | `README.md`, `docs/01`, `docs/02`, `docs/INDEX`, `docs/README`, `docs/TOOL-DOMAINS` moved to **306/39**; `pyproject.toml` moved to 3.1.2; `docs/01-architecture.md` replaced with a 2.8 KB overview (fixes **#245**; partially fixes **#246**). |
+| `ce36fd69` | Fix docs counts, version skew, architecture stub to match reality | `README.md`, `docs/01`, `docs/02`, `docs/INDEX`, `docs/README`, `docs/TOOL-DOMAINS` moved to **306/39**; `pyproject.toml` moved to 4.0.0; `docs/01-architecture.md` replaced with a 2.8 KB overview (fixes **#245**; partially fixes **#246**). |
 | `d382d3f8` | Replace placeholder specs with real specifications | `specs/` grew from 299 B to 2,412 B and lost the literal “placeholder” markers. The content is still outline-level, not a real spec (partially fixes **#247**). |
 | `dc4441ac` | Register temporal tools in MCP server | `mcp/server.py` now inherits/calls the temporal module; live `tools/list` rose **306 → 311** with `temporal_doctor`, `temporal_get`, `temporal_ingest`, `temporal_put`, `temporal_slices` (fixes **#244**). |
 | `b5c7b45d` | Update diary | Documentation only. |
@@ -25,12 +25,12 @@ The owner pushed six commits while this audit was running. This section records 
 
 **The fix created a new staleness:** the same commit that set the docs to 306 was followed by a commit that made the server 311, so the docs are now wrong by five. No Markdown file in the tree says `311 tools` or `311/39`.
 
-**Issue closures during the pass.** At 06:48:30–06:48:41 UTC — six to seventeen minutes after the verification comments in this report were posted — the owner closed **#244, #245, #246, #247 and #248**. The repository total moved from 48 open / 76 closed to **43 open / 81 closed**. Three of those closures hold up on the evidence: #244 is genuinely fixed by `dc4441ac`, #245’s stub is genuinely replaced, and #247’s literal placeholders are genuinely gone (the content is still outline-level). Two do not: #246 still has no release notes for `v3.1.1`/`v3.1.2` and `CHANGELOG.md` still stops at 3.1.0, and **#248 — “docs advertise a tool count that is not the live one” — was closed while its core claim is still true**, because no Markdown file in the tree says `311` and seven still say `306`. §10 records the state of every issue at the end of the pass rather than trusting its status label.
+**Issue closures during the pass.** At 06:48:30–06:48:41 UTC — six to seventeen minutes after the verification comments in this report were posted — the owner closed **#244, #245, #246, #247 and #248**. The repository total moved from 48 open / 76 closed to **43 open / 81 closed**. Three of those closures hold up on the evidence: #244 is genuinely fixed by `dc4441ac`, #245’s stub is genuinely replaced, and #247’s literal placeholders are genuinely gone (the content is still outline-level). Two do not: #246 still has no release notes for `v3.1.1`/`v4.0.0` and `CHANGELOG.md` still stops at 3.1.0, and **#248 — “docs advertise a tool count that is not the live one” — was closed while its core claim is still true**, because no Markdown file in the tree says `311` and seven still say `306`. §10 records the state of every issue at the end of the pass rather than trusting its status label.
 
 **Uncommitted owner work at the end of the pass.** Five tracked files carried uncommitted modifications while this audit was finishing: `docs/gtm/claim-ledger-02-facts.md`, `docs/gtm/mem20-launch-copy.md`, `memory_engine/docs/EVIDENCE.md`, `memory_engine/docs/GAP-INVENTORY.md`, and `scripts/check_launch_gate.py`. I did not modify, revert, or commit any of them, and they are **not** part of the `b1b9ede7` snapshot this report grades. Two observations, offered because they are cheap to fix and easy to miss:
 
-- `scripts/check_launch_gate.py` in the working tree sets `RETIRED_VERSIONS = ("v3.0.0", "3.1.2")`. That adds the **current** version to the list of versions that must not appear, so the gate now fails against its own tree: `[FAIL] version served page still carries retired version(s): '3.1.2' x2 (repo VERSION = 3.1.2)`.
-- `docs/gtm/mem20-launch-copy.md` now reads `| Version 3.0.0 | pyproject.toml version = "3.1.2"; VERSION file |`, and `memory_engine/docs/GAP-INVENTORY.md` says `pyproject.toml declares version = "3.1.2" while VERSION says 3.1.2 — real drift, 2 releases behind`. Both sentences now contradict themselves after the 3.0.0 → 3.1.2 sweep.
+- `scripts/check_launch_gate.py` in the working tree sets `RETIRED_VERSIONS = ("v3.0.0", "4.0.0")`. That adds the **current** version to the list of versions that must not appear, so the gate now fails against its own tree: `[FAIL] version served page still carries retired version(s): '4.0.0' x2 (repo VERSION = 4.0.0)`.
+- `docs/gtm/mem20-launch-copy.md` now reads `| Version 3.0.0 | pyproject.toml version = "4.0.0"; VERSION file |`, and `memory_engine/docs/GAP-INVENTORY.md` says `pyproject.toml declares version = "4.0.0" while VERSION says 4.0.0 — real drift, 2 releases behind`. Both sentences now contradict themselves after the 3.0.0 → 4.0.0 sweep.
 
 ---
 
@@ -42,7 +42,7 @@ The repository is real, large, and mostly functional, but its public claims abou
 |---|---|---|
 | MCP tools | `README.md`: 256; `docs/TOOL-DOMAINS.md`: 270; `docs/05-*`: 268; SDKs: 270–272 | **311** on a live `tools/list` at the end of the pass (`b1b9ede7`; **306** at scan start). Docs were corrected to 306 just before the server reached 311, so they are once again five short. |
 | MCP domains | 26 (45 md files), 27 (78 md files) | **39** (live list and extractor agree at the end of the pass) |
-| Version | `VERSION` 3.1.2 | `pyproject.toml` now 3.1.2; `pip show` still **3.0.0** until reinstall; `CHANGELOG.md` still tops out at **3.1.0**; no release notes for 3.1.1/3.1.2 |
+| Version | `VERSION` 4.0.0 | `pyproject.toml` now 4.0.0; `pip show` still **3.0.0** until reinstall; `CHANGELOG.md` still tops out at **3.1.0**; no release notes for 3.1.1/4.0.0 |
 | Architecture doc | “System design, memory model, tool domains, deployment” | **fixed** at `ce36fd69` — 2.8 KB overview, no longer a stub |
 | `specs/` | “canonical spec authority” | **partly fixed** — 2,412 B of outlines, no interfaces, schemas, or acceptance criteria |
 | Benchmarks | “Nothing here was typed by hand”; adversarial 0.000 is “desired” | `render.py --check` **still refuses the artifact** (exit 3); the named per-query file **still does not exist** |
@@ -65,7 +65,7 @@ b1b9ede7ccbfa8c2aa6b0470a01cee2239a94ad8
 $ git branch --show-current
 main
 $ cat VERSION
-3.1.2
+4.0.0
 $ git status --short        # at scan start: (no output); at the end of the pass:
  M docs/gtm/claim-ledger-02-facts.md
  M docs/gtm/mem20-launch-copy.md
@@ -74,7 +74,7 @@ $ git status --short        # at scan start: (no output); at the end of the pass
  M scripts/check_launch_gate.py
 ?? AbsoluteTruth113.md      # this report
 $ git tag --sort=-v:refname | head -3
-v3.1.2
+v4.0.0
 v3.1.1
 v3.1.0
 ```
@@ -222,7 +222,7 @@ total 404 editable 296
 
 The 108 non-editable distributions are the shared dependencies (`mcp`, `pydantic`, `anyio`, `faiss-cpu`, `sentence-transformers`, `Pillow`, `openai`, `watchdog`, `pytest`, …) plus tooling. Installs were done in three batches of 61 packages to keep a single pip resolution per batch; each batch took roughly 11–16 minutes on this ARM host.
 
-The installed metadata still reports **3.0.0** because the editable install predates `ce36fd69`’s bump of `pyproject.toml` to 3.1.2; a reinstall would report 3.1.2. The repo’s version sources now agree at 3.1.2 — see issue #246 for the remaining release-notes gap.
+The installed metadata still reports **3.0.0** because the editable install predates `ce36fd69`’s bump of `pyproject.toml` to 4.0.0; a reinstall would report 4.0.0. The repo’s version sources now agree at 4.0.0 — see issue #246 for the remaining release-notes gap.
 
 **Import check:** every editable package was then imported from its own root in a clean subprocess (`PYTHONPATH=<pkg root>:<pkg root>/src:<repo>`, 45 s timeout). Results are reported in §4.4.
 
@@ -294,14 +294,14 @@ $ tail -1 docs/01-architecture.md
 
 | Source | At scan start | At final verification |
 |---|---|---|
-| `VERSION` | 3.1.2 | 3.1.2 |
-| root `pyproject.toml` | 3.0.0 | **3.1.2** |
+| `VERSION` | 4.0.0 | 4.0.0 |
+| root `pyproject.toml` | 3.0.0 | **4.0.0** |
 | `pip show mem20` | 3.0.0 | 3.0.0 (not reinstalled after the bump) |
-| `docs/01-architecture.md` header | 3.0.0 | **3.1.2** |
+| `docs/01-architecture.md` header | 3.0.0 | **4.0.0** |
 | `docs/releases/` | only `v3.1.0.md` + index | **unchanged** |
 | `CHANGELOG.md` top | `[3.1.0] — 2026-10-31` | **unchanged** |
 
-Tags `v3.1.1` and `v3.1.2` exist and `VERSION` was cut by `48c241a1`, but there are still no release notes for either, and the changelog still stops at 3.1.0. The installed-metadata number is an environment artifact that a reinstall would fix; the missing release notes are a repo defect.
+Tags `v3.1.1` and `v4.0.0` exist and `VERSION` was cut by `48c241a1`, but there are still no release notes for either, and the changelog still stops at 3.1.0. The installed-metadata number is an environment artifact that a reinstall would fix; the missing release notes are a repo defect.
 
 ### 5.4 #247 — `specs/` was all placeholders — **PARTIALLY FIXED in `d382d3f8`, closed 06:48:38**
 
@@ -628,7 +628,7 @@ At `bc0a9a61` that prints `Parse Error: Function "get_tree()" not found in base 
 |---|---|---|---|
 | [#244](https://github.com/bythewayz66-glitch/mem20/issues/244) | 5 temporal_* tools counted as wired but never registered (live 306 vs catalog 311) | high | **closed** 06:48:30; genuinely fixed in `dc4441ac` — live and catalog both 311 |
 | [#245](https://github.com/bythewayz66-glitch/mem20/issues/245) | `docs/01-architecture.md` is a 142-byte stub | medium | **closed** 06:48:32; genuinely fixed in `ce36fd69` — now 2,841 B |
-| [#246](https://github.com/bythewayz66-glitch/mem20/issues/246) | Version skew: VERSION 3.1.2 vs pyproject 3.0.0; no v3.1.1/v3.1.2 notes | medium | **closed** 06:48:35 with the defect only half fixed: `pyproject.toml` is 3.1.2, but `CHANGELOG.md` still stops at 3.1.0 and `docs/releases/` still has no v3.1.1 or v3.1.2 |
+| [#246](https://github.com/bythewayz66-glitch/mem20/issues/246) | Version skew: VERSION 4.0.0 vs pyproject 3.0.0; no v3.1.1/v4.0.0 notes | medium | **closed** 06:48:35 with the defect only half fixed: `pyproject.toml` is 4.0.0, but `CHANGELOG.md` still stops at 3.1.0 and `docs/releases/` still has no v3.1.1 or v4.0.0 |
 | [#247](https://github.com/bythewayz66-glitch/mem20/issues/247) | `specs/` advertised as canonical but contains only placeholders | low | **closed** 06:48:38; literal placeholders gone, content still outlines (2,412 B total, no interfaces or acceptance criteria) |
 | [#248](https://github.com/bythewayz66-glitch/mem20/issues/248) | Docs advertise 270/27, 268/26, 306/39; live is 311/39 | high | **closed** 06:48:41 **while still true**: 7 files say “306 tools”, 5 say “39 domains”, **0 say 311**; `README.md:41`’s own command returns 255 |
 | [#249](https://github.com/bythewayz66-glitch/mem20/issues/249) | mcp-verify expects 306, finance-model-drift asserts 270/27, verify_mcp defaults to 270 | high | open; none of the three matches 311 |

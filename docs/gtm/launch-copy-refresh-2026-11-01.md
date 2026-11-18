@@ -18,7 +18,7 @@ The v4 pack (`docs/gtm/mem20-launch-copy.md`) was written against a 13-query ben
 | "13-query corpus: 14 grounded facts, 3 simulated" | **RETIRED.** Corpus is 700 grounded / 1,300 simulated / 250 queries | `latest.json` → `facts`, `simulated`, `queries` |
 | "270 tools across 27 domains" | **RETIRED.** Live handshake returns 272; 28 registration groups | `verify_mcp.py` → `TOOL_COUNT: 272`; `_setup_tools` → 28 calls |
 | "`pip install aiohttp` needed as an extra step" | **CLOSED.** `requirements.txt` pins `aiohttp>=3.14.5` and `mcp-types>=2.3.0` | `requirements.txt` at `main` |
-| "Version 3.0.0" | **RETIRED.** `VERSION` = 3.1.2 | `VERSION` at `main` |
+| "Version 3.0.0" | **RETIRED.** `VERSION` = 4.0.0 | `VERSION` at `main` |
 
 A launch asset that ships a false benchmark claim is the single highest-severity defect in this lane. That is what this refresh fixes.
 
@@ -77,7 +77,7 @@ $ grep -oE "2[0-9]{2} tools" /tmp/site.html | sort | uniq -c
       8 270 tools
 ```
 
-The site is up and anonymous-reachable. It prints **v3.1.0** and **270 tools** while the code is **3.1.2** and **272**. The pack discloses this as defect D2 rather than quoting the site's numbers.
+The site is up and anonymous-reachable. It prints **v3.1.0** and **270 tools** while the code is **4.0.0** and **272**. The pack discloses this as defect D2 rather than quoting the site's numbers.
 
 ---
 
@@ -89,7 +89,7 @@ The site is up and anonymous-reachable. It prints **v3.1.0** and **270 tools** w
 | 2 | Abstention (0.000 everywhere) promoted to the lead finding | It is the true universal weakness and the most defensible thing to disclose |
 | 3 | 270 → 272 tools; 27 domains → 28 registration groups | Measured, and the domain count is not code-derived |
 | 4 | `pip install aiohttp` workaround removed from every asset | Defect closed in `requirements.txt` |
-| 5 | Version 3.0.0 → 3.1.2, with the `pyproject.toml` contradiction named | `VERSION` is what `main` carries; the packaging defect is disclosed, not hidden |
+| 5 | Version 3.0.0 → 4.0.0, with the `pyproject.toml` contradiction named | `VERSION` is what `main` carries; the packaging defect is disclosed, not hidden |
 | 6 | Every rate now carries its n | A rate without a sample size is not a measurement |
 | 7 | Guardrails expanded from 7 to 10 rules | Adds: no abstention claim, no rate without n, no domain count as measured, no unfetched URL |
 | 8 | §9 hand-off lists five open defects with owners | Copy is ready; the launch is not, and the reason is not copy |
@@ -122,7 +122,7 @@ The negative controls matter more than the pass. A scanner that reports PASS on 
 
 | ID | Defect | Owner | Blocks launch? |
 |---|---|---|---|
-| D1 | `pyproject.toml` declares 3.0.0 while `VERSION` is 3.1.2 | GitHub Repo Assistant | No, but any `pip install .` reports the wrong version |
+| D1 | `pyproject.toml` declares 3.0.0 while `VERSION` is 4.0.0 | GitHub Repo Assistant | No, but any `pip install .` reports the wrong version |
 | D2 | mem20.com prints v3.1.0 / 270 tools — behind `main` | Webpage Developer | **Yes** — traffic would hit a page contradicting the repo |
 | D3 | No `og:image`, `twitter:card`, or favicon | Webpage Developer | **Yes** — Product Hunt cannot accept a submission without gallery assets |
 | D4 | Canonical Pages URL 301s to `http://` | Repo admin / Pages config | **Yes** — mixed content on the primary link |

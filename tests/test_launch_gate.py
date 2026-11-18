@@ -21,8 +21,8 @@ def served(body: str) -> "gate.FetchResult":
 
 class LaunchGateVersionTests(unittest.TestCase):
     def test_current_version_is_not_treated_as_retired(self) -> None:
-        self.assertNotIn("3.1.2", gate.retired_versions_for("3.1.2"))
-        self.assertEqual(gate.retired_versions_for("3.1.2"), ("v3.0.0", "3.0.0"))
+        self.assertNotIn("4.0.0", gate.retired_versions_for("4.0.0"))
+        self.assertEqual(gate.retired_versions_for("4.0.0"), ("v3.0.0", "3.0.0"))
 
     def test_retired_versions_for_keeps_genuinely_retired_strings(self) -> None:
         retired = gate.retired_versions_for("9.9.9")
@@ -31,22 +31,22 @@ class LaunchGateVersionTests(unittest.TestCase):
 
     def test_gate_version_passes_when_the_served_page_carries_the_current_version(self) -> None:
         report = gate.gate_version(
-            served("<h1>mem20 3.1.2</h1><footer>3.1.2</footer>"), "3.1.2"
+            served("<h1>mem20 4.0.0</h1><footer>4.0.0</footer>"), "4.0.0"
         )
         self.assertEqual(report["verdict"], gate.VERDICT_PASS, report)
-        self.assertIn("3.1.2 x2", report["detail"])
+        self.assertIn("4.0.0 x2", report["detail"])
 
     def test_gate_version_fails_when_a_retired_version_is_still_served(self) -> None:
         report = gate.gate_version(
-            served("<h1>mem20 3.1.2</h1><footer>v3.0.0</footer>"), "3.1.2"
+            served("<h1>mem20 4.0.0</h1><footer>v3.0.0</footer>"), "4.0.0"
         )
         self.assertEqual(report["verdict"], gate.VERDICT_FAIL)
         self.assertIn("v3.0.0", report["detail"])
 
     def test_gate_version_fails_when_the_current_version_is_missing(self) -> None:
-        report = gate.gate_version(served("<h1>mem20</h1>"), "3.1.2")
+        report = gate.gate_version(served("<h1>mem20</h1>"), "4.0.0")
         self.assertEqual(report["verdict"], gate.VERDICT_FAIL)
-        self.assertIn("never mentions current version 3.1.2", report["detail"])
+        self.assertIn("never mentions current version 4.0.0", report["detail"])
 
 
 if __name__ == "__main__":

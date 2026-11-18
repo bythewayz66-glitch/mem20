@@ -13,7 +13,7 @@ branch SHA or committed URL backs it.
 |---|---|---|
 | B1 | `main` not release-clean: 3 of 13 checks red on `0224a649` (`Tests`, `MCP handshake (shallow clone)`, `artifact evidence`). Root cause is issue **#229**: `mem20kilnz/engine/` dropped with a gitlink in `71939ee0`, so ~200 tests fail loudly by design. Restore the engine source or retire the package — do not paper over it with a skip. Not an agent call. | GitHub Repo Assistant / mem20-sybsystems |
 | B2 | **50 at-risk commits on 12 branches**, unmerged, **no PR open for any of them** — they will rot. Triage order in §3. | Orchestrator → branch owners |
-| B3 | `main` untagged at 4.0.0 — no `v4.0.0`; newest semver `v3.1.2` is **683 commits behind**. Cutting a tag is an owner call. | owner (release cut) |
+| B3 | `main` untagged at 4.0.0 — no `v4.0.0`; newest semver `v4.0.0` is **683 commits behind**. Cutting a tag is an owner call. | owner (release cut) |
 | B4 | PyPI absent — `mem20` / `mem20-mcp` / `mem20-sdk` all 404. Needs a token or trusted publisher. | owner (credentials) |
 | B5 | Live surface is **487 tools / 129 domains**, not the house 257 / 26 — positioning line is stale (§6). | owner (positioning) |
 
@@ -96,7 +96,7 @@ opened from this branch; that PR is the evidence of record for this push.
 | Carried claim | Live measurement |
 |---|---|
 | "257 tools across 26 domains" | **487 / 129** (`docs/surface.json`, cross-checked against the AST catalog); 19 tools unwired — house line is several surface moves stale |
-| "`v3.1.2` is the newest tag" | newest by creatordate is `archive-ops-daily-report-2026-11-14` (`9670699`, 23 behind / 1 ahead); newest semver is `v3.1.2` (683 behind). Both true; `main` is untagged at 4.0.0 |
+| "`v4.0.0` is the newest tag" | newest by creatordate is `archive-ops-daily-report-2026-11-14` (`9670699`, 23 behind / 1 ahead); newest semver is `v4.0.0` (683 behind). Both true; `main` is untagged at 4.0.0 |
 | TAM $1.28B / SAM $282M / SOM $1.68M; ACV $14,000 | not re-measured here; carried unchanged, not verified |
 
 ## 7. Reproduce
@@ -106,7 +106,7 @@ git clone https://github.com/bythewayz66-glitch/mem20.git && cd mem20 && git fet
 git rev-parse origin/main && git log -1 --format='%ci %s' origin/main
 for b in $(git for-each-ref --format='%(refname:short)' refs/remotes/origin | grep -v 'origin/HEAD' | grep -v 'origin/main$'); do
   n=$(git rev-list --count origin/main..$b); [ "$n" -gt 0 ] && echo "$n $b"; done | sort -rn
-git rev-list --left-right --count v3.1.2...origin/main
+git rev-list --left-right --count v4.0.0...origin/main
 git ls-tree -r --name-only origin/main | wc -l
 ```
 

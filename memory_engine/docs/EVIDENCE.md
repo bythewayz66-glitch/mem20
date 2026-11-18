@@ -10,8 +10,8 @@ $ wc -c memory_engine/__init__.py
 0 memory_engine/__init__.py
 
 $ grep -c "^version" pyproject.toml; cat VERSION
-version = "3.1.2"  (pyproject.toml:7)
-3.1.2  (VERSION)
+version = "4.0.0"  (pyproject.toml:7)
+4.0.0  (VERSION)
 
 ## 2. New tests pass
 
@@ -32,7 +32,7 @@ FAILED memory_engine/tests/test_fact_fiction_labeling.py::TestLabelSurvivesEvery
 
 $ python3 -c "import memory_engine; print(len(memory_engine.__all__), memory_engine.__version__)"
 names: 50
-version: 3.1.2
+version: 4.0.0
 
 ## 5. Health report on a fresh store
 

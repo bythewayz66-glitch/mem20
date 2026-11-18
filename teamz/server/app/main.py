@@ -1,6 +1,8 @@
 from __future__ import annotations
 
+import asyncio
 import json
+import re
 import time
 import uuid
 from typing import Any, AsyncIterator, Dict, List, Optional
@@ -113,7 +115,7 @@ async def health() -> Dict[str, Any]:
     mem20_ok = False
     if settings.mem20_enabled:
         try:
-            await get_mem20_client().ensure()
+            await asyncio.wait_for(get_mem20_client().ensure(), timeout=5.0)
             mem20_ok = True
         except Exception:
             mem20_ok = False
@@ -133,8 +135,8 @@ async def status() -> Dict[str, Any]:
     if settings.mem20_enabled:
         try:
             client = get_mem20_client()
-            await client.ensure()
-            tools = await client.tools()
+            await asyncio.wait_for(client.ensure(), timeout=5.0)
+            tools = await asyncio.wait_for(client.tools(), timeout=5.0)
             mem20.update({"connected": True, "tools": len(tools)})
         except Exception as e:
             mem20.update({"error": str(e)})
@@ -288,6 +290,32 @@ async def _augment_messages_with_channel_memory(messages: List[Dict[str, Any]], 
     return out
 
 
+def _execution_tools_instruction() -> str:
+    tools = tools_manifest()
+    lines = []
+    for t in tools:
+        name = t.get("name")
+        desc = t.get("description", "")
+        params = t.get("params")
+        if name:
+            lines.append(f"- {name}: {desc}" + (f" params={json.dumps(params, ensure_ascii=False)}" if params else ""))
+    return (
+        "You have REAL execution tools on the server and can create/modify files, run commands, and inspect the workspace. "
+        "When the user asks you to build, create, edit, fix, run, test, or produce anything outside chat, you MUST use these tools to actually do it. "
+        "Do not only describe or pretend; produce real artifacts/files/command results.\n\n"
+        "To use tools, reply with STRICT JSON only (no markdown fences) in this shape:\n"
+        "{\n"
+        '  "thought": "brief plan",\n'
+        '  "tool_actions": [\n'
+        '    {"tool": "terminal|write_file|edit_file|read_file|list_files|gh|github|run_tests|...", "args": {...}}\n'
+        "  ]\n"
+        "}\n"
+        "The server will execute tool_actions and return results to you. After receiving results, either emit more tool_actions JSON or reply with a normal final answer summarizing what was actually created/changed (include file paths/commands). "
+        "Use write_file/edit_file/terminal to build apps and write real code. Prefer small, verifiable steps.\n\n"
+        "Available execution tools:\n" + "\n".join(lines)
+    )
+
+
 def _lead_runtime_instruction(agent: Optional[Dict[str, Any]], conversation: Optional[Dict[str, Any]]) -> Optional[str]:
     if not agent or not (agent.get("isLead") or agent.get("lead")):
         return None
@@ -295,7 +323,7 @@ def _lead_runtime_instruction(agent: Optional[Dict[str, Any]], conversation: Opt
         "You are the LEAD AGENT for this workspace. You can add, remove, and program agents and the runtime itself. "
         "When asked, you can make new channels, make agents, and program/configure current ones. "
         "You must orchestrate and delegate work to groups of agents that match the task.\n\n"
-        "When you decide to perform runtime changes, include a fenced code block with language `teamz-actions` containing STRICT JSON: "
+        "For workspace/runtime management changes, include a fenced code block with language `teamz-actions` containing STRICT JSON: "
         "{\"actions\":[ ... ]}.\n"
         "Supported actions: "
         "create_channel {name, agentIds?:[], agentNames?:[], topic?}; "
@@ -308,19 +336,186 @@ def _lead_runtime_instruction(agent: Optional[Dict[str, Any]], conversation: Opt
         "invite_agent_to_channel {conversationId|channelId|nameMatch, agentId|agentName}; "
         "send_message {conversationId|channelId|nameMatch|agentName, text, directedAgentNames?:[]}; "
         "open_direct_chat {agentId|agentName}.\n"
-        "Use names/ids that exist in context when possible. Explain what you did. "
+        "Use names/ids from workspace context when possible. Prefer agentNames/nameMatch when ids unknown. "
+        "If asked to create a channel or agent, actually emit the corresponding teamz-actions block. "
         "For HTML presentation deliverables when a job is completed, include a fenced block with language `presentation` containing complete HTML."
     )
 
 
+def _extract_json_object(text: str) -> Optional[Dict[str, Any]]:
+    text = (text or "").strip()
+    if not text:
+        return None
+    try:
+        obj = json.loads(text)
+        return obj if isinstance(obj, dict) else None
+    except Exception:
+        pass
+    # Try fenced json blocks
+    fence_patterns = [
+        r"```(?:json)?\s*(\{[\s\S]*?\})\s*```",
+        r"```\s*(\{[\s\S]*?\})\s*```",
+    ]
+    for pat in fence_patterns:
+        m = re.search(pat, text, flags=re.IGNORECASE)
+        if m:
+            try:
+                obj = json.loads(m.group(1))
+                if isinstance(obj, dict):
+                    return obj
+            except Exception:
+                pass
+    start = text.find("{")
+    end = text.rfind("}")
+    if start != -1 and end != -1 and end > start:
+        candidate = text[start : end + 1]
+        try:
+            obj = json.loads(candidate)
+            return obj if isinstance(obj, dict) else None
+        except Exception:
+            # Try to find balanced-ish object by trimming trailing text after last valid-ish brace region
+            return None
+    return None
+
+
+def _normalize_chat_tool_actions(parsed: Any) -> List[Dict[str, Any]]:
+    if not isinstance(parsed, dict):
+        return []
+    raw = parsed.get("tool_actions") or parsed.get("actions") or parsed.get("tool_calls")
+    if not isinstance(raw, list):
+        return []
+    actions: List[Dict[str, Any]] = []
+    for item in raw:
+        if not isinstance(item, dict):
+            continue
+        # Support worker style: {"tool":"write_file","args":{...}}
+        # and generic: {"name":"write_file","arguments":{...}}
+        tool = item.get("tool") or item.get("name") or item.get("type")
+        args = item.get("args") if isinstance(item.get("args"), dict) else (
+            item.get("arguments") if isinstance(item.get("arguments"), dict) else None
+        )
+        if not tool:
+            continue
+        action: Dict[str, Any] = {"tool": str(tool)}
+        if isinstance(args, dict):
+            action["args"] = args
+        else:
+            # Inline params form
+            inline = {k: v for k, v in item.items() if k not in {"tool", "name", "type", "args", "arguments"}}
+            if inline:
+                action["args"] = inline
+        actions.append(action)
+    # Avoid executing frontend runtime-control actions via execution tool runner.
+    runtime_control = {
+        "create_channel", "rename_channel", "update_channel_members", "delete_channel",
+        "create_agent", "update_agent", "delete_agent", "invite_agent_to_channel",
+        "send_message", "open_direct_chat", "delegate", "post_message",
+    }
+    filtered = [a for a in actions if str(a.get("tool") or "").lower() not in runtime_control]
+    return filtered
+
+
+async def _run_agentic_tool_loop(
+    base_messages: List[Dict[str, Any]],
+    req: ChatRequest,
+    *,
+    max_iterations: int = 6,
+) -> Dict[str, Any]:
+    messages = list(base_messages)
+    all_attempts: List[Dict[str, Any]] = []
+    all_tool_results: List[Dict[str, Any]] = []
+    final_text = ""
+    final_model = req.model or (req.agent or {}).get("model") or "unknown"
+    final_usage = None
+
+    for _ in range(max_iterations):
+        ctx = RouteContext(
+            messages=messages,
+            requested_model=req.model or (req.agent or {}).get("model"),
+            strict_model=bool(req.strict_model),
+            stream=False,
+            temperature=req.temperature,
+            max_tokens=req.max_tokens,
+            metadata=req.metadata or {},
+        )
+        result = await router.complete(ctx)
+        attempts = [a.to_dict() if hasattr(a, "to_dict") else a for a in result.attempts]
+        all_attempts.extend(attempts)
+        text = (result.text or "").strip()
+        final_text = text
+        final_model = result.model or final_model
+        final_usage = result.usage or final_usage
+
+        parsed = _extract_json_object(text)
+        tool_actions = _normalize_chat_tool_actions(parsed)
+        if not tool_actions:
+            break
+
+        # Execute real tools server-side
+        tool_results = await execute_actions(tool_actions, agent_id=(req.agent or {}).get("id") if isinstance(req.agent, dict) else None)
+        all_tool_results.extend(tool_results)
+
+        # Feed tool call + results back to model for next step/final answer
+        messages.append({"role": "assistant", "content": text})
+        result_lines = []
+        for tr in tool_results:
+            tool = tr.get("tool")
+            ok = tr.get("ok")
+            err = tr.get("error")
+            data = tr.get("data")
+            try:
+                data_s = json.dumps(data, ensure_ascii=False)
+            except Exception:
+                data_s = str(data)
+            if len(data_s) > 6000:
+                data_s = data_s[:6000] + "…"
+            if ok:
+                result_lines.append(f"- {tool}: OK {data_s}")
+            else:
+                result_lines.append(f"- {tool}: ERROR {err} {data_s}")
+        messages.append({
+            "role": "user",
+            "content": (
+                "Tool execution results (real server-side actions):\n"
+                + ("\n".join(result_lines) if result_lines else "- (no results)")
+                + "\n\nContinue: if more actions are needed, reply with STRICT JSON tool_actions. "
+                  "If finished, reply with a clear final answer describing what you actually created/changed, including file paths and command outcomes."
+            ),
+        })
+
+    # If the model ended on a tool-actions JSON message, produce a user-facing summary
+    if final_text:
+        parsed_final = _extract_json_object(final_text)
+        if parsed_final and _normalize_chat_tool_actions(parsed_final):
+            ok_count = sum(1 for r in all_tool_results if r.get("ok"))
+            fail_count = len(all_tool_results) - ok_count
+            final_text = (
+                "Executed requested tool actions.\n\n"
+                f"Results: {ok_count} succeeded, {fail_count} failed.\n"
+                + "\n".join(
+                    f"- {'✓' if r.get('ok') else '✗'} {r.get('tool')}: {r.get('error') or (r.get('data') or {}).get('path') or (r.get('data') or {}).get('command') or 'done'}"
+                    for r in all_tool_results[-20:]
+                )
+            )
+
+    return {
+        "text": final_text,
+        "model": final_model,
+        "usage": final_usage,
+        "attempts": all_attempts,
+        "tool_results": all_tool_results,
+    }
+
+
 async def _augment_messages_for_agent_runtime(messages: List[Dict[str, Any]], req: ChatRequest) -> List[Dict[str, Any]]:
     out = await _augment_messages_with_channel_memory(messages, req.conversation)
+    exec_instr = _execution_tools_instruction()
+    insert_at = 1 if out and out[0].get("role") == "system" else 0
+    out.insert(insert_at, {"role": "system", "content": exec_instr})
     lead_instr = _lead_runtime_instruction(req.agent, req.conversation)
     if lead_instr:
-        # Insert after any existing system messages block start to keep strong instruction
-        insert_at = 0
-        if out and out[0].get("role") == "system":
-            insert_at = 1
+        # Keep lead runtime-control instruction prominent (after execution tools instruction)
+        insert_at = 1 if out and out[0].get("role") == "system" else 0
         out.insert(insert_at, {"role": "system", "content": lead_instr})
     # Provide compact roster/channel context if available in metadata for orchestration/delegation
     meta = req.metadata or {}
@@ -354,15 +549,6 @@ async def _augment_messages_for_agent_runtime(messages: List[Dict[str, Any]], re
 async def chat_completions(req: ChatRequest):
     base_messages = _messages_to_dicts(req.messages)
     ctx_messages = await _augment_messages_for_agent_runtime(base_messages, req)
-    ctx = RouteContext(
-        messages=ctx_messages,
-        requested_model=req.model or (req.agent or {}).get("model"),
-        strict_model=bool(req.strict_model),
-        stream=bool(req.stream),
-        temperature=req.temperature,
-        max_tokens=req.max_tokens,
-        metadata=req.metadata or {},
-    )
 
     # Persist latest user message context to channel memory (best-effort)
     if settings.mem20_enabled:
@@ -375,66 +561,58 @@ async def chat_completions(req: ChatRequest):
         if last_user:
             await _maybe_store_memory("user", req.conversation, f"User: {last_user}")
 
+    # Run agentic tool loop (server-side execution). Uses non-stream completions internally
+    # so tool calls can be detected/executed; streaming requests receive a final streamed payload.
+    try:
+        loop_result = await _run_agentic_tool_loop(ctx_messages, req, max_iterations=6)
+    except Exception as e:
+        raise HTTPException(status_code=502, detail=f"agent execution failed: {e}")
+
+    final_text = loop_result.get("text") or ""
+    final_model = loop_result.get("model") or (req.model or (req.agent or {}).get("model") or "unknown")
+    final_usage = loop_result.get("usage")
+    attempts = loop_result.get("attempts") or []
+    meta = _routing_meta(attempts, req.model or (req.agent or {}).get("model"))
+
+    if final_text:
+        await _maybe_store_memory("assistant", req.conversation, f"Assistant: {final_text}")
+
     if not req.stream:
-        result = await router.complete(ctx)
-        await _maybe_store_memory("assistant", req.conversation, f"Assistant: {result.text}")
-        attempts = [a.to_dict() if hasattr(a, "to_dict") else a for a in result.attempts]
-        meta = _routing_meta(attempts, ctx.requested_model)
         resp = ChatResponse(
             id=f"chatcmpl-{uuid.uuid4().hex[:24]}",
             created=int(time.time()),
-            model=result.model,
-            choices=[ChatChoice(index=0, message={"role": "assistant", "content": result.text}, finish_reason="stop")],
-            usage=_usage_obj(result.usage),
+            model=final_model,
+            choices=[ChatChoice(index=0, message={"role": "assistant", "content": final_text}, finish_reason="stop")],
+            usage=_usage_obj(final_usage),
             routing=meta,
         )
         return JSONResponse(resp.model_dump())
 
     async def event_stream() -> AsyncIterator[str]:
-        final_text = ""
-        final_usage = None
-        final_model = None
-        attempts: List[Dict[str, Any]] = []
-        async for ev in router.stream(ctx):
-            if ev.type == "meta":
-                attempts = ev.data.get("attempts") or attempts
-                yield f"event: meta\ndata: {json.dumps({'type':'meta','attempts':attempts}, ensure_ascii=False)}\n\n"
-            elif ev.type == "delta":
-                delta = ev.data.get("delta") or ""
-                final_text += delta
+        if attempts:
+            yield f"event: meta\ndata: {json.dumps({'type':'meta','attempts':attempts}, ensure_ascii=False)}\n\n"
+        if final_text:
+            # Emit in chunks so clients that expect incremental deltas still work.
+            chunk_size = 400
+            for i in range(0, len(final_text), chunk_size):
+                delta = final_text[i:i + chunk_size]
                 payload = {
                     "id": "chatcmpl-stream",
                     "object": "chat.completion.chunk",
                     "choices": [{"index": 0, "delta": {"content": delta}, "finish_reason": None}],
-                    "provider": ev.data.get("provider"),
-                    "model": ev.data.get("model"),
+                    "model": final_model,
                 }
                 yield f"data: {json.dumps(payload, ensure_ascii=False)}\n\n"
-            elif ev.type == "done":
-                final_text = ev.data.get("text") or final_text
-                final_usage = ev.data.get("usage") or final_usage
-                final_model = ev.data.get("model") or final_model
-                attempts = ev.data.get("attempts") or attempts
-                meta = _routing_meta(attempts, ctx.requested_model).model_dump() if attempts else None
-                done_payload = {
-                    "type": "done",
-                    "text": final_text,
-                    "provider": ev.data.get("provider"),
-                    "model": final_model,
-                    "usage": final_usage,
-                    "routing": meta,
-                    "fallback_used": ev.data.get("fallback_used", False),
-                }
-                yield f"event: done\ndata: {json.dumps(done_payload, ensure_ascii=False)}\n\n"
-                yield "data: [DONE]\n\n"
-                if final_text:
-                    await _maybe_store_memory("assistant", req.conversation, f"Assistant: {final_text}")
-                return
-            elif ev.type == "error":
-                attempts = ev.data.get("attempts") or attempts
-                err_payload = {"type": "error", "error": ev.data.get("error"), "attempts": attempts}
-                yield f"event: error\ndata: {json.dumps(err_payload, ensure_ascii=False)}\n\n"
-                return
+        done_payload = {
+            "type": "done",
+            "text": final_text,
+            "model": final_model,
+            "usage": final_usage,
+            "routing": meta.model_dump() if meta else None,
+            "fallback_used": False,
+            "tool_results": loop_result.get("tool_results") or [],
+        }
+        yield f"event: done\ndata: {json.dumps(done_payload, ensure_ascii=False)}\n\n"
         yield "data: [DONE]\n\n"
 
     return StreamingResponse(event_stream(), media_type="text/event-stream")
@@ -638,25 +816,6 @@ async def connectors_google_request(payload: Dict[str, Any]):
 
 # --- Runtime planning for lead agent / orchestration ---
 
-def _extract_json_object(text: str) -> Optional[Dict[str, Any]]:
-    text = (text or "").strip()
-    if not text:
-        return None
-    try:
-        obj = json.loads(text)
-        return obj if isinstance(obj, dict) else None
-    except Exception:
-        pass
-    start = text.find("{")
-    end = text.rfind("}")
-    if start != -1 and end != -1 and end > start:
-        try:
-            obj = json.loads(text[start : end + 1])
-            return obj if isinstance(obj, dict) else None
-        except Exception:
-            return None
-    return None
-
 
 @app.post("/v1/runtime/plan")
 async def runtime_plan(payload: Dict[str, Any]):
@@ -846,7 +1005,20 @@ async def get_state_status() -> Dict[str, Any]:
 
 @app.put("/v1/state")
 async def put_state(snapshot: WorkspaceSnapshot) -> Dict[str, Any]:
-    state_store.save(snapshot.model_dump())
+    current = state_store.load()
+    data = snapshot.model_dump()
+    # Preserve server-managed/runtime fields and unknown extras when the frontend
+    # syncs workspace UI state, to avoid clobbering data managed by other endpoints/workers.
+    for key in ("goals", "tasks", "activity"):
+        if not data.get(key) and current.get(key):
+            data[key] = current.get(key)
+    core_keys = {"version", "updatedAt", "agents", "conversations", "messages", "filters", "activeConversationId", "goals", "tasks", "activity"}
+    for key, value in current.items():
+        if key in core_keys:
+            continue
+        if key not in data or data.get(key) in (None, {}, [], ""):
+            data[key] = value
+    state_store.save(data)
     return {"ok": True, "state": state_store.summary()}
 
 

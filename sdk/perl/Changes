@@ -13,13 +13,13 @@ Revision history for Mem20 (Perl SDK)
     - t/05-surface.t now also asserts the manifest is internally consistent
       and not stale against the repository surface files, and treats 311 as
       a retired count.
-    - SERVER_VERSION 3.1.2 -> 4.0.0.
+    - SERVER_VERSION 4.0.0 -> 4.0.0.
 
 0.2.0  2026-11-01
     - Publishable CPAN distribution: added MANIFEST, MANIFEST.SKIP,
       LICENSE and this Changes file. `make dist` previously failed with
       "Problem opening MANIFEST: No such file or directory".
-    - Verified against mem20 server 3.1.2: 311 tools across 39 domain
+    - Verified against mem20 server 4.0.0: 311 tools across 39 domain
       modules (311 unique names).
     - t/05-surface.t guards the documented 311/39 surface against drift
       and resolves the dist root from __FILE__ so it works under CI.

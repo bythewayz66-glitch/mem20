@@ -1157,3 +1157,510 @@ class GitQueryRequest(BaseModel):
     include_diffs: bool = True
     include_blame: bool = False
     file_path: Optional[str] = None
+
+
+# --- Phase 11: Planning & Reasoning ------------------------------------------
+
+class HTNConfigRequest(BaseModel):
+    max_depth: Optional[int] = None
+    max_nodes: Optional[int] = None
+    heuristic_weight: Optional[float] = None
+    use_heuristic: Optional[bool] = None
+    timeout_seconds: Optional[float] = None
+    allow_partial_plans: Optional[bool] = None
+
+
+class MCTSConfigRequest(BaseModel):
+    max_iterations: Optional[int] = None
+    max_depth: Optional[int] = None
+    max_time_seconds: Optional[float] = None
+    exploration_constant: Optional[float] = None
+    discount_factor: Optional[float] = None
+    rollout_policy: Optional[str] = None
+    num_rollouts: Optional[int] = None
+    parallel_rollouts: Optional[bool] = None
+    transposition_table: Optional[bool] = None
+    progressive_widening: Optional[bool] = None
+    widening_factor: Optional[float] = None
+
+
+class CounterfactualConfigRequest(BaseModel):
+    max_scenarios: Optional[int] = None
+    max_interventions_per_scenario: Optional[int] = None
+    similarity_threshold: Optional[float] = None
+    min_confidence: Optional[float] = None
+    enable_auto_generation: Optional[bool] = None
+    comparison_metrics: Optional[List[str]] = None
+
+
+class VerificationConfigRequest(BaseModel):
+    sandbox: Optional[Dict[str, Any]] = None
+    checks: Optional[List[Dict[str, Any]]] = None
+    fail_fast: Optional[bool] = None
+    parallel_checks: Optional[bool] = None
+    max_parallel: Optional[int] = None
+    collect_artifacts: Optional[bool] = None
+    artifact_retention_hours: Optional[int] = None
+
+
+class NegotiationConfigRequest(BaseModel):
+    max_turns: Optional[int] = None
+    max_questions_per_turn: Optional[int] = None
+    timeout_seconds: Optional[float] = None
+    auto_accept_threshold: Optional[float] = None
+    require_human_for: Optional[List[str]] = None
+    escalation_contact: Optional[str] = None
+
+
+class RiskConfigRequest(BaseModel):
+    risk_thresholds: Optional[Dict[str, float]] = None
+    require_approval_above: Optional[str] = None
+    require_approval_if_irreversible: Optional[bool] = None
+    irreversibility_threshold: Optional[float] = None
+    default_likelihood: Optional[float] = None
+    default_impact: Optional[float] = None
+    blast_radius_multipliers: Optional[Dict[str, float]] = None
+
+
+class ContingencyConfigRequest(BaseModel):
+    max_fallbacks_per_step: Optional[int] = None
+    default_retry_attempts: Optional[int] = None
+    default_backoff_base: Optional[float] = None
+    default_backoff_max: Optional[float] = None
+    enable_rollbacks: Optional[bool] = None
+    rollback_checkpoint_interval: Optional[int] = None
+    auto_generate: Optional[bool] = None
+    fallback_timeout_multiplier: Optional[float] = None
+
+
+class SchedulerConfigRequest(BaseModel):
+    max_parallel_steps: Optional[int] = None
+    default_timeout_seconds: Optional[float] = None
+    preemption_enabled: Optional[bool] = None
+    deadline_aware: Optional[bool] = None
+    resource_aware: Optional[bool] = None
+    checkpoint_interval_seconds: Optional[float] = None
+    slack_buffer_seconds: Optional[float] = None
+    priority_weight: Optional[float] = None
+    urgency_weight: Optional[float] = None
+
+
+class ConsensusConfigRequest(BaseModel):
+    default_timeout_hours: Optional[float] = None
+    default_min_approval: Optional[float] = None
+    default_min_voters: Optional[int] = None
+    allow_abstain: Optional[bool] = None
+    allow_conditional: Optional[bool] = None
+    quorum_required: Optional[bool] = None
+    escalation_on_timeout: Optional[bool] = None
+    escalation_contact: Optional[str] = None
+    weighted_voting: Optional[bool] = None
+    voter_weights: Optional[Dict[str, float]] = None
+
+
+class ExplanationConfigRequest(BaseModel):
+    default_level: Optional[str] = None
+    include_evidence: Optional[bool] = None
+    include_alternatives: Optional[bool] = None
+    include_tradeoffs: Optional[bool] = None
+    include_assumptions: Optional[bool] = None
+    max_alternatives_per_step: Optional[int] = None
+    template_style: Optional[str] = None
+    language: Optional[str] = None
+
+
+class PlanningManagerConfigRequest(BaseModel):
+    htn: Optional[HTNConfigRequest] = None
+    mcts: Optional[MCTSConfigRequest] = None
+    counterfactual: Optional[CounterfactualConfigRequest] = None
+    verifier: Optional[VerificationConfigRequest] = None
+    negotiator: Optional[NegotiationConfigRequest] = None
+    risk: Optional[RiskConfigRequest] = None
+    contingency: Optional[ContingencyConfigRequest] = None
+    scheduler: Optional[SchedulerConfigRequest] = None
+    consensus: Optional[ConsensusConfigRequest] = None
+    explainer: Optional[ExplanationConfigRequest] = None
+
+
+class PlanRequest(BaseModel):
+    goal: str
+    context: Dict[str, Any] = Field(default_factory=dict)
+    initial_state: Optional[Dict[str, Any]] = None
+    use_htn: bool = True
+    use_mcts: bool = True
+
+
+class NegotiationAnswerRequest(BaseModel):
+    question_id: str
+    value: Any
+
+
+class WhatIfRequest(BaseModel):
+    question: str
+
+
+class VerificationCheckRequest(BaseModel):
+    name: str
+    type: str
+    command: str
+    args: List[str] = Field(default_factory=list)
+    working_dir: Optional[str] = None
+    env: Dict[str, str] = Field(default_factory=dict)
+    timeout_seconds: float = 60.0
+    required: bool = True
+    metadata: Dict[str, Any] = Field(default_factory=dict)
+
+
+class ConsensusProposalRequest(BaseModel):
+    title: str
+    description: str
+    decision_type: str
+    proposer: str
+    options: List[Dict[str, Any]] = Field(default_factory=list)
+    required_voters: List[str] = Field(default_factory=list)
+    min_approval_ratio: float = 0.67
+    min_voters: int = 3
+    deadline_hours: float = 24.0
+    metadata: Dict[str, Any] = Field(default_factory=dict)
+
+
+class ConsensusVoteRequest(BaseModel):
+    voter_id: str
+    vote_type: str
+    selected_option: Optional[str] = None
+    conditions: List[str] = Field(default_factory=list)
+    rationale: str = ""
+    confidence: float = 1.0
+
+
+class ExplanationRequest(BaseModel):
+    level: str = "standard"
+    format: str = "natural"
+
+
+# --- Phase 12: Collaboration & Human-in-the-Loop ----------------------------------
+
+class ApprovalConfigRequest(BaseModel):
+    default_timeout_hours: Optional[float] = None
+    default_min_approvals: Optional[int] = None
+    escalation_enabled: Optional[bool] = None
+    escalation_timeout_hours: Optional[float] = None
+    escalation_contact: Optional[str] = None
+    notification_webhook: Optional[str] = None
+    auto_approve_low_risk: Optional[bool] = None
+    low_risk_threshold: Optional[float] = None
+
+
+class PairConfigRequest(BaseModel):
+    max_participants: Optional[int] = None
+    allow_role_swap: Optional[bool] = None
+    auto_assign_roles: Optional[bool] = None
+    session_timeout_minutes: Optional[float] = None
+    activity_tracking: Optional[bool] = None
+    recording_enabled: Optional[bool] = None
+    shared_terminal: Optional[bool] = None
+    shared_editor: Optional[bool] = None
+    voice_enabled: Optional[bool] = None
+
+
+class ReviewConfigRequest(BaseModel):
+    required_approvals: Optional[int] = None
+    require_all_reviewers: Optional[bool] = None
+    auto_assign_reviewers: Optional[bool] = None
+    reviewer_pools: Optional[Dict[str, List[str]]] = None
+    require_ci_pass: Optional[bool] = None
+    allow_suggestions: Optional[bool] = None
+    suggestion_apply_threshold: Optional[int] = None
+    comment_threading: Optional[bool] = None
+    draft_by_default: Optional[bool] = None
+
+
+class HandoffConfigRequest(BaseModel):
+    default_timeout_seconds: Optional[float] = None
+    auto_accept_if_idle: Optional[bool] = None
+    idle_threshold_seconds: Optional[float] = None
+    require_acknowledgment: Optional[bool] = None
+    transfer_conversation_history: Optional[bool] = None
+    max_history_items: Optional[int] = None
+    notification_webhook: Optional[str] = None
+
+
+class WhiteboardConfigRequest(BaseModel):
+    max_elements_per_scene: Optional[int] = None
+    auto_save_interval_seconds: Optional[float] = None
+    history_limit: Optional[int] = None
+    allow_guest_edit: Optional[bool] = None
+    default_theme: Optional[str] = None
+    grid_size: Optional[int] = None
+    export_formats: Optional[List[str]] = None
+
+
+class MeetingConfigRequest(BaseModel):
+    auto_transcribe: Optional[bool] = None
+    auto_extract_actions: Optional[bool] = None
+    auto_generate_summary: Optional[bool] = None
+    transcription_language: Optional[str] = None
+    transcription_model: Optional[str] = None
+    action_extraction_model: Optional[str] = None
+    summary_model: Optional[str] = None
+    max_transcript_length: Optional[int] = None
+    auto_join_enabled: Optional[bool] = None
+    join_before_host: Optional[bool] = None
+    recording_enabled: Optional[bool] = None
+    notification_webhook: Optional[str] = None
+
+
+class DigestConfigRequest(BaseModel):
+    default_frequency: Optional[str] = None
+    default_format: Optional[str] = None
+    max_items_per_section: Optional[int] = None
+    include_empty_sections: Optional[bool] = None
+    timezone: Optional[str] = None
+    delivery_webhook: Optional[str] = None
+    email_sender: Optional[str] = None
+    slack_webhook: Optional[str] = None
+
+
+class GuestConfigRequest(BaseModel):
+    default_expiry_hours: Optional[float] = None
+    max_expiry_hours: Optional[float] = None
+    default_max_uses: Optional[int] = None
+    require_authentication: Optional[bool] = None
+    allow_ip_restriction: Optional[bool] = None
+    allow_domain_restriction: Optional[bool] = None
+    session_timeout_minutes: Optional[float] = None
+    max_concurrent_sessions: Optional[int] = None
+    audit_log_enabled: Optional[bool] = None
+    notification_webhook: Optional[str] = None
+
+
+class ConflictConfigRequest(BaseModel):
+    auto_assign_mediator: Optional[bool] = None
+    mediator_pool: Optional[List[str]] = None
+    default_severity: Optional[str] = None
+    escalation_threshold_hours: Optional[float] = None
+    max_mediation_sessions: Optional[int] = None
+    auto_escalate_on_stall: Optional[bool] = None
+    stall_threshold_hours: Optional[float] = None
+    notification_webhook: Optional[str] = None
+
+
+class SocialConfigRequest(BaseModel):
+    enable_kudos: Optional[bool] = None
+    enable_streaks: Optional[bool] = None
+    enable_achievements: Optional[bool] = None
+    enable_velocity: Optional[bool] = None
+    streak_types: Optional[List[str]] = None
+    kudos_cooldown_hours: Optional[float] = None
+    max_kudos_per_day: Optional[int] = None
+    achievement_thresholds: Optional[Dict[str, int]] = None
+    velocity_window_days: Optional[int] = None
+    notification_webhook: Optional[str] = None
+
+
+class CollaborationManagerConfigRequest(BaseModel):
+    approvals: Optional[ApprovalConfigRequest] = None
+    pair_programming: Optional[PairConfigRequest] = None
+    code_review: Optional[ReviewConfigRequest] = None
+    handoff: Optional[HandoffConfigRequest] = None
+    whiteboard: Optional[WhiteboardConfigRequest] = None
+    meeting_agent: Optional[MeetingConfigRequest] = None
+    digest: Optional[DigestConfigRequest] = None
+    guest_access: Optional[GuestConfigRequest] = None
+    conflict_resolution: Optional[ConflictConfigRequest] = None
+    social: Optional[SocialConfigRequest] = None
+
+
+class ApprovalRequestRequest(BaseModel):
+    title: str
+    description: str
+    approval_type: str
+    requester: str
+    context: Dict[str, Any] = Field(default_factory=dict)
+    priority: Optional[str] = None
+    required_approvers: List[str] = Field(default_factory=list)
+    min_approvals: Optional[int] = None
+    timeout_hours: Optional[float] = None
+    metadata: Dict[str, Any] = Field(default_factory=dict)
+
+
+class ApprovalDecisionRequest(BaseModel):
+    request_id: str
+    user_id: str
+    decision: str
+    rationale: str = ""
+    conditions: List[str] = Field(default_factory=list)
+
+
+class PairSessionRequest(BaseModel):
+    title: str
+    creator_id: str
+    creator_name: str
+    is_agent: bool = False
+
+
+class PairJoinRequest(BaseModel):
+    session_id: str
+    user_id: str
+    name: str
+    preferred_role: Optional[str] = None
+    is_agent: bool = False
+
+
+class CodeReviewRequest(BaseModel):
+    title: str
+    description: str
+    author: str
+    head_branch: str
+    base_branch: str = "main"
+    files_changed: List[str] = Field(default_factory=list)
+    diff: str = ""
+    reviewers: List[str] = Field(default_factory=list)
+
+
+class ReviewCommentRequest(BaseModel):
+    review_id: str
+    author: str
+    file_path: str
+    content: str
+    line_start: Optional[int] = None
+    line_end: Optional[int] = None
+    comment_type: str = "inline"
+    suggestion: Optional[str] = None
+
+
+class ReviewDecisionRequest(BaseModel):
+    review_id: str
+    reviewer: str
+    decision: str
+    rationale: str = ""
+
+
+class HandoffRequest(BaseModel):
+    type: str
+    reason: str
+    from_party: str
+    to_party: str
+    context: Dict[str, Any] = Field(default_factory=dict)
+    message: str = ""
+    priority: int = 0
+
+
+class HandoffResponseRequest(BaseModel):
+    request_id: str
+    responder: str
+    accepted: bool
+    message: str = ""
+    conditions: List[str] = Field(default_factory=list)
+
+
+class WhiteboardSceneRequest(BaseModel):
+    name: str
+    creator: str
+    theme: Optional[str] = None
+
+
+class WhiteboardElementRequest(BaseModel):
+    scene_id: str
+    type: str
+    x: float
+    y: float
+    width: float
+    height: float
+    angle: float = 0.0
+    style: Optional[Dict[str, Any]] = None
+    text: str = ""
+    points: List[List[float]] = Field(default_factory=list)
+
+
+class MeetingRequest(BaseModel):
+    title: str
+    host_id: str
+    scheduled_at: float
+    description: str = ""
+    participants: List[str] = Field(default_factory=list)
+    tags: List[str] = Field(default_factory=list)
+
+
+class MeetingTranscriptRequest(BaseModel):
+    meeting_id: str
+    speaker_id: str
+    speaker_name: str
+    text: str
+    start_time: float
+    end_time: float
+    confidence: float = 1.0
+    is_agent: bool = False
+
+
+class DigestTemplateRequest(BaseModel):
+    name: str
+    description: str
+    sections: List[Dict[str, Any]] = Field(default_factory=list)
+    recipients: List[str] = Field(default_factory=list)
+    frequency: str = "daily"
+    format: str = "markdown"
+
+
+class GuestTokenRequest(BaseModel):
+    role: str
+    resource_type: str
+    resource_id: str
+    created_by: str
+    expires_in_hours: Optional[float] = None
+    max_uses: Optional[int] = None
+    resource_name: Optional[str] = None
+    allowed_ips: List[str] = Field(default_factory=list)
+    allowed_domains: List[str] = Field(default_factory=list)
+
+
+class ConflictRequest(BaseModel):
+    title: str
+    description: str
+    type: str
+    parties: List[Dict[str, Any]] = Field(default_factory=list)
+    severity: Optional[str] = None
+    reported_by: str = ""
+
+
+class ConflictPositionRequest(BaseModel):
+    conflict_id: str
+    agent_id: str
+    position: str
+    interests: List[str] = Field(default_factory=list)
+    concerns: List[str] = Field(default_factory=list)
+    proposed_solution: Optional[str] = None
+
+
+class KudosRequest(BaseModel):
+    from_agent: str
+    to_agent: str
+    category: str
+    message: str
+    project_id: Optional[str] = None
+    task_id: Optional[str] = None
+    visibility: str = "team"
+
+
+class StreakUpdateRequest(BaseModel):
+    agent_id: str
+    streak_type: str
+    increment: bool = True
+
+
+class AchievementRequest(BaseModel):
+    agent_id: str
+    type: str
+    title: str
+    description: str
+    icon: str = "🏆"
+
+
+class VelocityRequest(BaseModel):
+    team_id: str
+    completed_tasks: int
+    completed_story_points: int
+    cycle_times_hours: List[float] = Field(default_factory=list)
+    lead_times_hours: List[float] = Field(default_factory=list)
+    quality_metrics: Dict[str, float] = Field(default_factory=dict)
+    collaboration_data: Dict[str, Any] = Field(default_factory=dict)

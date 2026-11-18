@@ -8,7 +8,7 @@
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview --port 4173",
-    "test": "node --test 'test/**/*.js'",
+    "test": "node --test test/*.test.js",
     "desktop:dev": "cd ../../src-tauri && npm --prefix ../mem20controlz/web exec tauri dev",
     "desktop:build": "cd ../../src-tauri && npm --prefix ../mem20controlz/web exec tauri build"
   },

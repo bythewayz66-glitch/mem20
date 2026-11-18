@@ -54,7 +54,7 @@ Six findings carry the release. They are ranked by severity, and the first three
 root cause: **the surface a visitor lands on does not know which release it is.**
 
 1. **The product contradicts itself about its own version.** The landing page advertises
-   **v4.0.0**; the shell one click away renders **`mem20 v3.1.2`** in its persistent sidebar. Both
+   **v4.0.0**; the shell one click away renders **`mem20 v4.0.0`** in its persistent sidebar. Both
    are live, on the same domain, on the same day. For any other product this is a cosmetic bug.
    For a product whose thesis is *"a memory that can prove what it knows,"* it is a
    self-refuting claim in the first screenful. → [F-01](#f-01--three-different-version-identities-on-one-domain-s1)
@@ -252,7 +252,7 @@ view lists five invariants and names the actual functions (`_assert_grounded()` 
 append-only ledger with validated tags). The origin-tagging discipline is real in the data layer
 too — `chronicles.json` carries an `origin_legend` and the RSS items carry
 `<category>grounded</category>`.
-**What undermines it:** he reaches this view through a shell that says `v3.1.2` and that is
+**What undermines it:** he reaches this view through a shell that says `v4.0.0` and that is
 permanently showing a red *"door down"* state. A reviewer whose entire job is verifying claims
 reads those two signals before he reads the invariants, and they tell him the surface is not
 under control. This is the highest-cost instance of [F-01](#f-01--three-different-version-identities-on-one-domain-s1)
@@ -327,7 +327,7 @@ Confidence: **Observed** · **Derived** · **Inferred**.
 |---|---|---|
 | Repository `VERSION` | `4.0.0` | the file |
 | Landing page fact tile (`/`) | `v4.0.0` | hardcoded badge in `docs/index.html` |
-| Shell persistent sidebar (`/app/`) | **`mem20 v3.1.2`** | hardcoded in `docs/app/assets/index-B4bqkMyH.js` |
+| Shell persistent sidebar (`/app/`) | **`mem20 v4.0.0`** | hardcoded in `docs/app/assets/index-B4bqkMyH.js` |
 
 The shell's string is not a stale file — it is baked into the shipped bundle and renders on every
 view, directly beneath the door-status pill, in the sidebar a visitor cannot dismiss.
@@ -344,7 +344,7 @@ harmed by it:
   That is an operational question with a wrong-answer cost.
 
 **Derived consequence:** every future bug report against the shell is ambiguous. "The shell says
-v3.1.2" is now a true statement about a 4.0.0 deployment, so the version field has stopped being
+v4.0.0" is now a true statement about a 4.0.0 deployment, so the version field has stopped being
 usable as a support triage signal. The cost compounds silently from here.
 
 ---

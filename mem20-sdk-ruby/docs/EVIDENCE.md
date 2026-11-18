@@ -51,7 +51,7 @@ the domain count and the manifest comparison above.
 
 ### 0.1 Build, test and packaging (2026-11-16)
 
-Captured on this checkout: Debian 12, `ruby 3.1.2p20`, `rspec 3.13`, `rubocop 1.92.2`.
+Captured on this checkout: Debian 12, `ruby 4.0.0p20`, `rspec 3.13`, `rubocop 1.92.2`.
 
 ```
 $ for f in $(find lib -name '*.rb'); do ruby -c "$f"; done

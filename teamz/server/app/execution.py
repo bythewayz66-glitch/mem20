@@ -742,6 +742,221 @@ async def execute_tool(name: str, args: Optional[Dict[str, Any]] = None) -> Tool
             )
         if tool == "get_memory_stats":
             return await get_memory_stats()
+        # Phase 12: Collaboration & Human-in-the-Loop
+        if tool == "request_approval":
+            return await request_approval(
+                title=args.get("title") if isinstance(args.get("title"), str) else "",
+                description=args.get("description") if isinstance(args.get("description"), str) else "",
+                approval_type=args.get("approval_type") if isinstance(args.get("approval_type"), str) else "",
+                requester=args.get("requester") if isinstance(args.get("requester"), str) else "",
+                context=args.get("context") if isinstance(args.get("context"), dict) else {},
+                priority=args.get("priority") if isinstance(args.get("priority"), str) else None,
+                required_approvers=args.get("required_approvers") if isinstance(args.get("required_approvers"), list) else None,
+                min_approvals=args.get("min_approvals") if isinstance(args.get("min_approvals"), int) else None,
+                timeout_hours=args.get("timeout_hours") if isinstance(args.get("timeout_hours"), (int, float)) else None,
+                metadata=args.get("metadata") if isinstance(args.get("metadata"), dict) else None,
+            )
+        if tool == "decide_approval":
+            return await decide_approval(
+                request_id=args.get("request_id") if isinstance(args.get("request_id"), str) else "",
+                user_id=args.get("user_id") if isinstance(args.get("user_id"), str) else "",
+                decision=args.get("decision") if isinstance(args.get("decision"), str) else "",
+                rationale=args.get("rationale") if isinstance(args.get("rationale"), str) else "",
+                conditions=args.get("conditions") if isinstance(args.get("conditions"), list) else None,
+            )
+        if tool == "create_pair_session":
+            return await create_pair_session(
+                title=args.get("title") if isinstance(args.get("title"), str) else "",
+                creator_id=args.get("creator_id") if isinstance(args.get("creator_id"), str) else "",
+                creator_name=args.get("creator_name") if isinstance(args.get("creator_name"), str) else "",
+                is_agent=bool(args.get("is_agent", False)),
+            )
+        if tool == "join_pair_session":
+            return await join_pair_session(
+                session_id=args.get("session_id") if isinstance(args.get("session_id"), str) else "",
+                user_id=args.get("user_id") if isinstance(args.get("user_id"), str) else "",
+                name=args.get("name") if isinstance(args.get("name"), str) else "",
+                preferred_role=args.get("preferred_role") if isinstance(args.get("preferred_role"), str) else None,
+                is_agent=bool(args.get("is_agent", False)),
+            )
+        if tool == "create_code_review":
+            return await create_code_review(
+                title=args.get("title") if isinstance(args.get("title"), str) else "",
+                description=args.get("description") if isinstance(args.get("description"), str) else "",
+                author=args.get("author") if isinstance(args.get("author"), str) else "",
+                head_branch=args.get("head_branch") if isinstance(args.get("head_branch"), str) else "",
+                base_branch=args.get("base_branch") if isinstance(args.get("base_branch"), str) else "main",
+                files_changed=args.get("files_changed") if isinstance(args.get("files_changed"), list) else None,
+                diff=args.get("diff") if isinstance(args.get("diff"), str) else "",
+                reviewers=args.get("reviewers") if isinstance(args.get("reviewers"), list) else None,
+            )
+        if tool == "add_review_comment":
+            return await add_review_comment(
+                review_id=args.get("review_id") if isinstance(args.get("review_id"), str) else "",
+                author=args.get("author") if isinstance(args.get("author"), str) else "",
+                file_path=args.get("file_path") if isinstance(args.get("file_path"), str) else "",
+                content=args.get("content") if isinstance(args.get("content"), str) else "",
+                line_start=args.get("line_start") if isinstance(args.get("line_start"), int) else None,
+                line_end=args.get("line_end") if isinstance(args.get("line_end"), int) else None,
+                comment_type=args.get("comment_type") if isinstance(args.get("comment_type"), str) else "inline",
+                suggestion=args.get("suggestion") if isinstance(args.get("suggestion"), str) else None,
+            )
+        if tool == "submit_review_decision":
+            return await submit_review_decision(
+                review_id=args.get("review_id") if isinstance(args.get("review_id"), str) else "",
+                reviewer=args.get("reviewer") if isinstance(args.get("reviewer"), str) else "",
+                decision=args.get("decision") if isinstance(args.get("decision"), str) else "",
+                rationale=args.get("rationale") if isinstance(args.get("rationale"), str) else "",
+            )
+        if tool == "request_handoff":
+            return await request_handoff(
+                type=args.get("type") if isinstance(args.get("type"), str) else "",
+                reason=args.get("reason") if isinstance(args.get("reason"), str) else "",
+                from_party=args.get("from_party") if isinstance(args.get("from_party"), str) else "",
+                to_party=args.get("to_party") if isinstance(args.get("to_party"), str) else "",
+                context=args.get("context") if isinstance(args.get("context"), dict) else {},
+                message=args.get("message") if isinstance(args.get("message"), str) else "",
+                priority=int(args.get("priority") or 0),
+            )
+        if tool == "respond_handoff":
+            return await respond_handoff(
+                request_id=args.get("request_id") if isinstance(args.get("request_id"), str) else "",
+                responder=args.get("responder") if isinstance(args.get("responder"), str) else "",
+                accepted=bool(args.get("accepted", False)),
+                message=args.get("message") if isinstance(args.get("message"), str) else "",
+                conditions=args.get("conditions") if isinstance(args.get("conditions"), list) else None,
+            )
+        if tool == "create_whiteboard":
+            return await create_whiteboard(
+                name=args.get("name") if isinstance(args.get("name"), str) else "",
+                creator=args.get("creator") if isinstance(args.get("creator"), str) else "",
+                theme=args.get("theme") if isinstance(args.get("theme"), str) else None,
+            )
+        if tool == "add_whiteboard_element":
+            return await add_whiteboard_element(
+                scene_id=args.get("scene_id") if isinstance(args.get("scene_id"), str) else "",
+                element=args.get("element") if isinstance(args.get("element"), dict) else {},
+                user_id=args.get("user_id") if isinstance(args.get("user_id"), str) else "",
+            )
+        if tool == "schedule_meeting":
+            return await schedule_meeting(
+                title=args.get("title") if isinstance(args.get("title"), str) else "",
+                host_id=args.get("host_id") if isinstance(args.get("host_id"), str) else "",
+                scheduled_at=float(args.get("scheduled_at") or 0),
+                description=args.get("description") if isinstance(args.get("description"), str) else "",
+                participants=args.get("participants") if isinstance(args.get("participants"), list) else None,
+                tags=args.get("tags") if isinstance(args.get("tags"), list) else None,
+            )
+        if tool == "start_meeting":
+            return await start_meeting(
+                meeting_id=args.get("meeting_id") if isinstance(args.get("meeting_id"), str) else "",
+            )
+        if tool == "end_meeting":
+            return await end_meeting(
+                meeting_id=args.get("meeting_id") if isinstance(args.get("meeting_id"), str) else "",
+            )
+        if tool == "add_meeting_transcript":
+            return await add_meeting_transcript(
+                meeting_id=args.get("meeting_id") if isinstance(args.get("meeting_id"), str) else "",
+                speaker_id=args.get("speaker_id") if isinstance(args.get("speaker_id"), str) else "",
+                speaker_name=args.get("speaker_name") if isinstance(args.get("speaker_name"), str) else "",
+                text=args.get("text") if isinstance(args.get("text"), str) else "",
+                start_time=float(args.get("start_time") or 0),
+                end_time=float(args.get("end_time") or 0),
+                confidence=float(args.get("confidence") or 1.0),
+                is_agent=bool(args.get("is_agent", False)),
+            )
+        if tool == "create_digest_template":
+            return await create_digest_template(
+                name=args.get("name") if isinstance(args.get("name"), str) else "",
+                description=args.get("description") if isinstance(args.get("description"), str) else "",
+                sections=args.get("sections") if isinstance(args.get("sections"), list) else [],
+                recipients=args.get("recipients") if isinstance(args.get("recipients"), list) else [],
+                frequency=args.get("frequency") if isinstance(args.get("frequency"), str) else "daily",
+                format=args.get("format") if isinstance(args.get("format"), str) else "markdown",
+            )
+        if tool == "generate_digest":
+            return await generate_digest(
+                template_id=args.get("template_id") if isinstance(args.get("template_id"), str) else "",
+                period_start=args.get("period_start") if isinstance(args.get("period_start"), (int, float)) else None,
+                period_end=args.get("period_end") if isinstance(args.get("period_end"), (int, float)) else None,
+            )
+        if tool == "create_guest_token":
+            return await create_guest_token(
+                role=args.get("role") if isinstance(args.get("role"), str) else "",
+                resource_type=args.get("resource_type") if isinstance(args.get("resource_type"), str) else "",
+                resource_id=args.get("resource_id") if isinstance(args.get("resource_id"), str) else "",
+                created_by=args.get("created_by") if isinstance(args.get("created_by"), str) else "",
+                expires_in_hours=args.get("expires_in_hours") if isinstance(args.get("expires_in_hours"), (int, float)) else None,
+                max_uses=args.get("max_uses") if isinstance(args.get("max_uses"), int) else None,
+                resource_name=args.get("resource_name") if isinstance(args.get("resource_name"), str) else None,
+                allowed_ips=args.get("allowed_ips") if isinstance(args.get("allowed_ips"), list) else None,
+                allowed_domains=args.get("allowed_domains") if isinstance(args.get("allowed_domains"), list) else None,
+            )
+        if tool == "validate_guest_token":
+            return await validate_guest_token(
+                token_string=args.get("token_string") if isinstance(args.get("token_string"), str) else "",
+                client_ip=args.get("client_ip") if isinstance(args.get("client_ip"), str) else None,
+            )
+        if tool == "open_conflict":
+            return await open_conflict(
+                title=args.get("title") if isinstance(args.get("title"), str) else "",
+                description=args.get("description") if isinstance(args.get("description"), str) else "",
+                type=args.get("type") if isinstance(args.get("type"), str) else "",
+                parties=args.get("parties") if isinstance(args.get("parties"), list) else [],
+                severity=args.get("severity") if isinstance(args.get("severity"), str) else None,
+                reported_by=args.get("reported_by") if isinstance(args.get("reported_by"), str) else "",
+            )
+        if tool == "assign_mediator":
+            return await assign_mediator(
+                conflict_id=args.get("conflict_id") if isinstance(args.get("conflict_id"), str) else "",
+                mediator_id=args.get("mediator_id") if isinstance(args.get("mediator_id"), str) else "",
+            )
+        if tool == "resolve_conflict":
+            return await resolve_conflict(
+                conflict_id=args.get("conflict_id") if isinstance(args.get("conflict_id"), str) else "",
+                resolution=args.get("resolution") if isinstance(args.get("resolution"), str) else "",
+                agreed_actions=args.get("agreed_actions") if isinstance(args.get("agreed_actions"), list) else [],
+            )
+        if tool == "give_kudos":
+            return await give_kudos(
+                from_agent=args.get("from_agent") if isinstance(args.get("from_agent"), str) else "",
+                to_agent=args.get("to_agent") if isinstance(args.get("to_agent"), str) else "",
+                category=args.get("category") if isinstance(args.get("category"), str) else "",
+                message=args.get("message") if isinstance(args.get("message"), str) else "",
+                project_id=args.get("project_id") if isinstance(args.get("project_id"), str) else None,
+                task_id=args.get("task_id") if isinstance(args.get("task_id"), str) else None,
+                visibility=args.get("visibility") if isinstance(args.get("visibility"), str) else "team",
+            )
+        if tool == "update_streak":
+            return await update_streak(
+                agent_id=args.get("agent_id") if isinstance(args.get("agent_id"), str) else "",
+                streak_type=args.get("streak_type") if isinstance(args.get("streak_type"), str) else "",
+                increment=bool(args.get("increment", True)),
+            )
+        if tool == "award_achievement":
+            return await award_achievement(
+                agent_id=args.get("agent_id") if isinstance(args.get("agent_id"), str) else "",
+                type=args.get("type") if isinstance(args.get("type"), str) else "",
+                title=args.get("title") if isinstance(args.get("title"), str) else "",
+                description=args.get("description") if isinstance(args.get("description"), str) else "",
+                icon=args.get("icon") if isinstance(args.get("icon"), str) else "🏆",
+            )
+        if tool == "record_velocity":
+            return await record_velocity(
+                team_id=args.get("team_id") if isinstance(args.get("team_id"), str) else "",
+                completed_tasks=int(args.get("completed_tasks") or 0),
+                completed_story_points=int(args.get("completed_story_points") or 0),
+                cycle_times_hours=args.get("cycle_times_hours") if isinstance(args.get("cycle_times_hours"), list) else [],
+                lead_times_hours=args.get("lead_times_hours") if isinstance(args.get("lead_times_hours"), list) else [],
+                quality_metrics=args.get("quality_metrics") if isinstance(args.get("quality_metrics"), dict) else {},
+                collaboration_data=args.get("collaboration_data") if isinstance(args.get("collaboration_data"), dict) else {},
+            )
+        if tool == "get_leaderboard":
+            return await get_leaderboard(
+                metric=args.get("metric") if isinstance(args.get("metric"), str) else "kudos_received",
+                limit=int(args.get("limit") or 10),
+            )
         return ToolResult(False, tool or "unknown", error=f"unknown tool: {name}")
     except ToolError as e:
         return ToolResult(False, tool or "unknown", error=str(e))
@@ -1786,6 +2001,142 @@ def tools_manifest() -> List[Dict[str, Any]]:
             "description": "Get memory system statistics.",
             "params": {},
         },
+        # Phase 12: Collaboration & Human-in-the-Loop
+        {
+            "name": "request_approval",
+            "description": "Request approval for a sensitive operation.",
+            "params": {"title": "string", "description": "string", "approval_type": "string", "requester": "string", "context": "object", "priority?": "string", "required_approvers?": ["string"], "min_approvals?": "number", "timeout_hours?": "number", "metadata?": "object"},
+        },
+        {
+            "name": "decide_approval",
+            "description": "Decide on an approval request.",
+            "params": {"request_id": "string", "user_id": "string", "decision": "string", "rationale?": "string", "conditions?": ["string"]},
+        },
+        {
+            "name": "create_pair_session",
+            "description": "Create a pair programming session.",
+            "params": {"title": "string", "creator_id": "string", "creator_name": "string", "is_agent?": "boolean"},
+        },
+        {
+            "name": "join_pair_session",
+            "description": "Join a pair programming session.",
+            "params": {"session_id": "string", "user_id": "string", "name": "string", "preferred_role?": "string", "is_agent?": "boolean"},
+        },
+        {
+            "name": "create_code_review",
+            "description": "Create a code review.",
+            "params": {"title": "string", "description": "string", "author": "string", "head_branch": "string", "base_branch?": "string", "files_changed?": ["string"], "diff?": "string", "reviewers?": ["string"]},
+        },
+        {
+            "name": "add_review_comment",
+            "description": "Add a comment to a code review.",
+            "params": {"review_id": "string", "author": "string", "file_path": "string", "content": "string", "line_start?": "number", "line_end?": "number", "comment_type?": "string", "suggestion?": "string"},
+        },
+        {
+            "name": "submit_review_decision",
+            "description": "Submit a decision on a code review.",
+            "params": {"review_id": "string", "reviewer": "string", "decision": "string", "rationale?": "string"},
+        },
+        {
+            "name": "request_handoff",
+            "description": "Request a handoff between human and agent.",
+            "params": {"type": "string", "reason": "string", "from_party": "string", "to_party": "string", "context": "object", "message?": "string", "priority?": "number"},
+        },
+        {
+            "name": "respond_handoff",
+            "description": "Respond to a handoff request.",
+            "params": {"request_id": "string", "responder": "string", "accepted": "boolean", "message?": "string", "conditions?": ["string"]},
+        },
+        {
+            "name": "create_whiteboard",
+            "description": "Create a shared whiteboard.",
+            "params": {"name": "string", "creator": "string", "theme?": "string"},
+        },
+        {
+            "name": "add_whiteboard_element",
+            "description": "Add an element to a whiteboard.",
+            "params": {"scene_id": "string", "element": "object", "user_id": "string"},
+        },
+        {
+            "name": "schedule_meeting",
+            "description": "Schedule a meeting with the meeting agent.",
+            "params": {"title": "string", "host_id": "string", "scheduled_at": "number", "description?": "string", "participants?": ["string"], "tags?": ["string"]},
+        },
+        {
+            "name": "start_meeting",
+            "description": "Start a scheduled meeting.",
+            "params": {"meeting_id": "string"},
+        },
+        {
+            "name": "end_meeting",
+            "description": "End an active meeting.",
+            "params": {"meeting_id": "string"},
+        },
+        {
+            "name": "add_meeting_transcript",
+            "description": "Add a transcript segment to a meeting.",
+            "params": {"meeting_id": "string", "speaker_id": "string", "speaker_name": "string", "text": "string", "start_time": "number", "end_time": "number", "confidence?": "number", "is_agent?": "boolean"},
+        },
+        {
+            "name": "create_digest_template",
+            "description": "Create a digest template for stakeholder updates.",
+            "params": {"name": "string", "description": "string", "sections": ["object"], "recipients": ["string"], "frequency?": "string", "format?": "string"},
+        },
+        {
+            "name": "generate_digest",
+            "description": "Generate a digest from a template.",
+            "params": {"template_id": "string", "period_start?": "number", "period_end?": "number"},
+        },
+        {
+            "name": "create_guest_token",
+            "description": "Create a guest access token for read-only access.",
+            "params": {"role": "string", "resource_type": "string", "resource_id": "string", "created_by": "string", "expires_in_hours?": "number", "max_uses?": "number", "resource_name?": "string", "allowed_ips?": ["string"], "allowed_domains?": ["string"]},
+        },
+        {
+            "name": "validate_guest_token",
+            "description": "Validate a guest access token.",
+            "params": {"token_string": "string", "client_ip?": "string"},
+        },
+        {
+            "name": "open_conflict",
+            "description": "Open a conflict for mediation.",
+            "params": {"title": "string", "description": "string", "type": "string", "parties": ["object"], "severity?": "string", "reported_by?": "string"},
+        },
+        {
+            "name": "assign_mediator",
+            "description": "Assign a mediator to a conflict.",
+            "params": {"conflict_id": "string", "mediator_id": "string"},
+        },
+        {
+            "name": "resolve_conflict",
+            "description": "Resolve a conflict with agreed actions.",
+            "params": {"conflict_id": "string", "resolution": "string", "agreed_actions": ["string"]},
+        },
+        {
+            "name": "give_kudos",
+            "description": "Give kudos to another agent.",
+            "params": {"from_agent": "string", "to_agent": "string", "category": "string", "message": "string", "project_id?": "string", "task_id?": "string", "visibility?": "string"},
+        },
+        {
+            "name": "update_streak",
+            "description": "Update an agent's streak.",
+            "params": {"agent_id": "string", "streak_type": "string", "increment?": "boolean"},
+        },
+        {
+            "name": "award_achievement",
+            "description": "Award an achievement to an agent.",
+            "params": {"agent_id": "string", "type": "string", "title": "string", "description": "string", "icon?": "string"},
+        },
+        {
+            "name": "record_velocity",
+            "description": "Record team velocity metrics.",
+            "params": {"team_id": "string", "completed_tasks": "number", "completed_story_points": "number", "cycle_times_hours": ["number"], "lead_times_hours": ["number"], "quality_metrics": "object", "collaboration_data": "object"},
+        },
+        {
+            "name": "get_leaderboard",
+            "description": "Get leaderboard for a social metric.",
+            "params": {"metric?": "string", "limit?": "number"},
+        },
     ]
 
 
@@ -2598,3 +2949,606 @@ async def get_memory_stats() -> ToolResult:
         return ToolResult(True, "get_memory_stats", data=stats)
     except Exception as e:
         return ToolResult(False, "get_memory_stats", error=f"{type(e).__name__}: {e}")
+
+
+# --- Phase 12: Collaboration & Human-in-the-Loop ----------------------------------
+
+async def request_approval(
+    title: str,
+    description: str,
+    approval_type: str,
+    requester: str,
+    context: Dict[str, Any],
+    priority: Optional[str] = None,
+    required_approvers: Optional[List[str]] = None,
+    min_approvals: Optional[int] = None,
+    timeout_hours: Optional[float] = None,
+    metadata: Optional[Dict[str, Any]] = None,
+) -> ToolResult:
+    try:
+        from .collaboration import get_approval_gate
+        
+        gate = get_approval_gate()
+        request_id = gate.request_approval(
+            title=title,
+            description=description,
+            approval_type=approval_type,
+            requester=requester,
+            context=context,
+            priority=priority,
+            required_approvers=required_approvers,
+            min_approvals=min_approvals,
+            timeout_hours=timeout_hours,
+            metadata=metadata,
+        )
+        return ToolResult(True, "request_approval", data={"request_id": request_id})
+    except Exception as e:
+        return ToolResult(False, "request_approval", error=f"{type(e).__name__}: {e}")
+
+
+async def decide_approval(
+    request_id: str,
+    user_id: str,
+    decision: str,
+    rationale: str = "",
+    conditions: Optional[List[str]] = None,
+) -> ToolResult:
+    try:
+        from .collaboration import get_approval_gate
+        
+        gate = get_approval_gate()
+        success = gate.decide(request_id, user_id, decision, rationale, conditions)
+        return ToolResult(True, "decide_approval", data={"success": success})
+    except Exception as e:
+        return ToolResult(False, "decide_approval", error=f"{type(e).__name__}: {e}")
+
+
+async def create_pair_session(
+    title: str,
+    creator_id: str,
+    creator_name: str,
+    is_agent: bool = False,
+) -> ToolResult:
+    try:
+        from .collaboration import get_pair_session
+        
+        pair = get_pair_session()
+        session_id = pair.create_session(title, creator_id, creator_name, is_agent)
+        return ToolResult(True, "create_pair_session", data={"session_id": session_id})
+    except Exception as e:
+        return ToolResult(False, "create_pair_session", error=f"{type(e).__name__}: {e}")
+
+
+async def join_pair_session(
+    session_id: str,
+    user_id: str,
+    name: str,
+    preferred_role: Optional[str] = None,
+    is_agent: bool = False,
+) -> ToolResult:
+    try:
+        from .collaboration import get_pair_session
+        
+        pair = get_pair_session()
+        from .pair_programming import PairRole
+        role = PairRole(preferred_role) if preferred_role else None
+        success = pair.join_session(session_id, user_id, name, role, is_agent)
+        return ToolResult(True, "join_pair_session", data={"success": success})
+    except Exception as e:
+        return ToolResult(False, "join_pair_session", error=f"{type(e).__name__}: {e}")
+
+
+async def create_code_review(
+    title: str,
+    description: str,
+    author: str,
+    head_branch: str,
+    base_branch: str = "main",
+    files_changed: Optional[List[str]] = None,
+    diff: str = "",
+    reviewers: Optional[List[str]] = None,
+) -> ToolResult:
+    try:
+        from .collaboration import get_code_review
+        
+        reviews = get_code_review()
+        review_id = reviews.create_review(
+            title=title,
+            description=description,
+            author=author,
+            head_branch=head_branch,
+            base_branch=base_branch,
+            files_changed=files_changed,
+            diff=diff,
+            reviewers=reviewers,
+        )
+        return ToolResult(True, "create_code_review", data={"review_id": review_id})
+    except Exception as e:
+        return ToolResult(False, "create_code_review", error=f"{type(e).__name__}: {e}")
+
+
+async def add_review_comment(
+    review_id: str,
+    author: str,
+    file_path: str,
+    content: str,
+    line_start: Optional[int] = None,
+    line_end: Optional[int] = None,
+    comment_type: str = "inline",
+    suggestion: Optional[str] = None,
+) -> ToolResult:
+    try:
+        from .collaboration import get_code_review
+        
+        reviews = get_code_review()
+        comment_id = reviews.add_comment(
+            review_id=review_id,
+            author=author,
+            file_path=file_path,
+            content=content,
+            line_start=line_start,
+            line_end=line_end,
+            comment_type=comment_type,
+            suggestion=suggestion,
+        )
+        return ToolResult(True, "add_review_comment", data={"comment_id": comment_id})
+    except Exception as e:
+        return ToolResult(False, "add_review_comment", error=f"{type(e).__name__}: {e}")
+
+
+async def submit_review_decision(
+    review_id: str,
+    reviewer: str,
+    decision: str,
+    rationale: str = "",
+) -> ToolResult:
+    try:
+        from .collaboration import get_code_review
+        
+        reviews = get_code_review()
+        success = reviews.submit_decision(review_id, reviewer, decision, rationale)
+        return ToolResult(True, "submit_review_decision", data={"success": success})
+    except Exception as e:
+        return ToolResult(False, "submit_review_decision", error=f"{type(e).__name__}: {e}")
+
+
+async def request_handoff(
+    type: str,
+    reason: str,
+    from_party: str,
+    to_party: str,
+    context: Dict[str, Any],
+    message: str = "",
+    priority: int = 0,
+) -> ToolResult:
+    try:
+        from .collaboration import get_handoff_manager
+        from .handoff import HandoffType, HandoffReason, HandoffContext
+        
+        handoffs = get_handoff_manager()
+        handoff_id = handoffs.request_handoff(
+            type=type,
+            reason=reason,
+            from_party=from_party,
+            to_party=to_party,
+            context=HandoffContext(**context),
+            message=message,
+            priority=priority,
+        )
+        return ToolResult(True, "request_handoff", data={"handoff_id": handoff_id})
+    except Exception as e:
+        return ToolResult(False, "request_handoff", error=f"{type(e).__name__}: {e}")
+
+
+async def respond_handoff(
+    request_id: str,
+    responder: str,
+    accepted: bool,
+    message: str = "",
+    conditions: Optional[List[str]] = None,
+) -> ToolResult:
+    try:
+        from .collaboration import get_handoff_manager
+        
+        handoffs = get_handoff_manager()
+        success = handoffs.respond(request_id, responder, accepted, message, conditions)
+        return ToolResult(True, "respond_handoff", data={"success": success})
+    except Exception as e:
+        return ToolResult(False, "respond_handoff", error=f"{type(e).__name__}: {e}")
+
+
+async def create_whiteboard(
+    name: str,
+    creator: str,
+    theme: Optional[str] = None,
+) -> ToolResult:
+    try:
+        from .collaboration import get_whiteboard
+        
+        wb = get_whiteboard()
+        scene_id = wb.create_scene(name, creator, theme)
+        return ToolResult(True, "create_whiteboard", data={"scene_id": scene_id})
+    except Exception as e:
+        return ToolResult(False, "create_whiteboard", error=f"{type(e).__name__}: {e}")
+
+
+async def add_whiteboard_element(
+    scene_id: str,
+    element: Dict[str, Any],
+    user_id: str,
+) -> ToolResult:
+    try:
+        from .collaboration import get_whiteboard
+        from .whiteboard import WhiteboardElement, ElementType, ElementStyle
+        
+        wb = get_whiteboard()
+        
+        # Create element from dict
+        style = ElementStyle()
+        if element.get("style"):
+            style = ElementStyle(**element["style"])
+        
+        elem = WhiteboardElement(
+            id=str(uuid.uuid4())[:8],
+            type=ElementType(element["type"]),
+            x=element["x"],
+            y=element["y"],
+            width=element["width"],
+            height=element["height"],
+            angle=element.get("angle", 0.0),
+            style=style,
+            text=element.get("text", ""),
+            points=element.get("points", []),
+            created_by=user_id,
+            updated_by=user_id,
+        )
+        
+        wb.add_element(scene_id, elem, user_id)
+        return ToolResult(True, "add_whiteboard_element", data={"element_id": elem.id})
+    except Exception as e:
+        return ToolResult(False, "add_whiteboard_element", error=f"{type(e).__name__}: {e}")
+
+
+async def schedule_meeting(
+    title: str,
+    host_id: str,
+    scheduled_at: float,
+    description: str = "",
+    participants: Optional[List[str]] = None,
+    tags: Optional[List[str]] = None,
+) -> ToolResult:
+    try:
+        from .collaboration import get_meeting_agent
+        
+        meetings = get_meeting_agent()
+        meeting_id = meetings.schedule_meeting(
+            title=title,
+            host_id=host_id,
+            scheduled_at=scheduled_at,
+            description=description,
+            participants=participants,
+            tags=tags,
+        )
+        return ToolResult(True, "schedule_meeting", data={"meeting_id": meeting_id})
+    except Exception as e:
+        return ToolResult(False, "schedule_meeting", error=f"{type(e).__name__}: {e}")
+
+
+async def start_meeting(meeting_id: str) -> ToolResult:
+    try:
+        from .collaboration import get_meeting_agent
+        
+        meetings = get_meeting_agent()
+        success = meetings.start_meeting(meeting_id)
+        return ToolResult(True, "start_meeting", data={"success": success})
+    except Exception as e:
+        return ToolResult(False, "start_meeting", error=f"{type(e).__name__}: {e}")
+
+
+async def end_meeting(meeting_id: str) -> ToolResult:
+    try:
+        from .collaboration import get_meeting_agent
+        
+        meetings = get_meeting_agent()
+        success = meetings.end_meeting(meeting_id)
+        return ToolResult(True, "end_meeting", data={"success": success})
+    except Exception as e:
+        return ToolResult(False, "end_meeting", error=f"{type(e).__name__}: {e}")
+
+
+async def add_meeting_transcript(
+    meeting_id: str,
+    speaker_id: str,
+    speaker_name: str,
+    text: str,
+    start_time: float,
+    end_time: float,
+    confidence: float = 1.0,
+    is_agent: bool = False,
+) -> ToolResult:
+    try:
+        from .collaboration import get_meeting_agent
+        
+        meetings = get_meeting_agent()
+        segment_id = meetings.add_transcript(
+            meeting_id=meeting_id,
+            speaker_id=speaker_id,
+            speaker_name=speaker_name,
+            text=text,
+            start_time=start_time,
+            end_time=end_time,
+            confidence=confidence,
+            is_agent=is_agent,
+        )
+        return ToolResult(True, "add_meeting_transcript", data={"segment_id": segment_id})
+    except Exception as e:
+        return ToolResult(False, "add_meeting_transcript", error=f"{type(e).__name__}: {e}")
+
+
+async def create_digest_template(
+    name: str,
+    description: str,
+    sections: List[Dict[str, Any]],
+    recipients: List[str],
+    frequency: str = "daily",
+    format: str = "markdown",
+) -> ToolResult:
+    try:
+        from .collaboration import get_digest_generator
+        from .digest import DigestTemplate, DigestSection, ContentType, DigestFormat, DigestFrequency
+        
+        digests = get_digest_generator()
+        sections_objs = [
+            DigestSection(
+                type=ContentType(s["type"]),
+                title=s["title"],
+                content=[],
+                order=s.get("order", 0),
+            )
+            for s in sections
+        ]
+        
+        template = DigestTemplate(
+            id=str(uuid.uuid4())[:8],
+            name=name,
+            description=description,
+            sections=sections_objs,
+            format=format,
+            frequency=frequency,
+            recipients=recipients,
+        )
+        
+        template_id = digests.create_template(template)
+        return ToolResult(True, "create_digest_template", data={"template_id": template_id})
+    except Exception as e:
+        return ToolResult(False, "create_digest_template", error=f"{type(e).__name__}: {e}")
+
+
+async def generate_digest(
+    template_id: str,
+    period_start: Optional[float] = None,
+    period_end: Optional[float] = None,
+) -> ToolResult:
+    try:
+        from .collaboration import get_digest_generator
+        
+        digests = get_digest_generator()
+        digest = digests.generate_digest(template_id, period_start, period_end)
+        if digest:
+            return ToolResult(True, "generate_digest", data={"digest_id": digest.id})
+        return ToolResult(False, "generate_digest", error="Failed to generate digest")
+    except Exception as e:
+        return ToolResult(False, "generate_digest", error=f"{type(e).__name__}: {e}")
+
+
+async def send_digest(digest_id: str) -> ToolResult:
+    try:
+        from .collaboration import get_digest_generator
+        
+        digests = get_digest_generator()
+        success = digests.send_digest(digest_id)
+        return ToolResult(True, "send_digest", data={"success": success})
+    except Exception as e:
+        return ToolResult(False, "send_digest", error=f"{type(e).__name__}: {e}")
+
+
+async def create_guest_token(
+    role: str,
+    resource_type: str,
+    resource_id: str,
+    created_by: str,
+    expires_in_hours: Optional[float] = None,
+    max_uses: Optional[int] = None,
+    resource_name: Optional[str] = None,
+    allowed_ips: Optional[List[str]] = None,
+    allowed_domains: Optional[List[str]] = None,
+) -> ToolResult:
+    try:
+        from .collaboration import get_guest_access
+        from .guest_access import GuestRole, ResourceType
+        
+        guest = get_guest_access()
+        token = guest.create_token(
+            role=role,
+            resource_type=resource_type,
+            resource_id=resource_id,
+            created_by=created_by,
+            expires_in_hours=expires_in_hours,
+            max_uses=max_uses,
+            resource_name=resource_name,
+            allowed_ips=allowed_ips,
+            allowed_domains=allowed_domains,
+        )
+        return ToolResult(True, "create_guest_token", data={"token_id": token.id, "token": token.token})
+    except Exception as e:
+        return ToolResult(False, "create_guest_token", error=f"{type(e).__name__}: {e}")
+
+
+async def validate_guest_token(token_string: str, client_ip: Optional[str] = None) -> ToolResult:
+    try:
+        from .collaboration import get_guest_access
+        
+        guest = get_guest_access()
+        token = guest.validate_token(token_string, client_ip)
+        if token:
+            return ToolResult(True, "validate_guest_token", data={"token_id": token.id, "valid": True})
+        return ToolResult(False, "validate_guest_token", error="Invalid or expired token")
+    except Exception as e:
+        return ToolResult(False, "validate_guest_token", error=f"{type(e).__name__}: {e}")
+
+
+async def open_conflict(
+    title: str,
+    description: str,
+    type: str,
+    parties: List[Dict[str, Any]],
+    severity: Optional[str] = None,
+    reported_by: str = "",
+) -> ToolResult:
+    try:
+        from .collaboration import get_conflict_resolver
+        from .conflict_resolution import ConflictType, ConflictSeverity
+        
+        conflicts = get_conflict_resolver()
+        conflict_id = conflicts.open_conflict(
+            title=title,
+            description=description,
+            type=type,
+            parties=parties,
+            severity=severity,
+            reported_by=reported_by,
+        )
+        return ToolResult(True, "open_conflict", data={"conflict_id": conflict_id})
+    except Exception as e:
+        return ToolResult(False, "open_conflict", error=f"{type(e).__name__}: {e}")
+
+
+async def assign_mediator(conflict_id: str, mediator_id: str) -> ToolResult:
+    try:
+        from .collaboration import get_conflict_resolver
+        
+        conflicts = get_conflict_resolver()
+        success = conflicts.assign_mediator(conflict_id, mediator_id)
+        return ToolResult(True, "assign_mediator", data={"success": success})
+    except Exception as e:
+        return ToolResult(False, "assign_mediator", error=f"{type(e).__name__}: {e}")
+
+
+async def resolve_conflict(
+    conflict_id: str,
+    resolution: str,
+    agreed_actions: List[str],
+) -> ToolResult:
+    try:
+        from .collaboration import get_conflict_resolver
+        
+        conflicts = get_conflict_resolver()
+        success = conflicts.complete_mediation(conflict_id, resolution, agreed_actions)
+        return ToolResult(True, "resolve_conflict", data={"success": success})
+    except Exception as e:
+        return ToolResult(False, "resolve_conflict", error=f"{type(e).__name__}: {e}")
+
+
+async def give_kudos(
+    from_agent: str,
+    to_agent: str,
+    category: str,
+    message: str,
+    project_id: Optional[str] = None,
+    task_id: Optional[str] = None,
+    visibility: str = "team",
+) -> ToolResult:
+    try:
+        from .collaboration import get_social_features
+        from .social import KudosCategory
+        
+        social = get_social_features()
+        kudos = social.give_kudos(
+            from_agent=from_agent,
+            to_agent=to_agent,
+            category=category,
+            message=message,
+            project_id=project_id,
+            task_id=task_id,
+            visibility=visibility,
+        )
+        if kudos:
+            return ToolResult(True, "give_kudos", data={"kudos_id": kudos.id})
+        return ToolResult(False, "give_kudos", error="Failed to give kudos")
+    except Exception as e:
+        return ToolResult(False, "give_kudos", error=f"{type(e).__name__}: {e}")
+
+
+async def update_streak(agent_id: str, streak_type: str, increment: bool = True) -> ToolResult:
+    try:
+        from .collaboration import get_social_features
+        
+        social = get_social_features()
+        streak = social.update_streak(agent_id, streak_type, increment)
+        if streak:
+            return ToolResult(True, "update_streak", data={"streak": streak.__dict__})
+        return ToolResult(False, "update_streak", error="Failed to update streak")
+    except Exception as e:
+        return ToolResult(False, "update_streak", error=f"{type(e).__name__}: {e}")
+
+
+async def award_achievement(
+    agent_id: str,
+    type: str,
+    title: str,
+    description: str,
+    icon: str = "🏆",
+) -> ToolResult:
+    try:
+        from .collaboration import get_social_features
+        from .social import AchievementType
+        
+        social = get_social_features()
+        achievement = social.award_achievement(
+            agent_id=agent_id,
+            type=type,
+            title=title,
+            description=description,
+            icon=icon,
+        )
+        return ToolResult(True, "award_achievement", data={"achievement_id": achievement.id})
+    except Exception as e:
+        return ToolResult(False, "award_achievement", error=f"{type(e).__name__}: {e}")
+
+
+async def record_velocity(
+    team_id: str,
+    completed_tasks: int,
+    completed_story_points: int,
+    cycle_times_hours: List[float],
+    lead_times_hours: List[float],
+    quality_metrics: Dict[str, float],
+    collaboration_data: Dict[str, Any],
+) -> ToolResult:
+    try:
+        from .collaboration import get_social_features
+        
+        social = get_social_features()
+        velocity = social.record_team_velocity(
+            team_id=team_id,
+            completed_tasks=completed_tasks,
+            completed_story_points=completed_story_points,
+            cycle_times_hours=cycle_times_hours,
+            lead_times_hours=lead_times_hours,
+            quality_metrics=quality_metrics,
+            collaboration_data=collaboration_data,
+        )
+        return ToolResult(True, "record_velocity", data={"velocity": velocity.__dict__})
+    except Exception as e:
+        return ToolResult(False, "record_velocity", error=f"{type(e).__name__}: {e}")
+
+
+async def get_leaderboard(metric: str = "kudos_received", limit: int = 10) -> ToolResult:
+    try:
+        from .collaboration import get_social_features
+        
+        social = get_social_features()
+        leaderboard = social.get_leaderboard(metric, limit)
+        return ToolResult(True, "get_leaderboard", data={"leaderboard": leaderboard})
+    except Exception as e:
+        return ToolResult(False, "get_leaderboard", error=f"{type(e).__name__}: {e}")

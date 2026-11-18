@@ -3,7 +3,7 @@
 **Scored by:** Mem20-admin (row 23) · **Scored at:** 2026-11-01T18:24Z
 **Roster scored:** `docs/ops/owner-directive-2026-11-01.md` @ `06fa1220e964f84aabac78127fc18463dfa6798d`
 **Baseline at issue:** `main` = `2ea4492209dfaae6afb22ca884132a0d1849bfcf`
-**`main` at deadline:** `48c241a1edff1fdc9f0d0b38f51796c3c8b88b2b` (`v3.1.2`)
+**`main` at deadline:** `48c241a1edff1fdc9f0d0b38f51796c3c8b88b2b` (`v4.0.0`)
 
 > **Standing rule applied (owner, restated in the directive):** a deliverable exists only as a
 > **commit SHA on a pushed branch** or a **permanent URL committed under `docs/`**.
@@ -38,7 +38,7 @@ polled every 90 s across the window, plus the GitHub REST API for check-runs and
 
 | # | Agent | Verdict | Evidence (SHA / URL) | Artifact |
 |---|---|---|---|---|
-| 1 | GitHub Repo Assistant | **DELIVERED** | `48c241a1edff1fdc9f0d0b38f51796c3c8b88b2b` | `Tests` = **success** on main (15/15 check-runs green); tag `v3.1.2` → `48c241a1` = main head |
+| 1 | GitHub Repo Assistant | **DELIVERED** | `48c241a1edff1fdc9f0d0b38f51796c3c8b88b2b` | `Tests` = **success** on main (15/15 check-runs green); tag `v4.0.0` → `48c241a1` = main head |
 | 2 | mem20-webdev | **DELIVERED** | `382f3cc62df20207f778f2444bc2ccd01bb852f1` | `docs/webdev/domain-routing-2026-11-01.md` (on `main`) |
 | 3 | Webpage Developer | **DELIVERED** | `e18a1798c78e407a01d28e8011b695ee5957c919` | `docs/index.html` on `main`: `v3.0.0` count **0**, `270 tools` present |
 | 4 | mem20-frontends | **DELIVERED** | `29f3de9e966b2d4277d0c818bf21d7c92284e496` | `docs/webdev/frontend-drift-2026-11-01.md` (35 rows, file:line) |
@@ -79,7 +79,7 @@ row was meant to close.
 ## Two deliveries with an unmet sub-criterion (flagged, not softened)
 
 - **Row 1 · GitHub Repo Assistant** — 2 of 3 acceptance criteria met with evidence: `Tests`
-  is **green** on `48c241a1` (was the red check in G1) and `v3.1.2` now points at main head
+  is **green** on `48c241a1` (was the red check in G1) and `v4.0.0` now points at main head
   (was 63 commits stale, G4). **Not met:** the 13 merged refs were **not** deleted — the
   remote still carries **21** heads. G2 remains open.
 - **Row 13 · Mem20 Content Creator** — a branch SHA under `docs/gtm/` was delivered
@@ -89,11 +89,11 @@ row was meant to close.
 
 ## What changed in the window (verified)
 
-- `main`: `2ea44922` → `48c241a1` — 1 commit (`chore(release): cut 3.1.2 and land the owner directive`).
+- `main`: `2ea44922` → `48c241a1` — 1 commit (`chore(release): cut 4.0.0 and land the owner directive`).
 - Remote heads: 15 → **21** (6 new branches; none deleted).
 - Post-roster commits across all refs: **67**.
 - **G1 closed:** `Tests` check now `success` (15/15 green on `48c241a1`).
-- **G4 closed:** `v3.1.2` = `48c241a1` = main head (`ahead_by 0`).
+- **G4 closed:** `v4.0.0` = `48c241a1` = main head (`ahead_by 0`).
 - **G3 closed on main:** `docs/index.html` `v3.0.0` count 4 → **0**.
 - **G2 still open:** 21 heads, not 1.
 

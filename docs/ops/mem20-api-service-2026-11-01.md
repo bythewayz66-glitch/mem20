@@ -1,6 +1,6 @@
 # mem20 HTTP API service — 4.0 server lane
 
-**Lane:** server / backend · **Date:** 2026-11-01 · **Base:** `main` @ `48c241a1edff1fdc9f0d0b38f51796c3c8b88b2b` (`VERSION` 3.1.2)
+**Lane:** server / backend · **Date:** 2026-11-01 · **Base:** `main` @ `48c241a1edff1fdc9f0d0b38f51796c3c8b88b2b` (`VERSION` 4.0.0)
 
 ## 1. The gap this closes
 

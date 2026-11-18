@@ -162,7 +162,7 @@ Run workflow* with `dry_run` left on (the default).
 ## Verification — reproduced results
 
 The build, test and packaging rows below were produced on this checkout
-(2026-11-16, Ruby 3.1.2, Debian 12) and are reproduced verbatim in
+(2026-11-16, Ruby 4.0.0, Debian 12) and are reproduced verbatim in
 [`docs/EVIDENCE.md`](docs/EVIDENCE.md). The live stdio round-trip row is the
 earlier capture from a Kali Linux host with Ruby 3.3.8; that host has since been
 retired and no longer exists, so the measurement stands as recorded. The surface

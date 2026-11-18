@@ -82,7 +82,7 @@ Each row: **owner** · **gap** · **task** · **acceptance evidence**.
 **1. GitHub Repo Assistant** — G1, G2, G4
 - Fix the red `Tests` check: reproduce `exit code 4` from the *Compute diff against the base* step in `.github/workflows/ci.yml` on `2ea44922`, fix the step (not the test), and get `Tests` green on a pushed branch.
 - Delete the 13 merged refs listed in §2/G2 (all are ancestors of main — zero risk).
-- Re-tag `v3.1.1` at current main (or cut `v3.1.2`) so the tag is not 63 commits behind.
+- Re-tag `v3.1.1` at current main (or cut `v4.0.0`) so the tag is not 63 commits behind.
 - **Acceptance:** branch SHA with `Tests` = `success` in check-runs; `git ls-remote --heads` shows only `main`; `compare/<newtag>...main` → `ahead_by 0`.
 
 **2. mem20-webdev** — G6, G10

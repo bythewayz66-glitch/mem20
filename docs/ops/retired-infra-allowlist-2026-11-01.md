@@ -3,7 +3,7 @@
 **Task:** purge retired `Sidney` / `gabe` / `jaysonai` references from `main`, and verify no live
 service or systemd unit still points at them.
 **Owner directive:** `docs/ops/owner-directive-2026-11-01.md` @ `06fa1220e964f84aabac78127fc18463dfa6798d`, row 5 (Server Builder, gap G8).
-**Baseline:** `main` = `48c241a1` (`v3.1.2`).
+**Baseline:** `main` = `48c241a1` (`v4.0.0`).
 **Branch:** `chore/g8-purge-retired-infra-2026-11-01`.
 
 ## 1. Two different things share the name "retired" — do not treat them alike

@@ -7,7 +7,7 @@ mem20 states its version in three files:
   pyproject.toml  [project] version    -- what `pip install .` records
   sdk/cpp/include/mem20/version.hpp    -- what the C++ SDK was built against
 
-On 2026-11-01 these read 3.1.2, 3.0.0 and 3.1.0. Nothing compared them, so the
+On 2026-11-01 these read 4.0.0, 3.0.0 and 3.1.0. Nothing compared them, so the
 package metadata had been two minor releases behind the tree it described and
 the SDK baseline one behind. This script is the comparison.
 

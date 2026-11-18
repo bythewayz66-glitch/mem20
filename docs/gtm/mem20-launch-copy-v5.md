@@ -3,7 +3,7 @@
 **Prepared by:** Mem20 Content Creator · **Seat:** Brand & Positioning Strategist
 **Supersedes:** Launch Copy Pack v4 (`docs/gtm/mem20-launch-copy.md`, retained in place as the retired reference)
 **Canonical repo:** https://github.com/bythewayz66-glitch/mem20 · **Branch read:** `main` · **HEAD:** `d99ab5d8e9c5c45a1fb3d02d3b65b2f9a96b5110`
-**Version:** `VERSION` = **3.1.2** · **License:** MIT · **Python:** >=3.10 · **Protocol:** MCP `2025-06-18`
+**Version:** `VERSION` = **4.0.0** · **License:** MIT · **Python:** >=3.10 · **Protocol:** MCP `2025-06-18`
 **Canonical public URL:** https://mem20.com/ · **Verified:** 2026-11-01 · **Audit:** `python3 docs/gtm/audit-launch-copy.py` → exit 0
 
 > **What changed from v4, and why it had to change.**
@@ -14,9 +14,9 @@
 >
 > **3. The install line works again, with no extra step.** v4 had to add a manual `aiohttp` install because the A2A module imported it at module scope while the manifest omitted it. At this HEAD `requirements.txt` pins eight packages including `aiohttp>=3.14.5` and `mcp-types>=2.3.0`, and a clean install boots. The workaround is gone from every asset below.
 >
-> **4. The version is a contradiction inside the repo, and copy must not paper over it.** `VERSION` = **3.1.2**; `pyproject.toml` still declares the retired **3.0.0**. Assets quote **3.1.2** (what `main` carries) and name the packaging defect rather than hiding it.
+> **4. The version is a contradiction inside the repo, and copy must not paper over it.** `VERSION` = **4.0.0**; `pyproject.toml` still declares the retired **3.0.0**. Assets quote **4.0.0** (what `main` carries) and name the packaging defect rather than hiding it.
 >
-> **5. The public page is one release behind the code.** https://mem20.com/ returns 200 and prints **v3.1.0** four times and **270 tools** eight times. The code says 3.1.2 / 272. That drift is a live defect, disclosed in §7, not a number to copy into launch copy.
+> **5. The public page is one release behind the code.** https://mem20.com/ returns 200 and prints **v3.1.0** four times and **270 tools** eight times. The code says 4.0.0 / 272. That drift is a live defect, disclosed in §7, not a number to copy into launch copy.
 >
 > **6. PyPI is still not a thing.** `mem20`, `mem20-ai` and `mem20oreo` all return 404 on pypi.org. Install is source-only, and no asset may imply otherwise.
 
@@ -513,7 +513,7 @@ A number not in this table does not ship. Every row is traceable to a file or a 
 |---|---|---|---|---|
 | C1 | MCP tool surface | **272** | `python3 verify_mcp.py` with `MEM20_EXPECTED_TOOLS=272` → `TOOL_COUNT: 272`, `RESULT: PASS`; CI pins the same value in `.github/workflows/mcp-verify.yml` | Counts tools, not retrieval quality. 270 is the retired value from an earlier HEAD. |
 | C2 | Registration groups | **28** | `sed -n '/def _setup_tools/,/def _handle_list_tools/p' mcp/server.py \| grep -cE 'self\.register_[a-z0-9_]+_tools\(\)'` → 28 | "27 domains" is an editorial subtraction in `docs/TOOL-DOMAINS.md`, not a code-derived number. Do not present a domain count as measured. |
-| C3 | Version | **3.1.2** | `VERSION` at `main` | `pyproject.toml` still declares the retired 3.0.0 — packaging defect, disclosed not hidden. |
+| C3 | Version | **4.0.0** | `VERSION` at `main` | `pyproject.toml` still declares the retired 3.0.0 — packaging defect, disclosed not hidden. |
 | C4 | License | **MIT** | `pyproject.toml` `license = { text = "MIT" }` | — |
 | C5 | Python floor | **>=3.10** | `pyproject.toml` `requires-python` | — |
 | C6 | Protocol | **MCP 2025-06-18** | `verify_mcp.py` initialize response `protocolVersion` | — |
@@ -553,7 +553,7 @@ A number not in this table does not ship. Every row is traceable to a file or a 
 
 | ID | Defect | Owner | Effect on launch |
 |---|---|---|---|
-| D1 | `pyproject.toml` declares the retired 3.0.0 while `VERSION` is 3.1.2 | GitHub Repo Assistant | Any `pip install .` reports the wrong version. Copy quotes 3.1.2 and names the defect. |
+| D1 | `pyproject.toml` declares the retired 3.0.0 while `VERSION` is 4.0.0 | GitHub Repo Assistant | Any `pip install .` reports the wrong version. Copy quotes 4.0.0 and names the defect. |
 | D2 | https://mem20.com/ prints v3.1.0 and 270 tools — one release and two tools behind `main` | Webpage Developer | A visitor who checks the site against the repo sees a contradiction. |
 | D3 | No `og:image`, no `twitter:card`, no favicon on the public page | Webpage Developer | Product Hunt cannot accept a submission without gallery assets; HN/Reddit/X render a grey box. |
 | D4 | Canonical Pages URL 301s to `http://` rather than `https://` | Repo admin / Pages config | Mixed-content and trust problem on the primary link. |

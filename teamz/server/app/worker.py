@@ -304,6 +304,10 @@ def build_worker_prompt(
                 "next. If the goal is complete, say done=true."
             ),
             (
+                "You may delegate and orchestrate: create agents/channels, invite members, post messages to other rooms/agents, and set goals for rooms so work continues autonomously until stopped. "
+                "When delegating, give clear instructions and assign work to the right agents/channels."
+            ),
+            (
                 "You may learn skills: the workspace has a catalogue of "
                 f"{skill_count} skills you can draw on and add to your own portfolio."
             ),
@@ -328,9 +332,10 @@ def build_worker_prompt(
             "Team:\n" + ("\n".join(f"- {a.get('name')} ({a.get('origin', {}).get('role', a.get('role', ''))})" for a in others) if others else "- (you are the only member)"),
             "Recent room history:\n" + ("\n".join(history_lines) if history_lines else "- (empty)"),
             (
-                "Take the NEXT concrete step now. Call your tools as needed, then reply with STRICT JSON only:\n"
+                "Take the NEXT concrete step now. Use tools/runtime actions as needed, then reply with STRICT JSON only:\n"
                 '{"summary": string, "progress": 0-100, "next_step": string, "done": boolean, '
-                '"tool_actions": [{"tool": "terminal|write_file|edit_file|read_file|list_files|gh|github", "args": {...}}], '
+                '"tool_actions": [{"tool": "terminal|write_file|edit_file|read_file|list_files|gh|github|run_tests|...", "args": {...}}], '
+                '"runtime_actions": [{"type": "create_channel|create_agent|update_agent|invite_agent_to_channel|update_channel_members|rename_channel|send_message|set_goal|delete_channel|delete_agent", "...": "..."}], '
                 '"learned_skills": [{"key": string, "label": string, "level": 1-5}]}'
             ),
         ]
@@ -508,35 +513,19 @@ class GoalWorker:
         parsed = _extract_json_object(raw)
         tool_results: List[Dict[str, Any]] = []
         if parsed and isinstance(parsed.get("tool_actions"), list):
-            tool_results = execute_actions(parsed.get("tool_actions"), agent_id=agent.get("id"))
+            try:
+                tool_results = execute_actions(parsed.get("tool_actions"), agent_id=agent.get("id"))
+            except Exception as e:
+                tool_results = [{"ok": False, "tool": "execute_actions", "error": str(e)}]
 
-        # --- Award XP for successful tool executions ---
-        xp_gained = 0
-        for tr in tool_results:
-            if tr.get("ok"):
-                xp_gained += XP_PER_SUCCESSFUL_TOOL
-                # Award XP to relevant skills based on tool used
-                tool = tr.get("tool")
-                skill_key = self._tool_to_skill_key(tr.get("tool"))
-                if skill_key:
-                    # Award XP to the agent's skill
-                    state = self.store.load()
-                    for ag in state.get("agents") or []:
-                        if ag.get("id") == agent.get("id"):
-                            ag = _add_skill_xp(ag, skill_key, XP_PER_SUCCESSFUL_TOOL)
-                    self.store.save(state)
-
-        # Bonus XP for completing a step successfully
-        xp_gained += XP_PER_SUCCESSFUL_STEP
-        state = self.store.load()
-        for ag in state.get("agents") or []:
-            if ag.get("id") == agent.get("id"):
-                # Add to general XP (could track on a primary skill)
-                for skill in ag.get("skills") or []:
-                    if skill.get("level", 1) == max(s.get("level", 1) for s in ag.get("skills") or [{"level": 1}]):
-                        ag = _add_skill_xp(ag, skill["key"], XP_PER_SUCCESSFUL_STEP)
-                        break
-        self.store.save(state)
+        runtime_actions_raw = []
+        if isinstance(parsed, dict):
+            for k in ("runtime_actions", "teamz_actions", "actions"):
+                v = parsed.get(k)
+                if isinstance(v, list):
+                    runtime_actions_raw = v
+                    break
+        runtime_actions = _normalize_runtime_actions(runtime_actions_raw)
 
         summary = str(
             (parsed or {}).get("summary")
@@ -548,28 +537,77 @@ class GoalWorker:
         learned = (parsed or {}).get("learned_skills") if isinstance((parsed or {}).get("learned_skills"), list) else []
 
         state = self.store.load()
-        goal = (state.setdefault("goals", {}).get(conversation_id) or {})
-        goal.update(
+
+        # Apply runtime/delegation actions (workspace orchestration) on current state
+        runtime_results: List[Dict[str, Any]] = []
+        if runtime_actions:
+            try:
+                runtime_results = _apply_worker_runtime_actions(
+                    state,
+                    runtime_actions,
+                    current_conversation_id=conversation_id,
+                    actor=agent,
+                )
+            except Exception as e:
+                runtime_results = [{"ok": False, "type": "runtime_actions", "error": str(e)}]
+
+        # --- Award XP for successful tool executions and step ---
+        for tr in tool_results:
+            if tr.get("ok"):
+                skill_key = self._tool_to_skill_key(tr.get("tool"))
+                if skill_key:
+                    for ag in state.get("agents") or []:
+                        if isinstance(ag, dict) and ag.get("id") == agent.get("id"):
+                            _add_skill_xp(ag, skill_key, XP_PER_SUCCESSFUL_TOOL)
+                            break
+        # Bonus XP for completing a step
+        for ag in state.get("agents") or []:
+            if isinstance(ag, dict) and ag.get("id") == agent.get("id"):
+                skills = [s for s in (ag.get("skills") or []) if isinstance(s, dict)]
+                if skills:
+                    top = max(skills, key=lambda s: int(s.get("level", 1) or 1))
+                    _add_skill_xp(ag, str(top.get("key") or "general"), XP_PER_SUCCESSFUL_STEP)
+                break
+
+        goal_state = (state.setdefault("goals", {}).get(conversation_id) or {})
+        goal_state.update(
             {
+                "text": goal_state.get("text") or goal.get("text") or "",
                 "progress": progress,
                 "status": "done" if done else "active",
                 "done": done,
                 "active": not done,
-                "steps": int(goal.get("steps", 0)) + 1,
+                "steps": int(goal_state.get("steps", goal.get("steps", 0)) or 0) + 1,
                 "lastStep": summary,
                 "nextStep": next_step,
                 "updatedAt": int(time.time() * 1000),
                 "lastAgentId": agent.get("id"),
+                "lastError": None,
+                "cooldownUntil": None,
             }
         )
-        state.setdefault("messages", {}).setdefault(conversation_id, []).append(
+        state.setdefault("goals", {})[conversation_id] = goal_state
+
+        msg_text = _compose_step_message(summary, next_step, done, tool_results, agent.get("name"))
+        if runtime_results:
+            ok_rt = sum(1 for r in runtime_results if r.get("ok"))
+            fail_rt = len(runtime_results) - ok_rt
+            rt_lines = [f"Runtime actions: {ok_rt} ok, {fail_rt} failed"]
+            for r in runtime_results[:10]:
+                mark = "✓" if r.get("ok") else "✗"
+                detail = r.get("name") or r.get("id") or r.get("error") or r.get("type") or ""
+                rt_lines.append(f"- {mark} {r.get('type')}: {detail}")
+            msg_text = msg_text.rstrip() + "\n\n" + "\n".join(rt_lines)
+
+        bucket = state.setdefault("messages", {}).setdefault(conversation_id, [])
+        bucket.append(
             {
-                "id": f"m-{int(time.time()*1000)}-{len(state['messages'][conversation_id])}",
+                "id": f"m-{int(time.time()*1000)}-{len(bucket)}",
                 "conversationId": conversation_id,
                 "authorType": "agent",
                 "authorId": agent.get("id"),
                 "authorName": agent.get("name"),
-                "text": _compose_step_message(summary, next_step, done, tool_results, agent.get("name")),
+                "text": msg_text,
                 "createdAt": int(time.time() * 1000),
                 "status": "sent",
                 "kind": "goal-step",
@@ -587,6 +625,7 @@ class GoalWorker:
                 "text": summary,
                 "progress": progress,
                 "tools": [t.get("tool") for t in tool_results],
+                "runtime_actions": [r.get("type") for r in runtime_results if r.get("ok")],
                 "at": int(time.time() * 1000),
             }
         )
@@ -605,8 +644,25 @@ class GoalWorker:
             "nextStep": next_step,
             "done": done,
             "toolResults": tool_results,
+            "runtimeResults": runtime_results,
             "elapsedMs": int((time.time() - started) * 1000),
         }
+
+    def _tool_to_skill_key(self, tool: Any) -> Optional[str]:
+        t = str(tool or "").strip().lower()
+        if not t:
+            return None
+        mapping = {
+            "terminal": "terminal",
+            "run_tests": "testing",
+            "write_file": "coding",
+            "edit_file": "coding",
+            "read_file": "code-reading",
+            "list_files": "filesystem",
+            "gh": "github",
+            "github": "github",
+        }
+        return mapping.get(t)
 
     def _record_failure(self, state: Dict[str, Any], conversation_id: str, error: str) -> None:
         self.last_error = error
@@ -941,6 +997,377 @@ def _apply_learned_skills(state: Dict[str, Any], agent_id: Optional[str], learne
                 skills.append({"key": key, "label": label, "level": level})
         agent["skills"] = skills
     return state
+
+
+def _uid(prefix: str) -> str:
+    return f"{prefix}-{uuid.uuid4().hex[:10]}"
+
+
+def _resolve_agent_ref(state: Dict[str, Any], ref: Any) -> Optional[Dict[str, Any]]:
+    if not ref:
+        return None
+    if isinstance(ref, dict):
+        ref = ref.get("agentId") or ref.get("agent_id") or ref.get("id") or ref.get("name") or ref.get("agentName")
+    ref_s = str(ref).strip()
+    if not ref_s:
+        return None
+    for a in state.get("agents") or []:
+        if not isinstance(a, dict):
+            continue
+        if str(a.get("id") or "") == ref_s:
+            return a
+    ref_l = ref_s.lower()
+    for a in state.get("agents") or []:
+        if not isinstance(a, dict):
+            continue
+        if str(a.get("name") or "").strip().lower() == ref_l:
+            return a
+    return None
+
+
+def _resolve_conversation_ref(state: Dict[str, Any], action: Dict[str, Any]) -> Optional[Dict[str, Any]]:
+    for key in ("conversationId", "conversation_id", "channelId", "channel_id", "id"):
+        v = action.get(key)
+        if v:
+            for c in state.get("conversations") or []:
+                if isinstance(c, dict) and str(c.get("id") or "") == str(v):
+                    return c
+    for key in ("nameMatch", "channelName", "name"):
+        v = action.get(key)
+        if v:
+            vl = str(v).strip().lower()
+            for c in state.get("conversations") or []:
+                if isinstance(c, dict) and str(c.get("name") or "").strip().lower() == vl:
+                    return c
+    # direct chat target by agent name/id
+    for key in ("agentName", "agentId", "agent"):
+        a = _resolve_agent_ref(state, action.get(key))
+        if a:
+            for c in state.get("conversations") or []:
+                if isinstance(c, dict) and c.get("kind") == "direct" and (c.get("agentIds") or [None])[0] == a.get("id"):
+                    return c
+    return None
+
+
+def _ensure_messages_bucket(state: Dict[str, Any], conversation_id: str) -> List[Dict[str, Any]]:
+    msgs = state.setdefault("messages", {})
+    if not isinstance(msgs.get(conversation_id), list):
+        msgs[conversation_id] = []
+    return msgs[conversation_id]
+
+
+def _normalize_runtime_actions(raw: Any) -> List[Dict[str, Any]]:
+    if not isinstance(raw, list):
+        return []
+    out: List[Dict[str, Any]] = []
+    for item in raw:
+        if not isinstance(item, dict):
+            continue
+        action = dict(item)
+        if "type" not in action and "tool" in action:
+            action["type"] = action.get("tool")
+        if "type" not in action and "name" in action:
+            action["type"] = action.get("name")
+        if action.get("type"):
+            action["type"] = str(action["type"]).strip().lower()
+            out.append(action)
+    return out
+
+
+def _apply_worker_runtime_actions(
+    state: Dict[str, Any],
+    actions: List[Dict[str, Any]],
+    *,
+    current_conversation_id: Optional[str] = None,
+    actor: Optional[Dict[str, Any]] = None,
+) -> List[Dict[str, Any]]:
+    results: List[Dict[str, Any]] = []
+    now_ms = int(time.time() * 1000)
+    for action in actions:
+        if not isinstance(action, dict):
+            continue
+        t = str(action.get("type") or action.get("tool") or action.get("name") or "").strip().lower()
+        try:
+            if t == "create_agent":
+                name = str(action.get("name") or "").strip()
+                if not name:
+                    results.append({"ok": False, "type": t, "error": "missing name"})
+                    continue
+                agent = {
+                    "id": _uid("agent"),
+                    "name": name,
+                    "status": "online",
+                    "createdAt": now_ms,
+                    "emoji": action.get("emoji") or "🤖",
+                    "accent": action.get("accent") or "#6b7280",
+                    "systemPrompt": str(action.get("systemPrompt") or action.get("system_prompt") or f"You are {name}, a helpful AI agent.").strip(),
+                    "model": action.get("model"),
+                    "skills": _normalize_skills(action.get("skills") or []),
+                    "isLead": bool(action.get("isLead") or action.get("lead")),
+                    "origin": {"role": str(action.get("role") or "").strip()} if action.get("role") else {},
+                }
+                state.setdefault("agents", []).append(agent)
+                # optional direct chat
+                direct = {
+                    "id": _uid("conv"),
+                    "kind": "direct",
+                    "name": agent["name"],
+                    "agentIds": [agent["id"]],
+                    "createdAt": now_ms,
+                }
+                state.setdefault("conversations", []).insert(0, direct)
+                _ensure_messages_bucket(state, direct["id"])
+                # optional add to channel
+                target_conv = _resolve_conversation_ref(state, action)
+                if target_conv and target_conv.get("kind") == "channel":
+                    ids = list(target_conv.get("agentIds") or [])
+                    if agent["id"] not in ids:
+                        ids.append(agent["id"])
+                        target_conv["agentIds"] = ids
+                results.append({"ok": True, "type": t, "id": agent["id"], "name": agent["name"]})
+            elif t == "create_channel":
+                name = str(action.get("name") or "").strip() or "New Channel"
+                agent_ids: List[str] = []
+                for x in (action.get("agentIds") or []):
+                    a = _resolve_agent_ref(state, x)
+                    if a and a.get("id") and a["id"] not in agent_ids:
+                        agent_ids.append(a["id"])
+                for x in (action.get("agentNames") or []):
+                    a = _resolve_agent_ref(state, x)
+                    if a and a.get("id") and a["id"] not in agent_ids:
+                        agent_ids.append(a["id"])
+                if not agent_ids and actor and actor.get("id"):
+                    agent_ids.append(actor["id"])
+                conv = {
+                    "id": _uid("conv"),
+                    "kind": "channel",
+                    "name": name,
+                    "agentIds": agent_ids,
+                    "topic": str(action.get("topic") or "").strip() or None,
+                    "createdAt": now_ms,
+                }
+                state.setdefault("conversations", []).insert(0, conv)
+                _ensure_messages_bucket(state, conv["id"])
+                results.append({"ok": True, "type": t, "id": conv["id"], "name": conv["name"]})
+            elif t in {"update_agent", "program_agent"}:
+                a = _resolve_agent_ref(state, action.get("agentId") or action.get("agentName") or action.get("agent"))
+                if not a:
+                    results.append({"ok": False, "type": t, "error": "agent not found"})
+                    continue
+                if action.get("name"):
+                    a["name"] = str(action["name"]).strip() or a.get("name")
+                if action.get("systemPrompt") or action.get("system_prompt"):
+                    a["systemPrompt"] = str(action.get("systemPrompt") or action.get("system_prompt"))
+                if action.get("model") is not None:
+                    a["model"] = action.get("model")
+                if isinstance(action.get("skills"), list):
+                    a["skills"] = _normalize_skills(action.get("skills"))
+                if isinstance(action.get("addSkills"), list):
+                    existing = list(a.get("skills") or [])
+                    for sk in _normalize_skills(action.get("addSkills")):
+                        found = next((x for x in existing if x.get("key") == sk.get("key")), None)
+                        if found:
+                            found["level"] = max(int(found.get("level") or 1), int(sk.get("level") or 1))
+                        else:
+                            existing.append(sk)
+                    a["skills"] = existing
+                if "isLead" in action or "lead" in action:
+                    a["isLead"] = bool(action.get("isLead") or action.get("lead"))
+                if action.get("status"):
+                    a["status"] = str(action.get("status"))
+                results.append({"ok": True, "type": t, "id": a.get("id")})
+            elif t in {"invite_agent_to_channel", "invite_agent", "add_agent_to_channel", "update_channel_members", "set_channel_members"}:
+                conv = _resolve_conversation_ref(state, action)
+                if not conv or conv.get("kind") != "channel":
+                    results.append({"ok": False, "type": t, "error": "channel not found"})
+                    continue
+                ids = set(str(x) for x in (conv.get("agentIds") or []) if x)
+                # full set if provided
+                if isinstance(action.get("agentIds"), list) or isinstance(action.get("agentNames"), list):
+                    ids = set()
+                    for x in (action.get("agentIds") or []):
+                        a = _resolve_agent_ref(state, x)
+                        if a and a.get("id"):
+                            ids.add(str(a["id"]))
+                    for x in (action.get("agentNames") or []):
+                        a = _resolve_agent_ref(state, x)
+                        if a and a.get("id"):
+                            ids.add(str(a["id"]))
+                for key in ("addAgentIds", "addAgentNames", "agentId", "agentName", "agent"):
+                    vals = action.get(key)
+                    if vals is None:
+                        continue
+                    if not isinstance(vals, list):
+                        vals = [vals]
+                    for x in vals:
+                        a = _resolve_agent_ref(state, x)
+                        if a and a.get("id"):
+                            ids.add(str(a["id"]))
+                for key in ("removeAgentIds", "removeAgentNames"):
+                    for x in (action.get(key) or []):
+                        a = _resolve_agent_ref(state, x)
+                        if a and a.get("id"):
+                            ids.discard(str(a["id"]))
+                conv["agentIds"] = list(ids)
+                results.append({"ok": True, "type": t, "id": conv.get("id"), "agentIds": conv["agentIds"]})
+            elif t in {"rename_channel", "update_channel"}:
+                conv = _resolve_conversation_ref(state, action)
+                if not conv:
+                    results.append({"ok": False, "type": t, "error": "channel not found"})
+                    continue
+                if action.get("name") or action.get("newName"):
+                    conv["name"] = str(action.get("name") or action.get("newName")).strip() or conv.get("name")
+                if "topic" in action:
+                    conv["topic"] = str(action.get("topic") or "").strip() or None
+                results.append({"ok": True, "type": t, "id": conv.get("id")})
+            elif t in {"delete_channel", "delete_conversation"}:
+                conv = _resolve_conversation_ref(state, action)
+                if not conv:
+                    results.append({"ok": False, "type": t, "error": "channel not found"})
+                    continue
+                if conv.get("kind") == "direct":
+                    results.append({"ok": False, "type": t, "error": "cannot delete direct chat"})
+                    continue
+                cid = conv.get("id")
+                state["conversations"] = [c for c in (state.get("conversations") or []) if not (isinstance(c, dict) and c.get("id") == cid)]
+                (state.get("messages") or {}).pop(cid, None)
+                (state.get("goals") or {}).pop(cid, None)
+                if state.get("activeConversationId") == cid:
+                    convs = state.get("conversations") or []
+                    state["activeConversationId"] = convs[0]["id"] if convs else None
+                results.append({"ok": True, "type": t, "id": cid})
+            elif t == "delete_agent":
+                a = _resolve_agent_ref(state, action.get("agentId") or action.get("agentName") or action.get("agent"))
+                if not a:
+                    results.append({"ok": False, "type": t, "error": "agent not found"})
+                    continue
+                aid = a.get("id")
+                state["agents"] = [x for x in (state.get("agents") or []) if not (isinstance(x, dict) and x.get("id") == aid)]
+                new_convs = []
+                for c in (state.get("conversations") or []):
+                    if not isinstance(c, dict):
+                        continue
+                    if c.get("kind") == "direct" and (c.get("agentIds") or [None])[0] == aid:
+                        (state.get("messages") or {}).pop(c.get("id"), None)
+                        continue
+                    if c.get("kind") == "channel":
+                        c["agentIds"] = [x for x in (c.get("agentIds") or []) if x != aid]
+                    new_convs.append(c)
+                state["conversations"] = new_convs
+                results.append({"ok": True, "type": t, "id": aid})
+            elif t in {"send_message", "delegate", "post_message"}:
+                conv = _resolve_conversation_ref(state, action)
+                # fallback: create/find direct chat by target agent
+                if not conv:
+                    target_a = _resolve_agent_ref(state, action.get("agentName") or action.get("agent") or action.get("to") or action.get("toAgent"))
+                    if target_a:
+                        for c in state.get("conversations") or []:
+                            if isinstance(c, dict) and c.get("kind") == "direct" and (c.get("agentIds") or [None])[0] == target_a.get("id"):
+                                conv = c
+                                break
+                        if not conv:
+                            conv = {
+                                "id": _uid("conv"),
+                                "kind": "direct",
+                                "name": target_a.get("name") or "Chat",
+                                "agentIds": [target_a.get("id")],
+                                "createdAt": now_ms,
+                            }
+                            state.setdefault("conversations", []).insert(0, conv)
+                            _ensure_messages_bucket(state, conv["id"])
+                if not conv:
+                    # default to current room if available
+                    if current_conversation_id:
+                        conv = next((c for c in (state.get("conversations") or []) if isinstance(c, dict) and c.get("id") == current_conversation_id), None)
+                if not conv:
+                    results.append({"ok": False, "type": t, "error": "conversation not found"})
+                    continue
+                text = str(action.get("text") or action.get("message") or action.get("content") or "").strip()
+                if not text:
+                    results.append({"ok": False, "type": t, "error": "missing text"})
+                    continue
+                directed = []
+                for key in ("directedAgentIds", "directedAgentNames", "mentions"):
+                    for x in (action.get(key) or []):
+                        a = _resolve_agent_ref(state, x)
+                        if a and a.get("id"):
+                            directed.append(a["id"])
+                author_id = actor.get("id") if actor else None
+                msg = {
+                    "id": _uid("m"),
+                    "conversationId": conv.get("id"),
+                    "authorType": "agent" if author_id else "user",
+                    "authorId": author_id,
+                    "authorName": actor.get("name") if actor else None,
+                    "text": text,
+                    "createdAt": now_ms,
+                    "status": "sent",
+                }
+                if directed:
+                    msg["mentions"] = directed
+                    msg["directed"] = True
+                _ensure_messages_bucket(state, conv["id"]).append(msg)
+                results.append({"ok": True, "type": t, "id": conv.get("id")})
+            elif t in {"set_goal", "create_goal", "update_goal"}:
+                conv = _resolve_conversation_ref(state, action) or (next((c for c in (state.get("conversations") or []) if isinstance(c, dict) and c.get("id") == current_conversation_id), None) if current_conversation_id else None)
+                if not conv:
+                    results.append({"ok": False, "type": t, "error": "conversation not found"})
+                    continue
+                cid = conv.get("id")
+                goals = state.setdefault("goals", {})
+                text = str(action.get("text") or action.get("goal") or action.get("objective") or "").strip()
+                active = action.get("active")
+                if active is None:
+                    active = True
+                if not text and t == "set_goal":
+                    goals.pop(cid, None)
+                    results.append({"ok": True, "type": t, "id": cid, "cleared": True})
+                    continue
+                existing = goals.get(cid) or {}
+                goals[cid] = {
+                    "text": text or existing.get("text", ""),
+                    "active": bool(active),
+                    "done": bool(existing.get("done")) if existing else False,
+                    "status": "active" if bool(active) else existing.get("status", "paused"),
+                    "progress": int(existing.get("progress", 0) or 0),
+                    "steps": int(existing.get("steps", 0) or 0),
+                    "lastStep": existing.get("lastStep"),
+                    "nextStep": existing.get("nextStep"),
+                    "lastError": None,
+                    "lastAgentId": existing.get("lastAgentId"),
+                    "createdAt": int(existing.get("createdAt") or now_ms),
+                    "updatedAt": now_ms,
+                    "cooldownUntil": None,
+                }
+                results.append({"ok": True, "type": t, "id": cid})
+            elif t == "open_direct_chat":
+                a = _resolve_agent_ref(state, action.get("agentId") or action.get("agentName") or action.get("agent"))
+                if not a:
+                    results.append({"ok": False, "type": t, "error": "agent not found"})
+                    continue
+                conv = None
+                for c in state.get("conversations") or []:
+                    if isinstance(c, dict) and c.get("kind") == "direct" and (c.get("agentIds") or [None])[0] == a.get("id"):
+                        conv = c
+                        break
+                if not conv:
+                    conv = {
+                        "id": _uid("conv"),
+                        "kind": "direct",
+                        "name": a.get("name") or "Chat",
+                        "agentIds": [a.get("id")],
+                        "createdAt": now_ms,
+                    }
+                    state.setdefault("conversations", []).insert(0, conv)
+                    _ensure_messages_bucket(state, conv["id"])
+                state["activeConversationId"] = conv.get("id")
+                results.append({"ok": True, "type": t, "id": conv.get("id")})
+            else:
+                # ignore unknown runtime action types here (some are frontend-only concepts)
+                results.append({"ok": False, "type": t or "unknown", "error": "unsupported runtime action"})
+        except Exception as e:
+            results.append({"ok": False, "type": t, "error": str(e)})
+    return results
 
 
 def _clamp_progress(value: Any, fallback: int) -> int:

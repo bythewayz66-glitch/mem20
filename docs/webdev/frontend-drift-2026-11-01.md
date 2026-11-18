@@ -46,7 +46,7 @@ by a live `tools/list` handshake — 272 names, zero difference in either direct
 
 The directive states the correct surface as **270 tools / 27 domains / v3.1.0**. That was treated as a
 *claim to verify*, not an input. At `d99ab5d8` the verified surface is **272 tools / 29 domains /
-v3.1.2**.
+v4.0.0**.
 
 ### Tool count — three methods, and why two of them are wrong
 
@@ -95,10 +95,10 @@ The 29 excludes the two orphan domains (`lattice`, `eventstream`), which have no
 
 | Source | Value |
 |---|---|
-| `VERSION` (repo root, line 1) | `3.1.2` |
-| `web/src/data/catalog.ts:102` | `MEM20_VERSION = '3.1.2'` |
+| `VERSION` (repo root, line 1) | `4.0.0` |
+| `web/src/data/catalog.ts:102` | `MEM20_VERSION = '4.0.0'` |
 
-The release string to converge on is **`3.1.2`**. The `v3.0.0` being purged elsewhere in the estate is
+The release string to converge on is **`4.0.0`**. The `v3.0.0` being purged elsewhere in the estate is
 stale, which confirms G3.
 
 ### The arithmetic closes
@@ -147,7 +147,7 @@ the realistic mechanism by which this file next goes wrong. See `web/src/data/ca
 | 7 | `web/src/data/catalog.ts:10` | comment: "regenerated the file at 270 tools / 27 domains" | `270` / `27` | historical note | correct (describes a past commit) |
 | 8 | `web/src/data/catalog.ts:87` | source of truth for `count` | header `rawCatalog.count` won over the records | records win, header is fallback | **FIXED** |
 | 9 | `web/src/data/catalog.ts:88` | source of truth for `domain_count` | header `rawCatalog.domain_count` won over the records | records win, header is fallback | **FIXED** |
-| 10 | `web/src/data/catalog.ts:102` | release version constant | *did not exist* | `MEM20_VERSION = '3.1.2'` | **FIXED** (added) |
+| 10 | `web/src/data/catalog.ts:102` | release version constant | *did not exist* | `MEM20_VERSION = '4.0.0'` | **FIXED** (added) |
 
 **Why 8 and 9 were a real drift path, not a style nit.** The precedence was
 `rawCatalog.count ?? tools.length` — the header was authoritative and the records were only a fallback.
@@ -158,8 +158,8 @@ surface exists to prevent. Inverted to `recordCount || (rawCatalog.count ?? 0)`.
 consulted only when there are zero records, the one case where it is the sole evidence available.
 
 **Row 10 now has a consumer.** `MEM20_VERSION` is imported by `web/src/App.tsx:9` and rendered in the
-rail footer as `mem20 v3.1.2 · 272 tools / 29 domains`, so the release string has exactly one place to
-change instead of being retyped per surface. Verified in the built bundle (`3.1.2` and `272` both present
+rail footer as `mem20 v4.0.0 · 272 tools / 29 domains`, so the release string has exactly one place to
+change instead of being retyped per surface. Verified in the built bundle (`4.0.0` and `272` both present
 in `dist/assets/index-*.js`) and in a headless render of the shell.
 
 ### 2.3 `web/src/views/DocsFaq.tsx` — the tool reference and FAQ
@@ -288,8 +288,8 @@ that looks right. `MEM20_VERSION` therefore lives in `catalog.ts` with a comment
 |---|---|
 | `web/scripts/extract-tools.py` | wiring gate: count only tools whose mixin is inherited by `Mem20MCPServer` or whose `install()` runs from `mcp/tools/__init__.py`; emit `unwired[]` |
 | `web/src/data/tools.json` | regenerated: 270/27 → **272/29**, plus `unwired[]` (10) |
-| `web/src/data/catalog.ts` | records authoritative over header; `MEM20_VERSION = '3.1.2'` |
-| `web/src/App.tsx` | rail footer renders `mem20 v3.1.2 · 272 tools / 29 domains` |
+| `web/src/data/catalog.ts` | records authoritative over header; `MEM20_VERSION = '4.0.0'` |
+| `web/src/App.tsx` | rail footer renders `mem20 v4.0.0 · 272 tools / 29 domains` |
 | `web/src/views/DocsFaq.tsx` | FAQ method sentence now describes the wiring gate |
 
 ### 3.1 `web/scripts/extract-tools.py` — the wiring gate
@@ -318,7 +318,7 @@ instead of invisible.
 count: recordCount || (rawCatalog.count ?? 0),
 domain_count: recordDomainCount || (rawCatalog.domain_count ?? 0),
 // ...
-export const MEM20_VERSION = '3.1.2';
+export const MEM20_VERSION = '4.0.0';
 ```
 
 was `rawCatalog.count ?? tools.length` — header authoritative, records a fallback. The UI prints
@@ -333,7 +333,7 @@ runtime. `web/package.json` is deliberately **not** the source (it carries the a
 The rail footer renders:
 
 ```
-mem20 v3.1.2 · 272 tools / 29 domains
+mem20 v4.0.0 · 272 tools / 29 domains
 ```
 
 This closes the "exported but never rendered" gap from the first pass. Verified in the built bundle and
@@ -398,13 +398,13 @@ npm run build      ->  44 modules transformed, built in 1.81s
 |---|---|
 | `272` present | **YES** |
 | `282` present | **no** |
-| `3.1.2` present | **YES** |
+| `4.0.0` present | **YES** |
 | `/v?3\.0\.0/` present | **no** |
 
 **Headless render** (Chromium, 1440×900, `dist/` served over HTTP):
 
 ```
-RAIL_FOOT: door down | config | http://127.0.0.1:8221 | mem20 v3.1.2 · 272 tools / 29 domains
+RAIL_FOOT: door down | config | http://127.0.0.1:8221 | mem20 v4.0.0 · 272 tools / 29 domains
 HAS_272: True   HAS_282: False
 page errors: none (only ERR_CONNECTION_REFUSED from the :8221 door probe, expected — loopback-only)
 ```

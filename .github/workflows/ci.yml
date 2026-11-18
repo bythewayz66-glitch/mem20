@@ -252,7 +252,7 @@ jobs:
         working-directory: build/cpp
         run: ctest --output-on-failure
       # VERSION, pyproject.toml and version.hpp each state the version and
-      # nothing compared them: on 2026-11-01 they read 3.1.2, 3.0.0 and 3.1.0.
+      # nothing compared them: on 2026-11-01 they read 4.0.0, 3.0.0 and 3.1.0.
       - name: Version consistency
         run: python3 scripts/check_version_consistency.py
 

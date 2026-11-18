@@ -50,7 +50,7 @@ All notable changes to the mem20 Ruby SDK are documented here. The format follow
 - **Surface counts and server version aligned with the live value.** The gem quoted
   **272 tools across 27 domains** and server **v2.1.0rc2**. The live surface was
   **311 tools across 39 domains** (`docs/surface.json`, generated from a real
-  `tools/list`), and the server release is **3.1.2**. `Mem20::Surface`,
+  `tools/list`), and the server release is **4.0.0**. `Mem20::Surface`,
   `Mem20::SERVER_VERSION`, the gemspec, the README and `docs/` now all state the live
   values, and `rake surface:check` compares them with `docs/surface.json`.
 - **`Client#tool` rejected the documented call form.** `def tool(name, **params)` cannot

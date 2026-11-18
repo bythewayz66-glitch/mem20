@@ -266,3 +266,26 @@ export async function optimizePromptWithOrchestrator(input: {
   if (data?.routing) recordRouting(data.routing, null, data.routing.selected_provider, data.routing.selected_model);
   return data;
 }
+
+export async function planRuntimeWithOrchestrator(input: {
+  request: string;
+  workspace?: { agents?: any[]; conversations?: any[]; activeConversation?: any };
+  conversation?: any;
+  history?: Array<{ authorType?: string; authorName?: string; text?: string }>;
+}): Promise<{ ok?: boolean; summary?: string; actions?: any[]; delegations?: any[]; response?: string; routing?: RoutingMeta | null }> {
+  const settings = getSettings();
+  const res = await fetch(`${baseUrl(settings)}/v1/runtime/plan`, {
+    method: 'POST',
+    headers: headers(settings),
+    body: JSON.stringify({
+      request: input.request,
+      workspace: input.workspace ?? {},
+      conversation: input.conversation,
+      history: input.history ?? [],
+    }),
+  });
+  if (!res.ok) throw new Error(await readError(res));
+  const data = await res.json();
+  if (data?.routing) recordRouting(data.routing, null, data.routing.selected_provider, data.routing.selected_model);
+  return data;
+}

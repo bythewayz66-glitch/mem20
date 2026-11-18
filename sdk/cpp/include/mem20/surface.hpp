@@ -47,7 +47,7 @@ namespace mem20 {
 namespace surface {
 
 // --- server version this surface was verified against ------------------------
-inline constexpr const char* kServerVersion = "3.1.2";
+inline constexpr const char* kServerVersion = "4.0.0";
 
 // --- tool count -------------------------------------------------------------
 // Distinct tool names a fresh `tools/list` returns: 487.
@@ -56,8 +56,8 @@ inline constexpr std::size_t kToolCount = 487;
 // The two halves. Every tool belongs to a domain, so the domain half is the
 // whole surface and the transport/infra layer is empty.
 inline constexpr std::size_t kDomainTools = 487;  // registered by the 129 domains
-inline constexpr std::size_t kA2aLayerTools = 0;  // a2a is a domain in v3.1.2
-inline constexpr std::size_t kInfraTools = 0;     // job_* is a domain in v3.1.2
+inline constexpr std::size_t kA2aLayerTools = 0;  // a2a is a domain in v4.0.0
+inline constexpr std::size_t kInfraTools = 0;     // job_* is a domain in v4.0.0
 
 // --- domain count -----------------------------------------------------------
 // Distinct owning domain modules after the documented folds = 129.

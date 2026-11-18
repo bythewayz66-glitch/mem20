@@ -104,7 +104,7 @@ is scored as not delivered, regardless of how complete the description sounds.
 # PART II — Confirmation sweep and 4.0 working status
 
 **Sweep window:** 2026-11-01, 18:56Z–19:12Z · **Roster at check time:** 26 members (25 agents + 1 human owner)
-**Repo state at check time:** `main` = `48c241a1edff1fdc9f0d0b38f51796c3c8b88b2b` ("chore(release): cut 3.1.2 and land the owner directive"), 25 branches total (24 non-`main`), **7 open PRs (#150–#156)**, `teamz` `main` = `ca1e6c66c5bba61ce32834ae41a266823393a475`.
+**Repo state at check time:** `main` = `48c241a1edff1fdc9f0d0b38f51796c3c8b88b2b` ("chore(release): cut 4.0.0 and land the owner directive"), 25 branches total (24 non-`main`), **7 open PRs (#150–#156)**, `teamz` `main` = `ca1e6c66c5bba61ce32834ae41a266823393a475`.
 
 This part answers two separate questions the owner asked, and they are **not** the same question:
 

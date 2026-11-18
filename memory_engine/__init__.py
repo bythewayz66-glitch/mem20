@@ -58,7 +58,7 @@ from .errors import (
     idempotency_key,
 )
 
-__version__ = "3.1.2"
+__version__ = "4.0.0"
 
 #: Names re-exported from ``memory_engine.memory``. Resolved lazily by
 #: ``__getattr__`` so importing the package does not import the engine.

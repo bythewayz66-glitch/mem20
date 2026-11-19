@@ -38,7 +38,7 @@ coverage>=7
 # `pip install -r requirements.txt` resolve to an impossible pair (pip exited
 # with ResolutionImpossible). Keep the fastapi range and move starlette to the
 # line its own metadata requires.
-fastapi>=0.162.2,<0.163
+fastapi>=0.162.5,<0.163
 starlette>=0.46,<0.47
 
 # mem20autouez imports websockets at module scope (connection.py:12).

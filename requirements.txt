@@ -24,7 +24,7 @@ sentence-transformers>=2.2.0
 # stripe: mem20shopz).
 httpx>=0.28.1
 PyYAML>=6.0.3
-stripe>=16.1
+stripe>=17.0.0
 
 # The 4.0 conformance gate (scripts/renovation/conformance.py) verifies
 # criterion 6 by running each subsystem's suite under coverage and counting

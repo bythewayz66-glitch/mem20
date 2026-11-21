@@ -1,20 +1,15 @@
 name: Assemble serial instalment
 
 # One-shot assembler for docs/app/narrative/serial-2026-11-21.md.
-# The publishing API rejects some larger single writes and appends one trailing
-# newline to every file it writes, so the instalment is committed in small
-# numbered parts under docs/app/narrative/.parts2/ and concatenated here in
-# filename order, with exactly one trailing newline stripped from each part to
-# undo the API's addition.
+# The publishing API rejects some larger single writes and strips trailing
+# whitespace from every file it writes, so the instalment is committed in small
+# numbered parts under docs/app/narrative/.parts2/ whose boundaries fall on
+# non-whitespace characters, and concatenated here in filename order. The
+# assembled file is written from EMPTY (the target is replaced, never appended
+# to) and gets exactly one final newline.
 #
-# TRIGGER: push of docs/app/narrative/.assemble-trigger ONLY. An earlier version
-# triggered on any .parts2/ push, which meant it fired on every part commit and
-# deleted the parts directory after the first one, assembling a partial file.
-# The trigger file is committed last, once every part is in place.
-#
-# MODE: if the target already exists, the parts are PREPENDED to it (the parts
-# hold the head of the document and the existing target holds the tail). If the
-# target does not exist, the parts become the whole document.
+# TRIGGER: push of docs/app/narrative/.assemble-trigger ONLY, committed last
+# once every part is in place.
 
 on:
   push:
@@ -39,18 +34,12 @@ jobs:
           PARTS=docs/app/narrative/.parts2
           TARGET=docs/app/narrative/serial-2026-11-21.md
           ls -la "$PARTS"
-          : > /tmp/head.md
+          : > /tmp/assembled.md
           for f in $(ls "$PARTS"/*.md | sort); do
             echo "appending $f"
-            perl -0777 -pe 's/\n\z//' "$f" >> /tmp/head.md
+            cat "$f" >> /tmp/assembled.md
           done
-          if [ -f "$TARGET" ]; then
-            echo "target exists: prepending parts to it"
-            cat /tmp/head.md "$TARGET" > /tmp/assembled.md
-          else
-            echo "target absent: parts are the whole document"
-            cp /tmp/head.md /tmp/assembled.md
-          fi
+          printf '\n' >> /tmp/assembled.md
           mv /tmp/assembled.md "$TARGET"
           rm -rf "$PARTS"
           rm -f docs/app/narrative/.assemble-trigger

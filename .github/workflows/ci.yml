@@ -213,6 +213,25 @@ jobs:
             exit 0
           }
 
+  lock-pin:
+    name: Lock pin freshness (issue #447)
+    runs-on: ubuntu-latest
+    steps:
+      # fetch-depth: 0 is required: the check walks <pin>..HEAD to see whether
+      # the pinned package moved, which a shallow clone cannot answer.
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      # requirements.lock pins the four editable installs to a commit SHA of
+      # this repo. Nothing compared that SHA against the tree, so the pins fell
+      # behind silently (#447) and a fresh `pip install -r requirements.lock`
+      # installed stale copies of those packages while the checkout said 4.0.0.
+      - name: Editable pins must describe the current tree
+        run: python3 scripts/check_lock_pin.py
+
   rust:
     name: Rust braid (issue #21)
     runs-on: ubuntu-latest

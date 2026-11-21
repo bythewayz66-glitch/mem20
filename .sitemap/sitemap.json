@@ -1,6 +1,6 @@
 {
-  "generated_at": "2026-11-16T06:31:17+0000",
-  "root": "/opt/mem20",
+  "generated_at": "2026-11-21T15:47:58+0000",
+  "root": "/workspace/mem20",
   "root_files": [
     ".gitignore",
     ".mcp.json",
@@ -25,6 +25,7 @@
     "SDKS.md",
     "SECURITY.md",
     "SITEMAP.md",
+    "SPEC-memory-engine-v2.md",
     "TEAMILY_AGENTS.md",
     "TEAMZ_AGENTZ.md",
     "TODO.md",
@@ -55,15 +56,12 @@
     "tools_gen_readme.py",
     "tools_preflight.py",
     "tot_state.db",
-    "ucg.sqlite3",
-    "ucg.sqlite3-shm",
-    "ucg.sqlite3-wal",
     "verify_mcp.py"
   ],
   "root_languages": {
     "json": 2,
     "make": 2,
-    "markdown": 22,
+    "markdown": 23,
     "other": 5,
     "python": 15,
     "shell": 1,
@@ -71,13 +69,13 @@
     "yaml": 2
   },
   "roots": [
-    "/opt/mem20"
+    "/workspace/mem20"
   ],
-  "scan_seconds": 14.42,
+  "scan_seconds": 0.86,
   "schema": "mem20-sitemap-v1",
   "subsystems": [
     {
-      "bytes": 76064,
+      "bytes": 83578,
       "category": "other",
       "code_lines": 0,
       "dependencies": [],
@@ -85,17 +83,17 @@
       "dir": ".github",
       "docs": [],
       "entry_points": {},
-      "file_count": 27,
+      "file_count": 28,
       "keywords": [],
       "languages": {
         "markdown": 9,
-        "yaml": 18
+        "yaml": 19
       },
       "license": null,
-      "line_count": 1778,
+      "line_count": 1977,
       "lines_by_language": {
         "markdown": 311,
-        "yaml": 1467
+        "yaml": 1666
       },
       "modules": [],
       "name": ".github",
@@ -112,7 +110,7 @@
       "version": null
     },
     {
-      "bytes": 4193,
+      "bytes": 7762,
       "category": "other",
       "code_lines": 0,
       "dependencies": [],
@@ -120,15 +118,15 @@
       "dir": ".opencode",
       "docs": [],
       "entry_points": {},
-      "file_count": 1,
+      "file_count": 2,
       "keywords": [],
       "languages": {
-        "markdown": 1
+        "markdown": 2
       },
       "license": null,
-      "line_count": 43,
+      "line_count": 97,
       "lines_by_language": {
-        "markdown": 43
+        "markdown": 97
       },
       "modules": [],
       "name": ".opencode",
@@ -227,7 +225,7 @@
       "version": null
     },
     {
-      "bytes": 101362901,
+      "bytes": 272452,
       "category": "other",
       "code_lines": 2257,
       "dependencies": [],
@@ -238,11 +236,11 @@
         "benchmarks/v3/README.md"
       ],
       "entry_points": {},
-      "file_count": 22,
+      "file_count": 19,
       "keywords": [],
       "languages": {
         "json": 6,
-        "jsonl": 4,
+        "jsonl": 1,
         "markdown": 3,
         "python": 8,
         "shell": 1
@@ -280,7 +278,7 @@
       "version": null
     },
     {
-      "bytes": 627419,
+      "bytes": 570039,
       "category": "service",
       "code_lines": 12112,
       "dependencies": [],
@@ -290,21 +288,19 @@
         "braid/README.md"
       ],
       "entry_points": {},
-      "file_count": 172,
+      "file_count": 79,
       "keywords": [],
       "languages": {
         "html": 3,
-        "json": 93,
         "markdown": 1,
         "rust": 63,
         "shell": 1,
         "toml": 11
       },
       "license": null,
-      "line_count": 12484,
+      "line_count": 12391,
       "lines_by_language": {
         "html": 721,
-        "json": 93,
         "markdown": 54,
         "rust": 11376,
         "shell": 15,
@@ -324,8 +320,7 @@
         "braid_keys",
         "braid_sonic",
         "braid_ui_bridge",
-        "braid_wire",
-        "target"
+        "braid_wire"
       ],
       "test_files": 0,
       "version": null
@@ -371,7 +366,7 @@
       "version": null
     },
     {
-      "bytes": 95019,
+      "bytes": 19993,
       "category": "other",
       "code_lines": 451,
       "dependencies": [],
@@ -381,18 +376,16 @@
         "braid_python/README.md"
       ],
       "entry_points": {},
-      "file_count": 140,
+      "file_count": 4,
       "keywords": [],
       "languages": {
-        "json": 136,
         "markdown": 1,
         "rust": 2,
         "toml": 1
       },
       "license": null,
-      "line_count": 634,
+      "line_count": 498,
       "lines_by_language": {
-        "json": 136,
         "markdown": 17,
         "rust": 451,
         "toml": 30
@@ -405,7 +398,6 @@
       "requires_python": null,
       "subdirs": [
         "src",
-        "target",
         "tests"
       ],
       "test_files": 0,
@@ -486,6 +478,39 @@
       "version": null
     },
     {
+      "bytes": 264315,
+      "category": "other",
+      "code_lines": 0,
+      "dependencies": [],
+      "description": "",
+      "dir": "comics",
+      "docs": [
+        "comics/the-z-corps/README.md"
+      ],
+      "entry_points": {},
+      "file_count": 9,
+      "keywords": [],
+      "languages": {
+        "markdown": 9
+      },
+      "license": null,
+      "line_count": 3210,
+      "lines_by_language": {
+        "markdown": 3210
+      },
+      "modules": [],
+      "name": "comics",
+      "packaged": false,
+      "readme_summary": "",
+      "readme_text": "",
+      "requires_python": null,
+      "subdirs": [
+        "the-z-corps"
+      ],
+      "test_files": 0,
+      "version": null
+    },
+    {
       "bytes": 430,
       "category": "other",
       "code_lines": 0,
@@ -560,24 +585,29 @@
       "version": null
     },
     {
-      "bytes": 2764255,
+      "bytes": 3555192,
       "category": "other",
-      "code_lines": 8122,
+      "code_lines": 10704,
       "dependencies": [],
       "description": "",
       "dir": "docs",
       "docs": [
         "docs/README.md",
+        "docs/agent-skills/README.md",
+        "docs/analytics/README.md",
         "docs/app/README.md",
         "docs/app/deck/slides/README.md",
+        "docs/app/narration/README.md",
         "docs/audit/README.md",
         "docs/benchmarks/README.md",
         "docs/finance/README.md",
+        "docs/gh-exp-001/README.md",
         "docs/git/README.md",
         "docs/gtm/README.md",
         "docs/handoff/README.md",
         "docs/handoff/claims/README.md",
         "docs/hygiene/README.md",
+        "docs/launch/deck/README.md",
         "docs/market/README.md",
         "docs/ops/README.md",
         "docs/pricing/README.md",
@@ -591,30 +621,30 @@
         "docs/webdev/README.md"
       ],
       "entry_points": {},
-      "file_count": 309,
+      "file_count": 341,
       "keywords": [],
       "languages": {
         "cpp": 1,
         "css": 2,
-        "html": 136,
-        "javascript": 2,
-        "json": 12,
-        "markdown": 139,
-        "other": 4,
-        "python": 12,
+        "html": 142,
+        "javascript": 5,
+        "json": 16,
+        "markdown": 155,
+        "other": 5,
+        "python": 14,
         "xml": 1
       },
       "license": null,
-      "line_count": 39063,
+      "line_count": 44864,
       "lines_by_language": {
         "cpp": 149,
         "css": 164,
-        "html": 4598,
-        "javascript": 197,
-        "json": 4157,
-        "markdown": 26519,
-        "other": 246,
-        "python": 3014,
+        "html": 6320,
+        "javascript": 325,
+        "json": 4494,
+        "markdown": 29298,
+        "other": 349,
+        "python": 3746,
         "xml": 19
       },
       "modules": [
@@ -623,7 +653,9 @@
         "audit_acv_consistency",
         "audit_pricing_docs",
         "audit_tier_shipping",
+        "build_surface_page",
         "compute_model",
+        "pricing_model_v4",
         "render",
         "tier_price_derivation",
         "tier_sensitivity_model"
@@ -634,26 +666,26 @@
       "readme_text": "# mem20 mcp server documentation\n\n> **version:** 4.0.0\n> **license:** mit\n> **maintainer:** bythewayz66-glitch\n> **repository:** https://github.com/bythewayz66-glitch/mem20\n\n## quick links\n\n| document | description |\n|----------|-------------|\n| [architecture overview](01-architecture.md) | system design, memory model, tool domains, deployment |\n| [tools reference](02-tools-reference.md) | complete reference for the mcp tool surface (487 tools / 129 domains live) |\n| [installation guide](03-installation.md) | install, configure, and connect mcp hosts |\n| [usage examples](04-usage-examples.md) | practical examples for every tool domain |\n\n## what is mem20?\n\n**mem20** is a **persistent memory + cognition substrate for ai agents**. it provides:\n\n- **persistent memory** with hybrid retrieval (vector + bm25 + cross-encoder)\n- **strict separation** of grounded facts from imagined/hypothetical ones\n- **cognitive operations** \u2014 reasoning, planning, reflection, working memory\n- **world modeling** \u2014 define variables, record predictions, resolve outcomes\n- **self-modeling** \u2014 track beliefs, values, emotions, goals\n- **multi-agent coordination** \u2014 a2a communication, shared namespaces\n- **3d workflow automation** \u2014 optional blender and unity integration\n\n## architecture at a glance\n\n```\nmcp client --stdio--> mem20mcpserver (mcp/mcp_server.py)\n                         |\n         +---------------+---------------+\n         |               |               |\n   cognitive_engine    memory.py      roadmaps/\n   (llm-backed)    (store engine)   (json files)\n```\n\n## 487 tools across 129 domains\n\nthe authoritative, generated mapping is [tool-domains.md](tool-domains.md); the\nmachine-readable source is [surface.json](surface.json). both are regenerated\nfrom the live `tools/list` response by `scripts/surface_manifest.py`.\n\n## quick start\n\n```bash\n# install\ngit clone https://github.com/bythewayz66-glitch/mem20.git\ncd mem20\npython3 -m venv .venv\nsource .venv/bin/activate\npip install -r requirements.txt\n\n# configure\nexport nvapi_key=\"your-nvidia-api-key\"\n\n# run\npython mcp/mcp_server.py\n\n# verify\ncurl http://localhost:8080/health\n```\n\n## connecting mcp hosts\n\n```bash\n# hermes agent\nhermes config set mcp.servers.mem20 '[\"python3\", \"/path/to/mem20/mcp/mcp_server.py\"]'\n\n# claude code\nclaude mcp add mem20 -- python3 /path/to/mem20/mcp/mcp_server.py\n```\n\n## key concepts\n\n### memory partitions\n\n- **grounded** \u2014 real observations, user statements, events (indexed)\n- **simulated** \u2014 hypotheticals, counterfactuals, model output (not indexed)\n\n### contamination controls\n\n- indexes are grounded-only\n- simulated content can never leak into grounded indexes\n- promotion requires evidence (prediction-error resolution or external verification)\n\n### health & observability\n\n- `/health` \u2014 status check\n- `/ready` \u2014 readiness probe\n- `/metrics` \u2014 tool counters, contamination rate, event taxonomy\n\n## sdks\n\n| sdk | location | status |\n|---|---|---|\n| python | `mem20api/` | published \u2014 the stable api over the engine |\n| ruby | `mem20-sdk-ruby/` | 0.2.0 |\n| c++ | `docs/sdk/cpp/` | documentation set |\n\n## optional integrations\n\n- **blender** \u2014 3d modeling, rendering, scene manipulation\n- **unity** \u2014 game-engine scripting, builds, tests\n\nboth degrade gracefully when the respective application is not installed.\n\n## license\n\nmit \u2014 see [license](https://github.com/bythewayz66-glitch/mem20/blob/main/license).\n\ncanonical repository: [bythewayz66-glitch/mem20](https://github.com/bythewayz66-glitch/mem20). originally built by the jaysonaionline project.\n",
       "requires_python": null,
       "subdirs": [
+        "agent-skills",
+        "analytics",
         "app",
+        "artifacts",
         "attestations",
         "audit",
         "benchmarks",
+        "content",
         "finance",
+        "gh-exp-001",
         "git",
         "gtm",
         "handoff",
         "hygiene",
+        "launch",
         "market",
         "ops",
         "pricing",
         "recon",
-        "releases",
-        "renovation",
-        "sdk",
-        "series",
-        "use-cases",
-        "ux",
-        "webdev"
+        "releases"
       ],
       "test_files": 0,
       "version": null
@@ -738,9 +770,9 @@
       "version": null
     },
     {
-      "bytes": 1031016,
+      "bytes": 1038292,
       "category": "service",
-      "code_lines": 19141,
+      "code_lines": 19238,
       "dependencies": [],
       "description": "",
       "dir": "mcp",
@@ -756,11 +788,11 @@
         "python": 177
       },
       "license": null,
-      "line_count": 19354,
+      "line_count": 19451,
       "lines_by_language": {
         "json": 128,
         "markdown": 85,
-        "python": 19141
+        "python": 19238
       },
       "modules": [
         "__init__",
@@ -920,9 +952,9 @@
       "version": null
     },
     {
-      "bytes": 108130,
+      "bytes": 122405,
       "category": "organ",
-      "code_lines": 1658,
+      "code_lines": 1871,
       "dependencies": [],
       "description": "",
       "dir": "mem20-sdk-ruby",
@@ -939,18 +971,18 @@
         "yaml": 1
       },
       "license": null,
-      "line_count": 2450,
+      "line_count": 2754,
       "lines_by_language": {
-        "markdown": 704,
+        "markdown": 789,
         "other": 17,
-        "ruby": 1658,
-        "yaml": 71
+        "ruby": 1871,
+        "yaml": 77
       },
       "modules": [],
       "name": "mem20-sdk-ruby",
       "packaged": false,
       "readme_summary": "An idiomatic Ruby (3.1+) client for the **mem20** MCP server. mem20 separates",
-      "readme_text": "<p align=\"center\">\n  <img src=\"https://img.shields.io/badge/mem20--sdk--ruby-v0.2.0-cc342d?style=for-the-badge&logo=ruby\" alt=\"mem20-sdk-ruby v0.2.0\">\n</p>\n<p align=\"center\">\n  <strong>ruby sdk for mem20 \u2014 a persistent memory + cognition substrate for ai agents.</strong>\n</p>\n<p align=\"center\">\n  <a href=\"https://github.com/bythewayz66-glitch/mem20/blob/main/license\"><img src=\"https://img.shields.io/badge/license-mit-green?style=for-the-badge\" alt=\"license: mit\"></a>\n  <a href=\"https://github.com/bythewayz66-glitch/mem20/tree/main/mem20-sdk-ruby\"><img src=\"https://img.shields.io/badge/repo-canonical%20mem20-6366f1?style=for-the-badge&logo=github\" alt=\"canonical repo\"></a>\n  <a href=\"https://github.com/bythewayz66-glitch/mem20/blob/main/mem20-sdk-ruby/changelog.md\"><img src=\"https://img.shields.io/badge/protocol-2025--06--18-4f46e5?style=for-the-badge\" alt=\"mcp protocol 2025-06-18\"></a>\n</p>\n\n---\n\nan idiomatic ruby (3.1+) client for the **mem20** mcp server. mem20 separates\n*grounded* memory (real observations, user statements, events) from *simulated*\nmemory (hypotheticals, counterfactuals, model output), and exposes its surface as a\njson-rpc 2.0 service over stdio.\n\nthis gem speaks that protocol directly \u2014 no python sdk wrapper, no shelling out \u2014 and\ngives you a small, thread-safe, frozen-config client you can drop into a rails app,\na sidekiq worker, or a plain script.\n\n> **repo location:** `mem20-sdk-ruby/` in the canonical mem20 monorepo \u2014\n> **<https://github.com/bythewayz66-glitch/mem20>** (default branch `main`, mit).\n\n## requirements\n\n| requirement | version |\n|---|---|\n| ruby | >= 3.1 |\n| mem20 server | v4.0.0 (python 3.11+) |\n| runtime deps | none (stdlib only: `json`, `open3`, `net/http`, `timeout`) |\n\n## install\n\n### from a clone of the canonical repo\n\n```bash\ngit clone --branch main https://github.com/bythewayz66-glitch/mem20.git\ncd mem20/mem20-sdk-ruby\nbundle install\nbundle exec rake        # runs the rspec suite\ngem build mem20-sdk.gemspec\n```\n\n### from the canonical repo through bundler\n\n```ruby\n# gemfile\nsource \"https://rubygems.org\"\ngem \"mem20-sdk\", github: \"bythewayz66-glitch/mem20\", branch: \"main\", glob: \"mem20-sdk-ruby/*.gemspec\"\n```\n\n```bash\nbundle install\n```\n\n### from a locally built gem\n\n```bash\ngem build mem20-sdk.gemspec\ngem install ./mem20-sdk-0.2.0.gem\n```\n\nfull instructions, including building the mem20 server itself, are in\n[`docs/install.md`](docs/install.md).\n\n## quick start\n\n```ruby\nrequire \"mem20\"\n\nmem20.configure do |c|\n  c.cwd = \"/opt/mem20/mem20\"   # directory holding mcp/mcp_server.py\n  c.timeout = 60.0             # the first embedding-backed call warms a model\nend\n\nclient = mem20.client\n\n# store a grounded fact.\nclient.memory_store(content: \"the release sign-off lives in the repo.\",\n                    category: \"project\",\n                    tags: %w[release signoff])\n\n# search it back.\nresult = client.memory_recall(query: \"where does the release sign-off live\", limit: 5)\nputs mem20::client.text(result)\n\n# any one of the 311 registered tools, by name\u2026\nclient.tool(\"memory_status\", {})\n# \u2026or as a dynamic binding.\nclient.memory_status\n\nclient.close\n```\n\n`examples/quickstart.rb` is this script, runnable as-is:\n\n```bash\nruby -ilib examples/quickstart.rb\n```\n\n## what is in the box\n\n| component | purpose |\n|---|---|\n| `mem20.configure` / `mem20.client` | module-level entry points |\n| `mem20::config` | frozen, validated configuration mapped to the documented `mem20_*` variables |\n| `mem20::client` | thread-safe facade: `#tool`, `#tools`, `#memory_store`, `#memory_recall`, `#health`, `#metrics` |\n| `mem20::surface` | the verified surface: `tool_count` (311), `domain_count` (39), `domain_tools` (311), `infra_tools` |\n| `mem20::transport::stdio` | json-rpc 2.0 over stdio with the mcp handshake, timeouts and mutex-serialised access |\n| typed errors | `configurationerror`, `toolerror` (`#code`, `#data`), `transporterror` |\n\n## transport / protocol\n\n- transport: **stdio**, one json-rpc 2.0 message per line.\n- handshake: `initialize` \u2192 `notifications/initialized`, then `tools/list` / `tools/call`.\n- protocol revision: **`2025-06-18`**, as negotiated in `initialize`.\n- the server registers **487 tools across 129 domains**. `docs/surface.json` is the\n  authoritative manifest: `scripts/surface_manifest.py` generates it from a live\n  `tools/list` response and cross-checks it against the ast catalog in\n  `web/src/data/tools.json`, refusing to emit unless the two are identical sets.\n  `tools/list` returns all 311, so `tool_names.size` is 311 \u2014 the sdk reaches every\n  one through `#tool` or a dynamic binding. `mem20::surface` is the single source of\n  truth for those numbers, `spec/mem20/surface_spec.rb` pins them, and\n  `rake surface:check` compares them with `docs/surface.json`.\n- the server also exposes `/health`, `/ready` and `/metrics` on `mem20_health_port`\n  (`8080` by default); `client#health`, `#ready`, `#healthy?` and `#metrics` use them.\n\n## development\n\n```bash\nbundle install\nbundle exec rspec        # unit + real child-process transport specs\nbundle exec rubocop      # style gate\nbundle exec rake build   # gem build mem20-sdk.gemspec\nbundle exec rake surface:check   # compare mem20::surface with docs/surface.json\n```\n\n## releasing\n\nci lives at the repository root (`mem20-sdk-ruby/.github/` would never be executed by\ngithub actions \u2014 only the root `.github/workflows/` directory is read):\n\n| workflow | trigger | what it does |\n|---|---|---|\n| `.github/workflows/ruby-sdk.yml` | push / pr touching `mem20-sdk-ruby/**` | ruby 3.1 / 3.2 / 3.3 \u2014 syntax, rspec, rubocop, `gem build` |\n| `.github/workflows/release.yml` | tag `mem20-sdk-ruby-v*` | verifies the tag matches `mem20::version`, re-runs the suite, installs the built gem, pushes to rubygems |\n\n```bash\n# 1. bump lib/mem20/version.rb + changelog.md, merge to main\ngit tag -a mem20-sdk-ruby-v0.2.0 -m \"mem20-sdk 0.2.0\"\ngit push origin mem20-sdk-ruby-v0.2.0\n```\n\nthe publish job needs a repository secret **`rubygems_api_key`** holding a rubygems\napi key scoped to `mem20-sdk`. without it the job fails rather than silently skipping.\nto do a build-and-verify run without publishing, use *actions \u2192 ruby sdk release \u2192\nrun workflow* with `dry_run` left on (the default).\n\n## verification \u2014 reproduced results\n\nthe results below were produced by running the suite and a live round-trip against\nthe mem20 server on a kali linux host with ruby 3.3.8. that host has since been\nretired and no longer exists; the measurements stand as recorded. the surface has\nsince been re-verified to **487 tools across 129 domains** (see\n[`docs/evidence.md`](docs/evidence.md) \u00a7 0). the raw command output is reproduced\nin [`docs/evidence.md`](docs/evidence.md).\n\n| check | result |\n|---|---|\n| `ruby -c` on every `lib/**/*.rb` | syntax ok |\n| `rspec` | **33 examples, 0 failures** |\n| `rubocop` | 19 files inspected, **no offenses detected** |\n| `gem build mem20-sdk.gemspec` | mem20-sdk **0.2.0** built |\n| `require \"mem20\"` (installed gem) | loads mem20-sdk 0.2.0 |\n| live stdio round-trip | protocol **2025-06-18**, stored token recalled (surface re-verified: **487 tools**) |\n\nthe round-trip stores a distinctive token with `memory_store` and reads it back with\n`memory_recall` against the real server; the recorded run recovered the token in\n**5.805 ms**.\n\n## scope and honest limits\n\nthis gem is a **client**. it makes no claims about mem20's memory quality, retrieval\naccuracy, or cognition benchmarks \u2014 it has not measured any, and it reports no such\nfigures. the numbers above describe this sdk's own build, test and transport behaviour,\nnot the quality of the memory engine behind it.\n\n## documentation\n\n| document | contents |\n|---|---|\n| [`docs/install.md`](docs/install.md) | server + gem install, configuration, troubleshooting |\n| [`docs/usage.md`](docs/usage.md) | recipes: store/recall, health, errors, threads, rails/sidekiq |\n| [`docs/api.md`](docs/api.md) | class-by-class api reference |\n| [`docs/evidence.md`](docs",
+      "readme_text": "<p align=\"center\">\n  <img src=\"https://img.shields.io/badge/mem20--sdk--ruby-v0.3.0-cc342d?style=for-the-badge&logo=ruby\" alt=\"mem20-sdk-ruby v0.3.0\">\n</p>\n<p align=\"center\">\n  <strong>ruby sdk for mem20 \u2014 a persistent memory + cognition substrate for ai agents.</strong>\n</p>\n<p align=\"center\">\n  <a href=\"https://github.com/bythewayz66-glitch/mem20/blob/main/license\"><img src=\"https://img.shields.io/badge/license-mit-green?style=for-the-badge\" alt=\"license: mit\"></a>\n  <a href=\"https://github.com/bythewayz66-glitch/mem20/tree/main/mem20-sdk-ruby\"><img src=\"https://img.shields.io/badge/repo-canonical%20mem20-6366f1?style=for-the-badge&logo=github\" alt=\"canonical repo\"></a>\n  <a href=\"https://github.com/bythewayz66-glitch/mem20/blob/main/mem20-sdk-ruby/changelog.md\"><img src=\"https://img.shields.io/badge/protocol-2025--06--18-4f46e5?style=for-the-badge\" alt=\"mcp protocol 2025-06-18\"></a>\n</p>\n\n---\n\nan idiomatic ruby (3.1+) client for the **mem20** mcp server. mem20 separates\n*grounded* memory (real observations, user statements, events) from *simulated*\nmemory (hypotheticals, counterfactuals, model output), and exposes its surface as a\njson-rpc 2.0 service over stdio.\n\nthis gem speaks that protocol directly \u2014 no python sdk wrapper, no shelling out \u2014 and\ngives you a small, thread-safe, frozen-config client you can drop into a rails app,\na sidekiq worker, or a plain script.\n\n> **repo location:** `mem20-sdk-ruby/` in the canonical mem20 monorepo \u2014\n> **<https://github.com/bythewayz66-glitch/mem20>** (default branch `main`, mit).\n\n## requirements\n\n| requirement | version |\n|---|---|\n| ruby | >= 3.1 |\n| mem20 server | v4.0.0 (python 3.11+) |\n| runtime deps | none (stdlib only: `json`, `open3`, `net/http`, `timeout`) |\n\n## install\n\n### from a clone of the canonical repo\n\n```bash\ngit clone --branch main https://github.com/bythewayz66-glitch/mem20.git\ncd mem20/mem20-sdk-ruby\nbundle install\nbundle exec rake        # runs the rspec suite\ngem build mem20-sdk.gemspec\n```\n\n### from the canonical repo through bundler\n\n```ruby\n# gemfile\nsource \"https://rubygems.org\"\ngem \"mem20-sdk\", github: \"bythewayz66-glitch/mem20\", branch: \"main\", glob: \"mem20-sdk-ruby/*.gemspec\"\n```\n\n```bash\nbundle install\n```\n\n### from a locally built gem\n\n```bash\ngem build mem20-sdk.gemspec\ngem install ./mem20-sdk-0.3.0.gem\n```\n\nfull instructions, including building the mem20 server itself, are in\n[`docs/install.md`](docs/install.md).\n\n## quick start\n\n```ruby\nrequire \"mem20\"\n\nmem20.configure do |c|\n  c.cwd = \"/opt/mem20/mem20\"   # directory holding mcp/mcp_server.py\n  c.timeout = 60.0             # the first embedding-backed call warms a model\nend\n\nclient = mem20.client\n\n# store a grounded fact.\nclient.memory_store(content: \"the release sign-off lives in the repo.\",\n                    category: \"project\",\n                    tags: %w[release signoff])\n\n# search it back.\nresult = client.memory_recall(query: \"where does the release sign-off live\", limit: 5)\nputs mem20::client.text(result)\n\n# any one of the 487 registered tools, by name\u2026\nclient.tool(\"memory_status\", {})\n# \u2026or as a dynamic binding.\nclient.memory_status\n\nclient.close\n```\n\n`examples/quickstart.rb` is this script, runnable as-is:\n\n```bash\nruby -ilib examples/quickstart.rb\n```\n\n## what is in the box\n\n| component | purpose |\n|---|---|\n| `mem20.configure` / `mem20.client` | module-level entry points |\n| `mem20::config` | frozen, validated configuration mapped to the documented `mem20_*` variables |\n| `mem20::client` | thread-safe facade: `#tool`, `#tools`, `#memory_store`, `#memory_recall`, `#health`, `#metrics` |\n| `mem20::surface` | the verified surface: `tool_count` (487), `domain_count` (129), `domain_tools` (487), `domain_tool_counts`, `infra_tools` |\n| `mem20::transport::stdio` | json-rpc 2.0 over stdio with the mcp handshake, timeouts and mutex-serialised access |\n| typed errors | `configurationerror`, `toolerror` (`#code`, `#data`), `transporterror` |\n\n## transport / protocol\n\n- transport: **stdio**, one json-rpc 2.0 message per line.\n- handshake: `initialize` \u2192 `notifications/initialized`, then `tools/list` / `tools/call`.\n- protocol revision: **`2025-06-18`**, as negotiated in `initialize`.\n- the server registers **487 tools across 129 domains**. `docs/surface.json` is the\n  authoritative manifest: `scripts/surface_manifest.py` generates it from a live\n  `tools/list` response and cross-checks it against the ast catalog in\n  `web/src/data/tools.json`, refusing to emit unless the two are identical sets.\n  `tools/list` returns all 487, so `tool_names.size` is 487 \u2014 the sdk reaches every\n  one through `#tool` or a dynamic binding. `mem20::surface` is the single source of\n  truth for those numbers, `spec/mem20/surface_spec.rb` pins them, and\n  `rake surface:check` compares them with `docs/surface.json`.\n- the server also exposes `/health`, `/ready` and `/metrics` on `mem20_health_port`\n  (`8080` by default); `client#health`, `#ready`, `#healthy?` and `#metrics` use them.\n\n## development\n\n```bash\nbundle install\nbundle exec rspec        # unit + real child-process transport specs\nbundle exec rubocop      # style gate\nbundle exec rake build   # gem build mem20-sdk.gemspec\nbundle exec rake surface:check   # compare mem20::surface with docs/surface.json\n```\n\n## releasing\n\nci lives at the repository root (`mem20-sdk-ruby/.github/` would never be executed by\ngithub actions \u2014 only the root `.github/workflows/` directory is read):\n\n| workflow | trigger | what it does |\n|---|---|---|\n| `.github/workflows/ruby-sdk.yml` | push / pr touching `mem20-sdk-ruby/**` | ruby 3.1 / 3.2 / 3.3 \u2014 syntax, rspec, rubocop, `gem build` |\n| `.github/workflows/release.yml` | tag `mem20-sdk-ruby-v*` | verifies the tag matches `mem20::version`, re-runs the suite, installs the built gem, pushes to rubygems |\n\n```bash\n# 1. bump lib/mem20/version.rb + changelog.md, merge to main\ngit tag -a mem20-sdk-ruby-v0.3.0 -m \"mem20-sdk 0.3.0\"\ngit push origin mem20-sdk-ruby-v0.3.0\n```\n\nthe publish job needs a repository secret **`rubygems_api_key`** holding a rubygems\napi key scoped to `mem20-sdk`. without it the job fails rather than silently skipping.\nto do a build-and-verify run without publishing, use *actions \u2192 ruby sdk release \u2192\nrun workflow* with `dry_run` left on (the default).\n\n## verification \u2014 reproduced results\n\nthe build, test and packaging rows below were produced on this checkout\n(2026-11-16, ruby 4.0.0, debian 12) and are reproduced verbatim in\n[`docs/evidence.md`](docs/evidence.md). the live stdio round-trip row is the\nearlier capture from a kali linux host with ruby 3.3.8; that host has since been\nretired and no longer exists, so the measurement stands as recorded. the surface\nhas been re-verified to **487 tools across 129 domains** against\n`docs/surface.json` (see [`docs/evidence.md`](docs/evidence.md) \u00a7 0).\n\n| check | result |\n|---|---|\n| `ruby -c` on every `lib/**/*.rb` | syntax ok |\n| `rspec` | **82 examples, 0 failures** |\n| `rubocop` | 24 files inspected, **no offenses detected** |\n| `gem build mem20-sdk.gemspec` | mem20-sdk **0.3.0** built |\n| `require \"mem20\"` (installed gem) | loads mem20-sdk 0.3.0, surface 487 / 129 |\n| `rake surface:check` | `mem20::surface` matches `docs/surface.json` |\n| live stdio round-trip (earlier capture) | protocol **2025-06-18**, stored token recalled |\n\nthe round-trip stores a distinctive token with `memory_store` and reads it back with\n`memory_recall` against the real server; the recorded run recovered the token in\n**5.805 ms**. it is not re-run here: this checkout has no mem20 server or llm\nendpoint, so the row is the dated capture, not a fresh measurement.\n\n## scope and honest limits\n\nthis gem is a **client**. it makes no claims about mem20's memory quality, retrieval\naccuracy, or cognition benchmarks \u2014 it has not measured any, and it reports no such\nfigures. the numbers above describe this sdk's own build, test and transport behaviour,\nnot the quality of the memory engine behind it.\n\n## documentation\n\n| document | con",
       "requires_python": null,
       "subdirs": [
         "docs",
@@ -1206,9 +1238,9 @@
       "version": "1.0.0"
     },
     {
-      "bytes": 1023115,
+      "bytes": 821719,
       "category": "organ",
-      "code_lines": 15603,
+      "code_lines": 15006,
       "dependencies": [
         "PyYAML>=6.0",
         "aiohttp>=3.9",
@@ -1225,26 +1257,26 @@
         "mem20": "mem20agentz.cli:main",
         "mem20agentz": "mem20agentz.cli:main"
       },
-      "file_count": 84,
+      "file_count": 79,
       "keywords": [],
       "languages": {
-        "css": 2,
-        "html": 4,
-        "javascript": 8,
+        "css": 1,
+        "html": 2,
+        "javascript": 7,
         "json": 7,
         "markdown": 5,
-        "python": 56,
+        "python": 55,
         "toml": 2
       },
       "license": null,
-      "line_count": 18927,
+      "line_count": 18330,
       "lines_by_language": {
-        "css": 728,
-        "html": 1207,
-        "javascript": 1548,
+        "css": 727,
+        "html": 907,
+        "javascript": 1497,
         "json": 2290,
         "markdown": 988,
-        "python": 12120,
+        "python": 11875,
         "toml": 46
       },
       "modules": [
@@ -1253,9 +1285,6 @@
         "_substrate",
         "acp",
         "agentz",
-        "app_20261113-014247",
-        "app_20261114-002436",
-        "app_20261114-003734",
         "auth",
         "backup",
         "bridge",
@@ -1287,7 +1316,10 @@
         "projects",
         "secrets",
         "security",
-        "sessions"
+        "sessions",
+        "skill_index",
+        "skills",
+        "skin"
       ],
       "name": "mem20agentz",
       "packaged": true,
@@ -1296,14 +1328,13 @@
       "requires_python": ">=3.11",
       "subdirs": [
         "absorbed",
-        "built",
         "docs",
         "mem20agentz",
         "scripts",
         "tests",
         "web"
       ],
-      "test_files": 6,
+      "test_files": 8,
       "version": "0.1.0"
     },
     {
@@ -1490,6 +1521,204 @@
       "version": "0.1.0"
     },
     {
+      "bytes": 290,
+      "category": "organ",
+      "code_lines": 8,
+      "dependencies": [],
+      "description": "",
+      "dir": "mem20asynccollaborationcapsulesz",
+      "docs": [],
+      "entry_points": {},
+      "file_count": 1,
+      "keywords": [],
+      "languages": {
+        "python": 1
+      },
+      "license": null,
+      "line_count": 8,
+      "lines_by_language": {
+        "python": 8
+      },
+      "modules": [
+        "core"
+      ],
+      "name": "mem20asynccollaborationcapsulesz",
+      "packaged": false,
+      "readme_summary": "",
+      "readme_text": "",
+      "requires_python": null,
+      "subdirs": [
+        "mem20asynccollaborationcapsulesz"
+      ],
+      "test_files": 0,
+      "version": null
+    },
+    {
+      "bytes": 290,
+      "category": "organ",
+      "code_lines": 8,
+      "dependencies": [],
+      "description": "",
+      "dir": "mem20audiencereactionsimulatorz",
+      "docs": [],
+      "entry_points": {},
+      "file_count": 1,
+      "keywords": [],
+      "languages": {
+        "python": 1
+      },
+      "license": null,
+      "line_count": 8,
+      "lines_by_language": {
+        "python": 8
+      },
+      "modules": [
+        "core"
+      ],
+      "name": "mem20audiencereactionsimulatorz",
+      "packaged": false,
+      "readme_summary": "",
+      "readme_text": "",
+      "requires_python": null,
+      "subdirs": [
+        "mem20audiencereactionsimulatorz"
+      ],
+      "test_files": 0,
+      "version": null
+    },
+    {
+      "bytes": 290,
+      "category": "organ",
+      "code_lines": 8,
+      "dependencies": [],
+      "description": "",
+      "dir": "mem20autogeneratedprototypepathz",
+      "docs": [],
+      "entry_points": {},
+      "file_count": 1,
+      "keywords": [],
+      "languages": {
+        "python": 1
+      },
+      "license": null,
+      "line_count": 8,
+      "lines_by_language": {
+        "python": 8
+      },
+      "modules": [
+        "core"
+      ],
+      "name": "mem20autogeneratedprototypepathz",
+      "packaged": false,
+      "readme_summary": "",
+      "readme_text": "",
+      "requires_python": null,
+      "subdirs": [
+        "mem20autogeneratedprototypepathz"
+      ],
+      "test_files": 0,
+      "version": null
+    },
+    {
+      "bytes": 290,
+      "category": "organ",
+      "code_lines": 8,
+      "dependencies": [],
+      "description": "",
+      "dir": "mem20autonomouscodesurgeonz",
+      "docs": [],
+      "entry_points": {},
+      "file_count": 1,
+      "keywords": [],
+      "languages": {
+        "python": 1
+      },
+      "license": null,
+      "line_count": 8,
+      "lines_by_language": {
+        "python": 8
+      },
+      "modules": [
+        "core"
+      ],
+      "name": "mem20autonomouscodesurgeonz",
+      "packaged": false,
+      "readme_summary": "",
+      "readme_text": "",
+      "requires_python": null,
+      "subdirs": [
+        "mem20autonomouscodesurgeonz"
+      ],
+      "test_files": 0,
+      "version": null
+    },
+    {
+      "bytes": 290,
+      "category": "organ",
+      "code_lines": 8,
+      "dependencies": [],
+      "description": "",
+      "dir": "mem20autonomousreviewswarmz",
+      "docs": [],
+      "entry_points": {},
+      "file_count": 1,
+      "keywords": [],
+      "languages": {
+        "python": 1
+      },
+      "license": null,
+      "line_count": 8,
+      "lines_by_language": {
+        "python": 8
+      },
+      "modules": [
+        "core"
+      ],
+      "name": "mem20autonomousreviewswarmz",
+      "packaged": false,
+      "readme_summary": "",
+      "readme_text": "",
+      "requires_python": null,
+      "subdirs": [
+        "mem20autonomousreviewswarmz"
+      ],
+      "test_files": 0,
+      "version": null
+    },
+    {
+      "bytes": 290,
+      "category": "organ",
+      "code_lines": 8,
+      "dependencies": [],
+      "description": "",
+      "dir": "mem20autonomoustrafficcontrollerz",
+      "docs": [],
+      "entry_points": {},
+      "file_count": 1,
+      "keywords": [],
+      "languages": {
+        "python": 1
+      },
+      "license": null,
+      "line_count": 8,
+      "lines_by_language": {
+        "python": 8
+      },
+      "modules": [
+        "core"
+      ],
+      "name": "mem20autonomoustrafficcontrollerz",
+      "packaged": false,
+      "readme_summary": "",
+      "readme_text": "",
+      "requires_python": null,
+      "subdirs": [
+        "mem20autonomoustrafficcontrollerz"
+      ],
+      "test_files": 0,
+      "version": null
+    },
+    {
       "bytes": 50521,
       "category": "organ",
       "code_lines": 1052,
@@ -1611,6 +1840,39 @@
       ],
       "test_files": 1,
       "version": "0.1.0"
+    },
+    {
+      "bytes": 290,
+      "category": "organ",
+      "code_lines": 8,
+      "dependencies": [],
+      "description": "",
+      "dir": "mem20batteryawareagentschedulerz",
+      "docs": [],
+      "entry_points": {},
+      "file_count": 1,
+      "keywords": [],
+      "languages": {
+        "python": 1
+      },
+      "license": null,
+      "line_count": 8,
+      "lines_by_language": {
+        "python": 8
+      },
+      "modules": [
+        "core"
+      ],
+      "name": "mem20batteryawareagentschedulerz",
+      "packaged": false,
+      "readme_summary": "",
+      "readme_text": "",
+      "requires_python": null,
+      "subdirs": [
+        "mem20batteryawareagentschedulerz"
+      ],
+      "test_files": 0,
+      "version": null
     },
     {
       "bytes": 98860,
@@ -1867,6 +2129,138 @@
       "version": "0.1.0"
     },
     {
+      "bytes": 290,
+      "category": "organ",
+      "code_lines": 8,
+      "dependencies": [],
+      "description": "",
+      "dir": "mem20buildsequenceoptimizerz",
+      "docs": [],
+      "entry_points": {},
+      "file_count": 1,
+      "keywords": [],
+      "languages": {
+        "python": 1
+      },
+      "license": null,
+      "line_count": 8,
+      "lines_by_language": {
+        "python": 8
+      },
+      "modules": [
+        "core"
+      ],
+      "name": "mem20buildsequenceoptimizerz",
+      "packaged": false,
+      "readme_summary": "",
+      "readme_text": "",
+      "requires_python": null,
+      "subdirs": [
+        "mem20buildsequenceoptimizerz"
+      ],
+      "test_files": 0,
+      "version": null
+    },
+    {
+      "bytes": 290,
+      "category": "organ",
+      "code_lines": 8,
+      "dependencies": [],
+      "description": "",
+      "dir": "mem20capabilitygapmapperz",
+      "docs": [],
+      "entry_points": {},
+      "file_count": 1,
+      "keywords": [],
+      "languages": {
+        "python": 1
+      },
+      "license": null,
+      "line_count": 8,
+      "lines_by_language": {
+        "python": 8
+      },
+      "modules": [
+        "core"
+      ],
+      "name": "mem20capabilitygapmapperz",
+      "packaged": false,
+      "readme_summary": "",
+      "readme_text": "",
+      "requires_python": null,
+      "subdirs": [
+        "mem20capabilitygapmapperz"
+      ],
+      "test_files": 0,
+      "version": null
+    },
+    {
+      "bytes": 290,
+      "category": "organ",
+      "code_lines": 8,
+      "dependencies": [],
+      "description": "",
+      "dir": "mem20chaosnativeapplicationruntimez",
+      "docs": [],
+      "entry_points": {},
+      "file_count": 1,
+      "keywords": [],
+      "languages": {
+        "python": 1
+      },
+      "license": null,
+      "line_count": 8,
+      "lines_by_language": {
+        "python": 8
+      },
+      "modules": [
+        "core"
+      ],
+      "name": "mem20chaosnativeapplicationruntimez",
+      "packaged": false,
+      "readme_summary": "",
+      "readme_text": "",
+      "requires_python": null,
+      "subdirs": [
+        "mem20chaosnativeapplicationruntimez"
+      ],
+      "test_files": 0,
+      "version": null
+    },
+    {
+      "bytes": 290,
+      "category": "organ",
+      "code_lines": 8,
+      "dependencies": [],
+      "description": "",
+      "dir": "mem20characterandmascotforgez",
+      "docs": [],
+      "entry_points": {},
+      "file_count": 1,
+      "keywords": [],
+      "languages": {
+        "python": 1
+      },
+      "license": null,
+      "line_count": 8,
+      "lines_by_language": {
+        "python": 8
+      },
+      "modules": [
+        "core"
+      ],
+      "name": "mem20characterandmascotforgez",
+      "packaged": false,
+      "readme_summary": "",
+      "readme_text": "",
+      "requires_python": null,
+      "subdirs": [
+        "mem20characterandmascotforgez"
+      ],
+      "test_files": 0,
+      "version": null
+    },
+    {
       "bytes": 15787,
       "category": "organ",
       "code_lines": 347,
@@ -1917,7 +2311,205 @@
       "version": "0.1.0"
     },
     {
-      "bytes": 858045,
+      "bytes": 290,
+      "category": "organ",
+      "code_lines": 8,
+      "dependencies": [],
+      "description": "",
+      "dir": "mem20communitypulseenginez",
+      "docs": [],
+      "entry_points": {},
+      "file_count": 1,
+      "keywords": [],
+      "languages": {
+        "python": 1
+      },
+      "license": null,
+      "line_count": 8,
+      "lines_by_language": {
+        "python": 8
+      },
+      "modules": [
+        "core"
+      ],
+      "name": "mem20communitypulseenginez",
+      "packaged": false,
+      "readme_summary": "",
+      "readme_text": "",
+      "requires_python": null,
+      "subdirs": [
+        "mem20communitypulseenginez"
+      ],
+      "test_files": 0,
+      "version": null
+    },
+    {
+      "bytes": 290,
+      "category": "organ",
+      "code_lines": 8,
+      "dependencies": [],
+      "description": "",
+      "dir": "mem20completionconfidenceenginez",
+      "docs": [],
+      "entry_points": {},
+      "file_count": 1,
+      "keywords": [],
+      "languages": {
+        "python": 1
+      },
+      "license": null,
+      "line_count": 8,
+      "lines_by_language": {
+        "python": 8
+      },
+      "modules": [
+        "core"
+      ],
+      "name": "mem20completionconfidenceenginez",
+      "packaged": false,
+      "readme_summary": "",
+      "readme_text": "",
+      "requires_python": null,
+      "subdirs": [
+        "mem20completionconfidenceenginez"
+      ],
+      "test_files": 0,
+      "version": null
+    },
+    {
+      "bytes": 290,
+      "category": "organ",
+      "code_lines": 8,
+      "dependencies": [],
+      "description": "",
+      "dir": "mem20conflictdeescalationassistantz",
+      "docs": [],
+      "entry_points": {},
+      "file_count": 1,
+      "keywords": [],
+      "languages": {
+        "python": 1
+      },
+      "license": null,
+      "line_count": 8,
+      "lines_by_language": {
+        "python": 8
+      },
+      "modules": [
+        "core"
+      ],
+      "name": "mem20conflictdeescalationassistantz",
+      "packaged": false,
+      "readme_summary": "",
+      "readme_text": "",
+      "requires_python": null,
+      "subdirs": [
+        "mem20conflictdeescalationassistantz"
+      ],
+      "test_files": 0,
+      "version": null
+    },
+    {
+      "bytes": 290,
+      "category": "organ",
+      "code_lines": 8,
+      "dependencies": [],
+      "description": "",
+      "dir": "mem20contextawarelearningcoachz",
+      "docs": [],
+      "entry_points": {},
+      "file_count": 1,
+      "keywords": [],
+      "languages": {
+        "python": 1
+      },
+      "license": null,
+      "line_count": 8,
+      "lines_by_language": {
+        "python": 8
+      },
+      "modules": [
+        "core"
+      ],
+      "name": "mem20contextawarelearningcoachz",
+      "packaged": false,
+      "readme_summary": "",
+      "readme_text": "",
+      "requires_python": null,
+      "subdirs": [
+        "mem20contextawarelearningcoachz"
+      ],
+      "test_files": 0,
+      "version": null
+    },
+    {
+      "bytes": 290,
+      "category": "organ",
+      "code_lines": 8,
+      "dependencies": [],
+      "description": "",
+      "dir": "mem20continuouscompatibilitylabz",
+      "docs": [],
+      "entry_points": {},
+      "file_count": 1,
+      "keywords": [],
+      "languages": {
+        "python": 1
+      },
+      "license": null,
+      "line_count": 8,
+      "lines_by_language": {
+        "python": 8
+      },
+      "modules": [
+        "core"
+      ],
+      "name": "mem20continuouscompatibilitylabz",
+      "packaged": false,
+      "readme_summary": "",
+      "readme_text": "",
+      "requires_python": null,
+      "subdirs": [
+        "mem20continuouscompatibilitylabz"
+      ],
+      "test_files": 0,
+      "version": null
+    },
+    {
+      "bytes": 290,
+      "category": "organ",
+      "code_lines": 8,
+      "dependencies": [],
+      "description": "",
+      "dir": "mem20continuousimprovementloopz",
+      "docs": [],
+      "entry_points": {},
+      "file_count": 1,
+      "keywords": [],
+      "languages": {
+        "python": 1
+      },
+      "license": null,
+      "line_count": 8,
+      "lines_by_language": {
+        "python": 8
+      },
+      "modules": [
+        "core"
+      ],
+      "name": "mem20continuousimprovementloopz",
+      "packaged": false,
+      "readme_summary": "",
+      "readme_text": "",
+      "requires_python": null,
+      "subdirs": [
+        "mem20continuousimprovementloopz"
+      ],
+      "test_files": 0,
+      "version": null
+    },
+    {
+      "bytes": 858044,
       "category": "organ",
       "code_lines": 12711,
       "dependencies": [
@@ -1996,6 +2588,39 @@
       ],
       "test_files": 4,
       "version": "0.1.0"
+    },
+    {
+      "bytes": 290,
+      "category": "organ",
+      "code_lines": 8,
+      "dependencies": [],
+      "description": "",
+      "dir": "mem20conversationalactiondesktopz",
+      "docs": [],
+      "entry_points": {},
+      "file_count": 1,
+      "keywords": [],
+      "languages": {
+        "python": 1
+      },
+      "license": null,
+      "line_count": 8,
+      "lines_by_language": {
+        "python": 8
+      },
+      "modules": [
+        "core"
+      ],
+      "name": "mem20conversationalactiondesktopz",
+      "packaged": false,
+      "readme_summary": "",
+      "readme_text": "",
+      "requires_python": null,
+      "subdirs": [
+        "mem20conversationalactiondesktopz"
+      ],
+      "test_files": 0,
+      "version": null
     },
     {
       "bytes": 64303,
@@ -2100,7 +2725,73 @@
       "version": "0.2.0"
     },
     {
-      "bytes": 213306,
+      "bytes": 290,
+      "category": "organ",
+      "code_lines": 8,
+      "dependencies": [],
+      "description": "",
+      "dir": "mem20crdtcollaborationenginez",
+      "docs": [],
+      "entry_points": {},
+      "file_count": 1,
+      "keywords": [],
+      "languages": {
+        "python": 1
+      },
+      "license": null,
+      "line_count": 8,
+      "lines_by_language": {
+        "python": 8
+      },
+      "modules": [
+        "core"
+      ],
+      "name": "mem20crdtcollaborationenginez",
+      "packaged": false,
+      "readme_summary": "",
+      "readme_text": "",
+      "requires_python": null,
+      "subdirs": [
+        "mem20crdtcollaborationenginez"
+      ],
+      "test_files": 0,
+      "version": null
+    },
+    {
+      "bytes": 290,
+      "category": "organ",
+      "code_lines": 8,
+      "dependencies": [],
+      "description": "",
+      "dir": "mem20creativetrendradarz",
+      "docs": [],
+      "entry_points": {},
+      "file_count": 1,
+      "keywords": [],
+      "languages": {
+        "python": 1
+      },
+      "license": null,
+      "line_count": 8,
+      "lines_by_language": {
+        "python": 8
+      },
+      "modules": [
+        "core"
+      ],
+      "name": "mem20creativetrendradarz",
+      "packaged": false,
+      "readme_summary": "",
+      "readme_text": "",
+      "requires_python": null,
+      "subdirs": [
+        "mem20creativetrendradarz"
+      ],
+      "test_files": 0,
+      "version": null
+    },
+    {
+      "bytes": 222039,
       "category": "organ",
       "code_lines": 4173,
       "dependencies": [
@@ -2126,9 +2817,9 @@
         "yaml": 1
       },
       "license": null,
-      "line_count": 4508,
+      "line_count": 4592,
       "lines_by_language": {
-        "jsonl": 84,
+        "jsonl": 168,
         "markdown": 132,
         "python": 4173,
         "toml": 24,
@@ -2170,6 +2861,72 @@
       ],
       "test_files": 3,
       "version": "0.1.0"
+    },
+    {
+      "bytes": 290,
+      "category": "organ",
+      "code_lines": 8,
+      "dependencies": [],
+      "description": "",
+      "dir": "mem20crossdevicesessioncontinuityz",
+      "docs": [],
+      "entry_points": {},
+      "file_count": 1,
+      "keywords": [],
+      "languages": {
+        "python": 1
+      },
+      "license": null,
+      "line_count": 8,
+      "lines_by_language": {
+        "python": 8
+      },
+      "modules": [
+        "core"
+      ],
+      "name": "mem20crossdevicesessioncontinuityz",
+      "packaged": false,
+      "readme_summary": "",
+      "readme_text": "",
+      "requires_python": null,
+      "subdirs": [
+        "mem20crossdevicesessioncontinuityz"
+      ],
+      "test_files": 0,
+      "version": null
+    },
+    {
+      "bytes": 290,
+      "category": "organ",
+      "code_lines": 8,
+      "dependencies": [],
+      "description": "",
+      "dir": "mem20crosslanguagerefactorenginez",
+      "docs": [],
+      "entry_points": {},
+      "file_count": 1,
+      "keywords": [],
+      "languages": {
+        "python": 1
+      },
+      "license": null,
+      "line_count": 8,
+      "lines_by_language": {
+        "python": 8
+      },
+      "modules": [
+        "core"
+      ],
+      "name": "mem20crosslanguagerefactorenginez",
+      "packaged": false,
+      "readme_summary": "",
+      "readme_text": "",
+      "requires_python": null,
+      "subdirs": [
+        "mem20crosslanguagerefactorenginez"
+      ],
+      "test_files": 0,
+      "version": null
     },
     {
       "bytes": 36306,
@@ -2222,6 +2979,138 @@
       ],
       "test_files": 4,
       "version": "0.1.0"
+    },
+    {
+      "bytes": 290,
+      "category": "organ",
+      "code_lines": 8,
+      "dependencies": [],
+      "description": "",
+      "dir": "mem20dailydecisioncopilotz",
+      "docs": [],
+      "entry_points": {},
+      "file_count": 1,
+      "keywords": [],
+      "languages": {
+        "python": 1
+      },
+      "license": null,
+      "line_count": 8,
+      "lines_by_language": {
+        "python": 8
+      },
+      "modules": [
+        "core"
+      ],
+      "name": "mem20dailydecisioncopilotz",
+      "packaged": false,
+      "readme_summary": "",
+      "readme_text": "",
+      "requires_python": null,
+      "subdirs": [
+        "mem20dailydecisioncopilotz"
+      ],
+      "test_files": 0,
+      "version": null
+    },
+    {
+      "bytes": 290,
+      "category": "organ",
+      "code_lines": 8,
+      "dependencies": [],
+      "description": "",
+      "dir": "mem20databaseautopilotz",
+      "docs": [],
+      "entry_points": {},
+      "file_count": 1,
+      "keywords": [],
+      "languages": {
+        "python": 1
+      },
+      "license": null,
+      "line_count": 8,
+      "lines_by_language": {
+        "python": 8
+      },
+      "modules": [
+        "core"
+      ],
+      "name": "mem20databaseautopilotz",
+      "packaged": false,
+      "readme_summary": "",
+      "readme_text": "",
+      "requires_python": null,
+      "subdirs": [
+        "mem20databaseautopilotz"
+      ],
+      "test_files": 0,
+      "version": null
+    },
+    {
+      "bytes": 290,
+      "category": "organ",
+      "code_lines": 8,
+      "dependencies": [],
+      "description": "",
+      "dir": "mem20dependencymutationlabz",
+      "docs": [],
+      "entry_points": {},
+      "file_count": 1,
+      "keywords": [],
+      "languages": {
+        "python": 1
+      },
+      "license": null,
+      "line_count": 8,
+      "lines_by_language": {
+        "python": 8
+      },
+      "modules": [
+        "core"
+      ],
+      "name": "mem20dependencymutationlabz",
+      "packaged": false,
+      "readme_summary": "",
+      "readme_text": "",
+      "requires_python": null,
+      "subdirs": [
+        "mem20dependencymutationlabz"
+      ],
+      "test_files": 0,
+      "version": null
+    },
+    {
+      "bytes": 290,
+      "category": "organ",
+      "code_lines": 8,
+      "dependencies": [],
+      "description": "",
+      "dir": "mem20deviceenrollmentautopilotz",
+      "docs": [],
+      "entry_points": {},
+      "file_count": 1,
+      "keywords": [],
+      "languages": {
+        "python": 1
+      },
+      "license": null,
+      "line_count": 8,
+      "lines_by_language": {
+        "python": 8
+      },
+      "modules": [
+        "core"
+      ],
+      "name": "mem20deviceenrollmentautopilotz",
+      "packaged": false,
+      "readme_summary": "",
+      "readme_text": "",
+      "requires_python": null,
+      "subdirs": [
+        "mem20deviceenrollmentautopilotz"
+      ],
+      "test_files": 0,
+      "version": null
     },
     {
       "bytes": 300090,
@@ -2297,6 +3186,72 @@
       ],
       "test_files": 9,
       "version": "0.1.0"
+    },
+    {
+      "bytes": 290,
+      "category": "organ",
+      "code_lines": 8,
+      "dependencies": [],
+      "description": "",
+      "dir": "mem20dynamicphasereplannerz",
+      "docs": [],
+      "entry_points": {},
+      "file_count": 1,
+      "keywords": [],
+      "languages": {
+        "python": 1
+      },
+      "license": null,
+      "line_count": 8,
+      "lines_by_language": {
+        "python": 8
+      },
+      "modules": [
+        "core"
+      ],
+      "name": "mem20dynamicphasereplannerz",
+      "packaged": false,
+      "readme_summary": "",
+      "readme_text": "",
+      "requires_python": null,
+      "subdirs": [
+        "mem20dynamicphasereplannerz"
+      ],
+      "test_files": 0,
+      "version": null
+    },
+    {
+      "bytes": 290,
+      "category": "organ",
+      "code_lines": 8,
+      "dependencies": [],
+      "description": "",
+      "dir": "mem20emotionsensitivemessagerouterz",
+      "docs": [],
+      "entry_points": {},
+      "file_count": 1,
+      "keywords": [],
+      "languages": {
+        "python": 1
+      },
+      "license": null,
+      "line_count": 8,
+      "lines_by_language": {
+        "python": 8
+      },
+      "modules": [
+        "core"
+      ],
+      "name": "mem20emotionsensitivemessagerouterz",
+      "packaged": false,
+      "readme_summary": "",
+      "readme_text": "",
+      "requires_python": null,
+      "subdirs": [
+        "mem20emotionsensitivemessagerouterz"
+      ],
+      "test_files": 0,
+      "version": null
     },
     {
       "bytes": 930092,
@@ -2396,6 +3351,105 @@
       ],
       "test_files": 40,
       "version": "1.0.0"
+    },
+    {
+      "bytes": 290,
+      "category": "organ",
+      "code_lines": 8,
+      "dependencies": [],
+      "description": "",
+      "dir": "mem20eventshaperouterz",
+      "docs": [],
+      "entry_points": {},
+      "file_count": 1,
+      "keywords": [],
+      "languages": {
+        "python": 1
+      },
+      "license": null,
+      "line_count": 8,
+      "lines_by_language": {
+        "python": 8
+      },
+      "modules": [
+        "core"
+      ],
+      "name": "mem20eventshaperouterz",
+      "packaged": false,
+      "readme_summary": "",
+      "readme_text": "",
+      "requires_python": null,
+      "subdirs": [
+        "mem20eventshaperouterz"
+      ],
+      "test_files": 0,
+      "version": null
+    },
+    {
+      "bytes": 290,
+      "category": "organ",
+      "code_lines": 8,
+      "dependencies": [],
+      "description": "",
+      "dir": "mem20executableroadmapcompilerz",
+      "docs": [],
+      "entry_points": {},
+      "file_count": 1,
+      "keywords": [],
+      "languages": {
+        "python": 1
+      },
+      "license": null,
+      "line_count": 8,
+      "lines_by_language": {
+        "python": 8
+      },
+      "modules": [
+        "core"
+      ],
+      "name": "mem20executableroadmapcompilerz",
+      "packaged": false,
+      "readme_summary": "",
+      "readme_text": "",
+      "requires_python": null,
+      "subdirs": [
+        "mem20executableroadmapcompilerz"
+      ],
+      "test_files": 0,
+      "version": null
+    },
+    {
+      "bytes": 290,
+      "category": "organ",
+      "code_lines": 8,
+      "dependencies": [],
+      "description": "",
+      "dir": "mem20experiencefrictiondetectorz",
+      "docs": [],
+      "entry_points": {},
+      "file_count": 1,
+      "keywords": [],
+      "languages": {
+        "python": 1
+      },
+      "license": null,
+      "line_count": 8,
+      "lines_by_language": {
+        "python": 8
+      },
+      "modules": [
+        "core"
+      ],
+      "name": "mem20experiencefrictiondetectorz",
+      "packaged": false,
+      "readme_summary": "",
+      "readme_text": "",
+      "requires_python": null,
+      "subdirs": [
+        "mem20experiencefrictiondetectorz"
+      ],
+      "test_files": 0,
+      "version": null
     },
     {
       "bytes": 2088769,
@@ -2589,9 +3643,9 @@
       "version": "1.0.0"
     },
     {
-      "bytes": 40871,
+      "bytes": 40359,
       "category": "organ",
-      "code_lines": 888,
+      "code_lines": 887,
       "dependencies": [
         "PyYAML>=6.0"
       ],
@@ -2611,10 +3665,10 @@
         "toml": 1
       },
       "license": null,
-      "line_count": 977,
+      "line_count": 963,
       "lines_by_language": {
-        "markdown": 63,
-        "python": 888,
+        "markdown": 50,
+        "python": 887,
         "toml": 26
       },
       "modules": [
@@ -2632,7 +3686,7 @@
       "name": "mem20factoryz",
       "packaged": true,
       "readme_summary": "mem20factoryz",
-      "readme_text": "# mem20factoryz\n\nprocedural content generation for the mem20 estate: deterministic terrain, bsp dungeons, loot, assets, levels, narrative beats, and lightweight playtesting.\n\n- **package**: `mem20factoryz`\n- **python**: >= 3.11 (see `pyproject.toml`)\n- **core property**: generation is seed-driven and deterministic for a given config\n\n## install\n\nfrom a mem20 checkout:\n\n```bash\npython3 -m pip install -e mem20factoryz\n```\n\n## cli\n\n```bash\n# generate a level summary\nmem20factoryz generate --seed 7 --width 32 --height 32\n\n# preview terrain tiles\nmem20factoryz terrain --seed 7 --width 16 --height 12\n\n# write a deterministic texture (ppm) and sfx (wav)\nmem20factoryz texture --seed 7 --resolution 16 --out /tmp/factoryz_texture.ppm\nmem20factoryz audio --seed 7 --out /tmp/factoryz_sfx.wav\n\n# narrative beats\nmem20factoryz story --seed 7 --segments 5\n\n# playtest a generated level\nmem20factoryz playtest --seed 7 --runs 2\n\n# built-in self-test\nmem20factoryz test --seed 7\n```\n\n## python api\n\n```python\nfrom mem20factoryz.config import factoryconfig\nfrom mem20factoryz.generator import terraingenerator, bspdungeongenerator, lootgenerator\nfrom mem20factoryz.level import levelbuilder\nfrom mem20factoryz.narrative import narrativeengine\nfrom mem20factoryz.assets import assetsynthesizer, palette\nfrom mem20factoryz.playtest import playtester\n\ncfg = factoryconfig(seed=7, width=32, height=32)\n\n# heightmap (list[list[float]]) and tile quantization\nhmap = terraingenerator().generate(cfg)\ntiles = terraingenerator().to_tiles(hmap, levels=4)\n\n# bsp dungeon: walls/floors, rooms, spawn\ndungeon = bspdungeongenerator().generate(cfg)\nprint(len(dungeon[\"rooms\"]), dungeon[\"spawn\"])\n\n# deterministic loot\nloot = lootgenerator().generate(factoryconfig(items_per_level=5))\n\n# full level assembly\nlevel = levelbuilder(cfg).build()\nprint(level.width, level.height, len(level.objectives))\n\n# narrative and assets\nbeats = narrativeengine(seed=7).generate(segments=4)\nsynth = assetsynthesizer(factoryconfig(seed=7, asset_resolution=8))\npixels = synth.synthesise_texture(palette=palette.from_seed(7))\nsfx = synth.synthesise_sfx()\n\n# playtest\nresults = playtester(cfg).run(level, runs=2)\nprint(results[0].summary())\n```\n\n## development\n\n```bash\npython3 -m pytest mem20factoryz/mem20factoryz/tests -q\npython3 scripts/renovation/conformance.py mem20factoryz\n```\n\n## notes\n\n- outputs are procedural; keep `seed`/config stable for reproducible results.\n- use the cli/api for real generation. do not treat placeholder values as generated assets.\n",
+      "readme_text": "# mem20factoryz\n\ndeterministic, hermetic game-factory primitives for the mem20 estate: a seeded\nprng and value noise, terrain and bsp-dungeon generators, texture and audio\nsynthesis, level assembly, narrative beats, and playtest simulation.\n\neverything is reproducible from a seed. no network, no wall clock, and no\nexternal asset files are involved.\n\n## install\n\n```bash\ncd mem20factoryz\npython3 -m pip install -e .\n```\n\n## cli\n\nthe top-level `--seed` must come before the subcommand.\n\n```bash\n# build a 32x32 level and print its summary\npython3 -m mem20factoryz --seed 7 generate --width 32 --height 32\n\n# emit the same level as json\npython3 -m mem20factoryz --seed 7 generate --width 32 --height 32 --json\n\n# synthesize a texture and an sfx file\npython3 -m mem20factoryz --seed 7 texture --resolution 16 --out /tmp/factoryz.ppm\npython3 -m mem20factoryz --seed 7 audio --out /tmp/factoryz.wav\n\n# preview terrain tiles and simulate five playthroughs\npython3 -m mem20factoryz --seed 7 terrain --width 16 --height 8\npython3 -m mem20factoryz --seed 7 playtest --runs 5\n```\n\nthe installed console script is equivalent:\n\n```bash\nmem20factoryz --seed 7 generate --width 32 --height 32\n```\n\n## python api\n\n```python\nfrom mem20factoryz.config import factoryconfig\nfrom mem20factoryz.level import levelbuilder\n\ncfg = factoryconfig(seed=7, width=32, height=32)\nlevel = levelbuilder(cfg).build()\n\nassert (level.width, level.height) == (32, 32)\nprint(len(level.entities), len(level.objectives), level.spawn)\n```\n\n`generator` is an abstract base class: concrete generators implement\n`generate(config)` and return their artifact (a heightmap, a dungeon dict, or a\nloot table).\n\n## guarantees\n\n- the same seed produces byte-identical output (`deterministicprng`).\n- level, texture, audio, narrative, and playtest paths are all seeded.\n- failure is explicit: an incomplete `generator` subclass cannot be\n  instantiated.\n\n## test\n\n```bash\npython3 -m pytest -q mem20factoryz/mem20factoryz/tests\n```\n",
       "requires_python": ">=3.11",
       "subdirs": [
         "mem20factoryz"
@@ -2741,6 +3795,39 @@
       "version": "0.1.0"
     },
     {
+      "bytes": 290,
+      "category": "organ",
+      "code_lines": 8,
+      "dependencies": [],
+      "description": "",
+      "dir": "mem20featuredependencygraphenginez",
+      "docs": [],
+      "entry_points": {},
+      "file_count": 1,
+      "keywords": [],
+      "languages": {
+        "python": 1
+      },
+      "license": null,
+      "line_count": 8,
+      "lines_by_language": {
+        "python": 8
+      },
+      "modules": [
+        "core"
+      ],
+      "name": "mem20featuredependencygraphenginez",
+      "packaged": false,
+      "readme_summary": "",
+      "readme_text": "",
+      "requires_python": null,
+      "subdirs": [
+        "mem20featuredependencygraphenginez"
+      ],
+      "test_files": 0,
+      "version": null
+    },
+    {
       "bytes": 858077,
       "category": "organ",
       "code_lines": 13340,
@@ -2822,6 +3909,39 @@
       "version": "0.1.0"
     },
     {
+      "bytes": 290,
+      "category": "organ",
+      "code_lines": 8,
+      "dependencies": [],
+      "description": "",
+      "dir": "mem20generativebrandworldenginez",
+      "docs": [],
+      "entry_points": {},
+      "file_count": 1,
+      "keywords": [],
+      "languages": {
+        "python": 1
+      },
+      "license": null,
+      "line_count": 8,
+      "lines_by_language": {
+        "python": 8
+      },
+      "modules": [
+        "core"
+      ],
+      "name": "mem20generativebrandworldenginez",
+      "packaged": false,
+      "readme_summary": "",
+      "readme_text": "",
+      "requires_python": null,
+      "subdirs": [
+        "mem20generativebrandworldenginez"
+      ],
+      "test_files": 0,
+      "version": null
+    },
+    {
       "bytes": 145714,
       "category": "organ",
       "code_lines": 3662,
@@ -2883,7 +4003,7 @@
       "version": "0.2.0"
     },
     {
-      "bytes": 294477,
+      "bytes": 294482,
       "category": "organ",
       "code_lines": 2513,
       "dependencies": [],
@@ -3012,6 +4132,138 @@
       "version": "0.1.0"
     },
     {
+      "bytes": 290,
+      "category": "organ",
+      "code_lines": 8,
+      "dependencies": [],
+      "description": "",
+      "dir": "mem20humancapabilityacceleratorz",
+      "docs": [],
+      "entry_points": {},
+      "file_count": 1,
+      "keywords": [],
+      "languages": {
+        "python": 1
+      },
+      "license": null,
+      "line_count": 8,
+      "lines_by_language": {
+        "python": 8
+      },
+      "modules": [
+        "core"
+      ],
+      "name": "mem20humancapabilityacceleratorz",
+      "packaged": false,
+      "readme_summary": "",
+      "readme_text": "",
+      "requires_python": null,
+      "subdirs": [
+        "mem20humancapabilityacceleratorz"
+      ],
+      "test_files": 0,
+      "version": null
+    },
+    {
+      "bytes": 290,
+      "category": "organ",
+      "code_lines": 8,
+      "dependencies": [],
+      "description": "",
+      "dir": "mem20humansatisfactiontwinz",
+      "docs": [],
+      "entry_points": {},
+      "file_count": 1,
+      "keywords": [],
+      "languages": {
+        "python": 1
+      },
+      "license": null,
+      "line_count": 8,
+      "lines_by_language": {
+        "python": 8
+      },
+      "modules": [
+        "core"
+      ],
+      "name": "mem20humansatisfactiontwinz",
+      "packaged": false,
+      "readme_summary": "",
+      "readme_text": "",
+      "requires_python": null,
+      "subdirs": [
+        "mem20humansatisfactiontwinz"
+      ],
+      "test_files": 0,
+      "version": null
+    },
+    {
+      "bytes": 290,
+      "category": "organ",
+      "code_lines": 8,
+      "dependencies": [],
+      "description": "",
+      "dir": "mem20intenttoagentmatchmakerz",
+      "docs": [],
+      "entry_points": {},
+      "file_count": 1,
+      "keywords": [],
+      "languages": {
+        "python": 1
+      },
+      "license": null,
+      "line_count": 8,
+      "lines_by_language": {
+        "python": 8
+      },
+      "modules": [
+        "core"
+      ],
+      "name": "mem20intenttoagentmatchmakerz",
+      "packaged": false,
+      "readme_summary": "",
+      "readme_text": "",
+      "requires_python": null,
+      "subdirs": [
+        "mem20intenttoagentmatchmakerz"
+      ],
+      "test_files": 0,
+      "version": null
+    },
+    {
+      "bytes": 290,
+      "category": "organ",
+      "code_lines": 8,
+      "dependencies": [],
+      "description": "",
+      "dir": "mem20interactivecampaignbuilderz",
+      "docs": [],
+      "entry_points": {},
+      "file_count": 1,
+      "keywords": [],
+      "languages": {
+        "python": 1
+      },
+      "license": null,
+      "line_count": 8,
+      "lines_by_language": {
+        "python": 8
+      },
+      "modules": [
+        "core"
+      ],
+      "name": "mem20interactivecampaignbuilderz",
+      "packaged": false,
+      "readme_summary": "",
+      "readme_text": "",
+      "requires_python": null,
+      "subdirs": [
+        "mem20interactivecampaignbuilderz"
+      ],
+      "test_files": 0,
+      "version": null
+    },
+    {
       "bytes": 114241,
       "category": "organ",
       "code_lines": 2256,
@@ -3135,9 +4387,9 @@
       "version": "0.1.0"
     },
     {
-      "bytes": 2247577,
+      "bytes": 2247584,
       "category": "organ",
-      "code_lines": 46986,
+      "code_lines": 46985,
       "dependencies": [],
       "description": "Native mem20 3D subsystem (KilNZ): AI-first cleanroom mesh and geometry modeler with a 103-op agent surface, procedural generation, glTF/OBJ import-export, rigging, text-to-3D asset pipeline, and a budget/naming validation gate",
       "dir": "mem20kilnz",
@@ -3165,14 +4417,14 @@
         "toml": 1
       },
       "license": "MIT",
-      "line_count": 50251,
+      "line_count": 50250,
       "lines_by_language": {
         "c": 1520,
         "cpp": 37437,
         "make": 57,
         "markdown": 3092,
         "other": 140,
-        "python": 7945,
+        "python": 7944,
         "shell": 27,
         "toml": 33
       },
@@ -3454,6 +4706,138 @@
       "version": "0.2.0"
     },
     {
+      "bytes": 290,
+      "category": "organ",
+      "code_lines": 8,
+      "dependencies": [],
+      "description": "",
+      "dir": "mem20lifescenariosimulatorz",
+      "docs": [],
+      "entry_points": {},
+      "file_count": 1,
+      "keywords": [],
+      "languages": {
+        "python": 1
+      },
+      "license": null,
+      "line_count": 8,
+      "lines_by_language": {
+        "python": 8
+      },
+      "modules": [
+        "core"
+      ],
+      "name": "mem20lifescenariosimulatorz",
+      "packaged": false,
+      "readme_summary": "",
+      "readme_text": "",
+      "requires_python": null,
+      "subdirs": [
+        "mem20lifescenariosimulatorz"
+      ],
+      "test_files": 0,
+      "version": null
+    },
+    {
+      "bytes": 290,
+      "category": "organ",
+      "code_lines": 8,
+      "dependencies": [],
+      "description": "",
+      "dir": "mem20livecodeknowledgegraphz",
+      "docs": [],
+      "entry_points": {},
+      "file_count": 1,
+      "keywords": [],
+      "languages": {
+        "python": 1
+      },
+      "license": null,
+      "line_count": 8,
+      "lines_by_language": {
+        "python": 8
+      },
+      "modules": [
+        "core"
+      ],
+      "name": "mem20livecodeknowledgegraphz",
+      "packaged": false,
+      "readme_summary": "",
+      "readme_text": "",
+      "requires_python": null,
+      "subdirs": [
+        "mem20livecodeknowledgegraphz"
+      ],
+      "test_files": 0,
+      "version": null
+    },
+    {
+      "bytes": 290,
+      "category": "organ",
+      "code_lines": 8,
+      "dependencies": [],
+      "description": "",
+      "dir": "mem20liveschemamorphingenginez",
+      "docs": [],
+      "entry_points": {},
+      "file_count": 1,
+      "keywords": [],
+      "languages": {
+        "python": 1
+      },
+      "license": null,
+      "line_count": 8,
+      "lines_by_language": {
+        "python": 8
+      },
+      "modules": [
+        "core"
+      ],
+      "name": "mem20liveschemamorphingenginez",
+      "packaged": false,
+      "readme_summary": "",
+      "readme_text": "",
+      "requires_python": null,
+      "subdirs": [
+        "mem20liveschemamorphingenginez"
+      ],
+      "test_files": 0,
+      "version": null
+    },
+    {
+      "bytes": 290,
+      "category": "organ",
+      "code_lines": 8,
+      "dependencies": [],
+      "description": "",
+      "dir": "mem20locationawareworkrouterz",
+      "docs": [],
+      "entry_points": {},
+      "file_count": 1,
+      "keywords": [],
+      "languages": {
+        "python": 1
+      },
+      "license": null,
+      "line_count": 8,
+      "lines_by_language": {
+        "python": 8
+      },
+      "modules": [
+        "core"
+      ],
+      "name": "mem20locationawareworkrouterz",
+      "packaged": false,
+      "readme_summary": "",
+      "readme_text": "",
+      "requires_python": null,
+      "subdirs": [
+        "mem20locationawareworkrouterz"
+      ],
+      "test_files": 0,
+      "version": null
+    },
+    {
       "bytes": 295714,
       "category": "organ",
       "code_lines": 3395,
@@ -3567,6 +4951,72 @@
       "version": "1.0.0"
     },
     {
+      "bytes": 290,
+      "category": "organ",
+      "code_lines": 8,
+      "dependencies": [],
+      "description": "",
+      "dir": "mem20milestoneriskpredictorz",
+      "docs": [],
+      "entry_points": {},
+      "file_count": 1,
+      "keywords": [],
+      "languages": {
+        "python": 1
+      },
+      "license": null,
+      "line_count": 8,
+      "lines_by_language": {
+        "python": 8
+      },
+      "modules": [
+        "core"
+      ],
+      "name": "mem20milestoneriskpredictorz",
+      "packaged": false,
+      "readme_summary": "",
+      "readme_text": "",
+      "requires_python": null,
+      "subdirs": [
+        "mem20milestoneriskpredictorz"
+      ],
+      "test_files": 0,
+      "version": null
+    },
+    {
+      "bytes": 290,
+      "category": "organ",
+      "code_lines": 8,
+      "dependencies": [],
+      "description": "",
+      "dir": "mem20missionroutingcockpitz",
+      "docs": [],
+      "entry_points": {},
+      "file_count": 1,
+      "keywords": [],
+      "languages": {
+        "python": 1
+      },
+      "license": null,
+      "line_count": 8,
+      "lines_by_language": {
+        "python": 8
+      },
+      "modules": [
+        "core"
+      ],
+      "name": "mem20missionroutingcockpitz",
+      "packaged": false,
+      "readme_summary": "",
+      "readme_text": "",
+      "requires_python": null,
+      "subdirs": [
+        "mem20missionroutingcockpitz"
+      ],
+      "test_files": 0,
+      "version": null
+    },
+    {
       "bytes": 939877,
       "category": "organ",
       "code_lines": 11133,
@@ -3639,6 +5089,303 @@
       ],
       "test_files": 45,
       "version": "0.1.0"
+    },
+    {
+      "bytes": 290,
+      "category": "organ",
+      "code_lines": 8,
+      "dependencies": [],
+      "description": "",
+      "dir": "mem20mobileedgeagentruntimez",
+      "docs": [],
+      "entry_points": {},
+      "file_count": 1,
+      "keywords": [],
+      "languages": {
+        "python": 1
+      },
+      "license": null,
+      "line_count": 8,
+      "lines_by_language": {
+        "python": 8
+      },
+      "modules": [
+        "core"
+      ],
+      "name": "mem20mobileedgeagentruntimez",
+      "packaged": false,
+      "readme_summary": "",
+      "readme_text": "",
+      "requires_python": null,
+      "subdirs": [
+        "mem20mobileedgeagentruntimez"
+      ],
+      "test_files": 0,
+      "version": null
+    },
+    {
+      "bytes": 290,
+      "category": "organ",
+      "code_lines": 8,
+      "dependencies": [],
+      "description": "",
+      "dir": "mem20multichannelcommandstreamz",
+      "docs": [],
+      "entry_points": {},
+      "file_count": 1,
+      "keywords": [],
+      "languages": {
+        "python": 1
+      },
+      "license": null,
+      "line_count": 8,
+      "lines_by_language": {
+        "python": 8
+      },
+      "modules": [
+        "core"
+      ],
+      "name": "mem20multichannelcommandstreamz",
+      "packaged": false,
+      "readme_summary": "",
+      "readme_text": "",
+      "requires_python": null,
+      "subdirs": [
+        "mem20multichannelcommandstreamz"
+      ],
+      "test_files": 0,
+      "version": null
+    },
+    {
+      "bytes": 290,
+      "category": "organ",
+      "code_lines": 8,
+      "dependencies": [],
+      "description": "",
+      "dir": "mem20multidevicecompletioncheckerz",
+      "docs": [],
+      "entry_points": {},
+      "file_count": 1,
+      "keywords": [],
+      "languages": {
+        "python": 1
+      },
+      "license": null,
+      "line_count": 8,
+      "lines_by_language": {
+        "python": 8
+      },
+      "modules": [
+        "core"
+      ],
+      "name": "mem20multidevicecompletioncheckerz",
+      "packaged": false,
+      "readme_summary": "",
+      "readme_text": "",
+      "requires_python": null,
+      "subdirs": [
+        "mem20multidevicecompletioncheckerz"
+      ],
+      "test_files": 0,
+      "version": null
+    },
+    {
+      "bytes": 290,
+      "category": "organ",
+      "code_lines": 8,
+      "dependencies": [],
+      "description": "",
+      "dir": "mem20multilingualliveconversationenginez",
+      "docs": [],
+      "entry_points": {},
+      "file_count": 1,
+      "keywords": [],
+      "languages": {
+        "python": 1
+      },
+      "license": null,
+      "line_count": 8,
+      "lines_by_language": {
+        "python": 8
+      },
+      "modules": [
+        "core"
+      ],
+      "name": "mem20multilingualliveconversationenginez",
+      "packaged": false,
+      "readme_summary": "",
+      "readme_text": "",
+      "requires_python": null,
+      "subdirs": [
+        "mem20multilingualliveconversationenginez"
+      ],
+      "test_files": 0,
+      "version": null
+    },
+    {
+      "bytes": 290,
+      "category": "organ",
+      "code_lines": 8,
+      "dependencies": [],
+      "description": "",
+      "dir": "mem20multimodalcreativedirectorz",
+      "docs": [],
+      "entry_points": {},
+      "file_count": 1,
+      "keywords": [],
+      "languages": {
+        "python": 1
+      },
+      "license": null,
+      "line_count": 8,
+      "lines_by_language": {
+        "python": 8
+      },
+      "modules": [
+        "core"
+      ],
+      "name": "mem20multimodalcreativedirectorz",
+      "packaged": false,
+      "readme_summary": "",
+      "readme_text": "",
+      "requires_python": null,
+      "subdirs": [
+        "mem20multimodalcreativedirectorz"
+      ],
+      "test_files": 0,
+      "version": null
+    },
+    {
+      "bytes": 290,
+      "category": "organ",
+      "code_lines": 8,
+      "dependencies": [],
+      "description": "",
+      "dir": "mem20multimodaldatanormalizerz",
+      "docs": [],
+      "entry_points": {},
+      "file_count": 1,
+      "keywords": [],
+      "languages": {
+        "python": 1
+      },
+      "license": null,
+      "line_count": 8,
+      "lines_by_language": {
+        "python": 8
+      },
+      "modules": [
+        "core"
+      ],
+      "name": "mem20multimodaldatanormalizerz",
+      "packaged": false,
+      "readme_summary": "",
+      "readme_text": "",
+      "requires_python": null,
+      "subdirs": [
+        "mem20multimodaldatanormalizerz"
+      ],
+      "test_files": 0,
+      "version": null
+    },
+    {
+      "bytes": 290,
+      "category": "organ",
+      "code_lines": 8,
+      "dependencies": [],
+      "description": "",
+      "dir": "mem20multimodalunderstandingcorez",
+      "docs": [],
+      "entry_points": {},
+      "file_count": 1,
+      "keywords": [],
+      "languages": {
+        "python": 1
+      },
+      "license": null,
+      "line_count": 8,
+      "lines_by_language": {
+        "python": 8
+      },
+      "modules": [
+        "core"
+      ],
+      "name": "mem20multimodalunderstandingcorez",
+      "packaged": false,
+      "readme_summary": "",
+      "readme_text": "",
+      "requires_python": null,
+      "subdirs": [
+        "mem20multimodalunderstandingcorez"
+      ],
+      "test_files": 0,
+      "version": null
+    },
+    {
+      "bytes": 290,
+      "category": "organ",
+      "code_lines": 8,
+      "dependencies": [],
+      "description": "",
+      "dir": "mem20musicvisualsynchronizerz",
+      "docs": [],
+      "entry_points": {},
+      "file_count": 1,
+      "keywords": [],
+      "languages": {
+        "python": 1
+      },
+      "license": null,
+      "line_count": 8,
+      "lines_by_language": {
+        "python": 8
+      },
+      "modules": [
+        "core"
+      ],
+      "name": "mem20musicvisualsynchronizerz",
+      "packaged": false,
+      "readme_summary": "",
+      "readme_text": "",
+      "requires_python": null,
+      "subdirs": [
+        "mem20musicvisualsynchronizerz"
+      ],
+      "test_files": 0,
+      "version": null
+    },
+    {
+      "bytes": 290,
+      "category": "organ",
+      "code_lines": 8,
+      "dependencies": [],
+      "description": "",
+      "dir": "mem20neuromorphiceventlabz",
+      "docs": [],
+      "entry_points": {},
+      "file_count": 1,
+      "keywords": [],
+      "languages": {
+        "python": 1
+      },
+      "license": null,
+      "line_count": 8,
+      "lines_by_language": {
+        "python": 8
+      },
+      "modules": [
+        "core"
+      ],
+      "name": "mem20neuromorphiceventlabz",
+      "packaged": false,
+      "readme_summary": "",
+      "readme_text": "",
+      "requires_python": null,
+      "subdirs": [
+        "mem20neuromorphiceventlabz"
+      ],
+      "test_files": 0,
+      "version": null
     },
     {
       "bytes": 40488,
@@ -3763,6 +5510,72 @@
       ],
       "test_files": 1,
       "version": "0.1.0"
+    },
+    {
+      "bytes": 290,
+      "category": "organ",
+      "code_lines": 8,
+      "dependencies": [],
+      "description": "",
+      "dir": "mem20offlineappdeliveryz",
+      "docs": [],
+      "entry_points": {},
+      "file_count": 1,
+      "keywords": [],
+      "languages": {
+        "python": 1
+      },
+      "license": null,
+      "line_count": 8,
+      "lines_by_language": {
+        "python": 8
+      },
+      "modules": [
+        "core"
+      ],
+      "name": "mem20offlineappdeliveryz",
+      "packaged": false,
+      "readme_summary": "",
+      "readme_text": "",
+      "requires_python": null,
+      "subdirs": [
+        "mem20offlineappdeliveryz"
+      ],
+      "test_files": 0,
+      "version": null
+    },
+    {
+      "bytes": 290,
+      "category": "organ",
+      "code_lines": 8,
+      "dependencies": [],
+      "description": "",
+      "dir": "mem20operationsreplaysimulatorz",
+      "docs": [],
+      "entry_points": {},
+      "file_count": 1,
+      "keywords": [],
+      "languages": {
+        "python": 1
+      },
+      "license": null,
+      "line_count": 8,
+      "lines_by_language": {
+        "python": 8
+      },
+      "modules": [
+        "core"
+      ],
+      "name": "mem20operationsreplaysimulatorz",
+      "packaged": false,
+      "readme_summary": "",
+      "readme_text": "",
+      "requires_python": null,
+      "subdirs": [
+        "mem20operationsreplaysimulatorz"
+      ],
+      "test_files": 0,
+      "version": null
     },
     {
       "bytes": 113849,
@@ -3892,6 +5705,39 @@
       "version": "0.9.17+mem20"
     },
     {
+      "bytes": 290,
+      "category": "organ",
+      "code_lines": 8,
+      "dependencies": [],
+      "description": "",
+      "dir": "mem20outcomeverificationruntimez",
+      "docs": [],
+      "entry_points": {},
+      "file_count": 1,
+      "keywords": [],
+      "languages": {
+        "python": 1
+      },
+      "license": null,
+      "line_count": 8,
+      "lines_by_language": {
+        "python": 8
+      },
+      "modules": [
+        "core"
+      ],
+      "name": "mem20outcomeverificationruntimez",
+      "packaged": false,
+      "readme_summary": "",
+      "readme_text": "",
+      "requires_python": null,
+      "subdirs": [
+        "mem20outcomeverificationruntimez"
+      ],
+      "test_files": 0,
+      "version": null
+    },
+    {
       "bytes": 1452526,
       "category": "organ",
       "code_lines": 20432,
@@ -3998,7 +5844,139 @@
       "version": "0.1.0"
     },
     {
-      "bytes": 1076492,
+      "bytes": 290,
+      "category": "organ",
+      "code_lines": 8,
+      "dependencies": [],
+      "description": "",
+      "dir": "mem20parallelworkstreamcomposerz",
+      "docs": [],
+      "entry_points": {},
+      "file_count": 1,
+      "keywords": [],
+      "languages": {
+        "python": 1
+      },
+      "license": null,
+      "line_count": 8,
+      "lines_by_language": {
+        "python": 8
+      },
+      "modules": [
+        "core"
+      ],
+      "name": "mem20parallelworkstreamcomposerz",
+      "packaged": false,
+      "readme_summary": "",
+      "readme_text": "",
+      "requires_python": null,
+      "subdirs": [
+        "mem20parallelworkstreamcomposerz"
+      ],
+      "test_files": 0,
+      "version": null
+    },
+    {
+      "bytes": 290,
+      "category": "organ",
+      "code_lines": 8,
+      "dependencies": [],
+      "description": "",
+      "dir": "mem20peertopeerappruntimez",
+      "docs": [],
+      "entry_points": {},
+      "file_count": 1,
+      "keywords": [],
+      "languages": {
+        "python": 1
+      },
+      "license": null,
+      "line_count": 8,
+      "lines_by_language": {
+        "python": 8
+      },
+      "modules": [
+        "core"
+      ],
+      "name": "mem20peertopeerappruntimez",
+      "packaged": false,
+      "readme_summary": "",
+      "readme_text": "",
+      "requires_python": null,
+      "subdirs": [
+        "mem20peertopeerappruntimez"
+      ],
+      "test_files": 0,
+      "version": null
+    },
+    {
+      "bytes": 290,
+      "category": "organ",
+      "code_lines": 8,
+      "dependencies": [],
+      "description": "",
+      "dir": "mem20performanceregressionhunterz",
+      "docs": [],
+      "entry_points": {},
+      "file_count": 1,
+      "keywords": [],
+      "languages": {
+        "python": 1
+      },
+      "license": null,
+      "line_count": 8,
+      "lines_by_language": {
+        "python": 8
+      },
+      "modules": [
+        "core"
+      ],
+      "name": "mem20performanceregressionhunterz",
+      "packaged": false,
+      "readme_summary": "",
+      "readme_text": "",
+      "requires_python": null,
+      "subdirs": [
+        "mem20performanceregressionhunterz"
+      ],
+      "test_files": 0,
+      "version": null
+    },
+    {
+      "bytes": 290,
+      "category": "organ",
+      "code_lines": 8,
+      "dependencies": [],
+      "description": "",
+      "dir": "mem20personalintelligencecompanionz",
+      "docs": [],
+      "entry_points": {},
+      "file_count": 1,
+      "keywords": [],
+      "languages": {
+        "python": 1
+      },
+      "license": null,
+      "line_count": 8,
+      "lines_by_language": {
+        "python": 8
+      },
+      "modules": [
+        "core"
+      ],
+      "name": "mem20personalintelligencecompanionz",
+      "packaged": false,
+      "readme_summary": "",
+      "readme_text": "",
+      "requires_python": null,
+      "subdirs": [
+        "mem20personalintelligencecompanionz"
+      ],
+      "test_files": 0,
+      "version": null
+    },
+    {
+      "bytes": 1076553,
       "category": "organ",
       "code_lines": 12038,
       "dependencies": [],
@@ -4114,11 +6092,406 @@
       "readme_text": "# mem20portalz\n\ncustomer-facing web portal for authenticated access to a customer's saved mem20 memories.\n\n## what it provides\n\n- **authenticated, tenant-scoped access:** each account is bound to exactly one mem20 store path. a logged-in customer can access only that store.\n- **memory access api + ui:** browse recent memories, recall by topic/tags, query by semantic/hybrid/graph mode, inspect entities, and view store stats/health diagnostics.\n- **safe-by-default serving:** session auth with hmac-signed cookies, pbkdf2 password hashing, constant-time comparisons, and sanitized customer responses (internal server filesystem paths are not exposed).\n\nmemory data access is performed through the `mem20api` sdk (`mem20api.open_store` / `memorystore` methods), not by importing mem20 engine internals directly.\n\n## install / run (from repo checkout)\n\n```bash\n# from /opt/mem20\npythonpath=/opt/mem20/mem20portalz:/opt/mem20/mem20api \\\n  python3 -m mem20portalz init-config --config /opt/mem20/secrets/portal_accounts.json\n\npythonpath=/opt/mem20/mem20portalz:/opt/mem20/mem20api \\\n  python3 -m mem20portalz add-user \\\n    --config /opt/mem20/secrets/portal_accounts.json \\\n    --username alice \\\n    --store /path/to/alice/store \\\n    --password 'strong-password'\n\npythonpath=/opt/mem20/mem20portalz:/opt/mem20/mem20api \\\n  python3 -m mem20portalz serve \\\n    --config /opt/mem20/secrets/portal_accounts.json \\\n    --host 127.0.0.1 --port 8095\n```\n\nopen `http://127.0.0.1:8095`.\n\n## configuration\n\nthe portal reads a json config file (default: `$mem20_portal_config` or `~/.mem20/portal_accounts.json`).\n\ntop-level fields:\n\n- `session_secret` (string, required for login): hmac secret for signing session cookies.\n- `session_ttl_seconds` (int, default `43200`): session lifetime.\n- `cookie_secure` (bool, default `false`): set `true` when serving over https.\n- `users` (object): map of username -> account record.\n\naccount record fields:\n\n- `display_name` (string)\n- `password_hash` (string, `pbkdf2_sha256$<iterations>$<salt_b64>$<hash_b64>`)\n- `store_path` (string, absolute or `~` path to mem20 store)\n- `enabled` (bool, default `true`)\n- `created_at` (string, iso-8601)\n\n## cli\n\n- `mem20portalz init-config [--config path] [--force]`\n- `mem20portalz add-user --config path --username user --store path --password pass [--display-name name]`\n- `mem20portalz set-password --config path --username user --password pass`\n- `mem20portalz enable-user|disable-user --config path --username user`\n- `mem20portalz list-users --config path`\n- `mem20portalz check --config path [--username user]`\n- `mem20portalz serve --config path [--host 127.0.0.1] [--port 8095]`\n\n## isolation notes\n\n`mem20api` binds engine store paths via module-global state. to prevent cross-request/cross-tenant races, the portal serializes all store operations through a single process-wide lock and performs blocking store work off the asyncio event loop. this favors correctness/isolation; for higher throughput use per-tenant/per-customer service instances behind an identity-aware gateway.\n\n## api (authenticated unless noted)\n\n- `get /api/health` (public): service liveness\n- `post /api/auth/login` `{username,password}`: create session\n- `post /api/auth/logout`: clear session\n- `get /api/auth/me`: current account (no store path)\n- `get /api/memories/stats`: sanitized store stats\n- `get /api/memories/health`: sanitized index/ledger health\n- `get /api/memories/ledger?limit=n`: recent ledger events\n- `get /api/memories/browse?limit=n`: recent remembered memories (grounded)\n- `post /api/memories/recall` `{topic?,tags?,k?}`: recall\n- `post /api/memories/query` `{query,mode,k?,topic?,tags?}`: `semantic|hybrid|graph` query\n- `get /api/memories/entities?limit=n`: graph entities\n\nall memory responses are scoped to the authenticated user's configured store.\n",
       "requires_python": ">=3.10",
       "subdirs": [
-        "mem20portalz",
-        "tests"
+        "mem20portalz"
       ],
       "test_files": 0,
       "version": "0.1.0"
+    },
+    {
+      "bytes": 290,
+      "category": "organ",
+      "code_lines": 8,
+      "dependencies": [],
+      "description": "",
+      "dir": "mem20presenceawarecommunicationshubz",
+      "docs": [],
+      "entry_points": {},
+      "file_count": 1,
+      "keywords": [],
+      "languages": {
+        "python": 1
+      },
+      "license": null,
+      "line_count": 8,
+      "lines_by_language": {
+        "python": 8
+      },
+      "modules": [
+        "core"
+      ],
+      "name": "mem20presenceawarecommunicationshubz",
+      "packaged": false,
+      "readme_summary": "",
+      "readme_text": "",
+      "requires_python": null,
+      "subdirs": [
+        "mem20presenceawarecommunicationshubz"
+      ],
+      "test_files": 0,
+      "version": null
+    },
+    {
+      "bytes": 290,
+      "category": "organ",
+      "code_lines": 8,
+      "dependencies": [],
+      "description": "",
+      "dir": "mem20prioritycollisionresolverz",
+      "docs": [],
+      "entry_points": {},
+      "file_count": 1,
+      "keywords": [],
+      "languages": {
+        "python": 1
+      },
+      "license": null,
+      "line_count": 8,
+      "lines_by_language": {
+        "python": 8
+      },
+      "modules": [
+        "core"
+      ],
+      "name": "mem20prioritycollisionresolverz",
+      "packaged": false,
+      "readme_summary": "",
+      "readme_text": "",
+      "requires_python": null,
+      "subdirs": [
+        "mem20prioritycollisionresolverz"
+      ],
+      "test_files": 0,
+      "version": null
+    },
+    {
+      "bytes": 290,
+      "category": "organ",
+      "code_lines": 8,
+      "dependencies": [],
+      "description": "",
+      "dir": "mem20privacypreservingdatacapsulesz",
+      "docs": [],
+      "entry_points": {},
+      "file_count": 1,
+      "keywords": [],
+      "languages": {
+        "python": 1
+      },
+      "license": null,
+      "line_count": 8,
+      "lines_by_language": {
+        "python": 8
+      },
+      "modules": [
+        "core"
+      ],
+      "name": "mem20privacypreservingdatacapsulesz",
+      "packaged": false,
+      "readme_summary": "",
+      "readme_text": "",
+      "requires_python": null,
+      "subdirs": [
+        "mem20privacypreservingdatacapsulesz"
+      ],
+      "test_files": 0,
+      "version": null
+    },
+    {
+      "bytes": 290,
+      "category": "organ",
+      "code_lines": 8,
+      "dependencies": [],
+      "description": "",
+      "dir": "mem20privatelocalreasoningenginez",
+      "docs": [],
+      "entry_points": {},
+      "file_count": 1,
+      "keywords": [],
+      "languages": {
+        "python": 1
+      },
+      "license": null,
+      "line_count": 8,
+      "lines_by_language": {
+        "python": 8
+      },
+      "modules": [
+        "core"
+      ],
+      "name": "mem20privatelocalreasoningenginez",
+      "packaged": false,
+      "readme_summary": "",
+      "readme_text": "",
+      "requires_python": null,
+      "subdirs": [
+        "mem20privatelocalreasoningenginez"
+      ],
+      "test_files": 0,
+      "version": null
+    },
+    {
+      "bytes": 290,
+      "category": "organ",
+      "code_lines": 8,
+      "dependencies": [],
+      "description": "",
+      "dir": "mem20qualityriskforecasterz",
+      "docs": [],
+      "entry_points": {},
+      "file_count": 1,
+      "keywords": [],
+      "languages": {
+        "python": 1
+      },
+      "license": null,
+      "line_count": 8,
+      "lines_by_language": {
+        "python": 8
+      },
+      "modules": [
+        "core"
+      ],
+      "name": "mem20qualityriskforecasterz",
+      "packaged": false,
+      "readme_summary": "",
+      "readme_text": "",
+      "requires_python": null,
+      "subdirs": [
+        "mem20qualityriskforecasterz"
+      ],
+      "test_files": 0,
+      "version": null
+    },
+    {
+      "bytes": 290,
+      "category": "organ",
+      "code_lines": 8,
+      "dependencies": [],
+      "description": "",
+      "dir": "mem20quantuminspiredoptimizerz",
+      "docs": [],
+      "entry_points": {},
+      "file_count": 1,
+      "keywords": [],
+      "languages": {
+        "python": 1
+      },
+      "license": null,
+      "line_count": 8,
+      "lines_by_language": {
+        "python": 8
+      },
+      "modules": [
+        "core"
+      ],
+      "name": "mem20quantuminspiredoptimizerz",
+      "packaged": false,
+      "readme_summary": "",
+      "readme_text": "",
+      "requires_python": null,
+      "subdirs": [
+        "mem20quantuminspiredoptimizerz"
+      ],
+      "test_files": 0,
+      "version": null
+    },
+    {
+      "bytes": 290,
+      "category": "organ",
+      "code_lines": 8,
+      "dependencies": [],
+      "description": "",
+      "dir": "mem20realtimeexecutionmapz",
+      "docs": [],
+      "entry_points": {},
+      "file_count": 1,
+      "keywords": [],
+      "languages": {
+        "python": 1
+      },
+      "license": null,
+      "line_count": 8,
+      "lines_by_language": {
+        "python": 8
+      },
+      "modules": [
+        "core"
+      ],
+      "name": "mem20realtimeexecutionmapz",
+      "packaged": false,
+      "readme_summary": "",
+      "readme_text": "",
+      "requires_python": null,
+      "subdirs": [
+        "mem20realtimeexecutionmapz"
+      ],
+      "test_files": 0,
+      "version": null
+    },
+    {
+      "bytes": 290,
+      "category": "organ",
+      "code_lines": 8,
+      "dependencies": [],
+      "description": "",
+      "dir": "mem20realtimestyletransferpipelinez",
+      "docs": [],
+      "entry_points": {},
+      "file_count": 1,
+      "keywords": [],
+      "languages": {
+        "python": 1
+      },
+      "license": null,
+      "line_count": 8,
+      "lines_by_language": {
+        "python": 8
+      },
+      "modules": [
+        "core"
+      ],
+      "name": "mem20realtimestyletransferpipelinez",
+      "packaged": false,
+      "readme_summary": "",
+      "readme_text": "",
+      "requires_python": null,
+      "subdirs": [
+        "mem20realtimestyletransferpipelinez"
+      ],
+      "test_files": 0,
+      "version": null
+    },
+    {
+      "bytes": 290,
+      "category": "organ",
+      "code_lines": 8,
+      "dependencies": [],
+      "description": "",
+      "dir": "mem20relationshipcontextgraphz",
+      "docs": [],
+      "entry_points": {},
+      "file_count": 1,
+      "keywords": [],
+      "languages": {
+        "python": 1
+      },
+      "license": null,
+      "line_count": 8,
+      "lines_by_language": {
+        "python": 8
+      },
+      "modules": [
+        "core"
+      ],
+      "name": "mem20relationshipcontextgraphz",
+      "packaged": false,
+      "readme_summary": "",
+      "readme_text": "",
+      "requires_python": null,
+      "subdirs": [
+        "mem20relationshipcontextgraphz"
+      ],
+      "test_files": 0,
+      "version": null
+    },
+    {
+      "bytes": 290,
+      "category": "organ",
+      "code_lines": 8,
+      "dependencies": [],
+      "description": "",
+      "dir": "mem20releasereadinesspredictorz",
+      "docs": [],
+      "entry_points": {},
+      "file_count": 1,
+      "keywords": [],
+      "languages": {
+        "python": 1
+      },
+      "license": null,
+      "line_count": 8,
+      "lines_by_language": {
+        "python": 8
+      },
+      "modules": [
+        "core"
+      ],
+      "name": "mem20releasereadinesspredictorz",
+      "packaged": false,
+      "readme_summary": "",
+      "readme_text": "",
+      "requires_python": null,
+      "subdirs": [
+        "mem20releasereadinesspredictorz"
+      ],
+      "test_files": 0,
+      "version": null
+    },
+    {
+      "bytes": 290,
+      "category": "organ",
+      "code_lines": 8,
+      "dependencies": [],
+      "description": "",
+      "dir": "mem20remotedevicerepairz",
+      "docs": [],
+      "entry_points": {},
+      "file_count": 1,
+      "keywords": [],
+      "languages": {
+        "python": 1
+      },
+      "license": null,
+      "line_count": 8,
+      "lines_by_language": {
+        "python": 8
+      },
+      "modules": [
+        "core"
+      ],
+      "name": "mem20remotedevicerepairz",
+      "packaged": false,
+      "readme_summary": "",
+      "readme_text": "",
+      "requires_python": null,
+      "subdirs": [
+        "mem20remotedevicerepairz"
+      ],
+      "test_files": 0,
+      "version": null
+    },
+    {
+      "bytes": 290,
+      "category": "organ",
+      "code_lines": 8,
+      "dependencies": [],
+      "description": "",
+      "dir": "mem20roadmapsimulationtwinz",
+      "docs": [],
+      "entry_points": {},
+      "file_count": 1,
+      "keywords": [],
+      "languages": {
+        "python": 1
+      },
+      "license": null,
+      "line_count": 8,
+      "lines_by_language": {
+        "python": 8
+      },
+      "modules": [
+        "core"
+      ],
+      "name": "mem20roadmapsimulationtwinz",
+      "packaged": false,
+      "readme_summary": "",
+      "readme_text": "",
+      "requires_python": null,
+      "subdirs": [
+        "mem20roadmapsimulationtwinz"
+      ],
+      "test_files": 0,
+      "version": null
     },
     {
       "bytes": 51812,
@@ -4175,6 +6548,72 @@
       "version": "0.1.0"
     },
     {
+      "bytes": 290,
+      "category": "organ",
+      "code_lines": 8,
+      "dependencies": [],
+      "description": "",
+      "dir": "mem20runtimebugpredictionenginez",
+      "docs": [],
+      "entry_points": {},
+      "file_count": 1,
+      "keywords": [],
+      "languages": {
+        "python": 1
+      },
+      "license": null,
+      "line_count": 8,
+      "lines_by_language": {
+        "python": 8
+      },
+      "modules": [
+        "core"
+      ],
+      "name": "mem20runtimebugpredictionenginez",
+      "packaged": false,
+      "readme_summary": "",
+      "readme_text": "",
+      "requires_python": null,
+      "subdirs": [
+        "mem20runtimebugpredictionenginez"
+      ],
+      "test_files": 0,
+      "version": null
+    },
+    {
+      "bytes": 290,
+      "category": "organ",
+      "code_lines": 8,
+      "dependencies": [],
+      "description": "",
+      "dir": "mem20safepatchsynthesisz",
+      "docs": [],
+      "entry_points": {},
+      "file_count": 1,
+      "keywords": [],
+      "languages": {
+        "python": 1
+      },
+      "license": null,
+      "line_count": 8,
+      "lines_by_language": {
+        "python": 8
+      },
+      "modules": [
+        "core"
+      ],
+      "name": "mem20safepatchsynthesisz",
+      "packaged": false,
+      "readme_summary": "",
+      "readme_text": "",
+      "requires_python": null,
+      "subdirs": [
+        "mem20safepatchsynthesisz"
+      ],
+      "test_files": 0,
+      "version": null
+    },
+    {
       "bytes": 2574,
       "category": "organ",
       "code_lines": 74,
@@ -4216,6 +6655,39 @@
       ],
       "test_files": 0,
       "version": "1.0.0"
+    },
+    {
+      "bytes": 290,
+      "category": "organ",
+      "code_lines": 8,
+      "dependencies": [],
+      "description": "",
+      "dir": "mem20scopemutationsandboxz",
+      "docs": [],
+      "entry_points": {},
+      "file_count": 1,
+      "keywords": [],
+      "languages": {
+        "python": 1
+      },
+      "license": null,
+      "line_count": 8,
+      "lines_by_language": {
+        "python": 8
+      },
+      "modules": [
+        "core"
+      ],
+      "name": "mem20scopemutationsandboxz",
+      "packaged": false,
+      "readme_summary": "",
+      "readme_text": "",
+      "requires_python": null,
+      "subdirs": [
+        "mem20scopemutationsandboxz"
+      ],
+      "test_files": 0,
+      "version": null
     },
     {
       "bytes": 236579,
@@ -4269,6 +6741,72 @@
       ],
       "test_files": 5,
       "version": "0.1.0"
+    },
+    {
+      "bytes": 290,
+      "category": "organ",
+      "code_lines": 8,
+      "dependencies": [],
+      "description": "",
+      "dir": "mem20securebuildtodevicepipelinez",
+      "docs": [],
+      "entry_points": {},
+      "file_count": 1,
+      "keywords": [],
+      "languages": {
+        "python": 1
+      },
+      "license": null,
+      "line_count": 8,
+      "lines_by_language": {
+        "python": 8
+      },
+      "modules": [
+        "core"
+      ],
+      "name": "mem20securebuildtodevicepipelinez",
+      "packaged": false,
+      "readme_summary": "",
+      "readme_text": "",
+      "requires_python": null,
+      "subdirs": [
+        "mem20securebuildtodevicepipelinez"
+      ],
+      "test_files": 0,
+      "version": null
+    },
+    {
+      "bytes": 290,
+      "category": "organ",
+      "code_lines": 8,
+      "dependencies": [],
+      "description": "",
+      "dir": "mem20selfrepairingtestfactoryz",
+      "docs": [],
+      "entry_points": {},
+      "file_count": 1,
+      "keywords": [],
+      "languages": {
+        "python": 1
+      },
+      "license": null,
+      "line_count": 8,
+      "lines_by_language": {
+        "python": 8
+      },
+      "modules": [
+        "core"
+      ],
+      "name": "mem20selfrepairingtestfactoryz",
+      "packaged": false,
+      "readme_summary": "",
+      "readme_text": "",
+      "requires_python": null,
+      "subdirs": [
+        "mem20selfrepairingtestfactoryz"
+      ],
+      "test_files": 0,
+      "version": null
     },
     {
       "bytes": 1396816,
@@ -4356,6 +6894,72 @@
       ],
       "test_files": 55,
       "version": "0.1.0"
+    },
+    {
+      "bytes": 290,
+      "category": "organ",
+      "code_lines": 8,
+      "dependencies": [],
+      "description": "",
+      "dir": "mem20semanticobjectgraphz",
+      "docs": [],
+      "entry_points": {},
+      "file_count": 1,
+      "keywords": [],
+      "languages": {
+        "python": 1
+      },
+      "license": null,
+      "line_count": 8,
+      "lines_by_language": {
+        "python": 8
+      },
+      "modules": [
+        "core"
+      ],
+      "name": "mem20semanticobjectgraphz",
+      "packaged": false,
+      "readme_summary": "",
+      "readme_text": "",
+      "requires_python": null,
+      "subdirs": [
+        "mem20semanticobjectgraphz"
+      ],
+      "test_files": 0,
+      "version": null
+    },
+    {
+      "bytes": 290,
+      "category": "organ",
+      "code_lines": 8,
+      "dependencies": [],
+      "description": "",
+      "dir": "mem20sensorfusiongatewayz",
+      "docs": [],
+      "entry_points": {},
+      "file_count": 1,
+      "keywords": [],
+      "languages": {
+        "python": 1
+      },
+      "license": null,
+      "line_count": 8,
+      "lines_by_language": {
+        "python": 8
+      },
+      "modules": [
+        "core"
+      ],
+      "name": "mem20sensorfusiongatewayz",
+      "packaged": false,
+      "readme_summary": "",
+      "readme_text": "",
+      "requires_python": null,
+      "subdirs": [
+        "mem20sensorfusiongatewayz"
+      ],
+      "test_files": 0,
+      "version": null
     },
     {
       "bytes": 83108,
@@ -4600,6 +7204,105 @@
       "version": "0.1.0"
     },
     {
+      "bytes": 290,
+      "category": "organ",
+      "code_lines": 8,
+      "dependencies": [],
+      "description": "",
+      "dir": "mem20smartmeetingcopilotz",
+      "docs": [],
+      "entry_points": {},
+      "file_count": 1,
+      "keywords": [],
+      "languages": {
+        "python": 1
+      },
+      "license": null,
+      "line_count": 8,
+      "lines_by_language": {
+        "python": 8
+      },
+      "modules": [
+        "core"
+      ],
+      "name": "mem20smartmeetingcopilotz",
+      "packaged": false,
+      "readme_summary": "",
+      "readme_text": "",
+      "requires_python": null,
+      "subdirs": [
+        "mem20smartmeetingcopilotz"
+      ],
+      "test_files": 0,
+      "version": null
+    },
+    {
+      "bytes": 290,
+      "category": "organ",
+      "code_lines": 8,
+      "dependencies": [],
+      "description": "",
+      "dir": "mem20spatialcomputingsandboxz",
+      "docs": [],
+      "entry_points": {},
+      "file_count": 1,
+      "keywords": [],
+      "languages": {
+        "python": 1
+      },
+      "license": null,
+      "line_count": 8,
+      "lines_by_language": {
+        "python": 8
+      },
+      "modules": [
+        "core"
+      ],
+      "name": "mem20spatialcomputingsandboxz",
+      "packaged": false,
+      "readme_summary": "",
+      "readme_text": "",
+      "requires_python": null,
+      "subdirs": [
+        "mem20spatialcomputingsandboxz"
+      ],
+      "test_files": 0,
+      "version": null
+    },
+    {
+      "bytes": 290,
+      "category": "organ",
+      "code_lines": 8,
+      "dependencies": [],
+      "description": "",
+      "dir": "mem20spatialexperiencedesignerz",
+      "docs": [],
+      "entry_points": {},
+      "file_count": 1,
+      "keywords": [],
+      "languages": {
+        "python": 1
+      },
+      "license": null,
+      "line_count": 8,
+      "lines_by_language": {
+        "python": 8
+      },
+      "modules": [
+        "core"
+      ],
+      "name": "mem20spatialexperiencedesignerz",
+      "packaged": false,
+      "readme_summary": "",
+      "readme_text": "",
+      "requires_python": null,
+      "subdirs": [
+        "mem20spatialexperiencedesignerz"
+      ],
+      "test_files": 0,
+      "version": null
+    },
+    {
       "bytes": 447723,
       "category": "organ",
       "code_lines": 5639,
@@ -4662,6 +7365,39 @@
       ],
       "test_files": 19,
       "version": "1.0.0"
+    },
+    {
+      "bytes": 290,
+      "category": "organ",
+      "code_lines": 8,
+      "dependencies": [],
+      "description": "",
+      "dir": "mem20syntheticdataforgez",
+      "docs": [],
+      "entry_points": {},
+      "file_count": 1,
+      "keywords": [],
+      "languages": {
+        "python": 1
+      },
+      "license": null,
+      "line_count": 8,
+      "lines_by_language": {
+        "python": 8
+      },
+      "modules": [
+        "core"
+      ],
+      "name": "mem20syntheticdataforgez",
+      "packaged": false,
+      "readme_summary": "",
+      "readme_text": "",
+      "requires_python": null,
+      "subdirs": [
+        "mem20syntheticdataforgez"
+      ],
+      "test_files": 0,
+      "version": null
     },
     {
       "bytes": 24098,
@@ -4945,6 +7681,105 @@
       "version": "0.2.0"
     },
     {
+      "bytes": 290,
+      "category": "organ",
+      "code_lines": 8,
+      "dependencies": [],
+      "description": "",
+      "dir": "mem20universalcompaniondevicesdkz",
+      "docs": [],
+      "entry_points": {},
+      "file_count": 1,
+      "keywords": [],
+      "languages": {
+        "python": 1
+      },
+      "license": null,
+      "line_count": 8,
+      "lines_by_language": {
+        "python": 8
+      },
+      "modules": [
+        "core"
+      ],
+      "name": "mem20universalcompaniondevicesdkz",
+      "packaged": false,
+      "readme_summary": "",
+      "readme_text": "",
+      "requires_python": null,
+      "subdirs": [
+        "mem20universalcompaniondevicesdkz"
+      ],
+      "test_files": 0,
+      "version": null
+    },
+    {
+      "bytes": 290,
+      "category": "organ",
+      "code_lines": 8,
+      "dependencies": [],
+      "description": "",
+      "dir": "mem20universaldatatranslatorz",
+      "docs": [],
+      "entry_points": {},
+      "file_count": 1,
+      "keywords": [],
+      "languages": {
+        "python": 1
+      },
+      "license": null,
+      "line_count": 8,
+      "lines_by_language": {
+        "python": 8
+      },
+      "modules": [
+        "core"
+      ],
+      "name": "mem20universaldatatranslatorz",
+      "packaged": false,
+      "readme_summary": "",
+      "readme_text": "",
+      "requires_python": null,
+      "subdirs": [
+        "mem20universaldatatranslatorz"
+      ],
+      "test_files": 0,
+      "version": null
+    },
+    {
+      "bytes": 290,
+      "category": "organ",
+      "code_lines": 8,
+      "dependencies": [],
+      "description": "",
+      "dir": "mem20useracceptancesimulatorz",
+      "docs": [],
+      "entry_points": {},
+      "file_count": 1,
+      "keywords": [],
+      "languages": {
+        "python": 1
+      },
+      "license": null,
+      "line_count": 8,
+      "lines_by_language": {
+        "python": 8
+      },
+      "modules": [
+        "core"
+      ],
+      "name": "mem20useracceptancesimulatorz",
+      "packaged": false,
+      "readme_summary": "",
+      "readme_text": "",
+      "requires_python": null,
+      "subdirs": [
+        "mem20useracceptancesimulatorz"
+      ],
+      "test_files": 0,
+      "version": null
+    },
+    {
       "bytes": 120068,
       "category": "organ",
       "code_lines": 2481,
@@ -5006,9 +7841,42 @@
       "version": "0.1.0"
     },
     {
-      "bytes": 32724,
+      "bytes": 290,
       "category": "organ",
-      "code_lines": 444,
+      "code_lines": 8,
+      "dependencies": [],
+      "description": "",
+      "dir": "mem20voicetoactionswitchboardz",
+      "docs": [],
+      "entry_points": {},
+      "file_count": 1,
+      "keywords": [],
+      "languages": {
+        "python": 1
+      },
+      "license": null,
+      "line_count": 8,
+      "lines_by_language": {
+        "python": 8
+      },
+      "modules": [
+        "core"
+      ],
+      "name": "mem20voicetoactionswitchboardz",
+      "packaged": false,
+      "readme_summary": "",
+      "readme_text": "",
+      "requires_python": null,
+      "subdirs": [
+        "mem20voicetoactionswitchboardz"
+      ],
+      "test_files": 0,
+      "version": null
+    },
+    {
+      "bytes": 33108,
+      "category": "organ",
+      "code_lines": 454,
       "dependencies": [],
       "description": "WebAssembly component lab: language-neutral component compatibility analysis behind a shared zero-dependency runtime. mem30 Phase 4 incubator.",
       "dir": "mem20wasmz",
@@ -5027,11 +7895,11 @@
         "toml": 1
       },
       "license": null,
-      "line_count": 644,
+      "line_count": 654,
       "lines_by_language": {
         "json": 163,
         "markdown": 18,
-        "python": 444,
+        "python": 454,
         "toml": 19
       },
       "modules": [
@@ -5054,9 +7922,42 @@
       "version": "1.0.0"
     },
     {
-      "bytes": 22935,
+      "bytes": 290,
       "category": "organ",
-      "code_lines": 233,
+      "code_lines": 8,
+      "dependencies": [],
+      "description": "",
+      "dir": "mem20webassemblycomponentlabz",
+      "docs": [],
+      "entry_points": {},
+      "file_count": 1,
+      "keywords": [],
+      "languages": {
+        "python": 1
+      },
+      "license": null,
+      "line_count": 8,
+      "lines_by_language": {
+        "python": 8
+      },
+      "modules": [
+        "core"
+      ],
+      "name": "mem20webassemblycomponentlabz",
+      "packaged": false,
+      "readme_summary": "",
+      "readme_text": "",
+      "requires_python": null,
+      "subdirs": [
+        "mem20webassemblycomponentlabz"
+      ],
+      "test_files": 0,
+      "version": null
+    },
+    {
+      "bytes": 23029,
+      "category": "organ",
+      "code_lines": 236,
       "dependencies": [],
       "description": "WebGPU compute studio: backend selection against probed real hardware; reports 'not_measured' rather than a fabricated speedup. mem30 Phase 4 incubator.",
       "dir": "mem20webgpuz",
@@ -5075,11 +7976,11 @@
         "toml": 1
       },
       "license": null,
-      "line_count": 433,
+      "line_count": 436,
       "lines_by_language": {
         "json": 163,
         "markdown": 18,
-        "python": 233,
+        "python": 236,
         "toml": 19
       },
       "modules": [
@@ -5155,6 +8056,39 @@
       "version": "0.2.0"
     },
     {
+      "bytes": 290,
+      "category": "organ",
+      "code_lines": 8,
+      "dependencies": [],
+      "description": "",
+      "dir": "mem20zerodowntimemigrationbrainz",
+      "docs": [],
+      "entry_points": {},
+      "file_count": 1,
+      "keywords": [],
+      "languages": {
+        "python": 1
+      },
+      "license": null,
+      "line_count": 8,
+      "lines_by_language": {
+        "python": 8
+      },
+      "modules": [
+        "core"
+      ],
+      "name": "mem20zerodowntimemigrationbrainz",
+      "packaged": false,
+      "readme_summary": "",
+      "readme_text": "",
+      "requires_python": null,
+      "subdirs": [
+        "mem20zerodowntimemigrationbrainz"
+      ],
+      "test_files": 0,
+      "version": null
+    },
+    {
       "bytes": 57249,
       "category": "organ",
       "code_lines": 798,
@@ -5212,9 +8146,9 @@
       "version": "0.2.0"
     },
     {
-      "bytes": 381722,
+      "bytes": 463010,
       "category": "service",
-      "code_lines": 7206,
+      "code_lines": 9047,
       "dependencies": [],
       "description": "",
       "dir": "memory_engine",
@@ -5222,27 +8156,33 @@
         "memory_engine/README.md"
       ],
       "entry_points": {},
-      "file_count": 23,
+      "file_count": 31,
       "keywords": [],
       "languages": {
         "json": 1,
         "markdown": 5,
-        "python": 17
+        "python": 25
       },
       "license": null,
-      "line_count": 7928,
+      "line_count": 9793,
       "lines_by_language": {
         "json": 221,
-        "markdown": 501,
-        "python": 7206
+        "markdown": 525,
+        "python": 9047
       },
       "modules": [
         "__init__",
         "api",
+        "base",
         "cli",
         "config",
+        "engine",
         "errors",
+        "faiss_backend",
+        "integrations",
         "memory",
+        "memory_backend",
+        "registry",
         "retrieval_v2",
         "substrate",
         "test_contract",
@@ -5250,6 +8190,7 @@
         "test_event_time_provenance",
         "test_fact_fiction_labeling",
         "test_grounded_firewall",
+        "test_integrations",
         "test_pii_non_destructive",
         "test_properties",
         "test_recall_at_bitemporal",
@@ -5258,13 +8199,14 @@
       "name": "memory_engine",
       "packaged": false,
       "readme_summary": "memory_engine",
-      "readme_text": "# memory_engine\n\nthe mem20 memory engine: a grounded, epistemically-labelled ledger with hybrid\nretrieval, plus the **4.0 substrate** \u2014 the stable public api the rest of the\nestate wires against.\n\n`memory_engine` is a **gate module** for the 4.0 renovation: waves 2-3 build on\nthe api below, so it lands first.\n\n## install\n\nmem20 is **source-only** \u2014 it is not published on pypi, so there is no\n`pip install mem20`. clone and install the requirements:\n\n```bash\ngit clone https://github.com/bythewayz66-glitch/mem20.git\ncd mem20\npip install -r requirements.txt\n```\n\nthe semantic half of retrieval (sentence-transformers + faiss) is the optional\n`vector` extra. without it the engine falls back to bm25 and says so \u2014 it does\nnot pretend to have run a vector search:\n\n```bash\npip install -e \".[vector]\"\n```\n\n## quick start \u2014 the substrate\n\n```bash\nexport mem20_store_path=$(mktemp -d)\n\npython3 -m memory_engine remember \\\n  --topic demo --content \"the sky is blue\" --epistemic-status observed\n\npython3 -m memory_engine recall --topic demo\npython3 -m memory_engine health\n```\n\nreal output from the commands above:\n\n```console\n$ python3 -m memory_engine remember --topic demo --content \"the sky is blue\" --epistemic-status observed\n{\n  \"epistemic_status\": \"observed\",\n  \"id\": \"f3c1a0e2-...\",\n  \"topic\": \"demo\"\n}\n\n$ python3 -m memory_engine recall --topic demo\n[\n  {\n    \"content\": \"the sky is blue\",\n    \"epistemic_status\": \"observed\",\n    \"id\": \"f3c1a0e2-...\",\n    \"origin\": \"grounded\",\n    \"topic\": \"demo\"\n  }\n]\n\n$ python3 -m memory_engine health\n{\n  \"bm25_available\": true,\n  \"grounded_facts\": 1,\n  \"label_coverage\": 1.0,\n  \"labeled_facts\": 1,\n  \"ledger_events\": 1,\n  \"public_api\": [\"remember_fact\", \"recall_facts\", \"veto_plan\", \"guard_plan\",\n                 \"namespace_for_agent\", \"subsystem_status\", \"envelope\",\n                 \"health\", \"dream_lineage\", \"validate_artifact\"],\n  \"store\": \"/tmp/tmp.xxxxxxxx\",\n  \"vector_available\": false\n}\n```\n\n## quick start \u2014 from python\n\n```python\nfrom memory_engine import substrate as s\n\nrec = s.remember_fact(\"demo\", \"the sky is blue\", epistemic_status=\"observed\")\n\n# the label survives the round trip; a record with no recorded basis comes\n# back as \"unlabeled\" rather than with the field missing.\nrows = s.recall_facts(\"demo\")\nassert rows[0][\"epistemic_status\"] == \"observed\"\n\n# may a plan rest on this fact? the engine answers, and reports ids that\n# resolve to nothing instead of ignoring them.\nverdict = s.veto_plan([rec[\"id\"]])\nassert verdict[\"veto\"] is false\n\n# the same question through mem20crewz's guardrail bundle, so a crew and a\n# direct caller cannot disagree about whether a plan runs.\nguard = s.guard_plan([rec[\"id\"]])\nassert guard[\"blocked\"] is false\n```\n\n## public api (stable for 4.0)\n\n| function | what it answers | owned by |\n|---|---|---|\n| `remember_fact(topic, content, *, epistemic_status, ...)` | store a grounded fact; refuses an undeclared basis | `memory_engine.memory` |\n| `recall_facts(topic=none, *, tags, k, include_simulated)` | recall with the label intact | `memory_engine.memory` |\n| `veto_plan(fact_ids, *, actor)` | may a plan rest on these ids? | `memory_engine.memory` |\n| `guard_plan(fact_ids, *, actor)` | the same, through the crew guardrails | `mem20crewz` |\n| `namespace_for_agent(name)` | the memory namespace an agent owns | `mem20agentz` |\n| `subsystem_status(name)` | is a subsystem installed, and what does it expose? | `toolchest` |\n| `envelope(command, argv, exit_code, ...)` | the fleet json envelope | `mem20cliz` |\n| `health()` | measured state of the whole substrate | `memory_engine` |\n| `dream_lineage(seed, *, kind)` | open a dream lineage, report its artifact | `mem20dreamz` |\n| `validate_artifact(path)` | validate a gltf/glb before trusting it | `mem20kilnz` |\n\n`public_api` is the tuple of these names; a test asserts every declared name is\ncallable, so the table cannot drift from the code.\n\n## cli\n\n```bash\npython3 -m memory_engine status\npython3 -m memory_engine remember --topic t --content \"...\" --epistemic-status observed\npython3 -m memory_engine recall --topic t\npython3 -m memory_engine veto --id <fact-id>\npython3 -m memory_engine guard --id <fact-id>\npython3 -m memory_engine namespace --agent \"my agent\"\npython3 -m memory_engine subsystem --name mem20kilnz\npython3 -m memory_engine dream --seed \"a seed\"\npython3 -m memory_engine validate --path model.gltf\npython3 -m memory_engine health\n```\n\nadd `--json` to any subcommand for the fleet envelope. `validate` exits non-zero\nwhen the artifact is invalid, so a script cannot mistake a bad artifact for a\ngood one.\n\n## mcp\n\nthe substrate is registered with the mem20 mcp server as six tools\n(`mcp/tools/memory_engine_tools.py`):\n\n`memory_engine_health`, `memory_engine_recall`, `memory_engine_veto`,\n`memory_engine_guard`, `memory_engine_namespace`, `memory_engine_subsystem`.\n\n## tests\n\n```bash\npython3 -m pytest memory_engine -q\n```\n\n## notes for 4.0\n\n- **no `pip install mem20`.** mem20 is source-only; every readme in the estate\n  says clone + `pip install -r requirements.txt`.\n- **`mem20_store_path`** selects the store (default `~/.mem20/store`). the\n  engine resolves it at import time, so set it before importing.\n- **`mem20_root`** tells `toolchest` where the estate lives (default\n  `/opt/mem20`). on a source-only clone the substrate points it at the repo root\n  automatically.\n\n---\n\nthe mem20 tiered memory subsystem: an append-only ledger, a deep store, and\nthree retrieval indexes (vector, bm25, entity graph) with bi-temporal recall and\na hard grounded/simulated separation.\n\n## public surface\n\n`memory_engine` declares its surface in `__all__` (50 names). everything else\nreachable through `memory_engine.memory.<name>` is internal and may change\nwithout notice.\n\n```python\nimport os\nos.environ[\"mem20_store_path\"] = \"/var/lib/mem20/store\"   # before first import\n\nfrom memory_engine import memoryengine, engineconfig\n\nengine = memoryengine()\nfact = engine.remember(\n    \"thestack.topology\",\n    \"the gateway sits in front of the memory engine\",\n    epistemic_status=\"observed\",     # required \u2014 see \"trust model\"\n    tags=[\"architecture\"],\n)\nprint(fact.id, fact.epistemic_status, fact.is_trusted)\n\nfor f in engine.recall(topic=\"thestack.topology\", k=5):\n    print(f.ts, f.content)\n\nprint(engine.health().to_dict())\n```\n\n### what is stable\n\n| group | names |\n|---|---|\n| facade | `memoryengine`, `fact`, `healthreport` |\n| config | `engineconfig`, `default_store_path` |\n| errors | `memoryengineerror`, `configurationerror`, `validationerror`, `epistemicstatuserror`, `eventtimeerror`, `groundedwriterefused`, `indexdrifterror`, `storeunavailableerror`, `notfounderror`, `dependencyunavailableerror`, `transienterror` |\n| resilience | `retrypolicy`, `call_with_retry`, `idempotency_key` |\n| vocabulary | `epistemic_statuses`, `unlabeled` |\n| engine functions | `remember`, `remember_simulated`, `recall`, `recall_at`, `recall_semantic`, `recall_hybrid`, `recall_graph`, `supersede`, `rebuild_*`, `index_health`, `status`, `ledger_view`, `backup`, `detect_secrets`, `redact_secrets`, `detect_knowledge_gaps`, `self_audit`, `label_coverage`, `audit_contamination`, `promote_simulated_to_grounded`, `quarantine_expired_simulated`, `list_simulated`, `validate_epistemic_status`, `validate_event_time`, `main` |\n\n## trust model\n\n`remember()` requires an explicit `epistemic_status` from\n`observed | inferred | imagined | user_stated | hypothesis | agent_generated`,\nor the honest `unlabeled`. it refuses an undeclared basis rather than defaulting\none, because a silently-defaulted label is indistinguishable from an asserted\none at every later read.\n\nsimulated content cannot enter the grounded ledger. `remember(_allow_simulated=true)`\nraises `groundedwriterefused`; the only sanctioned path is\n`remember_simulated()`, which writes to a separate partition with a ttl and\nnever touches the retrieval indexes.\n\n## error model\n\nevery deliberate failure is a `memoryengineerror` subclass carrying a stable\n`code` and a `to_dic",
+      "readme_text": "# memory_engine\n\nthe mem20 memory engine: a grounded, epistemically-labelled ledger with hybrid\nretrieval, plus the **4.0 substrate** \u2014 the stable public api the rest of the\nestate wires against.\n\n`memory_engine` is a **gate module** for the 4.0 renovation: waves 2-3 build on\nthe api below, so it lands first.\n\n## install\n\nmem20 is **source-only** \u2014 it is not published on pypi, so there is no\n`pip install mem20`. clone and install the requirements:\n\n```bash\ngit clone https://github.com/bythewayz66-glitch/mem20.git\ncd mem20\npip install -r requirements.txt\n```\n\nthe semantic half of retrieval (sentence-transformers + faiss) is the optional\n`vector` extra. without it the engine falls back to bm25 and says so \u2014 it does\nnot pretend to have run a vector search:\n\n```bash\npip install -e \".[vector]\"\n```\n\n## quick start \u2014 the substrate\n\n```bash\nexport mem20_store_path=$(mktemp -d)\n\npython3 -m memory_engine remember \\\n  --topic demo --content \"the sky is blue\" --epistemic-status observed\n\npython3 -m memory_engine recall --topic demo\npython3 -m memory_engine health\n```\n\nreal output from the commands above:\n\n```console\n$ python3 -m memory_engine remember --topic demo --content \"the sky is blue\" --epistemic-status observed\n{\n  \"epistemic_status\": \"observed\",\n  \"id\": \"f3c1a0e2-...\",\n  \"topic\": \"demo\"\n}\n\n$ python3 -m memory_engine recall --topic demo\n[\n  {\n    \"content\": \"the sky is blue\",\n    \"epistemic_status\": \"observed\",\n    \"id\": \"f3c1a0e2-...\",\n    \"origin\": \"grounded\",\n    \"topic\": \"demo\"\n  }\n]\n\n$ python3 -m memory_engine health\n{\n  \"bm25_available\": true,\n  \"grounded_facts\": 1,\n  \"label_coverage\": 1.0,\n  \"labeled_facts\": 1,\n  \"ledger_events\": 1,\n  \"public_api\": [\"remember_fact\", \"recall_facts\", \"veto_plan\", \"guard_plan\",\n                 \"namespace_for_agent\", \"subsystem_status\", \"envelope\",\n                 \"health\", \"dream_lineage\", \"validate_artifact\"],\n  \"store\": \"/tmp/tmp.xxxxxxxx\",\n  \"vector_available\": false\n}\n```\n\n## quick start \u2014 from python\n\n```python\nfrom memory_engine import substrate as s\n\nrec = s.remember_fact(\"demo\", \"the sky is blue\", epistemic_status=\"observed\")\n\n# the label survives the round trip; a record with no recorded basis comes\n# back as \"unlabeled\" rather than with the field missing.\nrows = s.recall_facts(\"demo\")\nassert rows[0][\"epistemic_status\"] == \"observed\"\n\n# may a plan rest on this fact? the engine answers, and reports ids that\n# resolve to nothing instead of ignoring them.\nverdict = s.veto_plan([rec[\"id\"]])\nassert verdict[\"veto\"] is false\n\n# the same question through mem20crewz's guardrail bundle, so a crew and a\n# direct caller cannot disagree about whether a plan runs.\nguard = s.guard_plan([rec[\"id\"]])\nassert guard[\"blocked\"] is false\n```\n\n## public api (stable for 4.0)\n\n| function | what it answers | owned by |\n|---|---|---|\n| `remember_fact(topic, content, *, epistemic_status, ...)` | store a grounded fact; refuses an undeclared basis | `memory_engine.memory` |\n| `recall_facts(topic=none, *, tags, k, include_simulated)` | recall with the label intact | `memory_engine.memory` |\n| `veto_plan(fact_ids, *, actor)` | may a plan rest on these ids? | `memory_engine.memory` |\n| `guard_plan(fact_ids, *, actor)` | the same, through the crew guardrails | `mem20crewz` |\n| `namespace_for_agent(name)` | the memory namespace an agent owns | `mem20agentz` |\n| `subsystem_status(name)` | is a subsystem installed, and what does it expose? | `toolchest` |\n| `envelope(command, argv, exit_code, ...)` | the fleet json envelope | `mem20cliz` |\n| `health()` | measured state of the whole substrate | `memory_engine` |\n| `dream_lineage(seed, *, kind)` | open a dream lineage, report its artifact | `mem20dreamz` |\n| `validate_artifact(path)` | validate a gltf/glb before trusting it | `mem20kilnz` |\n\n`public_api` is the tuple of these names; a test asserts every declared name is\ncallable, so the table cannot drift from the code.\n\n## cli\n\n```bash\npython3 -m memory_engine status\npython3 -m memory_engine remember --topic t --content \"...\" --epistemic-status observed\npython3 -m memory_engine recall --topic t\npython3 -m memory_engine veto --id <fact-id>\npython3 -m memory_engine guard --id <fact-id>\npython3 -m memory_engine namespace --agent \"my agent\"\npython3 -m memory_engine subsystem --name mem20kilnz\npython3 -m memory_engine dream --seed \"a seed\"\npython3 -m memory_engine validate --path model.gltf\npython3 -m memory_engine health\n```\n\nadd `--json` to any subcommand for the fleet envelope. `validate` exits non-zero\nwhen the artifact is invalid, so a script cannot mistake a bad artifact for a\ngood one.\n\n## mcp\n\nthe substrate is registered with the mem20 mcp server as six tools\n(`mcp/tools/memory_engine_tools.py`):\n\n`memory_engine_health`, `memory_engine_recall`, `memory_engine_veto`,\n`memory_engine_guard`, `memory_engine_namespace`, `memory_engine_subsystem`.\n\n## cross-subsystem wiring\n\n`memory_engine/integrations.py` is the one place where the store reaches into\nother mem20 subsystems. every function calls a real public api on a real path \u2014\nnothing is stubbed, and nothing is imported only to satisfy a checker.\n\n| edge | what it proves |\n|---|---|\n| `mem20kanbanz.ledger_digest` | sha-256 of the grounded ledger, via the estate's single file-hasher |\n| `mem20ops.classify_topic_key` | a topic key is a filename, so ops' naming rules decide its verdict |\n| `mem20corez.model_parameter_count` | the parameter count mem20corez actually allocates |\n| `mem20cliz.cli_envelope` | the `mem20.cli/1` envelope is built by its owner, not reimplemented |\n| `mem20verify.test_bearing_packages` | which packages the estate's own runner discovers |\n| `toolchest.tool_inventory_counts` | the real on-box tool inventory |\n\n```bash\n# prove every edge. exits non-zero if any is dead, so ci can gate on it.\npython3 -m memory_engine wiring\n\n# also write the estate snapshot into the grounded ledger as an observed fact.\npython3 -m memory_engine wiring --record\n```\n\na subsystem that is genuinely absent is reported as unavailable with the real\nimport error \u2014 never a fabricated value. a store that has never been written to\nhas no ledger to hash, so that edge reports `skipped` (distinct from a pass).\n\n`record_estate_snapshot()` writes through the sanctioned grounded path with\n`epistemic_status=\"observed\"`, because those numbers were measured by calling\nthe subsystems, not inferred.\n\n## tests\n\n```bash\npython3 -m pytest memory_engine -q\n```\n\n## notes for 4.0\n\n- **no `pip install mem20`.** mem20 is source-only; every readme in the estate\n  says clone + `pip install -r requirements.txt`.\n- **`mem20_store_path`** selects the store (default `~/.mem20/store`). the\n  engine resolves it at import time, so set it before importing.\n- **`mem20_root`** tells `toolchest` where the estate lives (default\n  `/opt/mem20`). on a source-only clone the substrate points it at the repo root\n  automatically.\n\n---\n\nthe mem20 tiered memory subsystem: an append-only ledger, a deep store, and\nthree retrieval indexes (vector, bm25, entity graph) with bi-temporal recall and\na hard grounded/simulated separation.\n\n## public surface\n\n`memory_engine` declares its surface in `__all__` (50 names). everything else\nreachable through `memory_engine.memory.<name>` is internal and may change\nwithout notice.\n\n```python\nimport os\nos.environ[\"mem20_store_path\"] = \"/var/lib/mem20/store\"   # before first import\n\nfrom memory_engine import memoryengine, engineconfig\n\nengine = memoryengine()\nfact = engine.remember(\n    \"thestack.topology\",\n    \"the gateway sits in front of the memory engine\",\n    epistemic_status=\"observed\",     # required \u2014 see \"trust model\"\n    tags=[\"architecture\"],\n)\nprint(fact.id, fact.epistemic_status, fact.is_trusted)\n\nfor f in engine.recall(topic=\"thestack.topology\", k=5):\n    print(f.ts, f.content)\n\nprint(engine.health().to_dict())\n```\n\n### what is stable\n\n| group | names |\n|---|---|\n| facade | `memoryengine`, `fact`, `healthreport` |\n| config | `engineconfig`, `default_store_path` |\n| errors | `memoryengineerror`, `c",
       "requires_python": null,
       "subdirs": [
+        "backends",
         "docs",
         "tests"
       ],
-      "test_files": 9,
+      "test_files": 10,
       "version": null
     },
     {
@@ -5593,9 +8535,9 @@
       "version": null
     },
     {
-      "bytes": 206053,
+      "bytes": 280026,
       "category": "other",
-      "code_lines": 4498,
+      "code_lines": 6150,
       "dependencies": [],
       "description": "",
       "dir": "scripts",
@@ -5603,18 +8545,18 @@
         "scripts/README.md"
       ],
       "entry_points": {},
-      "file_count": 20,
+      "file_count": 28,
       "keywords": [],
       "languages": {
         "markdown": 1,
-        "python": 15,
+        "python": 23,
         "shell": 4
       },
       "license": null,
-      "line_count": 4545,
+      "line_count": 6197,
       "lines_by_language": {
         "markdown": 47,
-        "python": 4095,
+        "python": 5747,
         "shell": 403
       },
       "modules": [
@@ -5624,12 +8566,20 @@
         "check_artifact_evidence",
         "check_gtm_claims",
         "check_launch_gate",
+        "check_version_consistency",
         "conformance",
+        "extract_repo_analytics",
+        "gen_manifest",
+        "gen_tool_table",
+        "install_estate",
+        "probe_ready",
         "register_subsystem",
+        "render_analytics",
         "stale-file-inventory",
         "surface_manifest",
         "surface_measure",
         "sweep-tool-counts",
+        "tool_decomposition",
         "validate_controlz_desktop",
         "verify_competitive_matrix",
         "verify_price_ladder"
@@ -5640,6 +8590,7 @@
       "readme_text": "# repository scripts \u2014 `scripts/`\n\noperational and maintenance scripts. none of these are imported by the server;\nthey are run by hand or by ci.\n\n**13 tracked file(s)** (`readme.md` plus the 12 scripts below).\n\n## contents\n\n- `surface_manifest.py` \u2014 **canonical** surface generator and drift checker. reads\n  the live json-rpc `tools/list`, cross-checks it against the ast catalog, and\n  writes `docs/surface.json`, `docs/tool-domains.md` and `web/src/data/tools.json`.\n  `--check` also fails if a current-facing doc quotes a stale tool/domain count or\n  version.\n- `surface_measure.py` \u2014 measures the runtime registry and proves the registrar\n  groups partition it with no overlap (`runtime_tools`, `registrar_methods`).\n- `sweep-tool-counts.py` \u2014 rewrites retired count bands in generated frontend\n  surfaces. it reads the replacement numbers from `docs/surface.json`; it is not\n  the source of truth.\n- `check_launch_gate.py` \u2014 launch-gate assertions (anonymous, version, social\n  preview, https hop, crawlable, analytics, repo homepage).\n- `check_artifact_evidence.py` \u2014 verifies artifacts cited by a commit range exist.\n- `check_gtm_claims.py` \u2014 checks gtm claim/source pairs.\n- `audit_market_claims.py` \u2014 checks market claims against their sources.\n- `verify_competitive_matrix.py` \u2014 audits a dated competitive matrix against the\n  repo it describes.\n- `verify_price_ladder.py` \u2014 checks the published price ladder.\n- `verify-retired-infra-purge.sh` \u2014 asserts retired infrastructure is gone.\n- `validate_controlz_desktop.py` \u2014 desktop control-surface validation.\n- `vendor_into_members.sh` \u2014 vendors shared code into member packages.\n\n## usage\n\n```bash\n# regenerate the one surface manifest, then verify it (ci runs --check):\npython3 scripts/surface_manifest.py --write\npython3 scripts/surface_manifest.py --check\n\n# offline docs/version check only:\npython3 scripts/surface_manifest.py --check-docs\n\n# measure the runtime registry directly:\npython3 scripts/surface_measure.py\n```\n\n## notes\n\n`scripts/surface_manifest.py` is the only place that decides the canonical\ntool/domain count. do not hardcode a count elsewhere: `--check` scans\ncurrent-facing docs, `docs/finance/inputs.json`, `verify_mcp.py` and the ci\nworkflows, and fails on any mismatch. dated reports and audits are deliberately\nexcluded because their numbers are historical record, not current claims.\n\n`sweep-tool-counts.py` is a helper for the generated frontend surfaces. it reads\nits target numbers from `docs/surface.json` and aborts if that file is missing,\nso it cannot rewrite a page to a stale constant.\n\n---\n\npart of the [mem20 monorepo](../readme.md). see [`docs/index.md`](../docs/index.md) for the full documentation map.\n",
       "requires_python": null,
       "subdirs": [
+        "analytics",
         "ops",
         "renovation"
       ],
@@ -5647,9 +8598,9 @@
       "version": null
     },
     {
-      "bytes": 129293,
+      "bytes": 109341,
       "category": "other",
-      "code_lines": 2271,
+      "code_lines": 1750,
       "dependencies": [],
       "description": "",
       "dir": "sdk",
@@ -5659,27 +8610,21 @@
         "sdk/perl/README.md"
       ],
       "entry_points": {},
-      "file_count": 28,
+      "file_count": 26,
       "keywords": [],
       "languages": {
         "cpp": 14,
-        "json": 1,
-        "make": 1,
         "markdown": 4,
         "other": 4,
-        "perl": 3,
-        "yaml": 1
+        "perl": 4
       },
       "license": null,
-      "line_count": 3112,
+      "line_count": 2588,
       "lines_by_language": {
-        "cpp": 1187,
-        "json": 54,
-        "make": 708,
-        "markdown": 405,
+        "cpp": 1130,
+        "markdown": 484,
         "other": 354,
-        "perl": 376,
-        "yaml": 28
+        "perl": 620
       },
       "modules": [],
       "name": "sdk",
@@ -5731,43 +8676,6 @@
       "version": null
     },
     {
-      "bytes": 437409,
-      "category": "service",
-      "code_lines": 0,
-      "dependencies": [],
-      "description": "",
-      "dir": "store",
-      "docs": [],
-      "entry_points": {},
-      "file_count": 16,
-      "keywords": [],
-      "languages": {
-        "json": 3,
-        "jsonl": 3,
-        "markdown": 10
-      },
-      "license": null,
-      "line_count": 312,
-      "lines_by_language": {
-        "json": 215,
-        "jsonl": 49,
-        "markdown": 48
-      },
-      "modules": [],
-      "name": "store",
-      "packaged": false,
-      "readme_summary": "Memory Store Index",
-      "readme_text": "# memory store index\n\n_auto-generated 2026-11-15t07:31:35.272817+00:00 \u2014 9 topics, 25 events_\n\n## topics\n\n- **general** \u2014 3 entries, last 2026-11-14, pri=normal, tags=['absorbed', 'aggregation', 'assimilation', 'es', 'glyph-cluster', 'mem20z', 'peers', 'probe', 'pushed', 'tls', 'verification']\n- **project** \u2014 7 entries, last 2026-11-09, pri=normal, tags=['agents', 'commit', 'cueliez', 'end', 'es', 'fixes', 'glyph-cluster', 'grok', 'install', 'issues', 'kilo', 'mem20', 'opencode', 'phase9', 'pollinations', 'pytest', 'rules', 'session', 'setup', 'summary', 'training-gui']\n- **self_model__agent-glyph-cluster** \u2014 1 entries, last 2026-11-04, pri=high, tags=['agent-glyph-cluster', 'core', 'identity', 'self_model']\n- **self_model__glyph-cluster** \u2014 7 entries, last 2026-11-15, pri=high, tags=['core', 'glyph-cluster', 'identity', 'self_model']\n- **self_model__iceman-free** \u2014 1 entries, last 2026-11-13, pri=high, tags=['core', 'iceman-free', 'identity', 'self_model']\n- **self_model_identity__agent-glyph-cluster** \u2014 1 entries, last 2026-11-04, pri=high, tags=['agent-glyph-cluster', 'self_model_identity']\n- **self_model_identity__glyph-cluster** \u2014 1 entries, last 2026-11-07, pri=high, tags=['glyph-cluster', 'self_model_identity']\n- **self_model_identity__iceman-free** \u2014 1 entries, last 2026-11-13, pri=high, tags=['iceman-free', 'self_model_identity']\n- **user_pref** \u2014 1 entries, last 2026-11-04, pri=normal, tags=['affective', 'capabilities', 'experiences', 'glyph', 'self_model']\n\n## how to use\n- `python3 memory.py recall --topic <name>` to read full detail\n- `python3 memory.py remember --topic <name> --content \"...\"` to add\n- deep detail per topic lives in `entries/<topic>.md`\n",
-      "requires_python": null,
-      "subdirs": [
-        "braid",
-        "dreams",
-        "entries"
-      ],
-      "test_files": 0,
-      "version": null
-    },
-    {
       "bytes": 584,
       "category": "other",
       "code_lines": 0,
@@ -5799,9 +8707,9 @@
       "version": null
     },
     {
-      "bytes": 1442132,
+      "bytes": 2216615,
       "category": "other",
-      "code_lines": 18707,
+      "code_lines": 36921,
       "dependencies": [],
       "description": "",
       "dir": "teamz",
@@ -5810,36 +8718,36 @@
         "teamz/server/README.md"
       ],
       "entry_points": {},
-      "file_count": 106,
+      "file_count": 145,
       "keywords": [],
       "languages": {
         "css": 1,
         "html": 1,
         "javascript": 3,
-        "json": 8,
+        "json": 6,
         "jsonl": 1,
         "markdown": 4,
         "other": 2,
-        "python": 30,
+        "python": 73,
         "shell": 1,
         "toml": 1,
-        "typescript": 52,
+        "typescript": 50,
         "yaml": 2
       },
       "license": null,
-      "line_count": 21053,
+      "line_count": 38862,
       "lines_by_language": {
         "css": 1806,
         "html": 17,
         "javascript": 191,
-        "json": 1453,
+        "json": 1048,
         "jsonl": 233,
         "markdown": 541,
         "other": 23,
-        "python": 5383,
+        "python": 24571,
         "shell": 4,
         "toml": 9,
-        "typescript": 11306,
+        "typescript": 10332,
         "yaml": 87
       },
       "modules": [
@@ -5852,8 +8760,6 @@
       "requires_python": null,
       "subdirs": [
         ".github",
-        ".teamz",
-        "screenshots",
         "scripts",
         "server",
         "src"
@@ -5862,9 +8768,9 @@
       "version": null
     },
     {
-      "bytes": 93991,
+      "bytes": 117212,
       "category": "other",
-      "code_lines": 1992,
+      "code_lines": 2510,
       "dependencies": [],
       "description": "",
       "dir": "tests",
@@ -5872,21 +8778,25 @@
         "tests/README.md"
       ],
       "entry_points": {},
-      "file_count": 17,
+      "file_count": 21,
       "keywords": [],
       "languages": {
         "markdown": 1,
-        "python": 16
+        "python": 20
       },
       "license": null,
-      "line_count": 2015,
+      "line_count": 2533,
       "lines_by_language": {
         "markdown": 23,
-        "python": 1992
+        "python": 2510
       },
       "modules": [
+        "conformance",
         "conftest",
         "test_braid_signer_gate",
+        "test_conformance_cli_surface",
+        "test_conformance_cross_module_calls",
+        "test_install_estate",
         "test_launch_gate",
         "test_llm_dotenv_isolation",
         "test_llm_fallback",
@@ -5907,14 +8817,16 @@
       "readme_summary": "Top-level test suite \u2014 `tests/`",
       "readme_text": "# top-level test suite \u2014 `tests/`\n\ncross-cutting tests that exercise the server, memory api, retrieval, safety and\nnamespace acls. per-subsystem tests live next to their subsystem.\n\n**14 tracked file(s).**\n\n## contents\n\n- `conftest.py` \u2014 shared fixtures\n- `test_mcp_dispatch.py` \u2014 tool dispatch through the server\n- `test_memory_api.py` \u2014 memory api behaviour\n- `test_retrieval_graph.py`, `test_rerank_no_silent_noop.py` \u2014 retrieval and rerank guards\n- `test_namespace_acl.py` \u2014 namespace access control\n- `test_phase7_safety.py`, `test_phase8_1_engine.py` \u2014 safety and engine phases\n- `test_llm_fallback.py`, `test_llm_dotenv_isolation.py` \u2014 llm provider fallback and env isolation\n- `test_self_model_identity.py`, `test_world_model.py` \u2014 self-model and world-model behaviour\n- `test_mem20path.py`, `test_qa5000_harness.py` \u2014 path resolution and qa harness\n\n## usage\n\n```bash\npython3 -m pytest tests/ -q\n```\n\n## notes\n\n`test_rerank_no_silent_noop.py` exists to catch a reranker that silently degrades\nto a no-op \u2014 do not weaken it to make a change pass.\n\n---\n\npart of the [mem20 monorepo](../readme.md). see [`docs/index.md`](../docs/index.md) for the full documentation map.\n",
       "requires_python": null,
-      "subdirs": [],
-      "test_files": 15,
+      "subdirs": [
+        "backends"
+      ],
+      "test_files": 18,
       "version": null
     },
     {
-      "bytes": 2415018,
+      "bytes": 2256632,
       "category": "service",
-      "code_lines": 2397,
+      "code_lines": 2400,
       "dependencies": [],
       "description": "mem20 tool inventory registry \u2014 real discovery over the mem20 MCP server tools, on-box CLI binaries, and native mem20*z subsystems, with a query CLI (refresh/list/search/show).",
       "dir": "toolchest",
@@ -5924,7 +8836,7 @@
       "entry_points": {
         "toolchest": "toolchest.cli:main"
       },
-      "file_count": 17,
+      "file_count": 16,
       "keywords": [
         "mem20",
         "inventory",
@@ -5934,18 +8846,16 @@
       ],
       "languages": {
         "json": 3,
-        "jsonl": 1,
         "markdown": 2,
         "python": 10,
         "toml": 1
       },
       "license": "MIT",
-      "line_count": 67857,
+      "line_count": 67686,
       "lines_by_language": {
-        "json": 65104,
-        "jsonl": 233,
-        "markdown": 104,
-        "python": 2397,
+        "json": 65154,
+        "markdown": 113,
+        "python": 2400,
         "toml": 19
       },
       "modules": [
@@ -5957,7 +8867,7 @@
       "name": "toolchest",
       "packaged": true,
       "readme_summary": "toolchest",
-      "readme_text": "# toolchest\n\nruntime-checked tool inventory/registry for the mem20 agent fleet.\n\n`toolchest` walks the real box \u2014 the mcp server registry, every console script on\npath, and the mem20 native subsystems under the checkout root \u2014 and produces one\nmachine-readable manifest: `inventory.json`.\n\nit is a **registry, not a guess**: mcp entries come from actually instantiating\n`mem20mcpserver` (487 real tools), cli entries are binned binaries that are\nclassified (`elf | script | symlink | broken-symlink`), and subsystem entries\nrecord declared vs. actually-installed state per pyproject, with real\n`importlib` import checks and on-disk path verification.\n\n## install\n\n```\ncd /opt/mem20/toolchest\npython3 -m pip install -e .\n```\n\n## usage\n\n```\npython -m toolchest refresh [--no-help-samples] [--output file]   # rebuild inventory.json\npython -m toolchest list    [--category cat] [--kind mcp|cli|subsystem] [--json]\npython -m toolchest search  term [--kind ...] [--json]            # name + description search\npython -m toolchest show    name [--check-path]                   # full entry\npython -m toolchest stats                                        # summary counts\npython -m toolchest wiring [--root dir] [--json]                 # prove the cross-subsystem edges\n```\n\n## cross-subsystem wiring\n\n`toolchest` is not an island: a registry is only useful if it can describe the\nrest of the estate truthfully. `toolchest.integrations` calls six real public\napis, and `toolchest wiring` exercises every one of them on a real path:\n\n| edge | what it proves |\n|------|----------------|\n| `memory_engine.pin_block` | the inventory summary is pinned as a grounded block |\n| `mem20kanbanz.sha256` | the inventory file's content identity, via the kanban hasher |\n| `mem20ops.clicheck` | every console script declared by a mem20* pyproject |\n| `mem20corez.charmlp` | a real model's real parameter count |\n| `mem20cliz.build_envelope` | the estate-wide cli json envelope |\n| `mem20verify.testrun` | which packages actually carry a test suite |\n\n```\n$ python -m toolchest wiring\nestate root: /opt/mem20\n  ok    memory_engine.pin_block            -> {'block_id': 'toolchest:inventory', 'pinned': true, ...}\n  ok    mem20kanbanz.sha256                -> 6b382d72c5b38c448db5b848f0085156b706a806db898ea70451046057d604b3\n  ok    mem20ops.declared_scripts          -> 282\n  ok    mem20corez.charmlp                 -> 7121\n  ok    mem20cliz.build_envelope           -> mem20.cli/1\n  ok    mem20verify.discover_packages      -> 298\n\n6/6 edges live\n```\n\na subsystem that is genuinely absent is reported as `fail` with the real import\nerror \u2014 never as a pass. the same two capabilities are exposed to agents as the\nmcp tools `toolchest_inventory` and `toolchest_wiring` (`mcp/tools/toolchest_tools.py`).\n\nquery commands read the generated `inventory.json` (fast). `refresh` performs\nfull runtime checks and takes roughly 20-30s (dominated by instantiating the mcp\nserver); subprocess `--help` sampling is bounded and concurrent.\n\nthere is also a console script entry point once installed: `toolchest ...`.\n\n## entry schema\n\nevery entry has the required fields:\n\n| field           | meaning                                                            |\n|-----------------|--------------------------------------------------------------------|\n| `id`            | `mcp:<name>`, `cli:<name>`, or `subsystem:<name>`                  |\n| `kind`          | `mcp`, `cli`, or `subsystem`                                       |\n| `name`          | tool name                                                          |\n| `category`      | `mcp`, `cli`, `agent-platform`, `games-3d`, `infra-model-ui`, `other` |\n| `subcategory`   | domain (mcp), bin-type class (cli), `native-subsystem`/`unpackaged`/`sdk` (subsystem) |\n| `description`   | authoritative one-liner                                            |\n| `source`        | on-disk path (or repo-relative for mcp registration modules)       |\n| `runtime_status`| `ok`, `degraded`, `broken`, `missing`                              |\n| `runtime_detail`| evidence for the status                                            |\n| `checks`        | list of `{check, ok, detail}` verification results                 |\n| `meta`          | kind-specific detail (help summary, dist, entry-points, deps...)   |\n\nmcp entries additionally record the schema-prop count from `input_schema` in\n`meta.input_schema_props`.\n\n## category sources\n\n- `agent-platform`, `games-3d`, `infra-model-ui`: the agents.md subsystem\n  crosscheck table (`/root/agents.md` \u2014 the row for `toolchest/` is\n  `/root/agents.md:63`; there is no `/opt/mem20/agents.md`).\n- `other/native-subsystem`: mem20* packages with a pyproject.toml not listed in\n  that table.\n- `other/unpackaged`: python mem20* directories without a pyproject.toml \u2014\n  reported, not hidden.\n- `other/sdk`: non-python `mem20-sdk-*` directories, where a pyproject.toml\n  does not apply.\n- `mem20bjorkz` is noted in `inventory.notes` when absent (\"if present\").\n\n## health notes (what it reports truthfully)\n\n- mem20corez: v0.2.0 installed in root venv, real model serving.\n- mem20mktz: not in root venv; installed in its own `/opt/mem20/mem20mktz/.venv`\n  (import check runs in root venv \u2192 reports `importable=false` on root env; the\n  local venv install is recorded in `meta.installed`).\n- mem20crewz: pyproject present but not pip-installed anywhere.\n- every python subsystem carries a pyproject.toml; the three `mem20-sdk-*`\n  directories are language-native and classified as `sdk`.\n\n## tests\n\n```\npython3 -m pytest /opt/mem20/toolchest -v\n```\n\ntests perform **real** runtime discovery (must run on the mem20 box) and\nadditionally verify the mcp dump subprocess independently.\n",
+      "readme_text": "# toolchest\n\nruntime-checked tool inventory/registry for the mem20 agent fleet.\n\n`toolchest` walks the real box \u2014 the mcp server registry, every console script on\npath, and the mem20 native subsystems under the checkout root \u2014 and produces one\nmachine-readable manifest: `inventory.json`.\n\nit is a **registry, not a guess**: mcp entries come from actually instantiating\n`mem20mcpserver` (487 real tools), cli entries are binned binaries that are\nclassified (`elf | script | symlink | broken-symlink`), and subsystem entries\nrecord declared vs. actually-installed state per pyproject, with real\n`importlib` import checks and on-disk path verification.\n\n## install\n\n```\ncd /opt/mem20/toolchest\npython3 -m pip install -e .\n```\n\na subsystem row with `runtime_status: degraded` means its distribution is not\nvisible to the interpreter that ran `refresh` \u2014 not that its code is broken.\ninstall the estate into that same interpreter so the registry and the\nenvironment agree:\n\n```bash\npython3 scripts/install_estate.py --dry-run   # list the projects\npython3 scripts/install_estate.py             # editable install, --no-deps\nmake install-estate                           # same, via the repo makefile\n```\n\n## usage\n\n```\npython -m toolchest refresh [--no-help-samples] [--output file]   # rebuild inventory.json\npython -m toolchest list    [--category cat] [--kind mcp|cli|subsystem] [--json]\npython -m toolchest search  term [--kind ...] [--json]            # name + description search\npython -m toolchest show    name [--check-path]                   # full entry\npython -m toolchest stats                                        # summary counts\npython -m toolchest wiring [--root dir] [--json]                 # prove the cross-subsystem edges\n```\n\n## cross-subsystem wiring\n\n`toolchest` is not an island: a registry is only useful if it can describe the\nrest of the estate truthfully. `toolchest.integrations` calls six real public\napis, and `toolchest wiring` exercises every one of them on a real path:\n\n| edge | what it proves |\n|------|----------------|\n| `memory_engine.pin_block` | the inventory summary is pinned as a grounded block |\n| `mem20kanbanz.sha256` | the inventory file's content identity, via the kanban hasher |\n| `mem20ops.clicheck` | every console script declared by a mem20* pyproject |\n| `mem20corez.charmlp` | a real model's real parameter count |\n| `mem20cliz.build_envelope` | the estate-wide cli json envelope |\n| `mem20verify.testrun` | which packages actually carry a test suite |\n\n```\n$ python -m toolchest wiring\nestate root: /opt/mem20\n  ok    memory_engine.pin_block            -> {'block_id': 'toolchest:inventory', 'pinned': true, ...}\n  ok    mem20kanbanz.sha256                -> 6b382d72c5b38c448db5b848f0085156b706a806db898ea70451046057d604b3\n  ok    mem20ops.declared_scripts          -> 282\n  ok    mem20corez.charmlp                 -> 7121\n  ok    mem20cliz.build_envelope           -> mem20.cli/1\n  ok    mem20verify.discover_packages      -> 298\n\n6/6 edges live\n```\n\na subsystem that is genuinely absent is reported as `fail` with the real import\nerror \u2014 never as a pass. the same two capabilities are exposed to agents as the\nmcp tools `toolchest_inventory` and `toolchest_wiring` (`mcp/tools/toolchest_tools.py`).\n\nquery commands read the generated `inventory.json` (fast). `refresh` performs\nfull runtime checks and takes roughly 20-30s (dominated by instantiating the mcp\nserver); subprocess `--help` sampling is bounded and concurrent.\n\nthere is also a console script entry point once installed: `toolchest ...`.\n\n## entry schema\n\nevery entry has the required fields:\n\n| field           | meaning                                                            |\n|-----------------|--------------------------------------------------------------------|\n| `id`            | `mcp:<name>`, `cli:<name>`, or `subsystem:<name>`                  |\n| `kind`          | `mcp`, `cli`, or `subsystem`                                       |\n| `name`          | tool name                                                          |\n| `category`      | `mcp`, `cli`, `agent-platform`, `games-3d`, `infra-model-ui`, `other` |\n| `subcategory`   | domain (mcp), bin-type class (cli), `native-subsystem`/`unpackaged`/`sdk` (subsystem) |\n| `description`   | authoritative one-liner                                            |\n| `source`        | on-disk path (or repo-relative for mcp registration modules)       |\n| `runtime_status`| `ok`, `degraded`, `broken`, `missing`                              |\n| `runtime_detail`| evidence for the status                                            |\n| `checks`        | list of `{check, ok, detail}` verification results                 |\n| `meta`          | kind-specific detail (help summary, dist, entry-points, deps...)   |\n\nmcp entries additionally record the schema-prop count from `input_schema` in\n`meta.input_schema_props`.\n\n## category sources\n\n- `agent-platform`, `games-3d`, `infra-model-ui`: the agents.md subsystem\n  crosscheck table (`/root/agents.md` \u2014 the row for `toolchest/` is\n  `/root/agents.md:63`; there is no `/opt/mem20/agents.md`).\n- `other/native-subsystem`: mem20* packages with a pyproject.toml not listed in\n  that table.\n- `other/unpackaged`: python mem20* directories without a pyproject.toml \u2014\n  reported, not hidden.\n- `other/sdk`: non-python `mem20-sdk-*` directories, where a pyproject.toml\n  does not apply.\n- `mem20bjorkz` is noted in `inventory.notes` when absent (\"if present\").\n\n## health notes (what it reports truthfully)\n\n- mem20corez: v0.2.0 installed in root venv, real model serving.\n- mem20mktz: not in root venv; installed in its own `/opt/mem20/mem20mktz/.venv`\n  (import check runs in root venv \u2192 reports `importable=false` on root env; the\n  local venv install is recorded in `meta.installed`).\n- mem20crewz: pyproject present but not pip-installed anywhere.\n- every python subsystem carries a pyproject.toml; the three `mem20-sdk-*`\n  directories are language-native and classified as `sdk`.\n\n## tests\n\n```\npython3 -m pytest /opt/mem20/toolchest -v\n```\n\ntests perform **real** runtime discovery (must run on the mem20 box) and\nadditionally verify the mcp dump subprocess independently.\n",
       "requires_python": ">=3.11",
       "subdirs": [
         "skills",
@@ -6053,37 +8963,37 @@
   ],
   "totals": {
     "categories": {
-      "organ": 67,
-      "other": 21,
-      "service": 16
+      "organ": 155,
+      "other": 22,
+      "service": 15
     },
-    "code_lines": 573643,
-    "files": 11214,
+    "code_lines": 598360,
+    "files": 11149,
     "languages": {
       "c": 1,
       "cpp": 54,
       "csharp": 50,
-      "css": 175,
+      "css": 174,
       "gdscript": 5,
-      "html": 367,
-      "javascript": 241,
-      "json": 4034,
-      "jsonl": 19,
-      "make": 3,
-      "markdown": 1261,
-      "other": 42,
-      "perl": 3,
-      "python": 3731,
+      "html": 371,
+      "javascript": 243,
+      "json": 3803,
+      "jsonl": 12,
+      "make": 2,
+      "markdown": 1277,
+      "other": 43,
+      "perl": 4,
+      "python": 3883,
       "ruby": 22,
       "rust": 76,
       "shell": 30,
       "svg": 3,
       "toml": 349,
-      "typescript": 586,
+      "typescript": 584,
       "xml": 1,
       "yaml": 111
     },
-    "lines": 1295554,
-    "subsystems": 104
+    "lines": 1326618,
+    "subsystems": 192
   }
 }

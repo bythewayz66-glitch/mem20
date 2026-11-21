@@ -12,7 +12,7 @@ full register.
 The pinned baseline is where these numbers were read, and it is not where the
 tree stands now. `VERSION` at `45445f48` was **3.0.0**; the shipped tree is
 **3.1.0** at `27c1e5fb`. The surface figure needs no such note - it was
-270 tools across 27 domains at the baseline and is **487 tools across 39
+270 tools across 27 domains at the baseline and is **487 tools across 129
 domains** as of 2026-11-07 (`docs/surface.json`, live `tools/list`) - but any
 asset that reads a slide's version line aloud must say which commit it came
 from, or it is quoting a past release as the present one.

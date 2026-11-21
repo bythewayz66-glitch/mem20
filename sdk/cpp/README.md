@@ -12,7 +12,7 @@
 
 ## Tool surface
 
-The server this release was verified against advertises **487 tools across 39
+The server this release was verified against advertises **487 tools across 129
 domains** over `tools/list`. That figure is stated in exactly one place in code
 — `include/mem20/surface.hpp` — where `static_assert`s pin it, and it is
 cross-checked against `docs/surface.json`, which `scripts/surface_manifest.py`

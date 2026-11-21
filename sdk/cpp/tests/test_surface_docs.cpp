@@ -16,7 +16,7 @@
 //      domains") verbatim.
 //   4. docs/sdk/cpp/README.md states it too.
 //   5. Neither document re-publishes a retired figure (257 / 268 / 270 / 272 /
-//      306 tools, 26 / 27 / 38 domains) outside an explicit "retired" note.
+//      306 / 311 tools, 26 / 27 / 38 / 39 domains) outside an explicit "retired" note.
 //
 // Exit contract:
 //   0  -> documented surface matches the header
@@ -129,7 +129,7 @@ void check_retired_figures(const std::string& label, const std::string& text) {
     if (mentions_retirement(context)) continue;
 
     if (contains(line, "tools")) {
-      for (const char* retired : {"257", "268", "270", "272", "306"}) {
+      for (const char* retired : {"257", "268", "270", "272", "306", "311"}) {
         if (contains_number(line, retired)) {
           violation(label + ": states the retired tool count " + retired +
                     " without marking it retired -> " + line);
@@ -137,7 +137,7 @@ void check_retired_figures(const std::string& label, const std::string& text) {
       }
     }
     if (contains(line, "domains")) {
-      for (const char* retired : {"26", "27", "38"}) {
+      for (const char* retired : {"26", "27", "38", "39"}) {
         if (contains_number(line, retired)) {
           violation(label + ": states the retired domain count " + retired +
                     " without marking it retired -> " + line);

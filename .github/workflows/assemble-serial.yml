@@ -4,13 +4,16 @@ name: Assemble serial instalment
 # The publishing API rejects some larger single writes and appends one trailing
 # newline to every file it writes, so the instalment is committed in small
 # numbered parts under docs/app/narrative/.parts2/ and concatenated here in
-# filename order, starting from EMPTY, with exactly one trailing newline
-# stripped from each part to undo the API's addition.
+# filename order, with exactly one trailing newline stripped from each part to
+# undo the API's addition.
 #
 # MANUAL DISPATCH ONLY. An earlier version also ran on push, which meant it
 # fired on every part commit and deleted the parts directory after the first
-# one, assembling a partial file. It now runs only when dispatched by hand,
-# after every part is in place.
+# one, assembling a partial file. It now runs only when dispatched by hand.
+#
+# MODE: if the target already exists, the parts are PREPENDED to it (the parts
+# hold the head of the document and the existing target holds the tail). If the
+# target does not exist, the parts become the whole document.
 
 on:
   workflow_dispatch:
@@ -32,12 +35,18 @@ jobs:
           PARTS=docs/app/narrative/.parts2
           TARGET=docs/app/narrative/serial-2026-11-21.md
           ls -la "$PARTS"
-          : > /tmp/assembled.md
+          : > /tmp/head.md
           for f in $(ls "$PARTS"/*.md | sort); do
             echo "appending $f"
-            # strip exactly one trailing newline (the API adds one per write)
-            perl -0777 -pe 's/\n\z//' "$f" >> /tmp/assembled.md
+            perl -0777 -pe 's/\n\z//' "$f" >> /tmp/head.md
           done
+          if [ -f "$TARGET" ]; then
+            echo "target exists: prepending parts to it"
+            cat /tmp/head.md "$TARGET" > /tmp/assembled.md
+          else
+            echo "target absent: parts are the whole document"
+            cp /tmp/head.md /tmp/assembled.md
+          fi
           mv /tmp/assembled.md "$TARGET"
           rm -rf "$PARTS"
           wc -c -w "$TARGET"

@@ -12,7 +12,13 @@ import os
 import sys
 
 _MAP = None
-_ROOT = "/opt/mem20"
+# Resolve the checkout this file lives in rather than a hard-coded host path.
+# The map used to be read from /opt/mem20, which does not exist on a clean
+# clone, so every absorbed member failed to import and the ecosystem probe
+# reported 0 peers. MEM20_ABSORBED_ROOT still overrides for non-standard layouts.
+_ROOT = os.environ.get("MEM20_ABSORBED_ROOT") or os.path.dirname(
+    os.path.abspath(__file__)
+)
 
 
 def _load():
@@ -23,11 +29,29 @@ def _load():
     try:
         with open(path, "r", encoding="utf-8") as f:
             data = json.load(f)
-        _ROOT = data.get("root", _ROOT)
+        # The map records the root it was generated under (e.g. /opt/mem20).
+        # Only adopt it when that directory actually exists here; otherwise keep
+        # the checkout-relative root so _rebase can remap the entries.
+        recorded = data.get("root")
+        if recorded and os.path.isdir(recorded):
+            _ROOT = recorded
         _MAP = data.get("mapping", {})
     except Exception:
         _MAP = {}
     return _MAP
+
+
+def _rebase(base: str) -> str:
+    """Map an absolute path recorded under another root onto this checkout."""
+    if os.path.isdir(base):
+        return base
+    marker = "/mem20/"
+    idx = base.find(marker)
+    if idx != -1:
+        candidate = os.path.join(_ROOT, base[idx + len(marker):])
+        if os.path.isdir(candidate):
+            return candidate
+    return base
 
 
 class AbsorbedFinder(importlib.abc.MetaPathFinder):
@@ -37,7 +61,7 @@ class AbsorbedFinder(importlib.abc.MetaPathFinder):
         top = parts[0]
         if top not in mapping:
             return None
-        base = mapping[top]
+        base = _rebase(mapping[top])
         if len(parts) == 1:
             # top-level package
             init = os.path.join(base, "__init__.py")

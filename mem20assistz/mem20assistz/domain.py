@@ -4,6 +4,19 @@ from __future__ import annotations
 
 from pathlib import Path
 
+# Absorbed mem20*z packages (e.g. mem20webhooksupernetworkz) live under
+# <pkg>/absorbed/ and are resolved by the repo-root import finder. Install it
+# before importing them, otherwise a clean checkout fails with ModuleNotFoundError.
+import sys as _sys
+
+_repo_root = Path(__file__).resolve().parents[2]
+if str(_repo_root) not in _sys.path:
+    _sys.path.insert(0, str(_repo_root))
+try:
+    import _mem20_absorbed_finder  # noqa: F401
+except Exception:
+    pass
+
 from memory_engine import EngineConfig, MemoryEngine
 from toolchest.catalog import load_inventory
 import mem20path

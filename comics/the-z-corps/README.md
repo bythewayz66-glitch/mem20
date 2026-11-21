@@ -26,7 +26,7 @@ running-gags sheet.
 
 ## Reference
 
-- [Series bible](series-bible/) — combined character cards, Issues #1–#4
+- [Series bible](series-bible/) — combined character cards, **Issues #1–#11** (162 pages, 145 cards). The earlier Issues #1–#4 volume is kept alongside it, unchanged.
 - [Issue #2 variant cover gallery](issue-02-variant-covers/) — gallery page, PDF + PNG
 
 ## Source

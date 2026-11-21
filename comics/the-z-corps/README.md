@@ -23,6 +23,7 @@ running-gags sheet.
 | [#9](issue-09/) | The Branch That Was Replaced | 19 – 20 Oct 2026, 8 commits in 8m35s | 38 |
 | [#10](issue-10/) | The Four-Channel Claim | 20 Oct 2026, the window is empty | 38 |
 | [#11](issue-11/) | The Same File Under Ninety-Two Names | 20 Oct 2026, the window is still empty | 38 |
+| [#12](issue-12/) | The Rerank That Ranked Nothing | 20 Oct 2026, the window is still empty | 38 |
 
 ## Reference
 

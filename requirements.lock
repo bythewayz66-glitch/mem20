@@ -19,10 +19,10 @@ httpx==0.28.1
 httpx2==2.16.0
 idna==3.20
 iniconfig==2.3.1
--e git+https://github.com/bythewayz66-glitch/mem20.git@520318b161fc51469a4ebe828b73f595903f5957#egg=mem20agentz&subdirectory=mem20agentz
--e git+https://github.com/bythewayz66-glitch/mem20.git@520318b161fc51469a4ebe828b73f595903f5957#egg=mem20controlz&subdirectory=mem20controlz
--e git+https://github.com/bythewayz66-glitch/mem20.git@520318b161fc51469a4ebe828b73f595903f5957#egg=mem20dreamz&subdirectory=mem20dreamz
--e git+https://github.com/bythewayz66-glitch/mem20.git@520318b161fc51469a4ebe828b73f595903f5957#egg=mem20ops&subdirectory=mem20ops
+-e git+https://github.com/bythewayz66-glitch/mem20.git@7668e1d6914264abaad59906d1b82d15d1e94389#egg=mem20agentz&subdirectory=mem20agentz
+-e git+https://github.com/bythewayz66-glitch/mem20.git@7668e1d6914264abaad59906d1b82d15d1e94389#egg=mem20controlz&subdirectory=mem20controlz
+-e git+https://github.com/bythewayz66-glitch/mem20.git@7668e1d6914264abaad59906d1b82d15d1e94389#egg=mem20dreamz&subdirectory=mem20dreamz
+-e git+https://github.com/bythewayz66-glitch/mem20.git@7668e1d6914264abaad59906d1b82d15d1e94389#egg=mem20ops&subdirectory=mem20ops
 multidict==7.1.0
 opentelemetry-api==1.45.1
 packaging==26.3

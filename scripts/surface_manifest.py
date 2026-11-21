@@ -22,10 +22,14 @@ import argparse
 import importlib.util
 import json
 import os
+import queue
 import re
 import subprocess
 import sys
 import tempfile
+import threading
+import time
+from contextlib import suppress
 from pathlib import Path
 
 REPO = Path(__file__).resolve().parents[1]
@@ -132,30 +136,101 @@ def live_tool_names() -> list[str]:
         {"jsonrpc": "2.0", "id": 2, "method": "tools/list", "params": {}},
     ]
     payload = "".join(json.dumps(message) + "\n" for message in messages)
-    completed = subprocess.run(
+
+    # Do NOT hand the payload to subprocess.run(input=...). That closes the
+    # child's stdin the instant the write finishes, and the server's stdio
+    # transport treats EOF as "session over": its stdin_reader finishes, closes
+    # the read stream, and the task group tears down stdout_writer while the
+    # tools/list response is still queued. The result was a process that exited
+    # 0 having answered only `initialize` -- the intermittent
+    # "tools/list returned no response (exit 0)" failure. Keeping stdin open
+    # until the response has actually been read removes the race: EOF is only
+    # sent after we are done listening.
+    process = subprocess.Popen(
         [_server_python(), str(REPO / "launcher.py")],
         cwd=REPO,
-        input=payload,
-        capture_output=True,
+        stdin=subprocess.PIPE,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
         text=True,
-        timeout=240,
         env={**os.environ, "PYTHONUNBUFFERED": "1", "MEM20_HEALTH_DISABLE": "1"},
     )
     response = None
-    for line in completed.stdout.splitlines():
-        line = line.strip()
-        if not line.startswith("{"):
-            continue
+    stderr_chunks: list[str] = []
+    try:
+        assert process.stdin is not None and process.stdout is not None
+        process.stdin.write(payload)
+        process.stdin.flush()
+
+        # Read responses on a worker thread so a server that dies without
+        # answering cannot block us past the deadline.
+        lines: "queue.Queue[str | None]" = queue.Queue()
+
+        def _pump() -> None:
+            try:
+                for raw in process.stdout:  # type: ignore[union-attr]
+                    lines.put(raw)
+            finally:
+                lines.put(None)
+
+        def _pump_stderr() -> None:
+            if process.stderr is None:
+                return
+            for raw in process.stderr:
+                stderr_chunks.append(raw)
+
+        reader = threading.Thread(target=_pump, daemon=True)
+        reader.start()
+        err_reader = threading.Thread(target=_pump_stderr, daemon=True)
+        err_reader.start()
+
+        deadline = time.monotonic() + 240
+        while True:
+            remaining = deadline - time.monotonic()
+            if remaining <= 0:
+                raise SurfaceError(
+                    "tools/list timed out after 240s; stderr:\n%s"
+                    % "".join(stderr_chunks)[-2000:]
+                )
+            try:
+                raw = lines.get(timeout=min(remaining, 5.0))
+            except queue.Empty:
+                if process.poll() is not None and lines.empty():
+                    break
+                continue
+            if raw is None:
+                break
+            line = raw.strip()
+            if not line.startswith("{"):
+                continue
+            try:
+                message = json.loads(line)
+            except ValueError:
+                continue
+            if message.get("id") == 2:
+                response = message
+                break
+    finally:
+        # Close stdin only now: the response is in hand (or we have given up).
+        # communicate() is deliberately not used here -- it would try to flush
+        # the stdin we just closed.
+        with suppress(OSError, ValueError):
+            if process.stdin is not None:
+                process.stdin.close()
+        if process.poll() is None:
+            process.terminate()
         try:
-            message = json.loads(line)
-        except ValueError:
-            continue
-        if message.get("id") == 2:
-            response = message
+            process.wait(timeout=30)
+        except subprocess.TimeoutExpired:
+            process.kill()
+            process.wait(timeout=30)
+        err_reader.join(timeout=5)
+    stderr_text = "".join(stderr_chunks)
+
     if response is None:
         raise SurfaceError(
-            "tools/list returned no response (exit %d); stderr:\n%s"
-            % (completed.returncode, completed.stderr[-2000:])
+            "tools/list returned no response (exit %s); stderr:\n%s"
+            % (process.returncode, stderr_text[-2000:])
         )
     if "error" in response:
         raise SurfaceError("tools/list failed: %s" % response["error"])

@@ -1,0 +1,51 @@
+name: Assemble serial instalment
+
+# One-shot assembler for docs/app/narrative/serial-2026-11-21.md.
+# The publishing API caps a single write at ~30 KB, so the instalment is
+# committed in parts under docs/app/narrative/.parts/ and concatenated here.
+# The job is a no-op once the parts directory is empty, so it cannot loop.
+
+on:
+  push:
+    paths:
+      - 'docs/app/narrative/.parts/**'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  assemble:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Concatenate parts into the instalment
+        run: |
+          set -euo pipefail
+          PARTS=docs/app/narrative/.parts
+          TARGET=docs/app/narrative/serial-2026-11-21.md
+          if [ ! -d "$PARTS" ] || [ -z "$(ls -A "$PARTS" 2>/dev/null)" ]; then
+            echo "No parts present; nothing to assemble."
+            exit 0
+          fi
+          ls -la "$PARTS"
+          cat "$TARGET" "$PARTS"/p1.md "$PARTS"/p2.md "$PARTS"/p3.md > /tmp/assembled.md
+          mv /tmp/assembled.md "$TARGET"
+          rm -rf "$PARTS"
+          wc -c -w "$TARGET"
+
+      - name: Commit and push
+        run: |
+          set -euo pipefail
+          git config user.name "mem20-naration-bot"
+          git config user.email "noreply@github.com"
+          git add -A docs/app/narrative
+          if git diff --cached --quiet; then
+            echo "Nothing staged."
+            exit 0
+          fi
+          git commit -m "docs(narrative): assemble serial 2026-11-21 from parts"
+          git push

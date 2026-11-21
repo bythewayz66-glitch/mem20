@@ -5,13 +5,14 @@ name: Assemble serial instalment
 # newline to every file it writes, so the instalment is committed in small
 # numbered parts under docs/app/narrative/.parts2/ and concatenated here in
 # filename order, starting from EMPTY, with exactly one trailing newline
-# stripped from each part to undo the API's addition. The job runs only when a
-# DONE sentinel is present, and removes .parts2/ afterwards, so it cannot loop.
+# stripped from each part to undo the API's addition.
+#
+# MANUAL DISPATCH ONLY. An earlier version also ran on push, which meant it
+# fired on every part commit and deleted the parts directory after the first
+# one, assembling a partial file. It now runs only when dispatched by hand,
+# after every part is in place.
 
 on:
-  push:
-    paths:
-      - 'docs/app/narrative/.parts2/**'
   workflow_dispatch:
 
 permissions:
@@ -30,10 +31,6 @@ jobs:
           set -euo pipefail
           PARTS=docs/app/narrative/.parts2
           TARGET=docs/app/narrative/serial-2026-11-21.md
-          if [ ! -f "$PARTS/DONE" ]; then
-            echo "No DONE sentinel; nothing to assemble."
-            exit 0
-          fi
           ls -la "$PARTS"
           : > /tmp/assembled.md
           for f in $(ls "$PARTS"/*.md | sort); do

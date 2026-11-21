@@ -2,14 +2,15 @@ name: Assemble serial instalment
 
 # One-shot assembler for docs/app/narrative/serial-2026-11-21.md.
 # The publishing API rejects some larger single writes, so the instalment is
-# committed in small numbered parts under docs/app/narrative/.parts/ and
-# concatenated here in filename order. The job runs only when a DONE sentinel
-# is present, and removes .parts/ afterwards, so it cannot loop.
+# committed in small numbered parts under docs/app/narrative/.parts2/ and
+# concatenated here in filename order, starting from EMPTY (the target is
+# replaced, never appended to). The job runs only when a DONE sentinel is
+# present, and removes .parts2/ afterwards, so it cannot loop.
 
 on:
   push:
     paths:
-      - 'docs/app/narrative/.parts/**'
+      - 'docs/app/narrative/.parts2/**'
   workflow_dispatch:
 
 permissions:
@@ -26,7 +27,7 @@ jobs:
       - name: Concatenate parts into the instalment
         run: |
           set -euo pipefail
-          PARTS=docs/app/narrative/.parts
+          PARTS=docs/app/narrative/.parts2
           TARGET=docs/app/narrative/serial-2026-11-21.md
           if [ ! -f "$PARTS/DONE" ]; then
             echo "No DONE sentinel; nothing to assemble."
@@ -34,7 +35,6 @@ jobs:
           fi
           ls -la "$PARTS"
           : > /tmp/assembled.md
-          cat "$TARGET" >> /tmp/assembled.md
           for f in $(ls "$PARTS"/*.md | sort); do
             echo "appending $f"
             cat "$f" >> /tmp/assembled.md

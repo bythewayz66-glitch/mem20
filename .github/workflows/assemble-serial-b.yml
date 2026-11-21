@@ -1,0 +1,73 @@
+name: Assemble serial instalment (2026-11-21b)
+
+# One-shot assembler for docs/app/narrative/serial-2026-11-21b.md.
+#
+# The publishing API rejects some larger single writes and strips trailing
+# whitespace from every file it writes, so the instalment is committed in small
+# numbered parts under docs/app/narrative/.parts2b/ and concatenated here in
+# filename order. Each part's trailing newlines are stripped before the join and
+# exactly one newline is written between parts, so the assembled file is
+# byte-identical to the local source regardless of what the API did to each part.
+#
+# TRIGGER: push of docs/app/narrative/.assemble-trigger-b ONLY, committed last
+# once every part is in place.
+
+on:
+  push:
+    paths:
+      - 'docs/app/narrative/.assemble-trigger-b'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  assemble:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Concatenate parts into the instalment
+        run: |
+          set -euo pipefail
+          PARTS=docs/app/narrative/.parts2b
+          TARGET=docs/app/narrative/serial-2026-11-21b.md
+          ls -la "$PARTS"
+          : > /tmp/assembled.md
+          first=1
+          for f in $(ls "$PARTS"/*.md | sort); do
+            echo "appending $f"
+            if [ "$first" -eq 0 ]; then
+              printf '\n' >> /tmp/assembled.md
+            fi
+            first=0
+            # strip ALL trailing newlines from the part, then emit its bytes
+            python3 - "$f" >> /tmp/assembled.md <<'PY'
+          import sys
+          p = sys.argv[1]
+          with open(p, 'rb') as fh:
+              data = fh.read()
+          sys.stdout.buffer.write(data.rstrip(b'\n'))
+          PY
+          done
+          printf '\n' >> /tmp/assembled.md
+          mv /tmp/assembled.md "$TARGET"
+          rm -rf "$PARTS"
+          rm -f docs/app/narrative/.assemble-trigger-b
+          wc -c -w "$TARGET"
+          sha256sum "$TARGET"
+
+      - name: Commit and push
+        run: |
+          set -euo pipefail
+          git config user.name "mem20-naration-bot"
+          git config user.email "noreply@github.com"
+          git add -A docs/app/narrative
+          if git diff --cached --quiet; then
+            echo "Nothing staged."
+            exit 0
+          fi
+          git commit -m "docs(narrative): assemble serial 2026-11-21b from parts"
+          git push

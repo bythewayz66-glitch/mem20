@@ -23,6 +23,20 @@ files those commits change. Two consequences:
   * A push that lands authored commits on trunk, and every pull request, is a
     delivery and must carry evidence.
 
+CI-infrastructure exemption
+---------------------------
+A delivery whose changed files are **limited to CI/workflow/gate machinery and
+dependency lockfiles** is exempt. Regenerating a lockfile or editing a workflow
+produces no artifact of its own: the code a lockfile pins is evidenced (or not)
+by the delivery that introduced it, and a workflow is the machinery that runs
+the gate rather than something the gate can evidence. Without this exemption
+every CI-maintenance push fails by construction, which trains people to ignore
+the check.
+
+The exemption is deliberately narrow: it applies only when *every* changed file
+is CI machinery or a lockfile. A commit that mixes a lockfile with product code
+is still a delivery and is still gated.
+
 Exempt passes always print the reason and the word EXEMPT, so a green log can
 never be mistaken for a verified delivery.
 
@@ -45,15 +59,37 @@ import re
 import subprocess
 import sys
 import tempfile
-from pathlib import Path
+from pathlib import Path, PurePosixPath
 
 SHA_RE = re.compile(r"\b[0-9a-f]{40}\b")
 URL_RE = re.compile(r"https://(?:static\.)?teamily\.ai/(?:sites|files)/[0-9a-fA-F-]+/")
 
 # The gate's own machinery. A change that touches ONLY these is how the gate
 # gets maintained and merged; it is not a 4.0 subsystem delivery.
-GATE_OWN_DIRS = (".github/workflows/",)
+GATE_OWN_DIRS = (".github/",)
 GATE_OWN_FILES = frozenset({"scripts/check_artifact_evidence.py"})
+
+# Dependency lockfiles. Regenerating one is a dependency-resolution maintenance
+# act: it produces no artifact of its own, and the code it pins is evidenced (or
+# not) by the delivery that introduced it. Matched by basename, at any depth.
+LOCKFILE_NAMES = frozenset({
+    "package-lock.json",
+    "npm-shrinkwrap.json",
+    "yarn.lock",
+    "pnpm-lock.yaml",
+    "bun.lockb",
+    "Cargo.lock",
+    "poetry.lock",
+    "Pipfile.lock",
+    "uv.lock",
+    "go.sum",
+    "composer.lock",
+    "Gemfile.lock",
+    "packages.lock.json",
+    "pubspec.lock",
+    "Podfile.lock",
+    "mix.lock",
+})
 
 # A push range with no before-SHA is the first push of a branch.
 ZERO_SHA = "0000000000000000000000000000000000000000"
@@ -100,6 +136,19 @@ def is_gate_own(path):
     if path in GATE_OWN_FILES:
         return True
     return any(path.startswith(d) for d in GATE_OWN_DIRS)
+
+
+def is_lockfile(path):
+    """True for a dependency lockfile, at any depth in the tree."""
+    return PurePosixPath(path).name in LOCKFILE_NAMES
+
+
+def is_ci_infrastructure(path):
+    """CI/workflow/gate machinery, or a dependency lockfile.
+
+    A change confined to these produces no artifact of its own to evidence.
+    """
+    return is_gate_own(path) or is_lockfile(path)
 
 
 def verified_commits(repo, shas):
@@ -182,9 +231,14 @@ def check_range(repo, diff_range, event="auto"):
         print("artifact-evidence gate: PASS (exempt: empty)")
         return 0, [], []
 
-    # 3. Gate maintenance: the change is the gate's own machinery.
-    if all(is_gate_own(f) for f in changed):
-        print("EXEMPT (ci-infrastructure): this change is the gate's own machinery.")
+    # 3. CI infrastructure: every changed file is CI/workflow/gate machinery or
+    #    a dependency lockfile. Such a change produces no artifact of its own.
+    if all(is_ci_infrastructure(f) for f in changed):
+        print("EXEMPT (ci-infrastructure): every changed file is CI/workflow/gate")
+        print("  machinery or a dependency lockfile, so this change produces no")
+        print("  artifact of its own to evidence.")
+        for f in changed:
+            print(f"  {f}")
         print("artifact-evidence gate: PASS (exempt: ci-infrastructure)")
         return 0, [], []
 
@@ -307,7 +361,36 @@ def self_test():
         assert _git(repo, "diff", "--name-only", f"{merge_base}..HEAD") == "", "case 6: tree should equal first parent"
         rc, _, _ = check_range(repo, f"{merge_base}...HEAD", event="push")
         assert rc == 0, f"case 6 (zero-diff merge push) should be EXEMPT, got {rc}"
-        print("self-test [6/6] zero-diff convergence push -> PASS (integration)")
+        print("self-test [6/9] zero-diff convergence push -> PASS (integration)")
+
+        # --- Case 7: lockfile-only change -> PASS (ci-infrastructure) -------
+        # The shape that failed in the wild: a push that only regenerates
+        # dependency lockfiles carries no artifact of its own.
+        (repo / "web").mkdir()
+        (repo / "web" / "package-lock.json").write_text('{"lockfileVersion": 3}\n')
+        (repo / "Cargo.lock").write_text("# lock\n")
+        _commit(repo, "fix CI: regenerate lockfiles")
+        rc, _, _ = check_range(repo, "HEAD~1...HEAD", event="push")
+        assert rc == 0, f"case 7 (lockfile-only) should be EXEMPT, got {rc}"
+        print("self-test [7/9] lockfile-only change -> PASS (ci-infrastructure)")
+
+        # --- Case 8: workflow-only change -> PASS (ci-infrastructure) -------
+        wf = repo / ".github" / "workflows"
+        wf.mkdir(parents=True)
+        (wf / "ci.yml").write_text("name: CI\n")
+        _commit(repo, "ci: adjust the workflow")
+        rc, _, _ = check_range(repo, "HEAD~1...HEAD", event="push")
+        assert rc == 0, f"case 8 (workflow-only) should be EXEMPT, got {rc}"
+        print("self-test [8/9] workflow-only change -> PASS (ci-infrastructure)")
+
+        # --- Case 9: THE TEETH. A lockfile mixed with product code is still a
+        #     delivery and must still carry evidence. ----------------------
+        (repo / "web" / "package-lock.json").write_text('{"lockfileVersion": 3, "x": 1}\n')
+        (repo / "feature.py").write_text("def g():\n    return 2\n")
+        _commit(repo, "feat: product code plus a lockfile bump")
+        rc, _, _ = check_range(repo, "HEAD~1...HEAD", event="push")
+        assert rc == 1, f"case 9 (lockfile + product code) should still FAIL, got {rc}"
+        print("self-test [9/9] lockfile mixed with product code -> still FAIL (gate keeps teeth)")
 
     print("self-test: ALL OK")
     return 0

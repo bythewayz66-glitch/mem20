@@ -20,6 +20,7 @@ running-gags sheet.
 | [#6](issue-06/) | The Report Says Nothing | 14 – 18 Oct 2026 | 38 |
 | [#7](issue-07/) | The Organ and the Oscillation | 19 Oct 2026, 09:13–10:00 | 35 |
 | [#8](issue-08/) | What the Repository Did With the Organ | 19 – 20 Oct 2026 | 33 |
+| [#9](issue-09/) | The Branch That Was Replaced | 19 – 20 Oct 2026, 8 commits in 8m35s | 38 |
 
 ## Reference
 

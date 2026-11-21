@@ -22,6 +22,7 @@ running-gags sheet.
 | [#8](issue-08/) | What the Repository Did With the Organ | 19 – 20 Oct 2026 | 33 |
 | [#9](issue-09/) | The Branch That Was Replaced | 19 – 20 Oct 2026, 8 commits in 8m35s | 38 |
 | [#10](issue-10/) | The Four-Channel Claim | 20 Oct 2026, the window is empty | 38 |
+| [#11](issue-11/) | The Same File Under Ninety-Two Names | 20 Oct 2026, the window is still empty | 38 |
 
 ## Reference
 

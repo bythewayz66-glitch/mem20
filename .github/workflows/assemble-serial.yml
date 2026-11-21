@@ -7,15 +7,19 @@ name: Assemble serial instalment
 # filename order, with exactly one trailing newline stripped from each part to
 # undo the API's addition.
 #
-# MANUAL DISPATCH ONLY. An earlier version also ran on push, which meant it
-# fired on every part commit and deleted the parts directory after the first
-# one, assembling a partial file. It now runs only when dispatched by hand.
+# TRIGGER: push of docs/app/narrative/.assemble-trigger ONLY. An earlier version
+# triggered on any .parts2/ push, which meant it fired on every part commit and
+# deleted the parts directory after the first one, assembling a partial file.
+# The trigger file is committed last, once every part is in place.
 #
 # MODE: if the target already exists, the parts are PREPENDED to it (the parts
 # hold the head of the document and the existing target holds the tail). If the
 # target does not exist, the parts become the whole document.
 
 on:
+  push:
+    paths:
+      - 'docs/app/narrative/.assemble-trigger'
   workflow_dispatch:
 
 permissions:
@@ -49,6 +53,7 @@ jobs:
           fi
           mv /tmp/assembled.md "$TARGET"
           rm -rf "$PARTS"
+          rm -f docs/app/narrative/.assemble-trigger
           wc -c -w "$TARGET"
 
       - name: Commit and push

@@ -8,7 +8,7 @@
 Library headers, sources, CMake, and tests live under **`sdk/cpp/`**.  
 This directory keeps protocol docs, API reference, and the `store_recall_audit` example.
 
-The server this release was verified against advertises **487 tools across 39
+The server this release was verified against advertises **487 tools across 129
 domains** over `tools/list`. The figure is stated in exactly one place in code —
 `include/mem20/surface.hpp`, where `static_assert`s pin it — and is
 cross-checked against `docs/surface.json` (generated from a live `tools/list` by

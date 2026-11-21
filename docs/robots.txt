@@ -1,0 +1,5 @@
+User-agent: *
+Allow: /
+
+# mem20 — auditable agent memory
+# https://mem20.com/

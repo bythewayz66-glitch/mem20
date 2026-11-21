@@ -1,10 +1,10 @@
 name: Assemble serial instalment
 
 # One-shot assembler for docs/app/narrative/serial-2026-11-21.md.
-# The publishing API caps a single write at ~30 KB, so the instalment is
-# committed in parts under docs/app/narrative/.parts/ and concatenated here.
-# The job is a no-op until all three parts are present, and a no-op again
-# once .parts/ has been removed, so it cannot loop.
+# The publishing API rejects some larger single writes, so the instalment is
+# committed in small numbered parts under docs/app/narrative/.parts/ and
+# concatenated here in filename order. The job runs only when a DONE sentinel
+# is present, and removes .parts/ afterwards, so it cannot loop.
 
 on:
   push:
@@ -28,14 +28,17 @@ jobs:
           set -euo pipefail
           PARTS=docs/app/narrative/.parts
           TARGET=docs/app/narrative/serial-2026-11-21.md
-          for p in p1 p2 p3; do
-            if [ ! -f "$PARTS/$p.md" ]; then
-              echo "Part $p not present yet; nothing to assemble."
-              exit 0
-            fi
-          done
+          if [ ! -f "$PARTS/DONE" ]; then
+            echo "No DONE sentinel; nothing to assemble."
+            exit 0
+          fi
           ls -la "$PARTS"
-          cat "$TARGET" "$PARTS"/p1.md "$PARTS"/p2.md "$PARTS"/p3.md > /tmp/assembled.md
+          : > /tmp/assembled.md
+          cat "$TARGET" >> /tmp/assembled.md
+          for f in $(ls "$PARTS"/*.md | sort); do
+            echo "appending $f"
+            cat "$f" >> /tmp/assembled.md
+          done
           mv /tmp/assembled.md "$TARGET"
           rm -rf "$PARTS"
           wc -c -w "$TARGET"

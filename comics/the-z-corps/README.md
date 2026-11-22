@@ -24,6 +24,7 @@ running-gags sheet.
 | [#10](issue-10/) | The Four-Channel Claim | 20 Oct 2026, the window is empty | 38 |
 | [#11](issue-11/) | The Same File Under Ninety-Two Names | 20 Oct 2026, the window is still empty | 38 |
 | [#12](issue-12/) | The Rerank That Ranked Nothing | 20 Oct 2026, the window is still empty | 38 |
+| [#13](issue-13/) | The Assembler and the Gate That Was Never Built | 21 Nov 2026, 16:11:08Z – 23:06:25Z | 38 |
 
 ## Reference
 

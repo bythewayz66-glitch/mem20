@@ -18,6 +18,8 @@ on:
     branches: [main]
     paths:
       - 'docs/series/_build.py'
+      - 'docs/series/_tpl.py'
+      - 'docs/series/_idx.py'
       - 'comics/the-z-corps/**'
       - 'docs/app/narrative/**'
       - '.github/workflows/series-build.yml'
@@ -29,8 +31,9 @@ permissions:
   id-token: write
 
 concurrency:
-  # Same group as pages.yml so the two deploys serialise instead of racing.
-  group: pages
+  # Deliberately NOT the "pages" group: pages.yml owns that and cancels
+  # anything else in it. This workflow serialises against itself only.
+  group: series-build
   cancel-in-progress: false
 
 jobs:

@@ -12,6 +12,8 @@ Writes, all under docs/series/ and all reusing series.css + analytics.js:
   data/comic-issues.json, data/chronicles.json, chronicles/feed.xml
 
 Markup lives in _tpl.py and _idx.py so each file stays small.
+
+Run: python3 docs/series/_build.py && python3 docs/series/_verify.py
 """
 import datetime
 import glob

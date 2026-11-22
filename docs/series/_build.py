@@ -11,7 +11,8 @@ Writes, all under docs/series/ and all reusing series.css + analytics.js:
   comic/index.html, chronicles/index.html, index.html
   data/comic-issues.json, data/chronicles.json, chronicles/feed.xml
 
-Markup lives in _tpl.py and _idx.py so each file stays small.
+Markup lives in _tpl.py and _idx.py, markdown in _md.py, so each file stays
+small.
 
 Run: python3 docs/series/_build.py && python3 docs/series/_verify.py
 """
@@ -30,100 +31,13 @@ RAW = "https://raw.githubusercontent.com/bythewayz66-glitch/mem20/main"
 SITE = "https://mem20.com"
 
 sys.path.insert(0, HERE)
-import _idx  # noqa: E402
-import _tpl  # noqa: E402
+import _idx    # noqa: E402
+import _md     # noqa: E402
+import _tpl    # noqa: E402
 
 esc = lambda s: html.escape(str(s), quote=True)
-
-# ------------------------------------------------------------------ markdown
-
-CODE = re.compile(r"`([^`]+)`")
-BOLD = re.compile(r"\*\*(.+?)\*\*")
-ITAL = re.compile(r"(?<!\*)\*([^*\n]+)\*(?!\*)")
-LINK = re.compile(r"\[([^\]]+)\]\(([^)]+)\)")
-BLOCK = re.compile(r"^(#{1,6}\s|[-*+]\s|\d+[.)]\s|>|\||-{3,}$)")
-
-
-def inline(t):
-    o = esc(t)
-    o = CODE.sub(lambda m: "<code>%s</code>" % m.group(1), o)
-    o = BOLD.sub(lambda m: "<strong>%s</strong>" % m.group(1), o)
-    o = ITAL.sub(lambda m: "<em>%s</em>" % m.group(1), o)
-    return LINK.sub(lambda m: '<a href="%s">%s</a>' % (m.group(2), m.group(1)), o)
-
-
-def md(mdtext):
-    L = mdtext.split("\n")
-    out, i, n = [], 0, len(L)
-    while i < n:
-        s = L[i].strip()
-        if not s:
-            i += 1
-            continue
-        if s.startswith("```"):
-            i += 1
-            buf = []
-            while i < n and not L[i].strip().startswith("```"):
-                buf.append(L[i])
-                i += 1
-            i += 1
-            out.append("<pre><code>%s</code></pre>" % esc("\n".join(buf)))
-            continue
-        if re.fullmatch(r"-{3,}|\*{3,}", s):
-            out.append("<hr>")
-            i += 1
-            continue
-        m = re.match(r"^(#{1,6})\s+(.*)$", s)
-        if m:
-            lv = min(len(m.group(1)) + 1, 6)
-            out.append("<h%d>%s</h%d>" % (lv, inline(m.group(2)), lv))
-            i += 1
-            continue
-        if s.startswith("|") and i + 1 < n and re.match(r"^\|[\s:|-]+\|$", L[i + 1].strip()):
-            head = [c.strip() for c in s.strip("|").split("|")]
-            i += 2
-            rows = []
-            while i < n and L[i].strip().startswith("|"):
-                rows.append([c.strip() for c in L[i].strip().strip("|").split("|")])
-                i += 1
-            t = ['<div class="tbl"><table class="spec"><thead><tr>']
-            t += ["<th>%s</th>" % inline(c) for c in head]
-            t.append("</tr></thead><tbody>")
-            for r in rows:
-                t.append("<tr>" + "".join("<td>%s</td>" % inline(c) for c in r) + "</tr>")
-            t.append("</tbody></table></div>")
-            out.append("".join(t))
-            continue
-        if s.startswith(">"):
-            buf = []
-            while i < n and L[i].strip().startswith(">"):
-                buf.append(L[i].strip().lstrip(">").strip())
-                i += 1
-            out.append('<blockquote class="note">%s</blockquote>' % inline(" ".join(buf)))
-            continue
-        if re.match(r"^[-*+]\s+", s):
-            it = []
-            while i < n and re.match(r"^[-*+]\s+", L[i].strip()):
-                it.append(re.sub(r"^[-*+]\s+", "", L[i].strip()))
-                i += 1
-            out.append("<ul>" + "".join("<li>%s</li>" % inline(x) for x in it) + "</ul>")
-            continue
-        if re.match(r"^\d+[.)]\s+", s):
-            it = []
-            while i < n and re.match(r"^\d+[.)]\s+", L[i].strip()):
-                it.append(re.sub(r"^\d+[.)]\s+", "", L[i].strip()))
-                i += 1
-            out.append("<ol>" + "".join("<li>%s</li>" % inline(x) for x in it) + "</ol>")
-            continue
-        buf = []
-        while i < n and L[i].strip() and not BLOCK.match(L[i].strip()):
-            buf.append(L[i].strip())
-            i += 1
-        if not buf:                      # unconsumed block marker: never loop
-            buf.append(L[i].strip())
-            i += 1
-        out.append("<p>%s</p>" % inline(" ".join(buf)))
-    return "\n".join(out)
+inline = _md.inline
+md = _md.md
 
 
 # ------------------------------------------------------------------ comics
@@ -146,16 +60,33 @@ def pdf_pages(path):
 
 
 def beats(script):
+    """Page beats come in two shapes across the issues:
+
+    * issues 01-05: `## PAGE N — TITLE` headings
+    * issues 06-12: a `| # | Page | Beat | Source |` table under "PAGE BY PAGE"
+
+    Both are read; whichever the issue uses is what its reader page lists.
+    """
     if not script or not os.path.exists(script):
         return []
+    text = open(script, encoding="utf-8", errors="ignore").read()
+
     out = []
-    for line in open(script, encoding="utf-8", errors="ignore"):
+    for line in text.split("\n"):
+        m = re.match(r"^##\s+PAGE\s+(\d+)\s*[\u2014\u2013-]\s*(.+?)\s*$", line.strip())
+        if m:
+            out.append((int(m.group(1)), m.group(2)))
+    if out:
+        return out
+
+    for line in text.split("\n"):
         s = line.strip()
         if not s.startswith("|"):
             continue
         c = [x.strip() for x in s.strip("|").split("|")]
-        if len(c) >= 3 and re.fullmatch(r"\d+", c[0]):
-            out.append((int(c[0]), c[1]))
+        if len(c) < 3 or not re.fullmatch(r"\d+", c[0]):
+            continue
+        out.append((int(c[0]), c[1] or c[2]))
     return out
 
 

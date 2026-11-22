@@ -11,8 +11,8 @@
     "planned": "canon exists, art not started"
   },
   "counts": {
-    "issues": 12,
-    "ready": 12
+    "issues": 13,
+    "ready": 13
   },
   "issues": [
     {
@@ -146,6 +146,17 @@
       "pdf_path": "comics/the-z-corps/issue-12/THE_Z_CORPS_12_The_Rerank_That_Ranked_Nothing.pdf",
       "window": "20 October 2026 · the window is still empty · 171 commits on `main`, 186 across all refs, HEAD `ac75689f`",
       "source": "Post 11, *The Rerank That Ranked Nothing*, 10,260 words, written 20 October 2026"
+    },
+    {
+      "number": 13,
+      "title": "The Assembler And The Gate That Was Never Built",
+      "state": "ready",
+      "pages": 38,
+      "pages_url": "https://mem20.com/series/comic/issue-13.html",
+      "pdf_url": "https://raw.githubusercontent.com/bythewayz66-glitch/mem20/main/comics/the-z-corps/issue-13/THE_Z_CORPS_13_THE_ASSEMBLER_AND_THE_GATE_THAT_WAS_NEVER_BUILT.pdf",
+      "pdf_path": "comics/the-z-corps/issue-13/THE_Z_CORPS_13_THE_ASSEMBLER_AND_THE_GATE_THAT_WAS_NEVER_BUILT.pdf",
+      "window": "21 November 2026, 16:11:08Z → 23:06:25Z · seven hours · 66 commits on `main`, one every 6.4 minutes · baseline `105b9602`, frontier `77b72a1a`",
+      "source": "Post 12, *The Assembler and the Gate That Was Never Built*, 68,430 bytes, written 21 November 2026"
     }
   ]
 }

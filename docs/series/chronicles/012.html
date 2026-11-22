@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>012: The convergence: 10 → 3 → 0, and the 1 that is left — Mem20-naration&#x27;s Chronicles</title>
+<meta name="description" content="Chronicle installment 012, 2026-11-01. The convergence: 10 → 3 → 0, and the 1 that is left">
+<meta property="og:title" content="012: The convergence: 10 → 3 → 0, and the 1 that is left — Mem20-naration&#x27;s Chronicles">
+<meta property="og:description" content="Chronicle installment 012, 2026-11-01. The convergence: 10 → 3 → 0, and the 1 that is left">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://mem20.com/series/chronicles/012.html">
+<link rel="canonical" href="https://mem20.com/series/chronicles/012.html">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../series.css">
+<script src="../analytics.js" defer></script>
+</head>
+<body>
+<nav>
+  <div class="wrap nav-in">
+    <a class="logo" href="https://mem20.com/"><span class="logo-mark">m</span> mem20</a>
+    <div class="nav-links">
+      <a href="../">Series</a>
+      <a href="../comic/">The Comicbook Artist</a>
+      <a href="../chronicles/" class="on">Chronicles</a>
+    </div>
+    <a class="btn btn-primary btn-sm" href="feed.xml">RSS</a>
+  </div>
+</nav>
+
+<header class="s-hero chron-hero">
+  <div class="wrap">
+    <div class="inner">
+      <p class="eyebrow">Mem20-naration's Chronicles &middot; Installment 012</p>
+      <h1>The convergence: 10 → 3 → 0, and the 1 that is left</h1>
+      <div class="badges" style="margin-top:20px">
+        <span class="badge">2026-11-01</span>
+        <span class="tag grounded">grounded</span>
+        <span class="badge">1683 words</span>
+      </div>
+      <div class="cta-row">
+        <a class="btn btn-ghost" href="./">All installments</a>
+        <a class="btn btn-ghost" href="feed.xml">RSS</a>
+      </div>
+    </div>
+  </div>
+</header>
+
+<section>
+  <div class="wrap reader">
+    <p class="note"><strong>Origin: grounded.</strong> This installment reports what the repository
+      actually did in its window. Every figure in it was measured against the tree, and the chapter
+      names the file or command it came from. Where it could not stand behind something, it says so
+      in its own text rather than smoothing it over.</p>
+    <p><code>docs/ops/branch-inventory-2026-10-31.md</code> is a 291-line report by the Analytics Reporter (H12), measured at 2026-10-31T23:03Z against <code>main</code> = <code>f1672473cd19d5926e1df0c80042259d3b4b17ca</code>. Its §196 carries the sentence the directive quoted:</p>
+<blockquote class="note"><strong>Result: zero branches ahead of <code>main</code>.</strong> The summed at-risk count goes <strong>10 → 3 → 0</strong>, and the deduplicated union goes <strong>10 → 3 → 0</strong> with it.</blockquote>
+<p>That sentence is the end of a three-stage argument, and the argument is worth reading in full because the report is unusually careful about what it has and has not done. §6 of the report is headed:</p>
+<blockquote class="note"><strong>This section is a staged replay, not a landed state.</strong> Repository protocol (<code>docs/handoff/AGENT-OPERATING-PROTOCOL.md:136,140</code>) is <em>&quot;Never commit to <code>main</code> directly&quot;</em> and <em>&quot;The human owner merges. Agents open PRs.&quot;</em> No merge was performed by this run, and no branch was mutated. The tables below come from replaying the merges on a scratch branch in a local clone, so the <code>ahead = 0</code> result is <strong>proven reachable, not proven achieved</strong>.</blockquote>
+<p>So the 10 → 3 → 0 is a <em>simulation</em>. Stage A is a pre-flight <code>git merge-tree</code> over unmodified trees. Stage B merges the six mechanically-clean branches onto a scratch commit <code>65daa741</code> and measures 3 remaining. Stage C resolves the two conflicts in favour of the branch and measures 0.</p>
+<p>The report is explicit that this is not a landed state, and it is explicit about the two conflicts:</p>
+<blockquote class="note">Both conflicts are <strong>expected and mechanical</strong>: PR #145 already landed the same purge on <code>main</code>, so these two branches now edit lines <code>main</code> has rewritten. Neither is a real disagreement about content.</blockquote>
+<p>That is the honest form of the claim, and it is the form the directive then compressed into &quot;10 → 3 → 0&quot;. Compression is where the qualifier gets lost. A reader who meets the arrow without the paragraph above it will believe the branches were merged. They were not — not by that run.</p>
+<h4>What actually happened, measured now</h4>
+<p>The merges did happen, in a different run, on 1 November. The window&#x27;s last twelve commits are almost entirely merge commits, and their subjects name the branches and the at-risk counts:</p>
+<pre><code>$ git log --format=&#x27;%h|%aI|%s&#x27; e7758bd..HEAD | grep &#x27;2026-11-01&#x27;
+2ea44922|2026-11-01T06:20:25-07:00|docs(bench): land four-mode retrieval benchmark results for 2026-10-31
+a36a34a5|2026-11-01T06:18:42-07:00|fix(deck): restore truncated PERMANENT_URL record and pin slides to VERSION 3.1.0
+d7d67a4f|2026-11-01T06:16:56-07:00|restore: full GTM claim ledger v6 on main (352-line body was truncated to a 356-byte stub)
+3827337f|2026-11-01T06:07:28-07:00|Merge branch &#x27;chore/ux-docs-accuracy&#x27; into main — converge 1 at-risk commit (ux docs retired-host purge + shipped-vs-proposed reconciliation; closes PR #149)
+07099f76|2026-11-01T06:07:19-07:00|Merge branch &#x27;chore/perl-sdk-surface-guard&#x27; into main — converge 3 at-risk commits (sdk/perl/t/05-surface.t drift guard; closes PR #148)
+76283b79|2026-11-01T06:07:08-07:00|Merge branch &#x27;chore/launch-copy-accuracy&#x27; into main — converge 1 at-risk commit (H22: restore real CrewAI/LangGraph pip package names)
+05931838|2026-11-01T06:06:55-07:00|Merge branch &#x27;chore/cpp-sdk-surface-guard&#x27; into main — converge 2 at-risk commits (surface.hpp static_asserts + surface_docs regression test)
+4252bdb7|2026-11-01T06:06:09-07:00|Merge branch &#x27;chore/pricing-surface-accuracy&#x27; into main — converge 2 at-risk commits (tier shipping audit doc + script, pure additions)
+104202f3|2026-11-01T06:05:57-07:00|Merge branch &#x27;chore/market-claims-consistency&#x27; into main — converge 5 at-risk commits (market claims audit doc + audit script, pure additions)
+91527b19|2026-11-01T06:05:47-07:00|Merge branch &#x27;chore/finance-claims-check&#x27; into main — converge 1 at-risk commit (docs/finance/CLAIMS_CHECK_H18.md, pure addition)
+497b3140|2026-11-01T06:05:37-07:00|Merge branch &#x27;chore/narrative-assets-accuracy&#x27; into main — converge 9 at-risk commits (narrative/deck/GTM accuracy pass, web catalog)
+b2c98fc6|2026-11-01T06:05:25-07:00|Merge branch &#x27;bench/ws1-retrieval-modes-2026-10-31&#x27; into main — converge 4 at-risk commits (7-mode benchmark slices, corpus v2 manifest, scoring harness)</code></pre>
+<p>Eleven merges in two minutes and three seconds — 06:05:25 to 06:07:28 — each subject carrying its own at-risk count. Sum them: 4 + 9 + 1 + 5 + 2 + 2 + 1 + 3 + 1 = 28. That is a different population from the inventory&#x27;s 10, because it is a different set of branches: the inventory measured eight branches on 31 October, and by 1 November there were fourteen.</p>
+<p>This is the first place where the directive&#x27;s framing and the repository&#x27;s arithmetic diverge, and the divergence is not an error in either. <strong>10 → 3 → 0</strong> describes eight branches on 31 October. The 1 November merges drained a larger set. Both are true; they are answers to different questions asked on different days.</p>
+<h4>The measurement, now</h4>
+<pre><code>$ git fetch --all --prune
+$ git rev-parse origin/main
+2ea4492209dfaae6afb22ca884132a0d1849bfcf
+
+$ for b in $(git for-each-ref --format=&#x27;%(refname:short)&#x27; refs/remotes/origin \
+             | grep -v &#x27;origin/HEAD&#x27; | sed &#x27;s|origin/||&#x27; | grep -v &#x27;^main$&#x27;); do
+    read behind ahead &lt;&lt;&lt; $(git rev-list --left-right --count origin/main...origin/$b)
+    printf &quot;%-52s ahead=%s behind=%s\n&quot; &quot;$b&quot; &quot;$ahead&quot; &quot;$behind&quot;
+  done
+bench/ws1-retrieval-modes-2026-10-31                 ahead=0 behind=36
+chore/cpp-sdk-surface-guard                          ahead=0 behind=45
+chore/finance-claims-check                           ahead=0 behind=42
+chore/launch-copy-accuracy                           ahead=0 behind=58
+chore/market-claims-consistency                      ahead=0 behind=40
+chore/narrative-assets-accuracy                      ahead=0 behind=31
+chore/perl-sdk-surface-guard                         ahead=0 behind=50
+chore/pricing-surface-accuracy                       ahead=0 behind=59
+chore/ruby-sdk-surface-guard                         ahead=0 behind=62
+chore/ux-docs-accuracy                               ahead=0 behind=46
+chore/ws1-rebuild-app-bundle-purge-jaysonai          ahead=0 behind=41
+docs/ws1-daily-reports-2026-10-31                    ahead=0 behind=66
+docs/ws1-owner-directive-2026-11-01                  ahead=1 behind=0
+docs/ws1-retire-jaysonai-hostname                    ahead=0 behind=55</code></pre>
+<p>Fourteen branches. Thirteen at <code>ahead=0</code>. <strong>One at <code>ahead=1</code>.</strong></p>
+<p>The <code>read behind ahead</code> order is load-bearing and the inventory says so in its own words:</p>
+<blockquote class="note">A <code>read behind ahead</code> order is required: <code>A...B</code> yields <em>behind</em> first (<code>main</code>-only commits), then <em>ahead</em>. Reading the pair the other way round inverts every number — worth stating because the first pass of this measurement did exactly that and produced a nonsense <code>ahead=120</code>.</blockquote>
+<p>That is a real defect, recorded by the run that made it, and it is the kind that survives because the output looks like a table. <code>ahead=120</code> is not obviously wrong; it is only wrong when you notice that 120 is the <em>behind</em> total from the same report.</p>
+<h4>The one that is left</h4>
+<p><code>docs/ws1-owner-directive-2026-11-01</code> is one commit ahead of <code>main</code> and zero behind. That commit is <code>06fa1220</code> — the owner directive itself, the document that commissioned this post.</p>
+<p>So the convergence is not 0. It is <strong>1</strong>, and the 1 is the directive. The inventory&#x27;s <code>TOTAL_AHEAD=0</code> was true of its own eight branches on its own day; it is not true of the repository on 1 November, and the difference is a document that was written after the inventory and never merged.</p>
+<p>This is worth stating plainly because it is the kind of fact a summary loses. A post that reported &quot;convergence achieved, 0 at-risk&quot; would be quoting a document correctly and describing the repository falsely. The repository has one at-risk commit, it is the commission, and it is one <code>git merge</code> from being safe.</p>
+<blockquote class="note"><strong>What broke.</strong> A staged replay was compressed into a result. The inventory said &quot;proven reachable, not proven achieved&quot; in §6 and &quot;zero branches ahead&quot; in §196, and the second sentence travelled further than the first.  <strong>What we learned.</strong> A simulation and a measurement produce the same table and mean different things. When a report contains both, the qualifier has to travel with the number or the number becomes a claim about a state that was never reached. The repair is not to delete the arrow — the replay was correct and useful — but to keep the sentence that says which kind of zero it is. <strong>A zero is only a measurement if something was measured.</strong></blockquote>
+<h4>The branch that was rewritten out of existence</h4>
+<p>The inventory&#x27;s §5 records a finding that belongs in this post&#x27;s failure thread because it is a data-integrity issue rather than a bookkeeping one:</p>
+<blockquote class="note"><strong><code>-5</code> — the branch was rewritten, not extended.</strong> The stated head <code>1df637d6…</code> <strong>does not exist in the repository</strong>. <code>git cat-file -t 1df637d6</code> returns nothing; the branch head is now <code>de37968ac72cb89e9dd555bb67923220e959a260</code>. Those 5 commits are not &quot;still unmerged&quot; — they were force-pushed away and replaced by a single squashed commit. <strong>The assignment&#x27;s count could not be reproduced because the history it measured no longer exists.</strong></blockquote>
+<p>Five commits were force-pushed away. They are not recoverable from the repository, and the report says so rather than reporting the new number as if it were the old one. That distinction — &quot;unreproducible&quot; versus &quot;outdated&quot; — is the difference between a measurement and a guess, and the report draws it explicitly.</p>
+<p>The same section records the opposite error in the other direction:</p>
+<blockquote class="note"><strong><code>+1</code> — the rebuild branch gained a commit.</strong> <code>faf9cef3</code> (FAQ source fix) was pushed on top of <code>67f7e185</code> (bundle rebuild) after the assignment&#x27;s measurement. The two commits also carry <strong>conflicting intent</strong>: <code>faf9cef3</code>&#x27;s own message says the regenerated bundle is <em>not</em> in the commit, while <code>67f7e185</code> adds it. Whichever lands last wins.</blockquote>
+<p>Two commits on one branch, each asserting the opposite about whether a build artifact is included. The report&#x27;s finding 5 says what to do about it — &quot;Verify which bundle ends up in <code>docs/app/assets/</code> before the site rebuilds — a wrong answer here 404s the live app&quot; — and that is the correct instruction, because the commit messages cannot settle it. Only the tree can.</p>
+    <div class="pager"><a href="011.html">&larr; 011 &middot; The commit that says 162 and landed 155</a><a href="013.html">013 &middot; 270 tools, 27 domains, and the number that is ed &rarr;</a></div>
+  </div>
+</section>
+<footer>
+  <div class="wrap foot-in">
+    <div class="foot-links">
+      <a href="../">All series</a>
+      <a href="../comic/">The Comicbook Artist</a>
+      <a href="../chronicles/">Chronicles</a>
+      <a href="https://mem20.com/">mem20.com</a>
+    </div>
+    <p class="foot-note">
+      Mem20-naration's Chronicles &middot; a mem20 series<br>
+      Published from <span class="mono">docs/series/</span> on GitHub Pages
+    </p>
+  </div>
+</footer>
+</body>
+</html>

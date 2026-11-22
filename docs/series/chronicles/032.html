@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>032: The gate that was never built: dated-record exclusion — Mem20-naration&#x27;s Chronicles</title>
+<meta name="description" content="Chronicle installment 032, 2026-11-21. The gate that was never built: dated-record exclusion">
+<meta property="og:title" content="032: The gate that was never built: dated-record exclusion — Mem20-naration&#x27;s Chronicles">
+<meta property="og:description" content="Chronicle installment 032, 2026-11-21. The gate that was never built: dated-record exclusion">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://mem20.com/series/chronicles/032.html">
+<link rel="canonical" href="https://mem20.com/series/chronicles/032.html">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../series.css">
+<script src="../analytics.js" defer></script>
+</head>
+<body>
+<nav>
+  <div class="wrap nav-in">
+    <a class="logo" href="https://mem20.com/"><span class="logo-mark">m</span> mem20</a>
+    <div class="nav-links">
+      <a href="../">Series</a>
+      <a href="../comic/">The Comicbook Artist</a>
+      <a href="../chronicles/" class="on">Chronicles</a>
+    </div>
+    <a class="btn btn-primary btn-sm" href="feed.xml">RSS</a>
+  </div>
+</nav>
+
+<header class="s-hero chron-hero">
+  <div class="wrap">
+    <div class="inner">
+      <p class="eyebrow">Mem20-naration's Chronicles &middot; Installment 032</p>
+      <h1>The gate that was never built: dated-record exclusion</h1>
+      <div class="badges" style="margin-top:20px">
+        <span class="badge">2026-11-21</span>
+        <span class="tag grounded">grounded</span>
+        <span class="badge">1374 words</span>
+      </div>
+      <div class="cta-row">
+        <a class="btn btn-ghost" href="./">All installments</a>
+        <a class="btn btn-ghost" href="feed.xml">RSS</a>
+      </div>
+    </div>
+  </div>
+</header>
+
+<section>
+  <div class="wrap reader">
+    <p class="note"><strong>Origin: grounded.</strong> This installment reports what the repository
+      actually did in its window. Every figure in it was measured against the tree, and the chapter
+      names the file or command it came from. Where it could not stand behind something, it says so
+      in its own text rather than smoothing it over.</p>
+    <p>The second open question was whether anything prevents a dated record from being rewritten after publication. The previous instalment had found two cases where it happened. The question is whether a gate exists that would catch the next one.</p>
+<p>The answer is again no, but the trail is more interesting, because there <em>is</em> a rule, written down, in two places, and there is a fix that was applied to the wrong layer.</p>
+<h4>4.1 The rule, as written</h4>
+<p><code>scripts/sweep-tool-counts.py</code> carries this docstring:</p>
+<pre><code>Append-only / dated records keep their historical numbers, because rewriting
+them would falsify the record rather than correct it:
+
+  CHANGELOG.md                  history of earlier reconciles
+  published/**                  immutable delivery archive (MANIFEST-pinned)
+  published/daily-reports/*.md  dated ops logs
+  docs/audit/*.md               dated audits
+  docs/recon/**                 the stale-file inventory and its evidence
+  docs/ops/metrics.json         dated issue titles / branch names
+  .sitemap/sitemap.json         generated snapshot
+  toolchest/inventory.json      generated snapshot
+  **/*.patch, bench/optionc     captured diffs of past states
+  &quot;older docs quote 258-260&quot;    sentences that describe the retired value</code></pre>
+<p>That is a correct and complete statement of the rule. It is also, as the commit that added half of it says, a statement the code did not implement.</p>
+<h4>4.2 The fix that came too late</h4>
+<p><code>0eab51ad</code>, 7 November 2026, subject <em>&quot;fix(sweep): stop rewriting the immutable archive and dated records&quot;</em>:</p>
+<pre><code>The sweep&#x27;s own docstring says append-only records keep their historical
+numbers, but its skip list was incomplete: it rewrote published/** (breaking
+published/MANIFEST.tsv, which has no generator in the repo), .sitemap/,
+docs/ops/metrics.json (dated issue titles) and the recon inventory&#x27;s own
+evidence strings. Add them to the skip list and mirror the new allowlist
+entries in the inventory generator.</code></pre>
+<p>Two files changed, 26 insertions and 1 deletion. The diff adds <code>published/</code> and <code>docs/recon/</code> to <code>SKIP_PREFIXES</code>, and four paths to <code>SKIP_FILES</code>:</p>
+<pre><code>+    &quot;.sitemap/sitemap.json&quot;,                            # generated snapshot
++    &quot;docs/ops/metrics.json&quot;,                            # dated issue titles / branch names
++    &quot;docs/recon/stale-file-inventory-2026-11-07.json&quot;,  # inventory evidence strings
++    &quot;toolchest/inventory.json&quot;,                         # generated snapshot (306 entries)</code></pre>
+<p>And the comment above the prefix list:</p>
+<pre><code>+    # published/ is the immutable delivery archive, integrity-pinned by
++    # published/MANIFEST.tsv (per-file sha-256) and governed by
++    # published/README.md rule 3 (&quot;never edit a preserved file in place&quot;).
++    # There is no manifest generator in the repo, so rewriting a preserved file
++    # breaks the manifest permanently. The sweep must not touch it.
++    &quot;published/&quot;,</code></pre>
+<p>Every sentence of that comment is true. <code>published/</code> is the immutable archive. It is pinned by <code>MANIFEST.tsv</code>. Rule 3 of <code>published/README.md</code> says never edit a preserved file in place. And rewriting a preserved file does break the manifest.</p>
+<p>The comment also contains a claim that is false: <em>&quot;There is no manifest generator in the repo.&quot;</em> There is one. <code>scripts/gen_manifest.py</code> exists, has a <code>--check</code> mode, and its docstring says:</p>
+<pre><code>The manifest is a claim: for every file under published/, this many bytes and
+this SHA-256. It was maintained by hand, and by 2026-11-01 thirty-two of its
+128 rows were wrong -- unchanged across four separate measurements, because
+nothing regenerated it and nothing checked it.
+
+This script is both halves:
+
+    python3 scripts/gen_manifest.py            # rewrite the manifest
+    python3 scripts/gen_manifest.py --check    # exit 1 if any row is wrong</code></pre>
+<p>So the fix was written on a false premise — that the manifest could not be regenerated, and therefore that any edit to <code>published/</code> was permanent damage. The premise was wrong, but the conclusion was right: the sweep should not touch the archive. A correct rule resting on an incorrect reason is still a correct rule, and it is also a rule that will be re-litigated by the next person who reads the comment and discovers the generator exists.</p>
+<h4>4.3 The fix did not prevent the next rewrite</h4>
+<p><code>0eab51ad</code> landed on 7 November. The 18 November sweep (<code>0cd80344</code>) rewrote four dated records anyway.</p>
+<p>The reason is visible in the repository and it is not a bug in the skip list. <code>scripts/sweep-tool-counts.py</code> is not invoked by any workflow. <code>grep -rn &#x27;sweep-tool-counts\|stale-file-inventory&#x27; .github/workflows/</code> returns nothing. The script is a tool a human runs by hand, and the 18 November commit was not that script running — it was a hand-run find-and-replace across the working tree, with a commit subject that says so: <em>&quot;Replace 3.1.2 with 4.0.0 across repository and include pending workspace changes&quot;</em>.</p>
+<p>A skip list protects against the tool that reads it. It does not protect against a different tool, or against a human with <code>sed</code>.</p>
+<h4>4.4 The other half of the rule</h4>
+<p><code>scripts/ops/check-doc-counts.py</code> is the one gate in the repository that explicitly reasons about dated records. Its exclusion list:</p>
+<pre><code>EXCLUDE_PREFIXES = (
+    &quot;published/&quot;,          # immutable delivery archive (MANIFEST-pinned)
+    &quot;docs/audit/&quot;,         # dated audits
+    &quot;docs/recon/&quot;,         # stale-file inventory + evidence
+    &quot;docs/ops/&quot;,           # dated ops logs
+    &quot;docs/app/narrative/&quot;, # dated serials
+    &quot;docs/app/deck/&quot;,      # dated deck records
+    &quot;docs/renovation/&quot;,    # in-flight 4.0 overhaul
+    &quot;ops/&quot;,                # dated ops records
+    &quot;.sitemap/&quot;,           # generated snapshot
+)
+EXCLUDE_FILES = {
+    &quot;CHANGELOG.md&quot;,        # history of earlier reconciles
+    &quot;DIARY.md&quot;,            # dated diary
+    &quot;failures.md&quot;,         # dated failure log
+    &quot;AbsoluteTruth113.md&quot;, # dated audit narrative
+    &quot;toolchest/inventory.json&quot;,  # generated snapshot
+}</code></pre>
+<p>This is the most complete statement of the dated-record rule in the repository, and it is correct. The gate excludes every dated record from its scan, because a dated record is allowed to contain a retired number — that is what makes it a record.</p>
+<p>But exclusion from a count check is not protection from a rewrite. The gate&#x27;s purpose is to fail when a <em>live</em> doc carries a retired tool count. It says nothing about whether a <em>dated</em> doc has been altered. A dated record could be rewritten from top to bottom and <code>check-doc-counts.py</code> would pass, because it never looks at it.</p>
+<p>Running it confirms the gate works as designed:</p>
+<pre><code>$ python3 scripts/ops/check-doc-counts.py --self-test
+SELF-TEST OK: 5 seeded line(s) caught, 4 clean line(s) passed
+
+$ python3 scripts/ops/check-doc-counts.py
+live pin: 487 tools / 129 domains
+scanned: 85 live doc(s)
+OK: no retired tool/domain band in any live doc</code></pre>
+<p>Eighty-five live docs scanned, zero violations. The gate is healthy. It is also, by construction, blind to the exact failure the previous instalment documented.</p>
+<h4>4.5 The verdict</h4>
+<p><strong>No dated-record-exclusion gate exists.</strong> What exists is:</p>
+<ul><li>a skip list in <code>scripts/sweep-tool-counts.py</code>, which is not invoked by CI and which protects only</li></ul>
+<p>against that one script;</p>
+<ul><li>an exclusion list in <code>scripts/ops/check-doc-counts.py</code>, which correctly excludes dated records from a</li></ul>
+<p>count check and therefore cannot detect their alteration;</p>
+<ul><li>a <code>--check</code> mode in <code>scripts/gen_manifest.py</code> that <em>would</em> detect byte changes under <code>published/</code>, and</li></ul>
+<p>which is not invoked by any workflow.</p>
+<p>The third is the closest thing to a real gate, and it is not wired up. Running it by hand:</p>
+<pre><code>$ python3 scripts/gen_manifest.py --check
+  MISMATCH published/README.md
+  MISMATCH .../mem20-ruby-sdk/CHANGELOG.md
+  ... (10 total)
+  UNLISTED published/checkpoints/ledger.md
+  ... (10 total)
+::error::published/MANIFEST.tsv does not describe the tree</code></pre>
+<p>Ten mismatches, ten unlisted files, 129 manifest rows against 172 files present. The archive&#x27;s integrity claim has been false for some time, and the only tool that can say so is not run automatically.</p>
+<p><strong>What broke.</strong> A rule was written down in a docstring, implemented in a skip list, and then bypassed by a different tool. A second gate excluded dated records from its scan for the right reason and thereby became incapable of noticing their alteration. A third tool could have caught it and was never wired up.</p>
+<p><strong>What we learned.</strong> A skip list is a promise a tool makes to itself. It is not a gate. The only thing that would catch a rewrite of a dated record is a check that compares the record against the commit that first published it — <code>git diff $(git log --diff-filter=A --format=%H -- &quot;$f&quot; | tail -1) HEAD -- &quot;$f&quot;</code> — and no such check exists in this repository. The audit in §5 is that check, run by hand, once.</p>
+    <div class="pager"><a href="031.html">&larr; 031 &middot; The gate that was never built: tag monotonicity</a><a href="033.html">033 &middot; The audit: every delivered document against its  &rarr;</a></div>
+  </div>
+</section>
+<footer>
+  <div class="wrap foot-in">
+    <div class="foot-links">
+      <a href="../">All series</a>
+      <a href="../comic/">The Comicbook Artist</a>
+      <a href="../chronicles/">Chronicles</a>
+      <a href="https://mem20.com/">mem20.com</a>
+    </div>
+    <p class="foot-note">
+      Mem20-naration's Chronicles &middot; a mem20 series<br>
+      Published from <span class="mono">docs/series/</span> on GitHub Pages
+    </p>
+  </div>
+</footer>
+</body>
+</html>

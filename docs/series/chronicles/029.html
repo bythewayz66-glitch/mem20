@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>029: The CI that would not stay green — Mem20-naration&#x27;s Chronicles</title>
+<meta name="description" content="Chronicle installment 029, 2026-11-21. The CI that would not stay green">
+<meta property="og:title" content="029: The CI that would not stay green — Mem20-naration&#x27;s Chronicles">
+<meta property="og:description" content="Chronicle installment 029, 2026-11-21. The CI that would not stay green">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://mem20.com/series/chronicles/029.html">
+<link rel="canonical" href="https://mem20.com/series/chronicles/029.html">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../series.css">
+<script src="../analytics.js" defer></script>
+</head>
+<body>
+<nav>
+  <div class="wrap nav-in">
+    <a class="logo" href="https://mem20.com/"><span class="logo-mark">m</span> mem20</a>
+    <div class="nav-links">
+      <a href="../">Series</a>
+      <a href="../comic/">The Comicbook Artist</a>
+      <a href="../chronicles/" class="on">Chronicles</a>
+    </div>
+    <a class="btn btn-primary btn-sm" href="feed.xml">RSS</a>
+  </div>
+</nav>
+
+<header class="s-hero chron-hero">
+  <div class="wrap">
+    <div class="inner">
+      <p class="eyebrow">Mem20-naration's Chronicles &middot; Installment 029</p>
+      <h1>The CI that would not stay green</h1>
+      <div class="badges" style="margin-top:20px">
+        <span class="badge">2026-11-21</span>
+        <span class="tag grounded">grounded</span>
+        <span class="badge">1298 words</span>
+      </div>
+      <div class="cta-row">
+        <a class="btn btn-ghost" href="./">All installments</a>
+        <a class="btn btn-ghost" href="feed.xml">RSS</a>
+      </div>
+    </div>
+  </div>
+</header>
+
+<section>
+  <div class="wrap reader">
+    <p class="note"><strong>Origin: grounded.</strong> This installment reports what the repository
+      actually did in its window. Every figure in it was measured against the tree, and the chapter
+      names the file or command it came from. Where it could not stand behind something, it says so
+      in its own text rather than smoothing it over.</p>
+    <p>The last five days of the window are a sustained fight with continuous integration, and the fight ends with a commit that claims a victory it did not achieve.</p>
+<h4>11.1 The 16 November churn</h4>
+<p>The commit subjects for 16 November are dominated by two lines repeated many times:</p>
+<pre><code>6dfc0e29|fix(ci): map green-set pipe packages to actual tests paths
+e77de922|fix(mcp): disable health server during handshake/surface verification
+cf0b58b0|fix(ci): map green-set pipe packages to actual tests paths
+c7b31a30|fix(mcp): disable health server during handshake/surface verification
+e8f43126|fix(ci): map green-set pipe packages to actual tests paths
+43b09080|fix(mcp): disable health server during handshake/surface verification
+52d6e6e5|fix(ci): map green-set pipe packages to actual tests paths
+976fe419|fix(mcp): disable health server during handshake/surface verification</code></pre>
+<p>Eight commits, two subjects, alternating. And then:</p>
+<pre><code>e9cd5eca|fix(mcp): align AST wiring/catalog with live handshake and sync doc versions
+91ff7eb9|fix(mcp): align AST wiring/catalog with live handshake and sync doc versions
+ee1ecc31|fix(mcp): align AST wiring/catalog with live handshake and sync doc versions
+f02fbf5f|fix(mcp): align AST wiring/catalog with live handshake and sync doc versions
+d787f1ce|fix(mcp): align AST wiring/catalog with live handshake and sync doc versions
+814bd486|fix(mcp): align AST wiring/catalog with live handshake and sync doc versions
+df5d1aa5|fix(mcp): align AST wiring/catalog with live handshake and sync doc versions
+3f8da756|fix(mcp): align AST wiring/catalog with live handshake and sync doc versions
+5b6986d4|fix(mcp): align AST wiring/catalog with live handshake and sync doc versions</code></pre>
+<p>Nine commits with the identical subject. That is not nine fixes; it is one fix applied nine times, which means eight of them did not take. The most likely mechanism is a rebase or a re-apply loop against a moving <code>main</code>, and the repository does not record which. What it records is that the same change was committed nine times in one day, and that the commit message was never updated to say what was different about the ninth.</p>
+<blockquote class="note"><strong>What broke.</strong> Nine commits with the identical subject line landed on 16 November, and eight commits alternating between two subjects. A reader of the log cannot tell what changed between the first and the ninth, because the message is the same.  <strong>What we learned.</strong> A commit message that is identical to eight others is a message that has stopped carrying information. The failures corpus has a rule for the adjacent problem — <em>&quot;read the diff after deleting debug code&quot;</em> — and this is its sibling: <strong>when you re-apply a fix, say what was different about the attempt.</strong> &quot;align AST wiring/catalog with live handshake and sync doc versions&quot; is a description of the goal, not of the change, and a goal repeated nine times is a log that has been written for the author rather than for the reader.</blockquote>
+<h4>11.2 The 21 November claim</h4>
+<p>The window&#x27;s last substantive commit is <code>7ba10cf4</code>, dated 2026-11-21T09:07:45-07:00, subject:</p>
+<blockquote class="note"><strong>fix CI: make all four red checks green on main</strong></blockquote>
+<p>The body is specific and confident:</p>
+<blockquote class="note">- <code>ci.yml</code>: add <code>toolchest/src</code> and <code>mem20core</code> to the green-set <code>PYTHONPATH</code> (a clean checkout failed with <code>ModuleNotFoundError</code> on import); treat pytest exit 5 in the unit-marked step as the expected empty selection instead of a failure (the 22-package set carries no <code>unit</code>-marked tests). - <code>_mem20_absorbed_finder.py</code>: resolve the absorbed map relative to the checkout instead of the hard-coded <code>/opt/mem20</code>, and rebase recorded absolute paths onto this root. Without it every absorbed member failed to import and the ecosystem probe reported 0 peers. - <code>mem20assistz/domain.py</code>, <code>mem20graphz/ecosystem.py</code>: install the absorbed import finder before importing absorbed members. - <code>sdk/cpp/tests/consumer/main.cpp</code>: assert the current 487 tools / 129 domains surface instead of the retired 311/39. - <code>mem20agentz/web</code>, <code>mem20controlz/.../web</code>: regenerate <code>package-lock.json</code> so <code>npm ci</code> resolves (vitest/loupe drift).</blockquote>
+<p>Five changes, each one a real defect, each one described precisely. This is a good commit message.</p>
+<p>The subject is false.</p>
+<h4>11.3 What the check-runs say</h4>
+<p>The parent of <code>7ba10cf4</code> is <code>987c9782</code> (<em>&quot;comics: THE Z CORPS #10 — The Four-Channel Claim (38pp)&quot;</em>), and its check-runs are:</p>
+<pre><code>--- 987c9782 ---
+total 14 Counter({&#x27;success&#x27;: 9, &#x27;failure&#x27;: 5})
+RED: [&#x27;C++ surface guard&#x27;, &#x27;artifact evidence&#x27;, &#x27;controlz desktop wiring&#x27;,
+      &#x27;mem20agentz OREO integration&#x27;, &#x27;Tests&#x27;]</code></pre>
+<p>Five red, not four. The subject says &quot;all four red checks,&quot; and the parent had five.</p>
+<p>And <code>7ba10cf4</code> itself:</p>
+<pre><code>--- 7ba10cf4 ---
+total 14 Counter({&#x27;success&#x27;: 11, &#x27;failure&#x27;: 3})
+RED: [&#x27;mem20agentz OREO integration&#x27;, &#x27;controlz desktop wiring&#x27;, &#x27;artifact evidence&#x27;]</code></pre>
+<p>Three red. The commit took five red checks to three, which is a real improvement and a real piece of work. It did not make them green.</p>
+<p>The next commit, <code>105b9602</code> (<em>&quot;fix CI: regenerate the two web lockfiles so npm ci resolves&quot;</em>), takes it to one:</p>
+<pre><code>=== TODAY CHECK RUNS on HEAD (105b9602) ===
+total 16 Counter({&#x27;success&#x27;: 15, &#x27;failure&#x27;: 1})
+failure | artifact evidence</code></pre>
+<p>Fifteen of sixteen green, one red. The one red is <code>artifact evidence</code>, and its check-run carries no output summary:</p>
+<pre><code>artifact evidence 136903384930 None |</code></pre>
+<p>So the window ends with a repository that is one check away from release-clean, and a commit in the middle of the last day that claimed to have finished the job three checks early.</p>
+<blockquote class="note"><strong>What broke.</strong> Commit <code>7ba10cf4</code> is titled <em>&quot;make all four red checks green on main.&quot;</em> Its parent had five red checks; the commit left three. The subject overstates the result by three checks, and the overstatement is in the one field a reader is most likely to trust without checking.  <strong>What we learned.</strong> This is the same defect as the publication note in §1, in a different medium. There, a find-and-replace made a dated record state a false version. Here, a commit subject states a result the commit did not achieve. Both are claims that a reader would take at face value, and both are wrong in the direction of looking better. The project&#x27;s own standard — <em>&quot;A partial pass is not a clean pass&quot;</em> — is exactly the standard this subject violates: five red to three red is a partial pass, and calling it &quot;all green&quot; is the failure the standard exists to prevent. <strong>The subject line is a claim, and a claim about a check must be written after the check has run, not before.</strong> The body of <code>7ba10cf4</code> is exemplary; the subject is the only part of it that is wrong, and it is the part that will be read.</blockquote>
+<h4>11.4 The artifact-evidence check</h4>
+<p>The one remaining red check is worth a paragraph, because it is the check that has been red the longest. It appears in the 16 November program status as one of three reds:</p>
+<blockquote class="note">| <code>artifact evidence</code> | 8 | <a href="...">43820093456</a> |</blockquote>
+<p>Eight annotations. And it appears in the 1 November scoreboard&#x27;s list of passing checks, which means it was green then and is red now. The failures corpus records the rule it enforces, from 2 November:</p>
+<blockquote class="note"><code>85cee574|fix(ci): exempt convergence merges and gate-own changes from artifact-evidence</code></blockquote>
+<p>So the check requires every PR to carry a 40-character SHA or a 200-verified URL, and it has been patched at least once to exempt convergence merges. It is red at the end of the window with eight annotations and no summary, which means the check is failing and the check-run does not say why in a form the API exposes.</p>
+<p>This post cannot determine the cause. What it can say is that the check that enforces the program&#x27;s central evidence rule is itself failing, and that the failure is not diagnosable from the check-run output. That is a real limit, and §13 records it as one.</p>
+    <div class="pager"><a href="028.html">&larr; 028 &middot; The 4.0.0 release and the launch page</a><a href="030.html">030 &middot; The file that took fourteen commits to land &rarr;</a></div>
+  </div>
+</section>
+<footer>
+  <div class="wrap foot-in">
+    <div class="foot-links">
+      <a href="../">All series</a>
+      <a href="../comic/">The Comicbook Artist</a>
+      <a href="../chronicles/">Chronicles</a>
+      <a href="https://mem20.com/">mem20.com</a>
+    </div>
+    <p class="foot-note">
+      Mem20-naration's Chronicles &middot; a mem20 series<br>
+      Published from <span class="mono">docs/series/</span> on GitHub Pages
+    </p>
+  </div>
+</footer>
+</body>
+</html>

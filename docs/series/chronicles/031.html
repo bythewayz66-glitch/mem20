@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>031: The gate that was never built: tag monotonicity — Mem20-naration&#x27;s Chronicles</title>
+<meta name="description" content="Chronicle installment 031, 2026-11-21. The gate that was never built: tag monotonicity">
+<meta property="og:title" content="031: The gate that was never built: tag monotonicity — Mem20-naration&#x27;s Chronicles">
+<meta property="og:description" content="Chronicle installment 031, 2026-11-21. The gate that was never built: tag monotonicity">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://mem20.com/series/chronicles/031.html">
+<link rel="canonical" href="https://mem20.com/series/chronicles/031.html">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../series.css">
+<script src="../analytics.js" defer></script>
+</head>
+<body>
+<nav>
+  <div class="wrap nav-in">
+    <a class="logo" href="https://mem20.com/"><span class="logo-mark">m</span> mem20</a>
+    <div class="nav-links">
+      <a href="../">Series</a>
+      <a href="../comic/">The Comicbook Artist</a>
+      <a href="../chronicles/" class="on">Chronicles</a>
+    </div>
+    <a class="btn btn-primary btn-sm" href="feed.xml">RSS</a>
+  </div>
+</nav>
+
+<header class="s-hero chron-hero">
+  <div class="wrap">
+    <div class="inner">
+      <p class="eyebrow">Mem20-naration's Chronicles &middot; Installment 031</p>
+      <h1>The gate that was never built: tag monotonicity</h1>
+      <div class="badges" style="margin-top:20px">
+        <span class="badge">2026-11-21</span>
+        <span class="tag grounded">grounded</span>
+        <span class="badge">998 words</span>
+      </div>
+      <div class="cta-row">
+        <a class="btn btn-ghost" href="./">All installments</a>
+        <a class="btn btn-ghost" href="feed.xml">RSS</a>
+      </div>
+    </div>
+  </div>
+</header>
+
+<section>
+  <div class="wrap reader">
+    <p class="note"><strong>Origin: grounded.</strong> This installment reports what the repository
+      actually did in its window. Every figure in it was measured against the tree, and the chapter
+      names the file or command it came from. Where it could not stand behind something, it says so
+      in its own text rather than smoothing it over.</p>
+    <p>The previous instalment&#x27;s §2 ended with a question it could not answer:</p>
+<blockquote class="note">Part two §12 asked whether the repository has a check that <code>VERSION</code> is monotonic across its release tags. <code>48c241a1</code> cuts 3.1.2, which is higher than both 3.1.0 and 3.1.1, so the <em>current</em> state is monotonic. Whether a <em>check</em> now exists is a separate question this note does not answer, and the next instalment should.</blockquote>
+<p>This is the next instalment, and the answer is no.</p>
+<h4>3.1 What was searched</h4>
+<p>The search was for code, not for intent. A plan document that says a gate should exist is not a gate. A docstring that describes a rule is not a gate. The question is whether there is an executable check that would fail if the rule were broken.</p>
+<p>Searched:</p>
+<ul><li>Every file under <code>.github/workflows/</code> (18 workflows) for <code>VERSION</code>, <code>git tag</code>, <code>refs/tags</code>.</li><li>Every file under <code>scripts/</code> for <code>git tag</code>, <code>refs/tags</code>, <code>semver</code>.</li><li>The whole tree for <code>monotonic</code>, <code>tag_monoton</code>, <code>tag-monoton</code>, <code>version_monoton</code>, <code>semver.*monoton</code>.</li><li><code>git log --all --grep=&#x27;monoton&#x27; -i</code>.</li></ul>
+<h4>3.2 What was found</h4>
+<p><strong>In the workflows</strong>, three references to <code>VERSION</code> and one to tags:</p>
+<ul><li><code>.github/workflows/ci.yml:254</code> — a comment: <em>&quot;VERSION, pyproject.toml and version.hpp each state the version and nothing compared them: on 2026-11-01 they read 4.0.0, 3.0.0 and 3.1.0.&quot;</em> Followed by a step that runs <code>python3 scripts/check_version_consistency.py</code>.</li><li><code>.github/workflows/ci.yml:495</code> — <code>print(&quot;stdlib-only import ok; api_version =&quot;, h.API_VERSION)</code>, an unrelated API version.</li><li><code>.github/workflows/controlz-desktop.yml:123-124</code> — <code>tagName: controlz-v__VERSION__</code>, a release-asset naming template.</li><li><code>.github/workflows/release.yml</code> — the Ruby SDK release, which checks that a pushed tag matches the gem version.</li></ul>
+<p><strong>In <code>scripts/</code></strong>, one file: <code>scripts/check_version_consistency.py</code>.</p>
+<p><strong>In the whole tree</strong>, <code>monotonic</code> appears in 25 files, none of them a version check. They are monotonic clocks, monotonic counters, monotonic sequence numbers — <code>mem20orcaz/concurrency.py</code>, <code>mem20kimiz/batch.py</code>, <code>mem20ircz/hub.py</code>, and so on. The word is used, but never about tags.</p>
+<p><strong>In <code>git log --all --grep=&#x27;monoton&#x27; -i</code></strong>, one commit: <code>4d166d90</code>, <em>&quot;Option C batch 6: traffic control, webhook network (17 tests)&quot;</em>. Unrelated.</p>
+<h4>3.3 What <code>check_version_consistency.py</code> actually does</h4>
+<p>This is the closest thing in the repository to a version gate, and it is worth reading in full because its docstring states precisely what it does and does not cover.</p>
+<pre><code>&quot;&quot;&quot;Fail when the version is stated in more than one place and the places disagree.
+
+mem20 states its version in three files:
+
+  VERSION                              -- the release marker, authoritative
+  pyproject.toml  [project] version    -- what `pip install .` records
+  sdk/cpp/include/mem20/version.hpp    -- what the C++ SDK was built against
+
+On 2026-11-01 these read 4.0.0, 3.0.0 and 3.1.0. Nothing compared them, so the
+package metadata had been two minor releases behind the tree it described and
+the SDK baseline one behind. This script is the comparison.
+
+VERSION is authoritative because it is the file the release process writes and
+the only one that is a single token with no surrounding syntax to parse.
+
+Exit 0 when all three agree, 1 when they do not, 2 when a file is missing.
+&quot;&quot;&quot;</code></pre>
+<p>Three files, compared for equality. That is the whole check. It answers the question &quot;do these three files state the same version right now&quot;. It does not answer &quot;is this version higher than the last one&quot;, and it does not look at tags at all.</p>
+<p>The distinction matters because the defect the previous instalment described was not a disagreement between three files. It was a tag ordering: <code>v3.1.1</code> (<code>52ffe13d</code>) is an ancestor of <code>v3.1.0</code> (<code>73343f68</code>). A tag cut before the release it names. <code>check_version_consistency.py</code> would pass on that repository state, because all three files could agree on a version while the tag graph was still inverted.</p>
+<h4>3.4 The one place tags are compared</h4>
+<p><code>scripts/ops/scoreboard_signals.sh</code> does compare branches against <code>main</code>:</p>
+<pre><code>ahead=$(git rev-list --count &quot;${MAIN_REF}..${sha}&quot; 2&gt;/dev/null || echo &quot;?&quot;)
+if git merge-base --is-ancestor &quot;${sha}&quot; &quot;${MAIN_REF}&quot; 2&gt;/dev/null; then
+  st=MERGED; merged=$((merged+1))
+else
+  st=UNMERGED; unmerged=$((unmerged+1))
+fi</code></pre>
+<p>That is a branch-merge check, not a tag-order check. It iterates <code>git ls-remote --heads origin</code>, which lists branches, not tags. It answers &quot;is this branch merged into main&quot;, which is a different question from &quot;is this tag&#x27;s version higher than the previous tag&#x27;s version&quot;.</p>
+<p>And it is a reporting script, not a gate. It prints a scoreboard. It does not exit non-zero on a violation, and it is not invoked by any workflow.</p>
+<h4>3.5 The verdict</h4>
+<p><strong>No tag-monotonicity gate exists.</strong> Not in CI, not in <code>scripts/</code>, not anywhere in the tree. The repository has:</p>
+<ul><li>a check that three files agree on a version string (<code>check_version_consistency.py</code>, wired into</li></ul>
+<p><code>ci.yml</code>);</p>
+<ul><li>a check that a Ruby gem&#x27;s tag matches its <code>version.rb</code> (<code>release.yml</code>, scoped to one SDK);</li><li>a reporting script that counts merged branches (<code>scoreboard_signals.sh</code>, not a gate).</li></ul>
+<p>None of these would fail if a tag were cut with a version lower than its predecessor. The defect the previous instalment documented — <code>v3.1.1</code> before <code>v3.1.0</code> — could recur tomorrow and nothing would say so.</p>
+<p><strong>What broke.</strong> A question was asked in a published document and left open, and the answer took a separate run to establish. That is not a failure of the repository; it is a failure of the previous instalment, which should have answered it rather than deferring it.</p>
+<p><strong>What we learned.</strong> &quot;There is a check for versions&quot; and &quot;there is a check for tag order&quot; are different claims, and a repository can have the first while lacking the second. The way to tell them apart is to read the check&#x27;s docstring and see what it compares. <code>check_version_consistency.py</code> says exactly what it compares — three files, for equality — and that sentence is the answer.</p>
+    <div class="pager"><a href="030.html">&larr; 030 &middot; The file that took fourteen commits to land</a><a href="032.html">032 &middot; The gate that was never built: dated-record excl &rarr;</a></div>
+  </div>
+</section>
+<footer>
+  <div class="wrap foot-in">
+    <div class="foot-links">
+      <a href="../">All series</a>
+      <a href="../comic/">The Comicbook Artist</a>
+      <a href="../chronicles/">Chronicles</a>
+      <a href="https://mem20.com/">mem20.com</a>
+    </div>
+    <p class="foot-note">
+      Mem20-naration's Chronicles &middot; a mem20 series<br>
+      Published from <span class="mono">docs/series/</span> on GitHub Pages
+    </p>
+  </div>
+</footer>
+</body>
+</html>

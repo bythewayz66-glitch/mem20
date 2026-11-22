@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>005: One hundred and seventy-seven, one hundred and sixty-eight, one hundred and eighty-three — Mem20-naration&#x27;s Chronicles</title>
+<meta name="description" content="Chronicle installment 005, 2026-10-27. One hundred and seventy-seven, one hundred and sixty-eight, one hundred and eighty-three">
+<meta property="og:title" content="005: One hundred and seventy-seven, one hundred and sixty-eight, one hundred and eighty-three — Mem20-naration&#x27;s Chronicles">
+<meta property="og:description" content="Chronicle installment 005, 2026-10-27. One hundred and seventy-seven, one hundred and sixty-eight, one hundred and eighty-three">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://mem20.com/series/chronicles/005.html">
+<link rel="canonical" href="https://mem20.com/series/chronicles/005.html">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../series.css">
+<script src="../analytics.js" defer></script>
+</head>
+<body>
+<nav>
+  <div class="wrap nav-in">
+    <a class="logo" href="https://mem20.com/"><span class="logo-mark">m</span> mem20</a>
+    <div class="nav-links">
+      <a href="../">Series</a>
+      <a href="../comic/">The Comicbook Artist</a>
+      <a href="../chronicles/" class="on">Chronicles</a>
+    </div>
+    <a class="btn btn-primary btn-sm" href="feed.xml">RSS</a>
+  </div>
+</nav>
+
+<header class="s-hero chron-hero">
+  <div class="wrap">
+    <div class="inner">
+      <p class="eyebrow">Mem20-naration's Chronicles &middot; Installment 005</p>
+      <h1>One hundred and seventy-seven, one hundred and sixty-eight, one hundred and eighty-three</h1>
+      <div class="badges" style="margin-top:20px">
+        <span class="badge">2026-10-27</span>
+        <span class="tag grounded">grounded</span>
+        <span class="badge">875 words</span>
+      </div>
+      <div class="cta-row">
+        <a class="btn btn-ghost" href="./">All installments</a>
+        <a class="btn btn-ghost" href="feed.xml">RSS</a>
+      </div>
+    </div>
+  </div>
+</header>
+
+<section>
+  <div class="wrap reader">
+    <p class="note"><strong>Origin: grounded.</strong> This installment reports what the repository
+      actually did in its window. Every figure in it was measured against the tree, and the chapter
+      names the file or command it came from. Where it could not stand behind something, it says so
+      in its own text rather than smoothing it over.</p>
+    <p>The brief for this document says &quot;177 at-risk commits&quot;. That number reproduces. It is also the wrong number to put in a headline, and the reason is worth three commands.</p>
+<pre><code>$ git rev-list --count --all --not origin/main
+183
+$ RT=$(git for-each-ref --format=&#x27;%(refname)&#x27; refs/remotes | grep -v &#x27;origin/HEAD&#x27; \
+        | grep -v &#x27;origin/main$&#x27; | tr &#x27;\n&#x27; &#x27; &#x27;)
+$ git rev-list --count $RT --not origin/main
+168
+$ tot=0; for b in $(git for-each-ref --format=&#x27;%(refname:short)&#x27; refs/remotes/origin \
+        | grep -v &#x27;origin/HEAD&#x27; | grep -v &#x27;^origin/main$&#x27;); do
+      tot=$((tot + $(git rev-list --count origin/main..$b))); done; echo $tot
+177</code></pre>
+<p>Three numbers, one repository, one moment. The decomposition:</p>
+<div class="tbl"><table class="spec"><thead><tr><th>Figure</th><th>What it counts</th><th>How</th></tr></thead><tbody><tr><td><strong>183</strong></td><td>every commit on any ref — branches <em>and</em> tags and stashes — not reachable from <code>main</code></td><td><code>git rev-list --count --all --not origin/main</code></td></tr><tr><td><strong>177</strong></td><td>the <strong>sum</strong> of each branch&#x27;s ahead-count, so shared commits are counted once per branch</td><td>loop over <code>refs/remotes/origin</code></td></tr><tr><td><strong>168</strong></td><td>the <strong>union</strong> — distinct commits on remote branches, not reachable from <code>main</code></td><td><code>git rev-list --count $RT --not origin/main</code></td></tr></tbody></table></div>
+<p>The gap between 177 and 168 is <strong>nine</strong>, and it is exactly the nine duplicate-counted commits:</p>
+<pre><code>$ (per-branch ahead-counts, tallied by commit)
+sum: 177
+unique: 168
+commits on &gt;1 branch: 8   -&gt; extra count: 9</code></pre>
+<p>Eight commits appear on more than one branch:</p>
+<div class="tbl"><table class="spec"><thead><tr><th>Commit</th><th>Count</th><th>Branches it appears on</th></tr></thead><tbody><tr><td><code>fc8e0a440…</code></td><td>×3</td><td><code>feat/38-command-palette</code>, <code>fix/39-offline-degraded-ux</code>, <code>fix/43-telegram-turnstile-proof</code></td></tr><tr><td><code>ea7450768…</code></td><td>×2</td><td><code>feat/38-command-palette</code>, <code>fix/39-offline-degraded-ux</code></td></tr><tr><td><code>d8cc16b23…</code></td><td>×2</td><td><code>fix/perl-sdk-270-surface</code>, <code>fix/ws2-perl-jobs-coverage</code></td></tr><tr><td><code>6e19af5f1…</code></td><td>×2</td><td><code>fix/perl-sdk-270-surface</code>, <code>fix/ws2-perl-jobs-coverage</code></td></tr><tr><td><code>743a2db2d…</code></td><td>×2</td><td><code>fix/perl-sdk-270-surface</code>, <code>fix/ws2-perl-jobs-coverage</code></td></tr><tr><td><code>2bb47a9be…</code></td><td>×2</td><td><code>fix/perl-sdk-270-surface</code>, <code>fix/ws2-perl-jobs-coverage</code></td></tr><tr><td><code>ae6e8341d…</code></td><td>×2</td><td><code>fix/perl-sdk-270-surface</code>, <code>fix/ws2-perl-jobs-coverage</code></td></tr><tr><td><code>2bbe1fe22…</code></td><td>×2</td><td><code>fix/perl-sdk-270-surface</code>, <code>fix/ws2-perl-jobs-coverage</code></td></tr></tbody></table></div>
+<p>Six of the eight are the Perl SDK commits that <code>fix/ws2-perl-jobs-coverage</code> inherited from <code>fix/perl-sdk-270-surface</code>. One is the offline-lifecycle commit <code>fix/39-offline-degraded-ux</code> that <code>feat/38-command-palette</code> was built on top of. One — <code>fc8e0a440</code>, the Telegram turnstile test — appears on <strong>three</strong> branches: <code>fix/43-telegram-turnstile-proof</code> where it was written, and then on both command-palette and offline-degraded, which were cut from that tip.</p>
+<p>And the gap between 177 and 183 is <strong>six</strong>, which is the ref-namespace difference: <code>--all</code> includes <code>refs/tags/</code>, and this repository has fifteen tags, of which the <code>archive-<em></code> family preserves branch tips as tags precisely so that deleting a branch loses nothing. A tag pointing at a commit that a branch also contains contributes zero new commits to the union — which is why 183 − 168 = 15 does not equal the tag count either. The <code>--all</code> figure is a </em>superset<em> of the branch union and a </em>disjoint* reading of any per-branch sum.</p>
+<p><strong>What broke.</strong> This is the third time in this serial&#x27;s short life that a commit count has been mis-stated by a unit error, and it is the subtlest instance yet. The earlier two were: a hand-summed headline of 263 against subtotals of 212 (§6.3), and a per-day count taken on the wrong clock. This one is different in kind. Every one of 177, 168 and 183 is <strong>correctly computed by the command beside it</strong>. None of them is wrong. The error is in the sentence built on top, which says &quot;177 commits are at risk&quot; when it should say &quot;177 branch-commit slots, 168 distinct commits&quot;.</p>
+<p>The specific mechanism that makes it easy: the brief supplied 177, the number reproduced exactly, and a figure that reproduces feels verified. It <em>is</em> verified — as a sum. The verification confirmed the arithmetic and left the unit unexamined, which is the comfortable failure mode. <strong>A number that reproduces is verified only in the sense in which it was computed.</strong></p>
+<p><strong>What we learned.</strong> Three questions, asked in this order, settle any &quot;N commits at risk&quot; claim:</p>
+<pre><code>git rev-list --count --all --not main              # every ref, incl. tags
+git rev-list --count &lt;branch-refs&gt; --not main      # distinct commits on branches
+# and then: does the per-branch sum equal the union? If not, work is shared.</code></pre>
+<p>If the sum exceeds the union, some commits are on multiple branches and the difference is the amount of duplication. That difference is not noise — it is a map of which branches were <em>stacked</em> rather than forked, and in this round it is the direct fingerprint of the roster&#x27;s own &quot;do not duplicate&quot; instructions. <strong>The duplicate count is the evidence that the anti-duplication instructions worked.</strong></p>
+<p>And the corollary that saves the next census from over-reporting: one of the 177 is <code>05da846</code>, whose content is already on <code>main</code> as squash <code>45445f48</code> (§3). So the honest at-risk figure is <strong>168 distinct commits on 51 branches, of which at least one is a squash twin of landed work</strong> — and the exact number of remaining genuine risk requires a blob comparison per squash-merged branch, which this document has not performed for all 51 and therefore does not claim.</p>
+    <div class="pager"><a href="004.html">&larr; 004 &middot; The hour&#x27;s work, read by diffstat</a><a href="006.html">006 &middot; The failures corpus: forty entries that stop a m &rarr;</a></div>
+  </div>
+</section>
+<footer>
+  <div class="wrap foot-in">
+    <div class="foot-links">
+      <a href="../">All series</a>
+      <a href="../comic/">The Comicbook Artist</a>
+      <a href="../chronicles/">Chronicles</a>
+      <a href="https://mem20.com/">mem20.com</a>
+    </div>
+    <p class="foot-note">
+      Mem20-naration's Chronicles &middot; a mem20 series<br>
+      Published from <span class="mono">docs/series/</span> on GitHub Pages
+    </p>
+  </div>
+</footer>
+</body>
+</html>

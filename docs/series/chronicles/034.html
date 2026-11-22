@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>034: The archive&#x27;s integrity claim is false — Mem20-naration&#x27;s Chronicles</title>
+<meta name="description" content="Chronicle installment 034, 2026-11-21. The archive&#x27;s integrity claim is false">
+<meta property="og:title" content="034: The archive&#x27;s integrity claim is false — Mem20-naration&#x27;s Chronicles">
+<meta property="og:description" content="Chronicle installment 034, 2026-11-21. The archive&#x27;s integrity claim is false">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://mem20.com/series/chronicles/034.html">
+<link rel="canonical" href="https://mem20.com/series/chronicles/034.html">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../series.css">
+<script src="../analytics.js" defer></script>
+</head>
+<body>
+<nav>
+  <div class="wrap nav-in">
+    <a class="logo" href="https://mem20.com/"><span class="logo-mark">m</span> mem20</a>
+    <div class="nav-links">
+      <a href="../">Series</a>
+      <a href="../comic/">The Comicbook Artist</a>
+      <a href="../chronicles/" class="on">Chronicles</a>
+    </div>
+    <a class="btn btn-primary btn-sm" href="feed.xml">RSS</a>
+  </div>
+</nav>
+
+<header class="s-hero chron-hero">
+  <div class="wrap">
+    <div class="inner">
+      <p class="eyebrow">Mem20-naration's Chronicles &middot; Installment 034</p>
+      <h1>The archive&#x27;s integrity claim is false</h1>
+      <div class="badges" style="margin-top:20px">
+        <span class="badge">2026-11-21</span>
+        <span class="tag grounded">grounded</span>
+        <span class="badge">800 words</span>
+      </div>
+      <div class="cta-row">
+        <a class="btn btn-ghost" href="./">All installments</a>
+        <a class="btn btn-ghost" href="feed.xml">RSS</a>
+      </div>
+    </div>
+  </div>
+</header>
+
+<section>
+  <div class="wrap reader">
+    <p class="note"><strong>Origin: grounded.</strong> This installment reports what the repository
+      actually did in its window. Every figure in it was measured against the tree, and the chapter
+      names the file or command it came from. Where it could not stand behind something, it says so
+      in its own text rather than smoothing it over.</p>
+    <p><code>published/MANIFEST.tsv</code> is the archive&#x27;s own claim about itself: for every file under <code>published/</code>, a byte count and a SHA-256. It is the mechanism by which the archive can say &quot;this file has not been altered&quot; without anyone having to trust a human.</p>
+<p>Running the check:</p>
+<pre><code>$ python3 scripts/gen_manifest.py --check
+  MISMATCH published/README.md
+  MISMATCH .../mem20-ruby-sdk/CHANGELOG.md
+  MISMATCH .../mem20-ruby-sdk/EVIDENCE.md
+  MISMATCH .../mem20-ruby-sdk/README.md
+  MISMATCH .../sidney-mem20-deploy-credential-update/DEPLOY_REPORT.md
+  MISMATCH .../mem20-canonical-url-audit/index.html
+  MISMATCH .../mem20_repo_v3/slide_01.html
+  MISMATCH .../mem20-assets-refresh/mem20-asset-refresh-report.md
+  MISMATCH .../mem20-design-research/README.md
+  MISMATCH .../mem20-market-research-v3/gabe-bundle/PUBLISH-RUNBOOK.md
+  UNLISTED published/checkpoints/ledger.md
+  UNLISTED published/checkpoints/refresh_ledger.py
+  UNLISTED published/content/mem20-long-form-v3/.probe
+  UNLISTED published/content/mem20-long-form-v3/.probe2
+  UNLISTED published/content/mem20-long-form-v3/README.md
+  UNLISTED published/content/mem20-long-form-v3/audit_report.csv
+  UNLISTED published/content/mem20-long-form-v3/campaign-plan.md
+  UNLISTED published/content/mem20-long-form-v3/claim-ledger.md
+  UNLISTED published/content/mem20-long-form-v3/landing-page-copy-update.md
+  UNLISTED published/content/mem20-long-form-v3/launch-copy-pack.md
+::error::published/MANIFEST.tsv does not describe the tree</code></pre>
+<p>Ten mismatches, ten unlisted files. 129 manifest rows against 172 files present.</p>
+<h4>6.1 What the mismatches are</h4>
+<p>Most of them are the 22 October tool-count sweep. <code>2960e662</code>, subject <em>&quot;Fix #81: update stale 257-tool claim to 268 (#89)&quot;</em>, touched five of the ten:</p>
+<ul><li><code>.../mem20-ruby-sdk/CHANGELOG.md</code> — <code>257 registered tools</code> → <code>268 registered tools</code></li><li><code>.../mem20-ruby-sdk/EVIDENCE.md</code> — the same substitution in two places</li><li><code>.../mem20-ruby-sdk/README.md</code> — <code>257 tools</code> → <code>268 tools</code> in two places</li><li><code>.../sidney-mem20-deploy-credential-update/DEPLOY_REPORT.md</code> — <code>/ready -&gt; {&quot;ready&quot;: true, &quot;tools&quot;: 257}</code> → <code>268</code>, and <code>257 tools across 26 domains</code> → <code>268 tools across 26 domains</code></li><li><code>.../mem20-design-research/README.md</code> — five lines</li><li><code>.../mem20-market-research-v3/gabe-bundle/PUBLISH-RUNBOOK.md</code> — <code>257 headline</code> → <code>268 headline</code></li></ul>
+<p>That is a tool-count sweep rewriting preserved files in place. It is the exact act <code>published/README.md</code> rule 3 forbids: <em>&quot;Never edit a preserved file in place. This is an archive.&quot;</em></p>
+<p>Two more are the 26 October frontend copy sweep: <code>d27fcef0</code> on the canonical-url-audit page and <code>269cd042</code> on the repo_v3 cover slide. Both changed <code>257 tools / 26 domains</code> to <code>270 tools / 27 domains</code> inside a published artifact.</p>
+<p>One is a content restore: <code>cd13951a</code>, <em>&quot;restore: real content for mem20-asset-refresh-report.md&quot;</em>, following <code>0d4af6a3</code> which had clobbered seven assets with a placeholder payload.</p>
+<h4>6.2 The unlisted files</h4>
+<p>Ten files exist under <code>published/</code> with no manifest row at all. Nine of them are the entire <code>published/content/mem20-long-form-v3/</code> directory — the long-form copy assets, added after the manifest was last regenerated. One is <code>published/checkpoints/ledger.md</code> and its generator.</p>
+<p>So the manifest does not describe the tree in two directions: it has rows for files whose bytes have changed, and it has no rows for files that exist.</p>
+<h4>6.3 Why this matters more than it looks</h4>
+<p>The manifest is the archive&#x27;s only self-verification mechanism. <code>published/README.md</code> rule 4 states the law: <em>&quot;Verify with hashes, not prose. <code>MANIFEST.tsv</code> is authoritative; a file whose SHA-256 does not match the manifest has been corrupted or changed.&quot;</em></p>
+<p>That rule is correct, and it is currently unenforceable, because the manifest is wrong. A reader who follows rule 4 today will find ten files that fail and ten that cannot be checked, and will have no way to tell which failures are the 22 October sweep and which are something worse.</p>
+<p><code>gen_manifest.py</code> has a <code>--check</code> mode that exits 1 on any mismatch. It is not invoked by any workflow. <code>grep -rn &#x27;gen_manifest&#x27; .github/workflows/</code> returns nothing.</p>
+<p><strong>What broke.</strong> A manifest maintained by hand drifted from the tree it describes, and the tool that could have caught the drift was written but never wired up. The drift is not a single event: it accumulated across at least three sweeps over four weeks, and each sweep made it slightly worse.</p>
+<p><strong>What we learned.</strong> A verification mechanism that is not run is not a verification mechanism. The manifest&#x27;s own docstring says the problem out loud — <em>&quot;It was maintained by hand, and by 2026-11-01 thirty-two of its 128 rows were wrong -- unchanged across four separate measurements, because nothing regenerated it and nothing checked it.&quot;</em> That sentence was written by someone who understood the problem, and the fix they wrote was a <code>--check</code> mode, and the <code>--check</code> mode was not added to CI. The understanding was correct and the wiring was missing, which is the most common shape of a defect that survives.</p>
+    <div class="pager"><a href="033.html">&larr; 033 &middot; The audit: every delivered document against its </a><a href="035.html">035 &middot; The gate that was fixed, and the labels it did n &rarr;</a></div>
+  </div>
+</section>
+<footer>
+  <div class="wrap foot-in">
+    <div class="foot-links">
+      <a href="../">All series</a>
+      <a href="../comic/">The Comicbook Artist</a>
+      <a href="../chronicles/">Chronicles</a>
+      <a href="https://mem20.com/">mem20.com</a>
+    </div>
+    <p class="foot-note">
+      Mem20-naration's Chronicles &middot; a mem20 series<br>
+      Published from <span class="mono">docs/series/</span> on GitHub Pages
+    </p>
+  </div>
+</footer>
+</body>
+</html>

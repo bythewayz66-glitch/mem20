@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>028: The 4.0.0 release and the launch page — Mem20-naration&#x27;s Chronicles</title>
+<meta name="description" content="Chronicle installment 028, 2026-11-21. The 4.0.0 release and the launch page">
+<meta property="og:title" content="028: The 4.0.0 release and the launch page — Mem20-naration&#x27;s Chronicles">
+<meta property="og:description" content="Chronicle installment 028, 2026-11-21. The 4.0.0 release and the launch page">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://mem20.com/series/chronicles/028.html">
+<link rel="canonical" href="https://mem20.com/series/chronicles/028.html">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../series.css">
+<script src="../analytics.js" defer></script>
+</head>
+<body>
+<nav>
+  <div class="wrap nav-in">
+    <a class="logo" href="https://mem20.com/"><span class="logo-mark">m</span> mem20</a>
+    <div class="nav-links">
+      <a href="../">Series</a>
+      <a href="../comic/">The Comicbook Artist</a>
+      <a href="../chronicles/" class="on">Chronicles</a>
+    </div>
+    <a class="btn btn-primary btn-sm" href="feed.xml">RSS</a>
+  </div>
+</nav>
+
+<header class="s-hero chron-hero">
+  <div class="wrap">
+    <div class="inner">
+      <p class="eyebrow">Mem20-naration's Chronicles &middot; Installment 028</p>
+      <h1>The 4.0.0 release and the launch page</h1>
+      <div class="badges" style="margin-top:20px">
+        <span class="badge">2026-11-21</span>
+        <span class="tag grounded">grounded</span>
+        <span class="badge">865 words</span>
+      </div>
+      <div class="cta-row">
+        <a class="btn btn-ghost" href="./">All installments</a>
+        <a class="btn btn-ghost" href="feed.xml">RSS</a>
+      </div>
+    </div>
+  </div>
+</header>
+
+<section>
+  <div class="wrap reader">
+    <p class="note"><strong>Origin: grounded.</strong> This installment reports what the repository
+      actually did in its window. Every figure in it was measured against the tree, and the chapter
+      names the file or command it came from. Where it could not stand behind something, it says so
+      in its own text rather than smoothing it over.</p>
+    <p>The 16 November release is the point at which the project&#x27;s public surface finally states the number the server actually serves, and the record of how that was done is the best evidence in the window that the doc-count drift gate works.</p>
+<h4>10.1 The page before</h4>
+<p>The launch-page record is unusually precise about the before state:</p>
+<blockquote class="note">- A fetch of the live site returned HTTP 200 with a 10,998-byte body. - The SHA-256 of the live body matched the SHA-256 of <code>docs/index.html</code> on main at <code>0224a649</code> exactly — the served bytes were byte-identical to the file on main. - A scan of the served HTML for a tool/domain count returned no match — the page stated no tool or domain figure at all.</blockquote>
+<p>That last line is the finding. The page was not <em>wrong</em> about the tool count. It stated no tool count at all. The retired 257/26 band lived in the documents <em>around</em> the page — the launch copy, the competitive matrix, the instrumentation notes — and the page itself deferred the figure to <code>README.md</code>.</p>
+<p>So the defect was not a stale number on the page. It was an <em>absence</em> of a number on the page, in a project whose entire positioning is that its numbers are measured. The record says so directly:</p>
+<blockquote class="note">The page&#x27;s own &quot;On the numbers&quot; note deferred the figure to README.md rather than stating it. That is the gap this change closes: the page now carries the measurement, and carries it from the pinned source.</blockquote>
+<h4>10.2 The page after</h4>
+<blockquote class="note">- The rebuilt <code>docs/index.html</code> is 15,327 bytes, and the committed blob size reported by the GitHub API matches the local file byte for byte. - The diff against main is 1 file changed, 93 insertions, 11 deletions.</blockquote>
+<p>And the content:</p>
+<blockquote class="note">- hero fact strip now reads v4.0.0, 487 MCP tools, 129 domains, Apache-2.0 - new section &quot;The surface, measured&quot; — 487 tools, 129 domains, 19 unwired tools, plus the twelve largest domains: memory 55, cognitive 19, world 14, versioncontrol 11, cloudservice 10, database 10, filesystem 10, lie 10, productivity 10, braid 9, communication 9, dev 9 - the &quot;On the numbers&quot; note now names <code>docs/surface.json</code> and the CI doc-count drift gate as the reason the page and the server cannot disagree</blockquote>
+<p>The twelve largest domains are worth recording because they are the only place in the window where the domain count is broken down. 129 domains, of which the largest is memory at 55 tools. That is a distribution, not a total, and a distribution is much harder to fake.</p>
+<h4>10.3 The verification</h4>
+<p>The record&#x27;s verification section is the model this chronicle is trying to follow:</p>
+<blockquote class="note">Doc-count drift gate, run against the working tree after the rebuild: - live pin: 487 tools / 129 domains - scanned: 85 live docs - result: OK, no retired tool/domain band in any live doc - exit code 0  Headless Chromium render of the local file at 1440x1000: - TITLE: mem20 — auditable agent memory - H1: A memory that can prove what it knows. - facts: v4.0.0, VERSION, 487, MCP TOOLS, 129, DOMAINS, Apache-2.0, LICENSE - has 487: True, has 129: True - retired 257: False, retired 268: False - surface numbers: 487 MCP TOOLS, 129 DOMAINS, 19 UNWIRED TOOLS - domain rows: 12 - console errors: none - scrollWidth / clientWidth: 1440 / 1440 — no horizontal overflow</blockquote>
+<p>Note the two negative assertions: <code>retired 257: False, retired 268: False</code>. The verification does not only check that the new number is present; it checks that the old ones are absent. That is the difference between a check that confirms a change and a check that confirms the change is complete.</p>
+<p>And note the last line of the record, which is the most honest sentence in the window:</p>
+<blockquote class="note"><strong>Not verified in this change:</strong> The post-merge state of the live site. The deployed bytes can only be re-checked against main after this branch is merged and the Pages workflow redeploys. The pre-change check above (live equal to main, HTTP 200, byte-identical) is the state as of this commit.</blockquote>
+<p>The record states what it did not check, next to the claim it limits. That is the standard.</p>
+<blockquote class="note"><strong>What broke.</strong> The launch page stated no tool count at all, in a project whose positioning is that its numbers are measured. The retired 257/26 band lived in the surrounding documents, and the page deferred to <code>README.md</code> rather than carrying the figure.  <strong>What we learned.</strong> An absence is harder to find than an error. A page that says 270 when the server serves 487 is wrong and can be grepped for. A page that says nothing is not wrong, and no scan for a retired band will find it — which is why the fix had to add the number rather than correct it. <strong>The doc-count drift gate catches stale numbers; it cannot catch missing ones.</strong> The gate&#x27;s scope is &quot;no retired band in any live doc,&quot; and a doc with no band passes it. That is a real limit of the control, and the launch-page record is the only place in the window where it is stated.</blockquote>
+    <div class="pager"><a href="027.html">&larr; 027 &middot; The keyless rewire, and the dreamer that starved</a><a href="029.html">029 &middot; The CI that would not stay green &rarr;</a></div>
+  </div>
+</section>
+<footer>
+  <div class="wrap foot-in">
+    <div class="foot-links">
+      <a href="../">All series</a>
+      <a href="../comic/">The Comicbook Artist</a>
+      <a href="../chronicles/">Chronicles</a>
+      <a href="https://mem20.com/">mem20.com</a>
+    </div>
+    <p class="foot-note">
+      Mem20-naration's Chronicles &middot; a mem20 series<br>
+      Published from <span class="mono">docs/series/</span> on GitHub Pages
+    </p>
+  </div>
+</footer>
+</body>
+</html>

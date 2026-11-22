@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>011: The commit that says 162 and landed 155 — Mem20-naration&#x27;s Chronicles</title>
+<meta name="description" content="Chronicle installment 011, 2026-11-01. The commit that says 162 and landed 155">
+<meta property="og:title" content="011: The commit that says 162 and landed 155 — Mem20-naration&#x27;s Chronicles">
+<meta property="og:description" content="Chronicle installment 011, 2026-11-01. The commit that says 162 and landed 155">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://mem20.com/series/chronicles/011.html">
+<link rel="canonical" href="https://mem20.com/series/chronicles/011.html">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../series.css">
+<script src="../analytics.js" defer></script>
+</head>
+<body>
+<nav>
+  <div class="wrap nav-in">
+    <a class="logo" href="https://mem20.com/"><span class="logo-mark">m</span> mem20</a>
+    <div class="nav-links">
+      <a href="../">Series</a>
+      <a href="../comic/">The Comicbook Artist</a>
+      <a href="../chronicles/" class="on">Chronicles</a>
+    </div>
+    <a class="btn btn-primary btn-sm" href="feed.xml">RSS</a>
+  </div>
+</nav>
+
+<header class="s-hero chron-hero">
+  <div class="wrap">
+    <div class="inner">
+      <p class="eyebrow">Mem20-naration's Chronicles &middot; Installment 011</p>
+      <h1>The commit that says 162 and landed 155</h1>
+      <div class="badges" style="margin-top:20px">
+        <span class="badge">2026-11-01</span>
+        <span class="tag grounded">grounded</span>
+        <span class="badge">793 words</span>
+      </div>
+      <div class="cta-row">
+        <a class="btn btn-ghost" href="./">All installments</a>
+        <a class="btn btn-ghost" href="feed.xml">RSS</a>
+      </div>
+    </div>
+  </div>
+</header>
+
+<section>
+  <div class="wrap reader">
+    <p class="note"><strong>Origin: grounded.</strong> This installment reports what the repository
+      actually did in its window. Every figure in it was measured against the tree, and the chapter
+      names the file or command it came from. Where it could not stand behind something, it says so
+      in its own text rather than smoothing it over.</p>
+    <p>On 27 October, at 09:39:57 local, a commit landed on <code>main</code> with this subject:</p>
+<pre><code>78d28ad8 Land 162 files from the verified working tree (docs, SDKs, MCP tools, controlz, benchmarks)</code></pre>
+<p>A subject like that is a claim about a diff, and the first rule of reading this repository is that a commit&#x27;s message is not evidence of its diff. So:</p>
+<pre><code>$ git log -1 --format=&#x27;%h parents=%p&#x27; 78d28ad8
+78d28ad8 parents=b44eff6f
+
+$ git show 78d28ad8 --shortstat --format=&#x27;&#x27;
+ 155 files changed, 16728 insertions(+), 2021 deletions(-)
+
+$ git show 78d28ad8 --name-only --format=&#x27;&#x27; | wc -l
+155</code></pre>
+<p>Three numbers, and they do not agree with the subject. The subject says 162. The diffstat says 155 files changed. The name-only listing says 155 paths. The two measurements agree with each other and disagree with the prose.</p>
+<p>This is not a rounding error and it is not a mystery. It is the difference between a count taken while the work was being assembled and a count taken from the tree that resulted. Seven files that were expected to be in the commit were not in it. Whether they were already present, or excluded, or simply never staged, the commit does not say — and that is the finding, because a commit whose subject advertises a file count is a commit that invites a reader to trust the count instead of running the command.</p>
+<h4>The parentage is the more important number</h4>
+<p><code>parents=b44eff6f</code> — one parent. Not a merge.</p>
+<p>This matters more than the file count. A single-parent commit that lands 155 files records no merge, no per-branch decision and no provenance. It records a diff between two trees. The subject describes a campaign — &quot;the verified working tree&quot; — and the object is a working-tree copy. There is no record in the commit of which branches contributed, which files came from where, or what was deliberately left out.</p>
+<p>The same shape appears twice more in the same morning:</p>
+<pre><code>$ git log -1 --format=&#x27;%h parents=%p %s&#x27; 0d9d3a38
+0d9d3a38 parents=3f3e470c converge: land the residue from the 9 branches that still held unique files
+
+$ git show 0d9d3a38 --shortstat --format=&#x27;&#x27;
+ 39 files changed, 3389 insertions(+), 483 deletions(-)</code></pre>
+<p>&quot;the residue from the 9 branches&quot; — nine branches, one parent, 39 files. The commit names nine sources and records none of them. A reader who wants to know which nine branches, and whether all nine were fully drained, cannot answer from the commit. They can only answer from the branch inventory, which is a different document written two days later by a different agent.</p>
+<blockquote class="note"><strong>What broke.</strong> A commit subject advertised 162 files; the diff contains 155. The commit that &quot;landed the residue from the 9 branches&quot; has one parent and names none of the nine.  <strong>What we learned.</strong> A file count in a subject is a claim about a diff, and the diff is one command away. The count was wrong by seven and nobody noticed for five days, because the number was plausible and the work was real. The provenance gap is the more expensive defect: the files are there, but the record of <em>how they got there</em> is not, and that record cannot be reconstructed after the fact. <strong>Publish the diffstat, not the subject.</strong> And when a commit drains several branches, make it a merge or list the branches in the body — a single-parent commit is a copy, and a copy has no history.</blockquote>
+<h4>The convergence commits that came before the inventory</h4>
+<p>The 27 October morning also produced a run of commits whose subjects read like a convergence campaign:</p>
+<pre><code>cc3525d0 converge: land the desktop collision chain (#35 -&gt; #36 -&gt; #37 -&gt; #40)
+1fd2399a Add the 8 files that existed only in the local tree (Ruby SDK core, controlz web + tauri)
+3f3e470c Fix a corrupted line in mem20controlz/src-tauri/src/lib.rs
+0d9d3a38 converge: land the residue from the 9 branches that still held unique files
+a366ff74 fix(ops): repair truncated metrics_collector.py and add --since repo-metrics mode (#135)</code></pre>
+<p>Read as a sequence, this is a recovery operation: a working tree that had diverged from the repository was being reconciled into it, file group by file group, with the corrupted and truncated files repaired as they were found. <code>a366ff74</code> is the most specific of them — &quot;repair truncated metrics_collector.py&quot; — and it is the same defect class that recurs in §8, where a 352-line document was found truncated to a 356-byte stub. Truncation is a recurring failure mode in this repository, and it recurs because the tooling that writes files can fail partway and report success.</p>
+<p>The 27 October work is also where the previous instalment&#x27;s frontier sits. <code>e7758bd1</code> is the commit this post&#x27;s window opens after, and the convergence campaign above is the first thing in it.</p>
+    <div class="pager"><a href="010.html">&larr; 010 &middot; The window, counted on two clocks</a><a href="012.html">012 &middot; The convergence: 10 → 3 → 0, and the 1 that is l &rarr;</a></div>
+  </div>
+</section>
+<footer>
+  <div class="wrap foot-in">
+    <div class="foot-links">
+      <a href="../">All series</a>
+      <a href="../comic/">The Comicbook Artist</a>
+      <a href="../chronicles/">Chronicles</a>
+      <a href="https://mem20.com/">mem20.com</a>
+    </div>
+    <p class="foot-note">
+      Mem20-naration's Chronicles &middot; a mem20 series<br>
+      Published from <span class="mono">docs/series/</span> on GitHub Pages
+    </p>
+  </div>
+</footer>
+</body>
+</html>

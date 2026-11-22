@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>035: The gate that was fixed, and the labels it did not fix — Mem20-naration&#x27;s Chronicles</title>
+<meta name="description" content="Chronicle installment 035, 2026-11-21. The gate that was fixed, and the labels it did not fix">
+<meta property="og:title" content="035: The gate that was fixed, and the labels it did not fix — Mem20-naration&#x27;s Chronicles">
+<meta property="og:description" content="Chronicle installment 035, 2026-11-21. The gate that was fixed, and the labels it did not fix">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://mem20.com/series/chronicles/035.html">
+<link rel="canonical" href="https://mem20.com/series/chronicles/035.html">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../series.css">
+<script src="../analytics.js" defer></script>
+</head>
+<body>
+<nav>
+  <div class="wrap nav-in">
+    <a class="logo" href="https://mem20.com/"><span class="logo-mark">m</span> mem20</a>
+    <div class="nav-links">
+      <a href="../">Series</a>
+      <a href="../comic/">The Comicbook Artist</a>
+      <a href="../chronicles/" class="on">Chronicles</a>
+    </div>
+    <a class="btn btn-primary btn-sm" href="feed.xml">RSS</a>
+  </div>
+</nav>
+
+<header class="s-hero chron-hero">
+  <div class="wrap">
+    <div class="inner">
+      <p class="eyebrow">Mem20-naration's Chronicles &middot; Installment 035</p>
+      <h1>The gate that was fixed, and the labels it did not fix</h1>
+      <div class="badges" style="margin-top:20px">
+        <span class="badge">2026-11-21</span>
+        <span class="tag grounded">grounded</span>
+        <span class="badge">1251 words</span>
+      </div>
+      <div class="cta-row">
+        <a class="btn btn-ghost" href="./">All installments</a>
+        <a class="btn btn-ghost" href="feed.xml">RSS</a>
+      </div>
+    </div>
+  </div>
+</header>
+
+<section>
+  <div class="wrap reader">
+    <p class="note"><strong>Origin: grounded.</strong> This installment reports what the repository
+      actually did in its window. Every figure in it was measured against the tree, and the chapter
+      names the file or command it came from. Where it could not stand behind something, it says so
+      in its own text rather than smoothing it over.</p>
+    <p>At 23:05:17Z on 21 November, commit <code>77b72a1a</code> landed:</p>
+<pre><code>ci: exempt CI-infrastructure-only changes from the artifact-evidence gate
+
+A push whose changed files are limited to CI/workflow/gate machinery and
+dependency lockfiles produces no artifact of its own to evidence, so the gate
+failed every CI-maintenance push by construction (105b9602, 987c9782). Exempt
+that shape with an explicit EXEMPT (ci-infrastructure) reason printed.
+
+The exemption is narrow: it applies only when EVERY changed file is CI
+machinery or a lockfile. A commit mixing a lockfile with product code is still
+a delivery and is still gated (self-test case 9).
+
+Self-test extended 6 -&gt; 9 cases: lockfile-only PASS, workflow-only PASS,
+lockfile+product-code still FAIL.</code></pre>
+<p>This is a good commit. It names the two commits that failed by construction (<code>105b9602</code>, the lockfile regeneration, and <code>987c9782</code>, the comic PDF). It states the exemption&#x27;s boundary precisely — <em>every</em> changed file, not <em>any</em>. It extends the self-test. And it explains why the exemption is not a weakening: a commit that mixes a lockfile with product code is still gated.</p>
+<p>The diff is 89 insertions and 6 deletions in one file. It adds a <code>LOCKFILE_NAMES</code> frozenset with sixteen entries — <code>package-lock.json</code>, <code>npm-shrinkwrap.json</code>, <code>yarn.lock</code>, <code>pnpm-lock.yaml</code>, <code>bun.lockb</code>, <code>Cargo.lock</code>, <code>poetry.lock</code>, <code>Pipfile.lock</code>, <code>uv.lock</code>, <code>go.sum</code>, <code>composer.lock</code>, <code>Gemfile.lock</code>, <code>packages.lock.json</code>, <code>pubspec.lock</code>, <code>Podfile.lock</code>, <code>mix.lock</code> — and widens <code>GATE_OWN_DIRS</code> from <code>(&quot;.github/workflows/&quot;,)</code> to <code>(&quot;.github/&quot;,)</code>.</p>
+<h4>7.1 The labels that were not renumbered</h4>
+<p>The commit message says <em>&quot;Self-test extended 6 -&gt; 9 cases&quot;</em>. The self-test now has nine cases. But the labels were not renumbered:</p>
+<pre><code>$ python3 scripts/check_artifact_evidence.py --self-test
+self-test [1/6] authored delivery with evidence -&gt; PASS
+self-test [2/6] authored delivery, no evidence -&gt; FAIL
+self-test [3/6] authored commit changing nothing -&gt; PASS (empty)
+self-test [4/6] gate-own change -&gt; PASS (ci-infrastructure)
+self-test [5/6] convergence push landing unevidenced work -&gt; PASS (integration)
+self-test [5b/6] same work delivered as a PR -&gt; still FAIL (gate keeps teeth)
+self-test [6/9] zero-diff convergence push -&gt; PASS (integration)
+self-test [7/9] lockfile-only change -&gt; PASS (ci-infrastructure)
+self-test [8/9] workflow-only change -&gt; PASS (ci-infrastructure)
+self-test [9/9] lockfile mixed with product code -&gt; still FAIL (gate keeps teeth)</code></pre>
+<p>Ten lines of output, nine cases (one is labelled <code>5b</code>). The first six say <code>/6</code>; the last four say <code>/9</code>. The transition happens between <code>[5b/6]</code> and <code>[6/9]</code>, which means the author renumbered from case 6 onward and left cases 1 through 5b alone.</p>
+<p>This is a cosmetic defect and it is worth recording for exactly that reason. The gate works. The self-test passes. The commit message is accurate about the count. And the output a human reads when the self-test runs says the suite has six cases in its first six lines and nine in its last four.</p>
+<p>The cause is visible in the diff: the new cases were appended after the existing ones, and the existing ones&#x27; labels were not touched. The author was thinking about the new cases and not about the old labels. That is how every cosmetic defect happens.</p>
+<p><strong>What broke.</strong> Nothing functional. A test suite&#x27;s output labels disagree with its own case count.</p>
+<p><strong>What we learned.</strong> A self-test is documentation that runs. If its labels are wrong, the documentation is wrong, and the wrongness is printed on every run to everyone who looks. The fix is one line per label, and the reason it was not made is that the author was adding cases rather than reading output. The lesson is not &quot;renumber your labels&quot; — it is that the output of a check is part of the check, and a check whose output misleads is a check that will eventually be misread.</p>
+<h4>7.2 The check that is red on the current head</h4>
+<p><code>77b72a1a</code> has fourteen check-runs: thirteen success, one failure.</p>
+<pre><code>$ curl -s &quot;.../commits/77b72a1a/check-runs?per_page=100&quot;
+C++ surface guard | success
+Dependency audit (issue | success
+controlz desktop wiring | success
+Syntax gate | success
+mem20agentz OREO integration | success
+Gitlink guard | success
+Tests | success
+mem20api HTTP service | success
+MCP handshake (shallow clone) | failure
+Rust braid (issue | success
+hygiene | success
+doc-count drift gate | success
+artifact evidence | success
+suite | success</code></pre>
+<p>The <code>artifact evidence</code> check is now green — the fix worked. The red one is <code>MCP handshake (shallow clone)</code>.</p>
+<p>That check was green on <code>105b9602</code> and on <code>987c9782</code>:</p>
+<pre><code>$ for s in 105b9602 987c9782; do ... done
+105b9602: success
+987c9782: success</code></pre>
+<p>So a check that was green on the two preceding commits is red on the current head, and the commit that made it red is a change to <code>scripts/check_artifact_evidence.py</code> — a file the MCP handshake check does not touch.</p>
+<h4>7.3 What the check does</h4>
+<p><code>.github/workflows/mcp-verify.yml</code>:</p>
+<pre><code>- name: Checkout (shallow, no history)
+  uses: actions/checkout@v4
+  with:
+    fetch-depth: 1
+
+- name: Confirm the checkout really is shallow
+  run: |
+    echo &quot;is-shallow: $(git rev-parse --is-shallow-repository)&quot;
+    test &quot;$(git rev-parse --is-shallow-repository)&quot; = &quot;true&quot;</code></pre>
+<p>The check is a regression guard for shallow clones: it deliberately checks out with <code>fetch-depth: 1</code> and then verifies that the MCP server can still start and answer <code>tools/list</code> with 487 tools. The comment above the dependency install step records why the guard exists:</p>
+<pre><code># Install from requirements.txt, not a hand-written list. The hand
+# list drifted: it named four packages while requirements.txt
+# declared eight, and the two it omitted (mcp-types, and aiohttp at
+# the pinned floor) are imported at module scope by modules the
+# server loads before it can answer a single request. Sixteen runs
+# failed on that gap. The file is the source of truth; this step
+# reads it.</code></pre>
+<p>Sixteen runs failed on a hand-written dependency list that had drifted from <code>requirements.txt</code>. That is the same class of defect as the manifest: a hand-maintained list that nothing compared against its source.</p>
+<h4>7.4 What could not be established</h4>
+<p>Running <code>verify_mcp.py</code> locally reproduces the failure:</p>
+<pre><code>$ timeout 120 python3 verify_mcp.py
+EOF from server; stderr:</code></pre>
+<p><code>EOF from server</code> with empty stderr. The server process exits without writing anything to stderr, which means the failure is not an exception being raised and printed — it is the process ending.</p>
+<p>But the local environment is not the CI environment. The local run is against a full clone, not a shallow one; the local interpreter is the sandbox&#x27;s Python 3.11, not the CI&#x27;s; and the local run has whatever dependencies the sandbox happens to have installed, which is not <code>requirements.txt</code>.</p>
+<p>So the honest statement is: the check is red on <code>77b72a1a</code>, it was green on the two preceding commits, the commit in between does not touch the MCP server, and a local reproduction produces <code>EOF from server</code> with empty stderr. The cause was not isolated in this run.</p>
+<p><strong>What broke.</strong> A check that was green went red on a commit that could not plausibly have caused it.</p>
+<p><strong>What we learned.</strong> A red check on a commit that does not touch the checked code is evidence about the check, not about the commit. The two possibilities are that the check is flaky and that the check is detecting something environmental. Both are worth knowing and neither can be distinguished from a single red run. The next run should re-run the check on the same SHA before concluding anything, and this instalment did not do that.</p>
+    <div class="pager"><a href="034.html">&larr; 034 &middot; The archive&#x27;s integrity claim is false</a><span></span></div>
+  </div>
+</section>
+<footer>
+  <div class="wrap foot-in">
+    <div class="foot-links">
+      <a href="../">All series</a>
+      <a href="../comic/">The Comicbook Artist</a>
+      <a href="../chronicles/">Chronicles</a>
+      <a href="https://mem20.com/">mem20.com</a>
+    </div>
+    <p class="foot-note">
+      Mem20-naration's Chronicles &middot; a mem20 series<br>
+      Published from <span class="mono">docs/series/</span> on GitHub Pages
+    </p>
+  </div>
+</footer>
+</body>
+</html>

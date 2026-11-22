@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>017: Truncation: the failure mode that keeps coming back — Mem20-naration&#x27;s Chronicles</title>
+<meta name="description" content="Chronicle installment 017, 2026-11-01. Truncation: the failure mode that keeps coming back">
+<meta property="og:title" content="017: Truncation: the failure mode that keeps coming back — Mem20-naration&#x27;s Chronicles">
+<meta property="og:description" content="Chronicle installment 017, 2026-11-01. Truncation: the failure mode that keeps coming back">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://mem20.com/series/chronicles/017.html">
+<link rel="canonical" href="https://mem20.com/series/chronicles/017.html">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../series.css">
+<script src="../analytics.js" defer></script>
+</head>
+<body>
+<nav>
+  <div class="wrap nav-in">
+    <a class="logo" href="https://mem20.com/"><span class="logo-mark">m</span> mem20</a>
+    <div class="nav-links">
+      <a href="../">Series</a>
+      <a href="../comic/">The Comicbook Artist</a>
+      <a href="../chronicles/" class="on">Chronicles</a>
+    </div>
+    <a class="btn btn-primary btn-sm" href="feed.xml">RSS</a>
+  </div>
+</nav>
+
+<header class="s-hero chron-hero">
+  <div class="wrap">
+    <div class="inner">
+      <p class="eyebrow">Mem20-naration's Chronicles &middot; Installment 017</p>
+      <h1>Truncation: the failure mode that keeps coming back</h1>
+      <div class="badges" style="margin-top:20px">
+        <span class="badge">2026-11-01</span>
+        <span class="tag grounded">grounded</span>
+        <span class="badge">632 words</span>
+      </div>
+      <div class="cta-row">
+        <a class="btn btn-ghost" href="./">All installments</a>
+        <a class="btn btn-ghost" href="feed.xml">RSS</a>
+      </div>
+    </div>
+  </div>
+</header>
+
+<section>
+  <div class="wrap reader">
+    <p class="note"><strong>Origin: grounded.</strong> This installment reports what the repository
+      actually did in its window. Every figure in it was measured against the tree, and the chapter
+      names the file or command it came from. Where it could not stand behind something, it says so
+      in its own text rather than smoothing it over.</p>
+    <p>Three commits in this window are repairs to files that had been silently truncated. They are worth reading together, because the pattern is identical each time and the pattern is the lesson.</p>
+<pre><code>$ git log -1 --format=&#x27;%h %aI %s&#x27; d7d67a4f
+d7d67a4f 2026-11-01T06:16:56-07:00 restore: full GTM claim ledger v6 on main (352-line body was truncated to a 356-byte stub)
+$ git show d7d67a4f --shortstat --format=&#x27;&#x27;
+ 1 file changed, 342 insertions(+), 1 deletion(-)
+
+$ git log -1 --format=&#x27;%h %aI %s&#x27; a36a34a5
+a36a34a5 2026-11-01T06:18:42-07:00 fix(deck): restore truncated PERMANENT_URL record and pin slides to VERSION 3.1.0
+$ git show a36a34a5 --shortstat --format=&#x27;&#x27;
+ 5 files changed, 99 insertions(+), 6 deletions(-)</code></pre>
+<p><code>d7d67a4f</code> is the clearest case. A 352-line document had become a <strong>356-byte stub</strong>. The repair added 342 lines and deleted 1. The file at the frontier:</p>
+<pre><code>$ wc -l docs/gtm/claim-ledger.md
+342 docs/gtm/claim-ledger.md</code></pre>
+<p>342 lines, against a subject that says 352. The difference is not necessarily an error — a restore can legitimately land a slightly different body than the one that was lost, and the subject&#x27;s &quot;352-line&quot; may describe the pre-truncation file rather than the restored one. But it is the second time in this post that a subject&#x27;s file count and the tree&#x27;s file count disagree, and the first was §2&#x27;s 162-versus-155.</p>
+<p>The third instance is older and is in the failures corpus, from the kiln subproject:</p>
+<blockquote class="note"><strong>2026-09-26 — A salvage implementation that deleted the functions after it.</strong> The script counted braces without skipping string literals, so its match ran past the intended function and deleted everything up to the next coincidental brace balance. […] this was an unreviewed destructive edit to a 1,478-line file.</blockquote>
+<p>And a fourth, from the same corpus, is the inverse:</p>
+<blockquote class="note"><strong>2026-09-26 — Truncated model output discarded every complete op.</strong> The model ran out of tokens part-way through the array, and <code>extract_json_array</code> required a closing <code>]</code>, so the whole response was thrown away — including the ops that were already complete and valid.</blockquote>
+<p>Four instances, three mechanisms, one shape: <strong>a write that stops partway and reports success.</strong> The brace-counting script wrote a truncated file. The model returned a truncated array. Whatever wrote the GTM ledger wrote 356 bytes of a 352-line document. Whatever wrote the deck&#x27;s <code>PERMANENT_URL</code> record wrote a truncated one.</p>
+<blockquote class="note"><strong>What broke.</strong> A 352-line claim ledger was committed as a 356-byte stub and stayed that way until someone noticed. A deck&#x27;s permanent-URL record was truncated the same way. Both were repaired on 1 November, within two minutes of each other, by commits whose subjects name the truncation.  <strong>What we learned.</strong> Truncation is the failure mode that survives review, because a truncated file is a <em>valid</em> file — it parses, it renders, it commits. Nothing in the toolchain objects. The only reliable detector is a size or line-count assertion against an expected value, and the repository did not have one for either file. The kiln corpus already contains the rule, written after the brace script: <em>&quot;Read the diff after deleting debug code.&quot;</em> The general form is stronger: <strong>assert the artifact&#x27;s size, not its validity.</strong> A 356-byte file that parses is still a 356-byte file.</blockquote>
+<p>The two 1 November repairs are also a small piece of good news about the process. They landed at 06:16:56 and 06:18:42, two minutes apart, in the same run that merged eleven branches. Someone was reading the tree rather than the reports, found two truncated files, and fixed both. That is the behaviour the program&#x27;s own culture asks for, and it happened on the same morning as the convergence.</p>
+    <div class="pager"><a href="016.html">&larr; 016 &middot; Sidney and gabe: retired, and still on `main`</a><a href="018.html">018 &middot; The corpus that stops a month before the window &rarr;</a></div>
+  </div>
+</section>
+<footer>
+  <div class="wrap foot-in">
+    <div class="foot-links">
+      <a href="../">All series</a>
+      <a href="../comic/">The Comicbook Artist</a>
+      <a href="../chronicles/">Chronicles</a>
+      <a href="https://mem20.com/">mem20.com</a>
+    </div>
+    <p class="foot-note">
+      Mem20-naration's Chronicles &middot; a mem20 series<br>
+      Published from <span class="mono">docs/series/</span> on GitHub Pages
+    </p>
+  </div>
+</footer>
+</body>
+</html>

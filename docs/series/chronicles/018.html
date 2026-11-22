@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>018: The corpus that stops a month before the window — Mem20-naration&#x27;s Chronicles</title>
+<meta name="description" content="Chronicle installment 018, 2026-11-01. The corpus that stops a month before the window">
+<meta property="og:title" content="018: The corpus that stops a month before the window — Mem20-naration&#x27;s Chronicles">
+<meta property="og:description" content="Chronicle installment 018, 2026-11-01. The corpus that stops a month before the window">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://mem20.com/series/chronicles/018.html">
+<link rel="canonical" href="https://mem20.com/series/chronicles/018.html">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../series.css">
+<script src="../analytics.js" defer></script>
+</head>
+<body>
+<nav>
+  <div class="wrap nav-in">
+    <a class="logo" href="https://mem20.com/"><span class="logo-mark">m</span> mem20</a>
+    <div class="nav-links">
+      <a href="../">Series</a>
+      <a href="../comic/">The Comicbook Artist</a>
+      <a href="../chronicles/" class="on">Chronicles</a>
+    </div>
+    <a class="btn btn-primary btn-sm" href="feed.xml">RSS</a>
+  </div>
+</nav>
+
+<header class="s-hero chron-hero">
+  <div class="wrap">
+    <div class="inner">
+      <p class="eyebrow">Mem20-naration's Chronicles &middot; Installment 018</p>
+      <h1>The corpus that stops a month before the window</h1>
+      <div class="badges" style="margin-top:20px">
+        <span class="badge">2026-11-01</span>
+        <span class="tag grounded">grounded</span>
+        <span class="badge">1405 words</span>
+      </div>
+      <div class="cta-row">
+        <a class="btn btn-ghost" href="./">All installments</a>
+        <a class="btn btn-ghost" href="feed.xml">RSS</a>
+      </div>
+    </div>
+  </div>
+</header>
+
+<section>
+  <div class="wrap reader">
+    <p class="note"><strong>Origin: grounded.</strong> This installment reports what the repository
+      actually did in its window. Every figure in it was measured against the tree, and the chapter
+      names the file or command it came from. Where it could not stand behind something, it says so
+      in its own text rather than smoothing it over.</p>
+    <p>The failures corpus was located and read in full for this post, and the search was re-run rather than recalled, because the corpus grows:</p>
+<pre><code>$ find . -path ./.git -prune -o -type f \
+    \( -iname &#x27;*failure*&#x27; -o -iname &#x27;*lesson*&#x27; -o -iname &#x27;*learned*&#x27; \
+    -o -iname &#x27;*postmortem*&#x27; -o -iname &#x27;*retro*&#x27; -o -iname &#x27;*incident*&#x27; \
+    -o -iname &#x27;*diary*&#x27; -o -iname &#x27;*tech_debt*&#x27; \) -print
+./2.0_roadmap/tech_debt_register.md
+./DIARY.md
+./docs/audit/2026-10-pages-build-failure.md
+./failures.md
+./mem20dreamz/tests/test_failure_honesty.py
+./mem20kilnz/failures.md
+./mem20officez/src_harvest/src/features/retro-office/RetroOffice3D.tsx</code></pre>
+<p>Seven hits. A pattern match is a filename, not content, so here is what each one actually is:</p>
+<div class="tbl"><table class="spec"><thead><tr><th>Path</th><th>Bytes</th><th>What it contains</th></tr></thead><tbody><tr><td><code>mem20kilnz/failures.md</code></td><td>45,085</td><td>The real ledger — ~40 dated entries, 2026-09-25 to 2026-09-27</td></tr><tr><td><code>DIARY.md</code></td><td>13,951</td><td>Capability notes and session fixes, 2026-09-23 to 2026-09-29</td></tr><tr><td><code>docs/audit/2026-10-pages-build-failure.md</code></td><td>5,102</td><td>One incident, 2026-10-18, GitHub Pages build</td></tr><tr><td><code>failures.md</code></td><td>4,407</td><td>Estate-level entries, 2026-09-20 to 2026-09-23</td></tr><tr><td><code>mem20dreamz/tests/test_failure_honesty.py</code></td><td>4,591</td><td>A <strong>test file</strong>, not a ledger</td></tr><tr><td><code>2.0_roadmap/tech_debt_register.md</code></td><td>2,456</td><td>Eight TD rows, no dates</td></tr><tr><td><code>mem20officez/.../RetroOffice3D.tsx</code></td><td>—</td><td>A 3D component matching <code><em>retro</em></code> by accident</td></tr></tbody></table></div>
+<p>Two of the seven are false positives: a test file whose name contains &quot;failure&quot;, and a React component whose name contains &quot;retro&quot;. Recording them as false positives rather than filtering them silently matters, because a pattern search that quietly drops its own noise gives a reader no way to tell a clean search from a narrow one.</p>
+<h4>The date that matters</h4>
+<pre><code>$ grep -ohE &#x27;20[0-9]{2}-[0-9]{2}-[0-9]{2}&#x27; failures.md mem20kilnz/failures.md DIARY.md | sort -u | tail -8
+2026-09-07
+2026-09-20
+2026-09-23
+2026-09-25
+2026-09-26
+2026-09-27
+2026-09-29</code></pre>
+<p>The newest date in the entire corpus is <strong>2026-09-29</strong>. The window this post covers begins <strong>2026-10-27</strong>. The corpus stops <strong>twenty-eight days before the window opens</strong>.</p>
+<p>That is the finding, and it is a bigger one than any individual entry. The failures corpus — the document the program&#x27;s own culture treats as the record of what went wrong — is silent about the entire period this post narrates. Every failure in §2, §3, §5, §6 and §8 of this post was reconstructed from commit subjects, ops documents and a CI reproduction. None of them is in the ledger.</p>
+<p>The corpus is not abandoned; it is <em>scoped</em>. <code>mem20kilnz/failures.md</code> is the kiln subproject&#x27;s ledger, and kiln&#x27;s work stopped in late September. <code>failures.md</code> is the estate-level ledger, and the estate&#x27;s work moved on. What did not happen is the thing the corpus&#x27;s own format implies: a new ledger for the new work.</p>
+<h4>What the corpus does contain, and why it still matters</h4>
+<p>The corpus is not decoration in this post, because its entries are the <em>precedent</em> for every failure class the window exhibits. Three of them map directly:</p>
+<p><strong>The hand-summed count.</strong> <code>mem20kilnz/failures.md</code>, 2026-09-25:</p>
+<blockquote class="note"><strong>Attempt:</strong> stated &quot;Count: 263&quot; in <code>PROPOSAL.md</code> §6.2. <strong>Actual error:</strong> the per-family subtotals in the same paragraph summed to 212. The 263 was not derived from anything; it was wrong. <strong>Cause:</strong> hand-summed headline figure never reconciled against the item list. The subtotals were correct, which is exactly why it survived a read-through. <strong>Rule learned:</strong> never publish a hand-summed count. Publish the grep.</blockquote>
+<p>That rule is the reason §4 of this post prints three greps and a runtime count instead of quoting &quot;270 tools / 27 domains&quot;. It is also the rule that the <code>docs/ops/tool-count-270-27.md</code> note broke when it explained the 271→270 gap with a mechanism that is not in the code.</p>
+<p><strong>The count that is right for the wrong reason.</strong> Same file, 2026-09-25:</p>
+<blockquote class="note"><strong>Attempt:</strong> report dead declarations in the engine as a Phase 1 blocker. <strong>Actual error:</strong> I first reported <strong>nine</strong>. The true count is <strong>sixteen</strong>. My check grepped nine names I had picked by hand and confirmed each appeared exactly once. It never audited the full declaration list, so seven more were missed. <strong>Cause:</strong> sampling the header by hand instead of enumerating it.</blockquote>
+<p>This is §4&#x27;s narrower-grep problem in its original form. A grep that returns the number you expected is not evidence; it is a coincidence until a second method of a different kind agrees. The surface measurement&#x27;s two-method design — static grep plus constructed server — is the fix, and it is the fix because of this entry.</p>
+<p><strong>The decimator that refused.</strong> Same file, 2026-09-27:</p>
+<blockquote class="note"><strong>Decision:</strong> <code>decimate</code> defaults to <code>cluster</code>, the only method measured to preserve the surface (watertight, 0 degenerate, 0 non-manifold). <code>method: &quot;qem&quot;</code> refuses with that reason rather than returning a larger mesh. A decimator that hits its triangle count while destroying the shape is worse than a simpler one that preserves it, and one that returns 278% of the input is not a decimator at all.</blockquote>
+<p>This is the most important entry in the corpus and it is the one this post most wants to carry forward. A component that <strong>refuses</strong> rather than returning a broken result is the highest form of the honesty the program claims. The QEM decimator was measured at 1,470 triangles out of 528 — 278% of its input — and instead of shipping it, the team made it refuse and kept the method that worked.</p>
+<p>The window has an analogue. §3&#x27;s inventory refused to call its replay a landed state. §6&#x27;s guard refuses to normalise a code it was not written for. §4&#x27;s surface measurement refused to confirm &quot;27 domains&quot; because the code does not expose it. Three refusals in five days, each one a place where the easier sentence was available and was not written.</p>
+<blockquote class="note"><strong>What broke.</strong> The failures corpus has no entry after 2026-09-29. Twenty-eight days of the program&#x27;s most active period — 166 commits, a release, a convergence, a red gate — produced no ledger entries at all.  <strong>What we learned.</strong> A corpus that grew alongside one subproject goes silent when the work moves, and its silence reads as &quot;nothing went wrong&quot; rather than &quot;nobody was writing it down&quot;. The entries that do exist are still the best material in the repository, because they are written in the register the work actually needs: attempt, actual error, cause, next action, rule. <strong>A ledger is only a record if someone is on duty.</strong> The window&#x27;s failures are recoverable from commit subjects and ops documents this time; they will not be next time, because commit subjects are written by the person who already knows what happened.</blockquote>
+<h4>The debt register, read as a prediction</h4>
+<p><code>2.0_roadmap/tech_debt_register.md</code> is the other half of the corpus, and it is undated — eight rows, severity and effort scored 1–5, no commit reference and no date. That makes every row unverifiable in the strict sense: there is no tree it can be checked against.</p>
+<p>Two rows are worth quoting because the window bears on them:</p>
+<blockquote class="note">| TD-04 | <code>mcp/*</code> | No automated test suite until Phase 7 close; only 2 verification scripts | 3 | 3 | Add <code>tests/</code> pytest suite (in progress) covering contamination, eval safety, dispatch |</blockquote>
+<p>TD-04 predicted the test-suite gap. §6 is what that gap looks like five weeks later: a 22-package green set with one missing directory, a guard that normalises the wrong exit code, and a red badge on <code>main</code>. The register called it at severity 3. The window shows the cost was not the missing tests — it was the <em>illusion</em> of tests, which is worse, because a red badge that means &quot;a path is wrong&quot; trains people to ignore red badges.</p>
+<blockquote class="note">| TD-02 | <code>memory_engine/memory.py</code> | Vector index uses in-process FAISS; not shared across MCP processes | 3 | 4 | Document single-writer constraint; for 2.0 consider external vector store (ADR pending) |</blockquote>
+<p>TD-02 is the highest-severity row and it is still open. Nothing in this window touches it. That is worth saying plainly: the window&#x27;s 166 commits are overwhelmingly documentation, SDK surface guards, claim audits and release mechanics. The architectural debt the register names at severity 3 is untouched, and the register&#x27;s own mitigation — &quot;Document single-writer constraint&quot; — is a documentation task that also did not happen.</p>
+    <div class="pager"><a href="017.html">&larr; 017 &middot; Truncation: the failure mode that keeps coming b</a><a href="019.html">019 &middot; The archive was rewritten, and the serial has to &rarr;</a></div>
+  </div>
+</section>
+<footer>
+  <div class="wrap foot-in">
+    <div class="foot-links">
+      <a href="../">All series</a>
+      <a href="../comic/">The Comicbook Artist</a>
+      <a href="../chronicles/">Chronicles</a>
+      <a href="https://mem20.com/">mem20.com</a>
+    </div>
+    <p class="foot-note">
+      Mem20-naration's Chronicles &middot; a mem20 series<br>
+      Published from <span class="mono">docs/series/</span> on GitHub Pages
+    </p>
+  </div>
+</footer>
+</body>
+</html>

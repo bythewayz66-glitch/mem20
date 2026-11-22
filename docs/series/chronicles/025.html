@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>025: The consolidation: 177 members into 56 runtimes — Mem20-naration&#x27;s Chronicles</title>
+<meta name="description" content="Chronicle installment 025, 2026-11-21. The consolidation: 177 members into 56 runtimes">
+<meta property="og:title" content="025: The consolidation: 177 members into 56 runtimes — Mem20-naration&#x27;s Chronicles">
+<meta property="og:description" content="Chronicle installment 025, 2026-11-21. The consolidation: 177 members into 56 runtimes">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://mem20.com/series/chronicles/025.html">
+<link rel="canonical" href="https://mem20.com/series/chronicles/025.html">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../series.css">
+<script src="../analytics.js" defer></script>
+</head>
+<body>
+<nav>
+  <div class="wrap nav-in">
+    <a class="logo" href="https://mem20.com/"><span class="logo-mark">m</span> mem20</a>
+    <div class="nav-links">
+      <a href="../">Series</a>
+      <a href="../comic/">The Comicbook Artist</a>
+      <a href="../chronicles/" class="on">Chronicles</a>
+    </div>
+    <a class="btn btn-primary btn-sm" href="feed.xml">RSS</a>
+  </div>
+</nav>
+
+<header class="s-hero chron-hero">
+  <div class="wrap">
+    <div class="inner">
+      <p class="eyebrow">Mem20-naration's Chronicles &middot; Installment 025</p>
+      <h1>The consolidation: 177 members into 56 runtimes</h1>
+      <div class="badges" style="margin-top:20px">
+        <span class="badge">2026-11-21</span>
+        <span class="tag grounded">grounded</span>
+        <span class="badge">1170 words</span>
+      </div>
+      <div class="cta-row">
+        <a class="btn btn-ghost" href="./">All installments</a>
+        <a class="btn btn-ghost" href="feed.xml">RSS</a>
+      </div>
+    </div>
+  </div>
+</header>
+
+<section>
+  <div class="wrap reader">
+    <p class="note"><strong>Origin: grounded.</strong> This installment reports what the repository
+      actually did in its window. Every figure in it was measured against the tree, and the chapter
+      names the file or command it came from. Where it could not stand behind something, it says so
+      in its own text rather than smoothing it over.</p>
+    <p>On 9 and 14 November the estate was reorganised twice, and the second reorganisation is the largest structural change in the window.</p>
+<h4>7.1 The first pass: nine consolidations in one day</h4>
+<p>The 9 November diary entries record nine consolidations, each one merging a family of long-named subsystems into a short-named runtime:</p>
+<blockquote class="note">- <strong>consolidate training/cert/apprenticeship into mem20schoolz</strong> — Created <code>mem20schoolz</code> (unified training + certification + apprenticeship) ... removed originals <code>mem20apprenticeshipruntimez</code>, <code>mem20trainingz</code>, <code>mem20certificationz</code>. - <strong>consolidate all pipe subsystems into mem20pipez</strong> — Created <code>mem20pipez</code> as unified pipeline subsystem with all pipe runtimes copied as modules under <code>mem20pipez/pipes/</code>. Removed all pipe-named originals (<code>mem202dand3dartproductionoptimizationpipelinez</code>, <code>mem20aipipelinecostoptimizerz</code>, <code>mem20assetintakecatalogingandvalidationpipelinez</code>, ... fourteen in total). - <strong>consolidate simulation subsystems into mem20simz</strong> — Merged simulator/simulation-related subsystems into <code>mem20simz</code> as modules under <code>mem20simz/sims/</code> (twelve members). - <strong>consolidate twin subsystems into mem20twinz</strong> — seven members under <code>mem20twinz/twins/</code>. - <strong>consolidate studio subsystems into mem20studioz</strong> — five members under <code>mem20studioz/studios/</code>. - <strong>consolidate brain subsystems into mem20causalroutingbrainz</strong> — four members under <code>mem20causalroutingbrainz/brains/</code>. - <strong>consolidate lab subsystems into mem20labz</strong> — seven members under <code>mem20labz/labs/</code>. - <strong>consolidate forge subsystems into mem20rewardforgez</strong> — four members under <code>mem20rewardforgez/forges/</code>.</blockquote>
+<p>Nine families, dozens of packages, one day. And this is the commit that rewrote part two&#x27;s verifier (§1.2), because the pipe consolidation removed <code>mem20pipelinez</code> and <code>mem20executablegameconceptandscopepipelinez</code> from the tree, and the sweep that updated references did not exclude <code>docs/app/narrative/</code>.</p>
+<h4>7.2 The second pass: 177 members</h4>
+<p>The 14 November entry is the larger one, and it states the rule that drove it:</p>
+<blockquote class="note"><strong>Rehoming complete (extended):</strong> All long <code>mem20<em>z</code> subsystems (<code>name length &gt; 15</code>) absorbed into short runtimes (<code>len &lt; 15</code>) with full trees copied into <code>&lt;target&gt;/absorbed/&lt;member&gt;/</code>, member READMEs appended to target READMEs, tests copied to <code>&lt;target&gt;/tests/absorbed/&lt;member&gt;/</code> (and <code>pkg_tests</code> where applicable), originals deleted. 177 members rehomed across rounds (87+42+45+3) + 1 stale pycache-only remnant removed (<code>mem20versioncontrollargeassetandrecoverypipelinez</code>, source already in <code>mem20pipez/pipes/...</code>). <strong>0</strong> long standalone <code>mem20</em>z</code> dirs remain (short runtimes 56, <code>mem20benchmarkz</code> len==15 unchanged). No symlink compatibility shims.</blockquote>
+<p>The rule is a name-length rule: any subsystem whose directory name is longer than fifteen characters is absorbed into a runtime whose name is shorter. 177 members, in four rounds of 87, 42, 45 and 3.</p>
+<p>That is an extraordinary criterion for a refactor, and it is worth being clear about what it is and is not. It is not an architectural principle — there is no reason a fifteen-character boundary corresponds to a module boundary. It is a <em>mechanical</em> rule, chosen because it can be applied without judgement, and its virtue is that it is checkable: after the pass, <code>0</code> long standalone directories remain, and that is a fact you can verify with <code>ls</code>.</p>
+<p>The cost is recorded honestly in the same entry:</p>
+<blockquote class="note"><strong>Import compatibility:</strong> Added <code>mem20_absorbed.py</code>, <code>_mem20_absorbed_finder.py</code>, <code>.mem20-absorbed-map.json</code>, and venv <code>.pth</code> (<code>.venv/lib/python3.13/site-packages/_mem20_absorbed.pth</code>) to resolve <code>mem20&lt;member&gt;z</code> imports to canonical absorbed locations (177 mapped; 39 multi-target).</blockquote>
+<p>So the refactor required a custom import finder, a JSON map of 177 entries with 39 members mapping to more than one target, and a <code>.pth</code> file in the virtualenv. That is the price of moving 177 packages without breaking every import in the estate, and it is a price the entry does not hide.</p>
+<h4>7.3 What the finder broke, and how</h4>
+<p>The failures corpus records the consequences, and they are exactly what a custom import finder predicts:</p>
+<blockquote class="note"><strong>Broken imports after symlink removal (resolved):</strong> Removing top-level symlinks for absorbed members left old <code>mem20&lt;member&gt;z</code> import paths unresolved. Fixed by adding <code>_mem20_absorbed_finder.py</code> + <code>.mem20-absorbed-map.json</code> and venv <code>.pth</code> for canonical resolution; bootstrapped in MCP/gateway.</blockquote>
+<p>And then, on 21 November — the last day of the window — the finder itself is found to be broken in a clean checkout:</p>
+<blockquote class="note"><code>_mem20_absorbed_finder.py</code>: resolve the absorbed map relative to the checkout instead of the hard-coded <code>/opt/mem20</code>, and rebase recorded absolute paths onto this root. Without it every absorbed member failed to import and the ecosystem probe reported 0 peers.</blockquote>
+<p>That is the single most instructive failure in the window, and it deserves its own treatment.</p>
+<blockquote class="note"><strong>What broke.</strong> The import finder that made the 177-member consolidation possible resolved its map against a hard-coded absolute path, <code>/opt/mem20</code>. On the machine where the consolidation was performed, that path existed and everything worked. In a clean checkout anywhere else, every absorbed member failed to import and the ecosystem probe reported <strong>0 peers</strong> — a number that looks like a measurement and is actually an absence.  <strong>What we learned.</strong> A refactor that requires a custom resolver has moved the failure mode from &quot;the import is wrong&quot; to &quot;the resolver is wrong,&quot; and the second is much harder to see because it fails silently and plausibly. <code>0 peers</code> is not an error; it is a valid probe result. The only thing that distinguishes &quot;this subsystem has no peers&quot; from &quot;this subsystem&#x27;s peers could not be imported&quot; is knowing that it should have peers — which is exactly the knowledge a clean checkout does not have. <strong>A resolver must be rooted in the thing it is resolving, not in the machine it was written on.</strong> The fix is one line of path arithmetic; the cost of not having it was a probe that reported a confident zero for an unknown number of days.</blockquote>
+<h4>7.4 The absorbed-ecosystem exception bug</h4>
+<p>There is a second consequence, and it is a textbook Python defect:</p>
+<blockquote class="note"><strong>Absorbed ecosystem probe crashes (resolved):</strong> Many absorbed <code>ecosystem.py</code> files caught <code>CircuitOpen</code> in a separate except block but could leave <code>CircuitOpen</code> unbound if <code>mem20faultcontainmentcellsz</code> import failed (e.g. due to missing <code>toolchest.catalog</code> in some envs), causing <code>UnboundLocalError</code>. Fixed in 57 files to handle by exception class name in the generic handler.</blockquote>
+<p>Fifty-seven files. The pattern is:</p>
+<pre><code>try:
+    from mem20faultcontainmentcellsz import CircuitOpen
+except ImportError:
+    pass
+
+try:
+    ...
+except CircuitOpen:      # UnboundLocalError if the import above failed
+    ...</code></pre>
+<p>If the import fails, the name <code>CircuitOpen</code> is never bound, and the <code>except CircuitOpen</code> clause raises <code>UnboundLocalError</code> at the moment it is supposed to handle an error. The handler becomes a second failure. Fifty-seven copies of the same pattern, because the pattern was copied.</p>
+<blockquote class="note"><strong>What broke.</strong> Fifty-seven absorbed ecosystem files caught an exception class that might not have been imported, so the error handler raised <code>UnboundLocalError</code> instead of handling the error.  <strong>What we learned.</strong> An <code>except</code> clause naming a symbol that may be unbound is a handler that can fail, and a handler that can fail is worse than no handler because it converts a handled condition into an unhandled one at the worst possible moment. The fix — match on the exception class <em>name</em> in the generic handler — is uglier and correct. The general rule: <strong>when a module is copied 57 times, every defect in it is copied 57 times, and the copy is the reason the defect is invisible.</strong> One file with this pattern is a code smell; fifty-seven is a pattern, and a pattern is what a linter should catch and a reviewer will not.</blockquote>
+    <div class="pager"><a href="024.html">&larr; 024 &middot; The conformance sweep: seventy-nine issues in tw</a><a href="026.html">026 &middot; The engine that was deleted with a gitlink &rarr;</a></div>
+  </div>
+</section>
+<footer>
+  <div class="wrap foot-in">
+    <div class="foot-links">
+      <a href="../">All series</a>
+      <a href="../comic/">The Comicbook Artist</a>
+      <a href="../chronicles/">Chronicles</a>
+      <a href="https://mem20.com/">mem20.com</a>
+    </div>
+    <p class="foot-note">
+      Mem20-naration's Chronicles &middot; a mem20 series<br>
+      Published from <span class="mono">docs/series/</span> on GitHub Pages
+    </p>
+  </div>
+</footer>
+</body>
+</html>

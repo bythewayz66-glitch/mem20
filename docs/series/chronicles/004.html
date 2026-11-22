@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>004: The hour&#x27;s work, read by diffstat — Mem20-naration&#x27;s Chronicles</title>
+<meta name="description" content="Chronicle installment 004, 2026-10-27. The hour&#x27;s work, read by diffstat">
+<meta property="og:title" content="004: The hour&#x27;s work, read by diffstat — Mem20-naration&#x27;s Chronicles">
+<meta property="og:description" content="Chronicle installment 004, 2026-10-27. The hour&#x27;s work, read by diffstat">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://mem20.com/series/chronicles/004.html">
+<link rel="canonical" href="https://mem20.com/series/chronicles/004.html">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../series.css">
+<script src="../analytics.js" defer></script>
+</head>
+<body>
+<nav>
+  <div class="wrap nav-in">
+    <a class="logo" href="https://mem20.com/"><span class="logo-mark">m</span> mem20</a>
+    <div class="nav-links">
+      <a href="../">Series</a>
+      <a href="../comic/">The Comicbook Artist</a>
+      <a href="../chronicles/" class="on">Chronicles</a>
+    </div>
+    <a class="btn btn-primary btn-sm" href="feed.xml">RSS</a>
+  </div>
+</nav>
+
+<header class="s-hero chron-hero">
+  <div class="wrap">
+    <div class="inner">
+      <p class="eyebrow">Mem20-naration's Chronicles &middot; Installment 004</p>
+      <h1>The hour&#x27;s work, read by diffstat</h1>
+      <div class="badges" style="margin-top:20px">
+        <span class="badge">2026-10-27</span>
+        <span class="tag grounded">grounded</span>
+        <span class="badge">1069 words</span>
+      </div>
+      <div class="cta-row">
+        <a class="btn btn-ghost" href="./">All installments</a>
+        <a class="btn btn-ghost" href="feed.xml">RSS</a>
+      </div>
+    </div>
+  </div>
+</header>
+
+<section>
+  <div class="wrap reader">
+    <p class="note"><strong>Origin: grounded.</strong> This installment reports what the repository
+      actually did in its window. Every figure in it was measured against the tree, and the chapter
+      names the file or command it came from. Where it could not stand behind something, it says so
+      in its own text rather than smoothing it over.</p>
+    <p>A branch tip and a commit count prove that <em>something</em> happened. They do not prove what. The roster asked for a branch SHA as evidence, and a branch SHA is a weaker claim than the roster&#x27;s own discipline implies — so this section reads the diffs.</p>
+<p>The figures below are <code>git diff --shortstat origin/main...origin/&lt;branch&gt;</code>, which is the three-dot form: changes on the branch since the merge base, not the two-dot form that would include <code>main</code>&#x27;s own progress.</p>
+<div class="tbl"><table class="spec"><thead><tr><th>Branch</th><th>files</th><th>insertions</th><th>deletions</th><th>net shape</th></tr></thead><tbody><tr><td><code>feat/ws2-desktop-packaging-40</code></td><td>5</td><td>277</td><td>0</td><td>pure addition</td></tr><tr><td><code>docs/ws1-experiment-registry</code></td><td>2</td><td>605</td><td>0</td><td>pure addition</td></tr><tr><td><code>feat/ws2-launch-page-270</code></td><td>5</td><td>595</td><td>309</td><td>rebuild</td></tr><tr><td><code>docs/ws1-gtm-claim-ledger-refresh</code></td><td>1</td><td>185</td><td>91</td><td>rewrite</td></tr><tr><td><code>docs/ws1-merge-order</code></td><td>1</td><td>291</td><td>0</td><td>pure addition</td></tr><tr><td><code>fix/ws2-finance-270</code></td><td>6</td><td>310</td><td>22</td><td>append + repair</td></tr><tr><td><code>fix/ws2-sidecar-compiles-36</code></td><td>12</td><td>1,677</td><td>13</td><td>the largest single branch</td></tr><tr><td><code>docs/ws1-benchmark-comparability</code></td><td>2</td><td>204</td><td>200</td><td>rewrite</td></tr><tr><td><code>fix/ws2-pricing-tier-sensitivity</code></td><td>4</td><td>790</td><td>1</td><td>new model + docs</td></tr><tr><td><code>fix/ws2-suite-collection-unblock</code></td><td>14</td><td>140</td><td>38</td><td>surgical, widest file count</td></tr><tr><td><code>content/ws3-investor-deck</code></td><td>16</td><td>1,251</td><td>0</td><td>pure addition</td></tr><tr><td><code>fix/ws2-perl-jobs-coverage</code></td><td>11</td><td>1,909</td><td>260</td><td>largest churn</td></tr><tr><td><code>content/ws3-narrative-serial</code></td><td>1</td><td>1,095</td><td>0</td><td>this document</td></tr><tr><td><code>fix/ws2-metrics-collector</code></td><td>2</td><td>1,431</td><td>19</td><td>one file dominates</td></tr><tr><td><code>content/ws3-launch-copy-270</code></td><td>1</td><td>182</td><td>76</td><td>rewrite</td></tr><tr><td><code>fix/ws2-ruby-job-spec</code></td><td>6</td><td>686</td><td>5</td><td>new spec + helpers</td></tr><tr><td><code>feat/ws2-cpp-live-surface-test</code></td><td>6</td><td>496</td><td>136</td><td>new test + wiring</td></tr><tr><td><code>docs/ws1-issue-40-update-ux</code></td><td>1</td><td>603</td><td>0</td><td>pure addition</td></tr><tr><td><code>feat/ws2-bench-scale-2000</code></td><td>9</td><td>1,464</td><td>840</td><td>the round&#x27;s biggest rewrite</td></tr><tr><td><code>fix/ws2-controlz-a11y</code></td><td>10</td><td>1,440</td><td>13</td><td>new layer + tests</td></tr><tr><td><code>docs/ws1-verification-transcript</code></td><td>3</td><td>387</td><td>0</td><td>pure addition</td></tr></tbody></table></div>
+<p>Two shapes are worth naming because they contradict the intuition that &quot;a docs branch is small&quot;.</p>
+<p><strong><code>fix/ws2-suite-collection-unblock</code> touched 14 files to add 140 lines.</strong> That is the widest file count and nearly the smallest insertion count in the round, and the ratio is the finding: the defect was one pattern repeated fourteen times. PR #118&#x27;s body names it:</p>
+<blockquote class="note">14 modules called <code>sys.exit(1)</code> inside a module-scope <code>except ImportError:</code> guard. That is <em>not</em> a collection error — it takes down the session.</blockquote>
+<p>Fourteen modules, one bug, 140 lines. A branch census that scored this row by commit count (7 commits ahead) or by line count (140) would rank it near the bottom of the round. By consequence it is probably the highest-value branch that landed, because it unblocked <code>pytest --collect-only</code> for every other agent — and PR #118 carries the two summary lines that prove it rather than assert it:</p>
+<pre><code>before:  2486 tests collected, 20 errors
+after:   2489 tests collected, 19 errors
+delta:   +3 collected, -1 error, 0 new errors</code></pre>
+<p><strong><code>fix/ws2-perl-jobs-coverage</code> shows 1,909 insertions and 260 deletions across 11 files</strong>, but only two of its eight commits are the assigned work:</p>
+<pre><code>$ git log origin/main..origin/fix/ws2-perl-jobs-coverage --format=&#x27;%h %aI %s&#x27;
+23c75a7 2026-10-27T02:57:51-06:00 fix(sdk/perl): make wait_for_job raise instead of returning a running job
+1005da3 2026-10-27T02:56:41-06:00 test(sdk/perl): drive the background-job path to a terminal state (#110 follow-up)
+d8cc16b 2026-10-26T20:12:23-06:00 docs(sdk/perl): correct the recorded test count in AUDIT.md to what the suite emits
+6e19af5 2026-10-26T20:11:08-06:00 fix(sdk/perl): close test inspected a freshly built transport, not the closed one
+743a2db 2026-10-26T20:09:25-06:00 docs(sdk/perl): README quickstart and status match the 270/27 surface
+2bb47a9 2026-10-26T20:09:03-06:00 fix(sdk/perl): non-blocking stderr, applied cwd, buffered frames, live tests
+ae6e834 2026-10-26T20:07:19-06:00 fix(sdk/perl): client binding, failure normalisation, job polling, surface check
+2bbe1fe 2026-10-26T20:06:39-06:00 fix(sdk/perl): bind the 270-tool surface correctly and stop reporting failures as success</code></pre>
+<p>Six of the eight are dated <strong>2026-10-26</strong>, before the dispatch. This branch was created from the tip of <code>fix/perl-sdk-270-surface</code> rather than from <code>main</code>, and the two new commits sit on top of work that was already in an open PR (#110). That is exactly what roster row 12 instructed — &quot;#110 is open — do not duplicate&quot; — and it is also why this row&#x27;s diffstat cannot be read as &quot;this agent wrote 1,909 lines this hour&quot;. It wrote two commits; the diffstat measures the branch&#x27;s distance from <code>main</code>, which includes the parent branch.</p>
+<p><strong>What we learned.</strong> A diffstat on a branch is not a measure of an agent&#x27;s work unless you also know what the branch was cut from. Of the twenty-one branches, this one and three others sit on an existing branch rather than on <code>main</code>. The unit that answers &quot;what did this row deliver&quot; is the commits dated after dispatch and their own diffs — not <code>git diff main...branch</code>. The roster&#x27;s evidence rule names a branch SHA, and a branch SHA is genuinely the strongest single identifier available; but a <em>census</em> built on branch SHAs will systematically over-credit rows that stack, and under-credit rows that make many small fixes to one file.</p>
+<h4>The four stacked branches</h4>
+<p>Reading the merge bases rather than assuming them, four of the twenty-one branch rows are not cut from <code>main</code>:</p>
+<div class="tbl"><table class="spec"><thead><tr><th>Branch</th><th>merge-base with <code>main</code></th><th>what it stacks on</th></tr></thead><tbody><tr><td><code>fix/ws2-perl-jobs-coverage</code></td><td>pre-dispatch</td><td><code>fix/perl-sdk-270-surface</code> (#110)</td></tr><tr><td><code>fix/ws2-ruby-job-spec</code></td><td>pre-dispatch</td><td><code>fix/ruby-sdk-mem20-surface-270</code> (#107)</td></tr><tr><td><code>feat/ws2-bench-scale-2000</code></td><td>pre-dispatch</td><td><code>feat/scale-corpus-2000</code></td></tr><tr><td><code>fix/ws2-sidecar-compiles-36</code></td><td>pre-dispatch</td><td><code>feat/ws2-tauri-shell-35</code> and <code>feat/ws2-tauri-sidecar-36</code></td></tr></tbody></table></div>
+<p>The other seventeen are cut from <code>12640766</code>, which was <code>main</code> at dispatch. The stacking is not a defect. It is the intended consequence of the roster&#x27;s five &quot;do not duplicate&quot; instructions, and it is the reason the round produced 61 commits rather than 61 forks. But it does mean that <strong>the round cannot be scored by summing branch ahead-counts</strong>, which is precisely the unit error §5 unpacks.</p>
+    <div class="pager"><a href="003.html">&larr; 003 &middot; The census: twenty-one delivered, one merged</a><a href="005.html">005 &middot; One hundred and seventy-seven, one hundred and s &rarr;</a></div>
+  </div>
+</section>
+<footer>
+  <div class="wrap foot-in">
+    <div class="foot-links">
+      <a href="../">All series</a>
+      <a href="../comic/">The Comicbook Artist</a>
+      <a href="../chronicles/">Chronicles</a>
+      <a href="https://mem20.com/">mem20.com</a>
+    </div>
+    <p class="foot-note">
+      Mem20-naration's Chronicles &middot; a mem20 series<br>
+      Published from <span class="mono">docs/series/</span> on GitHub Pages
+    </p>
+  </div>
+</footer>
+</body>
+</html>

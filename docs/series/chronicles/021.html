@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>021: The number that would not hold still — Mem20-naration&#x27;s Chronicles</title>
+<meta name="description" content="Chronicle installment 021, 2026-11-21. The number that would not hold still">
+<meta property="og:title" content="021: The number that would not hold still — Mem20-naration&#x27;s Chronicles">
+<meta property="og:description" content="Chronicle installment 021, 2026-11-21. The number that would not hold still">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://mem20.com/series/chronicles/021.html">
+<link rel="canonical" href="https://mem20.com/series/chronicles/021.html">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../series.css">
+<script src="../analytics.js" defer></script>
+</head>
+<body>
+<nav>
+  <div class="wrap nav-in">
+    <a class="logo" href="https://mem20.com/"><span class="logo-mark">m</span> mem20</a>
+    <div class="nav-links">
+      <a href="../">Series</a>
+      <a href="../comic/">The Comicbook Artist</a>
+      <a href="../chronicles/" class="on">Chronicles</a>
+    </div>
+    <a class="btn btn-primary btn-sm" href="feed.xml">RSS</a>
+  </div>
+</nav>
+
+<header class="s-hero chron-hero">
+  <div class="wrap">
+    <div class="inner">
+      <p class="eyebrow">Mem20-naration's Chronicles &middot; Installment 021</p>
+      <h1>The number that would not hold still</h1>
+      <div class="badges" style="margin-top:20px">
+        <span class="badge">2026-11-21</span>
+        <span class="tag grounded">grounded</span>
+        <span class="badge">1698 words</span>
+      </div>
+      <div class="cta-row">
+        <a class="btn btn-ghost" href="./">All installments</a>
+        <a class="btn btn-ghost" href="feed.xml">RSS</a>
+      </div>
+    </div>
+  </div>
+</header>
+
+<section>
+  <div class="wrap reader">
+    <p class="note"><strong>Origin: grounded.</strong> This installment reports what the repository
+      actually did in its window. Every figure in it was measured against the tree, and the chapter
+      names the file or command it came from. Where it could not stand behind something, it says so
+      in its own text rather than smoothing it over.</p>
+    <p>The tool count is the project&#x27;s headline figure. It appears in the README, the launch page, the investor deck, the SDK surface guards, the pricing derivation, the finance claims check, and the positioning line. Across the twenty-day window it took at least nine distinct values, and every one of them was true when it was measured.</p>
+<p>This section is the story of that number, because it is the clearest case in the whole chronicle of a metric that is real, measured, and useless as a claim.</p>
+<h4>3.1 The values, in order</h4>
+<p>The frontier value was <strong>270 tools / 27 domains</strong>, established in part one by two independent methods (271 registration sites, 270 distinct after <code>sort -u</code>, and 270 from <code>len(Mem20MCPServer().tools)</code>), with the domain count of 27 marked <strong>quoted</strong> because it was an editorial subtraction rather than a measurement.</p>
+<p>Then, on 1 November, the count moved repeatedly inside a single day. The commit subjects are the record:</p>
+<pre><code>5cc304d7|fix(web): count only tools the MCP server actually serves (272, not 282)
+d4be3686|ci(mcp): correct stale expected tool count 272 -&gt; 277 (main&#x27;s actual surface)
+b23ba33f|ci(mcp): set expected tool count to 281 (277 on main + 4 from this subsystem)
+95495d4d|ci: bump MEM20_EXPECTED_TOOLS 272 -&gt; 290
+658b25c0|ci: set MEM20_EXPECTED_TOOLS to measured 294 for this branch
+6cc1fcce|ci: set MEM20_EXPECTED_TOOLS to measured 298 for this branch
+b4f283d7|ci: set MEM20_EXPECTED_TOOLS to measured 302 for this branch
+e8b05216|ci: set MEM20_EXPECTED_TOOLS to measured 306 for this branch</code></pre>
+<p>Read that list as a sequence of measurements rather than a sequence of corrections. Each line is an agent measuring the surface on its own branch and finding a different number, because each branch carried a different set of subsystem additions. <code>b23ba33f</code> says it explicitly: <em>&quot;281 (277 on main + 4 from this subsystem).&quot;</em> The number is not drifting because anyone is wrong. It is drifting because the surface is the sum of what is wired, and twenty-two agents were wiring.</p>
+<p>There is a second reading of the same list, and it is less flattering. <code>5cc304d7</code> says <em>&quot;count only tools the MCP server actually serves (272, not 282)&quot;</em> — which means that at some point before it, the published figure was 282 and the served figure was 272. Ten tools were being counted that the server did not serve. That is the same defect that reappears at the end of the window as the 19 unwired tools in §3.4, and it is worth noticing that it was found and fixed on 1 November and was back by 21 November.</p>
+<p>By 2 November the daily ops report records <strong>306 tools / 44 domains</strong>. By 4 November the launch page and dashboard are updated to <strong>311 / 39</strong>. By 9 November the live surface is <strong>487 / 129</strong>.</p>
+<h4>3.2 The 311/39 plateau</h4>
+<p>Between 4 and 9 November the number settles at 311 tools and 39 domains, and a great deal of work is done to make every surface agree with it. The commit subjects from 8 November are almost entirely convergence:</p>
+<pre><code>82bca9ba|docs(4.0): converge the renovation plan&#x27;s house numbers to 311/39
+54435ef5|fix(deck): converge deck index, register and record to 311/39
+64e23923|fix(deck): converge the tool surface to 311/39 and make slide 04 self-consistent
+730271c3|docs(perl-sdk): restore full README with 311/39 on server 3.1.2
+376e08c1|docs(cpp-sdk): restore full source-ledger.md (311/39, server 3.1.2)
+746f1496|docs(ruby-gem): README states 311 tools / 39 domains on server 3.1.2</code></pre>
+<p>Six commits, six surfaces, one number. This is what convergence looks like when it is done properly: not a single edit to a single file, but a sweep across every document that states the figure, each one carrying the same value and the same server version.</p>
+<p>And then, on 9 November, the number is 487 and all of that work is historical.</p>
+<h4>3.3 The jump to 487</h4>
+<p>The 9 November entry in <code>DIARY.md</code> records what happened, and it is not a measurement error:</p>
+<blockquote class="note"><strong>Live surface &amp; stale counts:</strong> verified <strong>487 tools / 129 domains</strong> (<code>Mem20MCPServer().tools</code>, live). Regenerated <code>docs/surface.json</code>, <code>docs/TOOL-DOMAINS.md</code>, <code>web/src/data/tools.json</code>; aligned current-facing docs/SDKs/CI/finance/verify (<code>verify_mcp.py</code>, workflows, finance model/inputs regenerated, C++/Perl/Ruby surfaces + live tests). <code>scripts/surface_manifest.py --check-docs</code> = <strong>OK</strong>. Historical records (DIARY/changelogs/dated reports) left as history.</blockquote>
+<p>The jump from 311 to 487 is 176 tools, and it is not a bug fix. It is the consolidation described in §7: subsystems that had been separate packages were absorbed into short runtimes, and each absorbed member brought its tools with it. The surface grew because the estate was reorganised, not because anyone had been undercounting.</p>
+<p>The last sentence of that diary entry is the one that matters for this section: <em>&quot;Historical records (DIARY/changelogs/dated reports) left as history.&quot;</em> That is the correct decision, and it is also the decision that makes the number impossible to state without a date. A reader who opens a document dated 8 November and finds 311 is reading a true statement about 8 November. A reader who opens the same document on 21 November and finds 311 is reading a stale one, and nothing in the document tells them which.</p>
+<p>Note also that this entry is the one place in the window where the archive rule was applied correctly. The 9 November operator regenerated the live surfaces and explicitly left the dated records alone. Six days later the 18 November sweep did the opposite. The difference between the two is not knowledge — both operators knew the rule — it is that one of them was editing a handful of files by hand and the other was running a find-and-replace.</p>
+<h4>3.4 The number at publication</h4>
+<p>At the publication point the surface is <strong>487 tools / 129 domains</strong>, with <strong>19 tools unwired</strong>. The unwired list is in <code>docs/surface.json</code> and it is worth printing, because &quot;487 tools&quot; is a claim about what is registered and the unwired list is a claim about what is not:</p>
+<pre><code>gateway_admission, gateway_provenance, gateway_translate,
+lattice_emit, lattice_recall, lattice_report, lattice_search, lattice_verify,
+memory_engine_guard, memory_engine_health, memory_engine_namespace,
+memory_engine_recall, memory_engine_subsystem, memory_engine_veto,
+stream_publish, stream_recall, stream_report, stream_search, stream_verify</code></pre>
+<p>Nineteen tools across four families — gateway, lattice, memory_engine, stream — that exist in the catalog and are not served. The launch-page record from 16 November states the cross-check plainly:</p>
+<blockquote class="note"><code>docs/surface.json</code> on main: tools 487, domains 129, unwired_tools 19, cross_check: ast_tools 487, ast_domains 129, only_ast empty, only_live empty. Generated from the live JSON-RPC <code>tools/list</code> response; the AST catalog agrees exactly, with no tool present in one catalog and missing from the other.</blockquote>
+<p>So the two catalogs agree at 487, and 19 of those 487 are not wired. The number is honest in the sense that it is measured twice and the measurements match. It is not honest in the sense that a reader would take &quot;487 tools&quot; to mean 487 tools they can call.</p>
+<blockquote class="note"><strong>What broke.</strong> The project&#x27;s headline number took nine values in twenty days, and every one was correct at the moment it was measured. The consequence is that no document can state the number without also stating a date, and almost none of them do. The 8 November convergence — six commits making six surfaces agree on 311/39 — was obsolete within twenty-four hours.  <strong>What we learned.</strong> A metric that is the sum of what is currently wired is not a metric; it is a snapshot of a build. The project already knows this and already has the tool for it: the doc-count drift gate, which scans live docs for a retired tool/domain band and fails if it finds one. That gate is the right control, and it is the reason the 16 November launch page could be rebuilt with confidence. The lesson is narrower than &quot;keep numbers current&quot;: <strong>a number that changes when you add a feature must be published with the commit that changed it, or it must not be published at all.</strong> The 8 November convergence did the first thing correctly and the second thing not at all — it updated six surfaces and left the other eighty-odd documents stating 270.</blockquote>
+<h4>3.5 The house number</h4>
+<p>There is a fifth value, and it is the one that caused the most trouble: <strong>257 tools / 26 domains</strong>. This is the &quot;house&quot; figure — the number in the positioning line, the TAM/SAM/SOM model, and the investor narrative. It was never a measurement of the live surface. It was a number that had been true at some earlier point and had been carried forward.</p>
+<p>The 16 November program status names it as blocker B5:</p>
+<blockquote class="note">B5 | Live surface is <strong>487 tools / 129 domains</strong>, not the house 257 / 26 — positioning line is stale (§6).</blockquote>
+<p>And §6 of the same document tabulates the correction:</p>
+<blockquote class="note">| &quot;257 tools across 26 domains&quot; | <strong>487 / 129</strong> (<code>docs/surface.json</code>, cross-checked against the AST catalog); 19 tools unwired — house line is several surface moves stale |</blockquote>
+<p>The gap between 257 and 487 is 230 tools, and the gap between 26 and 129 is 103 domains. That is not a rounding difference. It is the difference between a product description and the product.</p>
+<blockquote class="note"><strong>What broke.</strong> The number used to sell the product was 230 tools and 103 domains away from the number the product serves. It was not a lie at the moment it was first written; it was a measurement that nobody re-took, carried forward through a reorganisation that nearly doubled the surface.  <strong>What we learned.</strong> The project&#x27;s own rule — &quot;a deliverable exists only as a commit SHA on a pushed branch or a permanent URL committed under <code>docs/</code>&quot; — has a counterpart for numbers that the program had not written down: <strong>a number exists only as a command&#x27;s output, and it expires.</strong> The house figure survived because it lived in documents that no gate scanned. The doc-count drift gate scans <em>live</em> docs and explicitly exempts historical records, which is correct — but the positioning line was live, and it was not in the gate&#x27;s scope until someone put it there.</blockquote>
+    <div class="pager"><a href="020.html">&larr; 020 &middot; The version that was cut twice, and then rewritt</a><a href="022.html">022 &middot; Twenty-two agents, one hour, and two absences &rarr;</a></div>
+  </div>
+</section>
+<footer>
+  <div class="wrap foot-in">
+    <div class="foot-links">
+      <a href="../">All series</a>
+      <a href="../comic/">The Comicbook Artist</a>
+      <a href="../chronicles/">Chronicles</a>
+      <a href="https://mem20.com/">mem20.com</a>
+    </div>
+    <p class="foot-note">
+      Mem20-naration's Chronicles &middot; a mem20 series<br>
+      Published from <span class="mono">docs/series/</span> on GitHub Pages
+    </p>
+  </div>
+</footer>
+</body>
+</html>

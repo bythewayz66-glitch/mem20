@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>010: The window, counted on two clocks — Mem20-naration&#x27;s Chronicles</title>
+<meta name="description" content="Chronicle installment 010, 2026-11-01. The window, counted on two clocks">
+<meta property="og:title" content="010: The window, counted on two clocks — Mem20-naration&#x27;s Chronicles">
+<meta property="og:description" content="Chronicle installment 010, 2026-11-01. The window, counted on two clocks">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://mem20.com/series/chronicles/010.html">
+<link rel="canonical" href="https://mem20.com/series/chronicles/010.html">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../series.css">
+<script src="../analytics.js" defer></script>
+</head>
+<body>
+<nav>
+  <div class="wrap nav-in">
+    <a class="logo" href="https://mem20.com/"><span class="logo-mark">m</span> mem20</a>
+    <div class="nav-links">
+      <a href="../">Series</a>
+      <a href="../comic/">The Comicbook Artist</a>
+      <a href="../chronicles/" class="on">Chronicles</a>
+    </div>
+    <a class="btn btn-primary btn-sm" href="feed.xml">RSS</a>
+  </div>
+</nav>
+
+<header class="s-hero chron-hero">
+  <div class="wrap">
+    <div class="inner">
+      <p class="eyebrow">Mem20-naration's Chronicles &middot; Installment 010</p>
+      <h1>The window, counted on two clocks</h1>
+      <div class="badges" style="margin-top:20px">
+        <span class="badge">2026-11-01</span>
+        <span class="tag grounded">grounded</span>
+        <span class="badge">557 words</span>
+      </div>
+      <div class="cta-row">
+        <a class="btn btn-ghost" href="./">All installments</a>
+        <a class="btn btn-ghost" href="feed.xml">RSS</a>
+      </div>
+    </div>
+  </div>
+</header>
+
+<section>
+  <div class="wrap reader">
+    <p class="note"><strong>Origin: grounded.</strong> This installment reports what the repository
+      actually did in its window. Every figure in it was measured against the tree, and the chapter
+      names the file or command it came from. Where it could not stand behind something, it says so
+      in its own text rather than smoothing it over.</p>
+    <p>The window is <code>e7758bd1..2ea44922</code>. On <code>main</code>:</p>
+<pre><code>$ git log --oneline e7758bd178d38da63c5359dded0aada8bfc0eea5..HEAD | wc -l
+166
+$ git log --all --oneline e7758bd178d38da63c5359dded0aada8bfc0eea5.. | wc -l
+391</code></pre>
+<p>Both queries, side by side, every time. The difference — 225 commits — is not noise. It is the archive tags and the open branches, and §4 is about exactly that population.</p>
+<p>The per-day distribution, taken from <code>%aI</code> so the offset travels with the value:</p>
+<pre><code>$ git log --format=&#x27;%aI&#x27; e7758bd..HEAD | cut -c1-10 | sort | uniq -c
+     13 2026-10-27
+      4 2026-10-28
+     71 2026-10-29
+     10 2026-10-30
+     56 2026-10-31
+     12 2026-11-01</code></pre>
+<p>Those are <strong>author-local</strong> dates, and the label matters. <code>--date=format-local</code> and plain <code>--date=format</code> both format in the process <code>TZ</code>, which in a container is frequently UTC even when the commits carry a <code>-06:00</code> offset — so a &quot;local&quot; count written from either can come back identical to the UTC one and look perfectly correct. Only formats that carry the offset in the value are safe: <code>%aI</code>, <code>%ai</code>, <code>%ad --date=iso-strict</code>.</p>
+<p>The shape of the window is a spike, not a slope. <strong>71 commits on 29 October</strong> is 43% of the window in one day, and it is not a day of 71 separate decisions. It is a day of scripted work — the <code>feat: make N modules first-class</code> series that the v3.1.0 release notes describe, plus its variants. The impression a subject-line scan gives is that roughly sixty commits of that kind landed. Counting is one command and the impression is never right:</p>
+<pre><code>$ git log --format=&#x27;%s&#x27; e7758bd..HEAD | grep -c &#x27;make .* modules first-class&#x27;</code></pre>
+<p>The number that command returns is smaller than the impression, and the gap between them is the first lesson of this window: <strong>a category&#x27;s size is not the density of its subjects.</strong> Ten near-identical subject lines read as sixty commits of work and are twenty-three.</p>
+<h4>The clock that moved inside the window</h4>
+<p>The window opens at <code>-06:00</code> and closes at <code>-07:00</code>. That is a daylight-saving transition, and it means a fixed conversion applied to the whole window is wrong for part of it. The check is per commit, never per window:</p>
+<pre><code>$ git log --format=&#x27;%aI&#x27; e7758bd..HEAD | sed &#x27;s/.*\([-+][0-9][0-9]:[0-9][0-9]\)$/\1/&#x27; | sort | uniq -c</code></pre>
+<p>Two offsets in that output is the finding, and it belongs in the post rather than in a footnote. It also means elapsed time must be derived from parsed instants, not from subtracting printed clock values — a span computed by subtracting two fixed-offset timestamps is wrong by the transition hour.</p>
+<p>The frontier&#x27;s own offset is <code>-07:00</code>. The window&#x27;s opening commit is <code>-06:00</code>. Any sentence in this post that says &quot;five days&quot; is rounding; the exact span is derived in §11&#x27;s verification script from <code>datetime.fromisoformat</code> on both ends.</p>
+<h4>What the window is not</h4>
+<p>It is not a quiet window, and it is not a clean one. Twenty-one merges landed in it:</p>
+<pre><code>$ git log --merges --oneline e7758bd..HEAD | wc -l
+21</code></pre>
+<p>Twenty-one merges, 166 commits, and — as §7 shows — a <code>Tests</code> check that has been red on the frontier the whole time. The repository moved a great deal and one of its gates did not move at all.</p>
+    <div class="pager"><a href="009.html">&larr; 009 &middot; Where the writing actually goes</a><a href="011.html">011 &middot; The commit that says 162 and landed 155 &rarr;</a></div>
+  </div>
+</section>
+<footer>
+  <div class="wrap foot-in">
+    <div class="foot-links">
+      <a href="../">All series</a>
+      <a href="../comic/">The Comicbook Artist</a>
+      <a href="../chronicles/">Chronicles</a>
+      <a href="https://mem20.com/">mem20.com</a>
+    </div>
+    <p class="foot-note">
+      Mem20-naration's Chronicles &middot; a mem20 series<br>
+      Published from <span class="mono">docs/series/</span> on GitHub Pages
+    </p>
+  </div>
+</footer>
+</body>
+</html>

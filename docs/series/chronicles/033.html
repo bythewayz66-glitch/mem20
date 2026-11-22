@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>033: The audit: every delivered document against its publication commit — Mem20-naration&#x27;s Chronicles</title>
+<meta name="description" content="Chronicle installment 033, 2026-11-21. The audit: every delivered document against its publication commit">
+<meta property="og:title" content="033: The audit: every delivered document against its publication commit — Mem20-naration&#x27;s Chronicles">
+<meta property="og:description" content="Chronicle installment 033, 2026-11-21. The audit: every delivered document against its publication commit">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://mem20.com/series/chronicles/033.html">
+<link rel="canonical" href="https://mem20.com/series/chronicles/033.html">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../series.css">
+<script src="../analytics.js" defer></script>
+</head>
+<body>
+<nav>
+  <div class="wrap nav-in">
+    <a class="logo" href="https://mem20.com/"><span class="logo-mark">m</span> mem20</a>
+    <div class="nav-links">
+      <a href="../">Series</a>
+      <a href="../comic/">The Comicbook Artist</a>
+      <a href="../chronicles/" class="on">Chronicles</a>
+    </div>
+    <a class="btn btn-primary btn-sm" href="feed.xml">RSS</a>
+  </div>
+</nav>
+
+<header class="s-hero chron-hero">
+  <div class="wrap">
+    <div class="inner">
+      <p class="eyebrow">Mem20-naration's Chronicles &middot; Installment 033</p>
+      <h1>The audit: every delivered document against its publication commit</h1>
+      <div class="badges" style="margin-top:20px">
+        <span class="badge">2026-11-21</span>
+        <span class="tag grounded">grounded</span>
+        <span class="badge">1279 words</span>
+      </div>
+      <div class="cta-row">
+        <a class="btn btn-ghost" href="./">All installments</a>
+        <a class="btn btn-ghost" href="feed.xml">RSS</a>
+      </div>
+    </div>
+  </div>
+</header>
+
+<section>
+  <div class="wrap reader">
+    <p class="note"><strong>Origin: grounded.</strong> This installment reports what the repository
+      actually did in its window. Every figure in it was measured against the tree, and the chapter
+      names the file or command it came from. Where it could not stand behind something, it says so
+      in its own text rather than smoothing it over.</p>
+    <p>The previous instalment ended with a list of things it could not verify. One of them was whether the rewrites it had found were isolated or representative. This section answers that, by running the check that does not exist as a gate — by hand, once, across every delivered document in the repository.</p>
+<h4>5.1 The method</h4>
+<p>For each delivered document:</p>
+<pre><code>first=$(git log --diff-filter=A --format=&#x27;%H&#x27; -- &quot;$f&quot; | tail -1)
+git diff &quot;$first&quot; HEAD -- &quot;$f&quot;</code></pre>
+<p><code>--diff-filter=A</code> finds the commit that <em>added</em> the file — its publication. <code>tail -1</code> takes the earliest such commit, in case a file was deleted and re-added. The diff then compares the file as it stands at <code>main</code> against the version at publication.</p>
+<p>Thirty-one documents were audited: five serial instalments, two program-history documents, eleven long-form copy assets, ten daily reports, the checkpoints ledger, and <code>published/README.md</code>.</p>
+<h4>5.2 The result</h4>
+<div class="tbl"><table class="spec"><thead><tr><th>Verdict</th><th>Count</th></tr></thead><tbody><tr><td>Unchanged since publication</td><td>19</td></tr><tr><td>Legitimate correction</td><td>4</td></tr><tr><td><strong>Retroactive rewrite</strong></td><td><strong>5</strong></td></tr><tr><td>Append-only addition</td><td>1</td></tr><tr><td>Assembly, not editing</td><td>1</td></tr><tr><td>Content restored after a placeholder clobber</td><td>1</td></tr></tbody></table></div>
+<p>Five retroactive rewrites. The previous instalment found two. The audit found three more, all in the daily reports, all from the same 18 November sweep.</p>
+<h4>5.3 The three the previous instalment missed</h4>
+<p><strong><code>published/daily-reports/2026-11-01.md</code></strong> — added <code>c2180055</code> (2026-11-01T22:27:10Z), rewritten by <code>d47c75ac</code> and <code>0cd80344</code>, 7 insertions and 7 deletions.</p>
+<p>The report&#x27;s &quot;Repo health&quot; table now states <code>VERSION | 4.0.0</code> for a measurement taken on 1 November. Its &quot;Latest tag&quot; row now reads <code>v4.0.0 @ 48c241a1</code> where the tag at that commit is <code>v3.1.2</code>. And its &quot;Verified in this run&quot; paragraph now says <code>VERSION 4.0.0</code> and <code>v4.0.0 @ 48c241a1, ancestor of main, 83 behind</code>.</p>
+<p>The <code>d47c75ac</code> leg did something different: it replaced a branch name in the agent-attribution table with <code>mem20pipez</code>. That is the same consolidation sweep that rewrote part two&#x27;s reproduction script.</p>
+<p><strong><code>published/daily-reports/2026-11-02.md</code></strong> — added <code>2b7f22ff</code> (2026-11-02T08:16:58-07:00), rewritten by <code>0cd80344</code>, 2 insertions and 2 deletions.</p>
+<p>Two lines. <code>VERSION 3.1.2</code> → <code>4.0.0</code> in the repo-health line, and <code>v3.1.2 = 48c241a1, 296 commits behind</code> → <code>v4.0.0 = 48c241a1, 296 commits behind</code>.</p>
+<p>The second is the more interesting one, because the rewrite has made the report assert something internally impossible. A tag named <code>v4.0.0</code> pointing at <code>48c241a1</code> is exactly the defect the report was describing — a tag that is not at HEAD. The rewrite did not fix the defect; it renamed the tag in the description of the defect, so the report now says &quot;v4.0.0 is 296 commits behind main&quot; about a commit that never carried that tag.</p>
+<p><strong><code>published/daily-reports/2026-11-14.md</code></strong> — added <code>85186b5a</code> (2026-11-14T08:07:46-07:00), rewritten by <code>0cd80344</code>, 6 insertions and 6 deletions.</p>
+<p>Six lines: <code>VERSION 3.1.2</code> → <code>4.0.0</code>, <code>Latest semver tag v3.1.2</code> → <code>v4.0.0</code>, <code>v3.1.2 is 660 commits behind</code> → <code>v4.0.0 is 660 commits behind</code>, and the same substitutions in the verified list and the action table.</p>
+<p>This one compounds. The 14 November report was written <em>after</em> the 9 November sweep and <em>before</em> the 18 November one. It was accurate when written. It was then falsified four days later by a sweep that had nothing to do with it.</p>
+<h4>5.4 What a legitimate correction looks like</h4>
+<p>The audit found four, and they are worth stating because the distinction is the whole point.</p>
+<p><code>published/history/mem20-program-history.md</code> (added <code>c69b1fb0</code>, changed by <code>de37968a</code>, 2 insertions and 1 deletion) had a quoted rule changed from <em>&quot;Sidney is not a storage location&quot;</em> to <em>&quot;Sidney is retired and is not a storage location&quot;</em>, with a parenthetical noting the host and publish gate no longer exist.</p>
+<p>That is a correction. The change does not alter what the history says happened. It updates a rule that is still in force, in a document that is a living statement of policy rather than a dated transcript. The original sentence remains true; the new one is more true, and it is dated by its commit.</p>
+<p><code>published/history/README.md</code> (added <code>69507f2a</code>, changed by <code>de37968a</code>, 1 insertion and 1 deletion) got the same treatment to the same rule.</p>
+<p><code>published/README.md</code> (added <code>4375f77c</code>, changed by five commits, 30 insertions and 8 deletions) is a living index. <code>a80fd259</code> repaired a truncated write of <code>MANIFEST.tsv</code>; <code>2960e662</code> updated a stale 257-tool claim to 268; <code>de37968a</code> purged retired host references. Each change is dated by its commit and none removes a claim a reader could have verified.</p>
+<p><code>published/content/mem20-long-form-v3/launch-copy-pack.md</code> (added <code>b17d5f84</code>, 9 insertions and 2 deletions) was published as a three-line placeholder and later filled in with the real pack. A placeholder replaced by its content is not a rewrite of a record; the placeholder asserted nothing that the replacement contradicts.</p>
+<h4>5.5 The test that separates them</h4>
+<p>The test is not &quot;was the file edited&quot;. It is: <strong>can a reader still reconstruct what was true at the moment the document claims to describe?</strong></p>
+<p>A correction adds information and leaves the old claim standing, dated. A rewrite removes the old claim and puts a new one in its place, undated, so that the document now asserts something that was never true when it says it was.</p>
+<p>By that test, the four corrections above pass and the five rewrites fail. The publication note fails because its printed transcript no longer matches what the printed commands return. Part two fails because its reproduction script no longer runs. The three daily reports fail because their tables of figures no longer describe the dates in their filenames.</p>
+<h4>5.6 The append-only addition</h4>
+<p>One document was extended without being edited: <code>published/daily-reports/2026-10-31.md</code> (added <code>f25b57d7</code>, changed by <code>4f20ecfb</code>, 10 insertions and 0 deletions). A &quot;Credential attestation&quot; section was appended at the end. No existing line changed.</p>
+<p>That is the shape a correction to a dated record should take. The record is extended, not edited. A reader can still see what the report said on 31 October, and can also see what was added to it later.</p>
+<h4>5.7 The assembly</h4>
+<p><code>docs/app/narrative/serial-2026-11-21.md</code> (added <code>b5107c53</code>, changed by five assembly commits, 1,273 insertions and 0 deletions) is not an edit at all. No line was ever deleted. The intermediate word counts — 4,903, 20,009, 8,066, 8,199, 16,264, 16,266 — are artefacts of partial assembly, not of content being removed.</p>
+<p>The 20,009-word intermediate is the one that needs explaining, and §2.6 explains it: the first assembly concatenated a parts directory containing duplicated sections. Its heading list has 21 entries with four duplicates; the final has 17 with none.</p>
+<p><strong>What broke.</strong> The previous instalment found two rewrites and reported them as the finding. There were five. The three it missed were in a directory it had not thought to audit — <code>published/daily-reports/</code> — because the two it had found were in <code>docs/app/narrative/</code>, and it generalised from the directory it happened to be looking at.</p>
+<p><strong>What we learned.</strong> A finding is not a survey. Finding two instances of a defect in one directory is evidence that the defect exists, not evidence about its extent. The extent has to be measured, and the measurement is mechanical: enumerate the population, run the same check on every member, and report the count. The previous instalment should have done that before publishing, and this one had to do it after.</p>
+    <div class="pager"><a href="032.html">&larr; 032 &middot; The gate that was never built: dated-record excl</a><a href="034.html">034 &middot; The archive&#x27;s integrity claim is false &rarr;</a></div>
+  </div>
+</section>
+<footer>
+  <div class="wrap foot-in">
+    <div class="foot-links">
+      <a href="../">All series</a>
+      <a href="../comic/">The Comicbook Artist</a>
+      <a href="../chronicles/">Chronicles</a>
+      <a href="https://mem20.com/">mem20.com</a>
+    </div>
+    <p class="foot-note">
+      Mem20-naration's Chronicles &middot; a mem20 series<br>
+      Published from <span class="mono">docs/series/</span> on GitHub Pages
+    </p>
+  </div>
+</footer>
+</body>
+</html>

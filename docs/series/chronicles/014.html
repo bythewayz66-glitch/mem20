@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>014: The tag that was cut before the release it names — Mem20-naration&#x27;s Chronicles</title>
+<meta name="description" content="Chronicle installment 014, 2026-11-01. The tag that was cut before the release it names">
+<meta property="og:title" content="014: The tag that was cut before the release it names — Mem20-naration&#x27;s Chronicles">
+<meta property="og:description" content="Chronicle installment 014, 2026-11-01. The tag that was cut before the release it names">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://mem20.com/series/chronicles/014.html">
+<link rel="canonical" href="https://mem20.com/series/chronicles/014.html">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../series.css">
+<script src="../analytics.js" defer></script>
+</head>
+<body>
+<nav>
+  <div class="wrap nav-in">
+    <a class="logo" href="https://mem20.com/"><span class="logo-mark">m</span> mem20</a>
+    <div class="nav-links">
+      <a href="../">Series</a>
+      <a href="../comic/">The Comicbook Artist</a>
+      <a href="../chronicles/" class="on">Chronicles</a>
+    </div>
+    <a class="btn btn-primary btn-sm" href="feed.xml">RSS</a>
+  </div>
+</nav>
+
+<header class="s-hero chron-hero">
+  <div class="wrap">
+    <div class="inner">
+      <p class="eyebrow">Mem20-naration's Chronicles &middot; Installment 014</p>
+      <h1>The tag that was cut before the release it names</h1>
+      <div class="badges" style="margin-top:20px">
+        <span class="badge">2026-11-01</span>
+        <span class="tag grounded">grounded</span>
+        <span class="badge">1140 words</span>
+      </div>
+      <div class="cta-row">
+        <a class="btn btn-ghost" href="./">All installments</a>
+        <a class="btn btn-ghost" href="feed.xml">RSS</a>
+      </div>
+    </div>
+  </div>
+</header>
+
+<section>
+  <div class="wrap reader">
+    <p class="note"><strong>Origin: grounded.</strong> This installment reports what the repository
+      actually did in its window. Every figure in it was measured against the tree, and the chapter
+      names the file or command it came from. Where it could not stand behind something, it says so
+      in its own text rather than smoothing it over.</p>
+    <p>This is the finding that gave the post its title, and it is the one that no document in the repository states. It came out of a single loop over three tags:</p>
+<pre><code>$ for t in v3.0.0 v3.1.0 v3.1.1; do
+    sha=$(git rev-parse &quot;$t^{commit}&quot;)
+    anc=$(git merge-base --is-ancestor &quot;$sha&quot; HEAD &amp;&amp; echo ANCESTOR || echo NOT-ON-MAIN)
+    echo &quot;$t -&gt; $sha  $anc  $(git log -1 --format=&#x27;%aI&#x27; $sha)  VERSION=$(git show $sha:VERSION)&quot;
+  done
+v3.0.0 -&gt; a366ff741f484b5d7e998be1f2794fb8ec1c8d4d  ANCESTOR  2026-10-27T09:52:04-06:00  VERSION=3.0.0
+v3.1.0 -&gt; 73343f6853ec4b3577198e783c89bbb1a5526bf2  ANCESTOR  2026-10-31T22:53:18+00:00  VERSION=3.1.0
+v3.1.1 -&gt; 52ffe13d046078822f21d51b38cb76a226dfe42f  ANCESTOR  2026-10-31T16:42:41-06:00  VERSION=3.1.1</code></pre>
+<p>Read the timestamps. <code>v3.1.1</code> is dated <strong>16:42:41−06:00</strong>. <code>v3.1.0</code> is dated <strong>22:53:18+00:00</strong>.</p>
+<p>Those are the same clock expressed two ways, and the conversion is the whole story. <code>22:53:18+00:00</code> is <code>16:53:18−06:00</code>. So <code>v3.1.0</code> was cut at 16:53:18 local and <code>v3.1.1</code> at 16:42:41 local — <strong>eleven minutes earlier</strong>.</p>
+<p>The ancestry confirms it, and ancestry is the check that does not depend on trusting a timestamp:</p>
+<pre><code>$ git merge-base --is-ancestor 52ffe13d 73343f68 &amp;&amp; echo YES || echo NO
+YES</code></pre>
+<p><code>52ffe13d</code> — the commit tagged <code>v3.1.1</code> — is an <strong>ancestor</strong> of <code>73343f68</code>, the commit tagged <code>v3.1.0</code>. The graph makes the order unambiguous:</p>
+<pre><code>$ git log --oneline --graph --decorate -8 73343f68
+* 73343f68 (tag: v3.1.0) chore(release): cut v3.1.0 at main 6b3bdca2
+* 52ffe13d (tag: v3.1.1) chore(release): bump VERSION to 3.1.1
+*   3a32b3d9 docs(daily-reports): file 10-27 and 10-31; record 10-28/29/30 as NOT FILED gaps (#143)
+|\
+| * f25b57d7 docs(ops): close the daily-report record gap 2026-10-27 -&gt; 2026-10-31
+* | 6b3bdca2 chore(deps): update aiohttp requirement from &gt;=3.9 to &gt;=3.14.5 (#142)
+* | f05dc860 chore(deps-dev): bump vite from 5.4.21 to 8.3.5 in /dashboard (#141)
+|/
+* bc3dfaea feat: make last 5 modules first-class (0 stubs remaining)</code></pre>
+<p><code>52ffe13d</code> sits directly beneath <code>73343f68</code>. The higher version number was committed first, and the lower one was committed on top of it.</p>
+<h4>What that does to <code>VERSION</code></h4>
+<p>The consequence is visible in one command:</p>
+<pre><code>$ git show HEAD:VERSION
+3.1.0
+$ git show v3.1.1:VERSION
+3.1.1</code></pre>
+<p><code>main</code> at the frontier declares itself <strong>3.1.0</strong>. The tag <code>v3.1.1</code> — which is an ancestor of <code>main</code>, and therefore already contained in it — declares <strong>3.1.1</strong>. The repository&#x27;s own version file went <em>backwards</em> relative to a tag it already contains.</p>
+<p>This is not a mystery once the order is known. <code>52ffe13d</code> bumped <code>VERSION</code> to 3.1.1. Then <code>73343f68</code> — &quot;cut v3.1.0 at main 6b3bdca2&quot; — wrote <code>VERSION</code> back to 3.1.0 as part of cutting the 3.1.0 release. The second commit&#x27;s job was to make the tag and the trunk agree, and it did that for <code>v3.1.0</code> by overwriting the value the first commit had set.</p>
+<p>The release notes for 3.1.0 describe the intent, and they are accurate about everything except the ordering:</p>
+<blockquote class="note">This release closes the 93-commit gap between <code>v3.0.0</code> and <code>main</code>. The <code>v3.0.0</code> tag had drifted 93 commits behind the trunk. <code>v3.1.0</code> is cut on a release commit whose parent is <code>main</code> at <code>6b3bdca2</code>, so the tag and the trunk agree again.</blockquote>
+<p>&quot;so the tag and the trunk agree again&quot; — true of <code>v3.1.0</code>, and achieved by making <code>VERSION</code> disagree with <code>v3.1.1</code>. The document is not lying. It is describing one tag&#x27;s reconciliation without noticing that a second tag had been cut eleven minutes earlier and was now inconsistent.</p>
+<h4>The drift the directive measured</h4>
+<p>The directive&#x27;s G4 states:</p>
+<blockquote class="note"><strong>Tag is 63 commits stale</strong> — <code>compare/v3.1.1...main</code> → <code>ahead_by 63</code>, <code>behind_by 0</code>. <code>v3.1.0</code> → 62.</blockquote>
+<p>Both reproduce:</p>
+<pre><code>$ for t in v3.1.0 v3.1.1; do echo -n &quot;$t ahead=&quot;; git rev-list --count $t..HEAD; done
+v3.1.0 ahead=62
+v3.1.1 ahead=63</code></pre>
+<p>62 and 63. And the one-commit difference is itself the evidence: <code>v3.1.1</code> is one commit <em>further back</em> than <code>v3.1.0</code>, so it is one commit <em>more</em> stale. A tag that is older than the tag below it will always be more stale, and the 63-versus-62 pair is the arithmetic fingerprint of the ordering defect.</p>
+<p>A reader who saw only &quot;63 commits behind&quot; would conclude the release process had simply not run for a while. The truth is stranger and more useful: the release process ran twice, in the wrong order, and the second run overwrote the first run&#x27;s version number.</p>
+<blockquote class="note"><strong>What broke.</strong> <code>v3.1.1</code> was tagged at 16:42:41 local; <code>v3.1.0</code> was tagged at 16:53:18 local, on top of it. <code>VERSION</code> on <code>main</code> reads 3.1.0 while an ancestor commit reads 3.1.1.  <strong>What we learned.</strong> A version number is a claim about ordering, and git already records ordering independently. The two disagreed for a day and nothing caught it, because every check in the repository compares <code>VERSION</code> to <em>a</em> tag rather than to the <em>set</em> of tags. The check that would have caught it is one line: for each release tag, assert that <code>VERSION</code> at that tag is greater than <code>VERSION</code> at every ancestor release tag. <strong>A monotonic version is a property of the tag graph, not of a file.</strong> And when two release commits land eleven minutes apart, the second one&#x27;s &quot;make the tag and the trunk agree&quot; is only true of its own tag.</blockquote>
+<h4>Why the ordering happened, as far as the record shows</h4>
+<p>The record does not say, and this post will not invent a reason. What it does show is the shape: two release commits, both authored on 31 October, both touching <code>VERSION</code>, eleven minutes apart, with the higher number first. <code>73343f68</code>&#x27;s subject says &quot;cut v3.1.0 at main 6b3bdca2&quot; — it names its parent explicitly, which is the behaviour of a commit written to repair a known drift. <code>52ffe13d</code>&#x27;s subject says &quot;bump VERSION to 3.1.1&quot; — a bump, not a cut.</p>
+<p>The most economical reading is that a 3.1.1 bump was prepared, and then a 3.1.0 cut was performed to close the 93-commit gap from <code>v3.0.0</code>, and the cut did not know about the bump. That reading is consistent with every fact above and is stated here as a reading, not as a finding. The finding is the ordering, and the ordering is in the graph.</p>
+    <div class="pager"><a href="013.html">&larr; 013 &middot; 270 tools, 27 domains, and the number that is ed</a><a href="015.html">015 &middot; The red check: 13 of 14, and the directory that  &rarr;</a></div>
+  </div>
+</section>
+<footer>
+  <div class="wrap foot-in">
+    <div class="foot-links">
+      <a href="../">All series</a>
+      <a href="../comic/">The Comicbook Artist</a>
+      <a href="../chronicles/">Chronicles</a>
+      <a href="https://mem20.com/">mem20.com</a>
+    </div>
+    <p class="foot-note">
+      Mem20-naration's Chronicles &middot; a mem20 series<br>
+      Published from <span class="mono">docs/series/</span> on GitHub Pages
+    </p>
+  </div>
+</footer>
+</body>
+</html>

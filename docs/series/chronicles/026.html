@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>026: The engine that was deleted with a gitlink — Mem20-naration&#x27;s Chronicles</title>
+<meta name="description" content="Chronicle installment 026, 2026-11-21. The engine that was deleted with a gitlink">
+<meta property="og:title" content="026: The engine that was deleted with a gitlink — Mem20-naration&#x27;s Chronicles">
+<meta property="og:description" content="Chronicle installment 026, 2026-11-21. The engine that was deleted with a gitlink">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://mem20.com/series/chronicles/026.html">
+<link rel="canonical" href="https://mem20.com/series/chronicles/026.html">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../series.css">
+<script src="../analytics.js" defer></script>
+</head>
+<body>
+<nav>
+  <div class="wrap nav-in">
+    <a class="logo" href="https://mem20.com/"><span class="logo-mark">m</span> mem20</a>
+    <div class="nav-links">
+      <a href="../">Series</a>
+      <a href="../comic/">The Comicbook Artist</a>
+      <a href="../chronicles/" class="on">Chronicles</a>
+    </div>
+    <a class="btn btn-primary btn-sm" href="feed.xml">RSS</a>
+  </div>
+</nav>
+
+<header class="s-hero chron-hero">
+  <div class="wrap">
+    <div class="inner">
+      <p class="eyebrow">Mem20-naration's Chronicles &middot; Installment 026</p>
+      <h1>The engine that was deleted with a gitlink</h1>
+      <div class="badges" style="margin-top:20px">
+        <span class="badge">2026-11-21</span>
+        <span class="tag grounded">grounded</span>
+        <span class="badge">1279 words</span>
+      </div>
+      <div class="cta-row">
+        <a class="btn btn-ghost" href="./">All installments</a>
+        <a class="btn btn-ghost" href="feed.xml">RSS</a>
+      </div>
+    </div>
+  </div>
+</header>
+
+<section>
+  <div class="wrap reader">
+    <p class="note"><strong>Origin: grounded.</strong> This installment reports what the repository
+      actually did in its window. Every figure in it was measured against the tree, and the chapter
+      names the file or command it came from. Where it could not stand behind something, it says so
+      in its own text rather than smoothing it over.</p>
+    <p>Issue #229 is the longest-running defect in the window, and its resolution on 16 November is the cleanest piece of engineering in the twenty days.</p>
+<h4>8.1 The defect</h4>
+<p>The failures corpus states it:</p>
+<blockquote class="note"><strong>Issue:</strong> #229 &quot;mem20kilnz: 200 test failures because the C++ engine source was deleted with the gitlink&quot; — the engine source was tracked as a gitlink (submodule pointer) to <code>JaysonAIOnline/mem20kilnz-engine</code> but the submodule was never initialized, leaving <code>mem20kilnz/engine/</code> empty. The gitlink was removed in commit 71939ee0 to unblock Pages builds.</blockquote>
+<p>The introducing commit is <code>71939ee0</code>, dated 2026-10-18T14:47:43-06:00, subject <em>&quot;Remove dangling gitlink submodules blocking Pages checkout.&quot;</em> That commit is correct in its own terms: a dangling gitlink does block a Pages checkout, and removing it unblocks the build. What it also does is remove the only pointer to the engine source, leaving <code>mem20kilnz/engine/</code> empty and every test that needs the engine failing at fixture setup.</p>
+<p>The program status names the consequence as blocker B1 and refuses to paper over it:</p>
+<blockquote class="note">B1 | <code>main</code> not release-clean: 3 of 13 checks red on <code>0224a649</code> (<code>Tests</code>, <code>MCP handshake (shallow clone)</code>, <code>artifact evidence</code>). Root cause is issue <strong>#229</strong>: <code>mem20kilnz/engine/</code> dropped with a gitlink in <code>71939ee0</code>, so ~200 tests fail loudly by design. Restore the engine source or retire the package — <strong>do not paper over it with a skip.</strong> Not an agent call.</blockquote>
+<p><em>&quot;Do not paper over it with a skip&quot;</em> is the sentence that makes this entry worth recording. The cheapest way to make 200 tests stop failing is to skip them, and the program status forbids it in advance.</p>
+<h4>8.2 The fix</h4>
+<p>The fix is three commits on 16 November, and the failures corpus records the whole procedure. The engine repository was cloned into the engine directory of the kiln package, so the source sits inside the checkout rather than behind a pointer. The engine needs the Assimp development headers for FBX import, which were installed from the distribution&#x27;s package manager; the package manager reported a non-fatal error on a <code>dbus</code> post-install script because of container permissions, and the headers installed successfully regardless. The build then ran clean with the project&#x27;s makefile — 0 warnings, 0 errors — and produced the <code>kiln</code> binary in the engine directory.</p>
+<p>The verification is the part that matters: the full test suite passes, <strong>279 passed, 7 skipped in 35.93s</strong>. The seven skipped are named as expected rather than left as an unexplained number — they require a GUI, Vulkan, or specific fixtures.</p>
+<p>Two hundred and seventy-nine passed, seven skipped, and the seven are named as expected rather than left as an unexplained number. The commits are <code>58e8b78f</code> (<em>&quot;Fix mem20kilnz engine build (issue #229)&quot;</em>), <code>76ea8ca1</code> and <code>7196a10b</code> (<em>&quot;Add mem20kilnz engine source (from JaysonAIOnline/mem20kilnz-engine)&quot;</em>), all dated 2026-11-16 between 04:33 and 04:35 UTC.</p>
+<p>Note what the fix is: the engine source is now <strong>in the repository</strong>, not referenced by a gitlink. The defect was that a pointer to an external repository was treated as if it were the content, and the fix is to stop doing that. That is the same class of error as the import finder in §7.3 — a reference that resolves on one machine and not another — and it is worth noticing that the window contains two independent instances of it.</p>
+<blockquote class="note"><strong>What broke.</strong> A commit that correctly removed a dangling gitlink also removed the only reference to the C++ engine source, leaving 200 tests failing at fixture setup for twenty-nine days. The failure was loud and correct: the tests were telling the truth about a missing dependency.  <strong>What we learned.</strong> The program status&#x27;s instruction — <em>&quot;Restore the engine source or retire the package — do not paper over it with a skip&quot;</em> — is the whole lesson, and it is worth recording that the instruction was written before the fix and followed by the fix. Two hundred failing tests are not a problem to be silenced; they are a measurement of a missing dependency, and the measurement is the useful part. <strong>A skip converts a true failure into a false pass, and the false pass is permanent while the true failure was temporary.</strong></blockquote>
+<h4>8.3 The engine&#x27;s own failures corpus</h4>
+<p><code>mem20kilnz/failures.md</code> is 45,085 bytes and is the richest single document in the repository. It is also, for most of the window, the only part of the failures corpus that is being written to. Its entries are the register this chronicle is trying to hold, and three of them are worth carrying into this post because they are the best statements of the project&#x27;s engineering values that exist.</p>
+<p>The first is the count that was wrong:</p>
+<blockquote class="note"><strong>2026-09-25 — Proposal claimed 263 AI-native features; real count was 212</strong> - <strong>Actual error:</strong> the per-family subtotals in the same paragraph summed to 212. The 263 was not derived from anything; it was wrong. - <strong>Cause:</strong> hand-summed headline figure never reconciled against the item list. The subtotals were correct, which is exactly why it survived a read-through. - <strong>Rule learned:</strong> never publish a hand-summed count. Publish the grep.</blockquote>
+<p><em>&quot;The subtotals were correct, which is exactly why it survived a read-through&quot;</em> is the most useful sentence in the corpus. A document whose parts are right and whose total is wrong is a document that rewards careful reading with a false confirmation.</p>
+<p>The second is the decimator that refused:</p>
+<blockquote class="note"><strong>2026-09-27 — QEM, second attempt: refused rather than shipped broken</strong> - <strong>Decision:</strong> <code>decimate</code> defaults to <code>cluster</code>, the only method measured to preserve the surface (watertight, 0 degenerate, 0 non-manifold). <code>method: &quot;qem&quot;</code> refuses with that reason rather than returning a larger mesh. A decimator that hits its triangle count while destroying the shape is worse than a simpler one that preserves it, and one that returns 278% of the input is not a decimator at all.</blockquote>
+<p>A decimator that returns 278% of its input is a function that has failed and reported success. The refusal is the correct behaviour, and it is recorded as a decision rather than a bug.</p>
+<p>The third is the exporter that was one off:</p>
+<blockquote class="note"><strong>2026-09-25 — OBJ exporter wrote every face index one too high</strong> - <strong>Actual error:</strong> my own importer rejected kiln&#x27;s export with &quot;face references vertex 275 but only 274 vertices exist&quot;. Blender accepted the file anyway. - <strong>Cause:</strong> <code>int base = 1;</code> combined with writing <code>base + v + 1</code>, so the first mesh&#x27;s indices started at 2 instead of 1. - <strong>Why it survived:</strong> nothing round-tripped OBJ through kiln before, and Blender is lenient about a trailing out-of-range index.</blockquote>
+<p><em>&quot;Blender accepted the file anyway&quot;</em> is the reason the defect survived, and it is the general shape of every lenient-parser bug: the tool that should have caught it was more forgiving than the tool that produced it.</p>
+<blockquote class="note"><strong>What broke.</strong> Three separate defects in the engine&#x27;s own history, each of which produced output that looked correct: a hand-summed total that contradicted its own subtotals, a decimator that destroyed the shape while hitting its count, and an exporter that wrote indices one too high and was accepted by the only external tool that read it.  <strong>What we learned.</strong> The corpus&#x27;s own rule — <em>&quot;never publish a hand-summed count. Publish the grep&quot;</em> — is the same rule this post applies to the tool count in §3, and it is the same rule the publication note violated in §1. The corpus has been saying it since September. The window contains at least three fresh violations of it, which is the honest measure of how much a written rule is worth without a gate behind it.</blockquote>
+    <div class="pager"><a href="025.html">&larr; 025 &middot; The consolidation: 177 members into 56 runtimes</a><a href="027.html">027 &middot; The keyless rewire, and the dreamer that starved &rarr;</a></div>
+  </div>
+</section>
+<footer>
+  <div class="wrap foot-in">
+    <div class="foot-links">
+      <a href="../">All series</a>
+      <a href="../comic/">The Comicbook Artist</a>
+      <a href="../chronicles/">Chronicles</a>
+      <a href="https://mem20.com/">mem20.com</a>
+    </div>
+    <p class="foot-note">
+      Mem20-naration's Chronicles &middot; a mem20 series<br>
+      Published from <span class="mono">docs/series/</span> on GitHub Pages
+    </p>
+  </div>
+</footer>
+</body>
+</html>

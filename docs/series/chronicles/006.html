@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>006: The failures corpus: forty entries that stop a month before the frontier — Mem20-naration&#x27;s Chronicles</title>
+<meta name="description" content="Chronicle installment 006, 2026-10-27. The failures corpus: forty entries that stop a month before the frontier">
+<meta property="og:title" content="006: The failures corpus: forty entries that stop a month before the frontier — Mem20-naration&#x27;s Chronicles">
+<meta property="og:description" content="Chronicle installment 006, 2026-10-27. The failures corpus: forty entries that stop a month before the frontier">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://mem20.com/series/chronicles/006.html">
+<link rel="canonical" href="https://mem20.com/series/chronicles/006.html">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../series.css">
+<script src="../analytics.js" defer></script>
+</head>
+<body>
+<nav>
+  <div class="wrap nav-in">
+    <a class="logo" href="https://mem20.com/"><span class="logo-mark">m</span> mem20</a>
+    <div class="nav-links">
+      <a href="../">Series</a>
+      <a href="../comic/">The Comicbook Artist</a>
+      <a href="../chronicles/" class="on">Chronicles</a>
+    </div>
+    <a class="btn btn-primary btn-sm" href="feed.xml">RSS</a>
+  </div>
+</nav>
+
+<header class="s-hero chron-hero">
+  <div class="wrap">
+    <div class="inner">
+      <p class="eyebrow">Mem20-naration's Chronicles &middot; Installment 006</p>
+      <h1>The failures corpus: forty entries that stop a month before the frontier</h1>
+      <div class="badges" style="margin-top:20px">
+        <span class="badge">2026-10-27</span>
+        <span class="tag grounded">grounded</span>
+        <span class="badge">4058 words</span>
+      </div>
+      <div class="cta-row">
+        <a class="btn btn-ghost" href="./">All installments</a>
+        <a class="btn btn-ghost" href="feed.xml">RSS</a>
+      </div>
+    </div>
+  </div>
+</header>
+
+<section>
+  <div class="wrap reader">
+    <p class="note"><strong>Origin: grounded.</strong> This installment reports what the repository
+      actually did in its window. Every figure in it was measured against the tree, and the chapter
+      names the file or command it came from. Where it could not stand behind something, it says so
+      in its own text rather than smoothing it over.</p>
+    <p>The charter for this serial is that the &quot;what broke / what we learned&quot; thread is the spine, not an appendix. So: where <em>is</em> the corpus, and how current is it?</p>
+<p>Searching the tree by filename for the usual markers — <code>failure</code>, <code>lesson</code>, <code>learned</code>, <code>postmortem</code>, <code>retro</code>, <code>incident</code>, <code>diary</code>, <code>regret</code>, <code>broke</code>, <code>tech_debt</code> — lands on eight paths. Two are false positives and one is a genuine find that the earlier draft of this document missed:</p>
+<div class="tbl"><table class="spec"><thead><tr><th>Path</th><th>Size</th><th>Contents</th></tr></thead><tbody><tr><td><code>mem20kilnz/failures.md</code></td><td>757 lines</td><td><strong>40 dated entries</strong>: 10 on 2026-09-25, 19 on 09-26, 11 on 09-27</td></tr><tr><td><code>failures.md</code> (root)</td><td>25 lines</td><td><strong>7 dated entries</strong>: 3 on 2026-09-20, 4 on 2026-09-23</td></tr><tr><td><code>DIARY.md</code></td><td>229 lines</td><td>session log, newest dated entry <strong>2026-09-29</strong></td></tr><tr><td><code>2.0_roadmap/tech_debt_register.md</code></td><td>29 lines</td><td>8 debt rows TD-01…TD-08, no dates</td></tr><tr><td><code>docs/audit/2026-10-pages-build-failure.md</code></td><td>110 lines</td><td>single incident, dated 2026-10-18</td></tr><tr><td><code>mem20dreamz/tests/test_failure_honesty.py</code></td><td>—</td><td><strong>false positive</strong>: a test <em>about</em> failure honesty, not a failure record</td></tr><tr><td><code>mem20officez/.../RetroOffice3D.tsx</code></td><td>—</td><td><strong>false positive</strong>: matches <code><em>retro</em></code> by accident</td></tr><tr><td><code>memory.py.broken</code></td><td>—</td><td>a preserved broken file, not a ledger</td></tr></tbody></table></div>
+<p>The newest entry in either failures file is <strong>2026-09-27</strong>. The newest commit on <code>main</code> is <strong>2026-10-27</strong>. The corpus therefore stops <strong>thirty days before the frontier</strong>, and every defect in the window this serial narrates exists only in commit subjects, PR bodies, audit documents and worklogs. That is a finding about the ledger, and it is the reason §3 and §4 lean so heavily on PR bodies: the corpus that should have carried those incidents had stopped being written.</p>
+<p><code>DIARY.md</code> is the closest thing to a live record and it is worth naming precisely, because it is not a failures ledger. It is a capability-and-operations log — what each estate service does, which systemd unit owns which port, and a &quot;Fixed this session&quot; block per date. Its newest date is 2026-09-29, four weeks before the frontier, and its register is <em>what works</em>, not <em>what broke</em>. A reader looking for the round&#x27;s incidents will not find them there.</p>
+<p>The corpus&#x27;s <em>format</em> is the model, though, and each entry already has the shape the chronicle needs: attempt · actual error · cause · next action · rule learned. Here is what is in it.</p>
+<h4>6.1 The decimator that hit its triangle count and destroyed the shape</h4>
+<p>The most instructive sequence in the corpus is not a single entry but five, spread across three days, all concerning one op: <code>decimate_mesh</code>.</p>
+<p><strong>First attempt — quadric error metrics.</strong> Three defects, and the corpus is precise about the order in which they were found:</p>
+<ol><li>The flip guard compared <code>cross(b-a, p-a)</code> against <code>cross(b-a, c-a)</code>. The actual post-collapse</li></ol>
+<p>normal is <code>cross(p-a, c-a)</code>. With the operands in the wrong order, <strong>every interior quadric minimiser looked like a flip, so all 552 candidates were rejected and the mesh never changed</strong> — the op reported success while doing nothing.</p>
+<ol><li>Fixed, it then segfaulted: collapsing deleted degenerate faces and swapped in a compacted vector,</li></ol>
+<p>which renumbered faces while the vertex→face index still held the old numbers.</p>
+<ol><li>Fixed again, it hit its triangle targets and lost **20% of signed volume at ratio 0.5 and 79% at</li></ol>
+<p>0.1**; once hole-filling was added it stopped reaching its target at all, reaching a fixed point at 297 faces.</p>
+<p>The cause, as recorded: the link condition was being applied to n-gon faces, where &quot;the vertex opposite the edge&quot; is not well defined, and the boundary case was never handled.</p>
+<p><strong>The decision</strong> was to replace it with vertex clustering — &quot;which has no topological failure mode&quot; — measured at 4% area drift at ratio 0.75 and 6.7% at 0.5, with zero degenerate, zero non-finite and zero non-manifold geometry, measured by <code>tests/mesh_metrics.py</code>. QEM was recorded as the planned replacement, &quot;not silently dropped&quot;.</p>
+<p><strong>Second attempt — refused rather than shipped broken.</strong> The 2026-09-27 entry fixes all three of the above and then measures six variants against a watertight 528-triangle sphere. The table is the best thing in the corpus:</p>
+<div class="tbl"><table class="spec"><thead><tr><th>attempt</th><th>result</th></tr></thead><tbody><tr><td>boundary quadrics computed once</td><td>100-140 boundary edges, −93% volume at ratio 0.1</td></tr><tr><td>boundary quadrics refreshed per collapse</td><td>140 boundary edges, no better</td></tr><tr><td>link condition checked after collapsing</td><td>564 triangles out of 528 in, +3% area, still holed</td></tr><tr><td>link condition checked before collapsing</td><td>564 triangles out, unchanged</td></tr><tr><td>triangulate first, then collapse</td><td><strong>1,470 triangles out of 528, +2457% area</strong></td></tr></tbody></table></div>
+<p>That last row is arithmetically 278.4% of the input triangle count (<code>1470/528 = 2.784</code>). The recorded cause: &quot;the hole left by a collapse must be retriangulated from the <em>hole boundary</em>, and the loop was being built from every neighbour of the surviving vertex. That adds more faces than the collapse removed, so the mesh grows.&quot;</p>
+<p>The decision line is the one to keep verbatim:</p>
+<blockquote class="note"><code>decimate</code> defaults to <code>cluster</code>, the only method measured to preserve the surface … <code>method: &quot;qem&quot;</code> refuses with that reason rather than returning a larger mesh. A decimator that hits its triangle count while destroying the shape is worse than a simpler one that preserves it, and one that returns 278% of the input is not a decimator at all.</blockquote>
+<p><strong>Third attempt — the fix, and what it was.</strong> The next entry names the actual mistake in its title: &quot;the hole boundary needed an <em>order</em>, not a set&quot;. The loop was a <em>set</em> of neighbours; a set has no order, and a fan over an unordered loop produces overlapping triangles. It was rewritten to walk the 1-ring in cyclic order through the face fan. The measured outcome, on the same sphere:</p>
+<div class="tbl"><table class="spec"><thead><tr><th>method</th><th>ratio</th><th>triangles</th><th>hit</th><th>area drift</th><th>volume drift</th><th>boundary</th><th>degenerate</th><th>watertight</th></tr></thead><tbody><tr><td>qem</td><td>0.75</td><td>396</td><td>75%</td><td>+3.10%</td><td><strong>−1.32%</strong></td><td>0</td><td>0</td><td>yes</td></tr><tr><td>cluster</td><td>0.75</td><td>172</td><td>33%</td><td>−4.02%</td><td>−8.20%</td><td>0</td><td>0</td><td>yes</td></tr><tr><td>qem</td><td>0.50</td><td>264</td><td>50%</td><td>+7.92%</td><td><strong>−0.60%</strong></td><td>0</td><td>0</td><td>yes</td></tr><tr><td>cluster</td><td>0.50</td><td>122</td><td>23%</td><td>−6.65%</td><td>−13.19%</td><td>0</td><td>0</td><td>yes</td></tr><tr><td>qem</td><td>0.25</td><td>132</td><td>25%</td><td>+60.01%</td><td>−8.80%</td><td>0</td><td>0</td><td>yes</td></tr><tr><td>qem</td><td>0.10</td><td>52</td><td>10%</td><td>+13.97%</td><td>−56.42%</td><td>0</td><td>0</td><td>yes</td></tr></tbody></table></div>
+<p><code>qem</code> became the default. And then the entry adds a guard that is really the lesson in executable form:</p>
+<blockquote class="note">decimation refuses a mesh that is not a closed surface, with the actual boundary and non-manifold edge counts. A decimator run on a holed or non-manifold input returns confident nonsense, so it says no instead.</blockquote>
+<p><strong>What we learned</strong>, in the corpus&#x27;s own words: <em>&quot;Count targets are not quality.&quot;</em> The generalised form for a program of this kind: <strong>a quality metric that can be satisfied while the artifact degrades is worse than no metric, because it converts a broken result into a green one.</strong> The decimator is the cleanest example in the repository of a component that refuses instead of lying, and refusals of this kind are among the most important entries in the story — which is why this section spends its length on them rather than on the features that worked.</p>
+<h4>6.2 The exporter that wrote every face index one too high</h4>
+<blockquote class="note"><strong>Attempt:</strong> round-trip a scene through OBJ. <strong>Actual error:</strong> my own importer rejected kiln&#x27;s export with &quot;face references vertex 275 but only 274 vertices exist&quot;. Blender accepted the file anyway. <strong>Cause:</strong> <code>int base = 1;</code> combined with writing <code>base + v + 1</code>, so the first mesh&#x27;s indices started at 2 instead of 1. <strong>Why it survived:</strong> nothing round-tripped OBJ through kiln before, and Blender is lenient about a trailing out-of-range index.</blockquote>
+<p>Three sentences of cause, and one of them is a fact about the <em>ecosystem</em> rather than the code. The defect was invisible for as long as it existed because the only consumer anyone had tried was a tolerant one. Blender&#x27;s leniency was not a courtesy; it was a missing test.</p>
+<p>The corpus draws the conclusion the project needed: &quot;The importer caught it; that is the argument for having an importer at all.&quot; A writer with no reader is untested. This is the same structural insight as the non-diff-scoped gate, one level down: <strong>a component that is only ever exercised by its own output, or by a consumer known to be forgiving, has not been exercised.</strong></p>
+<h4>6.3 &quot;Never publish a hand-summed count. Publish the grep.&quot;</h4>
+<p>The 2026-09-25 entry titled <em>&quot;Proposal claimed 263 AI-native features; real count was 212&quot;</em> is the origin of this serial&#x27;s governing rule, and it is worth reproducing entire because the error&#x27;s cause is not arithmetic:</p>
+<blockquote class="note"><strong>Actual error:</strong> the per-family subtotals in the same paragraph summed to 212. The 263 was not derived from anything; it was wrong. <strong>Cause:</strong> hand-summed headline figure never reconciled against the item list. The subtotals were correct, which is exactly why it survived a read-through. <strong>Next action:</strong> recounted mechanically with <code>grep -cE &#x27;^- [A-L][0-9][0-9] &#x27;</code>, then added family L (43 genuine generative-pipeline capabilities) to clear 250 honestly rather than padding. Now 255, verified. The document carries the verification command and the correction note. <strong>Rule learned:</strong> never publish a hand-summed count. Publish the grep.</blockquote>
+<p>The subtotals were right. That is the whole mechanism: a wrong total sitting beside correct components survives review, because a reader&#x27;s checking instinct is satisfied by the parts. And the repair was not to adjust the headline to 212 — it was to <em>do the missing work</em> (43 capabilities) and then report 255 with the command that produces it.</p>
+<p>The neighbouring entry in the same corpus applies the same discipline to a <em>scan</em> rather than a sum: sixteen engine functions were declared and never implemented, but the first report said nine, because &quot;I grepped nine names I had picked by hand&quot;. Two of the seven missed were <code>apply_frame</code> and <code>ik_two_bone</code> — the engine&#x27;s frame evaluation and two-bone IK. A hand-picked sample under-reported by 44% and hid the two functions whose absence mattered most.</p>
+<p><strong>What we learned.</strong> The failure mode is not &quot;I cannot count&quot;. It is &quot;I counted the part I could see and reported it as the whole&quot;. The countermeasure is mechanical and cheap: publish the command, not the number, and let the reader re-derive. §5 of this document is that rule applied to itself, and §5 is also where the rule caught this document&#x27;s own brief.</p>
+<h4>6.4 The transform chain that was mathematically wrong</h4>
+<p>A glTF node transform is <code>T<em>R</em>S</code>, and composing two gives <code>T<em>R</em>S<em>T</em>R*S</code> — which is <strong>not expressible as a single translation/quaternion/scale triple</strong>, because the inner translation has nowhere to go. The code collapsed the chain into one triple, &quot;which is only correct when rotations are absent&quot;.</p>
+<p>The evidence is a single distinguishing case: a parent with a 90° rotation and a 2× non-uniform scale, a child with its own 90° rotation and an offset. The true chain gives <code>(0, 2, 0)</code>; the collapsed triple gives <code>(0, −2, 0)</code>. Both are plausible numbers. Only one puts the point on the right side of the origin.</p>
+<p>And then the entry records something rarer, about its own investigation:</p>
+<blockquote class="note"><strong>Note on the investigation:</strong> my first hand-computed &quot;expected&quot; value was also wrong (2.0 instead of 3.0) because I forgot that the child&#x27;s own translation moves the point. The code was right; the expectation was not. Recorded because the same trap would mislead the next reader.</blockquote>
+<p>A ledger that records its author&#x27;s own wrong working is doing something no changelog can. The rule that falls out: <strong>a test whose expected value was hand-derived is itself a suspect</strong>, and the first disagreement between code and expectation is not evidence about the code.</p>
+<h4>6.5 The manifest that described the blockout</h4>
+<blockquote class="note"><strong>Actual error:</strong> the replay produced 1,720 bytes with 24 vertices where the original was 161,772 bytes with 5,952. Diffs were confined to the accessor counts, so the geometry itself differed, not just the encoding. <strong>Cause:</strong> the journal was read immediately after the brief, before the refine stage ran.</blockquote>
+<p>The manifest recorded the operations that produced the <em>blockout</em> while the file on disk was the refined asset. Replaying it faithfully rebuilt the wrong thing — &quot;faithfully, and wrongly&quot;. The corpus&#x27;s assessment is exact:</p>
+<blockquote class="note">this is worse than having no journal. A manifest that looks complete and replays cleanly is trusted; one that is quietly truncated is not.</blockquote>
+<p><strong>What we learned.</strong> Provenance has to be sampled at the same moment as the artifact, and a provenance record that <em>replays successfully</em> is a stronger claim than one that merely lists steps — which is why its failure is more dangerous, not less.</p>
+<h4>6.6 The refusals and the deletions</h4>
+<p>The corpus keeps three things a tidier ledger would have dropped.</p>
+<p><strong>An experiment deleted rather than half-kept.</strong> Classifying each voxel shell cell by its own nearest triangle normal gave <strong>2.1% volume error</strong> on a remeshed sphere against 11% for the binary field — a five-fold improvement — but left <strong>2,829 non-manifold edges</strong>, because neighbouring cells disagreed about which side of the surface they were on. A majority filter restored manifoldness and pushed the error straight back to <strong>10.9%</strong>. The recorded conclusion: &quot;the raggedness it removed was not noise, it was the accurate boundary. Both were deleted rather than left in as a partial feature.&quot;</p>
+<p>That is a capability with a genuinely better headline number, removed because the number was the only thing better about it. It is the same judgment as the decimator, made earlier and without a shipped alternative.</p>
+<p><strong>A source file preserved against a destructive edit.</strong> A brace-counting script written to replace one C++ function body did not skip string literals, so &quot;its match ran past the intended function and deleted everything up to the next coincidental brace balance&quot; — <code>apply_and_reply</code> was gone, and <code>dsl_command</code> with it. The compiler caught it because the project builds with warnings-as-errors on unused symbols; the fix was <code>git checkout</code> on the one file and redoing the edit by hand by exact match. The recorded rule: &quot;<code>git diff</code> reviewed for deletions before rebuilding.&quot;</p>
+<p><strong>A probe that states what it cannot measure.</strong> OBJ geometry: &quot;<code>probe</code> states <code>geometry not measured by this probe</code> in <code>reason</code> rather than presenting 0 as a measurement.&quot; One line, and it is the same principle as <code>not_measured</code> in the <code>family_otherstack</code> fix. The program has a house style for not knowing, and it appears independently in two components.</p>
+<h4>6.7 The defect classes the corpus names</h4>
+<p>Reading all forty entries together, the failures cluster into a small number of repeatable classes, and naming them is more useful than any single entry:</p>
+<ol><li><strong>Plausible output that is wrong</strong> — the colourless description that measured in local space, the</li></ol>
+<p>animation curve shifted by one key, the transform chain, the surface-nets winding. The corpus says of the animation case: &quot;every individual check passed. The file was valid glTF, the accessor counts were right, the times increased, and the import reported no error. Only comparing the sampled curve before and after a save caught it.&quot;</p>
+<ol><li><strong>Success reported for work not done</strong> — 552 candidates all rejected while the op reported success;</li></ol>
+<p><code>skin</code> reporting <code>skinned=True</code> while the exporter wrote no skin data; <code>translate</code> reporting &quot;translated &lt;name&gt;&quot; having moved nothing. The corpus&#x27;s verdict: &quot;A false success is worse than a crash, because the caller believes it.&quot;</p>
+<ol><li><strong>Unit-of-count errors</strong> — the 263/212 hand sum, the nine-versus-sixteen sampler, the advisory op</li></ol>
+<p>table drifting to <code>ops: 79</code> against 87 dispatched. The fix for the last one was a checker, <code>tests/check_op_sync.py</code>, that &quot;reads <code>apply_op</code>&#x27;s dispatch, the advisory table, the live <code>ping</code> count and the live <code>initialize</code> list, and fails on any mismatch in either direction.&quot;</p>
+<ol><li><strong>Environment and path assumptions</strong> — a relative output path resolved against the engine&#x27;s own</li></ol>
+<p>directory, a <code>sys.path[0]</code> insertion that shadowed an installed package with a namespace directory, a <code>cwd</code> documented but never applied.</p>
+<ol><li><strong>Tests that assert the wrong thing</strong> — three assertion failures that &quot;looked like defects&quot; and were</li></ol>
+<p>the author&#x27;s expectations; a test writing <code>broken.glb</code> into the repository root because it used a relative path instead of <code>tmp_path</code>; a green suite read as evidence of clean lint, followed by an <code>F401</code> committed anyway.</p>
+<p>Class 5 is the one the corpus treats most seriously, because it corrupts the instrument. The entry on the debris test ends with a process rule rather than a code fix: &quot;the post-commit verification now lints and tests as separate steps, after the final edit, and the result is read rather than assumed.&quot;</p>
+<p>Class 3 is the one this document committed, in §5, and the corpus&#x27;s own countermeasure — publish the grep — is what caught it.</p>
+<h4>6.8 The gate that had never passed once</h4>
+<p>The corpus&#x27;s lessons are about components. The audit tree holds a lesson about <em>infrastructure</em>, and it is the sharpest single document in the repository: <code>docs/audit/2026-10-pages-build-failure.md</code>, dated 2026-10-18, 110 lines, concerning issue #54. Its opening measurement is the whole argument:</p>
+<blockquote class="note">Every GitHub Pages run fails. At the time of diagnosis the workflow had <strong>23 runs, 0 successes</strong>.</blockquote>
+<p>Twenty-three runs and zero successes. A gate with zero successes has told you nothing about its subject and a great deal about itself, and the audit knows which is which. The failure was not in the build:</p>
+<pre><code>##[error]fatal: No url found for submodule path &#x27;kanban-mcp&#x27; in .gitmodules
+##[error]The process &#x27;/usr/bin/git&#x27; failed with exit code 128</code></pre>
+<p>Step outcomes: <code>Set up job</code> success → <strong><code>Checkout</code> failure</strong> → <code>Upload artifact</code> skipped → <code>deploy</code> job skipped. Nothing after checkout ever ran, which means every hypothesis about the deploy configuration was a hypothesis about a step that was never reached. The audit says so in a table of ruled-out causes — missing <code>pages: write</code> permissions, a missing concurrency group, a wrong artifact path, Jekyll processing a non-Jekyll site, a missing <code>index.html</code>, base-path 404s, a Node version mismatch — and each row&#x27;s verdict is a reason the step was skipped, not a reason it failed.</p>
+<p>The cause: the repository contained three entries with git mode <code>160000</code> (gitlinks), added by a plain <code>git add</code> of nested working trees rather than <code>git submodule add</code>. <strong>A gitlink records a commit pointer but writes no URL</strong>; the URL comes only from <code>.gitmodules</code>, which did not exist — not at <code>HEAD</code>, and not anywhere in history. All three pointed at repositories that return 404.</p>
+<p>And here is the part worth the chapter. CI was green throughout:</p>
+<blockquote class="note"><code>.github/workflows/ci.yml</code> uses <code>actions/checkout@v4</code> with no <code>submodules:</code> input (default <code>false</code>), so CI never recursed and never surfaced the problem — CI green, Pages red.</blockquote>
+<p>Two workflows, one checkout step each, different defaults, and the difference between them was invisible because only one of them recursed. The defect was not in either workflow. It was in the <em>absence of a workflow that exercised the other&#x27;s assumption</em>.</p>
+<p><strong>What broke.</strong> Every Pages deployment for at least five days (the audit&#x27;s table runs from 2026-10-14 17:18 to 2026-10-17 03:04) failed at checkout, and no test, gate or human noticed, because the only check anyone was reading (<code>ci.yml</code>) had disabled the exact mechanism that would have failed.</p>
+<p><strong>What we learned.</strong> The audit&#x27;s own record of the fix is a refusal to over-correct: the gitlinks were removed with <code>git rm --cached</code>, and the document is explicit that this is not a feature removal — &quot;These pointers reference repositories that do not exist, so they carry no content and no functionality; nothing can ever check them out. This is a broken pointer being repaired, not a feature being removed. The SHAs above are kept in the commit message so the original intent is recoverable.&quot; It also preserves the thing that could have been quietly lost: <code>mem20kilnz/</code> keeps all 43 of its real files.</p>
+<p>The generalisable rule: <strong>when two paths through the same tool use different defaults, the untested path is the one that will break, and it will break silently.</strong> The corollary is an operational one — a workflow with zero successes is not a flaky workflow, it is a workflow that has never run, and the difference between those two readings is one query on the run history.</p>
+<h4>6.9 The debt register, read as a prediction</h4>
+<p><code>2.0_roadmap/tech_debt_register.md</code> is 29 lines and eight rows, and it is the only place in the tree where the project states its own architectural risks in a scored form. Severity and effort are 1–5.</p>
+<div class="tbl"><table class="spec"><thead><tr><th>ID</th><th>Area</th><th>Finding</th><th>Severity</th></tr></thead><tbody><tr><td>TD-01</td><td><code>mcp/health.py</code></td><td>Metrics are in-memory; lost on restart; no durable sink</td><td>2</td></tr><tr><td>TD-02</td><td><code>memory_engine/memory.py</code></td><td>Vector index uses in-process FAISS; not shared across MCP processes</td><td><strong>3</strong></td></tr><tr><td>TD-03</td><td><code>memory_engine/memory.py</code></td><td><code>predict()</code> mutates live world-model state</td><td>2</td></tr><tr><td>TD-04</td><td><code>mcp/*</code></td><td>No automated test suite until Phase 7 close; only 2 verification scripts</td><td><strong>3</strong></td></tr><tr><td>TD-05</td><td><code>cog/cognitive_engine.py</code></td><td><code>plan</code>/<code>aplan</code> enforce epistemic veto but no rate-limit on LLM calls</td><td>2</td></tr><tr><td>TD-06</td><td><code>mcp/integration_tools.py</code></td><td>Blender/Unity handlers shell out; sandboxing is the user&#x27;s responsibility</td><td>2</td></tr><tr><td>TD-07</td><td><code>memory_engine/memory.py</code></td><td><code>safe_eval_condition</code> re-parses per step</td><td>1</td></tr><tr><td>TD-08</td><td><code>deploy</code></td><td>systemd unit has <code>Restart=always</code> but no health-based readiness gating</td><td>2</td></tr></tbody></table></div>
+<p>Two of these read differently on 27 October than they did when written, and the difference is the finding.</p>
+<p><strong>TD-04 is closed in fact and stale in the document.</strong> It records &quot;No automated test suite until Phase 7 close; only 2 verification scripts.&quot; The tree now contains test suites across multiple subprojects — <code>node --test</code> suites in the control-plane frontend (9 tests in #108, 22 in #109), 32 Rust tests in #113, 57 plus 8 live-server tests in the Perl SDK (#110), 153 in <code>mem20agentz</code> per #103, and 9 in the Telegram turnstile suite (#105). TD-04&#x27;s own mitigation column says &quot;Add <code>tests/</code> pytest suite (in progress)&quot;, so the row is not wrong — it is <em>unmaintained</em>. A debt register that is not re-scored becomes a document that understates the work done and overstates the risk remaining, which is a specific and unusual way to be wrong.</p>
+<p><strong>TD-01 and TD-02 are the rows that matter, and neither is discussed anywhere in this round&#x27;s twenty-two assignments.</strong> TD-02 — the vector index is in-process FAISS and is not shared across MCP processes — is recorded at severity 3, the highest in the file, with the mitigation &quot;Document single-writer constraint; for 2.0 consider external vector store (ADR pending)&quot;. TD-01 — metrics are in-memory and lost on restart — is what makes TD-08 (&quot;no health-based readiness gating&quot;) unfixable as written, because there is nothing durable for a readiness probe to read.</p>
+<p>Set that against the roster. Twenty-two assignments, and the closest any comes to TD-01 or TD-02 is row 14, which asks Analytics Reporter to &quot;measure what is real: commit velocity, PR cycle time, test counts, branch divergence — from <code>git log</code>&quot; and emit <code>docs/ops/metrics.json</code>. That is a good assignment and it is explicitly a <em>substitute</em> for telemetry (&quot;No visitor telemetry exists&quot;). But it is metrics about the project&#x27;s git history, not about the server, and it does not touch the in-memory health surface. The highest-severity architectural debt in the register went unassigned in a round whose stated purpose was to assign meaningful work to every agent.</p>
+<p><strong>What we learned.</strong> A risk register and a work roster are two documents that almost never get read together, and the gap between them is the most expensive gap in a planning cycle. The check is one line long: for each row in the register above severity 2, name the assignment that addresses it. If the answer is &quot;none,&quot; the round is optimising something other than its stated risk. This document makes no claim that TD-02 should have been prioritised over, say, the Tauri shell — only that the choice was never made explicitly anywhere in the tree, and an unrecorded choice is indistinguishable from an oversight.</p>
+    <div class="pager"><a href="005.html">&larr; 005 &middot; One hundred and seventy-seven, one hundred and s</a><a href="007.html">007 &middot; The three checks that are not seven &rarr;</a></div>
+  </div>
+</section>
+<footer>
+  <div class="wrap foot-in">
+    <div class="foot-links">
+      <a href="../">All series</a>
+      <a href="../comic/">The Comicbook Artist</a>
+      <a href="../chronicles/">Chronicles</a>
+      <a href="https://mem20.com/">mem20.com</a>
+    </div>
+    <p class="foot-note">
+      Mem20-naration's Chronicles &middot; a mem20 series<br>
+      Published from <span class="mono">docs/series/</span> on GitHub Pages
+    </p>
+  </div>
+</footer>
+</body>
+</html>

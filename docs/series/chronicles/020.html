@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>020: The version that was cut twice, and then rewritten — Mem20-naration&#x27;s Chronicles</title>
+<meta name="description" content="Chronicle installment 020, 2026-11-21. The version that was cut twice, and then rewritten">
+<meta property="og:title" content="020: The version that was cut twice, and then rewritten — Mem20-naration&#x27;s Chronicles">
+<meta property="og:description" content="Chronicle installment 020, 2026-11-21. The version that was cut twice, and then rewritten">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://mem20.com/series/chronicles/020.html">
+<link rel="canonical" href="https://mem20.com/series/chronicles/020.html">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../series.css">
+<script src="../analytics.js" defer></script>
+</head>
+<body>
+<nav>
+  <div class="wrap nav-in">
+    <a class="logo" href="https://mem20.com/"><span class="logo-mark">m</span> mem20</a>
+    <div class="nav-links">
+      <a href="../">Series</a>
+      <a href="../comic/">The Comicbook Artist</a>
+      <a href="../chronicles/" class="on">Chronicles</a>
+    </div>
+    <a class="btn btn-primary btn-sm" href="feed.xml">RSS</a>
+  </div>
+</nav>
+
+<header class="s-hero chron-hero">
+  <div class="wrap">
+    <div class="inner">
+      <p class="eyebrow">Mem20-naration's Chronicles &middot; Installment 020</p>
+      <h1>The version that was cut twice, and then rewritten</h1>
+      <div class="badges" style="margin-top:20px">
+        <span class="badge">2026-11-21</span>
+        <span class="tag grounded">grounded</span>
+        <span class="badge">1461 words</span>
+      </div>
+      <div class="cta-row">
+        <a class="btn btn-ghost" href="./">All installments</a>
+        <a class="btn btn-ghost" href="feed.xml">RSS</a>
+      </div>
+    </div>
+  </div>
+</header>
+
+<section>
+  <div class="wrap reader">
+    <p class="note"><strong>Origin: grounded.</strong> This installment reports what the repository
+      actually did in its window. Every figure in it was measured against the tree, and the chapter
+      names the file or command it came from. Where it could not stand behind something, it says so
+      in its own text rather than smoothing it over.</p>
+    <p>The window contains two release cuts and one repository-wide rewrite of the version string. They disagree with each other in a way that is instructive, and the disagreement is the same one that corrupted the archive in §1.</p>
+<h4>2.1 3.1.2, on 1 November</h4>
+<p><code>48c241a1</code> is a small commit doing three things: it moved <code>VERSION</code> from 3.1.0 to 3.1.2, it added a <code>CHANGELOG</code> section for 3.1.2, and it landed the owner directive from its branch onto <code>main</code>.</p>
+<p>The interesting part is the first line of its body, quoted in full in §1: <em>&quot;G1 (red Tests) is already fixed on main by 39554320 / f295e74c — the green set names mem20adaptz and Tests is green on that SHA.&quot;</em></p>
+<p>That sentence is the resolution of the red check that part two spent a whole section on. Part two §6 reproduced the failure locally, established that it was a pytest usage error (exit code 4) rather than a test failure (exit code 1), traced it to a directory named <code>mem20adaptiveinterfacecomposerz</code> that had been deleted in <code>e9a15295</code> while <code>.github/workflows/ci.yml</code> kept pointing at it, and found the phantom name in <strong>two</strong> places — line 266 and line 286 — with the second hidden only because the first failed before it ran.</p>
+<p>The fix that landed is the one the second-opinion document recommended, and it is worth recording that the recommendation was <em>substitute, not delete</em>:</p>
+<blockquote class="note">Keep <code>COUNT -ne 22</code> intact — <code>mem20adaptz</code> replaces the removed entry <strong>one-for-one</strong>, so the cardinality contract holds at 22 and the 13 <code>mem20adaptz</code> tests join the guarded set (D3). <strong>Substitute, do not delete:</strong> deleting drops the count to 21 and trips the cardinality guard at <code>ci.yml:275-279</code>, failing the job on the next line.</blockquote>
+<p>That is a small piece of engineering judgement that deserves its own line in the record. The obvious fix — remove the name that does not exist — would have turned the check green and <em>reduced coverage</em>, because <code>mem20adaptz</code> is the successor package and carries thirteen tests that CI was not running. The guard that counts names in a string cannot tell the difference between a list of twenty-two real directories and a list of twenty-two strings, so the cheap fix passes the guard and loses the tests. Substituting keeps the count and gains the coverage.</p>
+<blockquote class="note"><strong>What broke.</strong> A CI job failed for twenty days with exit code 4, and the failure was read as a test failure by everyone who saw the annotation, including the owner directive that assigned it. The directive&#x27;s §2/G1 attributed the failure to the <em>Compute diff against the base</em> step. That step concluded <code>success</code> in CI and replayed clean locally. The real failing step was <em>Run the green package set</em>.  <strong>What we learned.</strong> Exit code 4 and exit code 1 look identical in a check-run annotation that says only &quot;Process completed with exit code 4.&quot; The distinction — usage error versus failing assertion — is the difference between &quot;the product is broken&quot; and &quot;the invocation is broken,&quot; and it changes who owns the fix. The second-opinion document earned its place by printing the exit-code table before printing any diagnosis. <strong>Publish the exit code&#x27;s meaning, not just its value.</strong></blockquote>
+<h4>2.2 4.0.0, on 16 November</h4>
+<p>The second cut is <code>7fb3fc32</code>, dated 2026-11-16T06:37:20Z, subject <em>&quot;chore(release): bump site to 4.0.0 and apply blocker fixes.&quot;</em> It touches seventeen files with 37,165 insertions and 5,781 deletions, and the bulk of that is the regenerated agent skill catalog:</p>
+<pre><code> toolchest/skills/skills.catalog.agent.json |    2 +-
+ toolchest/skills/skills.index.agent.json   |    2 +-
+ 17 files changed, 37165 insertions(+), 5781 deletions(-)</code></pre>
+<p>Two lines changed in a JSON file and 37,165 insertions in the commit is not a contradiction: the catalog files are single-line JSON, so a one-line diff to a large document is a large diff. This is the kind of figure that reads as alarming in a <code>--stat</code> and is entirely ordinary once you know the file format. It is recorded here because a later reader comparing commit sizes will otherwise conclude that 16 November was a rewrite. It was not. The rewrite was two days later.</p>
+<h4>2.3 The rewrite, on 18 November</h4>
+<p>The third event is not a release cut. It is <code>0cd80344</code>, dated 2026-11-18T01:04:50Z, subject <em>&quot;Replace 3.1.2 with 4.0.0 across repository and include pending workspace changes.&quot;</em></p>
+<p>Ninety-seven files, 15,861 insertions, 260 deletions. The subject is doing two jobs at once and the second one is the one that matters: <em>&quot;and include pending workspace changes.&quot;</em> A commit that sweeps unrelated working-tree state into a version bump is the same failure mode the failures corpus records on 6 November, where a shared working tree meant <code>git commit</code> swept another agent&#x27;s staged files into <code>87f4d4e5</code>:</p>
+<blockquote class="note"><strong>2026-11-06: Shared working tree race</strong> — staging only my files was not enough because another agent had already staged its <code>mem20assistz</code> files, so <code>git commit</code> swept them into 87f4d4e5. NEXT ACTION: done — use <code>git commit --only &lt;paths&gt;</code> for every commit in a shared tree. The swept files were byte-identical to the other agent&#x27;s staged work, so no content was lost or reverted.</blockquote>
+<p>The 18 November commit does not record whether the swept changes were byte-identical to anything. It records that they were included. That is a weaker statement than the 6 November entry, and the difference is the point: the 6 November entry could say <em>no content was lost</em> because someone checked. The 18 November entry cannot, and does not claim to.</p>
+<p>And this is the commit that rewrote the publication note. The same find-and-replace that moved <code>VERSION</code> from 3.1.2 to 4.0.0 across the repository also moved it across a dated record of what <code>VERSION</code> had been on 1 November. The sweep was correct about the live tree and wrong about the archive, and it had no way to tell the difference.</p>
+<blockquote class="note"><strong>What broke.</strong> A version-string rewrite landed as a 97-file commit whose subject admits it carried unrelated working-tree state, and which retroactively falsified a delivered instalment of this chronicle. The commit is not wrong about the live tree — the version string did need replacing — but it is unauditable in the way that matters: a reader cannot tell which of the 97 files are the rewrite and which are the sweep, and one of them is a historical record that should have been excluded.  <strong>What we learned.</strong> The 6 November rule (<code>git commit --only &lt;paths&gt;</code>) was written down and then not applied twelve days later. A rule in a failures file is not a control. The control is the flag in the command, and the only way a rule survives is if the command that violates it is the one that feels slower. The same is true of the 8 November rule about not rewriting dated records: it was written down, and then a sweep ran without a path exclusion.</blockquote>
+<h4>2.4 What the three events say together</h4>
+<p>Three version events in twenty days, and the sequence 3.1.0 → 3.1.2 → 4.0.0 is monotonic. The project&#x27;s version discipline, judged only by the numbers, improved across the window: the frontier had a working tree one patch level <em>behind</em> its newest tag, and the publication point has a working tree that agrees with a version higher than every tag before it.</p>
+<p>Judged by the mechanism, nothing improved. There is still no check that the release tags form a monotonic sequence in <code>VERSION</code> — the question part two §12 left open, and the answer is still no. And the 18 November commit shows what happens without one: the version string is corrected by a repository-wide find-and-replace, which is the correct tool for the job and also the tool that cannot tell a live document from a historical record.</p>
+<p><code>VERSION</code> changed exactly twice in the window:</p>
+<pre><code>$ git log --format=&#x27;%h|%aI|%s&#x27; 2ea44922..HEAD -- VERSION
+7fb3fc32|2026-11-16T06:37:20+00:00|chore(release): bump site to 4.0.0 and apply blocker fixes
+48c241a1|2026-11-01T10:33:30-07:00|chore(release): cut 3.1.2 and land the owner directive</code></pre>
+<p>Two commits, two values, and a third event — the 18 November sweep — that changed no <code>VERSION</code> file because <code>VERSION</code> was already 4.0.0. The sweep&#x27;s job was to make the <em>rest of the repository</em> agree with a file that was already correct. That is the shape of the problem: the authoritative value was right, and 97 files disagreed with it, and the tool used to reconcile them could not read dates.</p>
+    <div class="pager"><a href="019.html">&larr; 019 &middot; The archive was rewritten, and the serial has to</a><a href="021.html">021 &middot; The number that would not hold still &rarr;</a></div>
+  </div>
+</section>
+<footer>
+  <div class="wrap foot-in">
+    <div class="foot-links">
+      <a href="../">All series</a>
+      <a href="../comic/">The Comicbook Artist</a>
+      <a href="../chronicles/">Chronicles</a>
+      <a href="https://mem20.com/">mem20.com</a>
+    </div>
+    <p class="foot-note">
+      Mem20-naration's Chronicles &middot; a mem20 series<br>
+      Published from <span class="mono">docs/series/</span> on GitHub Pages
+    </p>
+  </div>
+</footer>
+</body>
+</html>

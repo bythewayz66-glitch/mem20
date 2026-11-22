@@ -3,38 +3,149 @@
   "property": "mem20-series-01",
   "canonical_home": "https://mem20.com/series/comic/",
   "canon_owner": "Comicbook Artist",
-  "site_owner": "mem20-webdev",
   "format": "sequential art, numbered issues",
-  "updated": "2026-11-10",
+  "updated": "2026-11-21",
   "state_legend": {
-    "ready": "pages exist and are linked at their own URLs",
+    "ready": "art exists and is linked at its own URL",
     "in_production": "art is being drawn now",
     "planned": "canon exists, art not started"
+  },
+  "counts": {
+    "issues": 12,
+    "ready": 12
   },
   "issues": [
     {
       "number": 1,
-      "title": "The Sketch That Was Never Inked",
-      "state": "in_production",
-      "pages": 0,
-      "pages_url": null,
-      "logline": "A client commissions a cover they remember approving. The studio's ledger says it was only ever sketched. The Artist has to prove a negative with paper."
+      "title": "Chat Does Not Count",
+      "state": "ready",
+      "pages": 58,
+      "pages_url": "https://mem20.com/series/comic/issue-01.html",
+      "pdf_url": "https://raw.githubusercontent.com/bythewayz66-glitch/mem20/main/comics/the-z-corps/issue-01/THE_Z_CORPS_01_Chat_Does_Not_Count.pdf",
+      "pdf_path": "comics/the-z-corps/issue-01/THE_Z_CORPS_01_Chat_Does_Not_Count.pdf",
+      "window": null,
+      "source": null
     },
     {
       "number": 2,
-      "title": "Two Versions of Page Nine",
-      "state": "planned",
-      "pages": 0,
-      "pages_url": null,
-      "logline": "Both pages are real, both are dated, and only one of them was drawn first. The reader is shown both; the characters are not."
+      "title": "The First Commit Was Called Temp",
+      "state": "ready",
+      "pages": 60,
+      "pages_url": "https://mem20.com/series/comic/issue-02.html",
+      "pdf_url": "https://raw.githubusercontent.com/bythewayz66-glitch/mem20/main/comics/the-z-corps/issue-02/THE_Z_CORPS_02_The_First_Commit_Was_Called_Temp.pdf",
+      "pdf_path": "comics/the-z-corps/issue-02/THE_Z_CORPS_02_The_First_Commit_Was_Called_Temp.pdf",
+      "window": "28 August 2026 → 5 October 2026 (the real beginning)",
+      "source": null
     },
     {
       "number": 3,
-      "title": "The Studio That Forgot Its Own Hand",
-      "state": "planned",
-      "pages": 0,
-      "pages_url": null,
-      "logline": "An assistant's style becomes indistinguishable from the Artist's. Provenance, not style, is the only thing left that can tell them apart."
+      "title": "The Climb Forward",
+      "state": "ready",
+      "pages": 65,
+      "pages_url": "https://mem20.com/series/comic/issue-03.html",
+      "pdf_url": "https://raw.githubusercontent.com/bythewayz66-glitch/mem20/main/comics/the-z-corps/issue-03/THE_Z_CORPS_03_The_Climb_Forward.pdf",
+      "pdf_path": "comics/the-z-corps/issue-03/THE_Z_CORPS_03_The_Climb_Forward.pdf",
+      "window": "6 October 2026 → 19 October 2026",
+      "source": null
+    },
+    {
+      "number": 4,
+      "title": "Twenty-Two Of Twenty-Three",
+      "state": "ready",
+      "pages": 66,
+      "pages_url": "https://mem20.com/series/comic/issue-04.html",
+      "pdf_url": "https://raw.githubusercontent.com/bythewayz66-glitch/mem20/main/comics/the-z-corps/issue-04/THE_Z_CORPS_04_Twenty_Two_of_Twenty_Three.pdf",
+      "pdf_path": "comics/the-z-corps/issue-04/THE_Z_CORPS_04_Twenty_Two_of_Twenty_Three.pdf",
+      "window": "20 October 2026 → 7 November 2026",
+      "source": null
+    },
+    {
+      "number": 5,
+      "title": "The Rule And The Hole",
+      "state": "ready",
+      "pages": 72,
+      "pages_url": "https://mem20.com/series/comic/issue-05.html",
+      "pdf_url": "https://raw.githubusercontent.com/bythewayz66-glitch/mem20/main/comics/the-z-corps/issue-05/THE_Z_CORPS_05_The_Rule_and_the_Hole.pdf",
+      "pdf_path": "comics/the-z-corps/issue-05/THE_Z_CORPS_05_The_Rule_and_the_Hole.pdf",
+      "window": "7 November 2026, 18:15:48 UTC → 7 November 2026, 23:52:00 UTC",
+      "source": null
+    },
+    {
+      "number": 6,
+      "title": "The Report Says Nothing",
+      "state": "ready",
+      "pages": 38,
+      "pages_url": "https://mem20.com/series/comic/issue-06.html",
+      "pdf_url": "https://raw.githubusercontent.com/bythewayz66-glitch/mem20/main/comics/the-z-corps/issue-06/THE_Z_CORPS_06_The_Report_Says_Nothing.pdf",
+      "pdf_path": "comics/the-z-corps/issue-06/THE_Z_CORPS_06_The_Report_Says_Nothing.pdf",
+      "window": "14–18 October 2026 · 49 commits in window · 163 commits at head",
+      "source": "Post 05, *The Fortnight Where the Report Says Nothing*, published 19 October 2026"
+    },
+    {
+      "number": 7,
+      "title": "The Organ And The Oscillation",
+      "state": "ready",
+      "pages": 35,
+      "pages_url": "https://mem20.com/series/comic/issue-07.html",
+      "pdf_url": "https://raw.githubusercontent.com/bythewayz66-glitch/mem20/main/comics/the-z-corps/issue-07/THE_Z_CORPS_07_The_Organ_and_the_Oscillation.pdf",
+      "pdf_path": "comics/the-z-corps/issue-07/THE_Z_CORPS_07_The_Organ_and_the_Oscillation.pdf",
+      "window": "19 October 2026 · 09:13:58 → 10:00:13 author-local (`-0600`)",
+      "source": "Post 06, *The Organ and the Oscillation*, published 20 October 2026"
+    },
+    {
+      "number": 8,
+      "title": "What The Repository Did With The Organ",
+      "state": "ready",
+      "pages": 33,
+      "pages_url": "https://mem20.com/series/comic/issue-08.html",
+      "pdf_url": "https://raw.githubusercontent.com/bythewayz66-glitch/mem20/main/comics/the-z-corps/issue-08/THE_Z_CORPS_08_What_the_Repository_Did_With_the_Organ.pdf",
+      "pdf_path": "comics/the-z-corps/issue-08/THE_Z_CORPS_08_What_the_Repository_Did_With_the_Organ.pdf",
+      "window": "19–20 October 2026 · 163 commits on `main`, 178 across all refs, HEAD `efe38d5e`",
+      "source": "Post 07, *What the Repository Did With the Organ*, written 20 October 2026"
+    },
+    {
+      "number": 9,
+      "title": "The Branch That Was Replaced",
+      "state": "ready",
+      "pages": 38,
+      "pages_url": "https://mem20.com/series/comic/issue-09.html",
+      "pdf_url": "https://raw.githubusercontent.com/bythewayz66-glitch/mem20/main/comics/the-z-corps/issue-09/THE_Z_CORPS_09_The_Branch_That_Was_Replaced.pdf",
+      "pdf_path": "comics/the-z-corps/issue-09/THE_Z_CORPS_09_The_Branch_That_Was_Replaced.pdf",
+      "window": "19–20 October 2026 · 8 commits in 8m35s · 171 commits on `main`, 186 across all refs, HEAD `ac75689f`",
+      "source": "Post 08, *The Branch That Was Replaced*, 10,200 words, written 20 October 2026"
+    },
+    {
+      "number": 10,
+      "title": "The Four-Channel Claim",
+      "state": "ready",
+      "pages": 38,
+      "pages_url": "https://mem20.com/series/comic/issue-10.html",
+      "pdf_url": "https://raw.githubusercontent.com/bythewayz66-glitch/mem20/main/comics/the-z-corps/issue-10/THE_Z_CORPS_10_The_Four_Channel_Claim.pdf",
+      "pdf_path": "comics/the-z-corps/issue-10/THE_Z_CORPS_10_The_Four_Channel_Claim.pdf",
+      "window": "20 October 2026 · the window is empty · 171 commits on `main`, 186 across all refs, HEAD `ac75689f`",
+      "source": "Post 09, *The Four-Channel Claim*, 10,523 words, written 20 October 2026"
+    },
+    {
+      "number": 11,
+      "title": "The Same File Under Ninety-Two Names",
+      "state": "ready",
+      "pages": 38,
+      "pages_url": "https://mem20.com/series/comic/issue-11.html",
+      "pdf_url": "https://raw.githubusercontent.com/bythewayz66-glitch/mem20/main/comics/the-z-corps/issue-11/THE_Z_CORPS_11_The_Same_File_Under_Ninety_Two_Names.pdf",
+      "pdf_path": "comics/the-z-corps/issue-11/THE_Z_CORPS_11_The_Same_File_Under_Ninety_Two_Names.pdf",
+      "window": "20 October 2026 · the window is still empty · 171 commits on `main`, 186 across all refs, HEAD `ac75689f`",
+      "source": "Post 10, *The Same File Under Ninety-Two Names*, 10,128 words, written 20 October 2026"
+    },
+    {
+      "number": 12,
+      "title": "The Rerank That Ranked Nothing",
+      "state": "ready",
+      "pages": 38,
+      "pages_url": "https://mem20.com/series/comic/issue-12.html",
+      "pdf_url": "https://raw.githubusercontent.com/bythewayz66-glitch/mem20/main/comics/the-z-corps/issue-12/THE_Z_CORPS_12_The_Rerank_That_Ranked_Nothing.pdf",
+      "pdf_path": "comics/the-z-corps/issue-12/THE_Z_CORPS_12_The_Rerank_That_Ranked_Nothing.pdf",
+      "window": "20 October 2026 · the window is still empty · 171 commits on `main`, 186 across all refs, HEAD `ac75689f`",
+      "source": "Post 11, *The Rerank That Ranked Nothing*, 10,260 words, written 20 October 2026"
     }
   ]
 }

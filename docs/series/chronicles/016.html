@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>016: Sidney and gabe: retired, and still on `main` — Mem20-naration&#x27;s Chronicles</title>
+<meta name="description" content="Chronicle installment 016, 2026-11-01. Sidney and gabe: retired, and still on `main`">
+<meta property="og:title" content="016: Sidney and gabe: retired, and still on `main` — Mem20-naration&#x27;s Chronicles">
+<meta property="og:description" content="Chronicle installment 016, 2026-11-01. Sidney and gabe: retired, and still on `main`">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://mem20.com/series/chronicles/016.html">
+<link rel="canonical" href="https://mem20.com/series/chronicles/016.html">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../series.css">
+<script src="../analytics.js" defer></script>
+</head>
+<body>
+<nav>
+  <div class="wrap nav-in">
+    <a class="logo" href="https://mem20.com/"><span class="logo-mark">m</span> mem20</a>
+    <div class="nav-links">
+      <a href="../">Series</a>
+      <a href="../comic/">The Comicbook Artist</a>
+      <a href="../chronicles/" class="on">Chronicles</a>
+    </div>
+    <a class="btn btn-primary btn-sm" href="feed.xml">RSS</a>
+  </div>
+</nav>
+
+<header class="s-hero chron-hero">
+  <div class="wrap">
+    <div class="inner">
+      <p class="eyebrow">Mem20-naration's Chronicles &middot; Installment 016</p>
+      <h1>Sidney and gabe: retired, and still on `main`</h1>
+      <div class="badges" style="margin-top:20px">
+        <span class="badge">2026-11-01</span>
+        <span class="tag grounded">grounded</span>
+        <span class="badge">1304 words</span>
+      </div>
+      <div class="cta-row">
+        <a class="btn btn-ghost" href="./">All installments</a>
+        <a class="btn btn-ghost" href="feed.xml">RSS</a>
+      </div>
+    </div>
+  </div>
+</header>
+
+<section>
+  <div class="wrap reader">
+    <p class="note"><strong>Origin: grounded.</strong> This installment reports what the repository
+      actually did in its window. Every figure in it was measured against the tree, and the chapter
+      names the file or command it came from. Where it could not stand behind something, it says so
+      in its own text rather than smoothing it over.</p>
+    <p>The directive&#x27;s G8 is the item this post was most likely to get wrong, because it is the one where the tempting sentence and the true sentence point in opposite directions:</p>
+<blockquote class="note"><strong>Retired infra still on main</strong> — <code>docs/ops/branch-inventory-2026-10-31.md</code> §227: retired identities (<code>Sidney</code>, <code>gabe</code>, <code>jaysonai</code>) <strong>still present on <code>main</code></strong> after PR #145.</blockquote>
+<p>The inventory&#x27;s own §7 says the same thing, and says why:</p>
+<blockquote class="note">#145 was scoped to exclude the collision-guarded lanes, so these survive by design rather than by oversight — but they are still citable by a reader today.</blockquote>
+<p>So the honest position is: the retirement was performed, it was partial, and the residue is on <code>main</code> at the frontier. Measured now:</p>
+<pre><code>$ for t in sidney gabe jaysonai; do echo -n &quot;$t files=&quot;; git grep -li &quot;$t&quot; HEAD -- . | wc -l; done
+sidney files=86
+gabe files=77
+jaysonai files=80
+
+$ git grep -liE &#x27;sidney|gabe|jaysonai&#x27; HEAD -- . | wc -l
+129</code></pre>
+<p>129 files on <code>main</code> at <code>2ea44922</code> contain at least one of the three tokens. The union is smaller than the sum (86 + 77 + 80 = 243) because most files contain more than one — which is itself informative: the three names travel together, as a single retired deployment identity rather than three independent ones.</p>
+<h4>Where the residue actually is</h4>
+<p>The distribution is the finding, not the total. The heaviest concentrations:</p>
+<pre><code>$ git grep -ciE &#x27;sidney|gabe|jaysonai&#x27; HEAD -- . | sort -t: -k2 -rn | head -12
+HEAD:published/sites/ea6393ed-.../webpages/mem20-admin-ops-ledger/index.html:27
+HEAD:published/sites/e1381e73-.../documents/mem20-ux/gabe/publish_gabe.sh:25
+HEAD:published/sites/fb74dacb-.../documents/mem20-launch-deploy/deploy_launch.sh:17
+HEAD:published/sites/fb74dacb-.../documents/mem20-launch-deploy/README.md:11
+HEAD:published/sites/efd3d45f-.../webpages/mem20-admin-ops-ledger_v2/index.html:11
+HEAD:published/sites/f7c01331-.../documents/mem20-launch-copy/mem20-launch-copy.md:5
+HEAD:published/sites/f7c01331-.../webpages/mem20-launch-dashboard_v3/index.html:3
+HEAD:scripts/sweep-tool-counts.py:2
+HEAD:tools/gen_completion_audit.py:1
+HEAD:roadmaps/opencode-feature-asks.md:1
+HEAD:roadmaps/mem20-fleet-build.json:1</code></pre>
+<p>The top of that list is almost entirely <code>published/sites/</code> — the archived artifact tree. These are snapshots of previously published deliverables, committed into the repository as permanent records. They contain the retired names because they were published when those names were live, and they are <em>archives</em>: rewriting them would falsify the record of what was actually published.</p>
+<p>That is a defensible reason for the residue to exist, and it is not the reason the inventory gives. The inventory says the residue survives because #145 &quot;was scoped to exclude the collision-guarded lanes&quot; — a merge-conflict explanation. The measurement says the residue is concentrated in an archive tree that no merge would have touched. Both may be true of different subsets; neither document separates them.</p>
+<p>There is one file in that list that is not an archive and not a document, and it is the one that matters most:</p>
+<pre><code>HEAD:published/sites/e1381e73-.../documents/mem20-ux/gabe/publish_gabe.sh:25</code></pre>
+<p>A shell script named for the retired identity, with 25 occurrences, sitting in a published artifact tree. It is a deployment script. It is not executed by anything in the repository&#x27;s CI, and it is inside <code>published/</code>, so it is an archived copy of a script rather than a live one. But it is the kind of file that a reader searching for &quot;is this retired?&quot; will find, and it will look live.</p>
+<h4>The bundle was purged, and that is the one that reached visitors</h4>
+<p>The inventory&#x27;s §7 makes a distinction that is worth preserving exactly:</p>
+<blockquote class="note">The last one is the only one that reaches a <em>visitor</em> rather than a reader of the repo, which is exactly why <code>chore/ws1-rebuild-app-bundle-purge-jaysonai</code> exists.</blockquote>
+<p>That branch was about the served JavaScript bundle. At the frontier:</p>
+<pre><code>$ ls docs/app/assets/
+index-BMgU54DU.css
+index-BS9Fg-qc.js
+
+$ git grep -ciE &#x27;sidney|gabe|jaysonai&#x27; HEAD -- &#x27;docs/app/assets/*&#x27;
+(no output)</code></pre>
+<p>Zero. The bundle that a visitor&#x27;s browser downloads contains none of the three tokens. The inventory named <code>docs/app/assets/index-BmhMl8hv.js</code> as still carrying one reference; that filename is no longer in the tree, and its replacement carries none. So the one residue that reached an actual visitor has been fixed, and the residue that remains is in archives and documents that reach readers of the repository.</p>
+<p>That is a materially different statement from &quot;the retirement is incomplete&quot;, and it is the statement the evidence supports. The retirement is <strong>complete for the served surface and incomplete for the archive</strong>.</p>
+<h4>The serial&#x27;s own two references</h4>
+<p>The directive&#x27;s G7 counted zero occurrences of <code>Sidney</code> and zero of <code>gabe</code> in the previous instalment. That is right. But the previous instalment does contain two occurrences of the third token:</p>
+<pre><code>$ grep -niE &#x27;sidney|gabe|jaysonai&#x27; docs/app/narrative/serial-2026-10-27.md
+1167:     29 JaysonAIOnline
+1185:     29 JaysonAIOnline</code></pre>
+<p>Both are inside a quoted block — a count of commits by author identity, where <code>JaysonAIOnline</code> appears as an author name with 29 commits. That is public repository attribution, which the secrets policy permits and which the previous post was right to include: attributing commits requires naming the identity that authored them.</p>
+<p>So the previous post is not carrying a leak. It is carrying an author name in an attribution table, which is the one place such a name is legitimately required. This post does the same, and the distinction is worth stating because &quot;zero occurrences of Sidney and gabe&quot; and &quot;two occurrences of jaysonai&quot; are both true of the same file, and a reader who checked only the first pair would conclude the file was clean of all three.</p>
+<blockquote class="note"><strong>What broke.</strong> A retirement campaign (#145) was scoped to avoid merge conflicts, so it left 129 files on <code>main</code> carrying the retired identities. The inventory recorded this honestly. What no document recorded is that the residue is concentrated in an archive tree where rewriting it would falsify the record — and that the one residue which reached a visitor, the served JS bundle, was separately and successfully purged.  <strong>What we learned.</strong> &quot;Retired&quot; is not one state. A retirement has at least three surfaces — the served artifact, the source tree, and the archive — and they can be at three different stages simultaneously. Reporting a single count across all three produces a number that is true and a conclusion that is wrong in both directions: it overstates the risk to visitors and understates the completeness of the source purge. <strong>Measure the surface, not the token.</strong> And when a purge is scoped to avoid conflicts, say which surface the scope excludes, because the exclusion is what a later reader will mistake for an oversight.</blockquote>
+<h4>What the retirement did achieve</h4>
+<p>It is worth recording what #145 actually did, because a post that only counts residue misrepresents the work. <code>f1672473</code> is titled:</p>
+<pre><code>chore(infra): purge retired jaysonai.online / Sidney / gabe references (#145)</code></pre>
+<p>That commit is the base of the branch inventory&#x27;s comparison, and it is the reason the inventory&#x27;s numbers are keyed to <code>f1672473</code> rather than to the SHA its assignment named. The purge landed, it moved <code>main</code> by two commits, and it invalidated the assignment&#x27;s stated baseline before the inventory began — which the inventory records as its own finding 1:</p>
+<blockquote class="note"><strong>The stated baseline was already stale before this run started.</strong> <code>main</code> is <code>f1672473…</code>, not <code>27c1e5f…</code>; PR #145 merged in between. Any report keyed to the old SHA understates merges and overstates risk.</blockquote>
+<p>A purge that lands mid-audit is a good problem to have, and the inventory handled it correctly by re-deriving every number at the new HEAD and reporting both. That is the behaviour the whole program is supposed to exhibit, and it is worth naming when it happens.</p>
+    <div class="pager"><a href="015.html">&larr; 015 &middot; The red check: 13 of 14, and the directory that </a><a href="017.html">017 &middot; Truncation: the failure mode that keeps coming b &rarr;</a></div>
+  </div>
+</section>
+<footer>
+  <div class="wrap foot-in">
+    <div class="foot-links">
+      <a href="../">All series</a>
+      <a href="../comic/">The Comicbook Artist</a>
+      <a href="../chronicles/">Chronicles</a>
+      <a href="https://mem20.com/">mem20.com</a>
+    </div>
+    <p class="foot-note">
+      Mem20-naration's Chronicles &middot; a mem20 series<br>
+      Published from <span class="mono">docs/series/</span> on GitHub Pages
+    </p>
+  </div>
+</footer>
+</body>
+</html>

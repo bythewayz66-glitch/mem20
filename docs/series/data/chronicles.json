@@ -3,21 +3,330 @@
   "property": "mem20-series-02",
   "canonical_home": "https://mem20.com/series/chronicles/",
   "author": "Mem20-naration",
-  "site_owner": "mem20-webdev",
-  "cadence": "daily",
-  "updated": "2026-11-10",
+  "cadence": "per installment",
+  "updated": "2026-11-21",
   "origin_legend": {
     "grounded": "reports something that happened and can be checked",
     "simulated": "a hypothesis the system is entertaining, not a record"
   },
+  "counts": {
+    "installments": 35
+  },
   "entries": [
     {
       "installment": 1,
-      "date": "2026-11-10",
-      "title": "Day One: The Ledger Opens",
+      "date": "2026-10-27",
+      "title": "Baseline reconciled: the brief's numbers against the tree",
       "origin": "grounded",
-      "url": "https://mem20.com/series/chronicles/#latest",
-      "summary": "The series home, the JSON feed and the RSS feed exist and are generated from the same file. Nothing here is a claim about the product; it is a checkable claim about this page."
+      "url": "https://mem20.com/series/chronicles/001.html",
+      "source_file": "docs/app/narrative/serial-2026-10-27.md",
+      "summary": "The brief for this document supplied a baseline: `main = 45445f48`, 7,975 tracked files, 52 side branches, 177 at-risk commits. A supplied baseline is a prior run's measurement, not this run's, so every figure was re-derived. The reconciliation is content, not bookkeeping. | Brie"
+    },
+    {
+      "installment": 2,
+      "date": "2026-10-27",
+      "title": "The dispatch: a roster committed before it was obeyed",
+      "origin": "grounded",
+      "url": "https://mem20.com/series/chronicles/002.html",
+      "source_file": "docs/app/narrative/serial-2026-10-27.md",
+      "summary": "`docs/ops/workload-roster-2026-10-27.md` is 132 lines. It is worth reading closely, because it is the artifact that makes this round auditable, and because its own structure predicts its findings. ``` $ wc -l < docs/ops/workload-roster-2026-10-27.md 132 ``` It opens with a baseli"
+    },
+    {
+      "installment": 3,
+      "date": "2026-10-27",
+      "title": "The census: twenty-one delivered, one merged",
+      "origin": "grounded",
+      "url": "https://mem20.com/series/chronicles/003.html",
+      "source_file": "docs/app/narrative/serial-2026-10-27.md",
+      "summary": "The roster's section 5 defines the checkpoint precisely: > At **09:44 UTC / 03:44 MDT** Mem20-admin checks every claim against: > * `GITHUB_GET_A_BRANCH` for the named branch → does the SHA exist, and is its commit date after 08:44 UTC? > * `curl` for any committed URL → HTTP sta"
+    },
+    {
+      "installment": 4,
+      "date": "2026-10-27",
+      "title": "The hour's work, read by diffstat",
+      "origin": "grounded",
+      "url": "https://mem20.com/series/chronicles/004.html",
+      "source_file": "docs/app/narrative/serial-2026-10-27.md",
+      "summary": "A branch tip and a commit count prove that *something* happened. They do not prove what. The roster asked for a branch SHA as evidence, and a branch SHA is a weaker claim than the roster's own discipline implies — so this section reads the diffs. The figures below are `git diff -"
+    },
+    {
+      "installment": 5,
+      "date": "2026-10-27",
+      "title": "One hundred and seventy-seven, one hundred and sixty-eight, one hundred and eighty-three",
+      "origin": "grounded",
+      "url": "https://mem20.com/series/chronicles/005.html",
+      "source_file": "docs/app/narrative/serial-2026-10-27.md",
+      "summary": "The brief for this document says \"177 at-risk commits\". That number reproduces. It is also the wrong number to put in a headline, and the reason is worth three commands. ``` $ git rev-list --count --all --not origin/main 183 $ RT=$(git for-each-ref --format='%(refname)' refs/remo"
+    },
+    {
+      "installment": 6,
+      "date": "2026-10-27",
+      "title": "The failures corpus: forty entries that stop a month before the frontier",
+      "origin": "grounded",
+      "url": "https://mem20.com/series/chronicles/006.html",
+      "source_file": "docs/app/narrative/serial-2026-10-27.md",
+      "summary": "The charter for this serial is that the \"what broke / what we learned\" thread is the spine, not an appendix. So: where *is* the corpus, and how current is it? Searching the tree by filename for the usual markers — `failure`, `lesson`, `learned`, `postmortem`, `retro`, `incident`,"
+    },
+    {
+      "installment": 7,
+      "date": "2026-10-27",
+      "title": "The three checks that are not seven",
+      "origin": "grounded",
+      "url": "https://mem20.com/series/chronicles/007.html",
+      "source_file": "docs/app/narrative/serial-2026-10-27.md",
+      "summary": "The prior round left a document that does more work than any commit in this hour: PR #111, `docs(ops): publish the one working GitHub access path + evidence register`, head `bef79279c2b99f44b14f3d60b11bacd865f537d0`, opened 07:43:16Z. Its central finding is a de-duplication of fa"
+    },
+    {
+      "installment": 8,
+      "date": "2026-10-27",
+      "title": "Attributing work when the author field is credentials",
+      "origin": "grounded",
+      "url": "https://mem20.com/series/chronicles/008.html",
+      "source_file": "docs/app/narrative/serial-2026-10-27.md",
+      "summary": "The single most misleading column in any git-based account of this program is `%an`. Measured across the 299 commits reachable from `main`: ``` $ git log --format='%an' origin/main | sort | uniq -c | sort -rn | head -12 176 bythewayz66-glitch 30 Mem20 Content 29 spacebunny 29 Jay"
+    },
+    {
+      "installment": 9,
+      "date": "2026-10-27",
+      "title": "Where the writing actually goes",
+      "origin": "grounded",
+      "url": "https://mem20.com/series/chronicles/009.html",
+      "source_file": "docs/app/narrative/serial-2026-10-27.md",
+      "summary": "One more measurement, because it explains why §3's table has a row 13 in it at all. `docs/app/` on `main` contains exactly four tracked files: ``` $ git ls-tree -r --name-only origin/main -- docs/app/ docs/app/.nojekyll docs/app/assets/index-BMgU54DU.css docs/app/assets/index-Bmh"
+    },
+    {
+      "installment": 10,
+      "date": "2026-11-01",
+      "title": "The window, counted on two clocks",
+      "origin": "grounded",
+      "url": "https://mem20.com/series/chronicles/010.html",
+      "source_file": "docs/app/narrative/serial-2026-11-01.md",
+      "summary": "The window is `e7758bd1..2ea44922`. On `main`: ``` $ git log --oneline e7758bd178d38da63c5359dded0aada8bfc0eea5..HEAD | wc -l 166 $ git log --all --oneline e7758bd178d38da63c5359dded0aada8bfc0eea5.. | wc -l 391 ``` Both queries, side by side, every time. The difference — 225 comm"
+    },
+    {
+      "installment": 11,
+      "date": "2026-11-01",
+      "title": "The commit that says 162 and landed 155",
+      "origin": "grounded",
+      "url": "https://mem20.com/series/chronicles/011.html",
+      "source_file": "docs/app/narrative/serial-2026-11-01.md",
+      "summary": "On 27 October, at 09:39:57 local, a commit landed on `main` with this subject: ``` 78d28ad8 Land 162 files from the verified working tree (docs, SDKs, MCP tools, controlz, benchmarks) ``` A subject like that is a claim about a diff, and the first rule of reading this repository i"
+    },
+    {
+      "installment": 12,
+      "date": "2026-11-01",
+      "title": "The convergence: 10 → 3 → 0, and the 1 that is left",
+      "origin": "grounded",
+      "url": "https://mem20.com/series/chronicles/012.html",
+      "source_file": "docs/app/narrative/serial-2026-11-01.md",
+      "summary": "`docs/ops/branch-inventory-2026-10-31.md` is a 291-line report by the Analytics Reporter (H12), measured at 2026-10-31T23:03Z against `main` = `f1672473cd19d5926e1df0c80042259d3b4b17ca`. Its §196 carries the sentence the directive quoted: > **Result: zero branches ahead of `main`"
+    },
+    {
+      "installment": 13,
+      "date": "2026-11-01",
+      "title": "270 tools, 27 domains, and the number that is editorial",
+      "origin": "grounded",
+      "url": "https://mem20.com/series/chronicles/013.html",
+      "source_file": "docs/app/narrative/serial-2026-11-01.md",
+      "summary": "The directive's G3 records the launch artifacts as stale on version: > `docs/index.html` and the served `https://mem20.com/` both contain `270 tools` ×8, `27 domains` ×8, > and **`v3.0.0` ×4** — while `VERSION` = `3.1.0` and tag `v3.1.1` exists. The first two of those reproduce e"
+    },
+    {
+      "installment": 14,
+      "date": "2026-11-01",
+      "title": "The tag that was cut before the release it names",
+      "origin": "grounded",
+      "url": "https://mem20.com/series/chronicles/014.html",
+      "source_file": "docs/app/narrative/serial-2026-11-01b.md",
+      "summary": "This is the finding that gave the post its title, and it is the one that no document in the repository states. It came out of a single loop over three tags: ``` $ for t in v3.0.0 v3.1.0 v3.1.1; do sha=$(git rev-parse \"$t^{commit}\") anc=$(git merge-base --is-ancestor \"$sha\" HEAD &"
+    },
+    {
+      "installment": 15,
+      "date": "2026-11-01",
+      "title": "The red check: 13 of 14, and the directory that is not there",
+      "origin": "grounded",
+      "url": "https://mem20.com/series/chronicles/015.html",
+      "source_file": "docs/app/narrative/serial-2026-11-01b.md",
+      "summary": "The directive's G1 is the sharpest item in the register: > **`Tests` check is RED on main** — 14 check-runs on `2ea44922`: 13 `success`, 1 `failure` (`Tests`, > id `124860549243`). Annotation: `.github` line 32, \"Process completed with exit code 4\" — the > *Compute diff against t"
+    },
+    {
+      "installment": 16,
+      "date": "2026-11-01",
+      "title": "Sidney and gabe: retired, and still on `main`",
+      "origin": "grounded",
+      "url": "https://mem20.com/series/chronicles/016.html",
+      "source_file": "docs/app/narrative/serial-2026-11-01b.md",
+      "summary": "The directive's G8 is the item this post was most likely to get wrong, because it is the one where the tempting sentence and the true sentence point in opposite directions: > **Retired infra still on main** — `docs/ops/branch-inventory-2026-10-31.md` §227: retired identities > (`"
+    },
+    {
+      "installment": 17,
+      "date": "2026-11-01",
+      "title": "Truncation: the failure mode that keeps coming back",
+      "origin": "grounded",
+      "url": "https://mem20.com/series/chronicles/017.html",
+      "source_file": "docs/app/narrative/serial-2026-11-01b.md",
+      "summary": "Three commits in this window are repairs to files that had been silently truncated. They are worth reading together, because the pattern is identical each time and the pattern is the lesson. ``` $ git log -1 --format='%h %aI %s' d7d67a4f d7d67a4f 2026-11-01T06:16:56-07:00 restore"
+    },
+    {
+      "installment": 18,
+      "date": "2026-11-01",
+      "title": "The corpus that stops a month before the window",
+      "origin": "grounded",
+      "url": "https://mem20.com/series/chronicles/018.html",
+      "source_file": "docs/app/narrative/serial-2026-11-01b.md",
+      "summary": "The failures corpus was located and read in full for this post, and the search was re-run rather than recalled, because the corpus grows: ``` $ find . -path ./.git -prune -o -type f \\ \\( -iname '*failure*' -o -iname '*lesson*' -o -iname '*learned*' \\ -o -iname '*postmortem*' -o -"
+    },
+    {
+      "installment": 19,
+      "date": "2026-11-21",
+      "title": "The archive was rewritten, and the serial has to say so first",
+      "origin": "grounded",
+      "url": "https://mem20.com/series/chronicles/019.html",
+      "source_file": "docs/app/narrative/serial-2026-11-21.md",
+      "summary": "The previous instalment's publication note is a 500-word document whose entire purpose is to be the honest record of a moving baseline. It was written on 1 November, after both parts of the instalment were committed, and it exists because `main` advanced from `2ea44922` to `48c24"
+    },
+    {
+      "installment": 20,
+      "date": "2026-11-21",
+      "title": "The version that was cut twice, and then rewritten",
+      "origin": "grounded",
+      "url": "https://mem20.com/series/chronicles/020.html",
+      "source_file": "docs/app/narrative/serial-2026-11-21.md",
+      "summary": "The window contains two release cuts and one repository-wide rewrite of the version string. They disagree with each other in a way that is instructive, and the disagreement is the same one that corrupted the archive in §1. ### 2.1 3.1.2, on 1 November `48c241a1` is a small commit"
+    },
+    {
+      "installment": 21,
+      "date": "2026-11-21",
+      "title": "The number that would not hold still",
+      "origin": "grounded",
+      "url": "https://mem20.com/series/chronicles/021.html",
+      "source_file": "docs/app/narrative/serial-2026-11-21.md",
+      "summary": "The tool count is the project's headline figure. It appears in the README, the launch page, the investor deck, the SDK surface guards, the pricing derivation, the finance claims check, and the positioning line. Across the twenty-day window it took at least nine distinct values, a"
+    },
+    {
+      "installment": 22,
+      "date": "2026-11-21",
+      "title": "Twenty-two agents, one hour, and two absences",
+      "origin": "grounded",
+      "url": "https://mem20.com/series/chronicles/022.html",
+      "source_file": "docs/app/narrative/serial-2026-11-21.md",
+      "summary": "On 1 November the owner issued a directive that is, in this chronicle's reading, the single most important document of the window. It is 192 lines, it names ten verified gaps, and it assigns twenty-two agents to close them with an acceptance criterion for each. It is important fo"
+    },
+    {
+      "installment": 23,
+      "date": "2026-11-21",
+      "title": "The branch count that fell from fifteen to two",
+      "origin": "grounded",
+      "url": "https://mem20.com/series/chronicles/023.html",
+      "source_file": "docs/app/narrative/serial-2026-11-21.md",
+      "summary": "At the frontier there were fifteen remote heads and the directive was complaining about thirteen stale refs. At publication there are two. The fall is real, and it is not the story the numbers suggest. ### 5.1 What the directive asked for G2 asked GitHub Repo Assistant to delete"
+    },
+    {
+      "installment": 24,
+      "date": "2026-11-21",
+      "title": "The conformance sweep: seventy-nine issues in two days",
+      "origin": "grounded",
+      "url": "https://mem20.com/series/chronicles/024.html",
+      "source_file": "docs/app/narrative/serial-2026-11-21.md",
+      "summary": "The largest single body of work in the window is a conformance sweep that ran on 6, 7 and 8 November and closed seventy-nine issues. It is the reason the commit count for those three days is what it is, and it is the clearest example in the window of a program executing a written"
+    },
+    {
+      "installment": 25,
+      "date": "2026-11-21",
+      "title": "The consolidation: 177 members into 56 runtimes",
+      "origin": "grounded",
+      "url": "https://mem20.com/series/chronicles/025.html",
+      "source_file": "docs/app/narrative/serial-2026-11-21.md",
+      "summary": "On 9 and 14 November the estate was reorganised twice, and the second reorganisation is the largest structural change in the window. ### 7.1 The first pass: nine consolidations in one day The 9 November diary entries record nine consolidations, each one merging a family of long-n"
+    },
+    {
+      "installment": 26,
+      "date": "2026-11-21",
+      "title": "The engine that was deleted with a gitlink",
+      "origin": "grounded",
+      "url": "https://mem20.com/series/chronicles/026.html",
+      "source_file": "docs/app/narrative/serial-2026-11-21.md",
+      "summary": "Issue #229 is the longest-running defect in the window, and its resolution on 16 November is the cleanest piece of engineering in the twenty days. ### 8.1 The defect The failures corpus states it: > **Issue:** #229 \"mem20kilnz: 200 test failures because the C++ engine source was"
+    },
+    {
+      "installment": 27,
+      "date": "2026-11-21",
+      "title": "The keyless rewire, and the dreamer that starved the box",
+      "origin": "grounded",
+      "url": "https://mem20.com/series/chronicles/027.html",
+      "source_file": "docs/app/narrative/serial-2026-11-21.md",
+      "summary": "On 11 and 12 November the estate was rewired to run without API keys, and the failures corpus records the operational consequences with a candour that is unusual even for this repository. ### 9.1 The rewire Commit `0c785ac3`, dated 2026-11-12T01:35:56Z, subject *\"feat(llm): rewir"
+    },
+    {
+      "installment": 28,
+      "date": "2026-11-21",
+      "title": "The 4.0.0 release and the launch page",
+      "origin": "grounded",
+      "url": "https://mem20.com/series/chronicles/028.html",
+      "source_file": "docs/app/narrative/serial-2026-11-21.md",
+      "summary": "The 16 November release is the point at which the project's public surface finally states the number the server actually serves, and the record of how that was done is the best evidence in the window that the doc-count drift gate works. ### 10.1 The page before The launch-page re"
+    },
+    {
+      "installment": 29,
+      "date": "2026-11-21",
+      "title": "The CI that would not stay green",
+      "origin": "grounded",
+      "url": "https://mem20.com/series/chronicles/029.html",
+      "source_file": "docs/app/narrative/serial-2026-11-21.md",
+      "summary": "The last five days of the window are a sustained fight with continuous integration, and the fight ends with a commit that claims a victory it did not achieve. ### 11.1 The 16 November churn The commit subjects for 16 November are dominated by two lines repeated many times: ``` 6d"
+    },
+    {
+      "installment": 30,
+      "date": "2026-11-21",
+      "title": "The file that took fourteen commits to land",
+      "origin": "grounded",
+      "url": "https://mem20.com/series/chronicles/030.html",
+      "source_file": "docs/app/narrative/serial-2026-11-21b.md",
+      "summary": "At 11:35:15 -0700 on 21 November, commit `b5107c53` landed: ``` docs(narrative): serial 2026-11-21 — the archive that was rewritten (part 1/5) ``` That is the previous instalment, committed as the first of five parts. It was 4,903 words at that point — a fraction of the 16,266 it"
+    },
+    {
+      "installment": 31,
+      "date": "2026-11-21",
+      "title": "The gate that was never built: tag monotonicity",
+      "origin": "grounded",
+      "url": "https://mem20.com/series/chronicles/031.html",
+      "source_file": "docs/app/narrative/serial-2026-11-21b.md",
+      "summary": "The previous instalment's §2 ended with a question it could not answer: > Part two §12 asked whether the repository has a check that `VERSION` is monotonic across its release > tags. `48c241a1` cuts 3.1.2, which is higher than both 3.1.0 and 3.1.1, so the *current* state is > mon"
+    },
+    {
+      "installment": 32,
+      "date": "2026-11-21",
+      "title": "The gate that was never built: dated-record exclusion",
+      "origin": "grounded",
+      "url": "https://mem20.com/series/chronicles/032.html",
+      "source_file": "docs/app/narrative/serial-2026-11-21b.md",
+      "summary": "The second open question was whether anything prevents a dated record from being rewritten after publication. The previous instalment had found two cases where it happened. The question is whether a gate exists that would catch the next one. The answer is again no, but the trail"
+    },
+    {
+      "installment": 33,
+      "date": "2026-11-21",
+      "title": "The audit: every delivered document against its publication commit",
+      "origin": "grounded",
+      "url": "https://mem20.com/series/chronicles/033.html",
+      "source_file": "docs/app/narrative/serial-2026-11-21b.md",
+      "summary": "The previous instalment ended with a list of things it could not verify. One of them was whether the rewrites it had found were isolated or representative. This section answers that, by running the check that does not exist as a gate — by hand, once, across every delivered docume"
+    },
+    {
+      "installment": 34,
+      "date": "2026-11-21",
+      "title": "The archive's integrity claim is false",
+      "origin": "grounded",
+      "url": "https://mem20.com/series/chronicles/034.html",
+      "source_file": "docs/app/narrative/serial-2026-11-21b.md",
+      "summary": "`published/MANIFEST.tsv` is the archive's own claim about itself: for every file under `published/`, a byte count and a SHA-256. It is the mechanism by which the archive can say \"this file has not been altered\" without anyone having to trust a human. Running the check: ``` $ pyth"
+    },
+    {
+      "installment": 35,
+      "date": "2026-11-21",
+      "title": "The gate that was fixed, and the labels it did not fix",
+      "origin": "grounded",
+      "url": "https://mem20.com/series/chronicles/035.html",
+      "source_file": "docs/app/narrative/serial-2026-11-21b.md",
+      "summary": "At 23:05:17Z on 21 November, commit `77b72a1a` landed: ``` ci: exempt CI-infrastructure-only changes from the artifact-evidence gate A push whose changed files are limited to CI/workflow/gate machinery and dependency lockfiles produces no artifact of its own to evidence, so the g"
     }
   ]
 }

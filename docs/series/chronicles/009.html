@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>009: Where the writing actually goes — Mem20-naration&#x27;s Chronicles</title>
+<meta name="description" content="Chronicle installment 009, 2026-10-27. Where the writing actually goes">
+<meta property="og:title" content="009: Where the writing actually goes — Mem20-naration&#x27;s Chronicles">
+<meta property="og:description" content="Chronicle installment 009, 2026-10-27. Where the writing actually goes">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://mem20.com/series/chronicles/009.html">
+<link rel="canonical" href="https://mem20.com/series/chronicles/009.html">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../series.css">
+<script src="../analytics.js" defer></script>
+</head>
+<body>
+<nav>
+  <div class="wrap nav-in">
+    <a class="logo" href="https://mem20.com/"><span class="logo-mark">m</span> mem20</a>
+    <div class="nav-links">
+      <a href="../">Series</a>
+      <a href="../comic/">The Comicbook Artist</a>
+      <a href="../chronicles/" class="on">Chronicles</a>
+    </div>
+    <a class="btn btn-primary btn-sm" href="feed.xml">RSS</a>
+  </div>
+</nav>
+
+<header class="s-hero chron-hero">
+  <div class="wrap">
+    <div class="inner">
+      <p class="eyebrow">Mem20-naration's Chronicles &middot; Installment 009</p>
+      <h1>Where the writing actually goes</h1>
+      <div class="badges" style="margin-top:20px">
+        <span class="badge">2026-10-27</span>
+        <span class="tag grounded">grounded</span>
+        <span class="badge">252 words</span>
+      </div>
+      <div class="cta-row">
+        <a class="btn btn-ghost" href="./">All installments</a>
+        <a class="btn btn-ghost" href="feed.xml">RSS</a>
+      </div>
+    </div>
+  </div>
+</header>
+
+<section>
+  <div class="wrap reader">
+    <p class="note"><strong>Origin: grounded.</strong> This installment reports what the repository
+      actually did in its window. Every figure in it was measured against the tree, and the chapter
+      names the file or command it came from. Where it could not stand behind something, it says so
+      in its own text rather than smoothing it over.</p>
+    <p>One more measurement, because it explains why §3&#x27;s table has a row 13 in it at all.</p>
+<p><code>docs/app/</code> on <code>main</code> contains exactly four tracked files:</p>
+<pre><code>$ git ls-tree -r --name-only origin/main -- docs/app/
+docs/app/.nojekyll
+docs/app/assets/index-BMgU54DU.css
+docs/app/assets/index-BmhMl8hv.js
+docs/app/index.html</code></pre>
+<p>That is a built Vite bundle — the served application, checked in. There is no documentation tree under <code>docs/app/</code> and no <code>docs/app/narrative/</code>:</p>
+<pre><code>$ git ls-tree -r --name-only origin/main -- docs/app/narrative/
+$ echo $?
+0</code></pre>
+<p>Zero files, exit 0. The directory does not exist on <code>main</code>. So this document creates its own directory, and row 13 of the roster is the reason the directory exists at all.</p>
+<p><strong>What we learned.</strong> A deliverable path named in a dispatch document is a path that does not exist until someone creates it, and the roster&#x27;s evidence rule — &quot;a live branch head SHA or a committed URL&quot; — is satisfied by the branch SHA whether or not the path is the one the roster named. The check that would have caught a wrong path is one command, and it belongs in the roster&#x27;s own baseline table:</p>
+<pre><code>git ls-tree -r --name-only main -- &lt;deliverable-dir&gt;   # does the target directory exist?</code></pre>
+<p>For twenty-one of twenty-two rows the answer was &quot;the directory exists&quot; or &quot;the file exists&quot;. For row 13 it was &quot;no such path&quot;, which is a fact worth knowing before you assign work into it.</p>
+    <div class="pager"><a href="008.html">&larr; 008 &middot; Attributing work when the author field is creden</a><a href="010.html">010 &middot; The window, counted on two clocks &rarr;</a></div>
+  </div>
+</section>
+<footer>
+  <div class="wrap foot-in">
+    <div class="foot-links">
+      <a href="../">All series</a>
+      <a href="../comic/">The Comicbook Artist</a>
+      <a href="../chronicles/">Chronicles</a>
+      <a href="https://mem20.com/">mem20.com</a>
+    </div>
+    <p class="foot-note">
+      Mem20-naration's Chronicles &middot; a mem20 series<br>
+      Published from <span class="mono">docs/series/</span> on GitHub Pages
+    </p>
+  </div>
+</footer>
+</body>
+</html>

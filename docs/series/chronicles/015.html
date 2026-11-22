@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>015: The red check: 13 of 14, and the directory that is not there — Mem20-naration&#x27;s Chronicles</title>
+<meta name="description" content="Chronicle installment 015, 2026-11-01. The red check: 13 of 14, and the directory that is not there">
+<meta property="og:title" content="015: The red check: 13 of 14, and the directory that is not there — Mem20-naration&#x27;s Chronicles">
+<meta property="og:description" content="Chronicle installment 015, 2026-11-01. The red check: 13 of 14, and the directory that is not there">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://mem20.com/series/chronicles/015.html">
+<link rel="canonical" href="https://mem20.com/series/chronicles/015.html">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../series.css">
+<script src="../analytics.js" defer></script>
+</head>
+<body>
+<nav>
+  <div class="wrap nav-in">
+    <a class="logo" href="https://mem20.com/"><span class="logo-mark">m</span> mem20</a>
+    <div class="nav-links">
+      <a href="../">Series</a>
+      <a href="../comic/">The Comicbook Artist</a>
+      <a href="../chronicles/" class="on">Chronicles</a>
+    </div>
+    <a class="btn btn-primary btn-sm" href="feed.xml">RSS</a>
+  </div>
+</nav>
+
+<header class="s-hero chron-hero">
+  <div class="wrap">
+    <div class="inner">
+      <p class="eyebrow">Mem20-naration's Chronicles &middot; Installment 015</p>
+      <h1>The red check: 13 of 14, and the directory that is not there</h1>
+      <div class="badges" style="margin-top:20px">
+        <span class="badge">2026-11-01</span>
+        <span class="tag grounded">grounded</span>
+        <span class="badge">1789 words</span>
+      </div>
+      <div class="cta-row">
+        <a class="btn btn-ghost" href="./">All installments</a>
+        <a class="btn btn-ghost" href="feed.xml">RSS</a>
+      </div>
+    </div>
+  </div>
+</header>
+
+<section>
+  <div class="wrap reader">
+    <p class="note"><strong>Origin: grounded.</strong> This installment reports what the repository
+      actually did in its window. Every figure in it was measured against the tree, and the chapter
+      names the file or command it came from. Where it could not stand behind something, it says so
+      in its own text rather than smoothing it over.</p>
+    <p>The directive&#x27;s G1 is the sharpest item in the register:</p>
+<blockquote class="note"><strong><code>Tests</code> check is RED on main</strong> — 14 check-runs on <code>2ea44922</code>: 13 <code>success</code>, 1 <code>failure</code> (<code>Tests</code>, id <code>124860549243</code>). Annotation: <code>.github</code> line 32, &quot;Process completed with exit code 4&quot; — the <em>Compute diff against the base</em> step in <code>.github/workflows/ci.yml</code>.</blockquote>
+<p>The count reproduces from the public API:</p>
+<pre><code>$ curl -s &quot;https://api.github.com/repos/bythewayz66-glitch/mem20/commits/2ea44922.../check-runs&quot; \
+  | python3 -c &quot;import json,sys; d=json.load(sys.stdin); ...&quot;
+total 14
+conclusions {&#x27;success&#x27;: 13, &#x27;failure&#x27;: 1}
+deploy                             completed  success
+deploy                             completed  success
+report-build-status                completed  success
+build                              completed  success
+build                              completed  success
+mem20agentz OREO integration       completed  success
+Gitlink guard                      completed  success
+Tests                              completed  failure
+Syntax gate                        completed  success
+controlz desktop wiring            completed  success
+Rust braid (issue                  completed  success
+hygiene                            completed  success
+Dependency audit (issue            completed  success
+suite                              completed  success</code></pre>
+<p>Fourteen runs, thirteen green, one red, and the red one is <code>Tests</code>. The directive&#x27;s &quot;13/14 green&quot; is exact.</p>
+<h4>The annotation is a claim about a step, not about a line</h4>
+<p>The annotation says <code>.github</code> line 32 and &quot;exit code 4&quot;. Both are worth checking, because a step-level conclusion is a claim about a <strong>step</strong>, and a step whose body is a shell script reports <code>failure</code> if that script exits non-zero for any reason — a missing module at import, a crashed subprocess, a timeout, or a failed assertion. Reading &quot;step 6 → failure&quot; as &quot;the assertion failed&quot; is the same error class as reading a commit subject as its diff.</p>
+<p>Line 32 of <code>ci.yml</code> is:</p>
+<pre><code>$ sed -n &#x27;32p&#x27; .github/workflows/ci.yml
+            else</code></pre>
+<p>That is a line inside the <code>Compute diff against the base</code> step&#x27;s <code>if</code> block. It is not a failing assertion; it is where the runner&#x27;s annotation happened to point. The step&#x27;s body is:</p>
+<pre><code>      - name: Compute diff against the base
+        run: |
+          set -euo pipefail
+          if [ &quot;${{ github.event_name }}&quot; = &quot;pull_request&quot; ]; then
+            git fetch --no-tags origin &quot;${{ github.base_ref }}&quot; || true
+            RANGE=&quot;origin/${{ github.base_ref }}...HEAD&quot;
+          else
+            BEFORE=&quot;${{ github.event.before }}&quot;
+            if [ -z &quot;$BEFORE&quot; ] || [ &quot;$BEFORE&quot; = &quot;0000000000000000000000000000000000000000&quot; ]; then
+              RANGE=&quot;HEAD~1...HEAD&quot;
+            else
+              RANGE=&quot;${BEFORE}...HEAD&quot;
+            fi
+          fi
+          echo &quot;RANGE=$RANGE&quot;
+          git diff --name-only --diff-filter=ACMR &quot;$RANGE&quot; &gt; changed.txt || true
+          git diff --name-only --diff-filter=ACMR &quot;$RANGE&quot; | grep -E &#x27;[.]py$&#x27; &gt; changed_py.txt || true
+          git diff --unified=0 --diff-filter=ACMR &quot;$RANGE&quot; &gt; added.diff || true
+          echo &quot;changed: $(wc -l &lt; changed.txt) file(s), python: $(wc -l &lt; changed_py.txt)&quot;
+          sed -n &#x27;1,80p&#x27; changed.txt</code></pre>
+<p>Every <code>git diff</code> in that step is guarded with <code>|| true</code>. So the step cannot fail on a diff. It can only fail on <code>set -euo pipefail</code> catching something else — and the one unguarded command in the block is <code>sed -n &#x27;1,80p&#x27; changed.txt</code>, which cannot fail if <code>changed.txt</code> exists.</p>
+<p>Which means the annotation&#x27;s step attribution is probably wrong, and the exit code is the real evidence. Exit code 4 is not a shell convention. It is <strong>pytest&#x27;s</strong> &quot;usage error&quot; code, and specifically the code pytest returns for <code>ERROR: file or directory not found</code>.</p>
+<h4>Reproducing it</h4>
+<p>The <code>Tests</code> job&#x27;s third step runs a fixed list of 22 packages:</p>
+<pre><code>      - name: Run the green package set
+        run: |
+          set -euo pipefail
+          GREEN=&quot;mem20adaptiveinterfacecomposerz mem20assistz mem20autoz mem20biz
+                 mem20boxz mem20enginez mem20pipez
+                 mem20fabricz mem20facez mem20graphz mem20greenz mem20labz
+                 mem20orcaz mem20pipez mem20selfz mem20sensorz mem20simz
+                 mem20sitemapz mem20studioz mem20teamz mem20twinz mem20zimr&quot;
+          ROOTS=&quot;&quot;
+          COUNT=0
+          for pkg in $GREEN; do
+            ROOTS=&quot;$ROOTS $pkg/tests&quot;
+            COUNT=$((COUNT + 1))
+          done
+          if [ &quot;$COUNT&quot; -ne 22 ]; then
+            echo &quot;::error::Expected 22 packages in the green set, found $COUNT&quot;
+            exit 1
+          fi
+          python3 -m pytest -q -m &quot;not integration&quot; $ROOTS</code></pre>
+<p>The guard checks that the list has 22 entries. It does not check that the 22 entries exist. So:</p>
+<pre><code>$ GREEN=&quot;mem20adaptiveinterfacecomposerz mem20assistz ... mem20zimr&quot;
+$ for p in $GREEN; do
+    if [ -d &quot;$p/tests&quot; ]; then echo &quot;OK   $p&quot;; else echo &quot;MISS $p&quot;; fi
+  done
+MISS mem20adaptiveinterfacecomposerz
+OK   mem20assistz
+OK   mem20autoz
+OK   mem20biz
+OK   mem20boxz
+OK   mem20enginez
+OK   mem20pipez
+OK   mem20fabricz
+OK   mem20facez
+OK   mem20graphz
+OK   mem20greenz
+OK   mem20labz
+OK   mem20orcaz
+OK   mem20pipez
+OK   mem20selfz
+OK   mem20sensorz
+OK   mem20simz
+OK   mem20sitemapz
+OK   mem20studioz
+OK   mem20teamz
+OK   mem20twinz
+OK   mem20zimr
+count=22</code></pre>
+<p>Twenty-two entries, twenty-one directories. <code>mem20adaptiveinterfacecomposerz</code> has no <code>tests/</code> subdirectory at all.</p>
+<p>And the exit code, captured before any pipe so that <code>$?</code> is the script&#x27;s status and not the reader&#x27;s:</p>
+<pre><code>$ python3 -m pytest -q -m &quot;not integration&quot; mem20adaptiveinterfacecomposerz/tests &gt; /tmp/pt.txt 2&gt;&amp;1
+$ rc=$?; echo &quot;EXITCODE=$rc&quot;; tail -4 /tmp/pt.txt
+EXITCODE=4
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+3 warnings in 0.00s
+ERROR: file or directory not found: mem20adaptiveinterfacecomposerz/tests</code></pre>
+<p><strong>Exit 4. &quot;file or directory not found.&quot;</strong> The same code the runner reported.</p>
+<p>The control, on a package that does have a <code>tests/</code> directory:</p>
+<pre><code>$ python3 -m pytest -q -m &quot;not integration&quot; mem20assistz/tests &gt; /tmp/pt2.txt 2&gt;&amp;1
+$ rc2=$?; echo &quot;EXITCODE2=$rc2&quot;; tail -2 /tmp/pt2.txt
+EXITCODE2=0
+4 passed, 1 warning in 0.01s</code></pre>
+<p>Exit 0. One missing directory is the entire difference between a green <code>Tests</code> job and a red one.</p>
+<h4>The guard that normalises the wrong code</h4>
+<p>The job&#x27;s <em>fourth</em> step contains an exit-code guard, and it is written with real care:</p>
+<pre><code>          # `-m unit` matched zero tests in the 22-package set, so pytest exited 5
+          # (&quot;no tests collected&quot;) and failed the job regardless of code health.
+          # Exit 5 is normalised to success *after* the run, so a genuinely red
+          # suite still fails while an empty selection no longer does.
+          rc=0
+          python3 -m pytest -m unit -q $ROOTS || rc=$?
+          if [ &quot;$rc&quot; -eq 5 ]; then
+            echo &quot;::warning::No tests carry the &#x27;unit&#x27; marker in the green set; nothing to run.&quot;
+            exit 0
+          fi
+          exit &quot;$rc&quot;</code></pre>
+<p>This is a good guard. It captures <code>rc</code> before any pipe, it normalises exactly one code, and it lets every other code through. The comment even explains why: a genuinely red suite must still fail.</p>
+<p>The problem is that the guard is in the <em>fourth</em> step, and the failure is in the <em>third</em>. The third step has no guard at all — it ends with a bare <code>python3 -m pytest ...</code>, so exit 4 propagates and fails the job. The normalisation that was written for exit 5 does not reach the step that is actually failing, and the code that is actually failing is 4.</p>
+<blockquote class="note"><strong>What broke.</strong> The <code>Tests</code> job has been red on <code>main</code> because one of the 22 packages in its hard-coded green set — <code>mem20adaptiveinterfacecomposerz</code> — has no <code>tests/</code> directory. pytest exits 4 (&quot;file or directory not found&quot;), the step has no guard, and the job fails. The exit-5 normalisation that exists in the next step never sees it.  <strong>What we learned.</strong> A CI step&#x27;s exit-code guard usually handles one code and silently lets the rest through. Locate the guard before theorising about the cause, and count the codes it names. Here the guard names 5 and the failure is 4 — and the guard is in a different step from the failure, which is why reading the workflow top-to-bottom and finding &quot;there is a guard&quot; was not enough. <strong>A guard is only a guard for the step it is in.</strong> The repair is two lines: assert each of the 22 directories exists before invoking pytest, and normalise exit 4 alongside exit 5.</blockquote>
+<h4>A fix exists, and it is not on <code>main</code></h4>
+<p>While this post was being written, a repair for exactly this defect appeared — on a branch, not on <code>main</code>:</p>
+<pre><code>$ git log -1 --format=&#x27;%h %aI %s&#x27; f295e74c
+f295e74c 2026-11-01T10:29:15-07:00 fix(ci): point the green package set at mem20adaptz and fail loudly on a missing tests dir
+
+$ git merge-base --is-ancestor f295e74c origin/main &amp;&amp; echo ANCESTOR || echo NOT-ANCESTOR
+NOT-ANCESTOR</code></pre>
+<p>The fix does both things this section recommends: it replaces <code>mem20adaptiveinterfacecomposerz</code> with <code>mem20adaptz</code> in the green set, and it adds a <code>MISSING</code> accumulator that names any package whose <code>tests/</code> directory is absent and exits 1 with an actionable message before pytest is invoked.</p>
+<pre><code>$ git show f295e74c -- .github/workflows/ci.yml | grep -A3 &#x27;MISSING=&#x27;
++            if [ ! -d &quot;$pkg/tests&quot; ]; then
++              MISSING=&quot;$MISSING $pkg&quot;
++            fi</code></pre>
+<p>So the diagnosis in this section is not merely plausible — it is the diagnosis someone else reached independently, and the repair they wrote is the repair described above. What is missing is the merge. At the frontier, <code>main</code> still carries the broken list, and the <code>Tests</code> check on <code>2ea44922</code> is still red.</p>
+<p>That is worth stating precisely, because it is the difference between &quot;nobody noticed&quot; and &quot;somebody noticed and the fix is one merge away&quot;. The second is the true one, and it is a better fact about the project than the first.</p>
+<h4>What the red check does and does not tell you</h4>
+<p>It does not tell you the test suite is broken. Twenty-one of the twenty-two packages run, and the control above shows a package passing. It tells you that a hard-coded list of paths drifted from the tree, and that the drift is invisible because the list is validated by <em>length</em> rather than by <em>existence</em>.</p>
+<p>That distinction matters for how the red check should be read in the meantime. A red <code>Tests</code> badge on <code>main</code> is normally a signal that something is wrong with the code. Here it is a signal that something is wrong with the <em>workflow</em>, and the code is fine. Anyone who treated the badge as a code-health signal for the last several days was reading a true fact and drawing a false conclusion — which is the same failure mode as the staged replay in §3, one level down.</p>
+<p>The <code>mem20adaptiveinterfacecomposerz</code> directory does not exist at all on <code>main</code> — not the package, not just its <code>tests/</code> subdirectory:</p>
+<pre><code>$ git ls-tree -d --name-only origin/main | grep -i adaptive
+(no output)
+$ git ls-tree -r --name-only origin/main -- mem20adaptz/tests | wc -l
+2</code></pre>
+<p>The package was renamed to <code>mem20adaptz</code> in <code>e9a15295</code> (&quot;feat: mem20adaptz self-contained gold runtime; remove original adaptive mods&quot;, 2026-10-29T22:57:45−06:00), which is an ancestor of <code>main</code> and 92 commits behind the frontier. The CI list was pinned in <code>07d7c519</code> (&quot;ci: make the tests job required and pin the green package set (#5)&quot;, 2026-10-19) — ten days <em>before</em> the rename — and was carried forward through three subsequent CI repairs (<code>5ed15e33</code>, <code>12640766</code>, <code>b9de9aa8</code>) without anyone re-checking that its 22 paths resolve.</p>
+<p>So the defect is not a typo. It is a rename that landed in the tree and not in the workflow, and the workflow&#x27;s own validation — a count of 22 — could not see it, because a list of 22 names still has 22 entries after one of them stops existing.</p>
+    <div class="pager"><a href="014.html">&larr; 014 &middot; The tag that was cut before the release it names</a><a href="016.html">016 &middot; Sidney and gabe: retired, and still on `main` &rarr;</a></div>
+  </div>
+</section>
+<footer>
+  <div class="wrap foot-in">
+    <div class="foot-links">
+      <a href="../">All series</a>
+      <a href="../comic/">The Comicbook Artist</a>
+      <a href="../chronicles/">Chronicles</a>
+      <a href="https://mem20.com/">mem20.com</a>
+    </div>
+    <p class="foot-note">
+      Mem20-naration's Chronicles &middot; a mem20 series<br>
+      Published from <span class="mono">docs/series/</span> on GitHub Pages
+    </p>
+  </div>
+</footer>
+</body>
+</html>

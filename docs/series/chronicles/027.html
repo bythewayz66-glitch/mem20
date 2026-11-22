@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>027: The keyless rewire, and the dreamer that starved the box — Mem20-naration&#x27;s Chronicles</title>
+<meta name="description" content="Chronicle installment 027, 2026-11-21. The keyless rewire, and the dreamer that starved the box">
+<meta property="og:title" content="027: The keyless rewire, and the dreamer that starved the box — Mem20-naration&#x27;s Chronicles">
+<meta property="og:description" content="Chronicle installment 027, 2026-11-21. The keyless rewire, and the dreamer that starved the box">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://mem20.com/series/chronicles/027.html">
+<link rel="canonical" href="https://mem20.com/series/chronicles/027.html">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../series.css">
+<script src="../analytics.js" defer></script>
+</head>
+<body>
+<nav>
+  <div class="wrap nav-in">
+    <a class="logo" href="https://mem20.com/"><span class="logo-mark">m</span> mem20</a>
+    <div class="nav-links">
+      <a href="../">Series</a>
+      <a href="../comic/">The Comicbook Artist</a>
+      <a href="../chronicles/" class="on">Chronicles</a>
+    </div>
+    <a class="btn btn-primary btn-sm" href="feed.xml">RSS</a>
+  </div>
+</nav>
+
+<header class="s-hero chron-hero">
+  <div class="wrap">
+    <div class="inner">
+      <p class="eyebrow">Mem20-naration's Chronicles &middot; Installment 027</p>
+      <h1>The keyless rewire, and the dreamer that starved the box</h1>
+      <div class="badges" style="margin-top:20px">
+        <span class="badge">2026-11-21</span>
+        <span class="tag grounded">grounded</span>
+        <span class="badge">786 words</span>
+      </div>
+      <div class="cta-row">
+        <a class="btn btn-ghost" href="./">All installments</a>
+        <a class="btn btn-ghost" href="feed.xml">RSS</a>
+      </div>
+    </div>
+  </div>
+</header>
+
+<section>
+  <div class="wrap reader">
+    <p class="note"><strong>Origin: grounded.</strong> This installment reports what the repository
+      actually did in its window. Every figure in it was measured against the tree, and the chapter
+      names the file or command it came from. Where it could not stand behind something, it says so
+      in its own text rather than smoothing it over.</p>
+    <p>On 11 and 12 November the estate was rewired to run without API keys, and the failures corpus records the operational consequences with a candour that is unusual even for this repository.</p>
+<h4>9.1 The rewire</h4>
+<p>Commit <code>0c785ac3</code>, dated 2026-11-12T01:35:56Z, subject <em>&quot;feat(llm): rewire estate to keyless providers (pollinations + local ollama).&quot;</em> The diary records the verification: a root-level chat call returned a pollinations gpt-oss-20b reply with no key and no environment variable set, and an offline vision call returned a local moondream description with no model argument and no key.</p>
+<p>And the smoke tests across the estate:</p>
+<blockquote class="note">- gamez live: a role chat returned <code>GAMEZ-SMOKE-OK</code> (6.3s); an orchestrator chat returned <code>ORCH-SMOKE-OK</code> (56.8s); a vision chat returned a description (646.7s). A NIM model with no key raised <code>RuntimeError</code> — honest. - crewz live: <code>CogBrain().propose(...)</code> → <code>{&#x27;action&#x27;:&#x27;final&#x27;,&#x27;final&#x27;:&#x27;CREWZ-SMOKE-OK&#x27;}</code> (5.8s). - rpgz live: asyncio <code>chat_completion(...)</code> → <code>&#x27;RPGZ-SMOKE-OK\n&#x27;</code> (8.5s, after freeing CPU).</blockquote>
+<p>Note the parenthetical on the last line: <em>&quot;after freeing CPU.&quot;</em> That is the whole of §9.2.</p>
+<h4>9.2 The dreamer</h4>
+<p>The failures corpus records the incident in full, and it is the best operational entry in the window:</p>
+<blockquote class="note">- rpgz live smoke FAILED twice (<code>TimeoutError</code> 61.1s, 60.5s) — NOT a code defect. Root cause: my own <code>mem20dreamz idle</code> loop (PID 233583) was running the keyless panel nonstop: 4 concurrent 180s-timeout calls to local Ollama, both <code>llama-server</code> runners ~85% CPU, load average 12.6, 3-min/500 timeouts in the ollama journal. Fix: stopped the dreamer service, let the queue drain, retried → <code>RPGZ-SMOKE-OK</code> in 8.5s. Lesson: on this CPU-only box the idle dream loop starves every other LLM consumer; stop it before latency-sensitive verification, and report saturation instead of blaming the client.</blockquote>
+<p>Read the sequence. A smoke test failed twice with a 61-second timeout. The obvious diagnosis is that the client is broken. The actual cause is that the operator&#x27;s own background process — an idle &quot;dream&quot; loop, running the keyless panel continuously — was saturating the CPU with four concurrent 180-second calls to a local model server, driving load average to 12.6. Stopping it made the same test pass in 8.5 seconds.</p>
+<p>The lesson the corpus draws is exactly right and worth quoting again: <em>&quot;report saturation instead of blaming the client.&quot;</em></p>
+<p>There is a second entry from the same session that is a smaller version of the same thing:</p>
+<blockquote class="note">- Stopping the dreamer service hit <code>State &#x27;stop-sigterm&#x27; timed out. Killing.</code> — the process was mid-generation and did not handle SIGTERM until inference returned. Operational note: dreamer restarts can take the full stop timeout (SIGKILL). Not a code change this session; recorded so the next agent does not mistake it for a crash.</blockquote>
+<p>And a third, which is the purest example of a self-inflicted false failure in the whole corpus:</p>
+<blockquote class="note">- The <code>time</code> binary does not exist on this box — earlier benchmark attempts produced a self-inflicted false failure; the operator used shell timestamp arithmetic instead.</blockquote>
+<blockquote class="note"><strong>What broke.</strong> A latency-sensitive smoke test failed twice, and the cause was the operator&#x27;s own background process saturating the CPU. The failure looked exactly like a client defect, and the first two diagnoses were wrong.  <strong>What we learned.</strong> <em>&quot;Report saturation instead of blaming the client&quot;</em> is the rule, and it is a rule about the order of investigation rather than about the code. Before diagnosing a timeout, look at what else is running. The corpus&#x27;s own framing is the useful part: the entry does not say &quot;the test was flaky&quot; or &quot;the client was slow.&quot; It says the test failed, the cause was saturation, the fix was to stop the saturating process, and the retry passed in 8.5 seconds. <strong>A failure that is caused by the environment is still a failure, and recording it as an environment problem is not the same as recording it as a non-event.</strong> The distinction matters because the next agent will hit the same saturation and needs to know it is saturation.</blockquote>
+<h4>9.3 The stale documentation</h4>
+<p>The same session produced a documentation correction that is a small masterpiece of the genre:</p>
+<blockquote class="note">- <code>docs/03-installation.md</code> still claimed a provider API key was required — stale after the rewire; corrected to keyless-default with optional key.</blockquote>
+<p>One line, and it is the whole of §3 in miniature: a document that was true before a change, was not updated by the change, and was found by someone reading it. The rewire made the key optional; the installation guide still said it was required. Nothing failed. No test caught it. A person read the document and noticed.</p>
+    <div class="pager"><a href="026.html">&larr; 026 &middot; The engine that was deleted with a gitlink</a><a href="028.html">028 &middot; The 4.0.0 release and the launch page &rarr;</a></div>
+  </div>
+</section>
+<footer>
+  <div class="wrap foot-in">
+    <div class="foot-links">
+      <a href="../">All series</a>
+      <a href="../comic/">The Comicbook Artist</a>
+      <a href="../chronicles/">Chronicles</a>
+      <a href="https://mem20.com/">mem20.com</a>
+    </div>
+    <p class="foot-note">
+      Mem20-naration's Chronicles &middot; a mem20 series<br>
+      Published from <span class="mono">docs/series/</span> on GitHub Pages
+    </p>
+  </div>
+</footer>
+</body>
+</html>

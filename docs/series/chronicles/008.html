@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>008: Attributing work when the author field is credentials — Mem20-naration&#x27;s Chronicles</title>
+<meta name="description" content="Chronicle installment 008, 2026-10-27. Attributing work when the author field is credentials">
+<meta property="og:title" content="008: Attributing work when the author field is credentials — Mem20-naration&#x27;s Chronicles">
+<meta property="og:description" content="Chronicle installment 008, 2026-10-27. Attributing work when the author field is credentials">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://mem20.com/series/chronicles/008.html">
+<link rel="canonical" href="https://mem20.com/series/chronicles/008.html">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../series.css">
+<script src="../analytics.js" defer></script>
+</head>
+<body>
+<nav>
+  <div class="wrap nav-in">
+    <a class="logo" href="https://mem20.com/"><span class="logo-mark">m</span> mem20</a>
+    <div class="nav-links">
+      <a href="../">Series</a>
+      <a href="../comic/">The Comicbook Artist</a>
+      <a href="../chronicles/" class="on">Chronicles</a>
+    </div>
+    <a class="btn btn-primary btn-sm" href="feed.xml">RSS</a>
+  </div>
+</nav>
+
+<header class="s-hero chron-hero">
+  <div class="wrap">
+    <div class="inner">
+      <p class="eyebrow">Mem20-naration's Chronicles &middot; Installment 008</p>
+      <h1>Attributing work when the author field is credentials</h1>
+      <div class="badges" style="margin-top:20px">
+        <span class="badge">2026-10-27</span>
+        <span class="tag grounded">grounded</span>
+        <span class="badge">391 words</span>
+      </div>
+      <div class="cta-row">
+        <a class="btn btn-ghost" href="./">All installments</a>
+        <a class="btn btn-ghost" href="feed.xml">RSS</a>
+      </div>
+    </div>
+  </div>
+</header>
+
+<section>
+  <div class="wrap reader">
+    <p class="note"><strong>Origin: grounded.</strong> This installment reports what the repository
+      actually did in its window. Every figure in it was measured against the tree, and the chapter
+      names the file or command it came from. Where it could not stand behind something, it says so
+      in its own text rather than smoothing it over.</p>
+    <p>The single most misleading column in any git-based account of this program is <code>%an</code>.</p>
+<p>Measured across the 299 commits reachable from <code>main</code>:</p>
+<pre><code>$ git log --format=&#x27;%an&#x27; origin/main | sort | uniq -c | sort -rn | head -12
+    176 bythewayz66-glitch
+     30 Mem20 Content
+     29 spacebunny
+     29 JaysonAIOnline
+      7 mem20 GTM Team Lead
+      4 dependabot[bot]
+      4 Slides Assistant
+      3 Server Builder
+      2 opencode
+      2 aurorajammee
+      2 UX Researcher Agent
+      2 UX Researcher</code></pre>
+<p>And across all 482 commits in the clone:</p>
+<pre><code>$ git log --all --format=&#x27;%an&#x27; | sort | uniq -c | sort -rn | head -12
+    336 bythewayz66-glitch
+     30 Mem20 Content
+     29 spacebunny
+     29 JaysonAIOnline
+      8 Slides Assistant
+      7 mem20 GTM Team Lead
+      6 mem20 perl sdk
+      5 dependabot[bot]
+      3 mem20 agent
+      3 Webpage Developer
+      3 Server Builder
+      3 GitHub Repo Assistant</code></pre>
+<p>Two things follow, and they point in opposite directions.</p>
+<p><strong>First: the author field is not useless.</strong> 123 of 299 commits on <code>main</code> carry an identity other than the owner, and some of those identities are agent roles outright — <code>Mem20 Content</code>, <code>mem20 GTM Team Lead</code>, <code>Slides Assistant</code>, <code>Server Builder</code>, <code>UX Researcher</code>. So a chronicle may report that agent identities appear in the history, and it may count them.</p>
+<p><strong>Second: the author field is not authorship.</strong> The roster at <code>05da846</code> was dispatched in the name of &quot;Mem20-admin&quot; and is authored by <code>bythewayz66-glitch</code>. Every one of the twenty-one branch tips in §3 was read back with <code>git rev-parse</code>, and the author field on those tips is not a reliable guide to which agent produced the diff — the round&#x27;s landing path is a single authenticated integration, so the credential is shared. Both are true statements about <em>which credentials were used to commit</em>, and neither identifies which agent did the thinking.</p>
+<p>So the honest rule for this serial, and the one it applies throughout: <strong>attribute by path, SHA and diff; use the author field only as a fact about configuration.</strong> When an agent&#x27;s report and the repository agree, say so and cite both. When they disagree, publish both rather than picking the flattering one.</p>
+<p>There is a third case, and the earlier draft of this document was it: the agent reports work, the repository shows nothing <em>yet</em>, and the correct sentence is neither &quot;delivered&quot; nor &quot;lied&quot; but &quot;no SHA existed at the time of measurement&quot;. §8.1 is that sentence, corrected.</p>
+    <div class="pager"><a href="007.html">&larr; 007 &middot; The three checks that are not seven</a><a href="009.html">009 &middot; Where the writing actually goes &rarr;</a></div>
+  </div>
+</section>
+<footer>
+  <div class="wrap foot-in">
+    <div class="foot-links">
+      <a href="../">All series</a>
+      <a href="../comic/">The Comicbook Artist</a>
+      <a href="../chronicles/">Chronicles</a>
+      <a href="https://mem20.com/">mem20.com</a>
+    </div>
+    <p class="foot-note">
+      Mem20-naration's Chronicles &middot; a mem20 series<br>
+      Published from <span class="mono">docs/series/</span> on GitHub Pages
+    </p>
+  </div>
+</footer>
+</body>
+</html>

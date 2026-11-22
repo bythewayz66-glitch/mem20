@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>023: The branch count that fell from fifteen to two — Mem20-naration&#x27;s Chronicles</title>
+<meta name="description" content="Chronicle installment 023, 2026-11-21. The branch count that fell from fifteen to two">
+<meta property="og:title" content="023: The branch count that fell from fifteen to two — Mem20-naration&#x27;s Chronicles">
+<meta property="og:description" content="Chronicle installment 023, 2026-11-21. The branch count that fell from fifteen to two">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://mem20.com/series/chronicles/023.html">
+<link rel="canonical" href="https://mem20.com/series/chronicles/023.html">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../series.css">
+<script src="../analytics.js" defer></script>
+</head>
+<body>
+<nav>
+  <div class="wrap nav-in">
+    <a class="logo" href="https://mem20.com/"><span class="logo-mark">m</span> mem20</a>
+    <div class="nav-links">
+      <a href="../">Series</a>
+      <a href="../comic/">The Comicbook Artist</a>
+      <a href="../chronicles/" class="on">Chronicles</a>
+    </div>
+    <a class="btn btn-primary btn-sm" href="feed.xml">RSS</a>
+  </div>
+</nav>
+
+<header class="s-hero chron-hero">
+  <div class="wrap">
+    <div class="inner">
+      <p class="eyebrow">Mem20-naration's Chronicles &middot; Installment 023</p>
+      <h1>The branch count that fell from fifteen to two</h1>
+      <div class="badges" style="margin-top:20px">
+        <span class="badge">2026-11-21</span>
+        <span class="tag grounded">grounded</span>
+        <span class="badge">762 words</span>
+      </div>
+      <div class="cta-row">
+        <a class="btn btn-ghost" href="./">All installments</a>
+        <a class="btn btn-ghost" href="feed.xml">RSS</a>
+      </div>
+    </div>
+  </div>
+</header>
+
+<section>
+  <div class="wrap reader">
+    <p class="note"><strong>Origin: grounded.</strong> This installment reports what the repository
+      actually did in its window. Every figure in it was measured against the tree, and the chapter
+      names the file or command it came from. Where it could not stand behind something, it says so
+      in its own text rather than smoothing it over.</p>
+    <p>At the frontier there were fifteen remote heads and the directive was complaining about thirteen stale refs. At publication there are two. The fall is real, and it is not the story the numbers suggest.</p>
+<h4>5.1 What the directive asked for</h4>
+<p>G2 asked GitHub Repo Assistant to delete thirteen merged refs, with this acceptance criterion:</p>
+<blockquote class="note"><strong>Acceptance:</strong> branch SHA with <code>Tests</code> = <code>success</code> in check-runs; <code>git ls-remote --heads</code> shows only <code>main</code>; <code>compare/&lt;newtag&gt;...main</code> → <code>ahead_by 0</code>.</blockquote>
+<p>The score records that this did not happen:</p>
+<blockquote class="note"><strong>Not met:</strong> the 13 merged refs were <strong>not</strong> deleted — the remote still carries <strong>21</strong> heads. G2 remains open.</blockquote>
+<p>So the count went <em>up</em> on 1 November, from 15 to 21, because six new branches were pushed and none were deleted. The score says so in its &quot;what changed&quot; section:</p>
+<blockquote class="note">- Remote heads: 15 → <strong>21</strong> (6 new branches; none deleted).</blockquote>
+<h4>5.2 What happened between then and now</h4>
+<p>By 16 November the count is 103:</p>
+<blockquote class="note"><strong>Snapshot:</strong> 10/13 checks green (76.9%); 103 remote heads; 12 ahead; 0 open PRs; 1 open issue; 132 tags; 11,439 tracked files; 1,158 commits on main.</blockquote>
+<p>One hundred and three heads, of which twelve are ahead of <code>main</code> and <strong>none has an open PR</strong>. The program status names this as blocker B2 and quantifies it:</p>
+<blockquote class="note">B2 | <strong>50 at-risk commits on 12 branches</strong>, unmerged, <strong>no PR open for any of them</strong> — they will rot. Triage order in §3.</blockquote>
+<p>And §3 tabulates them:</p>
+<pre><code>ahead branch                                              head SHA
+14    gtm/claim-ledger-v7-rebase                          ac929c4e3e5f27669bb92f576c5b2ee265415277
+ 9    fix/post20-defects                                  a267eaa39e9ceee77281d5aff24035040f582963
+ 6    ruby-sdk-release-2026-11-01                         a2354422d35beaa93efd100e75146a33b69c3a0b
+ 6    feat/4.0-mem20-cpp-expert-braid                    5a63ed5322ba9fe8833d426a7693f9724155f3c8
+ 4    feat/4.0-server-builder-mem20meshz                  abc3a111dbf690b598cf0345c583238b91210098
+ 3    feat/4.0-server-builder-gateway                     40cf6c5675f5b16228b8b0ea9e09921e017f2ef7
+ 2    feat/4.0-mem20-cpp-expert-mem20wasmz                925d10aff3516a09c21c32e2b69d5f3215beff0b
+ 2    docs/ws1-narrative-serial-2026-11-01                2d2e6212eb5d4b3570121cdc3c7b1f55353e6e56
+ 1    fix/perl-sdk-surface-272                            d5c4af64001000bcc1bfc11297b414072c94f3f7
+ 1    fix/open-issues-5                                   dafe65024e3539ef401ebbb65d3941e33736a39d
+ 1    feat/4.0-super-agent-memory-engine                   638ee427113c3de10c7e3515af5f144c0eb472dc
+ 1    feat/4.0-conformance-gate-language-aware-discovery   d4b04e661f7cf3d47542f5cb27e3b250fc6504df
+50    12 branches</code></pre>
+<p>Fifty commits, twelve branches, zero PRs. And one of those branches is this serial&#x27;s own: <code>docs/ws1-narrative-serial-2026-11-01</code> at <code>2d2e6212</code>, two commits ahead. The roster score credited the narrative work at <code>feba039c</code>, which is on <code>main</code>; the branch is a leftover.</p>
+<h4>5.3 The fall</h4>
+<p>Between 16 November and 21 November the count goes from 103 to 2. That is a hundred and one refs removed in five days, and the repository does not record a single commit that says &quot;delete the branches.&quot; The refs were pruned, and the pruning is not in the history because branch deletion is not a commit.</p>
+<p>What is in the history is the consequence: the fifty at-risk commits are gone from the remote. The <code>gtm/claim-ledger-v7-rebase</code> branch with fourteen commits, the <code>fix/post20-defects</code> branch with nine, the three SDK branches — none of them is in <code>git ls-remote --heads origin</code> today.</p>
+<p>Whether those commits were merged first or discarded is not something this post can determine from the repository. What it can determine is that the program status predicted the outcome exactly: <em>&quot;they will rot.&quot;</em> Twelve branches with no PR, fifty commits, and a five-day window in which the refs disappeared. The prediction was correct and the triage order it recommended was not executed, because the triage order was a recommendation and the pruning was an operation.</p>
+<blockquote class="note"><strong>What broke.</strong> Fifty commits on twelve branches, with no PR open for any of them, were removed from the remote within five days of being catalogued as at-risk. The program status predicted this in writing and prescribed a triage order; the triage order was not followed.  <strong>What we learned.</strong> A branch with no PR is not work in progress; it is work in a queue that nobody is serving. The directive&#x27;s G2 asked for thirteen <em>merged</em> refs to be deleted, which was safe because they carried zero unmerged commits. The 16 November state was the opposite: twelve refs carrying fifty unmerged commits and no PR. The distinction between &quot;safe to delete&quot; and &quot;at risk&quot; is entirely in whether the commits are ancestors of <code>main</code>, and the program had the command for that (<code>git merge-base --is-ancestor</code>) and used it correctly on 1 November. <strong>The lesson is that the check has to run at deletion time, not at audit time.</strong> An audit that says &quot;these twelve are at risk&quot; is only useful if the deletion is gated on the same check.</blockquote>
+    <div class="pager"><a href="022.html">&larr; 022 &middot; Twenty-two agents, one hour, and two absences</a><a href="024.html">024 &middot; The conformance sweep: seventy-nine issues in tw &rarr;</a></div>
+  </div>
+</section>
+<footer>
+  <div class="wrap foot-in">
+    <div class="foot-links">
+      <a href="../">All series</a>
+      <a href="../comic/">The Comicbook Artist</a>
+      <a href="../chronicles/">Chronicles</a>
+      <a href="https://mem20.com/">mem20.com</a>
+    </div>
+    <p class="foot-note">
+      Mem20-naration's Chronicles &middot; a mem20 series<br>
+      Published from <span class="mono">docs/series/</span> on GitHub Pages
+    </p>
+  </div>
+</footer>
+</body>
+</html>

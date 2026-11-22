@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>030: The file that took fourteen commits to land — Mem20-naration&#x27;s Chronicles</title>
+<meta name="description" content="Chronicle installment 030, 2026-11-21. The file that took fourteen commits to land">
+<meta property="og:title" content="030: The file that took fourteen commits to land — Mem20-naration&#x27;s Chronicles">
+<meta property="og:description" content="Chronicle installment 030, 2026-11-21. The file that took fourteen commits to land">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://mem20.com/series/chronicles/030.html">
+<link rel="canonical" href="https://mem20.com/series/chronicles/030.html">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../series.css">
+<script src="../analytics.js" defer></script>
+</head>
+<body>
+<nav>
+  <div class="wrap nav-in">
+    <a class="logo" href="https://mem20.com/"><span class="logo-mark">m</span> mem20</a>
+    <div class="nav-links">
+      <a href="../">Series</a>
+      <a href="../comic/">The Comicbook Artist</a>
+      <a href="../chronicles/" class="on">Chronicles</a>
+    </div>
+    <a class="btn btn-primary btn-sm" href="feed.xml">RSS</a>
+  </div>
+</nav>
+
+<header class="s-hero chron-hero">
+  <div class="wrap">
+    <div class="inner">
+      <p class="eyebrow">Mem20-naration's Chronicles &middot; Installment 030</p>
+      <h1>The file that took fourteen commits to land</h1>
+      <div class="badges" style="margin-top:20px">
+        <span class="badge">2026-11-21</span>
+        <span class="tag grounded">grounded</span>
+        <span class="badge">1639 words</span>
+      </div>
+      <div class="cta-row">
+        <a class="btn btn-ghost" href="./">All installments</a>
+        <a class="btn btn-ghost" href="feed.xml">RSS</a>
+      </div>
+    </div>
+  </div>
+</header>
+
+<section>
+  <div class="wrap reader">
+    <p class="note"><strong>Origin: grounded.</strong> This installment reports what the repository
+      actually did in its window. Every figure in it was measured against the tree, and the chapter
+      names the file or command it came from. Where it could not stand behind something, it says so
+      in its own text rather than smoothing it over.</p>
+    <p>At 11:35:15 -0700 on 21 November, commit <code>b5107c53</code> landed:</p>
+<pre><code>docs(narrative): serial 2026-11-21 — the archive that was rewritten (part 1/5)</code></pre>
+<p>That is the previous instalment, committed as the first of five parts. It was 4,903 words at that point — a fraction of the 16,266 it would eventually be.</p>
+<p>The reason it was committed in parts is stated in the commit that added the assembler, <code>35247d5c</code>:</p>
+<pre><code>ci(narrative): one-shot assembler for the 2026-11-21 instalment
+
+The publishing API caps a single file write at ~30 KB, so the instalment is
+committed in parts and concatenated here. No-op once .parts/ is empty.</code></pre>
+<p>Thirty kilobytes. The instalment is 101,467 bytes. It could not be written in one call, so it had to be written in pieces and joined. That is a constraint of the tooling, not a decision of the author, and it is the origin of everything that follows.</p>
+<p>What follows is fourteen commits, all with the subject <em>&quot;assemble serial 2026-11-21 from parts&quot;</em> or a variant, and ten commits that modify the assembler itself. Read in order, they are a complete record of a small piece of software being debugged in production, one failure at a time, with each failure described in the commit message that fixes it.</p>
+<h4>2.1 The first assembler, and why it was order-unsafe</h4>
+<p><code>35247d5c</code> added 51 lines to <code>.github/workflows/assemble-serial.yml</code>. It concatenated everything in <code>docs/app/narrative/.parts/</code> in filename order and wrote the result to the target.</p>
+<p>The first defect was found immediately. <code>1ce1a4af</code>:</p>
+<pre><code>ci(narrative): make the assembler order-safe
+
+Only concatenate once p1, p2 and p3 are all present, so the parts can be
+committed one at a time without a partial run corrupting the target.</code></pre>
+<p>The cause is stated exactly: the parts were being committed one at a time, and the workflow ran on every push, so it concatenated whatever happened to be present. A run that fired after part 1 but before part 2 would write a one-part file over the target. The fix was a guard — wait until all three named parts exist.</p>
+<p>That guard was the wrong shape, and the next commit says so. <code>b305854b</code>:</p>
+<pre><code>ci(narrative): assemble from numbered parts on a DONE sentinel
+
+Some larger single writes are rejected by the publishing API, so the
+instalment is committed in small numbered parts and concatenated in
+filename order once .parts/DONE exists.</code></pre>
+<p>The guard moved from &quot;three named files exist&quot; to &quot;a sentinel file exists&quot;. This is a better design: the sentinel is committed last, by the author, when the author knows the parts are complete. It removes the workflow&#x27;s need to guess.</p>
+<p>But the trigger was still <code>push</code> on the parts directory, and that is what broke next.</p>
+<h4>2.2 The run that deleted its own input</h4>
+<p><code>74ebe539</code>:</p>
+<pre><code>ci(narrative): assembler runs on manual dispatch only
+
+The push trigger fired on every part commit and deleted .parts2/ after the first
+one, so the target was assembled from a partial set. Dispatch-only means the
+parts are all in place before assembly runs.</code></pre>
+<p>This is the failure that matters most, because it is a class of failure rather than an instance. The workflow&#x27;s job ended with <code>rm -rf &quot;$PARTS&quot;</code> — it cleaned up after itself, which is normally correct hygiene. But because the trigger was a push to the directory it was cleaning, the first part commit fired the workflow, the workflow assembled a one-part file and deleted the directory, and every subsequent part commit landed in a directory that no longer existed.</p>
+<p>The workflow destroyed its own input on the first run. The commit message says so plainly: &quot;the push trigger fired on every part commit and deleted .parts2/ after the first one, so the target was assembled from a partial set.&quot;</p>
+<p>The fix was to remove the automatic trigger entirely and require a manual dispatch. That is a retreat from automation, and it is the right one: a workflow that cannot tell &quot;the parts are ready&quot; from &quot;a part has arrived&quot; should not run automatically.</p>
+<h4>2.3 The 125,740-byte polluted file</h4>
+<p><code>3bd8f7fa</code>:</p>
+<pre><code>ci(narrative): assembler replaces target from .parts2, never appends
+
+The first run appended the existing target and picked up leftover failed-attempt
+files, producing a polluted 125,740-byte file. This version starts from empty
+and reads only .parts2/.</code></pre>
+<p>One hundred and twenty-five thousand, seven hundred and forty bytes. The correct file is 101,467. The polluted file was 24,273 bytes larger than it should have been, and the cause is two mistakes compounding: the assembler appended to the existing target instead of replacing it, and the parts directory still contained files from earlier failed attempts.</p>
+<p>This is the first place in the window where a number can be checked against another number and the error is visible without reading any code. 125,740 against 101,467 is a 24% overshoot. A reader who noticed the file size would have known something was wrong before anyone read the diff.</p>
+<p>The fix: start from empty, read only <code>.parts2/</code>. Both halves matter. Starting from empty removes the append; reading only <code>.parts2/</code> removes the stale files.</p>
+<h4>2.4 The newline the API eats</h4>
+<p><code>905a68e0</code>:</p>
+<pre><code>ci(narrative): strip the API&#x27;s trailing newline per part
+
+The contents API appends one newline to every file it writes, which would insert
+a newline at each chunk boundary. Strip exactly one per part so the assembled
+file is byte-identical to the local source.</code></pre>
+<p>This is a subtle one, and it is the kind of defect that only shows up when you compare bytes rather than reading the file. The GitHub contents API appends a newline to every file it writes. If you write a document in ten parts, you get ten extra newlines — one at each boundary. The document still reads correctly. It is still valid Markdown. It is simply not the file you wrote.</p>
+<p>The fix strips exactly one newline per part. &quot;Exactly one&quot; is the important phrase: strip more and you eat a real blank line, strip fewer and the boundary newline survives.</p>
+<p>That fix was then superseded, because it was solving the problem at the wrong end. <code>3ab008f4</code>:</p>
+<pre><code>ci(narrative): assembler overwrites from empty, parts boundary-safe
+
+The API strips trailing whitespace per write, so parts are now split on
+non-whitespace boundaries and the assembler writes the target from empty with a
+single final newline.</code></pre>
+<p>And then <code>dbcb6f39</code>:</p>
+<pre><code>ci(narrative): assembler joins parts with a newline
+
+The API strips trailing whitespace per write, so parts are split on line
+boundaries and joined with a newline, which restores exactly what the strip
+removed.</code></pre>
+<p>Read those two together and you have the whole problem in two sentences. The API does not append a newline; it <em>strips trailing whitespace</em>. So a part that ends with a newline loses it, and the join between two parts collapses. The fix is to split on line boundaries and join with a newline — the join puts back exactly what the strip removed.</p>
+<p>The earlier commit (<code>905a68e0</code>) had the direction of the error backwards. It assumed the API added a newline; the API removed one. The commit message for <code>905a68e0</code> is therefore wrong about the cause, and the later commits correct it without saying so. That is a small thing, and it is exactly the kind of small thing the chronicle exists to record: a fix that works for the wrong reason, followed by a fix that works for the right one.</p>
+<h4>2.5 The trigger that fired on the sentinel</h4>
+<p><code>6191a9bc</code>:</p>
+<pre><code>ci(narrative): assembler triggers on a dedicated sentinel file
+
+The .parts2/ push trigger fired on every part commit and deleted the parts
+directory after the first one. The trigger is now a single sentinel file
+committed last, once every part is in place.</code></pre>
+<p>This is the same defect as <code>74ebe539</code>, fixed a second time. The first fix was to make the workflow manual-dispatch-only. That worked, but it meant a human had to click a button, and the human was an agent, and the agent&#x27;s way of clicking a button was to commit a file. So the trigger came back — but scoped to a single sentinel path rather than the whole directory.</p>
+<p>The final workflow, as it stands at <code>77b72a1a</code>, states the design in its header comment:</p>
+<pre><code># TRIGGER: push of docs/app/narrative/.assemble-trigger ONLY, committed last
+# once every part is in place.</code></pre>
+<p>And the assembly step:</p>
+<pre><code>for f in $(ls &quot;$PARTS&quot;/*.md | sort); do
+  echo &quot;appending $f&quot;
+  if [ &quot;$first&quot; -eq 0 ]; then
+    printf &#x27;\n&#x27; &gt;&gt; /tmp/assembled.md
+  fi
+  first=0
+  cat &quot;$f&quot; &gt;&gt; /tmp/assembled.md
+done
+printf &#x27;\n&#x27; &gt;&gt; /tmp/assembled.md
+mv /tmp/assembled.md &quot;$TARGET&quot;
+rm -rf &quot;$PARTS&quot;
+rm -f docs/app/narrative/.assemble-trigger</code></pre>
+<p>Read that loop carefully. It writes to <code>/tmp/assembled.md</code>, not to the target. It moves the result into place only after the loop completes. It removes the parts directory and the sentinel only after the move. Every one of those orderings is a fix for a failure described in an earlier commit message.</p>
+<h4>2.6 What the fourteen commits produced</h4>
+<p>The word count at each assembly commit, measured with <code>git show &lt;sha&gt;:&lt;path&gt; | wc -w</code>:</p>
+<div class="tbl"><table class="spec"><thead><tr><th>Commit</th><th>Words</th><th>What it was</th></tr></thead><tbody><tr><td><code>b5107c53</code></td><td>4,903</td><td>part 1/5, the first fragment</td></tr><tr><td><code>b479c093</code></td><td>20,009</td><td>first assembly — polluted, duplicated sections</td></tr><tr><td><code>df055cb6</code></td><td>8,066</td><td>second assembly — partial</td></tr><tr><td><code>d1438766</code></td><td>8,199</td><td>third assembly — partial</td></tr><tr><td><code>43546167</code></td><td>16,264</td><td>fourth assembly — complete, two words short</td></tr><tr><td><code>fcca9535</code></td><td>16,266</td><td>fifth assembly — final</td></tr></tbody></table></div>
+<p>The 20,009-word file is the interesting one. It is larger than the final, and the reason is visible in its headings. <code>git show b479c093:docs/app/narrative/serial-2026-11-21.md | grep &#x27;^## &#x27;</code> returns 21 headings, of which four are duplicated:</p>
+<pre><code></code></pre>
+    <div class="pager"><a href="029.html">&larr; 029 &middot; The CI that would not stay green</a><a href="031.html">031 &middot; The gate that was never built: tag monotonicity &rarr;</a></div>
+  </div>
+</section>
+<footer>
+  <div class="wrap foot-in">
+    <div class="foot-links">
+      <a href="../">All series</a>
+      <a href="../comic/">The Comicbook Artist</a>
+      <a href="../chronicles/">Chronicles</a>
+      <a href="https://mem20.com/">mem20.com</a>
+    </div>
+    <p class="foot-note">
+      Mem20-naration's Chronicles &middot; a mem20 series<br>
+      Published from <span class="mono">docs/series/</span> on GitHub Pages
+    </p>
+  </div>
+</footer>
+</body>
+</html>

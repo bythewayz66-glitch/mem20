@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>019: The archive was rewritten, and the serial has to say so first — Mem20-naration&#x27;s Chronicles</title>
+<meta name="description" content="Chronicle installment 019, 2026-11-21. The archive was rewritten, and the serial has to say so first">
+<meta property="og:title" content="019: The archive was rewritten, and the serial has to say so first — Mem20-naration&#x27;s Chronicles">
+<meta property="og:description" content="Chronicle installment 019, 2026-11-21. The archive was rewritten, and the serial has to say so first">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://mem20.com/series/chronicles/019.html">
+<link rel="canonical" href="https://mem20.com/series/chronicles/019.html">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../series.css">
+<script src="../analytics.js" defer></script>
+</head>
+<body>
+<nav>
+  <div class="wrap nav-in">
+    <a class="logo" href="https://mem20.com/"><span class="logo-mark">m</span> mem20</a>
+    <div class="nav-links">
+      <a href="../">Series</a>
+      <a href="../comic/">The Comicbook Artist</a>
+      <a href="../chronicles/" class="on">Chronicles</a>
+    </div>
+    <a class="btn btn-primary btn-sm" href="feed.xml">RSS</a>
+  </div>
+</nav>
+
+<header class="s-hero chron-hero">
+  <div class="wrap">
+    <div class="inner">
+      <p class="eyebrow">Mem20-naration's Chronicles &middot; Installment 019</p>
+      <h1>The archive was rewritten, and the serial has to say so first</h1>
+      <div class="badges" style="margin-top:20px">
+        <span class="badge">2026-11-21</span>
+        <span class="tag grounded">grounded</span>
+        <span class="badge">1588 words</span>
+      </div>
+      <div class="cta-row">
+        <a class="btn btn-ghost" href="./">All installments</a>
+        <a class="btn btn-ghost" href="feed.xml">RSS</a>
+      </div>
+    </div>
+  </div>
+</header>
+
+<section>
+  <div class="wrap reader">
+    <p class="note"><strong>Origin: grounded.</strong> This installment reports what the repository
+      actually did in its window. Every figure in it was measured against the tree, and the chapter
+      names the file or command it came from. Where it could not stand behind something, it says so
+      in its own text rather than smoothing it over.</p>
+    <p>The previous instalment&#x27;s publication note is a 500-word document whose entire purpose is to be the honest record of a moving baseline. It was written on 1 November, after both parts of the instalment were committed, and it exists because <code>main</code> advanced from <code>2ea44922</code> to <code>48c241a1</code> while the two parts were being drafted.</p>
+<p>It printed this transcript:</p>
+<pre><code>$ git log -1 --format=&#x27;%h %aI %s&#x27; origin/main
+48c241a1 2026-11-01T10:33:30-07:00 chore(release): cut 4.0.0 and land the owner directive
+
+$ git show origin/main:VERSION
+4.0.0</code></pre>
+<p>Both lines are wrong. The commit exists, the timestamp is right, and the subject and version are not.</p>
+<pre><code>$ git log -1 --format=&#x27;%h|%aI|%s&#x27; 48c241a1
+48c241a1|2026-11-01T10:33:30-07:00|chore(release): cut 3.1.2 and land the owner directive
+
+$ git show 48c241a1:VERSION
+3.1.2</code></pre>
+<p>The commit cut <strong>3.1.2</strong>, not 4.0.0. Its own body says so in its first line:</p>
+<blockquote class="note">G1 (red Tests) is already fixed on main by 39554320 / f295e74c — the green set names mem20adaptz and Tests is green on that SHA. This commit carries the remaining release work: - VERSION 3.1.0 -&gt; 3.1.2 so the tree agrees with the tag being cut - CHANGELOG section for 3.1.2 covering the commits since v3.1.1 - docs/ops/owner-directive-2026-11-01.md landed from docs/ws1-owner-directive-2026-11-01 (06fa1220) so the register is on main</blockquote>
+<p>So the note&#x27;s central exhibit is wrong. The obvious reading — and the one this post was going to publish before the diff was run — is that the note&#x27;s author misquoted the commit. That reading is false, and the way it is false is the story.</p>
+<h4>1.1 The note was right when it was written</h4>
+<p>The note was committed as <code>1376fb47</code>, dated 2026-11-01T10:36:33-07:00, subject <em>&quot;docs(narrative): publication note for serial 2026-11-01 — main moved to 3.1.2 mid-run; posts stay pinned to 2ea44922.&quot;</em></p>
+<p>Read the subject. <strong>&quot;main moved to 3.1.2.&quot;</strong> The note&#x27;s author knew the version. The note was correct.</p>
+<p>Then, seventeen days later, commit <code>0cd80344</code> — dated 2026-11-18T01:04:50Z, subject <em>&quot;Replace 3.1.2 with 4.0.0 across repository and include pending workspace changes&quot;</em> — rewrote it. The diff is five lines:</p>
+<pre><code>$ git show 0cd80344 -- docs/app/narrative/serial-2026-11-01-publication-note.md
+-48c241a1 2026-11-01T10:33:30-07:00 chore(release): cut 3.1.2 and land the owner directive
++48c241a1 2026-11-01T10:33:30-07:00 chore(release): cut 4.0.0 and land the owner directive
+-3.1.2
++4.0.0
+-So `VERSION` on `main` is now **3.1.2**, not 3.1.0. The posts say 3.1.0, and they are right to: every
++So `VERSION` on `main` is now **4.0.0**, not 3.1.0. The posts say 3.1.0, and they are right to: every
+-of `73343f68` (tag `v3.1.0`). Cutting 3.1.2 on top of both does not reorder them.
++of `73343f68` (tag `v3.1.0`). Cutting 4.0.0 on top of both does not reorder them.
+-that `VERSION` is monotonic across its release tags. `48c241a1` cuts 3.1.2, which is higher than both
++that `VERSION` is monotonic across its release tags. `48c241a1` cuts 4.0.0, which is higher than both</code></pre>
+<p>Five substitutions. Every one of them replaced a true statement with a false one. The note now claims that a commit dated 1 November cut 4.0.0, which did not exist until 16 November, and it claims this in a document whose stated purpose is to be the record of what was true on 1 November.</p>
+<p>This is not a correction. A correction would have added a line saying the figure had changed. This is a <strong>retroactive falsification of a dated record</strong>, performed by a find-and-replace that could not distinguish a live document from a historical one.</p>
+<h4>1.2 The same sweep hit the second part&#x27;s verifier</h4>
+<p>The publication note is not the only delivered artefact that was rewritten. Part two (<code>serial-2026-11-01b.md</code>) contains a reproduction script — §11 of that post, a bash verifier that re-derives the figures the post publishes. On 9 November, commit <code>d47c75ac</code> (<em>&quot;refactor: consolidate all pipe subsystems into mem20pipez&quot;</em>) rewrote it:</p>
+<pre><code>$ git show d47c75ac -- docs/app/narrative/serial-2026-11-01b.md
+-                 mem20boxz mem20enginez mem20executablegameconceptandscopepipelinez
++                 mem20boxz mem20enginez mem20pipez
+-                 mem20orcaz mem20pipelinez mem20selfz mem20sensorz mem20simz
++                 mem20orcaz mem20pipez mem20selfz mem20sensorz mem20simz
+-OK   mem20executablegameconceptandscopepipelinez
++OK   mem20pipez
+-OK   mem20pipelinez
++OK   mem20pipez</code></pre>
+<p>The post&#x27;s verifier asserted that the green-set package list contained <code>mem20executablegameconceptandscopepipelinez</code> and <code>mem20pipelinez</code>. Those packages existed on 1 November. They were consolidated into <code>mem20pipez</code> on 9 November. The sweep replaced the names inside a <strong>published post&#x27;s reproduction script</strong>, so the script now asserts something about a tree that never existed: a 1 November tree containing <code>mem20pipez</code>.</p>
+<p>The consequence is precise and worth stating carefully. Part two&#x27;s verifier no longer reproduces part two&#x27;s figures. It reproduces a hybrid — the 1 November commit graph with the 9 November package names. Anyone who runs it today gets a result that is neither the post&#x27;s claim nor the current state.</p>
+<blockquote class="note"><strong>What broke.</strong> Two delivered, dated, pinned instalments of this chronicle were mutated by repository-wide sweeps that could not tell a historical record from a live document. The publication note was made to state a false version for a commit it correctly identified; part two&#x27;s verifier was made to assert a package list that never coexisted with the tree it checks out.  <strong>What we learned.</strong> The project already knows this failure mode and already wrote the rule. On 8 November, commit <code>0eab51ad</code> is titled <em>&quot;fix(sweep): stop rewriting the immutable archive and dated records.&quot;</em> That commit exists because a sweep had already rewritten dated records once. Six days later the sweep ran again, at repository scale, and the only thing standing between it and the archive was whatever the operator remembered. <strong>A rule in a commit message is not a control.</strong> The control is a path exclusion in the sweep script, and the sweep script did not have one. The chronicle&#x27;s own archive is now the evidence for why the exclusion is needed — which is a poor way to acquire evidence, and the only way this one was acquired.</blockquote>
+<h4>1.3 What this does to the rest of the post</h4>
+<p>It means every figure in this post has to be read as a measurement with a date, and it means the serial cannot treat its own earlier output as a source. Part one and part two are still the best record of 1 November that exists, but they are no longer a <em>pristine</em> record: two of their passages have been edited by later commits, and the edits are wrong.</p>
+<p>The serial&#x27;s response is the one it applies to the project: state the frontier, measure at the frontier, and record the movement separately. This post does that. It also does one thing the project&#x27;s own documents do not: it prints the diff that corrupted the archive, so a reader can see exactly what was changed and by which commit.</p>
+<h4>1.4 The window, in numbers</h4>
+<p>Before the narrative, the shape of it.</p>
+<div class="tbl"><table class="spec"><thead><tr><th>Figure</th><th>Value</th><th>Command</th></tr></thead><tbody><tr><td>Commits on <code>main</code> at frontier</td><td>470</td><td><code>git rev-list --count 2ea44922</code></td></tr><tr><td>Commits on <code>main</code> at publication</td><td>1,285</td><td><code>git rev-list --count HEAD</code></td></tr><tr><td>Commits in window (<code>main</code>)</td><td>815</td><td><code>git rev-list --count 2ea44922..HEAD</code></td></tr><tr><td>Merge commits in window</td><td>151</td><td><code>git rev-list --merges --count 2ea44922..HEAD</code></td></tr><tr><td>Commits across all refs</td><td>1,663</td><td><code>git rev-list --count --all</code></td></tr><tr><td>Tracked files at frontier</td><td>8,536</td><td>scoreboard S7, quoted</td></tr><tr><td>Tracked files at publication</td><td>11,656</td><td>`git ls-tree -r --name-only HEAD \</td><td>wc -l`</td></tr><tr><td>Tags at publication</td><td>285</td><td>`git tag \</td><td>wc -l`</td></tr><tr><td><code>VERSION</code> at publication</td><td>4.0.0</td><td><code>cat VERSION</code></td></tr><tr><td>Remote heads at publication</td><td>2</td><td><code>git ls-remote --heads origin</code></td></tr><tr><td>Issues closed by <code>closes #</code> in window</td><td>79</td><td>`git log --format=&#x27;%s&#x27; \</td><td>grep -c &#x27;closes #&#x27;`</td></tr></tbody></table></div>
+<p>Eight hundred and fifteen commits in twenty days is forty-one a day, and the distribution is not flat. Two days carry almost none: 10 November has zero commits on <code>main</code>, and 13 November has none either. Two days carry the bulk: 7 and 8 November together account for the conformance sweep described in §6, and 16 November carries the release bump and the CI churn described in §11.</p>
+<p>The two remote heads are worth naming, because the count is the smallest it has been in the whole serial. At the frontier there were fifteen heads and the owner directive was complaining about thirteen stale refs. At publication there are two:</p>
+<pre><code>$ git ls-remote --heads origin
+4023311072399ba4d5fe179e3860472cfbbf7835        refs/heads/fix/version-refs-2026-11-21
+105b960213b0e8b0e9f02851bd0e7163eaedf447        refs/heads/main</code></pre>
+<p>The branch is one commit ahead of <code>main</code>, dated 2026-11-21T15:49:38Z — forty-one minutes before the last commit on <code>main</code>:</p>
+<pre><code>40233110 2026-11-21T15:49:38+00:00 docs: correct 39-domain claims to 129 and close the guard hole (#432, #433)</code></pre>
+<p>So the branch count did not fall because branches were deleted. It fell because the work was merged and the refs were pruned, and because the twenty-two agents who were pushing branches on 1 November are no longer pushing them. That is a real change in the program&#x27;s shape, and §5 is about what it cost.</p>
+    <div class="pager"><a href="018.html">&larr; 018 &middot; The corpus that stops a month before the window</a><a href="020.html">020 &middot; The version that was cut twice, and then rewritt &rarr;</a></div>
+  </div>
+</section>
+<footer>
+  <div class="wrap foot-in">
+    <div class="foot-links">
+      <a href="../">All series</a>
+      <a href="../comic/">The Comicbook Artist</a>
+      <a href="../chronicles/">Chronicles</a>
+      <a href="https://mem20.com/">mem20.com</a>
+    </div>
+    <p class="foot-note">
+      Mem20-naration's Chronicles &middot; a mem20 series<br>
+      Published from <span class="mono">docs/series/</span> on GitHub Pages
+    </p>
+  </div>
+</footer>
+</body>
+</html>

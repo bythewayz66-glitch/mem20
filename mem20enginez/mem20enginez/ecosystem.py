@@ -117,6 +117,25 @@ def runtime_lifecycle(customers: Sequence[Mapping[str, Any]] = None) -> Dict[str
     return _safe("mem20customerlifecycleenginez", run)
 
 
+def capability_gap_mapper_probe() -> Dict[str, Any]:
+    """Probe the capability gap mapper subsystem."""
+    try:
+        # Ensure the subsystem project directory is on sys.path
+        import sys
+        from pathlib import Path
+        estate_root = Path(__file__).resolve().parents[2]
+        cgm_path = str(estate_root / "mem20gapz")
+        if cgm_path not in sys.path:
+            sys.path.insert(0, cgm_path)
+        
+        # Import using __import__ which respects sys.path modifications
+        eco = __import__("mem20gapz.ecosystem", fromlist=["probe"])
+        return eco.probe(include_member_ecosystems=False)
+    except Exception as exc:
+        return {"ok": False, "subsystem": "mem20gapz",
+                "error": f"{type(exc).__name__}: {exc}"}
+
+
 CORE_CHECKS = {
     "runtime_compatibility": compat_probe,
     "protocol_autodiscovery": protocol_discovery,
@@ -124,6 +143,7 @@ CORE_CHECKS = {
     "service_bundling": capability_bundle,
     "predictive_recall": predictive_routing,
     "customer_lifecycle": runtime_lifecycle,
+    "capability_gap_mapper": capability_gap_mapper_probe,
 }
 
 

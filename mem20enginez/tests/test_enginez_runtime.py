@@ -55,9 +55,9 @@ def test_ecosystem_core_peers_and_expanded_surface():
     assert ecosystem.runtime_lifecycle()["subsystem"] == "mem20customerlifecycleenginez"
 
     p = ecosystem.probe(include_member_ecosystems=True)
-    assert p["core_count"] == 6
+    assert p["core_count"] == 7
     assert isinstance(p.get("member_ecosystems"), dict)
-    # assimilated peer surface: core 6 + aggregated peer checks from absorbed ecosystems >> 6
+    # assimilated peer surface: core 7 + aggregated peer checks from absorbed ecosystems >> 7
     assert p.get("peer_surface_total", 0) >= 20
     assert p["count"] == p["peer_surface_total"]
     # aggregation performed over all members
@@ -66,7 +66,7 @@ def test_ecosystem_core_peers_and_expanded_surface():
 
     # core-only view
     pc = ecosystem.probe(include_member_ecosystems=False)
-    assert pc["core_count"] == 6
+    assert pc["core_count"] == 7
 
 
 def test_service_plan_status_doctor_http(tmp_path):
@@ -93,7 +93,7 @@ def test_service_plan_status_doctor_http(tmp_path):
     assert "runtime_lifecycle" in plan["signals"]
 
     doc = svc.doctor()
-    assert "probe" in doc and doc["probe"]["core_count"] == 6
+    assert "probe" in doc and doc["probe"]["core_count"] == 7
     assert doc["probe"].get("peer_surface_total", 0) >= 20
 
     sim = svc.simulate()
@@ -110,7 +110,7 @@ def test_service_plan_status_doctor_http(tmp_path):
             body = json.loads(r.read())
             assert body["members_total"] == len(MEMBERS)
         with urllib.request.urlopen(f"http://127.0.0.1:{port}/api/doctor") as r:
-            assert json.loads(r.read())["probe"]["core_count"] == 6
+            assert json.loads(r.read())["probe"]["core_count"] == 7
         with urllib.request.urlopen(f"http://127.0.0.1:{port}/api/members") as r:
             assert json.loads(r.read())["report"]["members_total"] == len(MEMBERS)
         with urllib.request.urlopen(f"http://127.0.0.1:{port}/") as r:

@@ -51,7 +51,7 @@ from typing import Optional
 _REPO_ROOT = pathlib.Path(__file__).resolve().parents[1]
 
 _PROJECTS = ("memory_engine", "mem20verify", "mem20dreamz", "mem20kilnz",
-             "mem20corez", "mem20cliz")
+             "mem20corez", "mem20cliz", "mem20gapz")
 
 
 def _bootstrap() -> None:
@@ -281,6 +281,41 @@ def cli_envelope(command: str, argv: list, exit_code: int, stdout: str = "",
                 "error": f"{type(exc).__name__}: {exc}"}
 
 
+def capability_gap_mapper_analyze(crew_skills: dict = None,
+                                   role_requirements: dict = None) -> dict:
+    """Run a capability gap analysis for crew composition planning.
+
+    Uses ``mem20gapz`` to detect gaps between current crew
+    capabilities and required capabilities for a given mission or role.
+    """
+    try:
+        from mem20gapz import family_capability_gap_mapper
+
+        request = {
+            "current_capabilities": crew_skills.get("current_capabilities", []) if crew_skills else [],
+            "required_capabilities": role_requirements.get("required_capabilities", []) if role_requirements else [],
+            "context": role_requirements.get("context", {}) if role_requirements else {},
+        }
+        result = family_capability_gap_mapper(206, request)
+        return {"ok": True, "subsystem": "mem20gapz",
+                "gaps": result.get("gaps", []),
+                "actions": result.get("actions", []),
+                "summary": result.get("summary", {})}
+    except Exception as exc:  # noqa: BLE001
+        return {"ok": False, "subsystem": "mem20gapz",
+                "error": f"{type(exc).__name__}: {exc}"}
+
+
+def capability_gap_mapper_probe() -> dict:
+    """Probe the capability gap mapper subsystem."""
+    try:
+        from mem20gapz.ecosystem import probe as cgm_probe
+        return cgm_probe(include_member_ecosystems=False)
+    except Exception as exc:  # noqa: BLE001
+        return {"ok": False, "subsystem": "mem20gapz",
+                "error": f"{type(exc).__name__}: {exc}"}
+
+
 # --------------------------------------------------------------------------
 # the governor
 # --------------------------------------------------------------------------
@@ -453,6 +488,7 @@ def _core_peers():
     checks['mem20kilnz'] = _safe('mem20kilnz', lambda: check_asset_budget('probe', 100))
     checks['mem20corez'] = _safe('mem20corez', lambda: model_confidence('probe confidence text'))
     checks['mem20cliz'] = _safe('mem20cliz', lambda: cli_envelope(['--json']))
+    checks['mem20gapz'] = _safe('mem20gapz', capability_gap_mapper_probe)
     return checks
 
 
@@ -460,7 +496,7 @@ def probe(include_member_ecosystems: bool = True) -> dict:
     checks = _core_peers()
     reachable = [k for k, v in checks.items() if v.get('ok')]
     result = {
-        'ok': len(reachable) >= 6,
+        'ok': len(reachable) >= 7,
         'count': len(reachable),
         'core_count': len(checks),
         'reachable': reachable,

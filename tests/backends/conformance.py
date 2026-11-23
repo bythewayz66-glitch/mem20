@@ -14,21 +14,13 @@ from typing import Any
 
 import numpy as np
 import pytest
+import pytest_asyncio
 
 from memory_engine.backends.base import BackendConfig, SearchQuery, VectorBackend, VectorRecord
 from memory_engine.backends.registry import registry
 
 
 # ─── Fixtures ───
-
-def pytest_addoption(parser: pytest.Parser) -> None:
-    parser.addoption(
-        "--backend",
-        action="store",
-        default="memory",
-        help="Comma-separated list of backends to test (e.g., faiss,memory)",
-    )
-
 
 @pytest.fixture(scope="session")
 def backend_names(request: pytest.FixtureRequest) -> list[str]:
@@ -40,34 +32,18 @@ def dimension() -> int:
     return 768
 
 
-@pytest.fixture(scope="session")
-def backend_factory(backend_names: list[str], dimension: int) -> dict[str, VectorBackend]:
-    """Create backend instances for each backend name."""
-    factories = {}
-    for name in backend_names:
-        if name not in registry:
-            pytest.skip(f"Backend '{name}' not registered")
-        config = BackendConfig(backend=name, dimension=dimension)
-        if name == "faiss":
-            config.faiss_index_type = "HNSW32"
-        elif name == "memory":
-            config.memory_backend = "hnsw"
-        factories[name] = registry.create(config)
-    return factories
-
-
-@pytest.fixture(scope="function")
-async def backend(
-    backend_factory: dict[str, VectorBackend],
-    backend_name: str,
-) -> VectorBackend:
-    """Get initialized backend for a specific test."""
-    b = backend_factory[backend_name]
-    config = BackendConfig(backend=backend_name, dimension=768)
+@pytest_asyncio.fixture(scope="function")
+async def backend(backend_name: str, dimension: int) -> VectorBackend:
+    """Create and initialize a fresh backend for each test."""
+    if backend_name not in registry:
+        pytest.skip(f"Backend '{backend_name}' not registered")
     if backend_name == "faiss":
-        config.faiss_index_type = "HNSW32"
+        config = BackendConfig(backend=backend_name, dimension=dimension, faiss_index_type="HNSW32")
     elif backend_name == "memory":
-        config.memory_backend = "hnsw"
+        config = BackendConfig(backend=backend_name, dimension=dimension, memory_backend="flat")
+    else:
+        config = BackendConfig(backend=backend_name, dimension=dimension)
+    b = registry.create(config)
     await b.initialize(config)
     yield b
     await b.close()
@@ -300,7 +276,10 @@ class TestBackendConformance:
     @pytest.mark.asyncio
     async def test_latency_p99(self, backend: VectorBackend) -> None:
         """Latency p99 < 50ms for 100k vectors (HNSW backends)."""
-        if backend.name not in ("faiss", "memory", "qdrant", "milvus", "lancedb"):
+        # Only run on backends that use ANN (HNSW, IVF, etc.)
+        # Memory backend in flat mode is not ANN
+        ann_backends = ("faiss", "qdrant", "milvus", "lancedb")
+        if backend.name not in ann_backends:
             pytest.skip("Latency test only for ANN backends")
 
         n = 50000  # Smaller for CI
@@ -420,9 +399,3 @@ class TestBackendConformance:
         assert len(results) == 5
 
 
-# ─── Backend-specific parametrization ───
-
-def pytest_generate_tests(metafunc: pytest.Metafunc) -> None:
-    if "backend" in metafunc.fixturenames:
-        backend_names = metafunc.config.getoption("--backend").split(",")
-        metafunc.parametrize("backend_name", [name.strip() for name in backend_names], indirect=True)

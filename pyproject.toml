@@ -28,7 +28,16 @@ dependencies = [
 
 [project.optional-dependencies]
 # Dev: run the test suite on a clean clone.
-dev = ["pytest>=7"]
+dev = ["pytest>=7", "pytest-asyncio", "hnswlib"]
+# Vector backends (optional - install extras to use)
+faiss = ["faiss-cpu>=1.7.4"]
+pgvector = ["psycopg[pool]>=3.1", "pgvector>=0.2"]
+qdrant = ["qdrant-client>=1.8"]
+lancedb = ["lancedb>=0.8"]
+milvus = ["pymilvus>=2.4"]
+weaviate = ["weaviate-client>=4.0"]
+# All vector backends
+all-backends = ["faiss-cpu>=1.7.4", "psycopg[pool]>=3.1", "pgvector>=0.2", "qdrant-client>=1.8", "lancedb>=0.8", "pymilvus>=2.4", "weaviate-client>=4.0"]
 # Optional integrations are EXTERNAL APPLICATIONS, not pip packages.
 # Blender / Unity must be installed on the host (see requirements-optional.txt).
 integrations = []
@@ -62,12 +71,11 @@ py-modules = ["memory", "metrics_collector", "procedural", "launcher", "mem20pat
 [project.entry-points."mem20.vector_backends"]
 faiss = "memory_engine.backends.faiss_backend:FaissBackend"
 memory = "memory_engine.backends.memory_backend:MemoryBackend"
-# Future backends (enabled when dependencies available):
-# pgvector = "memory_engine.backends.pgvector_backend:PgVectorBackend"
-# qdrant = "memory_engine.backends.qdrant_backend:QdrantBackend"
-# lancedb = "memory_engine.backends.lancedb_backend:LanceDBBackend"
-# milvus = "memory_engine.backends.milvus_backend:MilvusBackend"
-# weaviate = "memory_engine.backends.weaviate_backend:WeaviateBackend"
+pgvector = "memory_engine.backends.pgvector_backend:PgVectorBackend"
+qdrant = "memory_engine.backends.qdrant_backend:QdrantBackend"
+lancedb = "memory_engine.backends.lancedb_backend:LanceDBBackend"
+milvus = "memory_engine.backends.milvus_backend:MilvusBackend"
+weaviate = "memory_engine.backends.weaviate_backend:WeaviateBackend"
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]

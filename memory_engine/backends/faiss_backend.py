@@ -106,6 +106,7 @@ class FaissBackend(VectorBackend):
 
         self._index_path = self._store_path / "vector_index.faiss"
         self._meta_path = self._store_path / "vector_meta.json"
+        self._vectors_path = self._store_path / "vector_vectors.npy"
 
         # Load or create index
         await self._load_or_create_index()
@@ -122,15 +123,17 @@ class FaissBackend(VectorBackend):
 
         start = time.perf_counter()
 
-        if self._index_path.exists() and self._meta_path.exists():
+        if self._index_path.exists() and self._meta_path.exists() and self._vectors_path.exists():
             # Load existing index
             self._index = faiss.read_index(str(self._index_path))
             with open(self._meta_path, "r") as f:
                 self._meta = json.load(f)
+            self._vectors = np.load(self._vectors_path)
         else:
             # Create new index
             self._index = self._create_index()
             self._meta = []
+            self._vectors = np.empty((0, self._dimension), dtype=np.float32)
 
         self._build_time = time.perf_counter() - start
 
@@ -172,8 +175,9 @@ class FaissBackend(VectorBackend):
         elif index_type.startswith("HNSW"):
             # HNSW index (hierarchical navigable small world)
             # Format: "HNSW32" -> M=32
+            # Use inner product (cosine) metric with normalized vectors
             m = int(index_type[4:]) if len(index_type) > 4 else 32
-            index = faiss.IndexHNSWFlat(self._dimension, m)
+            index = faiss.IndexHNSWFlat(self._dimension, m, faiss.METRIC_INNER_PRODUCT)
             index.hnsw.efConstruction = self._config.faiss_ef_construction
             index.hnsw.efSearch = self._config.faiss_ef_search
             return index
@@ -204,6 +208,8 @@ class FaissBackend(VectorBackend):
             faiss.write_index(self._index, str(self._index_path))
             with open(self._meta_path, "w") as f:
                 json.dump(self._meta, f)
+            if hasattr(self, "_vectors") and self._vectors is not None:
+                np.save(self._vectors_path, self._vectors)
             self._build_time += time.perf_counter() - start
 
     async def add(self, records: list[VectorRecord]) -> None:
@@ -232,37 +238,71 @@ class FaissBackend(VectorBackend):
                 meta_entries.append(meta_entry)
 
             if vectors:
+                new_vectors = np.vstack(vectors)
                 # Train IVF index if needed
                 if hasattr(self._index, "is_trained") and not self._index.is_trained:
-                    train_data = np.vstack(vectors)
+                    train_data = new_vectors
                     if train_data.shape[0] < 100:
-                        # Need more data to train; use existing meta if available
-                        if self._meta:
-                            existing_vecs = []
-                            # We don't have existing vectors easily accessible
-                            # Just train with what we have
-                            pass
+                        # Need more data to train; use existing vectors if available
+                        if hasattr(self, "_vectors") and self._vectors.shape[0] > 0:
+                            train_data = np.vstack([self._vectors, new_vectors])
                     self._index.train(train_data)
 
-                self._index.add(np.vstack(vectors))
+                self._index.add(new_vectors)
                 self._meta.extend(meta_entries)
+                # Store vectors for rebuild capability
+                if hasattr(self, "_vectors") and self._vectors.shape[0] > 0:
+                    self._vectors = np.vstack([self._vectors, new_vectors])
+                else:
+                    self._vectors = new_vectors
 
             await self._save()
 
+    async def _rebuild_index(self) -> None:
+        """Rebuild FAISS index from stored vectors and metadata."""
+        import time
+        start = time.perf_counter()
+
+        if not hasattr(self, "_vectors") or self._vectors.shape[0] == 0:
+            # Nothing to rebuild
+            self._index = self._create_index()
+        else:
+            # Rebuild index from all stored vectors
+            self._index = self._create_index()
+            if hasattr(self._index, "is_trained") and not self._index.is_trained:
+                self._index.train(self._vectors)
+            self._index.add(self._vectors)
+
+        self._build_time += time.perf_counter() - start
+
     async def delete(self, ids: list[str]) -> None:
         with self._lock:
-            # FAISS doesn't support native delete; mark for rebuild
-            # We'll filter them out on search and rebuild on compact
+            # FAISS doesn't support native delete; rebuild index
             id_set = set(ids)
+            # Find indices of vectors to remove
+            keep_indices = [i for i, m in enumerate(self._meta) if m["id"] not in id_set]
             self._meta = [m for m in self._meta if m["id"] not in id_set]
+            # Also remove corresponding vectors
+            if hasattr(self, "_vectors") and self._vectors.shape[0] > 0:
+                self._vectors = self._vectors[keep_indices]
+            await self._rebuild_index()
             await self._save()
 
     async def update(self, records: list[VectorRecord]) -> None:
         with self._lock:
-            # FAISS doesn't support native update; delete + add
+            # FAISS doesn't support native update; delete + add + rebuild
             ids = [r.id for r in records]
-            await self.delete(ids)
+            # Find indices of vectors to remove
+            keep_indices = [i for i, m in enumerate(self._meta) if m["id"] not in ids]
+            self._meta = [m for m in self._meta if m["id"] not in ids]
+            # Also remove corresponding vectors
+            if hasattr(self, "_vectors") and self._vectors.shape[0] > 0:
+                self._vectors = self._vectors[keep_indices]
+            # Rebuild index with remaining vectors
+            await self._rebuild_index()
+            # Add new/updated records
             await self.add(records)
+            # Note: add() calls _save(), so we don't need to call it again
 
     async def search(self, query: SearchQuery) -> list[SearchResult]:
         with self._lock:

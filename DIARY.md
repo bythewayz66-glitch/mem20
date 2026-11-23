@@ -1044,3 +1044,28 @@ Reworked/verified subsystems #340–#350 (oldest→newest, 1 at a time) to full 
 ## 2026-11-23 — forgetting / working / consolidate in engine
 
 Folded adaptive forgetting (Ebbinghaus + spaced review), working-memory buffer+flush, and consolidate helpers into memory_engine. Ledger-backed; not candy. mem20adaptz.forgetting remains as pure math sibling; engine path is durable.
+
+## 2026-11-23 — session: candy quarantine + memory substrate fold-ins
+
+### candy/ (tracked, estate-excluded)
+- Created root `candy/` for all `mem20*z` with **len(name) > 15**.
+- Moved 87 top-level long packages + absorbed long trees + long MCP tools under `candy/`.
+- `candy/ESTATE_EXCLUDE` marker; `candy/README.md` documents the rule.
+- `candy/` is **tracked** (not gitignored). Estate must not import or discover it.
+- `mem20verify.testrun.discover_packages` skips `candy/` and any long `mem20*z` name.
+- `.mem20-absorbed-map.json` cleared of long-package mappings.
+- MCP: long tool modules under `candy/mcp_tools/`; temporal interval inlined in `mcp/checks.py` / `mcp/surface.py`.
+
+### memory_engine first-class modules (ledger-backed)
+Earlier in this effort and continued today:
+- predictive, temporal, episodic, ingest, skills, search, session, verify, containment
+- **forgetting** — Ebbinghaus + spaced review on grounded facts (`track` / `review` / `review_queue`)
+- **working** — short buffer + `working_flush()` → `remember()`
+- **consolidate** — topic consolidation / prune / promote helpers
+
+### Note on 4540-file candy move
+Long top-level packages were almost entirely 290-byte `from mem20core.core import *` stubs; absorbed trees were packaging husks. Quarantine removed clutter, not product depth.
+
+### Commits (main)
+- candy move + dewire
+- forgetting / working / consolidate fold-in

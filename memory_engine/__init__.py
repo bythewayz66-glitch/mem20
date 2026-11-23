@@ -95,6 +95,31 @@ _ENGINE_EXPORTS = frozenset(
     }
 )
 
+# Predictive recall + temporal (first-class; was mem20prez / mem20memorytimemachinez)
+_PREDICTIVE_EXPORTS = frozenset(
+    {
+        "predict_next",
+        "prefetch",
+        "record_recall_outcome",
+        "predictive_health",
+        "get_predictive",
+        "PredictiveRecall",
+        "Prediction",
+        "PrefetchResult",
+    }
+)
+_TEMPORAL_EXPORTS = frozenset(
+    {
+        "as_of",
+        "timeline",
+        "diff",
+        "snapshot",
+        "temporal_health",
+        "TimelineEvent",
+        "DiffResult",
+    }
+)
+
 __all__ = [
     # facade
     "MemoryEngine",
@@ -123,6 +148,8 @@ __all__ = [
     "UNLABELED",
     # engine functions (lazy)
     *sorted(_ENGINE_EXPORTS),
+    *sorted(_PREDICTIVE_EXPORTS),
+    *sorted(_TEMPORAL_EXPORTS),
     "__version__",
 ]
 
@@ -140,6 +167,12 @@ def __getattr__(name: str) -> Any:
                 f"memory_engine.memory does not define it. The contract and the "
                 f"engine have drifted."
             ) from exc
+    if name in _PREDICTIVE_EXPORTS:
+        from . import predictive as _pred
+        return getattr(_pred, name)
+    if name in _TEMPORAL_EXPORTS:
+        from . import temporal as _temp
+        return getattr(_temp, name)
     raise AttributeError(f"module {__name__!r} has no attribute {name!r}")
 
 

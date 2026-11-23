@@ -16,3 +16,7 @@ They are not separate top-level packages.
 | Fault containment | `memory_engine.containment` | `mem20faultcontainmentcellsz` |
 
 Import from `memory_engine` only. See `memory_engine/README.md` § First-class capabilities.
+
+| Forgetting / spaced review | `memory_engine.forgetting` | `mem20adaptiveforgettingenginez` (via adaptz) |
+| Working memory | `memory_engine.working` | (new engine surface) |
+| Consolidate | `memory_engine.consolidate` | (engine hygiene) |

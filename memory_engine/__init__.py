@@ -60,6 +60,17 @@ _SKILLS_EXPORTS = frozenset({
 _SEARCH_EXPORTS = frozenset({"cognitive_search", "search_health"})
 _SESSION_EXPORTS = frozenset({"save_session", "load_session", "list_sessions", "session_health"})
 _VERIFY_EXPORTS = frozenset({"verify_claim", "verify_prediction", "verify_batch", "verify_health"})
+
+_FORGETTING_EXPORTS = frozenset({
+    "retention", "reinforce", "review_state", "track", "item_state",
+    "review", "review_queue", "forgetting_health",
+})
+_WORKING_EXPORTS = frozenset({
+    "working_put", "working_get", "list_working", "working_clear", "working_flush", "flush", "working_health",
+})
+_CONSOLIDATE_EXPORTS = frozenset({
+    "prune_superseded", "consolidate_topic", "promote_all_due_simulated", "consolidate_health",
+})
 _CONTAINMENT_EXPORTS = frozenset({
     "MemoryCircuit", "CircuitOpen", "quarantine_topic", "is_quarantined", "safe_recall",
     "containment_health",
@@ -81,6 +92,9 @@ __all__ = [
     *sorted(_SESSION_EXPORTS),
     *sorted(_VERIFY_EXPORTS),
     *sorted(_CONTAINMENT_EXPORTS),
+    *sorted(_FORGETTING_EXPORTS),
+    *sorted(_WORKING_EXPORTS),
+    *sorted(_CONSOLIDATE_EXPORTS),
     "__version__",
 ]
 
@@ -112,6 +126,12 @@ def __getattr__(name: str) -> Any:
         from . import verify as m; return getattr(m, name)
     if name in _CONTAINMENT_EXPORTS:
         from . import containment as m; return getattr(m, name)
+    if name in _FORGETTING_EXPORTS:
+        from . import forgetting as m; return getattr(m, name)
+    if name in _WORKING_EXPORTS:
+        from . import working as m; return getattr(m, name)
+    if name in _CONSOLIDATE_EXPORTS:
+        from . import consolidate as m; return getattr(m, name)
     raise AttributeError(f"module {__name__!r} has no attribute {name!r}")
 
 

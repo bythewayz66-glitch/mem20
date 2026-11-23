@@ -1040,3 +1040,7 @@ Reworked/verified subsystems #340–#350 (oldest→newest, 1 at a time) to full 
 - Regression tests: `tests/test_conformance_cli_surface.py`,
   `tests/test_conformance_cross_module_calls.py`, `tests/test_install_estate.py`
   (13 pass), plus the existing factoryz suite (26 pass).
+
+## 2026-11-23 — forgetting / working / consolidate in engine
+
+Folded adaptive forgetting (Ebbinghaus + spaced review), working-memory buffer+flush, and consolidate helpers into memory_engine. Ledger-backed; not candy. mem20adaptz.forgetting remains as pure math sibling; engine path is durable.

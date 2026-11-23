@@ -1,0 +1,15 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "mem20prez"
+version = "1.1.0"
+description = "Predictive recall engine that learns from real mem20 recall traffic and prefetches grounded facts only"
+requires-python = ">=3.10"
+
+[project.scripts]
+mem20prez = "mem20prez.runtime:main"
+
+[tool.setuptools.packages.find]
+include = ["mem20prez", "mem20prez.*"]

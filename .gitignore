@@ -120,3 +120,7 @@ sdk/perl/MYMETA.*
 sdk/perl/*.tar.gz
 sdk/perl/Mem20-*/
 sdk/perl/MANIFEST.bak
+
+# Quarantine: long-name mem20*z subsystems (len > 15). Not part of the estate.
+# See candy/README.md if present locally — never commit this tree.
+candy/

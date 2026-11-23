@@ -1,0 +1,58 @@
+[project]
+name = "mem20comicz"
+version = "1.0.0"
+description = "Comic creation adapters, connectors, tools, pipelines and skills"
+requires-python = ">=3.9"
+
+[project.scripts]
+mem20-comicz = "mem20comicz.cli:main"
+EOF
+cat > mem20comicz/mem20comicz/cli.py << 'EOF'
+"""CLI entry point for mem20comicz."""
+
+import argparse
+import os
+import sys
+
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+
+from mem20comicz.pipeline import ComicPipeline
+
+
+def main():
+    p = argparse.ArgumentParser()
+    p.add_argument("script", help="shooting script markdown")
+    p.add_argument("--adapter", default="openai")
+    p.add_argument("--out", default="./pages")
+    args = p.parse_args()
+    pipe = ComicPipeline(adapter_name=args.adapter, out_dir=args.out)
+    res = pipe.run(args.script)
+    for r in res:
+        print(r["page"], r["path"])
+
+
+if __name__ == "__main__":
+    main()
+EOF
+cat > .opencode/skills/mem20comicz/SKILL.md << 'EOF'
+---
+name: mem20comicz
+description: Build illustrated comic issues from Z Corps shooting scripts using pluggable image-generation adapters.
+---
+
+# mem20comicz
+
+Use when creating or illustrating a Z Corps comic issue from a shooting script.
+
+## Adapters
+openai, stability, replicate (Flux). Configure via env: OPENAI_API_KEY, STABILITY_API_KEY, REPLICATE_API_TOKEN.
+
+## Pipeline
+`python -m mem20comicz.cli <shooting_script.md> --adapter openai --out ./pages`
+EOF
+cat > mem20comicz/tests/test_import.py << 'EOF'
+def test_import():
+    import mem20comicz
+    assert mem20comicz.__version__ == "1.0.0"
+EOF
+echo done

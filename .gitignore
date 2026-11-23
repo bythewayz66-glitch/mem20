@@ -72,7 +72,6 @@ npm-debug.log*
 .coverage
 .pytest_cache/
 htmlcov/
-# Ad-hoc root scratch (real suites live under each package's tests/)
 /test/
 
 # Model / embedding caches
@@ -88,11 +87,8 @@ CACHEDIR.TAG
 # Blender/Unity cache
 *.blend*
 
-# Rust build artifacts — keep Cargo.lock tracked for braid workspaces (issue #20)
+# Rust build artifacts
 **/target/
-# Do NOT ignore braid**/Cargo.lock — reproducible builds require it.
-# Ignore other accidental lockfiles outside braid if any:
-# (none)
 
 # Runtime data
 entries/*.json
@@ -120,7 +116,3 @@ sdk/perl/MYMETA.*
 sdk/perl/*.tar.gz
 sdk/perl/Mem20-*/
 sdk/perl/MANIFEST.bak
-
-# Quarantine: long-name mem20*z subsystems (len > 15). Not part of the estate.
-# See candy/README.md if present locally — never commit this tree.
-candy/

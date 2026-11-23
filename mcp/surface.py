@@ -50,8 +50,7 @@ from pathlib import Path as _Path
 _REPO_ROOT = _Path(__file__).resolve().parents[1]
 for _project in (
     "mem20ops", "mem20verify", "mem20liez", "mem20ircz",
-    "mem20temporaldatabasefabricz",
-):
+    ):
     # Some estates keep their packages nested under <parent>/absorbed/<name>.
     # Check those layouts too, otherwise a clean CI checkout cannot import the
     # temporal package and every mcp/tests collection dies before it runs.
@@ -68,9 +67,17 @@ for _project in (
 
 from mem20ops.clicheck import classify_naming
 from mem20verify.linters import noop_bodies
+
+def interval_contains(start, end, point) -> bool:
+    """Half-open [start, end); no candy dependency."""
+    if start is not None and point < start:
+        return False
+    if end is not None and point >= end:
+        return False
+    return True
+
 from mem20liez.gates import GateError, check_prohibited_uses
 from mem20ircz.filter import classify as classify_wire_line
-from mem20temporaldatabasefabricz.temporal.interval import (
     contains as interval_contains,
 )
 

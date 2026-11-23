@@ -25,7 +25,6 @@ from estate import Check
 from mem20ircz.filter import classify as classify_irc_line
 from mem20liez.gates import check_prohibited_uses
 from mem20ops.clicheck import classify_naming
-from mem20temporaldatabasefabricz.temporal.interval import contains as interval_contains
 from mem20verify.linters import identical_branches, noop_bodies
 
 #: Naming verdicts the fleet contract accepts for a subsystem binary.

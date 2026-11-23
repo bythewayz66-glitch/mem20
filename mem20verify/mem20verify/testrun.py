@@ -59,13 +59,20 @@ class TestResult:
 
 
 def discover_packages(root: str = DEFAULT_ROOT) -> list[str]:
-    """Directories that look like test-bearing packages."""
+    """Directories that look like test-bearing packages.
+
+    Skips ``candy/`` (long-name quarantine) and any root ``mem20*z`` whose
+    name is longer than 15 characters — those are not estate packages.
+    """
     found = []
     for name in sorted(os.listdir(root)):
         path = os.path.join(root, name)
         if not os.path.isdir(path) or name.startswith("."):
             continue
-        if name in ("tests", "test", "__pycache__"):
+        if name in ("tests", "test", "__pycache__", "candy"):
+            continue
+        # Long-name mem20 packages live under candy/ and are not estate.
+        if name.startswith("mem20") and name.endswith("z") and len(name) > 15:
             continue
         if os.path.exists(os.path.join(path, "pyproject.toml")) or \
                 os.path.isdir(os.path.join(path, "tests")) or \
@@ -111,12 +118,6 @@ def run_package(
         result.returncode = 127
         return result
 
-    # --override-ini addopts= neutralises the package's own addopts. Several
-    # packages set addopts="-q"; stacked with our -q that becomes a double
-    # --quiet, which suppresses pytest's "N passed" summary entirely. The suite
-    # still ran, but parse_counts() had no summary line to read and scored the
-    # package as 0 passed. Overriding addopts keeps exactly one -q so the
-    # summary is always emitted and the counts are real.
     cmd = [interpreter, "-m", "pytest", "-q", "-p", "no:warnings",
            "--override-ini", "addopts="]
     if test_pattern:
@@ -146,11 +147,6 @@ def run_package(
 
 
 def index_version(repo: str, rel_path: str) -> bytes | None:
-    """Contents of a path at the git index, i.e. the pre-edit baseline.
-
-    The index, not HEAD: much of this tree is staged-but-uncommitted, so HEAD
-    predates the files entirely and `git show HEAD:<path>` fails.
-    """
     try:
         proc = subprocess.run(["git", "-C", repo, "show", f":{rel_path}"],
                               capture_output=True, timeout=30, check=False)
@@ -198,13 +194,6 @@ def attribute(
     python: str | None = None,
     timeout: int = 600,
 ) -> list[BaselineVerdict]:
-    """Decide whether failures are pre-existing by re-running them on the
-    pre-edit baseline.
-
-    The working tree is restored in a `finally` block from an explicit backup,
-    so an interrupted run cannot leave the user's files modified. `git stash` is
-    deliberately not used: it can collide with unrelated stashes.
-    """
     package_dir = os.path.join(root, package)
 
     tracked: list[str] = []
@@ -216,7 +205,6 @@ def attribute(
 
     backups: dict[str, bytes | None] = {}
     for absolute in tracked:
-        relpath = os.path.relpath(absolute, root)
         with open(absolute, "rb") as fh:
             backups[absolute] = fh.read()
 

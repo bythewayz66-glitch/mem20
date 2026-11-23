@@ -1,38 +1,6 @@
 """memory_engine — the mem20 tiered memory subsystem.
 
-This package is the supported public surface. Before M0 ``__init__.py`` was
-0 bytes, so the only way to use the engine was ``from memory_engine import
-memory`` and then reach into a 4,800-line module of undocumented free
-functions. Nothing was declared, so nothing could be depended on.
-
-What is stable
---------------
-Everything named in ``__all__`` below. That is the contract:
-
-* ``MemoryEngine`` — typed facade (``memory_engine.api``)
-* the error model (``memory_engine.errors``)
-* ``EngineConfig`` (``memory_engine.config``)
-* the engine's free functions, re-exported lazily so ``import memory_engine``
-  stays cheap and does not pull in numpy/faiss/sentence-transformers
-
-Anything else reachable through ``memory_engine.memory.<name>`` is internal and
-may change without notice.
-
-Import cost
------------
-``import memory_engine`` imports only this file. The engine module (and its
-optional native dependencies) is imported on first attribute access. That
-matters because ``sentence_transformers`` alone costs seconds to import, and a
-CLI that only wants ``EngineConfig`` should not pay for it.
-
-Store path
-----------
-The engine resolves its store at import time from ``MEM20_STORE_PATH``
-(default ``~/.mem20/store``). Set the environment before the first access:
-
-    import os
-    os.environ["MEM20_STORE_PATH"] = "/var/lib/mem20/store"
-    from memory_engine import MemoryEngine
+Public surface: everything in ``__all__``. Lazy exports keep import cheap.
 """
 
 from __future__ import annotations
@@ -60,140 +28,90 @@ from .errors import (
 
 __version__ = "4.0.0"
 
-#: Names re-exported from ``memory_engine.memory``. Resolved lazily by
-#: ``__getattr__`` so importing the package does not import the engine.
 _ENGINE_EXPORTS = frozenset(
     {
-        "remember",
-        "remember_simulated",
-        "recall",
-        "recall_at",
-        "recall_semantic",
-        "recall_hybrid",
-        "recall_graph",
-        "supersede",
-        "rebuild_index",
-        "rebuild_vectors",
-        "rebuild_bm25",
-        "rebuild_graph",
-        "index_health",
-        "status",
-        "ledger_view",
-        "backup",
-        "detect_secrets",
-        "redact_secrets",
-        "detect_knowledge_gaps",
-        "self_audit",
-        "label_coverage",
-        "audit_contamination",
-        "promote_simulated_to_grounded",
-        "quarantine_expired_simulated",
-        "list_simulated",
-        "validate_epistemic_status",
-        "validate_event_time",
-        "main",
+        "remember", "remember_simulated", "recall", "recall_at", "recall_semantic",
+        "recall_hybrid", "recall_graph", "supersede", "rebuild_index", "rebuild_vectors",
+        "rebuild_bm25", "rebuild_graph", "index_health", "status", "ledger_view", "backup",
+        "detect_secrets", "redact_secrets", "detect_knowledge_gaps", "self_audit",
+        "label_coverage", "audit_contamination", "promote_simulated_to_grounded",
+        "quarantine_expired_simulated", "list_simulated", "validate_epistemic_status",
+        "validate_event_time", "main",
+        "procedural_add_skill", "procedural_get_skill", "procedural_find_skills",
+        "procedural_execute_skill", "procedural_learn", "procedural_list_skills",
     }
 )
 
-_PREDICTIVE_EXPORTS = frozenset(
-    {
-        "predict_next",
-        "prefetch",
-        "record_recall_outcome",
-        "predictive_health",
-        "get_predictive",
-        "PredictiveRecall",
-        "Prediction",
-        "PrefetchResult",
-    }
-)
-_TEMPORAL_EXPORTS = frozenset(
-    {
-        "as_of",
-        "timeline",
-        "diff",
-        "snapshot",
-        "temporal_health",
-        "TimelineEvent",
-        "DiffResult",
-    }
-)
-_EPISODIC_EXPORTS = frozenset(
-    {
-        "create_episode",
-        "add_event",
-        "link_episodes",
-        "recall_episodes",
-        "episode_graph",
-        "forget_episode",
-        "list_episodes",
-        "episodic_health",
-        "Episode",
-    }
-)
-_INGEST_EXPORTS = frozenset(
-    {
-        "ingest",
-        "ingest_batch",
-        "ingest_health",
-    }
-)
+_PREDICTIVE_EXPORTS = frozenset({
+    "predict_next", "prefetch", "record_recall_outcome", "predictive_health",
+    "get_predictive", "PredictiveRecall", "Prediction", "PrefetchResult",
+})
+_TEMPORAL_EXPORTS = frozenset({
+    "as_of", "timeline", "diff", "snapshot", "temporal_health", "TimelineEvent", "DiffResult",
+})
+_EPISODIC_EXPORTS = frozenset({
+    "create_episode", "add_event", "link_episodes", "recall_episodes", "episode_graph",
+    "forget_episode", "list_episodes", "episodic_health", "Episode",
+})
+_INGEST_EXPORTS = frozenset({"ingest", "ingest_batch", "ingest_health"})
+_SKILLS_EXPORTS = frozenset({
+    "export_skill", "import_skill", "transfer_skill", "list_transferred_skills", "skills_health",
+})
+_SEARCH_EXPORTS = frozenset({"cognitive_search", "search_health"})
+_SESSION_EXPORTS = frozenset({"save_session", "load_session", "list_sessions", "session_health"})
+_VERIFY_EXPORTS = frozenset({"verify_claim", "verify_prediction", "verify_batch", "verify_health"})
+_CONTAINMENT_EXPORTS = frozenset({
+    "MemoryCircuit", "CircuitOpen", "quarantine_topic", "is_quarantined", "safe_recall",
+    "containment_health",
+})
 
 __all__ = [
-    "MemoryEngine",
-    "Fact",
-    "HealthReport",
-    "EngineConfig",
-    "DEFAULT_STORE_PATH",
-    "MemoryEngineError",
-    "ConfigurationError",
-    "ValidationError",
-    "EpistemicStatusError",
-    "EventTimeError",
-    "GroundedWriteRefused",
-    "IndexDriftError",
-    "StoreUnavailableError",
-    "NotFoundError",
-    "DependencyUnavailableError",
-    "TransientError",
-    "RetryPolicy",
-    "call_with_retry",
-    "idempotency_key",
-    "EPISTEMIC_STATUSES",
-    "UNLABELED",
+    "MemoryEngine", "Fact", "HealthReport", "EngineConfig", "DEFAULT_STORE_PATH",
+    "MemoryEngineError", "ConfigurationError", "ValidationError", "EpistemicStatusError",
+    "EventTimeError", "GroundedWriteRefused", "IndexDriftError", "StoreUnavailableError",
+    "NotFoundError", "DependencyUnavailableError", "TransientError", "RetryPolicy",
+    "call_with_retry", "idempotency_key", "EPISTEMIC_STATUSES", "UNLABELED",
     *sorted(_ENGINE_EXPORTS),
     *sorted(_PREDICTIVE_EXPORTS),
     *sorted(_TEMPORAL_EXPORTS),
     *sorted(_EPISODIC_EXPORTS),
     *sorted(_INGEST_EXPORTS),
+    *sorted(_SKILLS_EXPORTS),
+    *sorted(_SEARCH_EXPORTS),
+    *sorted(_SESSION_EXPORTS),
+    *sorted(_VERIFY_EXPORTS),
+    *sorted(_CONTAINMENT_EXPORTS),
     "__version__",
 ]
 
 
 def __getattr__(name: str) -> Any:
-    """Resolve engine functions on first access (PEP 562)."""
     if name in _ENGINE_EXPORTS:
         from . import memory as _engine
         try:
             return getattr(_engine, name)
         except AttributeError as exc:
             raise AttributeError(
-                f"memory_engine declares {name!r} in its public surface but "
-                f"memory_engine.memory does not define it. The contract and the "
-                f"engine have drifted."
+                f"memory_engine declares {name!r} but memory does not define it"
             ) from exc
     if name in _PREDICTIVE_EXPORTS:
-        from . import predictive as _pred
-        return getattr(_pred, name)
+        from . import predictive as m; return getattr(m, name)
     if name in _TEMPORAL_EXPORTS:
-        from . import temporal as _temp
-        return getattr(_temp, name)
+        from . import temporal as m; return getattr(m, name)
     if name in _EPISODIC_EXPORTS:
-        from . import episodic as _ep
-        return getattr(_ep, name)
+        from . import episodic as m; return getattr(m, name)
     if name in _INGEST_EXPORTS:
-        from . import ingest as _ing
-        return getattr(_ing, name)
+        from . import ingest as m; return getattr(m, name)
+    if name in _SKILLS_EXPORTS:
+        from . import skills as m; return getattr(m, name)
+    if name in _SEARCH_EXPORTS:
+        from . import search as m; return getattr(m, name)
+    if name in _SESSION_EXPORTS:
+        from . import session as m; return getattr(m, name)
+    if name in _VERIFY_EXPORTS:
+        from . import verify as m; return getattr(m, name)
+    if name in _CONTAINMENT_EXPORTS:
+        from . import containment as m; return getattr(m, name)
     raise AttributeError(f"module {__name__!r} has no attribute {name!r}")
 
 

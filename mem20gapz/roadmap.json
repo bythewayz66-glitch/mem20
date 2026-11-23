@@ -1,0 +1,76 @@
+{
+  "global_id": 145,
+  "section": "Capability Intelligence",
+  "owner": "Gap",
+  "owner_code": "GAP",
+  "roadmap_index": 1,
+  "title": "Capability Gap Mapper",
+  "outcome": "Continuous visibility into capability deficits with prioritized bridging strategies",
+  "breakthrough": "Unified capability taxonomy spanning human skills, agent competencies, tool coverage, and infrastructure — enabling automated gap detection and ROI-ranked remediation",
+  "lane": "intelligence",
+  "phases": [
+    {
+      "name": "1.0 Foundation",
+      "subphases": [
+        {
+          "name": "1.1 Taxonomy & Ingestion",
+          "work": [
+            "Define unified capability taxonomy (skills, agents, tools, infra, data, APIs)",
+            "Build ingest adapters for HR systems, code repos, agent registries, infra CMDBs",
+            "Implement capability normalization and deduplication pipeline"
+          ]
+        },
+        {
+          "name": "1.2 Gap Detection Engine",
+          "work": [
+            "Implement desired vs actual capability diffing with semantic matching",
+            "Add criticality weighting (business impact, frequency, blast radius)",
+            "Build gap clustering to surface systemic themes vs one-offs"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "2.0 Intelligence",
+      "subphases": [
+        {
+          "name": "2.1 Bridging Strategy Generator",
+          "work": [
+            "Implement bridging action taxonomy: hire, train, build, buy, partner, automate, defer",
+            "Add ROI modeling (cost, time-to-capability, risk, strategic alignment)",
+            "Build multi-horizon planning (immediate, 30d, 90d, 1yr)"
+          ]
+        },
+        {
+          "name": "2.2 Progress Tracking & Feedback",
+          "work": [
+            "Implement capability acquisition tracking with leading/lagging indicators",
+            "Add feedback loops from outcomes to improve gap predictions",
+            "Build drift detection for capability decay and scope creep"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "3.0 Operationalization",
+      "subphases": [
+        {
+          "name": "3.1 Integration & Automation",
+          "work": [
+            "Expose REST/gRPC API for CI/CD, planning tools, and agent orchestration",
+            "Add webhook notifications for new critical gaps",
+            "Build Slack/Teams/CLI interfaces for stakeholders"
+          ]
+        },
+        {
+          "name": "3.2 Governance & Scale",
+          "work": [
+            "Implement RBAC for capability data (sensitive skills, strategic gaps)",
+            "Add audit trail for bridging decisions and outcomes",
+            "Build multi-tenant support for org units and subsidiaries"
+          ]
+        }
+      ]
+    }
+  ]
+}

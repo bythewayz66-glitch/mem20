@@ -95,7 +95,6 @@ _ENGINE_EXPORTS = frozenset(
     }
 )
 
-# Predictive recall + temporal (first-class; was mem20prez / mem20memorytimemachinez)
 _PREDICTIVE_EXPORTS = frozenset(
     {
         "predict_next",
@@ -119,16 +118,33 @@ _TEMPORAL_EXPORTS = frozenset(
         "DiffResult",
     }
 )
+_EPISODIC_EXPORTS = frozenset(
+    {
+        "create_episode",
+        "add_event",
+        "link_episodes",
+        "recall_episodes",
+        "episode_graph",
+        "forget_episode",
+        "list_episodes",
+        "episodic_health",
+        "Episode",
+    }
+)
+_INGEST_EXPORTS = frozenset(
+    {
+        "ingest",
+        "ingest_batch",
+        "ingest_health",
+    }
+)
 
 __all__ = [
-    # facade
     "MemoryEngine",
     "Fact",
     "HealthReport",
-    # config
     "EngineConfig",
     "DEFAULT_STORE_PATH",
-    # error model
     "MemoryEngineError",
     "ConfigurationError",
     "ValidationError",
@@ -143,13 +159,13 @@ __all__ = [
     "RetryPolicy",
     "call_with_retry",
     "idempotency_key",
-    # vocabulary
     "EPISTEMIC_STATUSES",
     "UNLABELED",
-    # engine functions (lazy)
     *sorted(_ENGINE_EXPORTS),
     *sorted(_PREDICTIVE_EXPORTS),
     *sorted(_TEMPORAL_EXPORTS),
+    *sorted(_EPISODIC_EXPORTS),
+    *sorted(_INGEST_EXPORTS),
     "__version__",
 ]
 
@@ -158,10 +174,9 @@ def __getattr__(name: str) -> Any:
     """Resolve engine functions on first access (PEP 562)."""
     if name in _ENGINE_EXPORTS:
         from . import memory as _engine
-
         try:
             return getattr(_engine, name)
-        except AttributeError as exc:  # pragma: no cover - contract drift guard
+        except AttributeError as exc:
             raise AttributeError(
                 f"memory_engine declares {name!r} in its public surface but "
                 f"memory_engine.memory does not define it. The contract and the "
@@ -173,6 +188,12 @@ def __getattr__(name: str) -> Any:
     if name in _TEMPORAL_EXPORTS:
         from . import temporal as _temp
         return getattr(_temp, name)
+    if name in _EPISODIC_EXPORTS:
+        from . import episodic as _ep
+        return getattr(_ep, name)
+    if name in _INGEST_EXPORTS:
+        from . import ingest as _ing
+        return getattr(_ing, name)
     raise AttributeError(f"module {__name__!r} has no attribute {name!r}")
 
 

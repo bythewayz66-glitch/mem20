@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "mem20wasmz"
-version = "1.0.0"
+version = "4.0.0+ng"
 description = "WebAssembly component lab: language-neutral component compatibility analysis behind a shared zero-dependency runtime. mem30 Phase 4 incubator."
 requires-python = ">=3.11"
 dependencies = []

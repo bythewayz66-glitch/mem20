@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "mem20mktz"
-version = "0.1.0"
+version = "4.0.0+ng"
 description = "mem30 Phase 2 marketplace organs: inference market, capability market, service bundling, adaptive pricing, resource trades"
 readme = "README.md"
 requires-python = ">=3.10"

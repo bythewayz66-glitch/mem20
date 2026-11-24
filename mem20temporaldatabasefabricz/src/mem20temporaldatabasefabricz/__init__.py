@@ -22,4 +22,4 @@ __all__ = [
     "event_time_coverage",
 ]
 
-__version__ = "1.1.0"
+__version__ = "4.0.0+ng"

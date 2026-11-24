@@ -8,7 +8,7 @@ Standard library only. The engine is a C++ binary this package builds and owns.
 """
 from __future__ import annotations
 
-__version__ = "0.1.0"
+__version__ = "4.0.0+ng"
 
 from .errors import (
     EngineMissing,

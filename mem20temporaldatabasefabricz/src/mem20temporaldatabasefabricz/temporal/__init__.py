@@ -23,4 +23,4 @@ __all__ = [
     "derive_intervals", "build_engine", "temporal_filter",
 ]
 
-__version__ = "1.1.0"
+__version__ = "4.0.0+ng"

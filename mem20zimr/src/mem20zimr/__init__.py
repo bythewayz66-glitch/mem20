@@ -3,4 +3,4 @@ from .runtime import MicroappRuntime
 from .sdk import ZeroInstallClient
 
 __all__ = ["MicroappRuntime", "ZeroInstallClient"]
-__version__ = "0.2.0"
+__version__ = "4.0.0+ng"

@@ -5,7 +5,7 @@ re-implemented on mem20 natives under mem20 branding. See docs/PLAN.md for the
 feature inventory + architecture map.
 """
 
-__version__ = "0.1.0"
+__version__ = "4.0.0+ng"
 __all__ = ["__version__", "config", "profiles", "sessions"]
 
 from . import config, profiles, sessions  # noqa: F401,E402

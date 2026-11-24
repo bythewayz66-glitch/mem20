@@ -5,7 +5,7 @@ from .domain import (
     add_event, context_diff, create_episode, entity_index, episode_graph, forget,
     graph_query, link_episodes, neighbors, recall, timeline,
 )
-__version__ = "1.0.0"
+__version__ = "4.0.0+ng"
 __all__ = [
     "add_event","context_diff","create_episode","entity_index","episode_graph","forget",
     "graph_query","link_episodes","neighbors","recall","timeline",

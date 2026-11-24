@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "mem20sensez"
-version = "0.1.0"
+version = "4.0.0+ng"
 description = "mem30 Phase 1 sense-organs: Capability Gap Mapper (RM-200), Dynamic Phase Replanner (RM-199), Personal Workflow Twin, Execution Digital Twin"
 readme = "README.md"
 requires-python = ">=3.11"

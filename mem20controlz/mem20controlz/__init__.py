@@ -14,4 +14,4 @@ Design rules:
 * reads never mutate; writes go through explicit, named endpoints
 """
 
-__version__ = "0.1.0"
+__version__ = "4.0.0+ng"

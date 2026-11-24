@@ -4,7 +4,7 @@ build-backend="setuptools.build_meta"
 
 [project]
 name="mem20livecodeknowledgegraphz"
-version="1.0.0"
+version="4.0.0+ng"
 description='Maintain a continuously updated graph of symbols, calls, data ownership, and runtime behavior'
 requires-python=">=3.11"
 

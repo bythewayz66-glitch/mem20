@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "mem20enginez"
-version = "1.0.0"
+version = "4.0.0+ng"
 description = "mem20 crew runtime: member registry, probing, compatibility/dispatch planning, durable state, CLI/HTTP API for 30 engine members"
 readme = "README.md"
 requires-python = ">=3.11"

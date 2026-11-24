@@ -1,6 +1,6 @@
 [project]
 name = "mem20agentz"
-version = "0.1.0"
+version = "4.0.0+ng"
 description = "mem20 agent platform — all known agent features, built directly into mem20"
 requires-python = ">=3.11"
 dependencies = [

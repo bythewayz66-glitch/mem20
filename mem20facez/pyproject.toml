@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "mem20facez"
-version = "1.0.0"
+version = "4.0.0+ng"
 description = "mem20 interface/workspace crew runtime: 8-member registry/composition with 6-peer capture, dataflow, mission, canvas, sandbox, and blackboard signals."
 readme = "README.md"
 requires-python = ">=3.11"

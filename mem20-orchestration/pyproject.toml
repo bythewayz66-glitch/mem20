@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "mem20-orchestration"
-version = "0.1.0"
+version = "4.0.0+ng"
 description = "Blender operator orchestration: query the real bpy.ops catalog and validate op sequences before they reach a live Blender session."
 readme = "README.md"
 requires-python = ">=3.11"

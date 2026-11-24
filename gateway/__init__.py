@@ -27,4 +27,4 @@ __all__ = [
     "target_is_known",
     "verify_store",
 ]
-__version__ = "0.2.0"
+__version__ = "4.0.0+ng"

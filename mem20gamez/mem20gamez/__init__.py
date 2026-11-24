@@ -81,7 +81,7 @@ else:
     _TORCH_ERROR = ""
 
 __title__ = "mem20gamez"
-__version__ = "0.1.0"
+__version__ = "4.0.0+ng"
 
 __all__ = [
     "DEFAULT_CONFIG",

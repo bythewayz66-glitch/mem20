@@ -4,10 +4,10 @@ use warnings;
 
 # The SDK version. Tracked independently of the mem20 server release, exactly
 # as the Ruby gem does (Mem20::VERSION vs Mem20::SERVER_VERSION).
-our $VERSION = '0.2.0';
+our $VERSION = '4.0.0+ng';
 
 # The mem20 server release this SDK was validated against.
-our $SERVER_VERSION = '3.1.2';
+our $SERVER_VERSION = '4.0.0+ng';
 
 # The MCP protocol revision sent in the `initialize` handshake.
 our $PROTOCOL_VERSION = '2025-06-18';
@@ -45,7 +45,7 @@ Constants, kept separate on purpose:
 =item C<$Mem20::Version::VERSION> - this SDK's own version.
 
 =item C<$Mem20::Version::SERVER_VERSION> - the mem20 server release the SDK
-was tested against. A 0.2.0 SDK talking to a 3.1.2 server is expected; they
+was tested against. A 4.0.0+ng SDK talking to a 4.0.0+ng server is expected; they
 version independently.
 
 =item C<$Mem20::Version::PROTOCOL_VERSION> - the MCP protocol revision used

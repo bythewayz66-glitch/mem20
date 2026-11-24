@@ -5,7 +5,7 @@
 
 Designed for game agents, NPC memory, and studio tooling that runs inside the editor or exported games (desktop platforms that can spawn a process).
 
-- Server baseline: mem20 **3.1.2**
+- Server baseline: mem20 **4.0.0+ng**
 - No third-party addons required
 - Same surface as the Ruby / TypeScript / Perl clients: `memory_store`, `memory_recall`, `tool()`, health probes
 

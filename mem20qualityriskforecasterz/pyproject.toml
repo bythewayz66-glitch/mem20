@@ -4,7 +4,7 @@ build-backend="setuptools.build_meta"
 
 [project]
 name="mem20qualityriskforecasterz"
-version="1.0.0"
+version="4.0.0+ng"
 description='Predict likely defects from change size, dependency shape, history, and runtime behavior'
 requires-python=">=3.11"
 

@@ -1,7 +1,7 @@
 """mem20schoolz — unified training, certification, and apprenticeship system."""
 from __future__ import annotations
 
-__version__ = "1.0.0"
+__version__ = "4.0.0+ng"
 
 # Re-export from all three subsystems
 from mem20schoolz import (

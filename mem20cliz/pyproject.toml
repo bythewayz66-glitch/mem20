@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "mem20cliz"
-version = "0.1.0"
+version = "4.0.0+ng"
 description = "Shared machine contract for mem20 fleet CLIs: a json_main decorator that adds --json to any CLI without changing its human output."
 readme = "README.md"
 requires-python = ">=3.11"

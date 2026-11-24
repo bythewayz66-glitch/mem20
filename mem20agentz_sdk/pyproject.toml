@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "mem20agentz_sdk"
-version = "0.1.0"
+version = "4.0.0+ng"
 description = "Native mem20 OpenAI Agents SDK absorption — Agent, Runner, Tools, Handoffs, Guardrails, Tracing"
 readme = "README.md"
 requires-python = ">=3.11"

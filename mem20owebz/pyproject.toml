@@ -1,6 +1,6 @@
 [project]
 name = "mem20owebz"
-version = "0.1.0"
+version = "4.0.0+ng"
 description = "mem20 chat front-end + model gateway — native re-home of the Open WebUI + LiteLLM bridge stack"
 requires-python = ">=3.11"
 dependencies = [

@@ -15,7 +15,7 @@ There is exactly one kanban store in mem20, and it belongs to the
 
 from __future__ import annotations
 
-__version__ = "0.1.0"
+__version__ = "4.0.0+ng"
 
 from .door import DEFAULT_DOOR, Board, Card, CapacityFull, Column, Door, DoorError, NotFound
 from .migrate import MigrationReport, inspect, migrate_file, read_foreign_boards, sha256

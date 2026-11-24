@@ -4,4 +4,4 @@ mem20 secrets home (/opt/mem20/secrets/.env + .env.fallback)."""
 
 __all__ = ["__version__", "__title__"]
 __title__ = "mem20owebz"
-__version__ = "0.1.0"
+__version__ = "4.0.0+ng"

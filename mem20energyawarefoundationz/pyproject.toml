@@ -4,7 +4,7 @@ build-backend="setuptools.build_meta"
 
 [project]
 name="mem20energyawarefoundationz"
-version="1.0.0"
+version="4.0.0+ng"
 description="Energy-Aware Foundation: power monitoring, thresholds, budgets, and optimization actions"
 requires-python=">=3.11"
 

@@ -10,4 +10,4 @@ The generated machine-readable inventory is ``inventory.json``; query it with
 ``python -m toolchest list|search|show``.
 """
 
-__version__ = "0.1.0"
+__version__ = "4.0.0+ng"

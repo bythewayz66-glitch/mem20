@@ -6,7 +6,7 @@
 |--|--|
 | Version | 0.1.0 |
 | Protocol | JSON-RPC 2.0 / stdio, MCP `2025-06-18` |
-| Server baseline | 3.1.2 |
+| Server baseline | 4.0.0+ng |
 | Tool surface | **487 tools across 129 domains** |
 | Partition safety | `GroundedMemory` vs `SimulatedMemory` types |
 

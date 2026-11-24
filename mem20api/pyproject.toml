@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "mem20api"
-version = "0.1.0"
+version = "4.0.0+ng"
 description = "Stable Python API over the mem20 memory engine: bind a store, read and write through one object, and get index-health and contamination diagnostics with every retrieval result."
 readme = "README.md"
 requires-python = ">=3.10"

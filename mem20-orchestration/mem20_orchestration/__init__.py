@@ -12,4 +12,4 @@ __all__ = [
     "Catalog", "CatalogError", "Op", "load",
     "Finding", "Report", "validate", "load_plan", "save_plan",
 ]
-__version__ = "0.1.0"
+__version__ = "4.0.0+ng"

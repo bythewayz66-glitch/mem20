@@ -29,7 +29,7 @@ a Sidekiq worker, or a plain script.
 | Requirement | Version |
 |---|---|
 | Ruby | >= 3.1 |
-| mem20 server | v3.1.2 (Python 3.11+) |
+| mem20 server | v4.0.0+ng (Python 3.11+) |
 | Runtime deps | none (stdlib only: `json`, `open3`, `net/http`, `timeout`) |
 
 ## Install

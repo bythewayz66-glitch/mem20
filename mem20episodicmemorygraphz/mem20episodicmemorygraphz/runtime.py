@@ -4,7 +4,7 @@ import argparse, json, mimetypes
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 from urllib.parse import parse_qs, urlparse
-__version__ = "1.0.0"
+__version__ = "4.0.0+ng"
 from .service import ConflictError, EpisodicService, NotFoundError, ValidationError
 
 WEB_DIR = Path(__file__).with_name("web")

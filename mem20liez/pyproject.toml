@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "mem20liez"
-version = "0.2.0"
+version = "4.0.0+ng"
 description = "Real-time micro-expression, voice-stress, emotion, manipulation and deception detection for mem20"
 readme = "README.md"
 requires-python = ">=3.11"

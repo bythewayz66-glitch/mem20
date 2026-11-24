@@ -4,7 +4,7 @@ build-backend="setuptools.build_meta"
 
 [project]
 name="mem20musicvisualsynchronizerz"
-version="1.0.0"
+version="4.0.0+ng"
 description='Generate and align motion, lighting, UI, and effects to live audio structure'
 requires-python=">=3.11"
 

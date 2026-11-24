@@ -4,7 +4,7 @@ build-backend="setuptools.build_meta"
 
 [project]
 name="mem20globalcapabilitymarketplacez"
-version="1.0.0"
+version="4.0.0+ng"
 description="Global Capability Marketplace (RM-218): listings/match/transactions with offer, trial, secure-capsule, query, and remix peer integrations; legacy domain preserved"
 requires-python=">=3.11"
 

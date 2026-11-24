@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "mem20yetiz"
-version = "0.2.0"
+version = "4.0.0+ng"
 description = "Native mem20 Yeti Claw absorption — real 3D rigging, animation, BVH mocap, glTF and OBJ export"
 readme = "README.md"
 requires-python = ">=3.11"

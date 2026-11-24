@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "mem20ocaskz"
-version = "0.1.0"
+version = "4.0.0+ng"
 description = "mem20 opencode feature-ask auditor — mines opencode's own session database for the feature requests Jayson actually made, classifies them by theme, and emits a traceable index. Read-only against the database: never mutates a session."
 readme = "README.md"
 requires-python = ">=3.11"

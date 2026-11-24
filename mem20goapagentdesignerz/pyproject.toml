@@ -4,7 +4,7 @@ build-backend="setuptools.build_meta"
 
 [project]
 name="mem20goapagentdesignerz"
-version="1.0.0"
+version="4.0.0+ng"
 description="GOAP Agent Designer (RM-226): goal-oriented planning/design with incentives, quality, collaboration, phasing, ecosystem, and capsule peer integrations; legacy domain preserved"
 requires-python=">=3.11"
 

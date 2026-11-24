@@ -4,7 +4,7 @@ build-backend="setuptools.build_meta"
 
 [project]
 name="mem20smartmeetingcopilotz"
-version="1.0.0"
+version="4.0.0+ng"
 description='Turn live meetings into decisions, assigned actions, follow-ups, and callable workflows'
 requires-python=">=3.11"
 

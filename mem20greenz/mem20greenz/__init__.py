@@ -11,6 +11,6 @@ First project: Mem20Teamz (from Teamily).
 
 from __future__ import annotations
 
-__version__ = "0.1.0"
+__version__ = "4.0.0+ng"
 
 __all__ = ["__version__"]

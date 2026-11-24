@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "mem20langz"
-version = "0.1.0"
+version = "4.0.0+ng"
 description = "Native mem20 graph substrate absorption: stateful multi-agent graphs (StateGraph, Pregel runtime, checkpointers, streaming, interrupts, Send)"
 requires-python = ">=3.10"
 dependencies = []

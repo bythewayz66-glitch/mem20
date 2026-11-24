@@ -5,7 +5,7 @@ Zero dependency on the `mem20 crews` package. See README.md for the mapping.
 
 from __future__ import annotations
 
-__version__ = "0.1.0"
+__version__ = "4.0.0+ng"
 
 from .agents import Agent
 from .a2a import A2AClient, A2AError

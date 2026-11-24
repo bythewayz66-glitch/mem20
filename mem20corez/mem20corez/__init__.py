@@ -14,4 +14,4 @@ No canned values anywhere: every claim is backed by actual computation.
 """
 
 __title__ = "mem20corez"
-__version__ = "0.2.0"
+__version__ = "4.0.0+ng"

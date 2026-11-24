@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "mem20ops"
-version = "0.1.0"
+version = "4.0.0+ng"
 description = "Reusable mem20 operational workflows: Cloudflare zone/Pages audits, stale-code detection, bounded verification, identity and namespace ACL inspection, lint deltas."
 readme = "README.md"
 requires-python = ">=3.11"

@@ -4,7 +4,7 @@ build-backend="setuptools.build_meta"
 
 [project]
 name="mem20databaseautopilotz"
-version="1.0.0"
+version="4.0.0+ng"
 description='Tune indexes, partitions, caching, compaction, and query plans from live workload behavior'
 requires-python=">=3.11"
 

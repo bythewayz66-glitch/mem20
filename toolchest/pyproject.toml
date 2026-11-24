@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "toolchest"
-version = "0.1.0"
+version = "4.0.0+ng"
 description = "mem20 tool inventory registry — real discovery over the mem20 MCP server tools, on-box CLI binaries, and native mem20*z subsystems, with a query CLI (refresh/list/search/show)."
 readme = "README.md"
 requires-python = ">=3.11"

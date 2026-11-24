@@ -47,7 +47,7 @@ namespace mem20 {
 namespace surface {
 
 // --- server version this surface was verified against ------------------------
-inline constexpr const char* kServerVersion = "3.1.2";
+inline constexpr const char* kServerVersion = "4.0.0+ng";
 
 // --- tool count -------------------------------------------------------------
 // Distinct tool names a fresh `tools/list` returns: 487.

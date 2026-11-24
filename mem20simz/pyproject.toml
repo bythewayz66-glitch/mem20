@@ -3,7 +3,7 @@ requires = ["setuptools>=61"]
 build-backend = "setuptools.build_meta"
 [project]
 name = "mem20simz"
-version = "1.0.0"
+version = "4.0.0+ng"
 description = "mem20 simulator runtime with 6 peers, HTTP cockpit, MCP"
 readme = "README.md"
 requires-python = ">=3.11"

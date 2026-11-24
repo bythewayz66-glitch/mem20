@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "mem20ucgz"
-version = "0.1.0"
+version = "4.0.0+ng"
 description = "mem20 RM-001 Universal Capability Graph (absorbed from FreeStack RM-001) — typed capability graph, composition planner, mesh, event plane"
 readme = "README.md"
 requires-python = ">=3.11"

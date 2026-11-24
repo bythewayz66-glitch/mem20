@@ -16,7 +16,7 @@ from .blueprint_builder import (
 from .level_streamer import LevelStreamer, LevelStreamingConfig, StreamingLevel
 
 __title__ = "mem20autouez"
-__version__ = "0.1.0"
+__version__ = "4.0.0+ng"
 
 __all__ = [
     "AutoUEConfig",

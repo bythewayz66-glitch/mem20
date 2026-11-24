@@ -1,6 +1,6 @@
 {
   "name": "mem20controlz-web",
-  "version": "0.1.0",
+  "version": "4.0.0+ng",
   "private": true,
   "type": "module",
   "description": "Operations console frontend for the mem20 control plane (same-origin API).",

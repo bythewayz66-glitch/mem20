@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "mem20orcaz"
-version = "0.9.17+mem20"
+version = "4.0.0+ng"
 description = "mem20orcaz — native, pure-stdlib port of OrKa's deterministic workflow orchestrator (sequential/parallel fork-join, routers, loops, failover, RAG nodes, YAML workflows)."
 requires-python = ">=3.10"
 

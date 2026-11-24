@@ -4,4 +4,4 @@ Primitives: BehaviorTree, GOAPPlanner, UtilityScorer, Navigator, Perception, Bla
 """
 
 __title__ = "mem20unikitz"
-__version__ = "0.1.0"
+__version__ = "4.0.0+ng"

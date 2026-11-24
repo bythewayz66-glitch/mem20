@@ -8,6 +8,6 @@ Server noise is discarded at the wire, inside the daemon, before anything is
 buffered — so MOTD, numerics and roster churn cannot reach a model at all.
 """
 
-__version__ = "0.1.0"
+__version__ = "4.0.0+ng"
 
 __all__ = ["__version__"]

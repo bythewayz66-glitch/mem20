@@ -12,7 +12,7 @@ from .domain import (
     check_member, compatibility, dispatch_plan, member_registry, summarize,
 )
 
-__version__ = "1.0.0"
+__version__ = "4.0.0+ng"
 
 __all__ = [
     "MEMBERS", "EngineMember", "MemberStatus", "RuntimePlan", "RuntimeReport",

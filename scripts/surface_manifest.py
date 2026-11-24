@@ -438,7 +438,7 @@ def check_versions() -> list[str]:
 
     index_html = _read(REPO / "docs" / "index.html")
     badges = re.findall(
-        r'<span class="badge">v?([0-9]+\.[0-9]+\.[0-9]+)</span>', index_html
+        r'<span class="badge">v?([0-9]+\.[0-9]+\.[0-9]+(?:[-+][0-9A-Za-z.]+)?)</span>', index_html
     )
     if not badges:
         problems.append("docs/index.html carries no version badge")

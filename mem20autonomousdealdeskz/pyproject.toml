@@ -4,7 +4,7 @@ build-backend="setuptools.build_meta"
 
 [project]
 name="mem20autonomousdealdeskz"
-version="1.0.0"
+version="4.0.0+ng"
 description="Autonomous deal desk with 6 subsystem-specific peer integrations, HTTP cockpit, and MCP tools"
 requires-python=">=3.11"
 

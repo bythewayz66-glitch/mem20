@@ -5,7 +5,7 @@ from __future__ import annotations
 from .runtime import AdaptiveRuntime, RuntimeConfig
 from . import achievement, dispatch, forgetting, inference, interface, personality, pricing
 
-__version__ = "1.0.0"
+__version__ = "4.0.0+ng"
 
 MEMBERS = {
     "achievement": "mem20adaptiveachievementenginez",

@@ -4,7 +4,7 @@ build-backend="setuptools.build_meta"
 
 [project]
 name="mem20spatialcomputingsandboxz"
-version="1.0.0"
+version="4.0.0+ng"
 description='Build shared 3D workspaces that expose capabilities, agents, and data as spatial objects'
 requires-python=">=3.11"
 

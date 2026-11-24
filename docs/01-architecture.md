@@ -1,6 +1,6 @@
 # mem20 Architecture Overview
 
-**Version:** 3.1.2  
+**Version:** 4.0.0+ng  
 **License:** MIT  
 **Maintainer:** bythewayz66-glitch  
 

@@ -11,7 +11,7 @@ import importlib.util
 import sys
 from pathlib import Path
 
-__version__ = "0.2.0"
+__version__ = "4.0.0+ng"
 
 MEMBERS = (
     "mem20autonomouscodesurgeonz",

@@ -9,7 +9,7 @@ session, records *why* it believes what it believes, and can be audited after th
 It ships as an MCP server (JSON-RPC 2.0 over stdio) plus a large estate of independently
 packaged subsystems.
 
-- **Version:** 3.1.2 (`VERSION`)
+- **Version:** 4.0.0+ng (`VERSION`)
 - **License:** Apache-2.0
 - **Python:** >= 3.10
 - **Transport:** MCP over stdio, with an HTTP health/metrics endpoint on `:8080`

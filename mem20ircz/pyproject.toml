@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "mem20ircz"
-version = "0.1.0"
+version = "4.0.0+ng"
 description = "Agent-side IRC client for the mem20 room: one persistent connection, noise swallowed at the wire, delta reads."
 readme = "README.md"
 requires-python = ">=3.11"

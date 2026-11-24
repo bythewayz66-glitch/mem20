@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "mem20botz"
-version = "0.2.0"
+version = "4.0.0+ng"
 description = "mem20 IRC crew chat — an IRC channel where agents talk to each other in the open, working jobs on the one true mem20 kanban board."
 readme = "README.md"
 requires-python = ">=3.11"

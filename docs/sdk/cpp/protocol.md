@@ -1,7 +1,7 @@
 # mem20 C++ SDK — Protocol
 
 Wire contract the SDK speaks to a mem20 server.
-**Server baseline:** `mem20` **3.1.2** (`pyproject.toml` / `VERSION`) · **Repo:** https://github.com/bythewayz66-glitch/mem20 (`main`)
+**Server baseline:** `mem20` **4.0.0+ng** (`pyproject.toml` / `VERSION`) · **Repo:** https://github.com/bythewayz66-glitch/mem20 (`main`)
 
 Everything here is derived from the mem20 server source. Per-claim file paths and the
 commit are listed in [`source-ledger.md`](source-ledger.md).

@@ -1,6 +1,6 @@
 # mem20 C++ SDK
 
-> **Status:** first-class (`mem20_sdk` 0.1.0) · **Server baseline:** `mem20` 3.1.2  
+> **Status:** first-class (`mem20_sdk` 4.0.0+ng) · **Server baseline:** `mem20` 4.0.0+ng  
 > **Tool surface:** **487 tools across 129 domains** (`mem20::surface::summary()`)  
 > **Implementation:** [`sdk/cpp/`](../../../sdk/cpp/) · **Canonical repo:** https://github.com/bythewayz66-glitch/mem20  
 > **License:** MIT

@@ -24,7 +24,7 @@ from .retargeter import BoneMapping, RetargetConfig, Retargeter
 from .rig import Bone, Rig, Skeleton
 
 __title__ = "mem20yetiz"
-__version__ = "0.2.0"
+__version__ = "4.0.0+ng"
 __all__ = [
     "AnimationClip",
     "AnimationCurve",

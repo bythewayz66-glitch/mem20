@@ -1,6 +1,6 @@
 [package]
 name = "mem20desktop"
-version = "0.1.0"
+version = "4.0.0+ng"
 edition = "2021"
 rust-version = "1.77"
 description = "Decision logic for the mem20controlz desktop shell: control-plane health parsing, a std-only HTTP probe, sidecar launch, and tray/poller rules. Deliberately free of Tauri, async runtimes and TLS so it is unit-testable on a machine with no WebView."

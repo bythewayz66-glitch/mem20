@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "mem20unitiz"
-version = "0.2.0"
+version = "4.0.0+ng"
 description = "A real reinforcement-learning toolkit with grid environments, PPO, DQN, SAC, and cooperative PPO"
 readme = "README.md"
 requires-python = ">=3.11"

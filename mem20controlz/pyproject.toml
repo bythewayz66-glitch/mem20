@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "mem20controlz"
-version = "0.1.0"
+version = "4.0.0+ng"
 description = "Unified control plane for the mem20 fleet: per-subsystem panels (REST-first, CLI fallback) plus the Websites manager for deploys, health, logs and Cloudflare DNS."
 readme = "README.md"
 requires-python = ">=3.11"

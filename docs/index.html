@@ -28,6 +28,7 @@
   .fact{background:var(--surface);padding:20px 22px}
   .fact .v{font-family:'Space Grotesk',sans-serif;font-size:22px;font-weight:600;letter-spacing:-.02em;margin-bottom:4px}
   .fact .l{font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+  .badge{display:inline-block;font-family:'IBM Plex Mono',monospace;font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;padding:3px 8px;border-radius:5px;color:var(--accent);background:rgba(47,212,196,.1);border:1px solid rgba(47,212,196,.35);vertical-align:middle}
   .split{display:grid;grid-template-columns:1fr 1fr;gap:18px}
   .panel{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:26px}
   .panel.grounded{border-left:3px solid var(--accent)}
@@ -75,7 +76,7 @@
 
 <header class="hero">
   <div class="wrap">
-    <p class="eyebrow">auditable agent memory</p>
+    <p class="eyebrow">auditable agent memory <span class="badge">v4.0.0+ng</span></p>
     <h1>A memory that can <span class="hl">prove what it knows.</span></h1>
     <p class="lede">
       mem20 gives an agent something it does not otherwise have: a memory that survives the session,
@@ -88,7 +89,7 @@
       <a class="btn btn-ghost" href="series/">See the series →</a>
     </div>
     <div class="facts">
-      <div class="fact"><div class="v">v3.1.2</div><div class="l">Version</div></div>
+      <div class="fact"><div class="v">v4.0.0+ng</div><div class="l">Version</div></div>
       <div class="fact"><div class="v">Apache-2.0</div><div class="l">License</div></div>
       <div class="fact"><div class="v">MCP / stdio</div><div class="l">Transport</div></div>
       <div class="fact"><div class="v">Python 3.10+</div><div class="l">Runtime</div></div>

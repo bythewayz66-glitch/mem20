@@ -27,7 +27,7 @@ previous repo location.
 |---|---|---|---|
 | S1 | Canonical repo URL is `github.com/bythewayz66-glitch/mem20`, branch `main`, MIT | `CANONICAL.md`, `LICENSE` | file read |
 | S2 | `JaysonAIOnline/mem20` is **not** canonical (absent / historical) | `CANONICAL.md` § Canonical designation (`JaysonAIOnline/mcp-cognitive-substrate` "earlier, much smaller … Historical / reference only") | file read |
-| S3 | Package name/version is `mem20` **3.1.2**, `requires-python >=3.10` | `pyproject.toml` (`[project] name/version/requires-python`) | file read |
+| S3 | Package name/version is `mem20` **4.0.0+ng**, `requires-python >=3.10` | `pyproject.toml` (`[project] name/version/requires-python`) | file read |
 | S4 | Runtime deps: `mcp>=2.1.1`, `pydantic>=2.13.4`, `anyio>=4.14.2`, `numpy>=1.24`, `faiss-cpu>=1.7.4`, `sentence-transformers>=2.2.0` | `requirements.txt`, `pyproject.toml` | file read |
 | S5 | Canonical entry point is the script `mcp/mcp_server.py` (thin shim → `server.py:main`) | `mcp/mcp_server.py` (`from server import main`) | file read |
 | S6 | `mcp/` is a *script directory*, not an importable package (no `__init__.py`) | `README.md` § Transport/protocol; `launcher.py` docstring | file read |

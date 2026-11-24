@@ -4,7 +4,7 @@ build-backend="setuptools.build_meta"
 
 [project]
 name="mem20intentcompilerz"
-version="1.0.0"
+version="4.0.0+ng"
 description="Intent Compiler (RM-051): translate goals into typed executable graphs with resources/constraints/success conditions; 6 peer integrations; legacy domain preserved"
 requires-python=">=3.11"
 

@@ -10,7 +10,7 @@ from .pipeline import LieDetector
 from .session import LiveLieSession
 from .gates import GateError, DISCLAIMER, PROHIBITED_USES
 
-__version__ = "0.3.0"
+__version__ = "4.0.0+ng"
 __all__ = [
     "DetectionResult",
     "SignalType",

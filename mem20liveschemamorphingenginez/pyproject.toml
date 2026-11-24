@@ -4,7 +4,7 @@ build-backend="setuptools.build_meta"
 
 [project]
 name="mem20liveschemamorphingenginez"
-version="1.0.0"
+version="4.0.0+ng"
 description='Evolve data structures while applications continue running'
 requires-python=">=3.11"
 

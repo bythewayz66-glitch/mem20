@@ -9,7 +9,7 @@ services:
       # Override to point at a host path, e.g. /srv/mem20/store
       MEM20_STORE_PATH: /data
     ports:
-      - "8080:8080"
+      - "9057:8080"
     volumes:
       # Persist the memory store across container restarts.
       - mem20-store:/data

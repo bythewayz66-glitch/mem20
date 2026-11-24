@@ -4,4 +4,4 @@ Primitives: Agent, Runner, Tool, Handoff, Guardrail, Trace, Session, Computer, W
 """
 
 __title__ = "mem20agentz_sdk"
-__version__ = "0.1.0"
+__version__ = "4.0.0+ng"

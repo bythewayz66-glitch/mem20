@@ -54,7 +54,7 @@ from .controller import ControllerConfig, FleetController, main
 from .integrations import Substrate
 from .runtime import Decision, Engine, SDK, Store, load_config
 
-__version__ = "1.1.0"
+__version__ = "4.0.0+ng"
 
 __all__ = [
     # domain

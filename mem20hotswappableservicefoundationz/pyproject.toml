@@ -4,7 +4,7 @@ build-backend="setuptools.build_meta"
 
 [project]
 name="mem20hotswappableservicefoundationz"
-version="1.0.0"
+version="4.0.0+ng"
 description="Hot-Swappable Service Foundation (RM-091): zero-disruption service swaps with versioning, config, reversibility, identity, context, capability peers; legacy domain preserved (#317)"
 requires-python=">=3.11"
 

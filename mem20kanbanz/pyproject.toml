@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "mem20kanbanz"
-version = "0.1.0"
+version = "4.0.0+ng"
 description = "The one true mem20 kanban: typed client, read-only inspector and non-destructive migrator for the mem20-kanban door."
 readme = "README.md"
 requires-python = ">=3.11"

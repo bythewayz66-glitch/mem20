@@ -7,7 +7,7 @@ this runtime provides the registry, CLI surface, and shared surface.
 
 from __future__ import annotations
 
-__version__ = "0.1.0"
+__version__ = "4.0.0+ng"
 
 MEMBERS = (
     "mem20autonomoussaleslaboratoryz",

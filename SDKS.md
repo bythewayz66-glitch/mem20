@@ -1,6 +1,6 @@
 # mem20 SDKs — first-class clients
 
-All clients talk to the same mem20 MCP server (JSON-RPC 2.0 over stdio, protocol **2025-06-18**) unless noted. Server baseline: **3.0.0**.
+All clients talk to the same mem20 MCP server (JSON-RPC 2.0 over stdio, protocol **2025-06-18**) unless noted. Server baseline: **4.0.0+ng**.
 
 ## Product invariants (all clients)
 
@@ -12,12 +12,12 @@ All clients talk to the same mem20 MCP server (JSON-RPC 2.0 over stdio, protocol
 
 | SDK | Path | Language | Role | Version |
 |-----|------|----------|------|---------|
-| **Python API** | `mem20api/` | Python | In-process engine API | ships with 3.0 |
-| **Ruby** | `mem20-sdk-ruby/` | Ruby ≥ 3.1 | MCP client gem | 0.2.0 |
-| **Perl** | `sdk/perl/` | Perl ≥ 5.20 | MCP client (core-only) | 0.1.0 |
-| **TypeScript** | `mem20-sdk-typescript/` | Node ≥ 18 | MCP client (`@mem20/sdk`) | 0.1.0 |
-| **Godot** | `mem20-sdk-godot/` | GDScript / Godot 4 | Editor/game addon | 0.1.0 |
-| **C++** | `sdk/cpp/` | C++17 | MCP client library | 0.1.0 |
+| **Python API** | `mem20api/` | Python | In-process engine API | ships with 4.0.0+ng |
+| **Ruby** | `mem20-sdk-ruby/` | Ruby ≥ 3.1 | MCP client gem | 4.0.0+ng |
+| **Perl** | `sdk/perl/` | Perl ≥ 5.20 | MCP client (core-only) | 4.0.0+ng |
+| **TypeScript** | `mem20-sdk-typescript/` | Node ≥ 18 | MCP client (`@mem20/sdk`) | 4.0.0+ng |
+| **Godot** | `mem20-sdk-godot/` | GDScript / Godot 4 | Editor/game addon | 4.0.0+ng |
+| **C++** | `sdk/cpp/` | C++17 | MCP client library | 4.0.0+ng |
 
 Docs-only protocol notes remain under `docs/sdk/cpp/` for the C++ walkthrough example.
 

@@ -37,7 +37,7 @@ from .parallel_executor import ParallelExecutor
 from .agent_factory import AgentFactory, AgentFactoryError, default_factory
 from .orchestrator import OrchestratorBase, Orchestrator
 
-__version__ = "0.9.17+mem20"
+__version__ = "4.0.0+ng"
 
 __all__ = [
     # contracts

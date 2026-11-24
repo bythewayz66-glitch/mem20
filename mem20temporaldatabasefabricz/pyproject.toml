@@ -4,7 +4,7 @@ build-backend="setuptools.build_meta"
 
 [project]
 name="mem20temporaldatabasefabricz"
-version="1.1.0"
+version="4.0.0+ng"
 description="Bi-temporal memory: separates when a claim was true from when the system knew it"
 requires-python=">=3.11"
 dependencies=[]

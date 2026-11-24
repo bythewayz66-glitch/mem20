@@ -4,7 +4,7 @@ build-backend="setuptools.build_meta"
 
 [project]
 name="mem20dailydecisioncopilotz"
-version="1.0.0"
+version="4.0.0+ng"
 description='Prioritize actions from goals, obligations, energy, time, and current context'
 requires-python=">=3.11"
 

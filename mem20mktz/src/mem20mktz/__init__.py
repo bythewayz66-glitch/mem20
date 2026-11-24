@@ -7,7 +7,7 @@ Plus service bundling (RM-087), adaptive pricing (RM-015), and braid-journaled
 resource trades (RM-012) so a composed, priced offer can actually be bought
 and the trade becomes a braid node (exit test).
 """
-__version__ = "0.1.0"
+__version__ = "4.0.0+ng"
 
 from .descriptor import (
     MKTZ_DESCRIPTORS,

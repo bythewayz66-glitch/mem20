@@ -11,5 +11,5 @@ members can be confidently wrong the same way, and agreement gets laundered into
 consensus. Different training lineages have genuinely different blind spots.
 """
 
-__version__ = "0.1.0"
+__version__ = "4.0.0+ng"
 __all__ = ["__version__"]

@@ -25,7 +25,7 @@ has no record of.
 
 from __future__ import annotations
 
-__version__ = "0.3.0"
+__version__ = "4.0.0+ng"
 
 from .agent_bots import AgentzBot, CrewBot
 from .base import Bot

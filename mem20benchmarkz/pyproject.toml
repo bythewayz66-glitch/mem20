@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "mem20benchmarkz"
-version = "0.1.0"
+version = "4.0.0+ng"
 description = "mem20 retrieval benchmarks — quality, latency, and trustworthiness metrics, with an explicit statement of what the numbers are and are not comparable to."
 readme = "README.md"
 requires-python = ">=3.10"

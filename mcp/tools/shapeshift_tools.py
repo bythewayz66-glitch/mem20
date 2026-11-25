@@ -13,13 +13,12 @@ import json
 import sys
 from pathlib import Path
 
-_REPO_ROOT = Path(__file__).resolve().parents[2]
-_GATEWAY = _REPO_ROOT / "mem20apishapeshiftinggatewayz"
-if str(_GATEWAY) not in sys.path:
-    sys.path.insert(0, str(_GATEWAY))
-
 from mem20apishapeshiftinggatewayz import governance  # noqa: E402
 from mem20apishapeshiftinggatewayz.runtime import Engine, load_config  # noqa: E402
+
+# The gateway project moved with the estate (absorbed under candy/), so its
+# project dir is resolved from the imported package, not a repo-root path.
+_GATEWAY = Path(governance.__file__).resolve().parent.parent
 
 try:
     import mcp_types as mt

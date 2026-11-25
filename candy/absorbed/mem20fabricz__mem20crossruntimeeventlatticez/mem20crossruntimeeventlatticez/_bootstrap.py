@@ -28,8 +28,19 @@ import os
 import sys
 from pathlib import Path
 
-# <repo>/<project>/<package>/_bootstrap.py -> <repo>
-REPO_ROOT = Path(__file__).resolve().parents[2]
+def _find_repo_root(start: Path) -> Path:
+    """Walk up to the real repo root (the dir with .git or mcp/server.py).
+
+    The estate moved: absorbed subsystems now live under candy/absorbed/, so a
+    fixed parents[N] lands in the middle of the tree instead of the root.
+    """
+    for candidate in (start, *start.parents):
+        if (candidate / ".git").is_dir() or (candidate / "mcp" / "server.py").is_file():
+            return candidate
+    return start.parents[2]
+
+
+REPO_ROOT = _find_repo_root(Path(__file__).resolve().parent)
 
 # (project, package) pairs whose real package lives one level down.
 _NESTED = (

@@ -1069,3 +1069,126 @@ Long top-level packages were almost entirely 290-byte `from mem20core.core impor
 ### Commits (main)
 - candy move + dewire
 - forgetting / working / consolidate fold-in
+
+## 2026-11-25 — session: restore the MCP server + wire in the 19 unwired tools
+
+Owner directed the repair after re-verification showed the MCP server could not
+start at HEAD. Two decisions drove it: restore the tools modules to
+`mcp/tools/` (not wire the import path to candy/), and wire in the 19 unwired
+tools for real — registered AND executing, not just counted.
+
+### Server restore (487 live again)
+
+- The Nov 23 candy move left 81 of the 122 `tools.*` modules the server
+  expects stranded in `candy/mcp_tools/`; `verify_mcp.py` died on import
+  (`ModuleNotFoundError: tools.mem20datalocalityoptimizerz_tools`).
+- Moved the 81 back to `mcp/tools/` (commit `9d945dd`).
+- The 4 "missing" modules (`mem20predictiverecallenginez`,
+  `mem20sensorymemoryingestz`, `mem20skillmemorytransferz`,
+  `mem20personalcognitivesearchz`) were NOT lost in the candy move: they did
+  not exist at the pre-move commit either. They were deleted in the Nov 22-23
+  dewire sequence. Their exact contents were recovered from the Nov 21 commit
+  `7668e1d691` and restored (commit `56e33a13`) — no regeneration, no stubs.
+- `lattice_tools.py` + `eventstream_tools.py` also moved back (`cd44c8f5`).
+  They are real modules (176/178 lines, 10 declared tools); the other 19
+  files left in `candy/mcp_tools/` are 2-line stubs (plus 17-line
+  `mixedinitiativefocusenginez`) and were deliberately NOT moved.
+- `verify_mcp.py` PASS: 487 tools, 10 `lie_*` tools. Surface manifest
+  regenerated from the live server (`7662a99f`).
+
+### Gate blind spot (found while regenerating the surface)
+
+- `web/scripts/extract-tools.py` only scans `mcp/tools/*.py` + `mcp/*.py`.
+  While `lattice_tools.py`/`eventstream_tools.py` sat in candy/, their 10
+  declarations were invisible to the gate: the unwired count read 9 instead
+  of the true 19. Moving them back made the gate honest again. Lesson: a
+  tool hidden from the scan is not a tool fixed — the gate can only see what
+  is under `mcp/`.
+
+### Absorbed map re-point (what actually made the tools execute)
+
+- Registering was not enough: the restored tools returned
+  `{"ok": false, "error": "ModuleNotFoundError"}` on call, because
+  `.mem20-absorbed-map.json` still pointed at the pre-move absorbed locations
+  (`<root>/mem20enginez/absorbed/...`), which no longer exist.
+- Re-pointed 176 of 177 map entries to the real candy locations
+  (`candy/absorbed/<parent>__<sub>/<sub>`). `mem20temporaldatabasefabricz`
+  is a src-layout package, so its entry points at its `src/<pkg>` dir.
+  `mem20gapz` does not exist anywhere; its entry was left as-is.
+- This makes candy/ live estate for imports. That reverses the Nov 23
+  quarantine intent for the subsystems — recorded here because it was a
+  deliberate trade: without it, the tools register but can never execute.
+- Deployment note: the server also needs the src-layout packages importable
+  (`mem20ops`, `mem20verify`, `toolchest`, `mem20temporaldatabasefabricz`)
+  and the requirements installed (PyYAML, httpx, websockets, numpy,
+  faiss-cpu, rank_bm25). Without PyYAML the memory_engine guard/namespace
+  tools fail; without numpy/faiss/rank_bm25 the search halves degrade to
+  "No search dependencies installed". The editable pins in
+  `requirements.lock` (Nov 21 SHA) are stale — see the lock-drift item.
+
+### Subsystem defects found (fixed or flagged, not papered over)
+
+- `mem20predictiverecallenginez/__init__.py` redirected to `mem20prez`, a
+  package that was never created. Fixed with a fallback to the local
+  `domain.py`, which is the real implementation (`recall_report`, `probe`).
+- `mem20sensorymemoryingestz`, `mem20skillmemorytransferz`,
+  `mem20personalcognitivesearchz` have NO `domain.py` at all (verified: it
+  never existed, not even at Nov 21). Their `__init__`/`runtime` reference a
+  `domain` module that is absent, so their status/doctor tools can never
+  succeed on call. Flagged, not fixed — writing those three `domain.py`
+  implementations is real feature work, not wiring.
+- Gateway `CAPABILITY.json` was lost in the candy move; recovered from Nov 21
+  (`52e5c45c`) and restored to the candy project dir.
+- `mcp/tools/shapeshift_tools.py` built its gateway path from a hardcoded
+  repo-root location; now resolves it from the imported package
+  (`governance.__file__`), so it survives moves.
+- Lattice/eventstream `_bootstrap.py` computed `REPO_ROOT` as
+  `parents[2]`, which lands in `candy/absorbed/` under the new layout.
+  Now walks up to the dir containing `.git` or `mcp/server.py`, with the old
+  value as fallback. Only the two imported copies (fabricz lattice/stream)
+  were fixed; four duplicate eventstream copies under other parents are inert
+  (the map points at the fabricz one).
+
+### Wiring the 19 (506 live, 0 unwired)
+
+- Added `ShapeShiftToolsMixin`, `MemoryEngineToolsMixin`,
+  `LatticeToolsMixin`, `EventStreamToolsMixin` to `_MIXIN_SPECS`, to the
+  `if False:` static class bases (the extractor's source of truth), and to
+  `_setup_tools` register calls — all three lists, or runtime and gate
+  disagree. Note the register calls live inside the `_src` string literal in
+  `_build_mem20_server_class`, so they are literal `\n` in the file, not
+  real newlines.
+- All 19 tools were called and returned real results (gateway translate with
+  confidence 0.35 safe-default; lattice emit/recall round-trip; stream
+  publish/recall round-trip; lattice/stream verify 11/11 roundtrip_ok;
+  memory_engine health/veto/guard/namespace/subsystem all live).
+- Live surface is now **506 tools / 133 domains, 0 unwired**.
+  `verify_mcp.py` default updated 487 -> 506; count-bearing docs updated
+  (README, docs/*, toolchest/README, index/dashboard HTML, finance
+  inputs.json); surface manifest + toolchest inventory regenerated
+  (inventory now mcp=506, cli=20, subsystem=69, total=595 — the cli count
+  dropped from the old file's 1356 because refresh counts binaries found
+  on-box, not the old file's scope).
+- `scripts/surface_manifest.py --check` still flags 2 items, both workflow
+  files (`.github/workflows/mcp-verify.yml` pins 487,
+  `finance-model-drift.yml` asserts 487/129). They cannot be edited by the
+  Muse GitHub App (403: no `workflows` permission) — blocked until the owner
+  grants it or applies the files himself.
+
+### Candy cleanup (one commit, owner login)
+
+- The 82 remaining candy copies of the moved modules were deleted in a
+  single git commit (`bc2fe45`) after the owner completed a one-time
+  `gh auth login` device flow (code flow, token stored by gh). The
+  alternative was 82 individual approval taps. `candy/mcp_tools/` now holds
+  only the 19 unmoved stubs.
+
+### Commits (main)
+
+- `9d945dd` restore 81 tools modules to mcp/tools/
+- `56e33a13` restore 4 tools modules from Nov 21 history
+- `cd44c8f5` restore lattice/eventstream tools modules
+- `7662a99f` regen surface manifest (487/129)
+- `c518130` delete candy copy of edgefleet_tools.py (test of the delete path)
+- `924418d` wire in the 19 + map re-point + fixes + regen (506/133)
+- `bc2fe45` remove 82 candy copies (git push via owner login)

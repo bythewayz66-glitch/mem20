@@ -37,7 +37,13 @@ class _HealthHandler(BaseHTTPRequestHandler):
             })
         elif path == "/ready":
             ready = bool(getattr(srv, "tools", None)) and len(getattr(srv, "tools", {})) > 0
-            self._json({"ready": ready, "tools": len(getattr(srv, "tools", {}))})
+            payload = {"ready": ready, "tools": len(getattr(srv, "tools", {}))}
+            try:
+                import mem20_absorbed
+                payload["absorbed"] = len(mem20_absorbed.absorbed_map())
+            except Exception:
+                pass
+            self._json(payload)
         elif path == "/metrics":
             self._json(srv.metrics())
         else:

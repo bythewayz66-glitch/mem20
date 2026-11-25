@@ -1,14 +1,13 @@
 
-# Assimilation: resolve absorbed mem20*z packages rehomed under short runtimes
+# Assimilation: resolve absorbed mem20*z packages rehomed under short runtimes.
+# The shared helper (mem20_absorbed.py) owns the path + finder setup.
 try:
     import sys as _sys, pathlib as _pl
     _repo = _pl.Path(__file__).resolve().parents[1]
     if str(_repo) not in _sys.path:
         _sys.path.insert(0, str(_repo))
-    _tc = _repo / "toolchest" / "src"
-    if _tc.is_dir() and str(_tc) not in _sys.path:
-        _sys.path.insert(0, str(_tc))
-    import _mem20_absorbed_finder  # noqa: F401
+    import mem20_absorbed as _absorbed
+    _absorbed.ensure_import_paths()
 except Exception:
     pass
 #!/usr/bin/env python3

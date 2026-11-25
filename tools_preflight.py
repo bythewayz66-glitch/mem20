@@ -14,7 +14,9 @@ from __future__ import annotations
 import ast, importlib, os, sys
 from pathlib import Path
 
-ROOT = Path("/opt/mem20")
+# Repo root: this file lives at the repo root in a checkout; /opt/mem20 is the
+# production install path. MEM20_ROOT overrides both (used by CI and tests).
+ROOT = Path(os.environ.get("MEM20_ROOT") or Path(__file__).resolve().parent)
 
 # Boundary probes every domain test suite is expected to contain.
 BOUNDARY_MARKERS = {

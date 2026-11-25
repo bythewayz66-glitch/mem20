@@ -103,7 +103,7 @@ def render_markdown(index: dict[str, Any]) -> str:
     lines.append("")
     lines.append("1. Run `/sitemap search \"<what you need>\"` before grepping the tree.")
     lines.append("2. Read the subsystem `README.md` before its code; summaries above are one-line only.")
-    lines.append("3. Check `AGENTS.md` in `/root` for standing rules that override local convention.")
+    lines.append("3. Check `AGENTS.md` at the repo root for standing rules that override local convention.")
     lines.append("4. Check `toolchest show <name>` before building anything new; most needs are already met.")
     lines.append("")
     return "\n".join(lines)

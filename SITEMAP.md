@@ -298,5 +298,5 @@ toolchest = toolchest.cli:main
 
 1. Run `/sitemap search "<what you need>"` before grepping the tree.
 2. Read the subsystem `README.md` before its code; summaries above are one-line only.
-3. Check `AGENTS.md` in `/root` for standing rules that override local convention.
+3. Check `AGENTS.md` at the repo root for standing rules that override local convention.
 4. Check `toolchest show <name>` before building anything new; most needs are already met.

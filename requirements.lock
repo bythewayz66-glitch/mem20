@@ -8,7 +8,7 @@ attrs==26.1.0
 certifi==2026.10.19
 click==8.5.0
 dbus-python==1.2.18
-fastapi==0.161.1
+fastapi==0.162.7
 frozenlist==1.8.0
 graphviz==0.14.2
 gyp==0.1
@@ -19,10 +19,10 @@ httpx==0.28.1
 httpx2==2.16.0
 idna==3.20
 iniconfig==2.3.1
--e git+https://github.com/bythewayz66-glitch/mem20.git@7668e1d6914264abaad59906d1b82d15d1e94389#egg=mem20agentz&subdirectory=mem20agentz
--e git+https://github.com/bythewayz66-glitch/mem20.git@7668e1d6914264abaad59906d1b82d15d1e94389#egg=mem20controlz&subdirectory=mem20controlz
--e git+https://github.com/bythewayz66-glitch/mem20.git@7668e1d6914264abaad59906d1b82d15d1e94389#egg=mem20dreamz&subdirectory=mem20dreamz
--e git+https://github.com/bythewayz66-glitch/mem20.git@7668e1d6914264abaad59906d1b82d15d1e94389#egg=mem20ops&subdirectory=mem20ops
+-e git+https://github.com/bythewayz66-glitch/mem20.git@072fe6d9c4d79b693d44536af6d7c1bba5d0a556#egg=mem20agentz&subdirectory=mem20agentz
+-e git+https://github.com/bythewayz66-glitch/mem20.git@072fe6d9c4d79b693d44536af6d7c1bba5d0a556#egg=mem20controlz&subdirectory=mem20controlz
+-e git+https://github.com/bythewayz66-glitch/mem20.git@072fe6d9c4d79b693d44536af6d7c1bba5d0a556#egg=mem20dreamz&subdirectory=mem20dreamz
+-e git+https://github.com/bythewayz66-glitch/mem20.git@072fe6d9c4d79b693d44536af6d7c1bba5d0a556#egg=mem20ops&subdirectory=mem20ops
 multidict==7.1.0
 opentelemetry-api==1.45.1
 packaging==26.3
@@ -37,7 +37,7 @@ pytest==9.1.1
 PyYAML==6.0.3
 ruff==0.17.2
 setuptools==84.2.1
-starlette==1.9.0
+starlette==0.46.2
 truststore==0.10.5
 typing-inspection==0.4.4
 typing_extensions==4.16.0

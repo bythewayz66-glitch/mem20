@@ -1314,3 +1314,13 @@ What changed (all numbers from `docs/surface.json`, 527 tools / 135 domains /
 
 Verification: `scripts/surface_manifest.py --check` and
 `scripts/ops/check-doc-counts.py` run before push (see commit message / report).
+
+## 2026-11-25 — session: point Running-products links at mem20.com subdomains
+
+Follow-up to the homepage rebuild (9d4db3d): control.mem20.com and shop.mem20.com
+now exist and both return HTTP 200, so the Running products section links the
+control plane and the shop at their mem20.com subdomains instead of
+control/shop.jaysonai.online. The section lede was updated to match (control and
+shop are linked at their subdomains; the rest still have no public link until
+their subdomains resolve). Nothing else changed. Verified: both subdomains HTTP
+200; scripts/ops/check-doc-counts.py passes.

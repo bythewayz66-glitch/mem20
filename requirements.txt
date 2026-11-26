@@ -23,7 +23,7 @@ sentence-transformers>=2.2.0
 # PyYAML: mem20crewz, mem20mktz, mem20owebz, mem20rpgz, mem20unitiz, mem20yetiz;
 # stripe: mem20shopz).
 httpx>=0.28.1
-PyYAML>=6.0.3
+PyYAML>=6.0.4
 stripe>=17.0.0
 
 # The 4.0 conformance gate (scripts/renovation/conformance.py) verifies

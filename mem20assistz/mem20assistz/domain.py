@@ -34,12 +34,17 @@ def estate_context(store_path: str | Path | None = None) -> dict:
     """Real integration probe across mem20 estate modules (used by conformance/tests)."""
     scripts = mem20path.discover_scripts()
     inv = load_inventory(_toolchest_inventory_path())
+    total = 0
+    if isinstance(inv, dict):
+        total = inv.get("total")
+        if total is None:
+            total = (inv.get("counts") or {}).get("total", 0)
     ledger = DeliveryLedger(max_entries=4)
     ledger.add("assistz-probe")
     score = focus_score({"priority": 1, "distractions": 0})
     ctx = {
         "path_scripts": len(scripts) if isinstance(scripts, dict) else 0,
-        "toolchest_total": int(inv.get("total", 0)) if isinstance(inv, dict) else 0,
+        "toolchest_total": int(total or 0),
         "dedup_probe_seen": "assistz-probe" in ledger,
         "focus_probe": float(score),
     }

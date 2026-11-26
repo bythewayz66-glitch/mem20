@@ -1192,3 +1192,79 @@ tools for real — registered AND executing, not just counted.
 - `c518130` delete candy copy of edgefleet_tools.py (test of the delete path)
 - `924418d` wire in the 19 + map re-point + fixes + regen (506/133)
 - `bc2fe45` remove 82 candy copies (git push via owner login)
+
+## 2026-11-25 — session: write the assistz and schoolz tools modules (the 21 stubs)
+
+Jesse asked what the "19 and 21" were, then said "Yes do assistz and schoolz".
+
+The 19 and the 21: `candy/mcp_tools/` holds 19 files (18 two-line stubs plus
+`mixedinitiativefocusenginez_tools.py`, 17 lines, a plain helper, not an MCP
+module). None of the 19 declares a mixin or a tool. The other 2 stubs are in
+`mcp/tools/` itself: `mem20assistz_tools.py` and `mem20schoolz_tools.py`,
+each just a docstring and one import line. 19 + 2 = 21 empty tools files doing
+nothing. The 19, by subsystem: mem202dand3dartproductionoptimizationpipelinez,
+mem20acquisitionandpartnershipscoutz, mem20adversarialqacrewz,
+mem20agentoutputcompilerz, mem20aigamestudiobuilderz, mem20ailevelarchitectz,
+mem20aipipelinecostoptimizerz, mem20aiproductionstudiooperatingsystemz,
+mem20antiexploitationrewardshieldz, mem20apishapeshiftinggatewayz (note: the
+gateway itself is wired via shapeshift_tools.py — this stub is a leftover
+with the same name), mem20assetintakecatalogingandvalidationpipelinez,
+mem20capabilitymarketplacez, mem20connectormarketplacez,
+mem20demandforecastandcapacitybrainz, mem20livemodelfusionz,
+mem20liveprojectdemonstrationenginez, mem20livingagenteconomyz,
+mem20loreragcontentgeneratorz, mixedinitiativefocusenginez.
+
+Assists (mem20assistz): the subsystem was real — `domain.estate_context()`
+and `ecosystem.probe()` both existed. Wrote `mcp/tools/mem20assistz_tools.py`
+(status -> estate_context, doctor -> probe). The doctor first reported 3/6
+peers reachable (ok False): the toolchest peer called `load_inventory()` with
+no path (it requires one), and the sitemapz peer imported
+`mem20sitemapz.policy` without the src layout on sys.path. Fixed both in
+`mem20assistz/ecosystem.py` (pass the inventory path; insert
+`mem20sitemapz/src` before importing). Also fixed `domain.estate_context()`
+to read the total from `counts.total` when the top-level `total` key is
+absent (the refreshed inventory nests it). Doctor now reports 6/6, ok True,
+and status reports toolchest_total 595 (pre-refresh) / 617 (after).
+
+Schoolz (mem20schoolz): the subsystem was broken, not just stubbed. Its
+`__init__.py` imported `Kiln, KilnError, OpFailed, EngineMissing,
+ValidationFailed` from itself (a self-import that can never resolve) and
+fourteen domain functions from a `domain.py` that never existed — not at
+HEAD, not at Nov 21 either. The three source subsystems it claims to
+consolidate (mem20apprenticeshipruntimez, mem20trainingz,
+mem20certificationz) exist nowhere in the tree. Wrote
+`mem20schoolz/mem20schoolz/domain.py` from scratch: a JSON store
+(`~/.mem20/mem20schoolz/state.json`, `MEM20_SCHOOLZ_STORE` override) with
+courses, lessons, learning paths, progress, exams, attempts, credentials
+(hash-verified), mentors, sessions, evaluations, skill levels 0-5 (points =
+lessons + 2 x passed exams), and progression plans. Nothing seeded, nothing
+faked — an empty catalog is an empty school. Fixed the `__init__.py` to drop
+the Kiln self-import (see below) so the package imports and exposes the
+domain API. Wrote `mcp/tools/mem20schoolz_tools.py` exposing all 19 domain
+functions as tools (status, doctor, list/get/create course, learning path,
+track progress, skill level, mentor match, evaluate task, progression plan,
+mentorship hours, register mentor, log session, list/create/take exam, issue
+and verify credential).
+
+Kiln: Jesse corrected that Kiln is native mem20, the AI 3D modeler
+(mem20kilnz), not absorbed and not part of schoolz. Verified: kilnz is not
+in the absorbed map, it lives at the repo root, and its tools are already on
+the surface via kilnz_tools.py. The schoolz Kiln import was a stray
+copy-paste; removed it and the Kiln names from schoolz `__all__`.
+
+Wiring: both mixins added to `_MIXIN_SPECS`, both class-bases lists, and
+both register calls in `_setup_tools` (mcp/server.py). Live surface is now
+**527 tools / 135 domains** (506 + 2 assistz + 19 schoolz), 0 unwired.
+verify_mcp.py PASS at 527. All 21 new tools called live over stdio: assistz
+status/doctor, and a full schoolz round trip (create course, create exam,
+take exam 100% pass, issue credential, verify credential true, bogus id
+false). Surface manifest regenerated (527/135); 26 doc lines re-pinned;
+check-doc-counts passes; toolchest inventory refreshed (mcp 527, cli 21,
+subsystem 69, total 617 — cli 20->21 is the on-box binary discovery, not a
+new mem20 CLI).
+
+Workflow pins: mcp-verify.yml and finance-model-drift.yml re-pinned 506/133
+-> 527/135 in the working tree, but the push is still blocked (no workflow
+scope on the gh token, no workflows permission on the Muse GitHub App).
+The pin updates ride in the stuck workflow commit; the assistz/schoolz
+commit was reordered ahead of it and pushed.

@@ -1,6 +1,6 @@
 # mem20 MCP — Complete Tools Reference
 
-> Every tool, every feature, every command. 506 tools across 133 domains. Written for someone who has never seen mem20 before.
+> Every tool, every feature, every command. 527 tools across 135 domains. Written for someone who has never seen mem20 before.
 
 ---
 
@@ -1347,7 +1347,7 @@ These track values, emotions, and goals — mem20's emotional intelligence layer
   "arguments": {
     "name": "complete_mem20_docs",
     "priority": 1,
-    "target_state": "All 506 tools fully documented"
+    "target_state": "All 527 tools fully documented"
   }
 }
 ```
@@ -3178,7 +3178,7 @@ These are advanced memory operations beyond the core tools.
   "name": "prod_task_create",
   "arguments": {
     "title": "Complete mem20 docs",
-    "description": "Write feature-by-feature documentation for all 506 tools",
+    "description": "Write feature-by-feature documentation for all 527 tools",
     "priority": "high",
     "due_date": "2026-09-07"
   }
@@ -3724,7 +3724,7 @@ These are advanced memory operations beyond the core tools.
     "action": "create",
     "repo": "bythewayz66-glitch/mem20",
     "title": "Add tool documentation",
-    "body": "Need comprehensive docs for all 506 tools"
+    "body": "Need comprehensive docs for all 527 tools"
   }
 }
 ```

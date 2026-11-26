@@ -137,7 +137,12 @@ def _core_peers():
     def toolchest_peer():
         try:
             from toolchest.catalog import load_inventory
-            inv = load_inventory()
+            from pathlib import Path as _P
+            _root = _P(__file__).resolve().parents[2]
+            _inv_path = _root / "toolchest" / "inventory.json"
+            if not _inv_path.exists():
+                _inv_path = _root / "toolchest" / "src" / "toolchest" / "inventory.json"
+            inv = load_inventory(_inv_path)
             total = inv.get('total') if isinstance(inv, dict) else None
             if total is None and isinstance(inv, dict):
                 counts = inv.get('counts') or {}
@@ -159,6 +164,11 @@ def _core_peers():
 
     def sitemap_peer():
         try:
+            import sys as _sys
+            from pathlib import Path as _P
+            _src = _P(__file__).resolve().parents[2] / "mem20sitemapz" / "src"
+            if _src.is_dir() and str(_src) not in _sys.path:
+                _sys.path.insert(0, str(_src))
             from mem20sitemapz.policy import is_skipped_dir
             v = is_skipped_dir('.git')
             return {'ok': True, 'skips_git': bool(v)}

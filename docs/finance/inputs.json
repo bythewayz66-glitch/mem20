@@ -26,8 +26,8 @@
     "note": "stamps rows appended to the reconciliation ledger. Fixed values, not clock reads, so regenerating the model is idempotent and the CI drift check stays green. Run 3 re-runs the model with the branch rebased onto main 45445f48."
   },
   "tool_surface": {
-    "tools": 506,
-    "domains": 133,
+    "tools": 527,
+    "domains": 135,
     "previous_tools": 311,
     "previous_domains": 39,
     "authority": "live JSON-RPC tools/list, generated into docs/surface.json by scripts/surface_manifest.py; CI .github/workflows/mcp-verify.yml pins 506; docs/TOOL-DOMAINS.md carries 506/133",

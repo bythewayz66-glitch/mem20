@@ -1,7 +1,7 @@
 {
   "format": "mem20-toolchest-inventory",
   "format_version": 1,
-  "generated_at": "2026-11-25T22:15:27.944817+00:00",
+  "generated_at": "2026-11-26T00:24:40.201238+00:00",
   "toolchest_version": "0.1.0",
   "host": "htch-runtime",
   "sources": [
@@ -10,10 +10,10 @@
     "native_subsystems"
   ],
   "counts": {
-    "mcp": 506,
-    "cli": 20,
+    "mcp": 527,
+    "cli": 21,
     "subsystem": 69,
-    "total": 595
+    "total": 617
   },
   "categories": {
     "agent-platform": {
@@ -23,7 +23,7 @@
       ]
     },
     "cli": {
-      "count": 20,
+      "count": 21,
       "subcategories": [
         "generic",
         "python-tooling",
@@ -43,7 +43,7 @@
       ]
     },
     "mcp": {
-      "count": 506,
+      "count": 527,
       "subcategories": [
         "a2a",
         "blender",
@@ -85,7 +85,7 @@
     "mem20bjorkz: not present on disk (AGENTS.md: 'if present')",
     "every Python subsystem carries a pyproject.toml",
     "non-Python SDK directories (packaging not applicable): mem20-sdk-godot, mem20-sdk-ruby, mem20-sdk-typescript",
-    "MCP registry read at runtime: True (506 tools)"
+    "MCP registry read at runtime: True (527 tools)"
   ],
   "entries": [
     {
@@ -12129,6 +12129,735 @@
       }
     },
     {
+      "id": "mcp:mem20assistz_status",
+      "kind": "mcp",
+      "name": "mem20assistz_status",
+      "category": "mcp",
+      "subcategory": "mcp-other",
+      "description": "Report the assistz integration context across the estate.",
+      "source": "mcp/mem20assistz_tools.py",
+      "runtime_status": "ok",
+      "runtime_detail": "registered by Mem20MCPServer._setup_tools in mcp/mem20assistz_tools.py",
+      "checks": [
+        {
+          "check": "server import",
+          "ok": true,
+          "detail": "mem20assistz_tools.py registered"
+        },
+        {
+          "check": "description non-empty",
+          "ok": true,
+          "detail": "57 chars"
+        },
+        {
+          "check": "schema present",
+          "ok": true,
+          "detail": "0 input props"
+        }
+      ],
+      "meta": {
+        "input_schema_props": [],
+        "registering_module": "mem20assistz_tools.py"
+      }
+    },
+    {
+      "id": "mcp:mem20assistz_doctor",
+      "kind": "mcp",
+      "name": "mem20assistz_doctor",
+      "category": "mcp",
+      "subcategory": "mcp-other",
+      "description": "Probe the assistz peer subsystems.",
+      "source": "mcp/mem20assistz_tools.py",
+      "runtime_status": "ok",
+      "runtime_detail": "registered by Mem20MCPServer._setup_tools in mcp/mem20assistz_tools.py",
+      "checks": [
+        {
+          "check": "server import",
+          "ok": true,
+          "detail": "mem20assistz_tools.py registered"
+        },
+        {
+          "check": "description non-empty",
+          "ok": true,
+          "detail": "34 chars"
+        },
+        {
+          "check": "schema present",
+          "ok": true,
+          "detail": "0 input props"
+        }
+      ],
+      "meta": {
+        "input_schema_props": [],
+        "registering_module": "mem20assistz_tools.py"
+      }
+    },
+    {
+      "id": "mcp:mem20schoolz_status",
+      "kind": "mcp",
+      "name": "mem20schoolz_status",
+      "category": "mcp",
+      "subcategory": "mcp-other",
+      "description": "Report the school store counts.",
+      "source": "mcp/mem20schoolz_tools.py",
+      "runtime_status": "ok",
+      "runtime_detail": "registered by Mem20MCPServer._setup_tools in mcp/mem20schoolz_tools.py",
+      "checks": [
+        {
+          "check": "server import",
+          "ok": true,
+          "detail": "mem20schoolz_tools.py registered"
+        },
+        {
+          "check": "description non-empty",
+          "ok": true,
+          "detail": "31 chars"
+        },
+        {
+          "check": "schema present",
+          "ok": true,
+          "detail": "0 input props"
+        }
+      ],
+      "meta": {
+        "input_schema_props": [],
+        "registering_module": "mem20schoolz_tools.py"
+      }
+    },
+    {
+      "id": "mcp:mem20schoolz_doctor",
+      "kind": "mcp",
+      "name": "mem20schoolz_doctor",
+      "category": "mcp",
+      "subcategory": "mcp-other",
+      "description": "Probe the school store.",
+      "source": "mcp/mem20schoolz_tools.py",
+      "runtime_status": "ok",
+      "runtime_detail": "registered by Mem20MCPServer._setup_tools in mcp/mem20schoolz_tools.py",
+      "checks": [
+        {
+          "check": "server import",
+          "ok": true,
+          "detail": "mem20schoolz_tools.py registered"
+        },
+        {
+          "check": "description non-empty",
+          "ok": true,
+          "detail": "23 chars"
+        },
+        {
+          "check": "schema present",
+          "ok": true,
+          "detail": "0 input props"
+        }
+      ],
+      "meta": {
+        "input_schema_props": [],
+        "registering_module": "mem20schoolz_tools.py"
+      }
+    },
+    {
+      "id": "mcp:mem20schoolz_list_courses",
+      "kind": "mcp",
+      "name": "mem20schoolz_list_courses",
+      "category": "mcp",
+      "subcategory": "mcp-other",
+      "description": "List every course in the catalog.",
+      "source": "mcp/mem20schoolz_tools.py",
+      "runtime_status": "ok",
+      "runtime_detail": "registered by Mem20MCPServer._setup_tools in mcp/mem20schoolz_tools.py",
+      "checks": [
+        {
+          "check": "server import",
+          "ok": true,
+          "detail": "mem20schoolz_tools.py registered"
+        },
+        {
+          "check": "description non-empty",
+          "ok": true,
+          "detail": "33 chars"
+        },
+        {
+          "check": "schema present",
+          "ok": true,
+          "detail": "0 input props"
+        }
+      ],
+      "meta": {
+        "input_schema_props": [],
+        "registering_module": "mem20schoolz_tools.py"
+      }
+    },
+    {
+      "id": "mcp:mem20schoolz_get_lesson",
+      "kind": "mcp",
+      "name": "mem20schoolz_get_lesson",
+      "category": "mcp",
+      "subcategory": "mcp-other",
+      "description": "Return one lesson from one course.",
+      "source": "mcp/mem20schoolz_tools.py",
+      "runtime_status": "ok",
+      "runtime_detail": "registered by Mem20MCPServer._setup_tools in mcp/mem20schoolz_tools.py",
+      "checks": [
+        {
+          "check": "server import",
+          "ok": true,
+          "detail": "mem20schoolz_tools.py registered"
+        },
+        {
+          "check": "description non-empty",
+          "ok": true,
+          "detail": "34 chars"
+        },
+        {
+          "check": "schema present",
+          "ok": true,
+          "detail": "2 input props"
+        }
+      ],
+      "meta": {
+        "input_schema_props": [
+          "course_id",
+          "lesson_id"
+        ],
+        "registering_module": "mem20schoolz_tools.py"
+      }
+    },
+    {
+      "id": "mcp:mem20schoolz_create_course",
+      "kind": "mcp",
+      "name": "mem20schoolz_create_course",
+      "category": "mcp",
+      "subcategory": "mcp-other",
+      "description": "Add a course with lessons [{title, content}].",
+      "source": "mcp/mem20schoolz_tools.py",
+      "runtime_status": "ok",
+      "runtime_detail": "registered by Mem20MCPServer._setup_tools in mcp/mem20schoolz_tools.py",
+      "checks": [
+        {
+          "check": "server import",
+          "ok": true,
+          "detail": "mem20schoolz_tools.py registered"
+        },
+        {
+          "check": "description non-empty",
+          "ok": true,
+          "detail": "45 chars"
+        },
+        {
+          "check": "schema present",
+          "ok": true,
+          "detail": "4 input props"
+        }
+      ],
+      "meta": {
+        "input_schema_props": [
+          "title",
+          "skill",
+          "lessons",
+          "description"
+        ],
+        "registering_module": "mem20schoolz_tools.py"
+      }
+    },
+    {
+      "id": "mcp:mem20schoolz_create_learning_path",
+      "kind": "mcp",
+      "name": "mem20schoolz_create_learning_path",
+      "category": "mcp",
+      "subcategory": "mcp-other",
+      "description": "Build a learning path for a learner toward a goal skill.",
+      "source": "mcp/mem20schoolz_tools.py",
+      "runtime_status": "ok",
+      "runtime_detail": "registered by Mem20MCPServer._setup_tools in mcp/mem20schoolz_tools.py",
+      "checks": [
+        {
+          "check": "server import",
+          "ok": true,
+          "detail": "mem20schoolz_tools.py registered"
+        },
+        {
+          "check": "description non-empty",
+          "ok": true,
+          "detail": "56 chars"
+        },
+        {
+          "check": "schema present",
+          "ok": true,
+          "detail": "3 input props"
+        }
+      ],
+      "meta": {
+        "input_schema_props": [
+          "learner",
+          "goal",
+          "course_ids"
+        ],
+        "registering_module": "mem20schoolz_tools.py"
+      }
+    },
+    {
+      "id": "mcp:mem20schoolz_track_progress",
+      "kind": "mcp",
+      "name": "mem20schoolz_track_progress",
+      "category": "mcp",
+      "subcategory": "mcp-other",
+      "description": "Record a learner's progress on one lesson.",
+      "source": "mcp/mem20schoolz_tools.py",
+      "runtime_status": "ok",
+      "runtime_detail": "registered by Mem20MCPServer._setup_tools in mcp/mem20schoolz_tools.py",
+      "checks": [
+        {
+          "check": "server import",
+          "ok": true,
+          "detail": "mem20schoolz_tools.py registered"
+        },
+        {
+          "check": "description non-empty",
+          "ok": true,
+          "detail": "42 chars"
+        },
+        {
+          "check": "schema present",
+          "ok": true,
+          "detail": "4 input props"
+        }
+      ],
+      "meta": {
+        "input_schema_props": [
+          "learner",
+          "course_id",
+          "lesson_id",
+          "status"
+        ],
+        "registering_module": "mem20schoolz_tools.py"
+      }
+    },
+    {
+      "id": "mcp:mem20schoolz_skill_level",
+      "kind": "mcp",
+      "name": "mem20schoolz_skill_level",
+      "category": "mcp",
+      "subcategory": "mcp-other",
+      "description": "Level 0-5 for a skill, optionally for one learner.",
+      "source": "mcp/mem20schoolz_tools.py",
+      "runtime_status": "ok",
+      "runtime_detail": "registered by Mem20MCPServer._setup_tools in mcp/mem20schoolz_tools.py",
+      "checks": [
+        {
+          "check": "server import",
+          "ok": true,
+          "detail": "mem20schoolz_tools.py registered"
+        },
+        {
+          "check": "description non-empty",
+          "ok": true,
+          "detail": "50 chars"
+        },
+        {
+          "check": "schema present",
+          "ok": true,
+          "detail": "2 input props"
+        }
+      ],
+      "meta": {
+        "input_schema_props": [
+          "skill",
+          "learner"
+        ],
+        "registering_module": "mem20schoolz_tools.py"
+      }
+    },
+    {
+      "id": "mcp:mem20schoolz_mentor_match",
+      "kind": "mcp",
+      "name": "mem20schoolz_mentor_match",
+      "category": "mcp",
+      "subcategory": "mcp-other",
+      "description": "Find mentors who teach a skill.",
+      "source": "mcp/mem20schoolz_tools.py",
+      "runtime_status": "ok",
+      "runtime_detail": "registered by Mem20MCPServer._setup_tools in mcp/mem20schoolz_tools.py",
+      "checks": [
+        {
+          "check": "server import",
+          "ok": true,
+          "detail": "mem20schoolz_tools.py registered"
+        },
+        {
+          "check": "description non-empty",
+          "ok": true,
+          "detail": "31 chars"
+        },
+        {
+          "check": "schema present",
+          "ok": true,
+          "detail": "2 input props"
+        }
+      ],
+      "meta": {
+        "input_schema_props": [
+          "learner",
+          "skill"
+        ],
+        "registering_module": "mem20schoolz_tools.py"
+      }
+    },
+    {
+      "id": "mcp:mem20schoolz_evaluate_task",
+      "kind": "mcp",
+      "name": "mem20schoolz_evaluate_task",
+      "category": "mcp",
+      "subcategory": "mcp-other",
+      "description": "Record an evaluation of a learner on a task (score 0-100).",
+      "source": "mcp/mem20schoolz_tools.py",
+      "runtime_status": "ok",
+      "runtime_detail": "registered by Mem20MCPServer._setup_tools in mcp/mem20schoolz_tools.py",
+      "checks": [
+        {
+          "check": "server import",
+          "ok": true,
+          "detail": "mem20schoolz_tools.py registered"
+        },
+        {
+          "check": "description non-empty",
+          "ok": true,
+          "detail": "58 chars"
+        },
+        {
+          "check": "schema present",
+          "ok": true,
+          "detail": "4 input props"
+        }
+      ],
+      "meta": {
+        "input_schema_props": [
+          "learner",
+          "task",
+          "score",
+          "notes"
+        ],
+        "registering_module": "mem20schoolz_tools.py"
+      }
+    },
+    {
+      "id": "mcp:mem20schoolz_progression_plan",
+      "kind": "mcp",
+      "name": "mem20schoolz_progression_plan",
+      "category": "mcp",
+      "subcategory": "mcp-other",
+      "description": "A plan for a learner to reach a goal skill.",
+      "source": "mcp/mem20schoolz_tools.py",
+      "runtime_status": "ok",
+      "runtime_detail": "registered by Mem20MCPServer._setup_tools in mcp/mem20schoolz_tools.py",
+      "checks": [
+        {
+          "check": "server import",
+          "ok": true,
+          "detail": "mem20schoolz_tools.py registered"
+        },
+        {
+          "check": "description non-empty",
+          "ok": true,
+          "detail": "43 chars"
+        },
+        {
+          "check": "schema present",
+          "ok": true,
+          "detail": "2 input props"
+        }
+      ],
+      "meta": {
+        "input_schema_props": [
+          "learner",
+          "goal"
+        ],
+        "registering_module": "mem20schoolz_tools.py"
+      }
+    },
+    {
+      "id": "mcp:mem20schoolz_mentorship_hours",
+      "kind": "mcp",
+      "name": "mem20schoolz_mentorship_hours",
+      "category": "mcp",
+      "subcategory": "mcp-other",
+      "description": "Total mentorship hours, optionally filtered.",
+      "source": "mcp/mem20schoolz_tools.py",
+      "runtime_status": "ok",
+      "runtime_detail": "registered by Mem20MCPServer._setup_tools in mcp/mem20schoolz_tools.py",
+      "checks": [
+        {
+          "check": "server import",
+          "ok": true,
+          "detail": "mem20schoolz_tools.py registered"
+        },
+        {
+          "check": "description non-empty",
+          "ok": true,
+          "detail": "44 chars"
+        },
+        {
+          "check": "schema present",
+          "ok": true,
+          "detail": "2 input props"
+        }
+      ],
+      "meta": {
+        "input_schema_props": [
+          "learner",
+          "mentor"
+        ],
+        "registering_module": "mem20schoolz_tools.py"
+      }
+    },
+    {
+      "id": "mcp:mem20schoolz_register_mentor",
+      "kind": "mcp",
+      "name": "mem20schoolz_register_mentor",
+      "category": "mcp",
+      "subcategory": "mcp-other",
+      "description": "Register a mentor and the skills they teach.",
+      "source": "mcp/mem20schoolz_tools.py",
+      "runtime_status": "ok",
+      "runtime_detail": "registered by Mem20MCPServer._setup_tools in mcp/mem20schoolz_tools.py",
+      "checks": [
+        {
+          "check": "server import",
+          "ok": true,
+          "detail": "mem20schoolz_tools.py registered"
+        },
+        {
+          "check": "description non-empty",
+          "ok": true,
+          "detail": "44 chars"
+        },
+        {
+          "check": "schema present",
+          "ok": true,
+          "detail": "2 input props"
+        }
+      ],
+      "meta": {
+        "input_schema_props": [
+          "name",
+          "skills"
+        ],
+        "registering_module": "mem20schoolz_tools.py"
+      }
+    },
+    {
+      "id": "mcp:mem20schoolz_log_session",
+      "kind": "mcp",
+      "name": "mem20schoolz_log_session",
+      "category": "mcp",
+      "subcategory": "mcp-other",
+      "description": "Log a mentorship session.",
+      "source": "mcp/mem20schoolz_tools.py",
+      "runtime_status": "ok",
+      "runtime_detail": "registered by Mem20MCPServer._setup_tools in mcp/mem20schoolz_tools.py",
+      "checks": [
+        {
+          "check": "server import",
+          "ok": true,
+          "detail": "mem20schoolz_tools.py registered"
+        },
+        {
+          "check": "description non-empty",
+          "ok": true,
+          "detail": "25 chars"
+        },
+        {
+          "check": "schema present",
+          "ok": true,
+          "detail": "4 input props"
+        }
+      ],
+      "meta": {
+        "input_schema_props": [
+          "learner",
+          "mentor",
+          "skill",
+          "hours"
+        ],
+        "registering_module": "mem20schoolz_tools.py"
+      }
+    },
+    {
+      "id": "mcp:mem20schoolz_list_exams",
+      "kind": "mcp",
+      "name": "mem20schoolz_list_exams",
+      "category": "mcp",
+      "subcategory": "mcp-other",
+      "description": "List every exam.",
+      "source": "mcp/mem20schoolz_tools.py",
+      "runtime_status": "ok",
+      "runtime_detail": "registered by Mem20MCPServer._setup_tools in mcp/mem20schoolz_tools.py",
+      "checks": [
+        {
+          "check": "server import",
+          "ok": true,
+          "detail": "mem20schoolz_tools.py registered"
+        },
+        {
+          "check": "description non-empty",
+          "ok": true,
+          "detail": "16 chars"
+        },
+        {
+          "check": "schema present",
+          "ok": true,
+          "detail": "0 input props"
+        }
+      ],
+      "meta": {
+        "input_schema_props": [],
+        "registering_module": "mem20schoolz_tools.py"
+      }
+    },
+    {
+      "id": "mcp:mem20schoolz_create_exam",
+      "kind": "mcp",
+      "name": "mem20schoolz_create_exam",
+      "category": "mcp",
+      "subcategory": "mcp-other",
+      "description": "Add an exam with questions [{prompt, choices, answer}].",
+      "source": "mcp/mem20schoolz_tools.py",
+      "runtime_status": "ok",
+      "runtime_detail": "registered by Mem20MCPServer._setup_tools in mcp/mem20schoolz_tools.py",
+      "checks": [
+        {
+          "check": "server import",
+          "ok": true,
+          "detail": "mem20schoolz_tools.py registered"
+        },
+        {
+          "check": "description non-empty",
+          "ok": true,
+          "detail": "55 chars"
+        },
+        {
+          "check": "schema present",
+          "ok": true,
+          "detail": "5 input props"
+        }
+      ],
+      "meta": {
+        "input_schema_props": [
+          "title",
+          "skill",
+          "questions",
+          "course_id",
+          "passing_score"
+        ],
+        "registering_module": "mem20schoolz_tools.py"
+      }
+    },
+    {
+      "id": "mcp:mem20schoolz_take_exam",
+      "kind": "mcp",
+      "name": "mem20schoolz_take_exam",
+      "category": "mcp",
+      "subcategory": "mcp-other",
+      "description": "Score answers {question_id: answer} against the exam key.",
+      "source": "mcp/mem20schoolz_tools.py",
+      "runtime_status": "ok",
+      "runtime_detail": "registered by Mem20MCPServer._setup_tools in mcp/mem20schoolz_tools.py",
+      "checks": [
+        {
+          "check": "server import",
+          "ok": true,
+          "detail": "mem20schoolz_tools.py registered"
+        },
+        {
+          "check": "description non-empty",
+          "ok": true,
+          "detail": "57 chars"
+        },
+        {
+          "check": "schema present",
+          "ok": true,
+          "detail": "3 input props"
+        }
+      ],
+      "meta": {
+        "input_schema_props": [
+          "learner",
+          "exam_id",
+          "answers"
+        ],
+        "registering_module": "mem20schoolz_tools.py"
+      }
+    },
+    {
+      "id": "mcp:mem20schoolz_issue_credential",
+      "kind": "mcp",
+      "name": "mem20schoolz_issue_credential",
+      "category": "mcp",
+      "subcategory": "mcp-other",
+      "description": "Issue a credential for a passed exam.",
+      "source": "mcp/mem20schoolz_tools.py",
+      "runtime_status": "ok",
+      "runtime_detail": "registered by Mem20MCPServer._setup_tools in mcp/mem20schoolz_tools.py",
+      "checks": [
+        {
+          "check": "server import",
+          "ok": true,
+          "detail": "mem20schoolz_tools.py registered"
+        },
+        {
+          "check": "description non-empty",
+          "ok": true,
+          "detail": "37 chars"
+        },
+        {
+          "check": "schema present",
+          "ok": true,
+          "detail": "2 input props"
+        }
+      ],
+      "meta": {
+        "input_schema_props": [
+          "learner",
+          "exam_id"
+        ],
+        "registering_module": "mem20schoolz_tools.py"
+      }
+    },
+    {
+      "id": "mcp:mem20schoolz_verify_credential",
+      "kind": "mcp",
+      "name": "mem20schoolz_verify_credential",
+      "category": "mcp",
+      "subcategory": "mcp-other",
+      "description": "Check a credential id against the store and its hash.",
+      "source": "mcp/mem20schoolz_tools.py",
+      "runtime_status": "ok",
+      "runtime_detail": "registered by Mem20MCPServer._setup_tools in mcp/mem20schoolz_tools.py",
+      "checks": [
+        {
+          "check": "server import",
+          "ok": true,
+          "detail": "mem20schoolz_tools.py registered"
+        },
+        {
+          "check": "description non-empty",
+          "ok": true,
+          "detail": "53 chars"
+        },
+        {
+          "check": "schema present",
+          "ok": true,
+          "detail": "1 input props"
+        }
+      ],
+      "meta": {
+        "input_schema_props": [
+          "credential_id"
+        ],
+        "registering_module": "mem20schoolz_tools.py"
+      }
+    },
+    {
       "id": "mcp:audiovoiceandmusicpipelinez_status",
       "kind": "mcp",
       "name": "audiovoiceandmusicpipelinez_status",
@@ -17780,6 +18509,43 @@
         "size": 191,
         "symlink": false,
         "resolved_target": "/home/hatch/workspace/mem20-venv/bin/f2py"
+      }
+    },
+    {
+      "id": "cli:fastapi",
+      "kind": "cli",
+      "name": "fastapi",
+      "category": "cli",
+      "subcategory": "web-net",
+      "description": "fastapi: To use the fastapi command, please install \"fastapi[standard]\":  \tpip install \"fastapi[standard]\"",
+      "source": "/home/hatch/workspace/mem20-venv/bin/fastapi",
+      "runtime_status": "ok",
+      "runtime_detail": "script in /home/hatch/workspace/mem20-venv/bin",
+      "checks": [
+        {
+          "check": "path exists",
+          "ok": true,
+          "detail": "/home/hatch/workspace/mem20-venv/bin/fastapi"
+        },
+        {
+          "check": "executable",
+          "ok": true,
+          "detail": ""
+        }
+      ],
+      "meta": {
+        "bin_dir": "/home/hatch/workspace/mem20-venv/bin",
+        "type": "script",
+        "shebang": "/home/hatch/workspace/mem20-venv/bin/python",
+        "executable": true,
+        "size": 185,
+        "symlink": false,
+        "resolved_target": "/home/hatch/workspace/mem20-venv/bin/fastapi",
+        "help": {
+          "sampled": true,
+          "ok": true,
+          "summary": "To use the fastapi command, please install \"fastapi[standard]\":  \tpip install \"fastapi[standard]\""
+        }
       }
     },
     {

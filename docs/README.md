@@ -10,7 +10,7 @@
 | Document | Description |
 |----------|-------------|
 | [Architecture Overview](01-architecture.md) | System design, memory model, tool domains, deployment |
-| [Tools Reference](02-tools-reference.md) | Complete reference for the MCP tool surface (506 tools / 133 domains live) |
+| [Tools Reference](02-tools-reference.md) | Complete reference for the MCP tool surface (527 tools / 135 domains live) |
 | [Installation Guide](03-installation.md) | Install, configure, and connect MCP hosts |
 | [Usage Examples](04-usage-examples.md) | Practical examples for every tool domain |
 
@@ -37,7 +37,7 @@ MCP client --stdio--> Mem20MCPServer (mcp/mcp_server.py)
    (LLM-backed)    (store engine)   (JSON files)
 ```
 
-## 506 Tools Across 133 Domains
+## 527 Tools Across 135 Domains
 
 The authoritative, generated mapping is [TOOL-DOMAINS.md](TOOL-DOMAINS.md); the
 machine-readable source is [surface.json](surface.json). Both are regenerated

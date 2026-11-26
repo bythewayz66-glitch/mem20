@@ -3,14 +3,9 @@ from __future__ import annotations
 
 __version__ = "1.0.0"
 
-# Re-export from all three subsystems
-from mem20schoolz import (
-    Kiln,
-    KilnError,
-    OpFailed,
-    EngineMissing,
-    ValidationFailed,
-)
+# The Kiln (Kiln, KilnError, OpFailed, EngineMissing, ValidationFailed) is the
+# native mem20kilnz AI 3D modeler, not part of schoolz — it lives in
+# mem20kilnz and is exposed by kilnz_tools.py. Do not re-export it here.
 from mem20schoolz.domain import (
     skill_level,
     mentor_match,
@@ -33,11 +28,6 @@ from mem20schoolz.domain import (
 )
 
 __all__ = [
-    "Kiln",
-    "KilnError",
-    "OpFailed",
-    "EngineMissing",
-    "ValidationFailed",
     "skill_level",
     "mentor_match",
     "evaluate_task",

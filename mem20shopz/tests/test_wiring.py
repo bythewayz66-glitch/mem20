@@ -22,7 +22,7 @@ from mem20shopz import wiring  # noqa: E402
 
 
 def test_every_catalog_group_maps_to_a_real_family():
-    """All five commercial groups resolve to a family the registry defines."""
+    """All six commercial groups resolve to a family the registry defines."""
     from mem20shopz import catalog
 
     for group in catalog.GROUPS:

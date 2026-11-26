@@ -53,14 +53,17 @@ log = logging.getLogger("mem20shopz.wiring")
 # mem20famz — which family of mem20 does this SKU actually buy?
 # ---------------------------------------------------------------------------
 
-#: SKU group -> the mem20famz family that delivers it. The shop's five catalog
-#: groups are commercial packaging; the family is the engineering truth.
+#: SKU group -> the mem20famz family that delivers it. The shop's six catalog
+#: groups are commercial packaging; the family is the engineering truth. A tier
+#: buys the mem20 platform at that level, so "tiers" maps to "platform" like
+#: "foundations" does.
 GROUP_FAMILY = {
     "foundations": "platform",
     "operations": "resilience",
     "intelligence": "memory-cognition",
     "creative": "production",
     "support": "human-team",
+    "tiers": "platform",
 }
 
 

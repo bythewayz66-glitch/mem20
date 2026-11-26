@@ -41,11 +41,11 @@ def client(shop_env):
 # --- catalog ---------------------------------------------------------------
 
 
-def test_five_catalog_groups_exist():
+def test_six_catalog_groups_exist():
     from mem20shopz import catalog
 
-    assert len(catalog.GROUPS) == 5
-    assert len({g["id"] for g in catalog.GROUPS}) == 5
+    assert len(catalog.GROUPS) == 6
+    assert len({g["id"] for g in catalog.GROUPS}) == 6
 
 
 def test_catalog_has_one_time_and_subscription_items():
@@ -64,12 +64,54 @@ def test_every_group_has_at_least_one_sku():
         assert group["count"] > 0, f"group {group['id']} is empty"
 
 
-def test_shipped_catalog_has_no_prices_configured():
-    """No price is invented, so nothing is sellable until real ones are added."""
+# The v3 house ladder, as shipped (docs/pricing/PRICING_DECISION_2026-11-25.md):
+# SKU id -> (tier name, amount_cents, live Stripe Price id).
+TIER_LADDER_CENTS = {
+    "team": ("Team", 600_000, "price_1UfvTjHgWvC5wL6JxxeNkxFH"),
+    "business": ("Business", 1_800_000, "price_1UfvTkHgWvC5wL6J0tn8EQWa"),
+    "scale": ("Scale", 3_600_000, "price_1UfvTqHgWvC5wL6Jbqef9C0K"),
+    "enterprise": ("Enterprise", 8_000_000, "price_1UfvTrHgWvC5wL6JVLhDzDyc"),
+}
+
+# The a-la-carte services. No document prices any of them, so all stay unpriced.
+A_LA_CARTE_IDS = [
+    "foundation-single", "fleet-starter", "hosting-monthly", "ops-audit",
+    "control-plane-setup", "oncall-monthly", "memory-tiering",
+    "agent-fleet-build", "intelligence-monthly", "asset-pipeline",
+    "game-vertical", "studio-monthly", "migration", "training",
+    "priority-support-monthly",
+]
+
+
+def test_tier_skus_carry_the_documented_ladder_prices():
+    """The v3 house ladder is shipped: four tier SKUs, exact ladder amounts."""
     from mem20shopz import catalog
 
-    assert catalog.is_configured() is False
-    assert catalog.summary()["configured"] == 0
+    for sku_id, (tier, cents, price_id) in TIER_LADDER_CENTS.items():
+        sku = catalog.get_sku(sku_id)
+        assert sku is not None, f"tier SKU {sku_id} is missing"
+        assert sku.tier == tier
+        assert sku.group == "tiers"
+        assert sku.configured is True
+        assert sku.amount_cents == cents
+        assert sku.price_id == price_id
+        assert sku.price_label() == f"${cents / 100:,.2f}"
+    assert catalog.summary()["configured"] == 4
+    assert catalog.is_configured() is True
+
+
+def test_a_la_carte_skus_stay_unpriced():
+    """No price is invented for the services: nothing documented prices them."""
+    from mem20shopz import catalog
+
+    assert len(A_LA_CARTE_IDS) == 15
+    for sku_id in A_LA_CARTE_IDS:
+        sku = catalog.get_sku(sku_id)
+        assert sku is not None, f"SKU {sku_id} is missing"
+        assert sku.configured is False
+        assert sku.amount_cents is None
+        assert sku.price_id == ""
+        assert "Stripe Price" in sku.unconfigured_reason()
 
 
 def test_unconfigured_sku_says_why():
@@ -219,15 +261,17 @@ def test_health_is_open(client):
 
 def test_catalog_endpoint_lists_groups(client):
     body = client.get("/api/catalog").json()
-    assert len(body["groups"]) == 5
-    assert body["summary"]["sellable"] is False
+    assert len(body["groups"]) == 6
+    assert body["summary"]["sellable"] is True
+    assert body["summary"]["configured"] == 4
+    assert body["summary"]["skus"] == 19
 
 
-def test_readiness_reports_why_it_cannot_sell(client):
+def test_readiness_reports_it_can_sell_now_tiers_are_priced(client):
     body = client.get("/api/readiness").json()
-    assert body["can_sell"] is False
-    assert body["catalog"]["configured"] == 0
-    assert body["blocking_reasons"]
+    assert body["can_sell"] is True
+    assert body["catalog"]["configured"] == 4
+    assert body["blocking_reasons"] == []
 
 
 def test_checkout_refuses_an_unconfigured_sku(client):

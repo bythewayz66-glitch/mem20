@@ -1,6 +1,10 @@
 {
   "_comment": [
-    "Prices are intentionally unset. A SKU becomes sellable only once BOTH",
+    "Four tier SKUs (team/business/scale/enterprise) ARE priced, from the v3",
+    "house ladder - see docs/pricing/PRICING_DECISION_2026-11-25.md. Each",
+    "carries a real Stripe Price (price_id) and the matching amount_cents.",
+    "The fifteen a-la-carte SKUs below stay unset on purpose: no documented",
+    "price exists for any of them. A SKU becomes sellable only once BOTH",
     "price_id (a real Stripe Price) and amount_cents are filled in - see",
     "catalog.py Sku.configured. Until then the storefront shows 'price not set'",
     "and checkout refuses with a reason. Nothing here guesses a price."
@@ -214,6 +218,66 @@
         "priority queue",
         "direct contact",
         "quarterly roadmap review"
+      ]
+    },
+    {
+      "id": "team",
+      "group": "tiers",
+      "tier": "Team",
+      "name": "Team",
+      "description": "Annual Team plan - the entry tier of mem20's documented pricing ladder. $6,000 per year, one annual term.",
+      "kind": "one_time",
+      "price_id": "price_1UfvTjHgWvC5wL6JxxeNkxFH",
+      "amount_cents": 600000,
+      "features": [
+        "one annual term, billed once per year",
+        "entry tier of the documented v3 house ladder",
+        "renews by repurchase, not auto-billing"
+      ]
+    },
+    {
+      "id": "business",
+      "group": "tiers",
+      "tier": "Business",
+      "name": "Business",
+      "description": "Annual Business plan - the second tier of mem20's documented pricing ladder. $18,000 per year, one annual term.",
+      "kind": "one_time",
+      "price_id": "price_1UfvTkHgWvC5wL6J0tn8EQWa",
+      "amount_cents": 1800000,
+      "features": [
+        "one annual term, billed once per year",
+        "second tier of the documented v3 house ladder",
+        "renews by repurchase, not auto-billing"
+      ]
+    },
+    {
+      "id": "scale",
+      "group": "tiers",
+      "tier": "Scale",
+      "name": "Scale",
+      "description": "Annual Scale plan - the third tier of mem20's documented pricing ladder. $36,000 per year, one annual term.",
+      "kind": "one_time",
+      "price_id": "price_1UfvTqHgWvC5wL6Jbqef9C0K",
+      "amount_cents": 3600000,
+      "features": [
+        "one annual term, billed once per year",
+        "third tier of the documented v3 house ladder",
+        "renews by repurchase, not auto-billing"
+      ]
+    },
+    {
+      "id": "enterprise",
+      "group": "tiers",
+      "tier": "Enterprise",
+      "name": "Enterprise",
+      "description": "Annual Enterprise plan - the top tier of mem20's documented pricing ladder. $80,000 per year, one annual term.",
+      "kind": "one_time",
+      "price_id": "price_1UfvTrHgWvC5wL6JVLhDzDyc",
+      "amount_cents": 8000000,
+      "features": [
+        "one annual term, billed once per year",
+        "top tier of the documented v3 house ladder",
+        "renews by repurchase, not auto-billing"
       ]
     }
   ]

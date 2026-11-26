@@ -80,10 +80,15 @@ real or dry?" is answerable without reading code.
 
 ## Catalog
 
-`mem20shopz/catalog.json` holds the SKUs across the five groups, one-time and
-subscription. Prices ship **unset**: a SKU is sellable only once both
-`price_id` and `amount_cents` are filled in. Until then the storefront shows
-"price not set" with the reason, and checkout returns 409. Nothing is guessed.
+`mem20shopz/catalog.json` holds the SKUs across the six groups, one-time and
+subscription. Four tier SKUs (`team`, `business`, `scale`, `enterprise`) are
+priced from the v3 house ladder — Team $6,000, Business $18,000, Scale
+$36,000, Enterprise $80,000 per year, each with a real live-mode Stripe Price
+(see `docs/pricing/PRICING_DECISION_2026-11-25.md`). The fifteen a-la-carte
+SKUs ship **unset**: no documented price exists for any of them, and a SKU is
+sellable only once both `price_id` and `amount_cents` are filled in. Until
+then the storefront shows "price not set" with the reason, and checkout
+returns 409. Nothing is guessed.
 
 ## Tests
 
@@ -92,7 +97,7 @@ python3 -m pytest tests -q
 ruff check mem20shopz tests
 ```
 
-42 tests. Webhook signatures are produced by the Stripe SDK's own
+58 tests. Webhook signatures are produced by the Stripe SDK's own
 `generate_signature_header`, so the tests exercise the same HMAC construction
 Stripe uses rather than a hand-rolled approximation. Coverage includes: valid
 signature, missing header, wrong secret, tampered body, garbage signature, stale

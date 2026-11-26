@@ -1,4 +1,4 @@
-"""The shop catalog: five groups, one-time and subscription pricing.
+"""The shop catalog: six groups, one-time and subscription pricing.
 
 Prices are data, and this module treats unpriced data as a hard error rather
 than a zero. A SKU with no configured amount cannot be bought, and the storefront
@@ -22,14 +22,18 @@ CATALOG_PATH = Path(__file__).with_name("catalog.json")
 ONE_TIME = "one_time"
 SUBSCRIPTION = "subscription"
 
-# The five catalog groups. Display-only metadata; the sellable items live under
-# "skus" in catalog.json.
+# The six catalog groups. Display-only metadata; the sellable items live under
+# "skus" in catalog.json. The "tiers" group holds the four annual plans of the
+# documented v3 house ladder (see docs/pricing/PRICING_DECISION_2026-11-25.md);
+# the other five groups are a-la-carte services, priced only when a real price
+# for them is documented.
 GROUPS = (
     {"id": "foundations", "title": "Foundations", "blurb": "Ship your first mem20 service."},
     {"id": "operations", "title": "Operations", "blurb": "Run and observe it in production."},
     {"id": "intelligence", "title": "Intelligence", "blurb": "Memory, cognition and agents."},
     {"id": "creative", "title": "Creative", "blurb": "3D, game and generative pipelines."},
     {"id": "support", "title": "Support", "blurb": "Hands-on help from the people who built it."},
+    {"id": "tiers", "title": "Annual Plans", "blurb": "The documented tier ladder, priced as published."},
 )
 
 
@@ -46,6 +50,7 @@ class Sku:
     kind: str = ONE_TIME
     price_id: str = ""
     amount_cents: int | None = None
+    tier: str = ""
     features: tuple[str, ...] = field(default_factory=tuple)
 
     @property
@@ -76,6 +81,7 @@ class Sku:
         return {
             "id": self.id,
             "group": self.group,
+            "tier": self.tier,
             "name": self.name,
             "description": self.description,
             "kind": self.kind,
@@ -120,6 +126,7 @@ def _load() -> list[Sku]:
                 kind=kind,
                 price_id=entry.get("price_id", "") or "",
                 amount_cents=amount,
+                tier=entry.get("tier", "") or "",
                 features=tuple(entry.get("features", [])),
             )
         )
@@ -135,7 +142,7 @@ def get_sku(sku_id: str) -> Sku | None:
 
 
 def groups() -> list[dict[str, Any]]:
-    """The five groups, each with its SKUs and how many are actually sellable."""
+    """The six groups, each with its SKUs and how many are actually sellable."""
     skus = all_skus()
     out: list[dict[str, Any]] = []
     for group in GROUPS:

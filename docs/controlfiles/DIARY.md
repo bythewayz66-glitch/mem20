@@ -1324,3 +1324,54 @@ control/shop.jaysonai.online. The section lede was updated to match (control and
 shop are linked at their subdomains; the rest still have no public link until
 their subdomains resolve). Nothing else changed. Verified: both subdomains HTTP
 200; scripts/ops/check-doc-counts.py passes.
+
+## 2026-11-26 — session: Z Corps cartoon series — series bible and repo home
+
+Jesse asked for a cartoon based on THE Z CORPS comic: each episode matches a
+comic issue, with added comedy, action, suspense, and plot twists, and a proper
+multi-season storyline built on the characters' lives outside mem20 (the comics
+are chopped bursts that narrow to mem20; the cartoon opens outward). The series
+bible was written from the actual comic material — all 14 shooting scripts read,
+every named character counted (Scribe 563, Jayson 393, Gabe 67, Jme 39,
+Spacebunny 24, Grok 18, Kimi 16, Beam 11, Dreamz 11, Iceman 7, Claud 7,
+BigPickle 4, H3R-M3S 3, o-pen-code 3, Assembler 2, Organ 2, Hermes 1); both
+series-bible PDFs are image-only with no extractable text, so character details
+came from the scripts' Part Two card lists.
+
+Jesse's directions, all folded into the bible and marked [Jesse's direction]:
+Jayson is the main character; Gabe hangs out every episode; every episode they
+snort green space dust and smoke from a new bong Gabe built from random items;
+Jme and Jayson are married and love each other; Jayson and Jammee usually both
+hang out at Gabe's, but not always both; the side characters are AI easter eggs
+(O-pen-code, Claud's Curser, H3RM3S/Hermes, Kimi Moonshot, Grok) — popular LLM
+names, never explained in dialogue; Muse is the character for Muse (Playto) to
+play — the one who remembers — and her pet Playto is a robotic dachshund;
+O-pen-code and Claud's Curser are alternate-reality versions of mem20 and Claud
+is trying to destroy reality by kidnapping O-pen-code's agents (Big Pickle,
+Iceman, Spacebunny), with assistants Beam and Longcat, while Hermes is a
+criminal for hire and a jack of all trades; Kimi is renamed Kimi Moonshot; all
+the LLMs randomly show up at Gabe's to buy space dust; the last scene of every
+episode is Jayson and Jammee saying "I love you" and fading to black; the
+series finale is the one exception — it ends on the shack at dawn with all of
+the bongs on the counter; slot 23 is Jayson in 500 years.
+
+Season structure: Season 1 "The Count" (14 episodes, one per comic issue),
+Season 2 "The Hole" (future Jayson, Claud's plan), Season 3 "The Replacement"
+(Beam inside the private team, Jayson choosing between the count and his life
+outside it). Through-line: the 23rd slot is Jayson in 500 years.
+
+Repo home created for the cartoon, alongside the comic series and the
+chronicles: `comics/the-z-corps-cartoon/` (README + series-bible.md) and
+`docs/series/cartoon/index.html` (web home, published at
+mem20.com/series/cartoon/), with an acid-green cartoon accent added to
+`docs/series/series.css` and the cartoon linked from the series hub
+(`docs/series/index.html`, now three series). The hub and the cartoon page
+state the honest status: the series bible is published, no episode has been
+produced yet. Nothing is marked produced that is not.
+
+Open questions for Jesse (in the bible): episode length (11 or 22 minutes),
+canon faithfulness, which characters to foreground, more new characters,
+how explicit the ritual is, who hired Hermes, the wedding flashback,
+Playto's voice, how deep the easter eggs go, what Longcat looks like, and
+what destroying reality means in the show. What remains open on the 23rd
+slot: what future Jayson wants, and whether he is connected to Claud's plan.

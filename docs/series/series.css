@@ -1,7 +1,7 @@
 /* mem20 series — shared design system
    Inherits the mem20.com palette so the series read as part of the product site,
-   not a bolted-on microsite. Two accents distinguish the two properties:
-   comic = amber/ink, chronicles = teal/blueprint. */
+   not a bolted-on microsite. Three accents distinguish the three properties:
+   comic = amber/ink, chronicles = teal/blueprint, cartoon = acid green. */
 
 :root{
   --bg:#070A0F; --bg-2:#0B1017; --surface:#101724; --surface-2:#141D2C; --surface-3:#1A2537;
@@ -11,6 +11,7 @@
   --radius:14px; --radius-sm:9px; --maxw:1180px;
   --comic:#F5B841; --comic-2:#E8734A;
   --chron:#46B8F5; --chron-2:#2FD4C4;
+  --cartoon:#CCFF00;
 }
 *{box-sizing:border-box;margin:0;padding:0}
 html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
@@ -94,6 +95,8 @@ footer{border-top:1px solid var(--line);padding:40px 0;background:var(--bg-2)}
 .sc-comic .go{color:var(--comic)}
 .sc-chron:hover{border-color:rgba(70,184,245,.55)}
 .sc-chron .go{color:var(--chron)}
+.sc-cartoon:hover{border-color:rgba(204,255,0,.55)}
+.sc-cartoon .go{color:var(--cartoon)}
 /* comic art: halftone + ink */
 .art-comic{background:
   radial-gradient(circle at 22% 30%,rgba(245,184,65,.30),transparent 55%),
@@ -111,10 +114,19 @@ footer{border-top:1px solid var(--line);padding:40px 0;background:var(--bg-2)}
   background-image:linear-gradient(rgba(70,184,245,.10) 1px,transparent 1px),
                    linear-gradient(90deg,rgba(70,184,245,.10) 1px,transparent 1px);
   background-size:26px 26px}
+/* cartoon art: acid green + newsprint grain */
+.art-cartoon{background:
+  radial-gradient(circle at 22% 30%,rgba(204,255,0,.30),transparent 55%),
+  radial-gradient(circle at 78% 72%,rgba(204,255,0,.14),transparent 58%),
+  repeating-radial-gradient(circle at 50% 50%,rgba(255,255,255,.055) 0 1px,transparent 1px 7px),
+  linear-gradient(160deg,#131A06,#0B1017 70%)}
+.art-cartoon::after{content:"";position:absolute;inset:0;
+  background:repeating-linear-gradient(115deg,rgba(0,0,0,.35) 0 2px,transparent 2px 9px);opacity:.5}
 .art-label{position:absolute;left:22px;bottom:18px;z-index:2;font-family:'Space Grotesk',sans-serif;
   font-weight:700;font-size:15px;letter-spacing:.02em}
 .art-comic .art-label{color:var(--comic)}
 .art-chron .art-label{color:var(--chron)}
+.art-cartoon .art-label{color:var(--cartoon)}
 
 /* ---------- series page hero ---------- */
 .s-hero{padding:64px 0 48px;position:relative;overflow:hidden}
@@ -126,6 +138,8 @@ footer{border-top:1px solid var(--line);padding:40px 0;background:var(--bg-2)}
   radial-gradient(ellipse at 85% 100%,rgba(232,115,74,.10),transparent 60%)}
 .chron-hero{background:radial-gradient(ellipse at 15% 0%,rgba(70,184,245,.13),transparent 60%),
   radial-gradient(ellipse at 85% 100%,rgba(47,212,196,.10),transparent 60%)}
+.cartoon-hero{background:radial-gradient(ellipse at 15% 0%,rgba(204,255,0,.10),transparent 60%),
+  radial-gradient(ellipse at 85% 100%,rgba(204,255,0,.06),transparent 60%)}
 
 /* ---------- issue / chapter list ---------- */
 .issue-list{display:grid;gap:14px}

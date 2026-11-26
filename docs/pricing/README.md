@@ -1,15 +1,20 @@
 # Pricing — `docs/pricing/`
 
-Entry point for the `docs/pricing/` documentation set. **7 tracked file(s).**
+Entry point for the `docs/pricing/` documentation set. **12 tracked file(s).**
 
 ## Contents
 
+- [`PRICING_DECISION_2026-11-25.md`](PRICING_DECISION_2026-11-25.md)
 - [`RECONCILIATION_NOTE.md`](RECONCILIATION_NOTE.md)
 - [`TIER_SHIPPING_AUDIT.md`](TIER_SHIPPING_AUDIT.md)
 - [`audit_acv_consistency.py`](audit_acv_consistency.py)
+- [`audit_pricing_docs.py`](audit_pricing_docs.py)
 - [`audit_tier_shipping.py`](audit_tier_shipping.py)
+- [`pricing_model_v4.py`](pricing_model_v4.py)
+- [`tier-price-derivation.csv`](tier-price-derivation.csv)
 - [`tier-sensitivity.csv`](tier-sensitivity.csv)
 - [`tier-sensitivity.md`](tier-sensitivity.md)
+- [`tier_price_derivation.py`](tier_price_derivation.py)
 - [`tier_sensitivity_model.py`](tier_sensitivity_model.py)
 
 ## Conventions

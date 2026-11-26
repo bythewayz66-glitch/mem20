@@ -30,7 +30,7 @@
     "domains": 135,
     "previous_tools": 311,
     "previous_domains": 39,
-    "authority": "live JSON-RPC tools/list, generated into docs/surface.json by scripts/surface_manifest.py; CI .github/workflows/mcp-verify.yml pins 506; docs/TOOL-DOMAINS.md carries 506/133",
+    "authority": "live JSON-RPC tools/list, generated into docs/surface.json by scripts/surface_manifest.py; CI .github/workflows/mcp-verify.yml pins 487 (stale, predates the 527/135 surface); docs/TOOL-DOMAINS.md carries 527/135",
     "asserted_on_every_run": true,
     "owner_of_migration": "Webpage Developer (P1)",
     "note": "311/39 and 257/26 are retired for the finance model. They survive only as stated prior values in the corrections register."

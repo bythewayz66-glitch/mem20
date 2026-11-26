@@ -1375,3 +1375,74 @@ how explicit the ritual is, who hired Hermes, the wedding flashback,
 Playto's voice, how deep the easter eggs go, what Longcat looks like, and
 what destroying reality means in the show. What remains open on the 23rd
 slot: what future Jayson wants, and whether he is connected to Claud's plan.
+
+## 2026-11-26 — session: Teamily first-job findings — doc drift fixes + GitHub issues
+
+Jesse's Teamily agents were given first jobs reviewing mem20; 12 of 22 jobs
+were sent and several agents delivered findings. Jesse asked to fix what can be
+fixed and file the rest as GitHub issues. Verified every finding against the
+live repo (remote main 30c2123, surface 527 tools / 135 domains) before acting.
+
+Fixed in this change (4 files, verified by recompute + check-doc-counts.py):
+- `docs/INDEX.md`: live surface 487/129 -> 527/135.
+- `docs/05-complete-tools-reference.md`: the doc contradicted itself — header
+  said 527/135, the summary TOTAL said 487/129, and an example target said
+  129 domains. Fixed the TOTAL to the table's own arithmetic (208 tools, 25
+  domain rows), fixed 6 row counts to match their listed tool names, fixed 5
+  section-header counts to match their tool entries (Core Memory 20->29,
+  Imagination 9->8, Thought Process 9->8, Cloud Storage 7->8, Marketing
+  7->9), fixed the example target to 135 domains, and qualified the header's
+  "Every tool" claim with the actual coverage (221 tools documented of 527).
+  The doc still covers only 26 of 135 domains — tracked as an issue.
+- `docs/pricing/README.md`: contents list was missing 5 files; now lists all
+  12 tracked files (was 7).
+- `docs/finance/inputs.json`: authority note said the CI workflow pins 506
+  and TOOL-DOMAINS carries 506/133; corrected to 487 (stale) and 527/135.
+  The tool_surface values (527/135) were already correct and untouched.
+
+Verified but NOT fixed here (filed as GitHub issues instead):
+- Backend Architect P0s: sys.path store import (`mcp/cognitive_tools.py:24`
+  inserts MEM20_STORE_PATH, default ~/.mem20/store, onto sys.path at import
+  time); unauthenticated 0.0.0.0 HTTP transport (health endpoint on
+  MEM20_HEALTH_PORT default 8080, and the Streamable HTTP MCP transport on
+  MEM20_MCP_PORT default 8082, both bound 0.0.0.0 with no auth); the wheel
+  ships no mcp/ directory (`pyproject.toml` packages only `memory_engine`).
+- AI Engineer: grounded/simulated separation — the guard itself is real
+  (remember() grounded-only, _assert_grounded firewall on the index write
+  paths, separate simulated partition, recall defaults grounded-only), but
+  no CI job executes the partition-guard tests
+  (`memory_engine/tests/test_grounded_firewall.py` and
+  `tests/test_memory_api.py::test_two_stores_do_not_leak_into_each_other`
+  carry no `unit` marker and are not in the CI green set), and bulk ingest
+  (`mem20benchmarkz/bulk_ingest.py`) defaults a missing epistemic_status to
+  "observed" when writing grounded ledger envelopes directly, bypassing the
+  trust lock remember() enforces.
+- Data Engineer drift: the two CI workflow pins (mcp-verify.yml
+  MEM20_EXPECTED_TOOLS "487", finance-model-drift.yml asserting 487/129)
+  are stale and cannot be fixed here — workflow files are blocked (the Muse
+  GitHub App lacks the workflows permission; the prepared files sit in local
+  commit ccace2a). The two drifted docs were fixed in this change.
+- Finance model: the derivation model (`docs/pricing/tier_price_derivation.py`)
+  derives 485 tools / 133 domains while the live surface is 527/135, so
+  `docs/pricing/audit_pricing_docs.py` FAILs (docs quote 272/274/258, the
+  model emits none of them). The pricing docs cannot be corrected to a true
+  number until the model derivation is fixed.
+- Launch copy: `docs/gtm/mem20-launch-copy-v5.md` is a dated 2026-11-01
+  snapshot verified at HEAD d99ab5d8 (272 tools); it was not rewritten in
+  place — it needs a v6 refresh against the live 527/135 surface.
+- Frontend Developer: delivered 5 homepage fixes, but the detail lives only
+  in the Teamily group chat (usage limit hit); the issue records the summary.
+- Git Workflow Master: verified main is strictly linear, HEAD 30c21233,
+  v4.0.0; the stuck workflow files need Jesse to grant the workflows
+  permission or apply them himself — tracked as an issue.
+- Minimal Change Engineer: tiles are NOT stale (0 lines, 0 files) — no
+  issue. Prompt Engineer: Teamily group has 45 agents, not 26 — a Teamily
+  fact, not a repo issue. Codebase Onboarding, AppSec, Product Researcher,
+  Analytics Reporter: still working when the limit hit; findings pending.
+
+Checks: `scripts/ops/check-doc-counts.py` PASS (527/135, 85 live docs, no
+retired band). The 05 reference recompute passes (25 rows sum to 208, no
+mismatched rows or section headers, no 487/129 left). `inputs.json` still
+valid JSON. Did not run `scripts/sweep-tool-counts.py --apply`: its dry run
+would rewrite dated chronicle titles ("270 tools, 27 domains") to live
+numbers, which would falsify historical records.

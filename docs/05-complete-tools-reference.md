@@ -1,6 +1,6 @@
 # mem20 MCP — Complete Tools Reference
 
-> Every tool, every feature, every command. 527 tools across 135 domains. Written for someone who has never seen mem20 before.
+> 527 tools across 135 domains. This reference documents 221 of those tools; the summary table at the end totals what is documented here. Written for someone who has never seen mem20 before.
 
 ---
 
@@ -23,7 +23,7 @@ The mem20 MCP server listens on stdio (stdin/stdout) using the Model Context Pro
 
 ---
 
-## Domain 1: Core Memory Tools (20 tools)
+## Domain 1: Core Memory Tools (29 tools)
 
 These are the foundation of mem20 — how you store, retrieve, and manage persistent memory.
 
@@ -798,7 +798,7 @@ These are mem20's reasoning and thought processing capabilities.
 
 ---
 
-## Domain 3: Imagination & Simulation Tools (9 tools)
+## Domain 3: Imagination & Simulation Tools (8 tools)
 
 These tools enable counterfactual reasoning, creative exploration, and simulation.
 
@@ -1518,7 +1518,7 @@ These manage project roadmaps, phases, and progress tracking.
 
 ---
 
-## Domain 8: Thought Process / Reasoning Paradigms (9 tools)
+## Domain 8: Thought Process / Reasoning Paradigms (8 tools)
 
 These provide different reasoning approaches — Tree-of-Thoughts, ReAct, Reflexion, Least-to-Most, Beam Search.
 
@@ -3321,7 +3321,7 @@ These are advanced memory operations beyond the core tools.
   "name": "prod_goal_set",
   "arguments</arg_key>{
     "goal": "Complete all mem20 documentation",
-    "target": "All 129 domains documented",
+    "target": "All 135 domains documented",
     "deadline": "2026-09-15"
   }
 }
@@ -3934,7 +3934,7 @@ These are advanced memory operations beyond the core tools.
 
 ---
 
-## Domain 22: Cloud Storage Tools (7 tools)
+## Domain 22: Cloud Storage Tools (8 tools)
 
 ### `cloudstorage_upload`
 
@@ -4097,7 +4097,7 @@ These are advanced memory operations beyond the core tools.
 
 ---
 
-## Domain 23: Marketing Tools (7 tools)
+## Domain 23: Marketing Tools (9 tools)
 
 ### `mkt_seo_analyze`
 
@@ -4651,7 +4651,7 @@ claude mcp add mem20 -- python3 /path/to/mem20/mcp/mcp_server.py
 
 | Domain | Count | Tools |
 |--------|-------|-------|
-| Core Memory | 20 | memory_store, memory_recall, memory_probe, memory_reason, memory_status, memory_contradict, memory_related, memory_feedback, memory_simulate_store, memory_promote, memory_list_simulated, memory_quarantine_simulated, memory_audit_contamination, memory_epistemic_veto, memory_pin_block, memory_unpin_block, memory_list_pinned_blocks, memory_get_pinned_block, memory_auto_consolidate, memory_cluster, memory_timeline, memory_triggers, memory_mood_tag, memory_stats, memory_graph_traverse, memory_export, memory_import, memory_context_window, memory_deduplicate |
+| Core Memory | 29 | memory_store, memory_recall, memory_probe, memory_reason, memory_status, memory_contradict, memory_related, memory_feedback, memory_simulate_store, memory_promote, memory_list_simulated, memory_quarantine_simulated, memory_audit_contamination, memory_epistemic_veto, memory_pin_block, memory_unpin_block, memory_list_pinned_blocks, memory_get_pinned_block, memory_auto_consolidate, memory_cluster, memory_timeline, memory_triggers, memory_mood_tag, memory_stats, memory_graph_traverse, memory_export, memory_import, memory_context_window, memory_deduplicate |
 | Cognitive | 6 | cog_process, cog_chain, cog_reason, cog_plan, cog_reflect, cog_working_memory |
 | Imagination | 8 | imagination_concept, imagination_visualize, imagination_prototype, imagination_critique, imagination_simulate, imagination_counterfactual, imagination_recombine, imagination_model |
 | World Model | 8 | world_model_add_variable, world_model_add_rule, world_model_simulate, world_model_predict, world_model_get_state, world_model_reset, world_model_record_prediction, world_model_resolve_prediction |
@@ -4668,12 +4668,12 @@ claude mcp add mem20 -- python3 /path/to/mem20/mcp/mcp_server.py
 | Communication | 9 | comm_send_email, comm_read_email, comm_slack_message, comm_discord_message, comm_telegram_message, comm_sms_send, comm_push_notify, comm_calendar_invite, comm_contact_manage |
 | Development | 9 | dev_execute_python, dev_execute_js, dev_execute_bash, dev_lint_python, dev_format_python, dev_search_code, dev_dependency_analyze, dev_run_tests, dev_api_test |
 | Search | 7 | search_web, search_local, search_knowledge_base, search_images, search_news, search_academic, search_code |
-| Design | 7 | design_image_generate, design_image_edit, design_color_palette, design_typography, design_svg_generate, design_figma, design_ui_component, design_asset_optimize |
+| Design | 8 | design_image_generate, design_image_edit, design_color_palette, design_typography, design_svg_generate, design_figma, design_ui_component, design_asset_optimize |
 | Productivity | 10 | prod_task_create, prod_task_list, prod_task_update, prod_note_create, prod_note_search, prod_time_track, prod_habit_track, prod_goal_set, prod_meeting_notes, prod_project_create |
-| Web Scraping | 9 | scrape_page, scrape_dynamic, scrape_api, scrape_rss, scrape_sitemap, scrape_structured, scrape_forms, scrape_submit_form |
+| Web Scraping | 8 | scrape_page, scrape_dynamic, scrape_api, scrape_rss, scrape_sitemap, scrape_structured, scrape_forms, scrape_submit_form |
 | Version Control | 11 | vcs_git_status, vcs_git_log, vcs_git_diff, vcs_git_commit, vcs_git_branch, vcs_git_remote, vcs_git_stash, vcs_git_tag, vcs_git_blame, vcs_github_issue, vcs_github_pr |
 | Cloud Services | 9 | cloud_aws_s3, cloud_aws_ec2, cloud_aws_lambda, cloud_gcp_storage, cloud_azure_blob, cloud_digitalocean_droplet, cloud_docker, cloud_heroku, cloud_k8s |
-| Cloud Storage | 7 | cloudstorage_upload, cloudstorage_download, cloudstorage_list, cloudstorage_delete, cloudstorage_copy, cloudstorage_sync, cloudstorage_metadata, cloudstorage_presigned_url |
-| Marketing | 7 | mkt_seo_analyze, mkt_social_post, mkt_social_analytics, mkt_email_campaign, mkt_content_generate, mkt_ab_test, mkt_analytics, mkt_competitor_analysis, mkt_hashtag_research |
-| Finance | 7 | fin_stock_quote, fin_crypto_price, fin_portfolio, fin_budget, fin_invoice, fin_tax_calc, fin_expense_track, fin_financial_news |
-| **TOTAL** | **487** | 129 domains |
+| Cloud Storage | 8 | cloudstorage_upload, cloudstorage_download, cloudstorage_list, cloudstorage_delete, cloudstorage_copy, cloudstorage_sync, cloudstorage_metadata, cloudstorage_presigned_url |
+| Marketing | 9 | mkt_seo_analyze, mkt_social_post, mkt_social_analytics, mkt_email_campaign, mkt_content_generate, mkt_ab_test, mkt_analytics, mkt_competitor_analysis, mkt_hashtag_research |
+| Finance | 8 | fin_stock_quote, fin_crypto_price, fin_portfolio, fin_budget, fin_invoice, fin_tax_calc, fin_expense_track, fin_financial_news |
+| **TOTAL** | **208** | 25 domains |

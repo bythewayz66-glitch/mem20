@@ -1268,3 +1268,49 @@ Workflow pins: mcp-verify.yml and finance-model-drift.yml re-pinned 506/133
 scope on the gh token, no workflows permission on the Muse GitHub App).
 The pin updates ride in the stuck workflow commit; the assistz/schoolz
 commit was reordered ahead of it and pushed.
+
+## 2026-11-25 — session: rebuild mem20.com homepage per the site audit
+
+Rebuilt `docs/index.html` on branch `docs/rebuild-homepage` (from `origin/main`
+ba6a712, so the blocked workflow commit ccace2a is not in the history). The
+audit (`~/workspace/your_files/mem20-com-audit.md`) found the page contradicting
+itself: meta/lede said 527/135 while the tiles, big numbers, cross-check line
+and Layer 03 still carried the pre-cleanup 487/129/19.
+
+What changed (all numbers from `docs/surface.json`, 527 tools / 135 domains /
+0 unwired):
+- Tiles 487->527, 129->135; surface big numbers 487->527, 129->135, 19 unwired->0;
+  cross-check line rewritten as a single gate-effective line ("cross-check 527 tools /
+  135 domains in both the live response and the AST catalog"); Layer 03 129->135.
+- Largest-domains table regenerated from `surface.json`, top 15 (memory 55,
+  cognitive 19, mem20schoolz 19 now #3, world 14, versioncontrol 11, then the
+  10s and 9s).
+- New "The estate" section: all 135 domains grouped into nine editorial families
+  (membership grounded in `docs/TOOL-DOMAINS.md`; verified by script — 132 domains
+  listed, plus the 3 below = 135; family tool counts sum 521 + 6 = 527). Includes
+  the honest taxonomy note: 156 package dirs (69 root + 87 candy/) is a different
+  count from 135 domains, not the same thing.
+- Honesty: the 3 subsystems with no `domain.py` anywhere
+  (mem20sensorymemoryingestz, mem20skillmemorytransferz,
+  mem20personalcognitivesearchz) are omitted from the families and named in an
+  "in development" note; the 19 empty stub files in `candy/mcp_tools/` are named
+  as not listed anywhere on the page. Nothing presented as working that is not.
+- New "Running products" section: controlz and shopz linked at their verified
+  live addresses (control.jaysonai.online, shop.jaysonai.online); chat, gateway,
+  gamez, kanban, messenger and irc listed as running on the server with ports
+  where verified, without guessed public links. mem20.com subdomains are not
+  linked — they do not resolve yet.
+- New "Docs & plans" section + nav/footer links: pricing, market, GTM launch
+  copy, launch deck, use cases, both tools references, dashboard, SDK.
+- Grounded-vs-simulated thesis kept untouched — the rebuild adds breadth, it
+  does not replace the core.
+- Self-maintenance: a small loader script fills the tiles, big numbers,
+  cross-check line and largest-domains table from `docs/surface.json` at load
+  time (hard-coded values remain as fallback); verified in Node against the real
+  surface.json (527/135/0, 15 rows). The cross-check line now states the live pin
+  on one line so the doc-count drift gate can catch it if it goes stale again —
+  that is why the old page slipped through: the stale numbers sat on lines with
+  no "tools"/"domains" word next to them, so the gate's patterns never fired.
+
+Verification: `scripts/surface_manifest.py --check` and
+`scripts/ops/check-doc-counts.py` run before push (see commit message / report).

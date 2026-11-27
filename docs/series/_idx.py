@@ -226,6 +226,7 @@ def hub(its, es):
       <a href="./" class="on">Series</a>
       <a href="comic/">The Comicbook Artist</a>
       <a href="chronicles/">Chronicles</a>
+      <a href="cartoon/">Z Corps</a>
     </div>
     <a class="btn btn-primary btn-sm" href="https://github.com/bythewayz66-glitch/mem20" target="_blank" rel="noopener">GitHub</a>
   </div>
@@ -234,11 +235,11 @@ def hub(its, es):
 <header class="hub-hero">
   <div class="wrap">
     <p class="eyebrow">mem20 &middot; creative properties</p>
-    <h1>Two series about <span class="hl">memory you can prove.</span></h1>
+    <h1>Three series about <span class="hl">memory you can prove.</span></h1>
     <p class="lede">
       mem20 ships one idea: grounded facts and simulated hypotheses never mix, and every retrieval
-      reports its own drift. These are the two creative properties that carry that idea to people who
-      will never read a benchmark table &mdash; one drawn, one written, both published here.
+      reports its own drift. These are the three creative properties that carry that idea to people who
+      will never read a benchmark table &mdash; one drawn, one written, one animated, all published here.
     </p>
 
     <div class="series-cards">
@@ -262,6 +263,18 @@ def hub(its, es):
           <span class="go">Read the chronicles &rarr;</span>
         </div>
       </a>
+
+      <a class="series-card sc-cartoon" href="cartoon/">
+        <div class="art art-cartoon"><span class="art-label">Z CORPS</span></div>
+        <div class="body">
+          <h2>Z Corps</h2>
+          <p>A cartoon. The comic's world, with the camera pulled out of the server cathedral to
+             follow the characters home &mdash; Jayson and Gabe at the water shack, a new bong every
+             episode, and a storyline that survives three seasons.
+             <strong>Episode 1</strong> is live &mdash; watch it now. Series bible published.</p>
+          <span class="go">Watch Episode 1 &rarr;</span>
+        </div>
+      </a>
     </div>
   </div>
 </header>
@@ -278,12 +291,14 @@ def hub(its, es):
         <tr><td>Comic feed</td><td class="mono">/series/data/comic-issues.json</td><td>Live &mdash; machine-readable</td></tr>
         <tr><td>Chronicles feed</td><td class="mono">/series/data/chronicles.json</td><td>Live &mdash; machine-readable</td></tr>
         <tr><td>Chronicles RSS</td><td class="mono">/series/chronicles/feed.xml</td><td>Live &mdash; subscribe</td></tr>
+        <tr><td>Cartoon home</td><td class="mono">/series/cartoon/</td><td>Live &mdash; Episode 1 watchable; series bible published</td></tr>
+        <tr><td>Cartoon series bible</td><td class="mono">comics/the-z-corps-cartoon/series-bible.md</td><td>Live &mdash; premise, characters, three-season storyline</td></tr>
       </tbody>
     </table>
   </div>
 </section>
 """ % (len(its), len(es), len(its), len(es)) + foot("mem20 series &middot; grounded and simulated never mix", 0)
 
-    return page("mem20 Series — The Comicbook Artist & Mem20-naration's Chronicles",
-                "The two creative properties of mem20: %d finished comic issues and %d origin-tagged chronicle installments." % (len(its), len(es)),
+    return page("mem20 Series — The Comicbook Artist, Mem20-naration's Chronicles & Z Corps",
+                "The three creative properties of mem20: %d finished comic issues, %d origin-tagged chronicle installments, and the Z Corps cartoon." % (len(its), len(es)),
                 "%s/series/" % SITE, "series.css", "analytics.js", body)

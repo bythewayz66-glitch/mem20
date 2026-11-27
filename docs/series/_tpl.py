@@ -49,6 +49,7 @@ FOOT = """<footer>
       <a href="{hub}">All series</a>
       <a href="{comic}">The Comicbook Artist</a>
       <a href="{chron}">Chronicles</a>
+      <a href="{toon}">Z Corps</a>
       <a href="https://mem20.com/">mem20.com</a>
     </div>
     <p class="foot-note">
@@ -74,7 +75,7 @@ def nav(kind, depth):
 
 def foot(note, depth):
     up = "../" * depth
-    return FOOT.format(hub=up or "./", comic=up + "comic/", chron=up + "chronicles/", note=note)
+    return FOOT.format(hub=up or "./", comic=up + "comic/", chron=up + "chronicles/", toon=up + "cartoon/", note=note)
 
 
 def page(title, desc, canon, css, js, body):

@@ -413,3 +413,6 @@ footer{background:var(--bg-2);border-top:1px solid var(--line);padding:var(--s-8
   .marquee-track{animation:none!important;transform:none!important}
   .marquee{overflow-x:auto}
 }
+@media (pointer:coarse){.icon-btn{width:44px;height:44px}.btn-sm{height:44px}.brand{min-height:44px;display:inline-flex;align-items:center}}
+@media (forced-colors:active){.dot{forced-color-adjust:none;box-sizing:border-box;background:transparent;border:1.5px solid CanvasText}.dot.ok{background:CanvasText}}
+@media (pointer:coarse){.logo{min-height:44px;display:inline-flex;align-items:center}.copy{min-height:44px;min-width:44px}.dock .x{width:44px;height:44px}}

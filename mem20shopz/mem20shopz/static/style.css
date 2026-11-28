@@ -364,3 +364,7 @@ html.js .reveal.is-in{opacity:1;transform:none}
   .marquee{overflow-x:auto}
   .runner{offset-distance:62%;opacity:1}
 }
+@media (pointer:coarse){.theme-btn{width:44px;height:44px}.btn-sm{min-height:44px}.brand{min-height:44px;display:inline-flex;align-items:center}}
+@media (forced-colors:active){.dot{forced-color-adjust:none;box-sizing:border-box;box-shadow:none;background:transparent;border:1.5px solid CanvasText}.dot.ok{background:CanvasText}}
+@media (pointer:coarse){.nav-link{min-height:44px;display:inline-flex;align-items:center}.faq summary{padding-block:11px}}
+@media (pointer:coarse){.theme-btn{flex:none;min-width:44px}.deal-closed{display:inline-flex;align-items:center;min-height:44px}.foot a{min-height:44px;display:inline-flex;align-items:center}}

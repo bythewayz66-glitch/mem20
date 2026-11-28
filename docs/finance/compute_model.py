@@ -132,12 +132,12 @@ def build(d):
         "on 6K/18K/36K/80K reconciles to 14,000 exactly")
 
     # --- Tool surface ----------------------------------------------------
-    if surf["tools"] != 487 or surf["domains"] != 129:
-        fail("tool surface must be the live 487/129, got %r/%r"
+    if surf["tools"] != 527 or surf["domains"] != 135:
+        fail("tool surface must be the live 527/135, got %r/%r"
              % (surf["tools"], surf["domains"]))
     log.append({
-        "item": "Tool surface (tools/domains)", "implied_by_model": "487 / 129",
-        "house_value": "487 / 129", "delta": 0, "delta_pct": 0.0, "unit": "count",
+        "item": "Tool surface (tools/domains)", "implied_by_model": "527 / 135",
+        "house_value": "527 / 135", "delta": 0, "delta_pct": 0.0, "unit": "count",
         "status": "RECONCILED",
         "note": "487/129 and 257/26 are retired; the finance model no longer depends on the "
                 "tool count for any revenue figure - it is carried as context only",

@@ -1,7 +1,7 @@
 services:
   mem20:
     build: .
-    image: mem20:2.1.0-rc2
+    image: mem20:4.0.0
     container_name: mem20
     restart: unless-stopped
     environment:

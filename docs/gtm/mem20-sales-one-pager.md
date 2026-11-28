@@ -70,7 +70,7 @@ At 120 accounts and a 4-quarter year, that is **30 net-new accounts per quarter*
 | Tier | Shape | Price (proposed) | What the buyer gets |
 |---|---|---|---|
 | **Free / OSS** | MIT, self-host, unlimited | $0 | Everything in the repo. This is the funnel, not a trial. |
-| **Supported** | Annual support + version-locked build | **$14,000/yr** (the blended ACV anchor) | Response SLAs, upgrade guidance, install hardening review |
+| **Supported** | Annual support + version-locked build | **No documented price — do not quote** ($14,000 is the blended ACV, never a price; see `docs/pricing/PRICING_DECISION_2026-11-25.md` §2) | Response SLAs, upgrade guidance, install hardening review |
 | **Compliance pack** | Supported + audit-evidence package | **proposed $28,000–$42,000/yr** | Written partition/audit evidence mapping for their model-risk file, plus a QBR cadence |
 | **Platform** | Multi-team / multi-VPC deployment | **proposed $56,000+/yr** | Deployment review, custom violation-class coverage, named engineer |
 

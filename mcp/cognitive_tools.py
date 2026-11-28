@@ -21,11 +21,49 @@ except ImportError:
     print("Error: mcp package not installed. Please install with: pip install mcp")
     sys.exit(1)
 
-sys.path.insert(0, os.environ.get("MEM20_STORE_PATH", os.path.expanduser("~/.mem20/store")))
+def _load_memory_engine():
+    """Load the memory engine by explicit file path, never via sys.path.
+
+    Issue #456: the old code put MEM20_STORE_PATH (a user-writable data
+    directory, default ~/.mem20/store) at sys.path[0] at import time, so any
+    .py file in the store shadowed stdlib/site-packages modules and executed
+    as code. The engine is repo code, not store data: load it by file
+    location (the mem20api.api._load_engine_by_path() precedent), falling
+    back to the store's own memory.py copy only on deployments that copied
+    it there. Registered as sys.modules["memory"], so later imports in this
+    file resolve from the cache. Data still lives under MEM20_STORE_PATH.
+    """
+    import importlib.util
+
+    _repo_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    _engine_file = os.path.join(_repo_root, "memory_engine", "memory.py")
+    for _name in ("memory", "memory_engine.memory"):
+        _existing = sys.modules.get(_name)
+        if _existing is not None and os.path.abspath(getattr(_existing, "__file__", "")) == os.path.abspath(_engine_file):
+            sys.modules.setdefault("memory", _existing)
+            return _existing
+    _store = os.environ.get("MEM20_STORE_PATH", os.path.expanduser("~/.mem20/store"))
+    for _path in (_engine_file, os.path.join(_store, "memory.py")):
+        if os.path.isfile(_path):
+            _spec = importlib.util.spec_from_file_location("memory", _path)
+            if _spec is None or _spec.loader is None:
+                continue
+            _mod = importlib.util.module_from_spec(_spec)
+            sys.modules["memory"] = _mod
+            _spec.loader.exec_module(_mod)
+            return _mod
+    raise ImportError("memory engine not found at " + _engine_file)
+
 try:
-    from memory import remember, recall, status as mem_status, rebuild_index, ledger_view
+    _memory_engine = _load_memory_engine()
+    remember = _memory_engine.remember
+    recall = _memory_engine.recall
+    mem_status = _memory_engine.status
+    rebuild_index = _memory_engine.rebuild_index
+    ledger_view = _memory_engine.ledger_view
+    _load_ledger = _memory_engine._load_ledger
     MEMORY_SYSTEM_AVAILABLE = True
-except ImportError:
+except Exception:
     MEMORY_SYSTEM_AVAILABLE = False
 
 

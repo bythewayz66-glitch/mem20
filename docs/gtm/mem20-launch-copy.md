@@ -2,11 +2,11 @@
 
 **Prepared by:** mem20 Content Creator · **Seat:** Brand & Positioning Strategist
 **Supersedes:** Launch Copy Pack v3 (`docs/gtm/mem20-launch-copy.md` @ `1264076698a0`, 2026-10-27 02:39 MDT)
-**Canonical repo:** https://github.com/bythewayz66-glitch/mem20 · **HEAD:** `1264076698a00878acc3adacf7bf1d51eea315cc` · `main` · **Version:** 3.0.0 · **License:** MIT · **Python:** >=3.10
-**Canonical public URL:** https://mem20.com/ · **Verified:** 2026-10-27 08:50 UTC · **Evidence:** `benchmarks/results/latest.md` + `docs/gtm/claim-ledger.md` in this repo
+**Canonical repo:** https://github.com/bythewayz66-glitch/mem20 · **HEAD:** `cb1b555589e69b9bfcf43201c53353909e454e97` · `main` · **Version:** 4.0.0 · **License:** Apache-2.0 · **Python:** >=3.10
+**Canonical public URL:** https://mem20.com/ · **Verified:** 2026-11-27 (live MCP handshake on jnet1) · **Evidence:** live `tools/list` + `docs/surface.json` + `benchmarks/results/latest.json`
 
 > **What changed from v3, and why it had to change.**
-> **The surface is 270 / 27, and 268 was never the total.** The live server registers **270 unique tool names across 27 domains**. The retired **268** was the *domain-only subtotal* — 268 domain tools across 27 domains, plus 2 server-infra tools (`job_status`, `job_wait`, registered in `mcp/server.py` outside the 27 domain mixins), equals 270. Publishing the subtotal as the total is how 268 got into copy; it is not a different measurement, it is a partial one. The **26** domain figure is retired too — the mixin count is **27** at this HEAD. **257** is the older, doubly-wrong count (a `memory_*` undercount plus 10 `lie_*` tools missing from every table).
+> **The surface is 527 tools across 135 domains, and 270 / 27 is now the retired snapshot.** A live MCP handshake at HEAD `8019c4f6` (2026-11-27, jnet1, `/root/.venv/bin/python` + `launcher.py`) returns **527 unique tool names** in a single `tools/list` page, and `docs/surface.json` (generated from that live surface) lists **135 domain names** whose counts sum to 527. The retired **270** was the total at HEAD `12640766`; **268** was its domain-only subtotal; **27** was its mixin count.
 > **Every performance claim is now a measured row plus its caveat.** v3 said hybrid scores 1.000 direct / 0.800 multi-hop / 0.000 adversarial. True, but it read as though hybrid were the only mode with a hole. **All three retrieval modes score 0.000 on the adversarial class** — hybrid, keyword *and* semantic, each on n=3. Copy that implies uniform strength is the claim that gets a launch pulled, so the full table ships instead of a highlight.
 > **The install line now works.** v3's install was `pip install -r requirements.txt` \u2192 `python mcp/mcp_server.py`. At this HEAD that **fails to boot**: `mcp/tools/a2a_tools.py` imports `aiohttp` at module scope and `aiohttp` is not in `requirements.txt` (verified in a clean interpreter: `ModuleNotFoundError: No module named 'aiohttp'`). One extra `pip install aiohttp` line is documented below until the manifest is fixed. Shipping a copy-paste install that raises on import is worse than shipping no install line.
 > **The public URL changed.** `bythewayz66-glitch.github.io/mem20/` now **301-redirects to `http://mem20.org/`, which returns 404**. The site is live and correct at **https://mem20.com/** (HTTP 200, 36,627 bytes, md5 `f82e7f31acf861810b5ea0bb40ea197e` — byte-identical to `docs/index.html` at this HEAD). v3's cited URL is dead as written; this pack cites the one that resolves.
@@ -34,7 +34,7 @@ Short alt (nav bars, meta descriptions, social bios):
 > Auditable agent memory. Grounded vs simulated, enforced at the storage layer — not asked for in a prompt.
 
 Feature line (pairs with either of the above; never used as a strength claim on its own):
-> 270 tools across 27 domains · MIT · Python 3.10+ · self-hosted · JSON-RPC 2.0 over stdio
+> 527 tools across 135 domains · Apache-2.0 · Python 3.10+ · self-hosted · JSON-RPC 2.0 over stdio
 
 ---
 

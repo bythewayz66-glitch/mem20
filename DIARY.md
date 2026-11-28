@@ -50,3 +50,14 @@ for it) -- no new generator was needed. Ran it to regenerate Surface.pm and
 updated the prose counts the guard test asserts (README.md, AUDIT.md,
 lib/Mem20/Version.pm POD, lib/Mem20/Client.pm POD). Evidence for the prior
 fix: 30fd99f6a6af1743f47d805e3d24f26f23f3eb5f
+
+## 2026-11-28 10:45 UTC — Z Corps cartoon card on the homepage (evidence for the card commit)
+
+The homepage now shows three series, not two: a Z Corps card (Property 03,
+animated) links to series/cartoon/ for Episode 1 "Chat Does Not Count"
+(22 min). The card commit changed docs/index.html (lede + third card) and
+docs/assets/mem20-ds.css (.series-strip 3 columns, .s-card.z violet
+variant). Verified live at https://mem20.com/ ("Three series, one thesis"
++ "Z Corps"). Caveat: the episode file the card links to is still the
+truncated 18 MB encode that cannot play; the verified 81 MB v2 cut swap is
+separate open work (Phase C). Evidence for the card commit: c6eef45678bc7b2fe9f80b2c25fd20b839450f6b

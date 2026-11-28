@@ -67,7 +67,7 @@ def create_session(
         payload["customer_email"] = customer_email
 
     try:
-        session = client.checkout.sessions.create(**payload)
+        session = client.checkout.sessions.create(payload)
     except Exception as exc:
         log.exception("stripe checkout session creation failed for %s", sku.id)
         raise CheckoutError(f"Stripe rejected the session: {type(exc).__name__}: {exc}") from exc

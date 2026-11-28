@@ -58,7 +58,7 @@ from typing import Any, Iterable, Sequence
 # names. That keeps the import identical whether the caller is pytest, the CLI,
 # or a plain ``python3`` from the repo root -- and it keeps the AST import names
 # the conformance gate counts.
-_REPO_ROOT = Path(__file__).resolve().parents[2]
+_REPO_ROOT = Path(__file__).resolve().parents[4]
 for _project in (
     "mem20ops",
     "mem20verify",

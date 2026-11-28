@@ -366,7 +366,7 @@ pre.code.is-typing::after{content:"▋";color:var(--grounded);animation:m20-blin
 .run .note{margin-top:var(--s-5)}
 
 /* ---------- two series ---------- */
-.series-strip{display:grid;grid-template-columns:1fr 1fr;gap:var(--s-5)}
+.series-strip{display:grid;grid-template-columns:1fr 1fr 1fr;gap:var(--s-5)}
 .s-card{display:flex;flex-direction:column;padding:0;overflow:hidden}
 .s-card .art{position:relative;height:180px;overflow:hidden;border-bottom:1px solid var(--line)}
 .s-card .art::before{content:"";position:absolute;inset:-12px;transition:transform 600ms var(--ease-out)}
@@ -376,10 +376,13 @@ pre.code.is-typing::after{content:"▋";color:var(--grounded);animation:m20-blin
 .s-card.c .art::after{content:"";position:absolute;left:24px;top:28px;width:46%;height:56%;border:4px solid #12142B;border-radius:4px;background:#FFF5DA;box-shadow:10px 10px 0 #12142B;transform:rotate(-3deg)}
 .s-card.h .art::before{background:linear-gradient(rgba(255,255,255,.12) 1px,transparent 1px) 0 0/24px 24px,linear-gradient(90deg,rgba(255,255,255,.12) 1px,transparent 1px) 0 0/24px 24px,linear-gradient(135deg,#0B3D63,#0E6E86 55%,#2FD4C4)}
 .s-card.h .art::after{content:"";position:absolute;right:30px;top:30px;width:110px;height:110px;border:2px solid rgba(255,255,255,.7);border-radius:50%;box-shadow:inset 0 0 0 18px rgba(255,255,255,.08),0 0 0 14px rgba(255,255,255,.06)}
+.s-card.z .art::before{background:radial-gradient(circle,rgba(255,255,255,.22) 1.6px,transparent 2px) 0 0/12px 12px,linear-gradient(135deg,#1E1B4B,#7C3AED 55%,#EC4899)}
+.s-card.z .art::after{content:"";position:absolute;left:50%;top:50%;width:0;height:0;margin:-34px 0 0 -24px;border-left:64px solid #FFF;border-top:34px solid transparent;border-bottom:34px solid transparent;filter:drop-shadow(0 4px 0 rgba(18,20,43,.45))}
 .s-card .sb{padding:var(--s-5)}
 .s-card .k{margin-bottom:var(--s-2)}
 .s-card.c .k{color:var(--simulated)}
 .s-card.h .k{color:var(--grounded)}
+.s-card.z .k{color:#B794F6}
 .s-card h3{font-size:1.5rem}
 .s-card p{margin-bottom:var(--s-4)}
 .s-card .go{font:600 .95rem var(--font-display);color:var(--grounded)}

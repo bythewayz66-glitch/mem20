@@ -68,18 +68,51 @@ for _project in (
 from mem20ops.clicheck import classify_naming
 from mem20verify.linters import noop_bodies
 
+def _parse_ts(value):
+    """Parse an ISO-8601 timestamp into an aware UTC datetime.
+
+    Mirrors the estate temporal interval contract: None means "open end"
+    and passes through; naive timestamps are refused; anything
+    unparseable raises ValueError, which check_validity reports as
+    "unparseable window or instant".
+    """
+    if value is None:
+        return None
+    if isinstance(value, datetime):
+        dt = value
+    else:
+        text = str(value).strip()
+        if not text:
+            return None
+        if text.endswith(("Z", "z")):
+            text = text[:-1] + "+00:00"
+        try:
+            dt = datetime.fromisoformat(text)
+        except ValueError as exc:
+            raise ValueError(f"not an ISO-8601 timestamp: {value!r}") from exc
+    if dt.tzinfo is None:
+        raise ValueError(f"timestamp has no timezone, refusing to guess: {value!r}")
+    return dt.astimezone(timezone.utc)
+
+
 def interval_contains(start, end, point) -> bool:
-    """Half-open [start, end); no candy dependency."""
-    if start is not None and point < start:
+    """Half-open [start, end); no candy dependency.
+
+    Bounds and instant are parsed as ISO-8601 timestamps, exactly as the
+    estate temporal interval did; unparseable input raises ValueError.
+    """
+    t = _parse_ts(point)
+    assert t is not None, "instant is required"
+    begin = _parse_ts(start)
+    if begin is not None and t < begin:
         return False
-    if end is not None and point >= end:
+    finish = _parse_ts(end)
+    if finish is not None and t >= finish:
         return False
     return True
 
 from mem20liez.gates import GateError, check_prohibited_uses
 from mem20ircz.filter import classify as classify_wire_line
-    contains as interval_contains,
-)
 
 #: Names that are structurally valid but carry no domain meaning. A tool called
 #: ``helper`` is a sign the surface is being used as a scratchpad.

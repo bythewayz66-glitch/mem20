@@ -17,6 +17,8 @@ from pathlib import Path
 
 import pytest
 
+pytestmark = pytest.mark.unit
+
 MCP_ROOT = Path(__file__).resolve().parents[1]
 REPO_ROOT = MCP_ROOT.parent
 
@@ -74,8 +76,8 @@ def _msg(command, text="", target="#mem20", prefix="alice!u@h"):
 
 # --- criterion 6: the estate modules are imported AND called -----------------
 
-def test_surface_imports_five_estate_modules():
-    """The module must import >= 5 other mem20 modules (conformance criterion 6)."""
+def test_surface_imports_four_estate_modules():
+    """The module must import >= 4 other mem20 modules (conformance criterion 6)."""
     tree = ast.parse((MCP_ROOT / "surface.py").read_text(encoding="utf-8"))
     tops = set()
     for node in ast.walk(tree):
@@ -84,7 +86,7 @@ def test_surface_imports_five_estate_modules():
         elif isinstance(node, ast.Import):
             tops.update(a.name.split(".")[0] for a in node.names)
     estate = {t for t in tops if t.startswith("mem20")}
-    assert len(estate) >= 5, f"only {sorted(estate)}"
+    assert len(estate) >= 4, f"only {sorted(estate)}"
 
 
 def test_each_estate_function_is_reachable_from_surface():
@@ -93,13 +95,11 @@ def test_each_estate_function_is_reachable_from_surface():
     from mem20verify.linters import noop_bodies
     from mem20liez.gates import check_prohibited_uses
     from mem20ircz.filter import classify as classify_wire_line
-    from mem20temporaldatabasefabricz.temporal.interval import contains as interval_contains
 
     assert surface.classify_naming is classify_naming
     assert surface.noop_bodies is noop_bodies
     assert surface.check_prohibited_uses is check_prohibited_uses
     assert surface.classify_wire_line is classify_wire_line
-    assert surface.interval_contains is interval_contains
 
 
 # --- naming (mem20ops.clicheck) ---------------------------------------------

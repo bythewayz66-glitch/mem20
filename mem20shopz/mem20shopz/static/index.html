@@ -2,10 +2,22 @@
 <html lang="en">
 <head>
 <meta charset="utf-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
 <title>mem20 shop</title>
 <meta name="description" content="Buy a working mem20 service. Prices and readiness are live, not promised." />
+<script>
+  (function () {
+    var d = document.documentElement;
+    d.classList.add("js");
+    try {
+      var t = localStorage.getItem("mem20-theme");
+      if (t === "light" || t === "dark") d.setAttribute("data-theme", t);
+    } catch (e) {}
+  })();
+</script>
 <link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600..800&family=Inter:wght@400..700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
 <link rel="stylesheet" href="/static/style.css" />
 </head>
 <body>
@@ -13,32 +25,73 @@
 
 <header class="topbar">
   <div class="wrap topbar-in">
-    <a class="brand" href="/">mem20<span class="brand-dim">.shop</span></a>
-    <div class="live" id="live" title="This page updates itself. No refresh needed.">
-      <span class="dot" id="dot"></span>
-      <span id="live-text">connecting…</span>
+    <a class="brand" href="/"><span class="mark" aria-hidden="true">m</span>mem20<span class="brand-dim">.shop</span></a>
+    <div class="nav-right">
+      <a class="nav-link" href="https://mem20.com/">mem20.com <span aria-hidden="true">↗</span></a>
+      <button class="theme-btn" id="theme-btn" type="button" aria-label="Toggle light or dark theme">
+        <svg class="i-sun" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><circle cx="12" cy="12" r="4.5" fill="currentColor"/><g stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 1.5v3M12 19.5v3M1.5 12h3M19.5 12h3M4.6 4.6l2.1 2.1M17.3 17.3l2.1 2.1M4.6 19.4l2.1-2.1M17.3 6.7l2.1-2.1"/></g></svg>
+        <svg class="i-moon" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path fill="currentColor" d="M20.5 14.6A8.5 8.5 0 0 1 9.4 3.5a8.5 8.5 0 1 0 11.1 11.1Z"/></svg>
+      </button>
+      <div class="live" id="live" title="This page updates itself. No refresh needed.">
+        <span class="dot" id="dot"></span>
+        <span id="live-text">connecting…</span>
+      </div>
     </div>
   </div>
 </header>
 
+<div class="deal">
+  <div class="wrap deal-in">
+    <a class="deal-open" href="#catalog">Shop open — products below are buyable</a>
+    <a class="deal-closed" href="#status">Not selling yet — see why ↓</a>
+  </div>
+</div>
+
 <main id="main" class="wrap">
 
   <section class="hero">
-    <h1>A working agent fleet, <span class="grad">not a promise of one.</span></h1>
-    <p class="lede">
-      Every product here is a real service with a real price, provisioned by a verified
-      payment webhook. If something is not buyable yet, this page says so plainly
-      instead of taking your money for it.
-    </p>
-    <div class="hero-actions">
-      <a class="btn btn-primary" href="#catalog">Browse the catalog</a>
-      <a class="btn" id="status-link" href="#status">Why can I not buy yet?</a>
+    <div class="hero-copy">
+      <h1>A working agent fleet, <span class="grad">not a promise of one.</span></h1>
+      <p class="lede">
+        Every product here is a real service with a real price, provisioned by a verified
+        payment webhook. If something is not buyable yet, this page says so plainly
+        instead of taking your money for it.
+      </p>
+      <div class="hero-actions">
+        <a class="btn btn-primary" href="#catalog">Browse the catalog</a>
+        <a class="btn" id="status-link" href="#status">Why can I not buy yet?</a>
+      </div>
     </div>
+    <figure class="pipe">
+      <figcaption class="kicker">FIG 01 · order pipeline</figcaption>
+      <svg viewBox="0 0 520 200" aria-hidden="true" focusable="false">
+        <defs>
+          <pattern id="hatch" width="8" height="8" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
+            <rect width="4" height="8" class="hatch-fill" />
+          </pattern>
+        </defs>
+        <path class="track" d="M65 80 H335" />
+        <path class="track track-last" d="M335 80 H455" />
+        <g class="st st1"><rect x="31" y="46" width="68" height="68" rx="16" /><text x="65" y="87">01</text></g>
+        <g class="st st2"><rect x="161" y="46" width="68" height="68" rx="16" /><text x="195" y="87">02</text></g>
+        <g class="st st3"><rect x="291" y="46" width="68" height="68" rx="16" /><text x="325" y="87">03</text></g>
+        <g class="st st4"><rect x="421" y="46" width="68" height="68" rx="16" /><text x="455" y="87">04</text></g>
+        <circle class="runner" r="7" />
+        <g class="lbl">
+          <text x="65" y="142">Checkout</text>
+          <text x="195" y="142">Stripe</text><text x="195" y="160">confirms</text>
+          <text x="325" y="142">Signed</text><text x="325" y="160">webhook</text>
+          <text x="455" y="142">Provisioning</text>
+          <text x="455" y="164" class="prov prov-on">✓ ready</text>
+          <text x="455" y="164" class="prov prov-off">~ dry-run</text>
+        </g>
+      </svg>
+    </figure>
   </section>
 
-  <section id="status" class="panel" aria-live="polite">
+  <section id="status" class="panel scoreboard reveal" aria-live="polite">
     <div class="panel-head">
-      <h2>Readiness</h2>
+      <div><p class="kicker">FIG 02</p><h2>Readiness</h2></div>
       <span class="pill" id="mode-pill">…</span>
     </div>
     <div id="status-body" class="status-body">
@@ -46,9 +99,9 @@
     </div>
   </section>
 
-  <div id="notice" class="notice" hidden></div>
+  <div id="notice" class="notice" role="status" hidden></div>
 
-  <section id="activity" class="panel" hidden>
+  <section id="activity" class="panel ticker" hidden>
     <div class="panel-head">
       <h2>Recent activity</h2>
       <span class="muted small" id="activity-total"></span>
@@ -57,8 +110,8 @@
   </section>
 
   <section id="catalog">
-    <div class="section-head">
-      <h2>The catalog</h2>
+    <div class="section-head reveal">
+      <div><p class="kicker">FIG 03</p><h2>The catalog</h2></div>
       <p class="muted" id="catalog-note">…</p>
     </div>
     <div id="groups" class="groups">
@@ -66,7 +119,8 @@
     </div>
   </section>
 
-  <section class="panel faq">
+  <section class="panel faq reveal">
+    <p class="kicker">FIG 04</p>
     <h2>Straight answers</h2>
     <details>
       <summary>What actually happens when I pay?</summary>
@@ -96,11 +150,24 @@
   </section>
 </main>
 
-<footer class="wrap foot">
-  <span class="muted small">mem20 — self-improving agent infrastructure.</span>
-  <a class="muted small" href="/api/health">health</a>
+<footer class="foot">
+  <div class="wrap foot-in">
+    <a class="brand" href="/"><span class="mark" aria-hidden="true">m</span>mem20<span class="brand-dim">.shop</span></a>
+    <span class="muted small">mem20 — self-improving agent infrastructure.</span>
+    <nav class="foot-nav" aria-label="Footer">
+      <a class="muted small" href="/api/health">health</a>
+      <a class="muted small" href="https://mem20.com/">mem20.com</a>
+      <a class="muted small" href="https://github.com/bythewayz66-glitch/mem20">GitHub</a>
+    </nav>
+  </div>
 </footer>
 
+<div class="mbar" id="mbar">
+  <span class="live mini" aria-hidden="true"><span class="dot" id="mbar-dot"></span><span id="mbar-text">connecting…</span></span>
+  <a class="btn btn-primary btn-sm" href="#catalog">Browse the catalog</a>
+</div>
+
 <script src="/static/app.js"></script>
+<script src="/static/fx.js"></script>
 </body>
 </html>

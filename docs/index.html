@@ -25,126 +25,101 @@
 <link rel="canonical" href="https://mem20.com/">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="series/series.css">
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600..800&family=Inter:wght@400..700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<script>
+/* before first paint: js flag (gates reveal), saved theme, and a passive note of how the surface.json fetch went (for the nav pill) */
+(function () {
+  var R = document.documentElement; R.classList.add('js');
+  try { var t = localStorage.getItem('mem20-theme'); if (t === 'light' || t === 'dark') R.dataset.theme = t; } catch (e) {}
+  var f = window.fetch;
+  if (f) window.fetch = function (u) {
+    var p = f.apply(window, arguments);
+    if (u === 'surface.json') window.__m20surface = p.then(function (r) { return r.ok && r.clone().json().then(function () { return true; }); }).catch(function () { return false; });
+    return p;
+  };
+})();
+</script>
+<link rel="stylesheet" href="assets/mem20-ds.css">
 <script src="series/analytics.js" defer></script>
 <!-- Privacy-respecting page analytics (issue #448). Cookie-free, no personal data,
      no cross-site tracking; honours DNT/GPC. Requires mem20.com to be registered
      as a site in the Plausible account for events to be recorded. -->
 <script defer data-domain="mem20.com" src="https://plausible.io/js/script.js"></script>
 <script src="gh-exp-001/per-visitor-randomization.js" defer></script>
-<style>
-  /* landing-page-only additions; everything else comes from series/series.css */
-  .hero{padding:88px 0 72px;position:relative;overflow:hidden}
-  .hero::before{content:"";position:absolute;inset:-40% 30% 40% -20%;background:radial-gradient(circle at 30% 40%,rgba(47,212,196,.13),transparent 62%);pointer-events:none}
-  .hero .wrap{position:relative}
-  .hero h1{font-size:clamp(34px,5.2vw,60px);max-width:19ch;margin-bottom:22px}
-  .hl{background:linear-gradient(100deg,var(--accent) 0%,var(--accent-2) 100%);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
-  .hero .lede{font-size:clamp(16px,1.6vw,19px);color:var(--text-2);max-width:64ch;margin-bottom:32px}
-  .cta{display:flex;flex-wrap:wrap;gap:12px;margin-bottom:44px}
-  .facts{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--line);border:1px solid var(--line);border-radius:var(--radius);overflow:hidden}
-  .fact{background:var(--surface);padding:20px 22px}
-  .fact .v{font-family:'Space Grotesk',sans-serif;font-size:22px;font-weight:600;letter-spacing:-.02em;margin-bottom:4px}
-  .fact .l{font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
-  .split{display:grid;grid-template-columns:1fr 1fr;gap:18px}
-  .panel{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:26px}
-  .panel.grounded{border-left:3px solid var(--accent)}
-  .panel.simulated{border-left:3px solid var(--amber)}
-  .panel h3{font-size:16px;margin-bottom:10px;display:flex;align-items:center;gap:9px}
-  .panel p{color:var(--text-2);font-size:14.5px}
-  .tag{font-family:'IBM Plex Mono',monospace;font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;padding:3px 8px;border-radius:5px}
-  .tag.g{color:var(--accent);background:rgba(47,212,196,.1);border:1px solid rgba(47,212,196,.35)}
-  .tag.s{color:var(--amber);background:var(--amber-bg);border:1px solid rgba(245,184,65,.35)}
-  .series-strip{display:grid;grid-template-columns:1fr 1fr;gap:18px}
-  .s-card{display:block;background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:26px;transition:border-color .18s ease,transform .18s ease}
-  .s-card:hover{border-color:var(--line-2);transform:translateY(-2px)}
-  .s-card .k{font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.12em;text-transform:uppercase;margin-bottom:10px}
-  .s-card.c .k{color:var(--comic)}
-  .s-card.h .k{color:var(--chron)}
-  .s-card h3{font-size:19px;margin-bottom:8px}
-  .s-card p{color:var(--text-2);font-size:14.5px;margin-bottom:14px}
-  .s-card .go{font-family:'Space Grotesk',sans-serif;font-size:13.5px;font-weight:600;color:var(--accent)}
-  pre.code{background:var(--bg-2);border:1px solid var(--line);border-radius:var(--radius-sm);padding:18px 20px;overflow-x:auto;font-size:13px;line-height:1.7;color:var(--text-2)}
-  pre.code .c{color:var(--muted)}
-  pre.code .a{color:var(--accent)}
-  .note{background:var(--surface);border:1px solid var(--line);border-left:3px solid var(--accent);border-radius:var(--radius-sm);padding:18px 22px;color:var(--text-2);font-size:14.5px}
-  .note strong{color:var(--text)}
-  /* live surface block */
-  .surface{display:grid;grid-template-columns:1.15fr 1fr;gap:18px;align-items:start}
-  .surface .big{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:26px}
-  .surface .big .row{display:flex;align-items:baseline;gap:14px;padding:14px 0;border-bottom:1px solid var(--line)}
-  .surface .big .row:last-child{border-bottom:0;padding-bottom:0}
-  .surface .big .row:first-child{padding-top:0}
-  .surface .n{font-family:'Space Grotesk',sans-serif;font-size:clamp(30px,4vw,42px);font-weight:600;letter-spacing:-.03em;line-height:1;color:var(--accent)}
-  .surface .n.alt{color:var(--accent-2)}
-  .surface .cap{font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
-  .surface .sub{font-size:13.5px;color:var(--text-2);margin-top:6px}
-  .surface table.spec td:last-child{text-align:right;font-family:'IBM Plex Mono',monospace;color:var(--text)}
-  .surface .tbl-wrap{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:8px 20px 14px}
-  .surface .tbl-wrap .hd{font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);padding:14px 0 6px}
-  .src{font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--muted);margin-top:16px}
-  .src a{color:var(--accent)}
-  .fam{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
-  .fam-card{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:22px}
-  .fam-card h3{font-size:16px;margin-bottom:8px}
-  .fam-card p{color:var(--text-2);font-size:13.5px;margin-bottom:14px}
-  .chips{display:flex;flex-wrap:wrap;gap:6px}
-  .chip{font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--text-2);background:var(--bg-2);border:1px solid var(--line);border-radius:5px;padding:3px 8px}
-  .docs-list{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
-  .docs-list a{display:block;background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:20px 22px}
-  .docs-list a:hover{border-color:var(--line-2)}
-  .docs-list .k{font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-bottom:8px}
-  .docs-list h3{font-size:16px;margin-bottom:6px}
-  .docs-list p{color:var(--text-2);font-size:13.5px}
-  @media(max-width:900px){
-    .fam,.docs-list{grid-template-columns:1fr}
-    .facts{grid-template-columns:repeat(2,1fr)}
-    .split,.series-strip,.surface{grid-template-columns:1fr}
-    .g3{grid-template-columns:1fr}
-  }
-</style>
+<script src="assets/mem20-fx.js" defer></script>
 </head>
 <body>
+<a class="skip" href="#main">Skip to content</a>
 
 <nav>
   <div class="wrap nav-in">
     <a class="logo" href="./"><span class="logo-mark">m</span> mem20</a>
-    <div class="nav-links">
+    <div class="nav-links" id="nav-links">
       <a href="./" class="on">Product</a>
       <a href="series/">Series</a>
       <a href="series/comic/">The Comicbook Artist</a>
       <a href="series/chronicles/">Chronicles</a>
       <a href="#docs">Docs</a>
+      <a href="https://shop.mem20.com">Shop ↗</a>
     </div>
-    <a class="btn btn-primary btn-sm" href="https://github.com/bythewayz66-glitch/mem20" target="_blank" rel="noopener">GitHub</a>
+    <div class="nav-tools">
+      <span class="live is-sim" id="surface-pill" role="status" title="Where the numbers on this page come from"><span class="dot hollow" aria-hidden="true"></span><span class="lt">static fallback</span></span>
+      <button class="icon-btn theme-toggle" type="button" aria-label="Light theme" aria-pressed="false"><svg class="moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M20 14.5A8 8 0 1 1 9.5 4a6.5 6.5 0 0 0 10.5 10.5z"/></svg><svg class="sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg></button>
+      <a class="btn btn-primary btn-sm" href="https://github.com/bythewayz66-glitch/mem20" target="_blank" rel="noopener">GitHub</a>
+      <button class="icon-btn burger" type="button" aria-expanded="false" aria-controls="nav-links" aria-label="Menu"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button>
+    </div>
   </div>
 </nav>
 
+<main id="main">
 <header class="hero">
-  <div class="wrap">
-    <p class="eyebrow">auditable agent memory</p>
-    <h1>A memory that can <span class="hl">prove what it knows.</span></h1>
-    <p class="lede">
-      mem20 gives an agent something it does not otherwise have: a memory that survives the session,
-      records <em>why</em> it believes what it believes, and can be audited after the fact.
-      Grounded facts and simulated hypotheses never mix — and every retrieval reports its own drift.
-    </p>
-    <div class="cta">
-      <a class="btn btn-primary" href="https://github.com/bythewayz66-glitch/mem20">Read the source</a>
-      <a class="btn btn-ghost" href="https://pypi.org/project/mem20-ce/">Install from PyPI</a>
-      <a class="btn btn-ghost" href="series/">See the series →</a>
+  <div class="wrap hero-grid">
+    <div class="hero-copy">
+      <p class="eyebrow badge">auditable agent memory</p>
+      <h1>A memory that can <span class="hl">prove what it knows.</span></h1>
+      <p class="lede">
+        mem20 gives an agent something it does not otherwise have: a memory that survives the session,
+        records <em>why</em> it believes what it believes, and can be audited after the fact.
+        Grounded facts and simulated hypotheses never mix — and every retrieval reports its own drift.
+      </p>
+      <div class="cta">
+        <a class="btn btn-primary" href="https://github.com/bythewayz66-glitch/mem20">Read the source</a>
+        <a class="btn btn-ghost" href="https://pypi.org/project/mem20-ce/">Install from PyPI</a>
+        <a class="btn btn-ghost" href="series/">See the series <span class="ar">→</span></a>
+      </div>
+    </div>
+    <div class="visual" aria-hidden="true">
+      <p class="fig">FIG 0.0 · memory lattice</p>
+      <canvas id="lattice"></canvas>
+      <div class="legend"><span class="lg-g">grounded</span><span class="lg-s">simulated</span></div>
     </div>
     <div class="facts">
-      <div class="fact"><div class="v"><span class="badge">v4.0.0</span></div><div class="l">Version</div></div>
-      <div class="fact"><div class="v" id="tile-tools">527</div><div class="l">MCP tools</div></div>
-      <div class="fact"><div class="v" id="tile-domains">135</div><div class="l">Domains</div></div>
-      <div class="fact"><div class="v">Apache-2.0</div><div class="l">License</div></div>
+      <div class="fact reveal" style="--i:0"><div class="v" data-stamp><span class="badge">v4.0.0</span></div><div class="l">Version</div></div>
+      <div class="fact reveal" style="--i:1"><div class="v" id="tile-tools" data-count>527</div><div class="l">MCP tools</div></div>
+      <div class="fact reveal" style="--i:2"><div class="v" id="tile-domains" data-count>135</div><div class="l">Domains</div></div>
+      <div class="fact reveal" style="--i:3"><div class="v" data-stamp>Apache-2.0</div><div class="l">License</div></div>
     </div>
   </div>
 </header>
 
+<div class="band" aria-label="Sample of domains">
+  <div class="marquee">
+    <div class="marquee-track">
+      <ul role="list" aria-label="Sample of domains"><li>memory</li><li>cognitive</li><li>world</li><li>lattice</li><li>temporal</li><li>verify</li><li>kilnz</li><li>braid</li><li>irc</li><li>agentz</li><li>crewz</li><li>a2a</li><li>blender</li><li>unity</li><li>finance</li><li>webhook</li><li>eventstream</li><li>search</li></ul>
+      <ul aria-hidden="true"><li>memory</li><li>cognitive</li><li>world</li><li>lattice</li><li>temporal</li><li>verify</li><li>kilnz</li><li>braid</li><li>irc</li><li>agentz</li><li>crewz</li><li>a2a</li><li>blender</li><li>unity</li><li>finance</li><li>webhook</li><li>eventstream</li><li>search</li></ul>
+    </div>
+  </div>
+  <div class="marquee rev" aria-hidden="true">
+    <div class="marquee-track">
+      <ul><li>mem20schoolz</li><li>versioncontrol</li><li>cloudservice</li><li>database</li><li>filesystem</li><li>lie</li><li>productivity</li><li>communication</li><li>dev</li><li>marketing</li><li>thought_process</li><li>dreamz</li><li>procedural</li><li>ops</li><li>roadmap</li><li>edgefleet</li><li>shapeshift</li><li>mem20simz</li></ul>
+      <ul><li>mem20schoolz</li><li>versioncontrol</li><li>cloudservice</li><li>database</li><li>filesystem</li><li>lie</li><li>productivity</li><li>communication</li><li>dev</li><li>marketing</li><li>thought_process</li><li>dreamz</li><li>procedural</li><li>ops</li><li>roadmap</li><li>edgefleet</li><li>shapeshift</li><li>mem20simz</li></ul>
+    </div>
+  </div>
+</div>
+
 <section>
   <div class="wrap">
+    <p class="fig">FIG 01</p>
     <h2 class="sec">The one rule</h2>
     <p class="sec-lede">
       Most agent memory is a single undifferentiated pile: a guess and a fact look identical once they
@@ -152,13 +127,16 @@
       retrieval, summarisation and time.
     </p>
     <div class="split">
-      <div class="panel grounded">
+      <div class="panel grounded reveal">
+        <span class="glyph" aria-hidden="true">✓</span>
         <h3><span class="tag g">grounded</span> What was observed</h3>
         <p>Written from a real event, a real document, a real tool result. Carries its provenance and
            can be re-checked against the source. This is the only class of memory mem20 will assert
            as true.</p>
       </div>
-      <div class="panel simulated">
+      <div class="seam" aria-hidden="true"></div>
+      <div class="panel simulated reveal" style="--i:2">
+        <span class="glyph" aria-hidden="true">~</span>
         <h3><span class="tag s">simulated</span> What was inferred</h3>
         <p>Written by a model reasoning about what might be the case. Useful, and never presented as
            fact. It stays labelled, so a later reader — human or agent — can tell which is which.</p>
@@ -169,6 +147,7 @@
 
 <section>
   <div class="wrap">
+    <p class="fig">FIG 02</p>
     <h2 class="sec">The surface, measured</h2>
     <p class="sec-lede">
       The MCP server registers <strong>527 tools across 135 domains</strong>. That is not a marketing
@@ -178,30 +157,30 @@
       reports cannot drift apart.
     </p>
     <div class="surface">
-      <div class="big">
+      <div class="big reveal">
         <div class="row">
-          <div class="n" id="big-tools">527</div>
+          <div class="n" id="big-tools" data-count>527</div>
           <div>
             <div class="cap">MCP tools</div>
             <div class="sub">Registered on the server and reachable over stdio JSON-RPC 2.0.</div>
           </div>
         </div>
         <div class="row">
-          <div class="n alt" id="big-domains">135</div>
+          <div class="n alt" id="big-domains" data-count>135</div>
           <div>
             <div class="cap">Domains</div>
             <div class="sub">Independently packaged capability modules, each with its own tests.</div>
           </div>
         </div>
         <div class="row">
-          <div class="n" style="color:var(--amber)" id="big-unwired">0</div>
+          <div class="n sim" id="big-unwired" data-count>0</div>
           <div>
             <div class="cap">Unwired tools</div>
             <div class="sub">No tool is registered without a domain surface. The count is zero, published, not hidden.</div>
           </div>
         </div>
       </div>
-      <div class="tbl-wrap">
+      <div class="tbl-wrap reveal" style="--i:1">
         <div class="hd">Largest domains</div>
         <table class="spec">
           <thead>
@@ -228,31 +207,38 @@
       </div>
     </div>
     <p class="src">
+      <span class="stamp" aria-hidden="true">✓</span><span>
       Source of truth: <a href="https://github.com/bythewayz66-glitch/mem20/blob/main/docs/surface.json">docs/surface.json</a>
       — generated from <span class="mono">tools/list</span>; <span id="crosscheck">cross-check 527 tools / 135 domains in both the live response and the AST catalog</span>,
       with no tool present in one catalog and missing from the other.
+      </span>
     </p>
   </div>
 </section>
 
 <section>
   <div class="wrap">
+    <p class="fig">FIG 03</p>
     <h2 class="sec">Three layers, in dependency order</h2>
     <p class="sec-lede">A durable substrate, a protocol surface, and a large estate of independently packaged capability modules.</p>
-    <div class="grid g3">
-      <div class="card">
+    <div class="grid g3 layers reveal">
+      <svg class="wire" viewBox="0 0 100 12" preserveAspectRatio="none" aria-hidden="true"><path class="dash" d="M2 6H98" vector-effect="non-scaling-stroke"/><path class="solid" d="M2 6H98" pathLength="1" vector-effect="non-scaling-stroke"/></svg>
+      <div class="card reveal" style="--i:1">
+        <span class="num" aria-hidden="true">01</span>
         <span class="k">Layer 01</span>
         <h3>Memory engine</h3>
         <p>Global memory, ledger and vector store. The durable substrate — everything else is a view
            onto it.</p>
       </div>
-      <div class="card">
+      <div class="card reveal" style="--i:3">
+        <span class="num" aria-hidden="true">02</span>
         <span class="k">Layer 02</span>
         <h3>MCP server</h3>
         <p>Exposes the engine and the wider estate as 527 MCP tools over stdio, with an HTTP
            health/metrics endpoint.</p>
       </div>
-      <div class="card">
+      <div class="card reveal" style="--i:5">
+        <span class="num" aria-hidden="true">03</span>
         <span class="k">Layer 03</span>
         <h3>Subsystems</h3>
         <p>135 domains of independently packaged capability, each with its own tool module
@@ -264,60 +250,67 @@
 
 <section>
   <div class="wrap">
+    <p class="fig">FIG 04</p>
     <h2 class="sec">The estate</h2>
     <p class="sec-lede">
       The memory engine is the core, not the whole product. The 135 domains group into nine families —
       every domain is listed below, grouped editorially; the membership comes from
       <span class="mono">docs/TOOL-DOMAINS.md</span>.
     </p>
+    <div class="estate-tools" hidden>
+      <div class="filters" role="group" aria-label="Filter families"></div>
+      <label class="search"><span class="sr-only">Search domains</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg><input type="search" placeholder="Search domains" autocomplete="off" spellcheck="false"></label>
+      <p id="estate-status" class="sr-only" aria-live="polite"></p>
+    </div>
     <div class="fam">
-      <div class="fam-card">
+      <div class="fam-card fx-card">
         <h3>Memory &amp; cognition</h3>
         <p>The core thesis: grounded facts and simulated hypotheses, kept apart at the storage layer, plus the world-model, reasoning and verification around them.</p>
         <div class="chips"><span class="chip">memory</span><span class="chip">memory_engine</span><span class="chip">cognitive</span><span class="chip">thought_process</span><span class="chip">world</span><span class="chip">lie</span><span class="chip">dreamz</span><span class="chip">lattice</span><span class="chip">temporal</span><span class="chip">verify</span><span class="chip">procedural</span><span class="chip">mem20predictiverecallenginez</span><span class="chip">mem20counterfactualmemorysimulatorz</span><span class="chip">mem20contextcompressionforgez</span></div>
       </div>
-      <div class="fam-card">
+      <div class="fam-card fx-card">
         <h3>Agents &amp; crews</h3>
         <p>The agents themselves: single agents, crews, agent-to-agent protocol, and the assistants that work alongside them.</p>
         <div class="chips"><span class="chip">agentz</span><span class="chip">crewz</span><span class="chip">a2a</span><span class="chip">corez</span><span class="chip">mem20assistz</span><span class="chip">mem20selfz</span><span class="chip">mem20twinz</span><span class="chip">toolchest</span><span class="chip">mem20styleguideagentz</span><span class="chip">mem20visualagentblackboardz</span><span class="chip">mem20collectivemodelintelligencez</span><span class="chip">mem20specialistmodelforgez</span><span class="chip">mem20autonomousworkcellsz</span><span class="chip">mem20personalmodelevolutionz</span></div>
       </div>
-      <div class="fam-card">
+      <div class="fam-card fx-card">
         <h3>3D &amp; creative</h3>
         <p>The native AI 3D modeler Kiln, Blender and Unity bridges, design tooling, and the audio, studio and animation pipelines.</p>
         <div class="chips"><span class="chip">kilnz</span><span class="chip">blender</span><span class="chip">unity</span><span class="chip">design</span><span class="chip">mem20audiovoiceandmusicpipelinez</span><span class="chip">mem20assetremixstudioz</span><span class="chip">mem20studioz</span><span class="chip">mem20rigginganimationandmotionpipelinez</span><span class="chip">mem20dynamicnarrativeenginez</span><span class="chip">mem20realitytosoftwarecompilerz</span><span class="chip">mem20spatialcommanduniversez</span><span class="chip">mem20visualdataflowcomposerz</span></div>
       </div>
-      <div class="fam-card">
+      <div class="fam-card fx-card">
         <h3>Learning</h3>
         <p>Courses, exams, hash-verified credentials, mentors, skill levels and progression — the schoolz training and certification surface.</p>
         <div class="chips"><span class="chip">mem20schoolz</span><span class="chip">mem20skillbasedprogressionbrainz</span><span class="chip">mem20dynamicskillgraphz</span><span class="chip">mem20communitychallengeenginez</span><span class="chip">mem20remoteexperimentlabz</span><span class="chip">mem20syntheticevaluatorarenaz</span><span class="chip">mem20playermotivationtwinz</span></div>
       </div>
-      <div class="fam-card">
+      <div class="fam-card fx-card">
         <h3>Commerce &amp; finance</h3>
         <p>Selling, pricing and money: deal desks, sales labs, business-model simulators, revenue hunting, and the customer lifecycle.</p>
         <div class="chips"><span class="chip">finance</span><span class="chip">marketing</span><span class="chip">mem20autonomousdealdeskz</span><span class="chip">mem20autonomousmicrosaasfoundryz</span><span class="chip">mem20autonomoussaleslaboratoryz</span><span class="chip">mem20autonomoussoftwarefoundryz</span><span class="chip">mem20businessmodelsimulatorz</span><span class="chip">mem20productledgrowthsimulatorz</span><span class="chip">mem20revenueleakhunterz</span><span class="chip">mem20uniteconomicsautopilotz</span><span class="chip">mem20offerassemblyfabricz</span><span class="chip">mem20offergenomeenginez</span><span class="chip">mem20opportunityradarz</span><span class="chip">mem20servicebundlingenginez</span><span class="chip">mem20customerlifecycleenginez</span><span class="chip">mem20customerdigitaltwinlabz</span><span class="chip">mem20crossproductloyaltygraphz</span><span class="chip">mem20realtimebusinesstwinz</span><span class="chip">mem20compoundingproductecosystemz</span><span class="chip">mem20resourceexchangemarketz</span><span class="chip">mem20realworldimpactrewardsz</span><span class="chip">mem20rewardforgez</span></div>
       </div>
-      <div class="fam-card">
+      <div class="fam-card fx-card">
         <h3>Control &amp; ops</h3>
         <p>Keeping the estate running: scheduling, recovery, self-tuning, identity, secure compute, and the planners that orchestrate it all.</p>
         <div class="chips"><span class="chip">ops</span><span class="chip">roadmap</span><span class="chip">job</span><span class="chip">productivity</span><span class="chip">mem20autonomousrecoverydirectorz</span><span class="chip">mem20autonomoustrafficcontrollerz</span><span class="chip">mem20batteryawareagentschedulerz</span><span class="chip">mem20roamingworkloadschedulerz</span><span class="chip">mem20selfoptimizingkernelz</span><span class="chip">mem20selftuningresourcegovernorz</span><span class="chip">mem20runtimecompatibilityenginez</span><span class="chip">mem20runtimepromptoptimizerz</span><span class="chip">mem20secretslessworkloadidentityz</span><span class="chip">mem20securecomputecapsulesz</span><span class="chip">mem20zerotouchnodeswarmz</span><span class="chip">mem20zerodowntimemigrationbrainz</span><span class="chip">mem20deterministicconfigurationgraphz</span><span class="chip">mem20dynamicphasereplannerz</span><span class="chip">mem20milestoneriskpredictorz</span><span class="chip">mem20prioritycollisionresolverz</span><span class="chip">mem20speculativeworkflowenginez</span><span class="chip">mem20productionplanningandtaskorchestrationpipelinez</span><span class="chip">mem20personalautomationcanvasz</span><span class="chip">mem20personalworkflowtwinz</span><span class="chip">mem20selfhealingplansz</span><span class="chip">mem20datalocalityoptimizerz</span><span class="chip">mem20devicecapabilitycompilerz</span><span class="chip">mem20universalhealthnervoussystemz</span><span class="chip">mem20planetarybatchfabricz</span><span class="chip">mem20realtimeeventautopilotz</span><span class="chip">mem20causalroutingbrainz</span><span class="chip">mem20protocolautodiscoveryenginez</span><span class="chip">mem20universalintegrationcompilerz</span></div>
       </div>
-      <div class="fam-card">
+      <div class="fam-card fx-card">
         <h3>Communication</h3>
         <p>Talking to people and to other systems: chat primitives, IRC, webhooks, event streams, and collaboration capsules.</p>
         <div class="chips"><span class="chip">communication</span><span class="chip">irc</span><span class="chip">webhook</span><span class="chip">eventstream</span><span class="chip">mem20ambientteamradioz</span><span class="chip">mem20asynccollaborationcapsulesz</span><span class="chip">mem20crdtcollaborationenginez</span><span class="chip">mem20realtimeteampresencez</span></div>
       </div>
-      <div class="fam-card">
+      <div class="fam-card fx-card">
         <h3>Games &amp; simulation</h3>
         <p>Quests, rewards, player models, and the simulators used to try a world before committing to it.</p>
         <div class="chips"><span class="chip">mem20dynamicquestrewardcomposerz</span><span class="chip">mem20simz</span><span class="chip">mem20outcomesimulationlabz</span><span class="chip">mem20architecturesimulationsandboxz</span></div>
       </div>
-      <div class="fam-card">
+      <div class="fam-card fx-card">
         <h3>Infrastructure</h3>
         <p>The substrate everything else stands on: storage, version control, cloud, search, scraping, and the protocol surface.</p>
         <div class="chips"><span class="chip">cloudservice</span><span class="chip">cloudstorage</span><span class="chip">database</span><span class="chip">filesystem</span><span class="chip">versioncontrol</span><span class="chip">dev</span><span class="chip">edgefleet</span><span class="chip">search</span><span class="chip">webscraping</span><span class="chip">braid</span><span class="chip">integration</span><span class="chip">shapeshift</span><span class="chip">mem20alternativedatabaseplaygroundz</span><span class="chip">mem20crossplatformmicrokernelz</span><span class="chip">mem20pipelinez</span><span class="chip">mem20ambientdevicecompanionz</span><span class="chip">rm052</span><span class="chip">rm239</span></div>
       </div>
     </div>
-    <p class="note" style="margin-top:22px">
+    <div class="notes">
+    <p class="note">
       <strong>Two different counts.</strong> The estate is also 156 package directories
       (69 at the repo root, 87 in <span class="mono">candy/</span>). That is a different taxonomy
       from the 135 domains above — domain names and package-directory names are not one-to-one
@@ -326,21 +319,23 @@
       <span class="mono">mem20*</span> domains are tool modules whose subsystem lives in
       <span class="mono">candy/absorbed/</span>. Do not read 135 and 156 as the same thing.
     </p>
-    <p class="note" style="margin-top:18px">
+    <p class="note is-sim">
       <strong>In development, not working offerings.</strong> Three domains —
-      <span class="mono">mem20sensorymemoryingestz</span>,
-      <span class="mono">mem20skillmemorytransferz</span> and
-      <span class="mono">mem20personalcognitivesearchz</span> — have tools registered on the
+      <span class="mono chip s">mem20sensorymemoryingestz</span>,
+      <span class="mono chip s">mem20skillmemorytransferz</span> and
+      <span class="mono chip s">mem20personalcognitivesearchz</span> — have tools registered on the
       server but no subsystem implementation behind them yet (no <span class="mono">domain.py</span>
       anywhere in the tree), so their status checks cannot succeed; they are left out of the
       families above on purpose. A further 19 capability areas exist only as empty stub files
       in <span class="mono">candy/mcp_tools/</span> and are not listed anywhere on this page.
     </p>
+    </div>
   </div>
 </section>
 
 <section>
   <div class="wrap">
+    <p class="fig">FIG 05</p>
     <h2 class="sec">Running products</h2>
     <p class="sec-lede">
       These frontends are live today, running on the mem20 server. The control plane and the shop
@@ -348,48 +343,72 @@
       the same server and their public links move to <span class="mono">mem20.com</span> subdomains
       once that setup lands — no subdomain is linked here until it resolves.
     </p>
-    <div class="grid g3">
-      <div class="card">
-        <span class="k">Live</span>
+    <div class="lobby">
+      <div class="card tile reveal" style="--i:0">
+        <div class="tb">
+        <span class="k badge live">Live</span>
         <h3>Control plane</h3>
         <p>mem20controlz — the control plane frontend, live and answering on port 8890.</p>
-        <p><a href="https://control.mem20.com">control.mem20.com →</a></p>
+        <p><a class="btn btn-sm btn-ghost" href="https://control.mem20.com">control.mem20.com →</a></p>
+        </div>
+        <div class="tile-facts" aria-hidden="true"><span class="pt">port 8890</span><span>mem20controlz</span></div>
       </div>
-      <div class="card">
-        <span class="k">Live</span>
+      <div class="card tile reveal" style="--i:1">
+        <div class="tb">
+        <span class="k badge live">Live</span>
         <h3>Shop</h3>
         <p>mem20shopz — the store frontend, live and answering on port 8891.</p>
-        <p><a href="https://shop.mem20.com">shop.mem20.com →</a></p>
+        <p><a class="btn btn-sm btn-ghost" href="https://shop.mem20.com">shop.mem20.com →</a></p>
+        </div>
+        <div class="tile-facts" aria-hidden="true"><span class="pt">port 8891</span><span>mem20shopz</span></div>
       </div>
-      <div class="card">
-        <span class="k">Live</span>
+      <div class="card tile reveal" style="--i:2">
+        <div class="tb">
+        <span class="k badge live">Live</span>
         <h3>Chat</h3>
         <p>mem20-chat — live on the server on port 3000.</p>
+        </div>
+        <div class="tile-facts" aria-hidden="true"><span class="pt">port 3000</span><span>mem20-chat</span></div>
       </div>
-      <div class="card">
-        <span class="k">Live</span>
+      <div class="card tile reveal" style="--i:3">
+        <div class="tb">
+        <span class="k badge live">Live</span>
         <h3>Gateway</h3>
         <p>mem20-gateway — the API gateway, live on the server on port 4000.</p>
+        </div>
+        <div class="tile-facts" aria-hidden="true"><span class="pt">port 4000</span><span>mem20-gateway</span></div>
       </div>
-      <div class="card">
-        <span class="k">Live</span>
+      <div class="card tile reveal" style="--i:0">
+        <div class="tb">
+        <span class="k badge live">Live</span>
         <h3>Gamez</h3>
         <p>mem20gamez — the game harness and game frontend, running on the server.</p>
+        </div>
+        <div class="tile-facts" aria-hidden="true"><span>mem20gamez</span><span>on the server</span></div>
       </div>
-      <div class="card">
-        <span class="k">Live</span>
+      <div class="card tile reveal" style="--i:1">
+        <div class="tb">
+        <span class="k badge live">Live</span>
         <h3>Kanban</h3>
         <p>mem20-kanban — the kanban board, running on the server.</p>
+        </div>
+        <div class="tile-facts" aria-hidden="true"><span>mem20-kanban</span><span>on the server</span></div>
       </div>
-      <div class="card">
-        <span class="k">Live</span>
+      <div class="card tile reveal" style="--i:2">
+        <div class="tb">
+        <span class="k badge live">Live</span>
         <h3>Messenger</h3>
         <p>mem20-messenger — the messenger frontend, running on the server.</p>
+        </div>
+        <div class="tile-facts" aria-hidden="true"><span>mem20-messenger</span><span>on the server</span></div>
       </div>
-      <div class="card">
-        <span class="k">Live</span>
+      <div class="card tile reveal" style="--i:3">
+        <div class="tb">
+        <span class="k badge live">Live</span>
         <h3>IRC</h3>
         <p>mem20ircz — the IRC service, running on the server.</p>
+        </div>
+        <div class="tile-facts" aria-hidden="true"><span>mem20ircz</span><span>on the server</span></div>
       </div>
     </div>
   </div>
@@ -397,6 +416,7 @@
 
 <section id="docs">
   <div class="wrap">
+    <p class="fig">FIG 06</p>
     <h2 class="sec">Docs &amp; plans</h2>
     <p class="sec-lede">
       The material behind the product — pricing, market, go-to-market, the launch deck, use cases,
@@ -404,59 +424,71 @@
       this page now points at them instead of leaving them unlinked.
     </p>
     <div class="docs-list">
-      <a href="https://github.com/bythewayz66-glitch/mem20/blob/main/docs/pricing/README.md">
+      <a class="fx-card reveal" style="--i:0" href="https://github.com/bythewayz66-glitch/mem20/blob/main/docs/pricing/README.md">
+        <span class="gl" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M3 12V4h8l10 10-8 8z"/><circle cx="7.5" cy="8" r="1.5"/></svg></span>
         <div class="k">Pricing</div>
-        <h3>Pricing model</h3>
+        <h3>Pricing model <span class="ar" aria-hidden="true">→</span></h3>
         <p>Pricing model v4 and the tier derivation behind it.</p>
       </a>
-      <a href="https://github.com/bythewayz66-glitch/mem20/blob/main/docs/market/README.md">
+      <a class="fx-card reveal" style="--i:1" href="https://github.com/bythewayz66-glitch/mem20/blob/main/docs/market/README.md">
+        <span class="gl" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M5 20V11M11 20V5M17 20v-6M2 20h20"/></svg></span>
         <div class="k">Market</div>
-        <h3>Competitive analysis</h3>
+        <h3>Competitive analysis <span class="ar" aria-hidden="true">→</span></h3>
         <p>Competitive analysis and price positioning against the market.</p>
       </a>
-      <a href="https://github.com/bythewayz66-glitch/mem20/blob/main/docs/gtm/mem20-launch-copy-v5.md">
+      <a class="fx-card reveal" style="--i:2" href="https://github.com/bythewayz66-glitch/mem20/blob/main/docs/gtm/mem20-launch-copy-v5.md">
+        <span class="gl" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" stroke-linecap="round"><path d="M3 10v4h4l8 5V5l-8 5z"/><path d="M19 9a4 4 0 0 1 0 6M7 14l1 6h3l-1-5"/></svg></span>
         <div class="k">Go-to-market</div>
-        <h3>Launch copy</h3>
+        <h3>Launch copy <span class="ar" aria-hidden="true">→</span></h3>
         <p>Launch copy v5, the sales one-pager, campaign plan and launch channels.</p>
       </a>
-      <a href="launch/deck/mem20-4.0-launch-deck.html">
+      <a class="fx-card reveal" style="--i:0" href="launch/deck/mem20-4.0-launch-deck.html">
+        <span class="gl" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><path d="M12 16v4M8 20h8M8 12l3-3 2 2 3-3"/></svg></span>
         <div class="k">Launch</div>
-        <h3>Launch deck</h3>
+        <h3>Launch deck <span class="ar" aria-hidden="true">→</span></h3>
         <p>The mem20 4.0 launch deck — sixteen slides, self-contained.</p>
       </a>
-      <a href="https://github.com/bythewayz66-glitch/mem20/blob/main/docs/use-cases/README.md">
+      <a class="fx-card reveal" style="--i:1" href="https://github.com/bythewayz66-glitch/mem20/blob/main/docs/use-cases/README.md">
+        <span class="gl" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><rect x="3" y="7" width="18" height="13" rx="2"/><path d="M9 7V4h6v3M3 13h18"/></svg></span>
         <div class="k">Use cases</div>
-        <h3>Use cases</h3>
+        <h3>Use cases <span class="ar" aria-hidden="true">→</span></h3>
         <p>Documented use cases, including the legal review and risk register.</p>
       </a>
-      <a href="https://github.com/bythewayz66-glitch/mem20/blob/main/docs/02-tools-reference.md">
+      <a class="fx-card reveal" style="--i:2" href="https://github.com/bythewayz66-glitch/mem20/blob/main/docs/02-tools-reference.md">
+        <span class="gl" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M4 4h6a3 3 0 0 1 3 3v13a2 2 0 0 0-2-2H4z"/><path d="M20 4h-4a3 3 0 0 0-3 3v13a2 2 0 0 1 2-2h5z"/></svg></span>
         <div class="k">Reference</div>
-        <h3>Tools reference</h3>
+        <h3>Tools reference <span class="ar" aria-hidden="true">→</span></h3>
         <p>The tools reference for the live surface.</p>
       </a>
-      <a href="https://github.com/bythewayz66-glitch/mem20/blob/main/docs/05-complete-tools-reference.md">
+      <a class="fx-card reveal" style="--i:0" href="https://github.com/bythewayz66-glitch/mem20/blob/main/docs/05-complete-tools-reference.md">
+        <span class="gl" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" stroke-linecap="round"><path d="M5 4h11a2 2 0 0 1 2 2v14H7a2 2 0 0 1-2-2z"/><path d="M5 18a2 2 0 0 1 2-2h11M9 8h5M9 11h5"/></svg></span>
         <div class="k">Reference</div>
-        <h3>Complete tools reference</h3>
+        <h3>Complete tools reference <span class="ar" aria-hidden="true">→</span></h3>
         <p>The complete tools reference — every tool on the surface.</p>
       </a>
-      <a href="dashboard.html">
+      <a class="fx-card reveal" style="--i:1" href="dashboard.html">
+        <span class="gl" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M3 17a9 9 0 0 1 18 0"/><path d="M12 17l4-5"/><circle cx="12" cy="17" r="1.2"/></svg></span>
         <div class="k">Live</div>
-        <h3>Dashboard</h3>
+        <h3>Dashboard <span class="ar" aria-hidden="true">→</span></h3>
         <p>The live dashboard for the running system.</p>
       </a>
-      <a href="https://github.com/bythewayz66-glitch/mem20/blob/main/docs/sdk/README.md">
+      <a class="fx-card reveal" style="--i:2" href="https://github.com/bythewayz66-glitch/mem20/blob/main/docs/sdk/README.md">
+        <span class="gl" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M8 4H7a2 2 0 0 0-2 2v4l-2 2 2 2v4a2 2 0 0 0 2 2h1M16 4h1a2 2 0 0 1 2 2v4l2 2-2 2v4a2 2 0 0 1-2 2h-1"/></svg></span>
         <div class="k">Developers</div>
-        <h3>SDK</h3>
+        <h3>SDK <span class="ar" aria-hidden="true">→</span></h3>
         <p>The SDK — client libraries for building on mem20.</p>
       </a>
     </div>
   </div>
 </section>
 
-<section>
+<section class="run">
   <div class="wrap">
+    <p class="fig">FIG 07</p>
     <h2 class="sec">Run it</h2>
     <p class="sec-lede">From a git checkout. The server starts, logs its health endpoint, and speaks JSON-RPC 2.0 over stdio.</p>
+    <div class="term reveal">
+      <div class="term-bar"><i></i><i></i><i></i><span class="t">bash</span><button class="copy" type="button" aria-live="polite" hidden>Copy</button></div>
 <pre class="code"><span class="c"># clone and install</span>
 git clone https://github.com/bythewayz66-glitch/mem20.git
 cd mem20
@@ -465,7 +497,8 @@ python3 -m venv .venv
 
 <span class="c"># start the MCP server</span>
 MEM20_STORE_PATH="$HOME/.mem20/store" .venv/bin/python mcp/mcp_server.py</pre>
-    <p class="note" style="margin-top:22px">
+    </div>
+    <p class="note">
       <strong>On the numbers.</strong> Every figure on this page is re-derivable. The tool and domain
       counts come from <span class="mono">docs/surface.json</span>, which is generated from the live
       <span class="mono">tools/list</span> response and checked in CI by the doc-count drift gate — a
@@ -482,32 +515,41 @@ MEM20_STORE_PATH="$HOME/.mem20/store" .venv/bin/python mcp/mcp_server.py</pre>
 
 <section>
   <div class="wrap">
+    <p class="fig">FIG 08</p>
     <h2 class="sec">Two series, one thesis</h2>
     <p class="sec-lede">
       A memory product is hard to feel from a feature list. So mem20 also publishes two creative
       properties that carry the same idea to people who will never read a benchmark table.
     </p>
     <div class="series-strip">
-      <a class="s-card c" href="series/comic/">
+      <a class="s-card c fx-card reveal" href="series/comic/">
+        <div class="art" aria-hidden="true"></div>
+        <div class="sb">
         <div class="k">Property 01 · drawn</div>
         <h3>The Comicbook Artist</h3>
         <p>An artist whose pages remember what was drawn on them — and refuse to pretend a sketch was
            ever a fact. Sequential art, panel by panel.</p>
-        <span class="go">Enter the series →</span>
+        <span class="go">Enter the series <span class="ar">→</span></span>
+        </div>
       </a>
-      <a class="s-card h" href="series/chronicles/">
+      <a class="s-card h fx-card reveal" style="--i:2" href="series/chronicles/">
+        <div class="art" aria-hidden="true"></div>
+        <div class="sb">
         <div class="k">Property 02 · written</div>
         <h3>Mem20-naration's Chronicles</h3>
         <p>A daily record. Each installment is tagged grounded or simulated at the top, because the
            whole point is that you can tell which is which.</p>
-        <span class="go">Read the chronicles →</span>
+        <span class="go">Read the chronicles <span class="ar">→</span></span>
+        </div>
       </a>
     </div>
   </div>
 </section>
+</main>
 
 <footer>
   <div class="wrap foot-in">
+    <a class="logo" href="./"><span class="logo-mark">m</span> mem20</a>
     <div class="foot-links">
       <a href="./">mem20.com</a>
       <a href="series/">Series</a>
@@ -517,12 +559,19 @@ MEM20_STORE_PATH="$HOME/.mem20/store" .venv/bin/python mcp/mcp_server.py</pre>
       <a href="dashboard.html">Dashboard</a>
       <a href="https://github.com/bythewayz66-glitch/mem20" target="_blank" rel="noopener">GitHub</a>
     </div>
+    <button class="icon-btn theme-toggle" type="button" aria-label="Light theme" aria-pressed="false"><svg class="moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M20 14.5A8 8 0 1 1 9.5 4a6.5 6.5 0 0 0 10.5 10.5z"/></svg><svg class="sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg></button>
     <p class="foot-note">
       mem20 · auditable agent memory · Apache-2.0<br>
       Grounded and simulated never mix · every entry states which it is
     </p>
   </div>
 </footer>
+
+<div class="dock" role="complementary" aria-label="Get mem20" hidden>
+  <a class="btn btn-primary btn-sm" href="https://github.com/bythewayz66-glitch/mem20">Read the source</a>
+  <a class="btn btn-ghost btn-sm" href="https://pypi.org/project/mem20-ce/">Install from PyPI</a>
+  <button class="x" type="button" aria-label="Dismiss">×</button>
+</div>
 
 <script>
 (function () {

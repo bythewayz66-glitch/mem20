@@ -33,6 +33,27 @@ def _absorbed_map():
         return {}
 
 
+
+def _rebase(loc):
+    """Map a map-recorded absolute path onto this checkout.
+
+    Mirrors _mem20_absorbed_finder._rebase: the map was generated under
+    /opt/mem20, so its values are absolute paths there. On any other checkout
+    (CI, a fresh clone) those paths do not exist; rebase the part after
+    "/mem20/" onto ESTATE_ROOT. Without this, _is_absorbed() is False for
+    every member outside jnet1 and the green set fails in CI only.
+    """
+    p = Path(loc)
+    if p.is_dir():
+        return p
+    marker = "/mem20/"
+    idx = loc.find(marker)
+    if idx != -1:
+        cand = ESTATE_ROOT / loc[idx + len(marker):]
+        if cand.is_dir():
+            return cand
+    return p
+
 def _member_dir(name):
     """Resolved on-disk dir for a member: local absorbed/ copy, repo-root dir, or candy via the finder map."""
     local = ABSORBED_ROOT / name
@@ -42,7 +63,7 @@ def _member_dir(name):
         return ESTATE_ROOT / name
     loc = _absorbed_map().get(name)
     if loc:
-        p = Path(loc)
+        p = _rebase(loc)
         if p.is_dir():
             return p
     return None
@@ -61,7 +82,7 @@ def _is_absorbed(name):
         return True
     loc = _absorbed_map().get(name)
     if loc:
-        lp = Path(loc)
+        lp = _rebase(loc)
         if lp.is_dir() and "absorbed" in lp.parts:
             return True
     return False

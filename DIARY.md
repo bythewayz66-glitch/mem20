@@ -30,3 +30,12 @@ which no longer exists. Fixed by pointing the registries at candy/ via the
 finder map (and restoring the mem20capabilitygapmapperz map entry). All 8
 failing tests now pass; green package set 233 passed, 0 failed. No test
 weakened, no count fudged. Evidence: 9d1854e6 -> 9d1854e6bbac56825e928131c7c707a995a0904d
+
+## 2026-11-28 09:53 UTC — Green set rebase fix (CI-only failure)
+
+The 9d1854e6 registry fix passed locally (233/0) but failed in CI: the
+.absorbed-map.json values are absolute /opt/mem20 paths, so _is_absorbed()
+was False for every member on the CI runner's checkout. Fixed by rebasing
+map paths onto the local checkout root (mirroring
+_mem20_absorbed_finder._rebase) in mem20enginez and mem20fabricz domain.py.
+Evidence for the earlier fix: 9d1854e6 -> 9d1854e6bbac56825e928131c7c707a995a0904d

@@ -136,6 +136,27 @@ def member_registry(names: Sequence[str] = None) -> List[EngineMember]:
     return out
 
 
+
+def _rebase(loc, base):
+    """Map a map-recorded absolute path onto this checkout.
+
+    Mirrors _mem20_absorbed_finder._rebase: the map was generated under
+    /opt/mem20, so its values are absolute paths there. On any other checkout
+    (CI, a fresh clone) those paths do not exist; rebase the part after
+    "/mem20/" onto base. Without this, _is_absorbed() is False for every
+    member outside jnet1 and the green set fails in CI only.
+    """
+    p = Path(loc)
+    if p.is_dir():
+        return p
+    marker = "/mem20/"
+    idx = loc.find(marker)
+    if idx != -1:
+        cand = Path(base) / loc[idx + len(marker):]
+        if cand.is_dir():
+            return cand
+    return p
+
 def _member_dir(name: str, root: Path = None) -> Optional[Path]:
     base = Path(root) if root else ESTATE_ROOT
     # absorbed under this runtime first
@@ -154,7 +175,7 @@ def _member_dir(name: str, root: Path = None) -> Optional[Path]:
             loc = (data.get("mapping") or {}).get(name)
             if loc:
                 # mapping points to inner package dir; absorbed root is parent of package dir
-                lp = Path(loc)
+                lp = _rebase(loc, base)
                 if lp.is_dir():
                     return lp.parent
     except Exception:
@@ -180,7 +201,7 @@ def _is_absorbed(name: str, root: Path = None) -> bool:
             data = json.loads(mp.read_text())
             loc = (data.get("mapping") or {}).get(name)
             if loc:
-                lp = Path(loc)
+                lp = _rebase(loc, base)
                 if lp.is_dir() and "absorbed" in lp.parts:
                     return True
     except Exception:

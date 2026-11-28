@@ -167,3 +167,57 @@ jobs:
           name: collection-log
           path: collect.log
           if-no-files-found: ignore
+
+  preflight:
+    name: preflight
+    runs-on: ubuntu-latest
+    # Non-blocking while the gate beds in (same pattern as the suite job):
+    # it reports failures on changed domain packages but cannot block a
+    # merge yet. Flip by removing continue-on-error once preflight is
+    # green on main.
+    continue-on-error: true
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install preflight dependencies
+        run: |
+          python3 -m pip install --upgrade pip
+          python3 -m pip install pytest
+
+      - name: Preflight changed domain packages
+        env:
+          MEM20_ROOT: ${{ github.workspace }}
+        run: |
+          set -euo pipefail
+          if [ "${{ github.event_name }}" = "pull_request" ]; then
+            git fetch --no-tags origin "${{ github.base_ref }}" || true
+            RANGE="origin/${{ github.base_ref }}...HEAD"
+          else
+            BEFORE="${{ github.event.before }}"
+            if [ -z "$BEFORE" ] || [ "$BEFORE" = "0000000000000000000000000000000000000000" ]; then
+              RANGE="HEAD~1...HEAD"
+            else
+              RANGE="${BEFORE}...HEAD"
+            fi
+          fi
+          git diff --name-only --diff-filter=ACMR "$RANGE" > changed.txt || true
+          # Only packages with the Option C layout <pkg>/<pkg>/domain.py
+          # can be preflighted; anything else is out of scope for this gate.
+          pkgs=""
+          for d in $(cut -d/ -f1 changed.txt | sort -u); do
+            if [ -f "$d/$d/domain.py" ]; then
+              pkgs="$pkgs $d"
+            fi
+          done
+          if [ -z "$pkgs" ]; then
+            echo "preflight: no changed domain packages"
+            exit 0
+          fi
+          echo "preflight: $pkgs"
+          python3 tools_preflight.py $pkgs

@@ -17,7 +17,7 @@ our $PROTOCOL_VERSION = '2025-06-18';
 # The tool surface this SDK is compiled against.
 #
 # These are NOT prefix buckets. SURFACE_DOMAIN_COUNT is the number of distinct
-# owning domain modules the server registers (129). The figure is read from
+# owning domain modules the server registers (135). The figure is read from
 # docs/surface.json, which scripts/surface_manifest.py generates from a live
 # `tools/list` response and cross-checks against the AST catalog in
 # web/src/data/tools.json -- the two collections must be identical or the
@@ -57,11 +57,11 @@ version independently.
 in the C<initialize> handshake.
 
 =item C<$Mem20::Version::SURFACE_TOOL_COUNT> - tools the SDK is compiled
-against (487), used by C<< Mem20::Client->verify_surface >>. Re-exported from
+against (527), used by C<< Mem20::Client->verify_surface >>. Re-exported from
 C<$Mem20::Surface::TOOL_COUNT>.
 
 =item C<$Mem20::Version::SURFACE_DOMAIN_COUNT> - domain modules the server
-registers (129). This is a registration count, B<not> a count of tool-name
+registers (135). This is a registration count, B<not> a count of tool-name
 prefixes; those are two different numbers. Re-exported from
 C<$Mem20::Surface::DOMAIN_COUNT>.
 

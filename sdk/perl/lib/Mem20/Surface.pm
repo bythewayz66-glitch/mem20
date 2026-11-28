@@ -23,8 +23,8 @@ use warnings;
 our $VERSION = '0.3.0';
 
 # The surface this SDK release was generated against.
-our $TOOL_COUNT   = 487;
-our $DOMAIN_COUNT = 129;
+our $TOOL_COUNT   = 527;
+our $DOMAIN_COUNT = 135;
 
 # Every tool name the server advertises, sorted. Sorted so a diff of this file
 # shows additions and removals rather than reshuffling.
@@ -92,29 +92,41 @@ our @TOOL_NAMES = qw(
     fin_portfolio fin_stock_quote fin_tax_calc fs_archive_create
     fs_archive_extract fs_diff fs_disk_usage fs_list fs_metadata fs_permissions
     fs_read fs_read_advanced fs_search fs_watch fs_write fs_write_advanced
+    gateway_admission gateway_provenance gateway_translate
     get_cognitive_tree_state graph_execute_reversible_plan imagination_concept
     imagination_counterfactual imagination_critique imagination_dream
     imagination_model imagination_prototype imagination_recombine
     imagination_simulate imagination_visualize irc_join irc_read irc_say
     irc_status irc_who job_status job_wait kilnz_budget kilnz_gate kilnz_ground
-    kilnz_status least_to_most lie_acknowledge_cue lie_dual_acknowledge
+    kilnz_status lattice_emit lattice_recall lattice_report lattice_search
+    lattice_verify least_to_most lie_acknowledge_cue lie_dual_acknowledge
     lie_feed_audio lie_feed_transcript lie_get_cues lie_list_sessions
     lie_seal_session lie_set_baseline lie_start_session lie_status
-    memory_assess_confidence memory_audit_contamination memory_auto_consolidate
-    memory_backfill_labels memory_cluster memory_consolidate
-    memory_context_window memory_contradict memory_decay memory_deduplicate
-    memory_detect_gaps memory_entity_extract memory_epistemic_veto memory_export
-    memory_feedback memory_get_pinned_block memory_graph_traverse memory_import
-    memory_index_health memory_ingest_audio memory_ingest_code
-    memory_ingest_image memory_ingest_pdf memory_label_coverage
-    memory_list_pinned_blocks memory_list_simulated memory_mood_tag
-    memory_namespace_create memory_namespace_list memory_pin_block memory_probe
-    memory_promote memory_quarantine_simulated memory_reason memory_recall
-    memory_recall_graph memory_recall_hybrid memory_recall_semantic
-    memory_reinforce memory_related memory_scan_pii memory_self_audit
-    memory_set_epistemic_status memory_shared_recall memory_shared_store
-    memory_simulate_store memory_stats memory_status memory_store
-    memory_timeline memory_triggers memory_unpin_block
+    mem20assistz_doctor mem20assistz_status mem20schoolz_create_course
+    mem20schoolz_create_exam mem20schoolz_create_learning_path
+    mem20schoolz_doctor mem20schoolz_evaluate_task mem20schoolz_get_lesson
+    mem20schoolz_issue_credential mem20schoolz_list_courses
+    mem20schoolz_list_exams mem20schoolz_log_session mem20schoolz_mentor_match
+    mem20schoolz_mentorship_hours mem20schoolz_progression_plan
+    mem20schoolz_register_mentor mem20schoolz_skill_level mem20schoolz_status
+    mem20schoolz_take_exam mem20schoolz_track_progress
+    mem20schoolz_verify_credential memory_assess_confidence
+    memory_audit_contamination memory_auto_consolidate memory_backfill_labels
+    memory_cluster memory_consolidate memory_context_window memory_contradict
+    memory_decay memory_deduplicate memory_detect_gaps memory_engine_guard
+    memory_engine_health memory_engine_namespace memory_engine_recall
+    memory_engine_subsystem memory_engine_veto memory_entity_extract
+    memory_epistemic_veto memory_export memory_feedback memory_get_pinned_block
+    memory_graph_traverse memory_import memory_index_health memory_ingest_audio
+    memory_ingest_code memory_ingest_image memory_ingest_pdf
+    memory_label_coverage memory_list_pinned_blocks memory_list_simulated
+    memory_mood_tag memory_namespace_create memory_namespace_list
+    memory_pin_block memory_probe memory_promote memory_quarantine_simulated
+    memory_reason memory_recall memory_recall_graph memory_recall_hybrid
+    memory_recall_semantic memory_reinforce memory_related memory_scan_pii
+    memory_self_audit memory_set_epistemic_status memory_shared_recall
+    memory_shared_store memory_simulate_store memory_stats memory_status
+    memory_store memory_timeline memory_triggers memory_unpin_block
     milestoneriskpredictorz_status mkt_ab_test mkt_analytics
     mkt_competitor_analysis mkt_content_generate mkt_email_campaign
     mkt_hashtag_research mkt_seo_analyze mkt_social_analytics mkt_social_post
@@ -169,6 +181,7 @@ our @TOOL_NAMES = qw(
     spatialcommanduniversez_doctor spatialcommanduniversez_status
     specialistmodelforgez_doctor specialistmodelforgez_status
     speculativeworkflowenginez_doctor speculativeworkflowenginez_status
+    stream_publish stream_recall stream_report stream_search stream_verify
     studioz_doctor studioz_status styleguideagentz_doctor
     styleguideagentz_status syntheticevaluatorarenaz_doctor
     syntheticevaluatorarenaz_status temporal_doctor temporal_get temporal_ingest
@@ -396,6 +409,9 @@ our %TOOL_DOMAIN = (
     'fs_watch'                                   => 'filesystem',
     'fs_write'                                   => 'integration',
     'fs_write_advanced'                          => 'filesystem',
+    'gateway_admission'                          => 'shapeshift',
+    'gateway_provenance'                         => 'shapeshift',
+    'gateway_translate'                          => 'shapeshift',
     'get_cognitive_tree_state'                   => 'thought_process',
     'graph_execute_reversible_plan'              => 'rm052',
     'imagination_concept'                        => 'cognitive',
@@ -418,6 +434,11 @@ our %TOOL_DOMAIN = (
     'kilnz_gate'                                 => 'kilnz',
     'kilnz_ground'                               => 'kilnz',
     'kilnz_status'                               => 'kilnz',
+    'lattice_emit'                               => 'lattice',
+    'lattice_recall'                             => 'lattice',
+    'lattice_report'                             => 'lattice',
+    'lattice_search'                             => 'lattice',
+    'lattice_verify'                             => 'lattice',
     'least_to_most'                              => 'thought_process',
     'lie_acknowledge_cue'                        => 'lie',
     'lie_dual_acknowledge'                       => 'lie',
@@ -429,6 +450,27 @@ our %TOOL_DOMAIN = (
     'lie_set_baseline'                           => 'lie',
     'lie_start_session'                          => 'lie',
     'lie_status'                                 => 'lie',
+    'mem20assistz_doctor'                        => 'mem20assistz',
+    'mem20assistz_status'                        => 'mem20assistz',
+    'mem20schoolz_create_course'                 => 'mem20schoolz',
+    'mem20schoolz_create_exam'                   => 'mem20schoolz',
+    'mem20schoolz_create_learning_path'          => 'mem20schoolz',
+    'mem20schoolz_doctor'                        => 'mem20schoolz',
+    'mem20schoolz_evaluate_task'                 => 'mem20schoolz',
+    'mem20schoolz_get_lesson'                    => 'mem20schoolz',
+    'mem20schoolz_issue_credential'              => 'mem20schoolz',
+    'mem20schoolz_list_courses'                  => 'mem20schoolz',
+    'mem20schoolz_list_exams'                    => 'mem20schoolz',
+    'mem20schoolz_log_session'                   => 'mem20schoolz',
+    'mem20schoolz_mentor_match'                  => 'mem20schoolz',
+    'mem20schoolz_mentorship_hours'              => 'mem20schoolz',
+    'mem20schoolz_progression_plan'              => 'mem20schoolz',
+    'mem20schoolz_register_mentor'               => 'mem20schoolz',
+    'mem20schoolz_skill_level'                   => 'mem20schoolz',
+    'mem20schoolz_status'                        => 'mem20schoolz',
+    'mem20schoolz_take_exam'                     => 'mem20schoolz',
+    'mem20schoolz_track_progress'                => 'mem20schoolz',
+    'mem20schoolz_verify_credential'             => 'mem20schoolz',
     'memory_assess_confidence'                   => 'memory',
     'memory_audit_contamination'                 => 'memory',
     'memory_auto_consolidate'                    => 'memory',
@@ -440,6 +482,12 @@ our %TOOL_DOMAIN = (
     'memory_decay'                               => 'memory',
     'memory_deduplicate'                         => 'memory',
     'memory_detect_gaps'                         => 'memory',
+    'memory_engine_guard'                        => 'memory_engine',
+    'memory_engine_health'                       => 'memory_engine',
+    'memory_engine_namespace'                    => 'memory_engine',
+    'memory_engine_recall'                       => 'memory_engine',
+    'memory_engine_subsystem'                    => 'memory_engine',
+    'memory_engine_veto'                         => 'memory_engine',
     'memory_entity_extract'                      => 'memory',
     'memory_epistemic_veto'                      => 'memory',
     'memory_export'                              => 'memory',
@@ -619,6 +667,11 @@ our %TOOL_DOMAIN = (
     'specialistmodelforgez_status'               => 'mem20specialistmodelforgez',
     'speculativeworkflowenginez_doctor'          => 'mem20speculativeworkflowenginez',
     'speculativeworkflowenginez_status'          => 'mem20speculativeworkflowenginez',
+    'stream_publish'                             => 'eventstream',
+    'stream_recall'                              => 'eventstream',
+    'stream_report'                              => 'eventstream',
+    'stream_search'                              => 'eventstream',
+    'stream_verify'                              => 'eventstream',
     'studioz_doctor'                             => 'mem20studioz',
     'studioz_status'                             => 'mem20studioz',
     'styleguideagentz_doctor'                    => 'mem20styleguideagentz',
@@ -758,8 +811,8 @@ Mem20::Surface - the mem20 tool surface this SDK was generated against
 
 B<Generated file.> Do not edit by hand; run C<perl xt/gen-surface.pl>.
 
-Holds the full tool-name list (487 names) and the tool-to-domain map
-(129 domains) that C<Mem20::Client/verify_surface> compares a live
+Holds the full tool-name list (527 names) and the tool-to-domain map
+(135 domains) that C<Mem20::Client/verify_surface> compares a live
 C<tools/list> against. A count alone cannot say I<which> tool moved; this
 module can.
 

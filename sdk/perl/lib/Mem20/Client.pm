@@ -158,9 +158,9 @@ sub tool_schema {
 #
 #   {
 #     ok             => 1,
-#     tools          => 487,
-#     expected_tools => 487,
-#     domains        => 129,
+#     tools          => 527,
+#     expected_tools => 527,
+#     domains        => 135,
 #     missing        => [],   # expected, not advertised
 #     extra          => [],   # advertised, not expected
 #     server_version => '4.0.0',
@@ -763,7 +763,7 @@ list or a single hashref. Alias: C<call_tool>.
 advertisement, cached after the first call.
 
 =item C<verify_surface> - compare the live tool surface with the manifest this
-SDK was generated against (487 tools across 129 domains). Returns C<ok>,
+SDK was generated against (527 tools across 135 domains). Returns C<ok>,
 C<tools>, C<expected_tools>, C<domains>, C<missing>, C<extra> and
 C<server_version>. C<missing> and C<extra> name the exact tools that moved, so
 a rename that keeps the count identical is still reported.

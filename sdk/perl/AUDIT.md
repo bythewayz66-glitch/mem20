@@ -1,17 +1,17 @@
 # Perl SDK surface audit — mem20 4.0.0 @ main (2026-11-16)
 
-Scope: `sdk/perl/` only. Target surface **487 tools across 129 domains**.
+Scope: `sdk/perl/` only. Target surface **527 tools across 135 domains**.
 
 Everything below was observed by running the server, not by reading its docs.
 Reproduce with the commands quoted in each section.
 
-## 1. The surface: 487 tools, 129 domains
+## 1. The surface: 527 tools, 135 domains
 
 The surface figure is read from `docs/surface.json`, which
 `scripts/surface_manifest.py` generates from a live `tools/list` response and
 cross-checks against the AST catalog in `web/src/data/tools.json` -- the two
 collections must be identical or the generator refuses to emit. Both land on
-**487 tools across 129 domains**.
+**527 tools across 135 domains**.
 
 ```
 initialize -> {"protocolVersion":"2025-06-18","serverInfo":{"name":"mem20-mcp","version":""}}
@@ -20,7 +20,7 @@ tools/list -> TOOL_COUNT: 487   UNIQUE: 487
 
 `serverInfo.version` is the empty string, so the SDK does not assert on it.
 
-**Why the domain count is not a prefix count.** Bucketing the 487 tool *names*
+**Why the domain count is not a prefix count.** Bucketing the 527 tool *names*
 by their first `_` component yields more buckets than there are domains, because
 `memory_*` and `vault_*` are separate prefixes inside one domain,
 `cloud_*`/`cloudstorage_*` likewise, and the bare `reflexion` has no underscore.
@@ -212,7 +212,7 @@ recall returned:
 surface: 487 tools (SDK compiled for 487), 129 domains, ok=1
 ```
 
-The live suite asserts the 487 count, a `memory_store`->`memory_recall` round
+The live suite asserts the 527 count, a `memory_store`->`memory_recall` round
 trip through the grounded partition, local refusal of a missing
 `epistemic_status`, `ToolError` for an unknown tool, `soft_error` for a rejected
 status, and a `cog_plan` job polled to a terminal state.
@@ -237,8 +237,8 @@ truth.
 
 `verify_surface` now returns `missing` and `extra` name lists alongside the
 counts, and `ok` is false when the live surface differs in either direction.
-`t/20-client.t` exercises this against the fake server (5 of 487 tools
-advertised): 482 names in `missing`, nothing in `extra`.
+`t/20-client.t` exercises this against the fake server (5 of 527 tools
+advertised): 522 names in `missing`, nothing in `extra`.
 
 The live surface was confirmed independently by driving the real server over
 stdio:

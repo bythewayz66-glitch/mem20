@@ -39,3 +39,14 @@ was False for every member on the CI runner's checkout. Fixed by rebasing
 map paths onto the local checkout root (mirroring
 _mem20_absorbed_finder._rebase) in mem20enginez and mem20fabricz domain.py.
 Evidence for the earlier fix: 9d1854e6 -> 9d1854e6bbac56825e928131c7c707a995a0904d
+
+## 2026-11-28 10:00 UTC — Perl SDK surface manifest regenerated (527/135)
+
+CI "Verify the Perl SDK" failed on sdk/perl/t/05-surface.t (1 of 77): the
+checked-in lib/Mem20/Surface.pm was stale (487/129) against the live surface
+(527 tools / 135 domains). The sanctioned generator sdk/perl/xt/gen-surface.pl
+was present and complete (it lives under sdk/perl/xt/, where the test looks
+for it) -- no new generator was needed. Ran it to regenerate Surface.pm and
+updated the prose counts the guard test asserts (README.md, AUDIT.md,
+lib/Mem20/Version.pm POD, lib/Mem20/Client.pm POD). Evidence for the prior
+fix: 30fd99f6a6af1743f47d805e3d24f26f23f3eb5f

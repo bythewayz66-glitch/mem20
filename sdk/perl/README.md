@@ -118,7 +118,7 @@ fails immediately and leaves the previous good value in place.
 
 ## Calling tools
 
-Three routes to the same **487-tool surface across 129 domains** (verified live
+Three routes to the same **527-tool surface across 135 domains** (verified live
 against mem20 4.0.0 — see `AUDIT.md`):
 
 ```perl
@@ -135,12 +135,12 @@ $client->memory_status;
 $client->cog_plan(goal => 'ship the 3.0 baseline');
 ```
 
-`verify_surface` compares the live `tools/list` surface with the 487/129
+`verify_surface` compares the live `tools/list` surface with the 527/135
 manifest this release was generated against, and names any tool that moved:
 
 ```perl
 my $s = $client->verify_surface;
-# { ok => 1, tools => 487, expected_tools => 487, domains => 129,
+# { ok => 1, tools => 527, expected_tools => 527, domains => 135,
 #   missing => [], extra => [], server_version => '4.0.0' }
 ```
 
@@ -255,15 +255,15 @@ MEM20_MCP_DIR=/opt/mem20/mcp MEM20_PYTHON=/opt/mem20/.venv/bin/python \
   prove -Ilib t/90-live-server.t
 ```
 
-That suite asserts the 487-tool surface, a `memory_store` → `memory_recall`
+That suite asserts the 527-tool surface, a `memory_store` → `memory_recall`
 round trip through the grounded partition, local refusal of a missing
 `epistemic_status`, `ToolError` for an unknown tool, `soft_error` for a rejected
 status, and a `cog_plan` job polled to a terminal state.
 
 ## Status
 
-Version 0.3.0, validated against mem20 server **4.0.0** on the **487-tool /
-129-domain** surface. The SDK versions independently of the server
+Version 0.3.0, validated against mem20 server **4.0.0** on the **527-tool /
+135-domain** surface. The SDK versions independently of the server
 (`$Mem20::Version::VERSION` vs `$Mem20::Version::SERVER_VERSION`).
 
 `AUDIT.md` records how the surface figure was established (registration count

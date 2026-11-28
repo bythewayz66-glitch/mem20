@@ -185,6 +185,18 @@ function skuCard(sku, canSell) {
   foot.className = "card-foot";
 
   const buyable = Boolean(sku.configured) && canSell;
+
+  // State hooks for fx.js and CSS. The badge states only what the API returned.
+  const state = buyable ? "buyable" : sku.configured ? "paused" : "unpriced";
+  card.dataset.state = state;
+  card.dataset.kind = sku.kind || "product";
+  card.dataset.sku = sku.id;
+  const badge = document.createElement("span");
+  badge.className = `badge ${state === "buyable" ? "g" : "s"}`;
+  badge.textContent =
+    state === "buyable" ? "Buyable" : state === "paused" ? "Checkout paused" : "Price not set";
+  card.prepend(badge);
+
   const price = document.createElement("span");
   if (buyable) {
     const amount = money(sku.amount_cents, sku.currency);

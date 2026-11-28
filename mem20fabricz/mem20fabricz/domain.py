@@ -2,7 +2,7 @@
 from __future__ import annotations
 from dataclasses import dataclass, field
 from typing import Any, Dict, List, Optional
-import importlib, time, sys
+import importlib, json, time, sys
 from pathlib import Path
 
 ESTATE_ROOT = Path(__file__).resolve().parents[2]
@@ -25,9 +25,59 @@ def _ensure_paths():
 
 _ensure_paths()
 
+def _absorbed_map():
+    try:
+        data = json.loads((ESTATE_ROOT / ".mem20-absorbed-map.json").read_text(encoding="utf-8"))
+        return data.get("mapping", {}) or {}
+    except Exception:
+        return {}
+
+
+def _member_dir(name):
+    """Resolved on-disk dir for a member: local absorbed/ copy, repo-root dir, or candy via the finder map."""
+    local = ABSORBED_ROOT / name
+    if local.is_dir():
+        return local
+    if (ESTATE_ROOT / name).is_dir():
+        return ESTATE_ROOT / name
+    loc = _absorbed_map().get(name)
+    if loc:
+        p = Path(loc)
+        if p.is_dir():
+            return p
+    return None
+
+
+def _is_absorbed(name):
+    """True when the member lives under an absorbed/ tree (candy or package-local).
+
+    The absorbed subsystems were rehomed from mem20fabricz/absorbed/ into
+    candy/absorbed/<runtime>__<member>/ (commit df78c415); the package-local
+    absorbed/ dir no longer exists, so testing only that path always returns
+    False. The finder map (.mem20-absorbed-map.json) is the index of the
+    canonical absorbed location.
+    """
+    if (ABSORBED_ROOT / name).is_dir():
+        return True
+    loc = _absorbed_map().get(name)
+    if loc:
+        lp = Path(loc)
+        if lp.is_dir() and "absorbed" in lp.parts:
+            return True
+    return False
+
+
 def _discover_absorbed():
-    if not ABSORBED_ROOT.is_dir(): return ()
-    return tuple(sorted(p.name for p in ABSORBED_ROOT.iterdir() if p.is_dir() and p.name.startswith('mem20') and p.name.endswith('z')))
+    found = []
+    if ABSORBED_ROOT.is_dir():
+        found += [p.name for p in ABSORBED_ROOT.iterdir() if p.is_dir() and p.name.startswith('mem20') and p.name.endswith('z')]
+    # canonical absorbed location: subsystems were rehomed into candy/ (df78c415);
+    # the package-local absorbed/ dir no longer exists.
+    candy = ESTATE_ROOT / "candy" / "absorbed"
+    if candy.is_dir():
+        prefix = "mem20fabricz__"
+        found += [p.name[len(prefix):] for p in candy.iterdir() if p.is_dir() and p.name.startswith(prefix)]
+    return tuple(sorted(set(found)))
 
 MEMBERS = _discover_absorbed() or (
     "mem20apishapeshiftinggatewayz","mem20rewardforgez","mem20collectivemodelintelligencez",
@@ -67,8 +117,8 @@ class FabricReport:
 
 def check_member(name: str) -> MemberStatus:
     _ensure_paths()
-    present = (ABSORBED_ROOT / name).is_dir() or (ESTATE_ROOT / name).is_dir()
-    absorbed = (ABSORBED_ROOT / name).is_dir()
+    present = (ABSORBED_ROOT / name).is_dir() or (ESTATE_ROOT / name).is_dir() or _member_dir(name) is not None
+    absorbed = _is_absorbed(name)
     try:
         mod = importlib.import_module(name)
         ver = getattr(mod, "__version__", None)

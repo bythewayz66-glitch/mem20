@@ -1,7 +1,7 @@
 """Engine runtime domain: real member registry, probing, compatibility, dispatch.
 
 Assimilated runtime: members include all absorbed subsystems rehomed under
-mem20enginez/absorbed/ (canonical + locally held copies). Probing locates
+candy/absorbed/ (canonical location). Probing locates
 absorbed members on disk and via import, and ecosystem peer aggregation
 surfaces peers from absorbed member ecosystems (>> 6).
 """
@@ -131,7 +131,7 @@ def member_registry(names: Sequence[str] = None) -> List[EngineMember]:
     names = list(names or MEMBERS)
     out = []
     for n in names:
-        absorbed = (ABSORBED_ROOT / n).is_dir()
+        absorbed = _is_absorbed(n)
         out.append(EngineMember(name=n, package=n, absorbed=absorbed))
     return out
 
@@ -162,11 +162,37 @@ def _member_dir(name: str, root: Path = None) -> Optional[Path]:
     return None
 
 
+def _is_absorbed(name: str, root: Path = None) -> bool:
+    """True when the member lives under an absorbed/ tree (candy or package-local).
+
+    Absorbed subsystems were rehomed from <runtime>/absorbed/ into
+    candy/absorbed/<runtime>__<member>/ (commit df78c415); the package-local
+    absorbed/ dir no longer exists, so testing only that path always returns
+    False. The finder map (.mem20-absorbed-map.json) is the index of the
+    canonical absorbed location.
+    """
+    if (ABSORBED_ROOT / name).is_dir():
+        return True
+    try:
+        base = Path(root) if root else ESTATE_ROOT
+        mp = base / ".mem20-absorbed-map.json"
+        if mp.exists():
+            data = json.loads(mp.read_text())
+            loc = (data.get("mapping") or {}).get(name)
+            if loc:
+                lp = Path(loc)
+                if lp.is_dir() and "absorbed" in lp.parts:
+                    return True
+    except Exception:
+        pass
+    return False
+
+
 def check_member(name: str, root: Path = None) -> MemberStatus:
     _ensure_paths()
     p = _member_dir(name, root)
     present = p is not None
-    absorbed = (ABSORBED_ROOT / name).is_dir()
+    absorbed = _is_absorbed(name, root)
     ver = None
     err = None
     importable = False

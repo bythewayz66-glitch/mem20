@@ -13,9 +13,18 @@ __version__ = "0.2.0"
 def _discover_absorbed_members():
     try:
         from pathlib import Path as _P
+        found = []
         _adir = _P(__file__).resolve().parents[1] / 'absorbed'
         if _adir.is_dir():
-            return tuple(sorted(p.name for p in _adir.iterdir() if p.is_dir() and p.name.startswith('mem20') and p.name.endswith('z')))
+            found += [p.name for p in _adir.iterdir() if p.is_dir() and p.name.startswith('mem20') and p.name.endswith('z')]
+        # canonical absorbed location: subsystems were rehomed into candy/ (df78c415);
+        # the package-local absorbed/ dir no longer exists.
+        _candy = _P(__file__).resolve().parents[2] / 'candy' / 'absorbed'
+        if _candy.is_dir():
+            _prefix = 'mem20graphz__'
+            found += [p.name[len(_prefix):] for p in _candy.iterdir() if p.is_dir() and p.name.startswith(_prefix)]
+        if found:
+            return tuple(sorted(set(found)))
     except Exception:
         pass
     return ()

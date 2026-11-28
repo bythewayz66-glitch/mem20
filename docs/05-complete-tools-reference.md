@@ -4676,4 +4676,4 @@ claude mcp add mem20 -- python3 /path/to/mem20/mcp/mcp_server.py
 | Cloud Storage | 8 | cloudstorage_upload, cloudstorage_download, cloudstorage_list, cloudstorage_delete, cloudstorage_copy, cloudstorage_sync, cloudstorage_metadata, cloudstorage_presigned_url |
 | Marketing | 9 | mkt_seo_analyze, mkt_social_post, mkt_social_analytics, mkt_email_campaign, mkt_content_generate, mkt_ab_test, mkt_analytics, mkt_competitor_analysis, mkt_hashtag_research |
 | Finance | 8 | fin_stock_quote, fin_crypto_price, fin_portfolio, fin_budget, fin_invoice, fin_tax_calc, fin_expense_track, fin_financial_news |
-| **TOTAL** | **208** | 25 domains |
+| **TOTAL** | **527** | 135 domains |
